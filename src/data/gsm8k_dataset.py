@@ -1,8 +1,8 @@
-from .base_datasets import BaseDataset
+from .base_dataset import BaseNonLabeledDataset
 from transformers import PreTrainedTokenizer
 
 
-class SST2Dataset(BaseDataset):
+class GSM8KDataset(BaseNonLabeledDataset):
 
     def __init__(
         self,

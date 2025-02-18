@@ -1,8 +1,8 @@
-from .base_datasets import BaseDataset
+from .base_datasets import BaseMultiTaskDataset
 from transformers import PreTrainedTokenizer
 
 
-class SST2Dataset(BaseDataset):
+class BBHDataset(BaseMultiTaskDataset):
 
     def __init__(
         self,

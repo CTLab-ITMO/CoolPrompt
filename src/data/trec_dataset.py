@@ -2,7 +2,7 @@ from .base_datasets import BaseDataset
 from transformers import PreTrainedTokenizer
 
 
-class SST2Dataset(BaseDataset):
+class TrecDataset(BaseDataset):
 
     def __init__(
         self,

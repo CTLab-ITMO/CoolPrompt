@@ -1,8 +1,8 @@
-from .base_datasets import BaseDataset
+from .base_datasets import BaseNonLabeledDataset
 from transformers import PreTrainedTokenizer
 
 
-class SST2Dataset(BaseDataset):
+class SamsumDataset(BaseNonLabeledDataset):
 
     def __init__(
         self,

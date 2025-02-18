@@ -2,8 +2,7 @@ from .base_datasets import BaseDataset
 from transformers import PreTrainedTokenizer
 
 
-class SST2Dataset(BaseDataset):
-
+class MRDataset(BaseDataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
