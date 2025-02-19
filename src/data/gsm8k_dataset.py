@@ -1,4 +1,4 @@
-from .base_dataset import BaseNonLabeledDataset
+from .base_datasets import BaseNonLabeledDataset
 from transformers import PreTrainedTokenizer
 
 
