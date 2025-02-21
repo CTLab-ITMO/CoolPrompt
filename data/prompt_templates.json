@@ -1,0 +1,4 @@
+{
+    "classification": "INSTRUCTION:\n<PROMPT>\n\nFORMAT:\nWAssign a label from [<LABELS>]. Return the label bracketed in <ans></ans>.\n\nINPUT:\n<INPUT>\n\nRESPONSE:\n",
+    "generation": "INSTRUCTION:\n<PROMPT>\n\nINPUT:\n<INPUT>\n\nRESPONSE:\n<RESPONSE_PREFIX>"
+}
