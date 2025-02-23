@@ -34,14 +34,14 @@
     "mnli": "In this task, you're given a pair of sentences, premise and hypothesis. Your job is to choose whether the two sentences clearly agree (0)/disagree (2) with each other, or if this cannot be determined (1).",
     "mr": "Please perform Sentiment Classification task. Given the sentence, assign a sentiment label (0 - for negative, and 1 - for positive).",
     "natural_instructions": {
-        "task021": "todo",
-        "task050": "todo",
-        "task069": "todo"
+        "task021": "A question that is free of any grammatical or logcal errors, should be labeled 'yes', otherwise it should be indicated as 'no'. A question is grammatically correct if all its entities i.e. nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position. A question is logically correct if the semantic makes sense.",
+        "task050": "You are given a sentence and a question in the input. If the information provided in the sentence is enough to answer the question, label \"Yes\", otherwise label \"No\". Do not use any facts other than those provided in the sentence while labeling \"Yes\" or \"No\". There are only two types of valid responses: Yes and No.",
+        "task069": "In this task, you will be shown a short story with a beginning, two potential middles, and an ending. Your job is to choose the middle statement that makes the story coherent / plausible by writing \"1\" or \"2\" in the output. If both sentences are plausible, pick the one that makes most sense."
     },
-    "openbookqa": "todo",
-    "qnli": "todo",
-    "samsum": "todo",
-    "sst-2": "todo",
-    "trec": "todo",
-    "yahoo": "todo"
+    "openbookqa": "Answer the following question: ",
+    "qnli": "Answer the following question: ",
+    "samsum": "Summarize the following text",
+    "sst-2": "Please perform Sentiment Classification task. Given the sentence, assign a sentiment label (0 - for negative, and 1 - for positive).",
+    "trec": "Answer the following question: ",
+    "yahoo": "Answer the following question: "
 }
