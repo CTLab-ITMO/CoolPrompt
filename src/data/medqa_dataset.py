@@ -8,13 +8,18 @@ class MedQADataset(BaseQADataset):
         self,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
-        prompt: str = "",
-        max_seq_length: int = None
+        config_path: str,
+        prompt: str = None,
+        max_seq_length: int = None,
+        four_options: bool = False,
     ) -> None:
+        name = "medqa_4_options" if four_options else "medqa"
+
         super().__init__(
-            tokenizer,
-            data_path,
-            prompt,
-            max_seq_length,
-            labels_set=['A', 'B', 'C', 'D', 'E']
+            name=name,
+            tokenizer=tokenizer,
+            data_path=data_path,
+            prompt_config_dir_path=config_path,
+            prompt=prompt,
+            max_seq_length=max_seq_length
         )

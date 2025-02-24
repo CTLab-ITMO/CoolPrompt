@@ -55,7 +55,7 @@ class BaseDataset(Dataset, ABC):
         with open(path, 'r') as f:
             data = json.load(f)
         key = key if key is not None else self.name
-        return data[key]
+        return data.get(key, "")
 
     @abstractmethod
     def _use_prompt_template(self) -> None:
@@ -208,8 +208,11 @@ class BaseGenerationDataset(BaseDataset):
         )
 
 
-GENERATION_TASKS = set([
-    'todo',
+INNER_GENERATION_TASKS = set([
+    'dyck_languages',
+    'multistep_arithmetic_two',
+    'object_counting',
+    'word_sorting'
 ])
 
 
@@ -235,7 +238,7 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         if key is not None:
             return data[key]
         return data[self.base_name][self.name]
-   
+
 
 class InnerTaskGenerationDataset(BaseGenerationDataset):
 
@@ -265,22 +268,22 @@ class BaseMultiTaskDataset:
 
     def __init__(
         self,
+        name: str,
         dir_path: str,
         tokenizer: PreTrainedTokenizer,
         prompt: str = None,
-        max_seq_lenght: int = None,
-        name_split_character: str = "-"
+        max_seq_lenght: int = None
     ) -> None:
+        self.name = name
         self.dir_path = dir_path
         self.tokenizer = tokenizer
         self.tasks_paths = self._get_tasks()
         self.prompt = prompt
         self.max_seq_length = max_seq_lenght
-        self.split_char = name_split_character
 
     def _get_tasks(self):
         files = os.listdir(self.dir_path)
-        task_names = [file.split(self.split_char)[0] for file in files]
+        task_names = [file.split("-")[0] for file in files]
         return {
             task_name: path_to_task
             for task_name, path_to_task in zip(task_names, files)
@@ -294,8 +297,9 @@ class BaseMultiTaskDataset:
                 All supported tasks: [{','.join(self.tasks_paths.keys())}]"""
             )
 
-        if task_name in GENERATION_TASKS:
+        if task_name in INNER_GENERATION_TASKS:
             return InnerTaskGenerationDataset(
+                base_name=self.name,
                 name=task_name,
                 tokenizer=self.tokenizer,
                 data_path=task_path,
@@ -304,6 +308,7 @@ class BaseMultiTaskDataset:
             )
 
         return InnerTaskClassificationDataset(
+            base_name=self.name,
             name=task_name,
             tokenizer=self.tokenizer,
             data_path=task_path,
@@ -318,10 +323,18 @@ class BaseQADataset(BaseClassificationDataset):
         name: str,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
-        prompt: str = "",
+        prompt_config_dir_path: str,
+        prompt: str = None,
         max_seq_length: int = None,
     ) -> None:
-        super().__init__(name, tokenizer, data_path, prompt, max_seq_length)
+        super().__init__(
+            name=name,
+            tokenizer=tokenizer,
+            data_path=data_path,
+            prompt_config_dir_path=prompt_config_dir_path,
+            prompt=prompt,
+            max_seq_length=max_seq_length
+        )
 
     def _make_options(self, options: dict) -> str:
         options_list = "\n".join(f"{k}: {v}" for k, v in options.items())

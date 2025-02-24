@@ -8,13 +8,13 @@ class NaturalInstructionsDataset(BaseMultiTaskDataset):
         self,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
-        prompt: str = "",
+        prompt: str = None,
         max_seq_length: int = None
     ) -> None:
         super().__init__(
-            tokenizer,
-            data_path,
-            prompt,
-            max_seq_length,
-            name_split_character="_"
+            name='natural_instructions',
+            dir_path=data_path,
+            tokenizer=tokenizer,
+            prompt=prompt,
+            max_seq_lenght=max_seq_length
         )

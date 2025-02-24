@@ -8,7 +8,13 @@ class BBHDataset(BaseMultiTaskDataset):
         self,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
-        prompt: str = "",
+        prompt: str = None,
         max_seq_length: int = None
     ) -> None:
-        super().__init__(tokenizer, data_path, prompt, max_seq_length)
+        super().__init__(
+            name='bbh',
+            dir_path=data_path,
+            tokenizer=tokenizer,
+            prompt=prompt,
+            max_seq_lenght=max_seq_length
+        )
