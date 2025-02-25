@@ -174,7 +174,11 @@ class BaseGenerationDataset(BaseDataset):
         )
 
     def _get_response_prefix(self) -> str:
-        return self._get_data_from_config('response_prefixes.json')
+        # disable this functionality right now,
+        # as it ruins all the process without data file
+        # I think the use of response prefixes should be discussed at first
+        # return self._get_data_from_config('response_prefixes.json')
+        return ""
 
     def _get_prompt_template(self) -> str:
         return self._get_data_from_config(
