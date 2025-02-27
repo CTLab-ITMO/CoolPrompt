@@ -26,8 +26,8 @@
     },
     "medqa": ["A", "B", "C", "D", "E"],
     "medqa_4_options": ["A", "B", "C", "D"],
-    "mnli": ["0", "1"],
-    "mr": ["0", "1"],
+    "mnli": ["entailment", "neutral", "contradiction"],
+    "mr": ["negative", "positive"],
     "natural_instructions": {
         "task021": ["No.", "Yes."],
         "task050": ["No.", "Yes."],
@@ -35,7 +35,7 @@
     },
     "openbookqa": ["A", "B", "C", "D"],
     "qnli": ["no_entailment", "entailment"],
-    "sst-2": ["0", "1"],
-    "trec": ["0", "1", "2", "3", "4", "6", "7", "8", "9", "10", "11", "13", "14", "15", "17", "18", "20", "21", "22", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "38", "39", "40", "41", "43", "44", "45", "46", "47", "49"],
+    "sst-2": ["negative", "positive"],
+    "trec": ["abbreviation", "expression_abbreviated", "animal", "body", "color", "invention", "currency", "disease_or_medicine", "event", "food", "musical_instrument", "language", "letter", "other_entity", "plant", "product", "religion", "sport", "element_or_substance", "symbol", "technique", "equivalent_term", "vehicle", "word_with_a_special_property", "definition", "description_of_something", "manner_of_an_action", "reason", "group_of_persons", "individual", "title_of_a_person", "description_of_a_person", "city", "country", "mount", "other_location", "state", "numeric_code", "number_of_something", "date", "distance", "price", "order_or_rank", "other_number", "period", "percent_or_fraction", "speed", "temperature", "size_or_area_or_volume", "weight"],
     "yahoo": ["Society & Culture", "Science & Mathematics", "Health", "Education & Reference", "Computers & Internet", "Sports", "Business & Finance", "Entertainment & Music", "Family & Relationships", "Politics & Government"]
 }
