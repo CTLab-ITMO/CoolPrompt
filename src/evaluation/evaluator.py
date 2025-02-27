@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Dict, List, Union, Tuple
+from typing import Dict, List, Tuple
 
 from evaluate import load
 import torch
-
 
 
 class BaseNLPEvaluator(ABC):
@@ -24,8 +23,8 @@ class BaseNLPEvaluator(ABC):
 
     @abstractmethod
     def add_batch(self,
-                model_outputs=None,
-                references=None) -> Dict:
+                  model_outputs=None,
+                  references=None) -> Dict:
         """
         Wrapper for evaluate.add_batch with preprocessing.
         """
@@ -36,8 +35,8 @@ class BaseNLPEvaluator(ABC):
         self.metrics[metric_name] = load(metric_name, **metric_args)
 
     def compute(self,
-                model_outputs = None,
-                references = None) -> Dict:
+                model_outputs=None,
+                references=None) -> Dict:
         """
         Template method for computing metrics
         """
@@ -66,7 +65,7 @@ class TokenClassificationEvaluator(BaseNLPEvaluator):
         into true_predictions and true_labels,
         skipping special tokens
         """
-        if model_outputs is None or  true_label_ids is None:
+        if model_outputs is None or true_label_ids is None:
             return None, None
 
         logits = model_outputs.logits
@@ -75,18 +74,21 @@ class TokenClassificationEvaluator(BaseNLPEvaluator):
 
         # Filter out ignored labels
         true_predictions = [
-            [self.id2label[p] for p, l in zip(pred_id, label_id) if l not in self.label_ids_to_ignore]
+            [self.id2label[p]
+             for p, l in zip(pred_id, label_id) if l not in self.label_ids_to_ignore]
             for pred_id, label_id in zip(pred_ids, true_label_ids)
         ]
         true_labels = [
-            [self.id2label[l] for l in label_id if l not in self.label_ids_to_ignore]
+            [self.id2label[id]
+             for id in label_id if id not in self.label_ids_to_ignore]
             for label_id in true_label_ids
         ]
 
         return true_predictions, true_labels
 
     def _compute_metrics(self, model_outputs, true_label_ids):
-        true_predictions, true_labels = self._preprocess_inputs(model_outputs, true_label_ids)
+        true_predictions, true_labels = (
+            self._preprocess_inputs(model_outputs, true_label_ids))
 
         return self.metrics["seqeval"].compute(
             predictions=true_predictions,
@@ -94,12 +96,13 @@ class TokenClassificationEvaluator(BaseNLPEvaluator):
         )
 
     def add_batch(self,
-                  model_outputs = None,
-                  references = None) -> Dict:
+                  model_outputs=None,
+                  references=None) -> Dict:
         """
         Wrapper for evaluate.add_batch with preprocessing.
         """
-        true_predictions, true_labels = self._preprocess_inputs(model_outputs, references)
+        true_predictions, true_labels = self._preprocess_inputs(
+            model_outputs, references)
 
         return self.metrics["seqeval"].add_batch(
             predictions=true_predictions,
