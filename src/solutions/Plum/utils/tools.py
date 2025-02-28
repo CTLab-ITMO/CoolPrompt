@@ -1,16 +1,18 @@
 """
 Modified from https://github.com/KaiyangZhou/deep-person-reid and https://github.com/KaiyangZhou/Dassl.pytorch
 """
-import os
-import sys
-import json
-import time
+
 import errno
-import numpy as np
-import random
+import json
+import os
 import os.path as osp
+import random
+import sys
+import time
 import warnings
 from difflib import SequenceMatcher
+
+import numpy as np
 import PIL
 import torch
 from PIL import Image
@@ -96,11 +98,10 @@ def download_url(url, dst):
             return
         duration = time.time() - start_time
         progress_size = int(count * block_size)
-        speed = int(progress_size / (1024*duration))
+        speed = int(progress_size / (1024 * duration))
         percent = int(count * block_size * 100 / total_size)
         sys.stdout.write(
-            "\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
-            (percent, progress_size / (1024*1024), speed, duration)
+            "\r...%d%%, %d MB, %d KB/s, %d seconds passed" % (percent, progress_size / (1024 * 1024), speed, duration)
         )
         sys.stdout.flush()
 

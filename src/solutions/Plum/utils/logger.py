@@ -1,10 +1,11 @@
 """
 Modified from https://github.com/KaiyangZhou/Dassl.pytorch
 """
+
 import os
+import os.path as osp
 import sys
 import time
-import os.path as osp
 
 from .tools import mkdir_if_missing
 
