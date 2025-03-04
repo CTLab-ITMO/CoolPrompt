@@ -6,11 +6,7 @@ from src.data.base.datasets import BaseClassificationDataset
 
 
 class BaseQADataset(BaseClassificationDataset):
-    """Classification dataset for QA data.
-
-    Attributes:
-        answers_ids (torch.Tensor): token ids for every answer
-    """
+    """Classification dataset for QA data."""
 
     def __init__(
         self,
@@ -56,7 +52,6 @@ class BaseQADataset(BaseClassificationDataset):
         """
         questions = self.df['input']
         options = self.df['options']
-        answers = list(self.df['target'])
         labels = list(self.df['label'])
         num_labels = labels_to_numbers(labels, self.labels)
 
@@ -69,7 +64,6 @@ class BaseQADataset(BaseClassificationDataset):
                     for input in inputs]
 
         input_ids, attention_mask = self._tokenize(messages)
-        self.answers_ids, _ = self._tokenize(answers)
 
         return (
             input_ids.type(torch.long),
@@ -87,13 +81,12 @@ class BaseQADataset(BaseClassificationDataset):
             ind (int): the position of the element.
 
         Returns:
-            Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+            Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
                 the tuple of element's representation in dataset
-                (input ids, attention mask, numeric label, answer ids).
+                (input ids, attention mask, numeric label).
         """
         return (
             self.input_ids[ind],
             self.attention_mask[ind],
-            self.labels[ind],
-            self.answers_ids[ind],
+            self.labels[ind]
         )
