@@ -31,8 +31,8 @@
     "gsm8k": "Solve the math word problem, giving your answer as an arabic numeral.",
     "math": "Solve the math word problem",
     "medqa": "Please use your domain knowledge in medical area to solve the questions.",
-    "mnli": "In this task, you're given a pair of sentences, premise and hypothesis. Your job is to choose whether the two sentences clearly agree (0)/disagree (2) with each other, or if this cannot be determined (1).",
-    "mr": "Please perform Sentiment Classification task. Given the sentence, assign a sentiment label (0 - for negative, and 1 - for positive).",
+    "mnli": "In this task, you're given a pair of sentences, premise and hypothesis. Your job is to choose whether the two sentences clearly agree/disagree with each other, or if this cannot be determined.",
+    "mr": "Please perform Sentiment Classification task",
     "natural_instructions": {
         "task021": "A question that is free of any grammatical or logcal errors, should be labeled 'yes', otherwise it should be indicated as 'no'. A question is grammatically correct if all its entities i.e. nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position. A question is logically correct if the semantic makes sense.",
         "task050": "You are given a sentence and a question in the input. If the information provided in the sentence is enough to answer the question, label \"Yes\", otherwise label \"No\". Do not use any facts other than those provided in the sentence while labeling \"Yes\" or \"No\". There are only two types of valid responses: Yes and No.",
@@ -41,7 +41,7 @@
     "openbookqa": "Answer the following question: ",
     "qnli": "Answer the following question: ",
     "samsum": "Summarize the following text",
-    "sst-2": "Please perform Sentiment Classification task. Given the sentence, assign a sentiment label (0 - for negative, and 1 - for positive).",
+    "sst-2": "Please perform Sentiment Classification task",
     "trec": "Answer the following question: ",
     "yahoo": "Answer the following question: "
 }
