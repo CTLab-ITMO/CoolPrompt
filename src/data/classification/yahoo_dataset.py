@@ -1,8 +1,8 @@
-from .base_datasets import BaseClassificationDataset
+from src.data.base.datasets import BaseClassificationDataset
 from transformers import PreTrainedTokenizer
 
 
-class SST2Dataset(BaseClassificationDataset):
+class YahooDataset(BaseClassificationDataset):
 
     def __init__(
         self,
@@ -13,7 +13,7 @@ class SST2Dataset(BaseClassificationDataset):
         max_seq_length: int = None
     ) -> None:
         super().__init__(
-            name='sst-2',
+            name='yahoo',
             tokenizer=tokenizer,
             data_path=data_path,
             prompt_config_dir_path=config_path,

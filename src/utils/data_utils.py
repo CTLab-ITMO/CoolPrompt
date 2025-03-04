@@ -1,6 +1,14 @@
 from typing import List, Sequence
 
 
+INNER_GENERATION_TASKS = set([
+    'dyck_languages',
+    'multistep_arithmetic_two',
+    'object_counting',
+    'word_sorting'
+])
+
+
 def labels_to_numbers(
     original_labels: List[str],
     ordered_labels: Sequence[str]

@@ -1,4 +1,4 @@
-from .base_datasets import BaseQADataset
+from src.data.base.datasets import BaseQADataset
 from transformers import PreTrainedTokenizer
 
 

@@ -1,8 +1,8 @@
-from .base_datasets import BaseGenerationDataset
+from src.data.base.datasets import BaseGenerationDataset
 from transformers import PreTrainedTokenizer
 
 
-class GSM8KDataset(BaseGenerationDataset):
+class SamsumDataset(BaseGenerationDataset):
 
     def __init__(
         self,
@@ -13,7 +13,7 @@ class GSM8KDataset(BaseGenerationDataset):
         max_seq_length: int = None
     ) -> None:
         super().__init__(
-            name='gsm8k',
+            name='samsum',
             tokenizer=tokenizer,
             data_path=data_path,
             prompt_config_dir_path=config_path,

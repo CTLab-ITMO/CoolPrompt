@@ -1,8 +1,8 @@
-from .base_datasets import BaseClassificationDataset
+from src.data.base.datasets import BaseClassificationDataset
 from transformers import PreTrainedTokenizer
 
 
-class MNLIDataset(BaseClassificationDataset):
+class MRDataset(BaseClassificationDataset):
 
     def __init__(
         self,
@@ -13,7 +13,7 @@ class MNLIDataset(BaseClassificationDataset):
         max_seq_length: int = None
     ) -> None:
         super().__init__(
-            name='mnli',
+            name='mr',
             tokenizer=tokenizer,
             data_path=data_path,
             prompt_config_dir_path=config_path,

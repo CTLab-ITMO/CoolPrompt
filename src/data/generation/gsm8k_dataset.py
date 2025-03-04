@@ -1,20 +1,22 @@
-from .base_datasets import BaseMultiTaskDataset
+from src.data.base.datasets import BaseGenerationDataset
 from transformers import PreTrainedTokenizer
 
 
-class BBHDataset(BaseMultiTaskDataset):
+class GSM8KDataset(BaseGenerationDataset):
 
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
+        config_path: str,
         prompt: str = None,
         max_seq_length: int = None
     ) -> None:
         super().__init__(
-            name='bbh',
-            dir_path=data_path,
+            name='gsm8k',
             tokenizer=tokenizer,
+            data_path=data_path,
+            prompt_config_dir_path=config_path,
             prompt=prompt,
-            max_seq_lenght=max_seq_length
+            max_seq_length=max_seq_length
         )

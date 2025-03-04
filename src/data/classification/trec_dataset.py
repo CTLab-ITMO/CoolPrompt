@@ -1,8 +1,8 @@
-from .base_datasets import BaseClassificationDataset
+from src.data.base.datasets import BaseClassificationDataset
 from transformers import PreTrainedTokenizer
 
 
-class YahooDataset(BaseClassificationDataset):
+class TrecDataset(BaseClassificationDataset):
 
     def __init__(
         self,
@@ -13,7 +13,7 @@ class YahooDataset(BaseClassificationDataset):
         max_seq_length: int = None
     ) -> None:
         super().__init__(
-            name='yahoo',
+            name='trec',
             tokenizer=tokenizer,
             data_path=data_path,
             prompt_config_dir_path=config_path,

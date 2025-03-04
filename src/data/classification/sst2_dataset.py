@@ -1,8 +1,8 @@
-from .base_datasets import BaseClassificationDataset
+from src.data.base.datasets import BaseClassificationDataset
 from transformers import PreTrainedTokenizer
 
 
-class TrecDataset(BaseClassificationDataset):
+class SST2Dataset(BaseClassificationDataset):
 
     def __init__(
         self,
@@ -10,13 +10,15 @@ class TrecDataset(BaseClassificationDataset):
         data_path: str,
         config_path: str,
         prompt: str = None,
-        max_seq_length: int = None
+        max_seq_length: int = None,
+        device=None
     ) -> None:
         super().__init__(
-            name='trec',
+            name='sst-2',
             tokenizer=tokenizer,
             data_path=data_path,
             prompt_config_dir_path=config_path,
             prompt=prompt,
-            max_seq_length=max_seq_length
+            max_seq_length=max_seq_length,
+            device=device,
         )

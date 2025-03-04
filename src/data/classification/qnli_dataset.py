@@ -1,5 +1,5 @@
-from .base_datasets import BaseClassificationDataset
-from .utils import labels_to_numbers
+from src.data.base.datasets import BaseClassificationDataset
+from src.utils.data_utils import labels_to_numbers
 from transformers import PreTrainedTokenizer
 from typing import Tuple
 import torch
