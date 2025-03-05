@@ -2,9 +2,9 @@ import json
 import pdb
 import random
 
-from transformers import AutoTokenizer
+from utils import model_loader
 
-tokenizer = AutoTokenizer.from_pretrained("AnatoliiPotapov/T-lite-instruct-0.1")
+tokenizer = model_loader.tokenizer
 
 
 def lowercase_list(lst):

@@ -142,8 +142,10 @@ def main(args):
     instruction = instruction[0].replace("\n" + "Emphasis & Caution: -", "")
     print("Instruction Edit2: ", instruction)
     if args.agnostic:
-        instruction = "You will be given a task. Read and understand the task carefully, and appropriately "
-        "answer '{}' or '{}'.".format(task_labels[0], task_labels[1])
+        instruction = (
+            "You will be given a task. Read and understand the task carefully, and appropriately "
+            "answer '{}' or '{}'.".format(task_labels[0], task_labels[1])
+        )
 
     if args.algorithm == "ga":
         trainer = GA_trainer.GA_trainer(

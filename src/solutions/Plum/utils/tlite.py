@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from sklearn.metrics import f1_score as F1
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from utils import model_loader
 from utils.expanded_encode_instruction import encode_instruction
 
 # Extra define
@@ -19,10 +19,8 @@ all_calibrated_preds = []
 all_answers = []
 
 # initialize tokenizer and model from pretrained T-Lite model
-model_name = "AnatoliiPotapov/T-lite-instruct-0.1"
-tokenizer = AutoTokenizer.from_pretrained(model_name, device_map="auto")
-model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto")
-model.eval()
+tokenizer = model_loader.tokenizer
+model = model_loader.model
 
 tokenizer.padding_side = "left"
 tokenizer.pad_token = tokenizer.eos_token
@@ -116,13 +114,13 @@ def complete_tlite(prompt, total_len=10, num_log_probs=None, echo=False):
             do_sample=False,
         )
     else:
-        assert echo and total_len == 0  # ? что это значит
+        assert echo and total_len == 0  
         total_sequences = input_ids["input_ids"].cuda()
 
     # they want the probs of the top tokens
     if num_log_probs is not None:
         # we are left padding, so we need to adjust the position IDs
-        attention_mask = (total_sequences != 50256).float()  # ? что за magic number?
+        attention_mask = (total_sequences != 50256).float()  
         position_ids = attention_mask.long().cumsum(-1) - 1
         position_ids.masked_fill_(attention_mask == 0, 1)
         # get the logits for the context and the next l tokens

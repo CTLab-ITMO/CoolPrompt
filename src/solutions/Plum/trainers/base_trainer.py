@@ -14,10 +14,10 @@ from nltk.tokenize.treebank import TreebankWordDetokenizer
 from scipy.stats import entropy
 from sklearn.metrics import balanced_accuracy_score
 from supar import Parser
-from transformers import AutoModelForCausalLM, AutoTokenizer
-from utils import tlite
+from utils import model_loader, tlite
 from utils.expanded_encode_instruction import training_encode_instruction
 
+# Ошибка при Parser.load: WeightUnpickler error: unsupported global
 torch.serialization.add_safe_globals(
     [
         supar.utils.config.Config,
@@ -28,7 +28,7 @@ torch.serialization.add_safe_globals(
         supar.utils.field.RawField,
         supar.utils.field.ChartField,
     ]
-)  # TODO это бред какой то
+)
 
 
 class TrainerBase:
@@ -89,7 +89,7 @@ class SimpleTrainer(TrainerBase):
         self.original_score = None
         self.result_candidate = None
         self.result_score = None
-        self.parser = Parser.load("crf-con-en", weights_only=False)  # TODO понять что это
+        self.parser = Parser.load("crf-con-en")
         self.para_tokenizer = None
         self.para_model = None
         self.state = {}
@@ -159,10 +159,8 @@ class SimpleTrainer(TrainerBase):
 
     def if_sub(self, edit_operations):
         if "sub" in edit_operations:
-            # torch_device = "cuda" if torch.cuda.is_available() else "cpu"  # ? что поставить?
-            para_model_name = "AnatoliiPotapov/T-lite-instruct-0.1"
-            self.para_tokenizer = AutoTokenizer.from_pretrained(para_model_name, device_map="auto")
-            self.para_model = AutoModelForCausalLM.from_pretrained(para_model_name, device_map="auto")
+            self.para_tokenizer = model_loader.tokenizer
+            self.para_model = model_loader.model
 
     def get_response(self, input_text, num_return_sequences, num_beams):
         torch_device = "cuda" if torch.cuda.is_available() else "cpu"

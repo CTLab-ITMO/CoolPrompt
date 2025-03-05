@@ -110,8 +110,10 @@ print(instruction)
 instruction = instruction[0].replace("\n" + "Emphasis & Caution: -", "")
 print(instruction)
 if args.agnostic:
-    instruction = "You will be given a task. Read and understand the task carefully, and appropriately "
-    "answer '{}' or '{}'.".format(task_labels[0], task_labels[1])
+    instruction = (
+        "You will be given a task. Read and understand the task carefully, and appropriately "
+        "answer '{}' or '{}'.".format(task_labels[0], task_labels[1])
+    )
 parser = Parser.load("crf-con-en")
 num_compose = args.num_compose
 num_candidates = args.num_candidates

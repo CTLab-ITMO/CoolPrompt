@@ -1,23 +1,23 @@
 
   python ./main.py \
     --data-dir "./data/" \
-    --algorithm "hc" \
+    --algorithm "tabu" \
     --mode "Instruction Only" \
     --train-seed 0 \
     --num-compose 1 \
-    --num-candidates 10 \
+    --num-candidates 8 \
     --backbone "tlite" \
-    --num-iter 50 \
-    --patience 7 \
+    --num-iter 3 \
+    --patience 5 \
     --write-preds \
     --meta-dir "./logs/" \
-    --meta-name "HC_batchsize_20_all_edits_l_1_m_10_n_50@task_001_agnostic_trainseed_0_seed_42_rho_7.txt" \
+    --meta-name "TS_batchsize_4_all_edits_l_1_m_8_n_20@task_001_agnostic_trainseed_0_seed_42_rho_7.txt" \
     --print-orig \
     --agnostic \
     --key-id 0 \
-    --batch-size 20 \
-    --tournament-selection 5 \
-    --project-name 'hc-prompt' \
+    --batch-size 4 \
+    --tournament-selection 4 \
+    --project-name 'ts-prompt' \
     --checkpoint-freq 10 \
     --output-dir "./output/" # dir to save cheskpoints
 
