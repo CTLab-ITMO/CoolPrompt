@@ -1,5 +1,6 @@
 from src.data.base.datasets import BaseClassificationDataset
 from transformers import PreTrainedTokenizer
+import torch
 
 
 class SST2Dataset(BaseClassificationDataset):
@@ -11,7 +12,7 @@ class SST2Dataset(BaseClassificationDataset):
         config_path: str,
         prompt: str = None,
         max_seq_length: int = None,
-        device=None
+        device: torch.device = None
     ) -> None:
         super().__init__(
             name='sst-2',

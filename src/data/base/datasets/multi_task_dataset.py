@@ -128,7 +128,7 @@ class BaseMultiTaskDataset(object):
         self.max_seq_length = max_seq_length
         self.device = device
 
-    def _get_tasks(self) -> dict[str, str]:
+    def _get_tasks(self) -> dict:
         """Extracts all paths to tasks parquet files.
 
         Returns:

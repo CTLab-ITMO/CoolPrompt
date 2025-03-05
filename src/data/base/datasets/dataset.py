@@ -62,9 +62,9 @@ class BaseDataset(Dataset, ABC):
             self.num_labels,
         ) = self._process_data()
 
-        self.input_ids.to(self.device)
-        self.attention_mask.to(self.device)
-        self.num_labels.to(self.device)
+        self.input_ids = self.input_ids.to(self.device)
+        self.attention_mask = self.attention_mask.to(self.device)
+        self.num_labels = self.num_labels.to(self.device)
 
     def _get_labels(self) -> List[str]:
         """Creates a list of all labels of the dataset.
@@ -74,7 +74,7 @@ class BaseDataset(Dataset, ABC):
         """
         return list()
 
-    def get_labels_mapping(self) -> dict[str, int]:
+    def get_labels_mapping(self) -> dict:
         """Creates dictionary, that allows mapping
         from string labels to their numeric identificators.
 

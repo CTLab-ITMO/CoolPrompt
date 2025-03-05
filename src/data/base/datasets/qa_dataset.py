@@ -28,7 +28,7 @@ class BaseQADataset(BaseClassificationDataset):
             device=device
         )
 
-    def _make_options(self, options: dict[str, str]) -> str:
+    def _make_options(self, options: dict) -> str:
         """Creates string that represents list of all possible answers
 
         Args:
