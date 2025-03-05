@@ -1,5 +1,6 @@
 from src.data.base.datasets import BaseQADataset
 from transformers import PreTrainedTokenizer
+import torch
 
 
 class MedQADataset(BaseQADataset):
@@ -12,6 +13,7 @@ class MedQADataset(BaseQADataset):
         prompt: str = None,
         max_seq_length: int = None,
         four_options: bool = False,
+        device: torch.device = None,
     ) -> None:
         name = "medqa_4_options" if four_options else "medqa"
 
@@ -21,5 +23,6 @@ class MedQADataset(BaseQADataset):
             data_path=data_path,
             prompt_config_dir_path=config_path,
             prompt=prompt,
-            max_seq_length=max_seq_length
+            max_seq_length=max_seq_length,
+            device=device
         )

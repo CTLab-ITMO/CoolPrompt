@@ -1,5 +1,6 @@
 from src.data.base.datasets import BaseGenerationDataset
 from transformers import PreTrainedTokenizer
+import torch
 
 
 class SamsumDataset(BaseGenerationDataset):
@@ -10,7 +11,8 @@ class SamsumDataset(BaseGenerationDataset):
         data_path: str,
         config_path: str,
         prompt: str = None,
-        max_seq_length: int = None
+        max_seq_length: int = None,
+        device: torch.device = None,
     ) -> None:
         super().__init__(
             name='samsum',
@@ -18,5 +20,6 @@ class SamsumDataset(BaseGenerationDataset):
             data_path=data_path,
             prompt_config_dir_path=config_path,
             prompt=prompt,
-            max_seq_length=max_seq_length
+            max_seq_length=max_seq_length,
+            device=device
         )

@@ -1,5 +1,6 @@
 from src.data.base.datasets import BaseQADataset
 from transformers import PreTrainedTokenizer
+import torch
 
 
 class OpenbookQADataset(BaseQADataset):
@@ -11,7 +12,7 @@ class OpenbookQADataset(BaseQADataset):
         config_path: str,
         prompt: str = None,
         max_seq_length: int = None,
-        four_options: bool = False,
+        device: torch.device = None,
     ) -> None:
         super().__init__(
             name="openbookqa",
@@ -19,5 +20,6 @@ class OpenbookQADataset(BaseQADataset):
             data_path=data_path,
             prompt_config_dir_path=config_path,
             prompt=prompt,
-            max_seq_length=max_seq_length
+            max_seq_length=max_seq_length,
+            device=device
         )

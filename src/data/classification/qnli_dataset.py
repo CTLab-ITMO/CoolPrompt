@@ -13,7 +13,8 @@ class QNLIDataset(BaseClassificationDataset):
         data_path: str,
         config_path: str,
         prompt: str = None,
-        max_seq_length: int = None
+        max_seq_length: int = None,
+        device: torch.device = None,
     ) -> None:
         super().__init__(
             name='qnli',
@@ -21,7 +22,8 @@ class QNLIDataset(BaseClassificationDataset):
             data_path=data_path,
             prompt_config_dir_path=config_path,
             prompt=prompt,
-            max_seq_length=max_seq_length
+            max_seq_length=max_seq_length,
+            device=device
         )
 
     def _process_data(self) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
