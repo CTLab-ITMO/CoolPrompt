@@ -4,6 +4,17 @@ import torch
 
 
 class NaturalInstructionsDataset(BaseMultiTaskDataset):
+    """Compilation of Natural Instructions tasks
+
+    Attributes:
+        name: a string name of the dataset.
+        tokenizer: a tokenizer provided for text tokenization.
+        data_path: a path to directory with data.
+        prompt: a string that describes task for LLM.
+        max_seq_length: an integer limit of token sequence.
+        device: device where to store tokenized data.
+        labels: array of all labels in dataset.
+    """
 
     def __init__(
         self,
