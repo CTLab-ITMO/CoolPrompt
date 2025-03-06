@@ -25,8 +25,8 @@ class GSM8KDataset(BaseGenerationDataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        config_path: str,
+        data_path: str = "./data/gsm8k/test-0000-of-00001.parquet",
+        config_path: str = "./data",
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,

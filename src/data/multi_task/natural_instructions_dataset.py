@@ -21,8 +21,8 @@ class NaturalInstructionsDataset(BaseMultiTaskDataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        config_path: str,
+        data_path: str = "./data/natural_instructions",
+        config_path: str = "./data",
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,

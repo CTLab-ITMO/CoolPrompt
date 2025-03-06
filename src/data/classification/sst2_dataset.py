@@ -25,8 +25,8 @@ class SST2Dataset(BaseClassificationDataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        config_path: str,
+        data_path: str = "./data/sst-2/test-00000-of-00001.parquet",
+        config_path: str = "./data",
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None
