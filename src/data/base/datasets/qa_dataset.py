@@ -6,7 +6,23 @@ from src.data.base.datasets import BaseClassificationDataset
 
 
 class BaseQADataset(BaseClassificationDataset):
-    """Classification dataset for QA data."""
+    """Classification dataset for QA data.
+
+    Attributes:
+        name: a string name of the dataset.
+        tokenizer: a tokenizer provided for text tokenization.
+        data_path: a path to file with data.
+        config_path: a path to directory with config files
+            (such as prompt_templates.json, basic_prompts.json etc.).
+        prompt: a string that describes task for LLM.
+        max_seq_length: an integer limit of token sequence.
+        device: device where to store tokenized data.
+        labels: array of all labels in dataset.
+        df: pandas.DataFrame that contains the data.
+        input_ids: torch.Tensor of input token ids for model.
+        attention_mask: torch.Tensor of attention masks for model.
+        num_labels: torch.Tensor of numeric identificators of the labels.
+    """
 
     def __init__(
         self,

@@ -16,6 +16,19 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
 
     Attributes:
         base_name: the global name of multi-task dataset this task is part of.
+        name: a string name of the dataset.
+        tokenizer: a tokenizer provided for text tokenization.
+        data_path: a path to file with data.
+        config_path: a path to directory with config files
+            (such as prompt_templates.json, basic_prompts.json etc.).
+        prompt: a string that describes task for LLM.
+        max_seq_length: an integer limit of token sequence.
+        device: device where to store tokenized data.
+        labels: array of all labels in dataset.
+        df: pandas.DataFrame that contains the data.
+        input_ids: torch.Tensor of input token ids for model.
+        attention_mask: torch.Tensor of attention masks for model.
+        num_labels: torch.Tensor of numeric identificators of the labels.
     """
 
     def __init__(
@@ -24,6 +37,7 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         name: str,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
+        config_path: str,
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None
@@ -33,6 +47,7 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
             name=name,
             tokenizer=tokenizer,
             data_path=data_path,
+            prompt_config_dir_path=config_path,
             prompt=prompt,
             max_seq_length=max_seq_length,
             device=device
@@ -67,6 +82,22 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
 
     Attributes:
         base_name: the global name of multi-task dataset this task is part of.
+        name: a string name of the dataset.
+        tokenizer: a tokenizer provided for text tokenization.
+        data_path: a path to file with data.
+        config_path: a path to directory with config files
+            (such as prompt_templates.json, basic_prompts.json etc.).
+        prompt: a string that describes task for LLM.
+        max_seq_length: an integer limit of token sequence.
+        device: device where to store tokenized data.
+        labels: array of all labels in dataset.
+        df: pandas.DataFrame that contains the data.
+        input_ids: torch.Tensor of input token ids for model.
+        attention_mask: torch.Tensor of attention masks for model.
+        num_labels: torch.Tensor of numeric identificators of the labels.
+        response_prefix: a string prefix that can be
+            added right before model output generation.
+            By default is empty string.
     """
 
     def __init__(
@@ -75,6 +106,7 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
         name: str,
         tokenizer: PreTrainedTokenizer,
         data_path: str,
+        config_path: str,
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None
@@ -84,6 +116,7 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
             name=name,
             tokenizer=tokenizer,
             data_path=data_path,
+            prompt_config_dir_path=config_path,
             prompt=prompt,
             max_seq_length=max_seq_length,
             device=device
@@ -105,6 +138,8 @@ class BaseMultiTaskDataset(object):
     Attributes:
         name: a string name of the dataset.
         dir_path: a path to directory with all tasks data.
+        config_path: a path to directory with config files
+            (such as prompt_templates.json, basic_prompts.json etc.).
         tokenizer: a tokenizer provided for text tokenization.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
@@ -115,6 +150,7 @@ class BaseMultiTaskDataset(object):
         self,
         name: str,
         dir_path: str,
+        config_path: str,
         tokenizer: PreTrainedTokenizer,
         prompt: str = None,
         max_seq_length: int = None,
@@ -122,6 +158,7 @@ class BaseMultiTaskDataset(object):
     ) -> None:
         self.name = name
         self.dir_path = dir_path
+        self.config_path = config_path
         self.tokenizer = tokenizer
         self.tasks_paths = self._get_tasks()
         self.prompt = prompt
@@ -156,11 +193,14 @@ class BaseMultiTaskDataset(object):
                 for non-exstisning task name.
         """
         task_path = self.tasks_paths.get(task_name, None)
+
         if task_path is None:
             raise ValueError(
-                f"""Bad task name
+                f"""Invalid task name
                 All supported tasks: [{','.join(self.tasks_paths.keys())}]"""
             )
+
+        task_path = os.path.join(self.dir_path, task_path)
 
         if task_name in INNER_GENERATION_TASKS:
             return InnerTaskGenerationDataset(
@@ -168,6 +208,7 @@ class BaseMultiTaskDataset(object):
                 name=task_name,
                 tokenizer=self.tokenizer,
                 data_path=task_path,
+                config_path=self.config_path,
                 prompt=self.prompt,
                 max_seq_length=self.max_seq_length,
                 device=self.device
@@ -178,6 +219,7 @@ class BaseMultiTaskDataset(object):
             name=task_name,
             tokenizer=self.tokenizer,
             data_path=task_path,
+            config_path=self.config_path,
             prompt=self.prompt,
             max_seq_length=self.max_seq_length,
             device=self.device
