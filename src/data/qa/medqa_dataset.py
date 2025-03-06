@@ -4,13 +4,16 @@ import torch
 
 
 class MedQADataset(BaseQADataset):
-    """Q/A dataset class for MedQA dataset
+    """Q/A dataset class for MedQA dataset.
+    This dataset contains two versions of data:
+    4-options data and multiple-options data.
 
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
         data_path: a path to file with data.
-        config_path: a path to directory with config files.
+        config_path: a path to directory with config files
+            (such as prompt_templates.json, basic_prompts.json etc.).
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
