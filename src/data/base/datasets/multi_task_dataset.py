@@ -193,11 +193,14 @@ class BaseMultiTaskDataset(object):
                 for non-exstisning task name.
         """
         task_path = self.tasks_paths.get(task_name, None)
+
         if task_path is None:
             raise ValueError(
-                f"""Bad task name
+                f"""Invalid task name
                 All supported tasks: [{','.join(self.tasks_paths.keys())}]"""
             )
+
+        task_path = os.path.join(self.dir_path, task_path)
 
         if task_name in INNER_GENERATION_TASKS:
             return InnerTaskGenerationDataset(
