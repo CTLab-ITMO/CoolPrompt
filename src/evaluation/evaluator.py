@@ -161,17 +161,16 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
         super().__init__(task_type="token-classification")
 
     def _load_default_metrics(self):
-        self.metrics = {"f1": load("f1")}
+        self.metrics = {
+            "f1": load("f1"),
+            "accuracy": load("accuracy"),
+        }
 
-    def _compute_metrics(self,
-                         predictions=None,
-                         references=None) -> float:
-
-        return self.metrics["f1"].compute(
-            predictions=predictions,
-            references=references,
-            average='macro'
-        )["f1"]
+    def _compute_metrics(self) -> Dict[str, float]:
+        return {
+            "f1": self.metrics["f1"].compute(average='macro')['f1'],
+            "accuracy": self.metrics["accuracy"].compute()['accuracy']
+        }
 
     def _prepare_labels(self, tokenizer, eval_ds, label_ids) -> Any:
         return label_ids
