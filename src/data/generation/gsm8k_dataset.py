@@ -1,6 +1,6 @@
-from src.data.base.datasets import BaseGenerationDataset
-from transformers import PreTrainedTokenizer
 import torch
+from transformers import PreTrainedTokenizer
+from src.data.base.datasets import BaseGenerationDataset
 
 
 class GSM8KDataset(BaseGenerationDataset):
@@ -9,9 +9,7 @@ class GSM8KDataset(BaseGenerationDataset):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -25,8 +23,7 @@ class GSM8KDataset(BaseGenerationDataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str = "./data/gsm8k/test-0000-of-00001.parquet",
-        config_path: str = "./data",
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,
@@ -34,8 +31,7 @@ class GSM8KDataset(BaseGenerationDataset):
         super().__init__(
             name='gsm8k',
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=config_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
             device=device

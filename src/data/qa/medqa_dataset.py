@@ -1,6 +1,6 @@
-from src.data.base.datasets import BaseQADataset
-from transformers import PreTrainedTokenizer
 import torch
+from transformers import PreTrainedTokenizer
+from src.data.base.datasets import BaseQADataset
 
 
 class MedQADataset(BaseQADataset):
@@ -11,9 +11,7 @@ class MedQADataset(BaseQADataset):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -29,8 +27,7 @@ class MedQADataset(BaseQADataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str = "./data/medqa/test-00000-of-00001.parquet",
-        config_path: str = "./data",
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         four_options: bool = False,
@@ -42,8 +39,7 @@ class MedQADataset(BaseQADataset):
         super().__init__(
             name=name,
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=config_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
             device=device

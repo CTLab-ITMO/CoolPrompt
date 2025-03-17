@@ -1,6 +1,6 @@
-from src.data.base.datasets import BaseMultiTaskDataset
-from transformers import PreTrainedTokenizer
 import torch
+from transformers import PreTrainedTokenizer
+from src.data.base.datasets import BaseMultiTaskDataset
 
 
 class NaturalInstructionsDataset(BaseMultiTaskDataset):
@@ -9,9 +9,7 @@ class NaturalInstructionsDataset(BaseMultiTaskDataset):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to directory with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -21,16 +19,14 @@ class NaturalInstructionsDataset(BaseMultiTaskDataset):
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str = "./data/natural_instructions",
-        config_path: str = "./data",
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,
     ) -> None:
         super().__init__(
             name='natural_instructions',
-            dir_path=data_path,
-            config_path=config_path,
+            split=split,
             tokenizer=tokenizer,
             prompt=prompt,
             max_seq_length=max_seq_length,
