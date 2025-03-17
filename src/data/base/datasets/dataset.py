@@ -44,7 +44,7 @@ class BaseDataset(Dataset, ABC):
         self.tokenizer = tokenizer
 
         self.split = split
-        assert self.split in set('test', 'train')
+        assert self.split in ['test', 'train']
 
         self.data_path = self._get_data_path()
         self.config_path = ALL_DATA_PATH

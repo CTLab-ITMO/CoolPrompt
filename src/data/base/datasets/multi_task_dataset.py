@@ -57,7 +57,7 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
             str: path to data
         """
         return os.path.join(
-            self.ALL_DATA_PATH,
+            ALL_DATA_PATH,
             self.base_name,
             self.name,
             f"{self.split}-00000-of-00001.parquet"
@@ -136,7 +136,7 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
             str: path to data
         """
         return os.path.join(
-            self.ALL_DATA_PATH,
+            ALL_DATA_PATH,
             self.base_name,
             self.name,
             f"{self.split}-00000-of-00001.parquet"
@@ -176,14 +176,14 @@ class BaseMultiTaskDataset(object):
         self.name = name
         self.tokenizer = tokenizer
         self.split = split
-        self.tasks_paths = self._get_tasks()
-        self.prompt = prompt
-        self.max_seq_length = max_seq_length
-        self.device = device
         self.dir_path = os.path.join(
             ALL_DATA_PATH,
             name
         )
+        self.tasks_paths = self._get_tasks()
+        self.prompt = prompt
+        self.max_seq_length = max_seq_length
+        self.device = device
 
     def _get_tasks(self) -> dict:
         """Extracts all paths to tasks parquet files.
