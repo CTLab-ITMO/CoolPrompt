@@ -17,6 +17,18 @@ CoolPrompt is an automative prompting framework for automative prompt optimizati
 
 ---
 
+## Quick Start
+
+- Install all project requirements
+    <code>pip install -r requirements.txt</code>
+
+- Download data
+    <code>bash scripts/dataset_downloading.sh --login `minio_login` --password `minio_password` </code>
+
+- Explore example notebooks to familiarize yourself with our framework
+
+---
+
 ## Data
 
 CoolPrompt is working with custom NLP benchmark. You can download it from our minio storage using [downloading script](https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/scripts/dataset_downloading.sh) (remember, you need to use credentials to access it).
