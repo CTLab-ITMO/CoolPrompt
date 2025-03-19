@@ -1,5 +1,8 @@
+import os
 from typing import List, Sequence
 
+
+ALL_DATA_PATH = os.path.expanduser('~/autoprompting_data')
 
 INNER_GENERATION_TASKS = set([
     'dyck_languages',
