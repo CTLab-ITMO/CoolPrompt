@@ -12,7 +12,7 @@ from evaluate import load, EvaluationModule
 from tqdm import tqdm
 import concurrent.futures
 import torch
-from vllm import LLM, SamplingParams, RequestOutput
+from vllm import LLM, SamplingParams
 
 from src.data.base.datasets import BaseDataset
 from src.utils.eval_utils import vllm_infer
@@ -83,18 +83,38 @@ class BaseNLPEvaluator(ABC):
         pass
 
     @abstractmethod
+    def _get_max_tokens(self) -> int:
+        pass
+
+    def _get_default_generation_args_vllm(self, tokenizer) -> Dict[str, Any]:
+        """Default arguments for vllm model generation"""
+        return {
+            "temperature": 0.0,
+            "max_tokens": self._get_max_tokens(),
+            "stop_token_ids": [tokenizer.eos_token_id]
+        }
+
+    def _get_default_generation_args_hf(self, tokenizer) -> Dict[str, Any]:
+        """Default arguments for hugginface model generation"""
+        return {
+            "temperature": 0.0,
+            "max_new_tokens": self._get_max_tokens(),
+            "eos_token_ids": [tokenizer.eos_token_id]
+        }
+
+    @abstractmethod
     def _prepare_predictions(
             self,
             tokenizer: Any,
             dataset: BaseDataset,
-            generated_tokens: List[torch.Tensor]
+            outputs: List[str]
     ) -> List[Any]:
         """Convert generated tokens into formatted predictions.
 
         Args:
             tokenizer: Model tokenizer used for decoding
             dataset: Dataset used for evaluation
-            generated_tokens: List of tensors containing model outputs
+            outputs: List of strings containing detokenized model outputs
 
         Returns:
             List of processed predictions in metric-compatible format
@@ -106,12 +126,10 @@ class BaseNLPEvaluator(ABC):
             model: Any,
             tokenizer: Any,
             eval_ds: BaseDataset,
-            idxes: torch.Tensor = None,
-            shuffle = False,
             batch_size: int = 64,
             model_generate_args: Dict[str, Any] = None
     ) -> Dict[str, float]:
-        """Execute full evaluation workflow.
+        """Execute full evaluation workflow with HF model.
 
         Args:
             model: Model to evaluate
@@ -124,27 +142,27 @@ class BaseNLPEvaluator(ABC):
             Dictionary of computed metrics
         """
 
-        model_generate_args = model_generate_args or {"eos_token_id": tokenizer.eos_token_id}
+        generate_args = self._get_default_generation_args_hf(tokenizer)
 
-        res_ds = eval_ds
-        if idxes is not None:
-            res_ds = torch.utils.data.Subset(eval_ds, idxes)
+        if model_generate_args:
+            generate_args.update(model_generate_args)
 
-
-        val_dataloader = torch.utils.data.DataLoader(res_ds, batch_size=batch_size, shuffle=shuffle)
+        val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)
 
         for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
             outputs = model.generate(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
-                **model_generate_args
+                **generate_args
             )
 
             generated_tokens = [
                 output[len(ids):] for output, ids in zip(outputs, input_ids)
             ]
 
-            predictions = self._prepare_predictions(tokenizer, eval_ds, generated_tokens)
+            generated_strings = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+
+            predictions = self._prepare_predictions(tokenizer, eval_ds, generated_strings)
 
             labels = self._prepare_labels(tokenizer, eval_ds, label_ids)
 
@@ -152,17 +170,15 @@ class BaseNLPEvaluator(ABC):
 
         return self._compute_metrics()
 
-
-    def evaluate_vllm_fast(
+    def evaluate_vllm(
             self,
-            model_name: str,
+            model: LLM,
             tokenizer: Any,
             eval_ds: BaseDataset,
             batch_size: int = 64,
-            max_workers=16,
             model_generate_args: Dict[str, Any] = None
     ) -> Dict[str, float]:
-        """Execute full evaluation workflow.
+        """Execute full evaluation workflow with vllm.LLM model.
 
         Args:
             model: Model to evaluate
@@ -175,14 +191,12 @@ class BaseNLPEvaluator(ABC):
             Dictionary of computed metrics
         """
 
-        model_generate_args = model_generate_args or {"stop_token_ids": [tokenizer.eos_token_id]}
+        generate_args = self._get_default_generation_args_vllm(tokenizer)
 
-        # def predict_on_example(prompt):
-        #     return vllm_infer(
-        #         prompt=prompt,
-        #         model_name=model_name,
-        #
-        #     )
+        if model_generate_args:
+            generate_args.update(model_generate_args)
+
+        sampling_params = SamplingParams(**generate_args)
 
         val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)
 
@@ -190,26 +204,80 @@ class BaseNLPEvaluator(ABC):
 
             inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
 
-            answers = []
+            answers = model.generate(
+                prompts=inputs,
+                sampling_params=sampling_params,
+                use_tqdm=False
+            )
 
-            with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-                futures = [executor.submit(vllm_infer, ex, model_name, **model_generate_args) for ex in inputs]
-                for i, future in tqdm(enumerate(concurrent.futures.as_completed(futures)), total=len(futures),
-                                      desc='vllm scorer'):
-                    answer = future.result()[0]
-                    answers.append(answer)
+            outputs = [answer.outputs[0].text for answer in answers]
 
-            label2id = eval_ds.get_labels_mapping()
+            predictions = self._prepare_predictions(tokenizer, eval_ds, outputs)
 
-            predictions = [self._extract_label_id_from_answer(answer, label2id)
-                           for answer in answers]
-
-            labels = label_ids
+            labels = self._prepare_labels(tokenizer, eval_ds, label_ids)
 
             self._add_batch(predictions, labels)
 
         return self._compute_metrics()
 
+    def evaluate_vllm_server(
+            self,
+            model_name: str,
+            tokenizer: Any,
+            eval_ds: BaseDataset,
+            server_url: str = "http://localhost:8000/v1/chat/completions",
+            batch_size: int = 64,
+            max_workers=16,
+            model_generate_args: Dict[str, Any] = None
+    ) -> Dict[str, float]:
+        """Execute full evaluation workflow with vllm server.
+
+        Args:
+            model: Model to evaluate
+            tokenizer: Tokenizer matching the model
+            eval_ds: Evaluation dataset
+            server_url: Vllm server url
+            batch_size: Batch size for evaluation
+            model_generate_args: Additional arguments for model generation
+
+        Returns:
+            Dictionary of computed metrics
+        """
+
+        generate_args = self._get_default_generation_args_vllm(tokenizer)
+
+        if model_generate_args:
+            generate_args.update(model_generate_args)
+
+        val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)
+
+        def infer(input_ids, label_id):
+            """Label is needed to ensure label <-> prompt match"""
+            return vllm_infer(input_ids, model_name, server_url=server_url, **generate_args), label_id
+
+        for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
+
+            inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
+
+            answers = []
+            label_ids = []
+
+            with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+                futures = [executor.submit(infer, prompt, label_id) for prompt, label_id in zip(inputs, label_ids)]
+                for i, future in tqdm(enumerate(concurrent.futures.as_completed(futures)), total=len(futures)):
+                    answer, label_id = future.result()[0]
+                    answers.append(answer)
+                    label_ids.append(label_id)
+
+            label_ids = torch.tensor(label_ids)
+
+            predictions = self._prepare_predictions(tokenizer, eval_ds, answers)
+
+            labels = self._prepare_labels(tokenizer, eval_ds, label_ids)
+
+            self._add_batch(predictions, labels)
+
+        return self._compute_metrics()
 
 
 class TextClassificationEvaluator(BaseNLPEvaluator):
@@ -241,16 +309,17 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
             "accuracy": self.metrics["accuracy"].compute()['accuracy']
         }
 
+    def _get_max_tokens(self) -> int:
+        return 50
+
     def _prepare_labels(self, tokenizer, eval_ds, label_ids) -> Any:
         return label_ids
 
-    def _prepare_predictions(self, tokenizer, eval_ds, generated_tokens) -> Any:
-        answers = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
-
+    def _prepare_predictions(self, tokenizer, eval_ds, generated_strings) -> Any:
         label2id = eval_ds.get_labels_mapping()
 
         predictions = [self._extract_label_id_from_answer(answer, label2id)
-                       for answer in answers]
+                       for answer in generated_strings]
 
         return predictions
 
@@ -281,107 +350,6 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
         label_id = label2id.get(label, self.FORMAT_MISMATCH_LABEL)
 
         return torch.tensor(label_id)
-
-    def evaluate_vllm(
-            self,
-            model: LLM,
-            tokenizer: Any,
-            eval_ds: BaseDataset,
-            batch_size: int = 64,
-            sampling_params: Dict[str, Any] = None
-    ) -> Dict[str, float]:
-        """Execute full evaluation workflow.
-
-        Args:
-            model: Model to evaluate
-            tokenizer: Tokenizer matching the model
-            eval_ds: Evaluation dataset
-            batch_size: Batch size for evaluation
-            model_generate_args: Additional arguments for model generation
-
-        Returns:
-            Dictionary of computed metrics
-        """
-
-        sampling_params = sampling_params or SamplingParams(temperature=0.7, max_tokens=50, stop_token_ids=[tokenizer.eos_token_id])
-
-        val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)
-
-
-        for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
-            inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
-
-            answers = model.generate(inputs, sampling_params)
-
-
-            label2id = eval_ds.get_labels_mapping()
-
-            predictions = [self._extract_label_id_from_answer(answer.outputs[0].text, label2id)
-                           for answer in answers]
-
-            labels = label_ids
-
-            self._add_batch(predictions, labels)
-
-        return self._compute_metrics()
-
-    def evaluate_vllm_fast(
-            self,
-            model_name: str,
-            tokenizer: Any,
-            eval_ds: BaseDataset,
-            batch_size: int = 64,
-            max_workers=16,
-            model_generate_args: Dict[str, Any] = None
-    ) -> Dict[str, float]:
-        """Execute full evaluation workflow.
-
-        Args:
-            model: Model to evaluate
-            tokenizer: Tokenizer matching the model
-            eval_ds: Evaluation dataset
-            batch_size: Batch size for evaluation
-            model_generate_args: Additional arguments for model generation
-
-        Returns:
-            Dictionary of computed metrics
-        """
-
-        model_generate_args = model_generate_args or {"stop_token_ids": [tokenizer.eos_token_id]}
-
-        val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)
-
-        futures = []
-
-        answers = []
-
-        from tqdm.auto import tqdm
-
-        progress_bar = tqdm(range(len(eval_ds)))
-
-        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-            for input_ids, attention_mask, label_ids in val_dataloader:
-
-                inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
-
-                futures.extend([executor.submit(vllm_infer, ex, model_name, **model_generate_args) for ex in inputs])
-
-
-            for i, future in enumerate(concurrent.futures.as_completed(futures)):
-                answer = future.result()[0]
-                answers.append(answer)
-                progress_bar.update(1)
-
-        label2id = eval_ds.get_labels_mapping()
-
-        predictions = [self._extract_label_id_from_answer(answer, label2id)
-                       for answer in answers]
-
-        labels = label_ids
-
-        self._add_batch(predictions, labels)
-
-        return self._compute_metrics()
 
 
 class GenerationEvaluator(BaseNLPEvaluator):
@@ -419,57 +387,11 @@ class GenerationEvaluator(BaseNLPEvaluator):
             "meteor": self.metrics["meteor"].compute()['meteor']
         }
 
+    def _get_max_tokens(self) -> int:
+        return 1024
+
     def _prepare_labels(self, tokenizer, eval_ds, label_ids) -> Any:
         return tokenizer.batch_decode(label_ids, skip_special_tokens=True)
 
-    def _prepare_predictions(self, tokenizer, eval_ds, generated_tokens) -> Any:
-        return tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
-
-
-if __name__ == "__main__":
-    import sys
-    import os
-
-    # This code enables using of "src.data" imports in vs code (when you're launching it directly from notebooks directory)
-    project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
-    sys.path.append(project_root)
-
-    from transformers import AutoTokenizer, AutoModelForCausalLM
-    import torch
-    import transformers
-
-    torch.manual_seed(42)
-
-    # Loading model weights
-    qconf = transformers.BitsAndBytesConfig(load_in_8bit=True)
-
-    model_name = "AnatoliiPotapov/T-lite-instruct-0.1"
-
-    model = LLM(model=model_name, dtype=torch.float16, trust_remote_code=True, \
-quantization="bitsandbytes", load_format="bitsandbytes")
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
-
-    from src.data.classification import SST2Dataset
-
-    a = SST2Dataset(
-        tokenizer=tokenizer,
-        data_path="../../data/sst-2/train-00000-of-00001.parquet",
-        config_path="../../data/",
-        device="cuda"
-    )
-
-    terminators = [
-        tokenizer.eos_token_id,
-        tokenizer.convert_tokens_to_ids("<|eot_id|>")
-    ]
-
-
-    evaluator = TextClassificationEvaluator()
-    metrics = evaluator.evaluate_vllm(
-        model=model,
-        tokenizer=tokenizer,
-        eval_ds=a,
-        batch_size=32
-    )
-    print(metrics)
+    def _prepare_predictions(self, tokenizer, eval_ds, generated_strings) -> Any:
+        return generated_strings

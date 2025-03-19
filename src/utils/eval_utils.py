@@ -3,13 +3,13 @@ import requests
 
 
 
-def vllm_infer(prompt, model_name, stop_token_ids,
+def vllm_infer(prompt_token_ids, model_name, stop_token_ids,
             server_url = "http://localhost:8000/v1/chat/completions",
             temperature=0.7, n=1, top_p=1, stop=None, max_tokens=50,
                   presence_penalty=0, frequency_penalty=0, logit_bias={}, timeout=10):
-    messages = [{"role": "user", "content": prompt}]
+    messages = [{"role": "user", "content": prompt_token_ids}]
     payload = {
-        "messages": messages,
+        "prompt_token_ids": messages,
         "model": model_name,
         "temperature": temperature,
         "n": n,
