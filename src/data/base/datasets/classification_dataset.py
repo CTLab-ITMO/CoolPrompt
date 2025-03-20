@@ -11,9 +11,7 @@ class BaseClassificationDataset(BaseDataset):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -28,8 +26,7 @@ class BaseClassificationDataset(BaseDataset):
         self,
         name: str,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        prompt_config_dir_path: str,
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None
@@ -37,8 +34,7 @@ class BaseClassificationDataset(BaseDataset):
         super().__init__(
             name=name,
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=prompt_config_dir_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
             device=device

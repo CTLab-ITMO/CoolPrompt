@@ -14,18 +14,9 @@ if [[ -z "$login" || -z "$password" ]]; then
     exit 1
 fi
 
-DATA_PATH=$PROJECT_ROOT/data
-
 echo "Downloading..."
-python3 $PROJECT_ROOT/src/utils/scripts/dataset_downloading.py --login $login --password $password --save_path $DATA_PATH/datasets.zip
+python3 $PROJECT_ROOT/src/utils/scripts/dataset_downloading.py --login $login --password $password --save_path ~/autoprompting_datasets.zip
 
-unzip $DATA_PATH/datasets.zip -d $DATA_PATH
+unzip ~/autoprompting_datasets.zip -d ~
 
-rm $DATA_PATH/data/*.json
-rm $DATA_PATH/data/*.py
-
-mv $DATA_PATH/data/* $DATA_PATH
-
-rmdir $DATA_PATH/data
-
-rm $DATA_PATH/datasets.zip
+rm ~/autoprompting_datasets.zip

@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
 import torch
 import pandas as pd
+from src.utils.data_utils import ALL_DATA_PATH
 
 
 class BaseDataset(Dataset, ABC):
@@ -14,6 +15,7 @@ class BaseDataset(Dataset, ABC):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
+        split: 'test' or 'train' data split. By default is 'test'.
         data_path: a path to file with data.
         config_path: a path to directory with config files
             (such as prompt_templates.json, basic_prompts.json etc.).
@@ -31,8 +33,7 @@ class BaseDataset(Dataset, ABC):
         self,
         name: str,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        prompt_config_dir_path: str,
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None
@@ -41,8 +42,12 @@ class BaseDataset(Dataset, ABC):
 
         self.name = name
         self.tokenizer = tokenizer
-        self.data_path = data_path
-        self.config_path = prompt_config_dir_path
+
+        self.split = split
+        assert self.split in ['test', 'train']
+
+        self.data_path = self._get_data_path()
+        self.config_path = ALL_DATA_PATH
         self.device = device
 
         self.labels = self._get_labels()
@@ -66,6 +71,18 @@ class BaseDataset(Dataset, ABC):
         self.input_ids = self.input_ids.to(self.device)
         self.attention_mask = self.attention_mask.to(self.device)
         self.num_labels = self.num_labels.to(self.device)
+
+    def _get_data_path(self) -> str:
+        """Generates path to data file
+
+        Returns:
+            str: path to data
+        """
+        return os.path.join(
+            ALL_DATA_PATH,
+            self.name,
+            f"{self.split}-00000-of-00001.parquet"
+        )
 
     def _get_labels(self) -> List[str]:
         """Creates a list of all labels of the dataset.
