@@ -10,13 +10,12 @@ from typing import Dict, Any, List, Tuple
 
 from evaluate import load, EvaluationModule
 from tqdm import tqdm
-from tqdm.auto import tqdm as tqdm_async
 import concurrent.futures
 import torch
 from vllm import LLM, SamplingParams
 
 from src.data.base.datasets import BaseDataset
-from src.utils.eval_utils import vllm_infer, Infer
+from src.utils.eval_utils import Infer
 
 
 class BaseNLPEvaluator(ABC):
@@ -29,6 +28,7 @@ class BaseNLPEvaluator(ABC):
         task_type: String identifier for the task type (e.g., 'text-classification')
         metrics: Dictionary of loaded evaluation metrics
     """
+
     def __init__(self, task_type: str):
         """Initialize base evaluator.
 
@@ -57,20 +57,17 @@ class BaseNLPEvaluator(ABC):
         """
         pass
 
-    def _add_batch(self,
-                   predictions=None,
-                   references=None) -> None:
+    def _add_batch(self, predictions=None, references=None) -> None:
         """
         Wrapper for evaluate.add_batch for a list of metrics.
         """
         for metric in self.metrics.values():
-            metric.add_batch(
-                predictions=predictions,
-                references=references
-            )
+            metric.add_batch(predictions=predictions, references=references)
 
     @abstractmethod
-    def _prepare_labels(self, tokenizer: Any, dataset: BaseDataset, label_ids: torch.Tensor) -> List[Any]:
+    def _prepare_labels(
+        self, tokenizer: Any, dataset: BaseDataset, label_ids: torch.Tensor
+    ) -> List[Any]:
         """Process batch of ground truth labels into final format.
 
         Args:
@@ -92,7 +89,7 @@ class BaseNLPEvaluator(ABC):
         return {
             "temperature": 0.0,
             "max_tokens": self._get_max_tokens(),
-            "stop_token_ids": [tokenizer.eos_token_id]
+            "stop_token_ids": [tokenizer.eos_token_id],
         }
 
     def _get_default_generation_args_hf(self, tokenizer) -> Dict[str, Any]:
@@ -100,15 +97,12 @@ class BaseNLPEvaluator(ABC):
         return {
             "temperature": 0.0,
             "max_new_tokens": self._get_max_tokens(),
-            "eos_token_id": [tokenizer.eos_token_id]
+            "eos_token_id": [tokenizer.eos_token_id],
         }
 
     @abstractmethod
     def _prepare_predictions(
-            self,
-            tokenizer: Any,
-            dataset: BaseDataset,
-            outputs: List[str]
+        self, tokenizer: Any, dataset: BaseDataset, outputs: List[str]
     ) -> List[Any]:
         """Convert generated tokens into formatted predictions.
 
@@ -123,12 +117,12 @@ class BaseNLPEvaluator(ABC):
         pass
 
     def evaluate(
-            self,
-            model: Any,
-            tokenizer: Any,
-            eval_ds: BaseDataset,
-            batch_size: int = 64,
-            model_generate_args: Dict[str, Any] = None
+        self,
+        model: Any,
+        tokenizer: Any,
+        eval_ds: BaseDataset,
+        batch_size: int = 64,
+        model_generate_args: Dict[str, Any] = None,
     ) -> Dict[str, float]:
         """Execute full evaluation workflow with HF model.
 
@@ -152,18 +146,20 @@ class BaseNLPEvaluator(ABC):
 
         for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
             outputs = model.generate(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                **generate_args
+                input_ids=input_ids, attention_mask=attention_mask, **generate_args
             )
 
             generated_tokens = [
-                output[len(ids):] for output, ids in zip(outputs, input_ids)
+                output[len(ids) :] for output, ids in zip(outputs, input_ids)
             ]
 
-            generated_strings = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)
+            generated_strings = tokenizer.batch_decode(
+                generated_tokens, skip_special_tokens=True
+            )
 
-            predictions = self._prepare_predictions(tokenizer, eval_ds, generated_strings)
+            predictions = self._prepare_predictions(
+                tokenizer, eval_ds, generated_strings
+            )
 
             labels = self._prepare_labels(tokenizer, eval_ds, label_ids)
 
@@ -172,12 +168,12 @@ class BaseNLPEvaluator(ABC):
         return self._compute_metrics()
 
     def evaluate_vllm(
-            self,
-            model: LLM,
-            tokenizer: Any,
-            eval_ds: BaseDataset,
-            batch_size: int = 64,
-            model_generate_args: Dict[str, Any] = None
+        self,
+        model: LLM,
+        tokenizer: Any,
+        eval_ds: BaseDataset,
+        batch_size: int = 64,
+        model_generate_args: Dict[str, Any] = None,
     ) -> Dict[str, float]:
         """Execute full evaluation workflow with vllm.LLM model.
 
@@ -206,9 +202,7 @@ class BaseNLPEvaluator(ABC):
             inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
 
             answers = model.generate(
-                prompts=inputs,
-                sampling_params=sampling_params,
-                use_tqdm=False
+                prompts=inputs, sampling_params=sampling_params, use_tqdm=False
             )
 
             outputs = [answer.outputs[0].text for answer in answers]
@@ -222,14 +216,14 @@ class BaseNLPEvaluator(ABC):
         return self._compute_metrics()
 
     def evaluate_vllm_server(
-            self,
-            model_name: str,
-            tokenizer: Any,
-            eval_ds: BaseDataset,
-            server_url: str = "http://localhost:8000/v1/chat/completions",
-            batch_size: int = 64,
-            max_workers=16,
-            model_generate_args: Dict[str, Any] = None
+        self,
+        model_name: str,
+        tokenizer: Any,
+        eval_ds: BaseDataset,
+        server_url: str = "http://localhost:8000/v1/chat/completions",
+        batch_size: int = 64,
+        max_workers=16,
+        model_generate_args: Dict[str, Any] = None,
     ) -> Dict[str, float]:
         """Execute full evaluation workflow with vllm server.
 
@@ -255,7 +249,9 @@ class BaseNLPEvaluator(ABC):
 
         infer_fn = Infer(model_name, server_url, model_generate_args)
 
-        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+        with concurrent.futures.ProcessPoolExecutor(
+            max_workers=max_workers
+        ) as executor:
             for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
 
                 inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
@@ -263,8 +259,10 @@ class BaseNLPEvaluator(ABC):
                 answers = []
                 ordered_label_ids = []
 
-                futures = [executor.submit(infer_fn, prompt, label_id.tolist())
-                           for prompt, label_id in zip(inputs, label_ids)]
+                futures = [
+                    executor.submit(infer_fn, prompt, label_id.tolist())
+                    for prompt, label_id in zip(inputs, label_ids)
+                ]
 
                 for future in concurrent.futures.as_completed(futures):
                     answer, label_id = future.result()
@@ -307,8 +305,8 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
 
     def _compute_metrics(self) -> Dict[str, float]:
         return {
-            "f1": self.metrics["f1"].compute(average='macro')['f1'],
-            "accuracy": self.metrics["accuracy"].compute()['accuracy']
+            "f1": self.metrics["f1"].compute(average="macro")["f1"],
+            "accuracy": self.metrics["accuracy"].compute()["accuracy"],
         }
 
     def _get_max_tokens(self) -> int:
@@ -320,12 +318,16 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
     def _prepare_predictions(self, tokenizer, eval_ds, generated_strings) -> Any:
         label2id = eval_ds.get_labels_mapping()
 
-        predictions = [self._extract_label_id_from_answer(answer, label2id)
-                       for answer in generated_strings]
+        predictions = [
+            self._extract_label_id_from_answer(answer, label2id)
+            for answer in generated_strings
+        ]
 
         return predictions
 
-    def _extract_label_id_from_answer(self, answer: str, label2id: dict[str, int]) -> torch.Tensor:
+    def _extract_label_id_from_answer(
+        self, answer: str, label2id: dict[str, int]
+    ) -> torch.Tensor:
         """Parse label from formatted answer string.
 
         Args:
@@ -371,7 +373,7 @@ class GenerationEvaluator(BaseNLPEvaluator):
         self.metrics = {
             "bleu": load("bleu"),
             "rouge": load("rouge"),
-            "meteor": load("meteor")
+            "meteor": load("meteor"),
         }
 
     def _compute_metrics(self) -> Dict[str, float]:
@@ -384,9 +386,9 @@ class GenerationEvaluator(BaseNLPEvaluator):
             - meteor: METEOR score
         """
         return {
-            "bleu": self.metrics["bleu"].compute()['bleu'],
-            "rouge": self.metrics["rouge"].compute()['rougeL'],
-            "meteor": self.metrics["meteor"].compute()['meteor']
+            "bleu": self.metrics["bleu"].compute()["bleu"],
+            "rouge": self.metrics["rouge"].compute()["rougeL"],
+            "meteor": self.metrics["meteor"].compute()["meteor"],
         }
 
     def _get_max_tokens(self) -> int:
@@ -397,67 +399,3 @@ class GenerationEvaluator(BaseNLPEvaluator):
 
     def _prepare_predictions(self, tokenizer, eval_ds, generated_strings) -> Any:
         return generated_strings
-
-
-
-
-
-if __name__ == "__main__":
-    from vllm import LLM
-    import sys
-    import os
-
-    # This code enables using of "src.data" imports in vs code (when you're launching it directly from notebooks directory)
-    project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
-    sys.path.append(project_root)
-
-    os.environ['TOKENIZERS_PARALLELISM'] = 'true'
-
-    from transformers import AutoTokenizer, AutoModelForCausalLM
-    import torch
-
-
-    torch.manual_seed(42)
-
-    model_name = "AnatoliiPotapov/T-lite-instruct-0.1"
-    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
-
-    evaluator = TextClassificationEvaluator()
-
-
-    from src.data.classification import SST2Dataset
-
-    terminators = [
-        tokenizer.eos_token_id,
-        tokenizer.convert_tokens_to_ids("<|eot_id|>")
-    ]
-
-    generate_args = {
-        "eos_token_id": terminators,
-    }
-
-    vllm_generate_args = {
-        "stop_token_ids": terminators,
-    }
-
-    my_prompt = "You will be given movie reviews. Determine if the given review has negative or positive sentiment."
-
-    prompted_sst2_ds = SST2Dataset(
-        tokenizer=tokenizer,
-        prompt=my_prompt,
-        device="cuda:0"
-    )
-
-    # сервер запущен такой командой
-    # vllm serve "AnatoliiPotapov/T-lite-instruct-0.1" --dtype half
-    #model = LLM(model=model_name, dtype=torch.float16, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="cuda",torch_dtype="float16",)
-
-    metrics_vllm_server = evaluator.evaluate(
-        model=model,
-        tokenizer=tokenizer,
-        eval_ds=prompted_sst2_ds,
-        batch_size=64,
-        model_generate_args=generate_args
-    )
-    print(metrics_vllm_server)
