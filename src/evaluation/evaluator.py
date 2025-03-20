@@ -10,12 +10,13 @@ from typing import Dict, Any, List, Tuple
 
 from evaluate import load, EvaluationModule
 from tqdm import tqdm
+from tqdm.auto import tqdm as tqdm_async
 import concurrent.futures
 import torch
 from vllm import LLM, SamplingParams
 
 from src.data.base.datasets import BaseDataset
-from src.utils.eval_utils import vllm_infer
+from src.utils.eval_utils import vllm_infer, Infer
 
 
 class BaseNLPEvaluator(ABC):
@@ -99,7 +100,7 @@ class BaseNLPEvaluator(ABC):
         return {
             "temperature": 0.0,
             "max_new_tokens": self._get_max_tokens(),
-            "eos_token_ids": [tokenizer.eos_token_id]
+            "eos_token_id": [tokenizer.eos_token_id]
         }
 
     @abstractmethod
@@ -233,11 +234,12 @@ class BaseNLPEvaluator(ABC):
         """Execute full evaluation workflow with vllm server.
 
         Args:
-            model: Model to evaluate
+            model_name: Name of the model to evaluate
             tokenizer: Tokenizer matching the model
             eval_ds: Evaluation dataset
             server_url: Vllm server url
             batch_size: Batch size for evaluation
+            max_workers: Number of workers for async requests
             model_generate_args: Additional arguments for model generation
 
         Returns:
@@ -251,31 +253,31 @@ class BaseNLPEvaluator(ABC):
 
         val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=batch_size)
 
-        def infer(input_ids, label_id):
-            """Label is needed to ensure label <-> prompt match"""
-            return vllm_infer(input_ids, model_name, server_url=server_url, **generate_args), label_id
+        infer_fn = Infer(model_name, server_url, model_generate_args)
 
-        for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
+        with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
+            for input_ids, attention_mask, label_ids in tqdm(val_dataloader):
 
-            inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
+                inputs = tokenizer.batch_decode(input_ids, skip_special_tokens=True)
 
-            answers = []
-            label_ids = []
+                answers = []
+                ordered_label_ids = []
 
-            with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-                futures = [executor.submit(infer, prompt, label_id) for prompt, label_id in zip(inputs, label_ids)]
-                for i, future in tqdm(enumerate(concurrent.futures.as_completed(futures)), total=len(futures)):
-                    answer, label_id = future.result()[0]
-                    answers.append(answer)
-                    label_ids.append(label_id)
+                futures = [executor.submit(infer_fn, prompt, label_id.tolist())
+                           for prompt, label_id in zip(inputs, label_ids)]
 
-            label_ids = torch.tensor(label_ids)
+                for future in concurrent.futures.as_completed(futures):
+                    answer, label_id = future.result()
+                    answers.append(answer[0])
+                    ordered_label_ids.append(label_id)
 
-            predictions = self._prepare_predictions(tokenizer, eval_ds, answers)
+                ordered_label_ids = torch.tensor(ordered_label_ids)
 
-            labels = self._prepare_labels(tokenizer, eval_ds, label_ids)
+                predictions = self._prepare_predictions(tokenizer, eval_ds, answers)
 
-            self._add_batch(predictions, labels)
+                labels = self._prepare_labels(tokenizer, eval_ds, ordered_label_ids)
+
+                self._add_batch(predictions, labels)
 
         return self._compute_metrics()
 
@@ -395,3 +397,67 @@ class GenerationEvaluator(BaseNLPEvaluator):
 
     def _prepare_predictions(self, tokenizer, eval_ds, generated_strings) -> Any:
         return generated_strings
+
+
+
+
+
+if __name__ == "__main__":
+    from vllm import LLM
+    import sys
+    import os
+
+    # This code enables using of "src.data" imports in vs code (when you're launching it directly from notebooks directory)
+    project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
+    sys.path.append(project_root)
+
+    os.environ['TOKENIZERS_PARALLELISM'] = 'true'
+
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+    import torch
+
+
+    torch.manual_seed(42)
+
+    model_name = "AnatoliiPotapov/T-lite-instruct-0.1"
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
+
+    evaluator = TextClassificationEvaluator()
+
+
+    from src.data.classification import SST2Dataset
+
+    terminators = [
+        tokenizer.eos_token_id,
+        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
+
+    generate_args = {
+        "eos_token_id": terminators,
+    }
+
+    vllm_generate_args = {
+        "stop_token_ids": terminators,
+    }
+
+    my_prompt = "You will be given movie reviews. Determine if the given review has negative or positive sentiment."
+
+    prompted_sst2_ds = SST2Dataset(
+        tokenizer=tokenizer,
+        prompt=my_prompt,
+        device="cuda:0"
+    )
+
+    # сервер запущен такой командой
+    # vllm serve "AnatoliiPotapov/T-lite-instruct-0.1" --dtype half
+    #model = LLM(model=model_name, dtype=torch.float16, trust_remote_code=True)
+    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="cuda",torch_dtype="float16",)
+
+    metrics_vllm_server = evaluator.evaluate(
+        model=model,
+        tokenizer=tokenizer,
+        eval_ds=prompted_sst2_ds,
+        batch_size=64,
+        model_generate_args=generate_args
+    )
+    print(metrics_vllm_server)
