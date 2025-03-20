@@ -220,7 +220,7 @@ class BaseNLPEvaluator(ABC):
         model_name: str,
         tokenizer: Any,
         eval_ds: BaseDataset,
-        server_url: str = "http://localhost:8000/v1/chat/completions",
+        server_url: str = "http://localhost:8000/v1/completions",
         batch_size: int = 64,
         max_workers=16,
         model_generate_args: Dict[str, Any] = None,
@@ -266,7 +266,7 @@ class BaseNLPEvaluator(ABC):
 
                 for future in concurrent.futures.as_completed(futures):
                     answer, label_id = future.result()
-                    answers.append(answer[0])
+                    answers.append(answer)
                     ordered_label_ids.append(label_id)
 
                 ordered_label_ids = torch.tensor(ordered_label_ids)
