@@ -41,17 +41,18 @@ class BaseQADataset(BaseClassificationDataset):
             device=device
         )
 
-    def _make_options(self, options: str) -> str:
+    def _make_options(self, options: dict | str) -> str:
         """Creates string that represents list of all possible answers
 
         Args:
-            options (str): string representation of dictionary that maps
-                every option ('A', 'B', etc.) to its answer
+            options (dict[str, str] | str): dictionary that maps every option
+                ('A', 'B', etc.) to its answer or its string representation
 
         Returns:
             str: string representation of the list of all options
         """
-        options = json.loads(options)
+        if isinstance(options, str):
+            options = json.loads(options)
         options_list = "\n".join(f"{k}: {v}" for k, v in options.items())
         return "\n\nOPTIONS:\n" + options_list + "\n"
 
