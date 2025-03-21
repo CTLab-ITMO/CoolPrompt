@@ -84,6 +84,7 @@ def load_dataset(
     sample: int = None,
     seed: int = 42
 ) -> BaseDataset:
+    dataset_name = dataset_name.lower()
     if dataset_name in BBH_TASKS:
         multi_ds = BBHDataset(
             tokenizer=tokenizer,
@@ -108,7 +109,7 @@ def load_dataset(
         return multi_ds.task(dataset_name)
 
     args = {}
-    match dataset_name.lower():
+    match dataset_name:
         case "mnli": dataset_cls = MNLIDataset
         case "mr": dataset_cls = MRDataset
         case "qnli": dataset_cls = QNLIDataset
