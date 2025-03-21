@@ -2,7 +2,7 @@ import json
 from typing import Tuple
 from transformers import PreTrainedTokenizer
 import torch
-from src.utils.data_utils import labels_to_numbers
+import src.utils.data_utils as utils
 from src.data.base.datasets import BaseClassificationDataset
 
 
@@ -74,7 +74,7 @@ class BaseQADataset(BaseClassificationDataset):
         questions = self.df['input']
         options = self.df['options']
         labels = list(self.df['label'])
-        num_labels = labels_to_numbers(labels, self.labels)
+        num_labels = utils.labels_to_numbers(labels, self.labels)
 
         inputs = ["\n\nQUESTION:\n"
                   + question

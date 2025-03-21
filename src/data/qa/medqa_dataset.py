@@ -2,7 +2,7 @@ import os
 import torch
 from transformers import PreTrainedTokenizer
 from src.data.base.datasets import BaseQADataset
-from src.utils.data_utils import ALL_DATA_PATH
+import src.utils.data_utils as utils
 
 
 class MedQADataset(BaseQADataset):
@@ -60,7 +60,7 @@ class MedQADataset(BaseQADataset):
             str: path to data
         """
         return os.path.join(
-            ALL_DATA_PATH,
+            utils.ALL_DATA_PATH,
             "medqa",
             '4_options' if self.four_options else "",
             f"{self.split}-00000-of-00001.parquet"

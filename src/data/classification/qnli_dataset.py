@@ -2,7 +2,7 @@ from typing import Tuple
 import torch
 from transformers import PreTrainedTokenizer
 from src.data.base.datasets import BaseClassificationDataset
-from src.utils.data_utils import labels_to_numbers
+import src.utils.data_utils as utils
 
 
 class QNLIDataset(BaseClassificationDataset):
@@ -49,7 +49,7 @@ class QNLIDataset(BaseClassificationDataset):
         questions = self.df['question']
         sentences = self.df['sentence']
         labels = list(self.df['target'])
-        numeric_labels = labels_to_numbers(labels, self.labels)
+        numeric_labels = utils.labels_to_numbers(labels, self.labels)
 
         inputs = [self.prompt.replace(
                     '<INPUT>',

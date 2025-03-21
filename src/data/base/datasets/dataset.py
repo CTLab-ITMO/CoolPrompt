@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
 import torch
 import pandas as pd
-from src.utils.data_utils import ALL_DATA_PATH
+import src.utils.data_utils as utils
 
 
 class BaseDataset(Dataset, ABC):
@@ -51,7 +51,7 @@ class BaseDataset(Dataset, ABC):
         assert self.split in ['test', 'train']
 
         self.data_path = self._get_data_path()
-        self.config_path = ALL_DATA_PATH
+        self.config_path = utils.ALL_DATA_PATH
         self.device = device
 
         self.labels = self._get_labels()
@@ -84,9 +84,11 @@ class BaseDataset(Dataset, ABC):
 
     def _sample_data(self) -> None:
         """Sampling data from DataFrame."""
-        self.sample = min(self.sample, len(self.df))
 
-        self.df = self.df.sample(self.sample, random_state=self.seed)
+        if self.sample is not None:
+            self.sample = min(self.sample, len(self.df))
+
+            self.df = self.df.sample(self.sample, random_state=self.seed)
 
     def _get_data_path(self) -> str:
         """Generates path to data file
@@ -95,7 +97,7 @@ class BaseDataset(Dataset, ABC):
             str: path to data
         """
         return os.path.join(
-            ALL_DATA_PATH,
+            utils.ALL_DATA_PATH,
             self.name,
             f"{self.split}-00000-of-00001.parquet"
         )
