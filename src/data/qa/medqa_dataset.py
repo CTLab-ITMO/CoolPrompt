@@ -1,6 +1,8 @@
+import os
 import torch
 from transformers import PreTrainedTokenizer
 from src.data.base.datasets import BaseQADataset
+from src.utils.data_utils import ALL_DATA_PATH
 
 
 class MedQADataset(BaseQADataset):
@@ -43,4 +45,17 @@ class MedQADataset(BaseQADataset):
             prompt=prompt,
             max_seq_length=max_seq_length,
             device=device
+        )
+
+    def _get_data_path(self) -> str:
+        """Generates path to data file
+
+        Returns:
+            str: path to data
+        """
+        return os.path.join(
+            ALL_DATA_PATH,
+            "medqa",
+            '4_options' if self.four_options else "",
+            f"{self.split}-00000-of-00001.parquet"
         )

@@ -1,3 +1,4 @@
+import json
 from typing import Tuple
 from transformers import PreTrainedTokenizer
 import torch
@@ -40,16 +41,17 @@ class BaseQADataset(BaseClassificationDataset):
             device=device
         )
 
-    def _make_options(self, options: dict) -> str:
+    def _make_options(self, options: str) -> str:
         """Creates string that represents list of all possible answers
 
         Args:
-            options (dict[str, str]): dictionary that maps
-                every option ('A', 'B', etc.) to its string representation
+            options (str): string representation of dictionary that maps
+                every option ('A', 'B', etc.) to its answer
 
         Returns:
             str: string representation of the list of all options
         """
+        options = json.loads(options)
         options_list = "\n".join(f"{k}: {v}" for k, v in options.items())
         return "\n\nOPTIONS:\n" + options_list + "\n"
 
