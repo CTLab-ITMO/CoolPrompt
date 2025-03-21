@@ -21,6 +21,8 @@ class BaseQADataset(BaseClassificationDataset):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -30,7 +32,9 @@ class BaseQADataset(BaseClassificationDataset):
         split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         super().__init__(
             name=name,
@@ -38,7 +42,9 @@ class BaseQADataset(BaseClassificationDataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )
 
     def _make_options(self, options: dict | str) -> str:

@@ -24,6 +24,8 @@ class MedQADataset(BaseQADataset):
         num_labels: torch.Tensor of numeric identificators of the labels.
         four_options: boolean value
             (if all the questions will have exact 4 answer options or not)
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -34,6 +36,8 @@ class MedQADataset(BaseQADataset):
         max_seq_length: int = None,
         four_options: bool = False,
         device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         name = "medqa_4_options" if four_options else "medqa"
         self.four_options = four_options
@@ -44,7 +48,9 @@ class MedQADataset(BaseQADataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )
 
     def _get_data_path(self) -> str:

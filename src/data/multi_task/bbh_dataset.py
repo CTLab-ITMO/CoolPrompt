@@ -14,6 +14,8 @@ class BBHDataset(BaseMultiTaskDataset):
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
         labels: array of all labels in dataset.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -23,6 +25,8 @@ class BBHDataset(BaseMultiTaskDataset):
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         super().__init__(
             name='bbh',
@@ -30,5 +34,7 @@ class BBHDataset(BaseMultiTaskDataset):
             tokenizer=tokenizer,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )

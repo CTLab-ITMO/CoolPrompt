@@ -22,6 +22,8 @@ class BaseGenerationDataset(BaseDataset):
         response_prefix: a string prefix that can be
             added right before model output generation.
             By default is empty string.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -31,7 +33,9 @@ class BaseGenerationDataset(BaseDataset):
         split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.response_prefix = self._get_response_prefix()
 
@@ -41,7 +45,9 @@ class BaseGenerationDataset(BaseDataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )
 
     def _get_response_prefix(self) -> str:

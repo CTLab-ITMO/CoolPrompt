@@ -20,6 +20,8 @@ class QNLIDataset(BaseClassificationDataset):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -29,6 +31,8 @@ class QNLIDataset(BaseClassificationDataset):
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         super().__init__(
             name='qnli',
@@ -36,7 +40,9 @@ class QNLIDataset(BaseClassificationDataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )
 
     def _process_data(self) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
