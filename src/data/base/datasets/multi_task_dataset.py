@@ -7,7 +7,7 @@ from src.data.base.datasets import (
     BaseClassificationDataset,
     BaseGenerationDataset
 )
-from src.utils.data_utils import INNER_GENERATION_TASKS, ALL_DATA_PATH
+from src.utils.data import ALL_DATA_PATH, INNER_GENERATION_TASKS
 
 
 class InnerTaskClassificationDataset(BaseClassificationDataset):
@@ -27,6 +27,8 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -37,7 +39,9 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.base_name = base_name
 
@@ -47,7 +51,9 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )
 
     def _get_data_path(self) -> str:
@@ -106,6 +112,8 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
         response_prefix: a string prefix that can be
             added right before model output generation.
             By default is empty string.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -116,7 +124,9 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
         split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.base_name = base_name
 
@@ -126,7 +136,9 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )
 
     def _get_data_path(self) -> str:
@@ -162,6 +174,8 @@ class BaseMultiTaskDataset(object):
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -171,7 +185,9 @@ class BaseMultiTaskDataset(object):
         split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.name = name
         self.tokenizer = tokenizer
@@ -184,6 +200,8 @@ class BaseMultiTaskDataset(object):
         self.prompt = prompt
         self.max_seq_length = max_seq_length
         self.device = device
+        self.sample = sample
+        self.seed = seed
 
     def _get_tasks(self) -> dict:
         """Extracts all paths to tasks parquet files.
@@ -223,22 +241,18 @@ class BaseMultiTaskDataset(object):
         task_path = os.path.join(self.dir_path, task_path)
 
         if task_name in INNER_GENERATION_TASKS:
-            return InnerTaskGenerationDataset(
-                base_name=self.name,
-                name=task_name,
-                tokenizer=self.tokenizer,
-                split=self.split,
-                prompt=self.prompt,
-                max_seq_length=self.max_seq_length,
-                device=self.device
-            )
+            task_cls = InnerTaskGenerationDataset
+        else:
+            task_cls = InnerTaskClassificationDataset
 
-        return InnerTaskClassificationDataset(
+        return task_cls(
             base_name=self.name,
             name=task_name,
             tokenizer=self.tokenizer,
             split=self.split,
             prompt=self.prompt,
             max_seq_length=self.max_seq_length,
-            device=self.device
+            device=self.device,
+            sample=self.sample,
+            seed=self.seed
         )

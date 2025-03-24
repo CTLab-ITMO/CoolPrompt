@@ -18,6 +18,8 @@ class OpenbookQADataset(BaseQADataset):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -27,6 +29,8 @@ class OpenbookQADataset(BaseQADataset):
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         super().__init__(
             name="openbookqa",
@@ -34,5 +38,7 @@ class OpenbookQADataset(BaseQADataset):
             split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )

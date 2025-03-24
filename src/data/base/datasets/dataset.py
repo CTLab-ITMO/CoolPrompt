@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
 import torch
 import pandas as pd
-from src.utils.data_utils import ALL_DATA_PATH
+from src.utils.data import ALL_DATA_PATH
 
 
 class BaseDataset(Dataset, ABC):
@@ -27,6 +27,8 @@ class BaseDataset(Dataset, ABC):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -36,7 +38,9 @@ class BaseDataset(Dataset, ABC):
         split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         super().__init__()
 
@@ -60,6 +64,12 @@ class BaseDataset(Dataset, ABC):
         self._use_prompt_template()
 
         self.df = self._read_data()
+
+        self.sample = sample
+        self.seed = seed
+
+        self._sample_data()
+
         self.max_seq_length = max_seq_length
 
         (
@@ -71,6 +81,14 @@ class BaseDataset(Dataset, ABC):
         self.input_ids = self.input_ids.to(self.device)
         self.attention_mask = self.attention_mask.to(self.device)
         self.num_labels = self.num_labels.to(self.device)
+
+    def _sample_data(self) -> None:
+        """Sampling data from DataFrame."""
+
+        if self.sample is not None:
+            self.sample = min(self.sample, len(self.df))
+
+            self.df = self.df.sample(self.sample, random_state=self.seed)
 
     def _get_data_path(self) -> str:
         """Generates path to data file
