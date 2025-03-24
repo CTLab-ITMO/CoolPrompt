@@ -2,7 +2,7 @@ from typing import Tuple, List
 from transformers import PreTrainedTokenizer
 import torch
 from src.data.base.datasets import BaseDataset
-import src.utils.data_utils as utils
+from src.utils.data import labels_to_numbers
 
 
 class BaseClassificationDataset(BaseDataset):
@@ -89,7 +89,7 @@ class BaseClassificationDataset(BaseDataset):
         """
         sentences = self.df['input']
         labels = list(self.df['target'])
-        numeric_labels = utils.labels_to_numbers(labels, self.labels)
+        numeric_labels = labels_to_numbers(labels, self.labels)
 
         inputs = [self.prompt.replace('<INPUT>', sentence)
                   for sentence in sentences]

@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 from transformers import PreTrainedTokenizer
 import torch
 import pandas as pd
-import src.utils.data_utils as utils
+from src.utils.data import ALL_DATA_PATH
 
 
 class BaseDataset(Dataset, ABC):
@@ -51,7 +51,7 @@ class BaseDataset(Dataset, ABC):
         assert self.split in ['test', 'train']
 
         self.data_path = self._get_data_path()
-        self.config_path = utils.ALL_DATA_PATH
+        self.config_path = ALL_DATA_PATH
         self.device = device
 
         self.labels = self._get_labels()
@@ -97,7 +97,7 @@ class BaseDataset(Dataset, ABC):
             str: path to data
         """
         return os.path.join(
-            utils.ALL_DATA_PATH,
+            ALL_DATA_PATH,
             self.name,
             f"{self.split}-00000-of-00001.parquet"
         )

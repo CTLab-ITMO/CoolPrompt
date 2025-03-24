@@ -7,7 +7,7 @@ from src.data.base.datasets import (
     BaseClassificationDataset,
     BaseGenerationDataset
 )
-import src.utils.data_utils as utils
+from src.utils.data import ALL_DATA_PATH, INNER_GENERATION_TASKS
 
 
 class InnerTaskClassificationDataset(BaseClassificationDataset):
@@ -63,7 +63,7 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
             str: path to data
         """
         return os.path.join(
-            utils.ALL_DATA_PATH,
+            ALL_DATA_PATH,
             self.base_name,
             self.name,
             f"{self.split}-00000-of-00001.parquet"
@@ -148,7 +148,7 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
             str: path to data
         """
         return os.path.join(
-            utils.ALL_DATA_PATH,
+            ALL_DATA_PATH,
             self.base_name,
             self.name,
             f"{self.split}-00000-of-00001.parquet"
@@ -193,7 +193,7 @@ class BaseMultiTaskDataset(object):
         self.tokenizer = tokenizer
         self.split = split
         self.dir_path = os.path.join(
-            utils.ALL_DATA_PATH,
+            ALL_DATA_PATH,
             name
         )
         self.tasks_paths = self._get_tasks()
@@ -240,7 +240,7 @@ class BaseMultiTaskDataset(object):
 
         task_path = os.path.join(self.dir_path, task_path)
 
-        if task_name in utils.INNER_GENERATION_TASKS:
+        if task_name in INNER_GENERATION_TASKS:
             task_cls = InnerTaskGenerationDataset
         else:
             task_cls = InnerTaskClassificationDataset
