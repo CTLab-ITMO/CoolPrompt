@@ -7,22 +7,23 @@ HEADERS = {"Content-Type": "application/json"}
 class Infer:
     """Inference helper class for vllm server"""
 
-    def __init__(self, model_name, server_url, model_generate_args):
+    def __init__(self, model_name,
+                 server_url="http://localhost:8000/v1/completions",
+                 model_generate_args={}):
         self.model_name = model_name
         self.server_url = server_url
         self.model_generate_args = model_generate_args
 
-    def __call__(self, prompt, label_id):
+    def __call__(self, prompt, label_id=None, **call_params):
         """Label is needed to ensure label <-> prompt match"""
-        return (
-            vllm_infer(
+        generate_args = {**self.model_generate_args, **call_params}
+        result = vllm_infer(
                 prompt,
                 self.model_name,
                 server_url=self.server_url,
-                **self.model_generate_args
-            ),
-            label_id,
+                **generate_args
         )
+        return result, label_id
 
 
 def vllm_infer(

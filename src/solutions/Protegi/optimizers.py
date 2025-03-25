@@ -3,18 +3,21 @@ from tqdm import tqdm
 import random
 from abc import ABC, abstractmethod
 import utils
+from src.solutions.Protegi.scorers import Cached01Scorer
+from src.utils.eval_utils import Infer
 
 
 class PromptOptimizer(ABC):
-    def __init__(self, args, evaluator_fn, scorer, max_threads=1, bf_eval=None):
+    def __init__(self, args, evaluator_fn, scorer : Cached01Scorer, infer_wrapper: Infer, max_threads=1, bf_eval=None):
         self.opt = args
         self.evaluator_fn = evaluator_fn
         self.scorer = scorer
+        self.infer_wrapper = infer_wrapper
         self.max_threads = max_threads
         self.bf_eval = bf_eval
 
     @abstractmethod
-    def expand_candidates(self, prompts, task, gpt4, train_exs):
+    def expand_candidates(self, prompts):
         pass
 
 
@@ -22,7 +25,7 @@ class ProTeGi(PromptOptimizer):
     """ ProTeGi: Prompt Optimization with Textual Gradients
     """
 
-    def _sample_error_str(self, texts, labels, preds, task, n=4):
+    def _sample_error_str(self, texts, labels, preds, n=4):
         """ Sample n error strings from the given texts, labels, and preds"""
         error_idxs = []
         for i, (l, p) in enumerate(zip(labels, preds)):
@@ -73,7 +76,7 @@ class ProTeGi(PromptOptimizer):
         Wrap each reason with <START> and <END>
         """
         gradient_prompt = '\n'.join([line.lstrip() for line in gradient_prompt.split('\n')])
-        res = utils.chatgpt(gradient_prompt, n=n)
+        res = self.infer_wrapper(gradient_prompt, n=n)
         feedbacks = []
         new_prompts = []
         for r in res:
@@ -99,7 +102,7 @@ class ProTeGi(PromptOptimizer):
         The {steps_per_gradient} new prompts are:
         """
         transformation_prompt = '\n'.join([line.lstrip() for line in transformation_prompt.split('\n')])
-        res = utils.chatgpt(transformation_prompt, n=n)
+        res = self.infer_wrapper(transformation_prompt, n=n)
         new_prompts = []
         for r in res:
             new_prompts += self.parse_tagged_text(r, "<START>", "<END>")
@@ -108,39 +111,40 @@ class ProTeGi(PromptOptimizer):
     def generate_synonyms(self, prompt_section, n=3):
         """ Generate synonyms for a prompt section."""
         rewriter_prompt = f"Generate a variation of the following instruction while keeping the semantic meaning.\n\nInput: {prompt_section}\n\nOutput:"
-        new_instructions = utils.chatgpt(rewriter_prompt, n=n)
+        new_instructions = self.infer_wrapper(rewriter_prompt, n=n)
         new_instructions = [x for x in new_instructions if x]
         return new_instructions
 
-    def get_gradients(self, prompt, task_section, task, gpt4, texts, labels, preds):
+    def get_gradients(self, task_section, texts, labels, preds):
         """ Get "gradients" for a prompt based on sampled error strings."""
         prompt_feedbacks = []
         for _ in tqdm(range(self.opt['n_gradients']), total=self.opt['n_gradients'], desc='gradients..'):
             error_string = self._sample_error_str(
-                texts, labels, preds, task, n=self.opt['errors_per_gradient'])
+                texts, labels, preds, n=self.opt['errors_per_gradient'])
             gradients = self._get_gradients(
                 task_section, error_string, self.opt['gradients_per_error'], n=1)
             prompt_feedbacks += [(t, error_string) for t in gradients]
         return prompt_feedbacks
 
-    def expand_candidates(self, prompts, task, gpt4, train_exs):
+    def expand_candidates(self, prompts):
         """ Expand a list of prompts by generating gradient-based successors and
             synonyms for each section.
         """
-        minibatch = random.sample(train_exs, k=self.opt['minibatch_size'])
+        # minibatch = random.sample(train_exs, k=self.opt['minibatch_size'])
 
         new_prompts = []
         for prompt in tqdm(prompts, desc=f'expanding {len(prompts)} prompts'):
-            sections = utils.parse_sectioned_prompt(prompt)
-            task_section = sections['task'].strip()
 
+            task_section = prompt
             # evaluate prompt on minibatch
-            _, texts, labels, preds = task.evaluate(gpt4, prompt, minibatch)
+
+            #TODO: pass these forward to other methods
+            prompts_with_system, labels, preds = self.scorer.get_predictions(prompt, self.infer_wrapper)
 
             # get gradients
             new_task_sections = []
             if self.opt['n_gradients'] > 0:
-                gradients = self.get_gradients(prompt, task_section, task, gpt4, texts, labels, preds)
+                gradients = self.get_gradients(task_section, texts, labels, preds)
                 new_task_sections = []
                 for feedback, error_string in tqdm(gradients, desc='applying gradients'):
                     tmp = self.apply_gradient(
@@ -191,13 +195,16 @@ class ProTeGi(PromptOptimizer):
 
         return new_prompts
 
-    def score_candidates(self, prompts, gpt4, train_exs):
-        """ Score a list of prompts."""
-        if len(prompts) == 1:
-            return [1.0]
+    def score_candidates(self, prompts):
+        """ Score a list of prompts.
 
+        They should be task_only prompts, e.g. without system (format) instruction
+        """
+                
+
+        # evaluator_fn is BruteForceEvaluator and such
         evals = self.evaluator_fn(
-            prompts, train_exs, gpt4,
+            prompts,
             scorer=self.scorer,
             rounds=self.opt['eval_rounds'],
             num_prompts_per_round=self.opt['eval_prompts_per_round'],

@@ -8,12 +8,11 @@ import time
 import json
 import argparse
 import scorers
-import tasks
-import predictors
 import optimizers
 
 from src.data.classification import SST2Dataset
 from src.evaluation.evaluator import TextClassificationEvaluator
+from src.utils.eval_utils import Infer
 
 
 def get_evaluator(evaluator):
@@ -36,16 +35,6 @@ TASK_TO_DS_MAP = {
 TASK_TO_SCORER_MAP = {
     "sst-2": TextClassificationEvaluator,
 }
-
-def get_task_ds(data_dir, task_name, split, tokenizer):
-    data_path = f"{data_dir}/{task_name}/{split}-00000-of-00001.parquet"
-
-    return TASK_TO_DS_MAP[task_name](
-        tokenizer=tokenizer,
-        data_path=data_path
-    )
-
-
 
 
 def get_args():
@@ -96,23 +85,47 @@ if __name__ == '__main__':
 
     tokenizer = AutoTokenizer.from_pretrained(args.engine)
 
-    model = AutoModelForCausalLM.from_pretrained(args.engine)
+    terminators = [
+        tokenizer.eos_token_id,
+        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
+
+    default_model_generate_args = {
+        "stop_token_ids": terminators
+    }
+
+    server_wrapper = Infer(model_name=args.engine)
 
     train_scorer = scorers.Cached01Scorer(
-        model,
+        args.engine,
         dataset_cls=TASK_TO_DS_MAP[args.task],
-        data_path=args.data_dir,
         tokenizer=tokenizer,
+        split='train',
+        default_gen_args=default_model_generate_args,
+        ds_scorer=TASK_TO_SCORER_MAP[args.task]
+    )
+
+    test_scorer = scorers.Cached01Scorer(
+        args.engine,
+        dataset_cls=TASK_TO_DS_MAP[args.task],
+        tokenizer=tokenizer,
+        split='test',
+        default_gen_args=default_model_generate_args,
         ds_scorer=TASK_TO_SCORER_MAP[args.task]
     )
 
     evaluator = get_evaluator(args.evaluator)(config)
     bf_eval = get_evaluator('bf')(config)
-    gpt4 = predictors.BinaryPredictor(config)
 
     optimizer = optimizers.ProTeGi(
-        config, evaluator, scorer, args.max_threads, bf_eval)
+        config, evaluator, train_scorer, args.max_threads, bf_eval)
 
+    ds_cls = TASK_TO_DS_MAP[args.task]
+
+    base_prompt = ds_cls(
+        tokenizer=tokenizer,
+        split='train'
+    )._get_basic_prompt()
 
     if os.path.exists(args.out):\
         
@@ -123,7 +136,8 @@ if __name__ == '__main__':
     with open(args.out, 'a') as outf:
         outf.write(json.dumps(config) + '\n')
 
-    candidates = [train_ds.prompt]
+    # Поддерживаем инвариант, что в них только чистый промпт, без формата.
+    candidates = [base_prompt]
 
     epochs = config['rounds'] + 1
 
@@ -133,10 +147,11 @@ if __name__ == '__main__':
 
         # expand candidates
         if round > 0:
-            candidates = optimizer.expand_candidates(candidates, task, gpt4, train_exs)
+            #TODO: добить эту штуку
+            candidates = optimizer.expand_candidates(candidates)
 
         # score candidates
-        scores = optimizer.score_candidates(candidates, gpt4, train_exs)
+        scores = optimizer.score_candidates(candidates)
         [scores, candidates] = list(zip(*sorted(list(zip(scores, candidates)), reverse=True)))
 
         # select candidates
@@ -149,10 +164,8 @@ if __name__ == '__main__':
             outf.write(f'{time.time() - start}\n')
             outf.write(f'{candidates}\n')
             outf.write(f'{scores}\n')
-        metrics = []
-        for candidate, score in zip(candidates, scores):
-            f1, texts, labels, preds = task.evaluate(gpt4, candidate, test_exs, n=args.n_test_exs)
-            metrics.append(f1)
+
+        metrics = test_scorer(candidates)
         with open(args.out, 'a') as outf:
             outf.write(f'{metrics}\n')
 
