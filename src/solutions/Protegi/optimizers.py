@@ -42,7 +42,7 @@ class ProTeGi(PromptOptimizer):
         error_idx = 0
         for i, (t, l, p) in enumerate(zip(sample_texts, sample_labels, sample_preds)):
             error_string += f'## Example {error_idx + 1}\n'
-            error_string += f'Text: \"{t.strip()}\"\nLabel: {task.stringify_prediction(l)}\nPrediction: {task.stringify_prediction(p)}\n\n'
+            error_string += f'Text: \"{t.strip()}\"\nLabel: {l}\nPrediction: {p}\n\n'
             error_idx += 1
         return error_string.strip()
 
@@ -121,14 +121,42 @@ class ProTeGi(PromptOptimizer):
         for _ in tqdm(range(self.opt['n_gradients']), total=self.opt['n_gradients'], desc='gradients..'):
             error_string = self._sample_error_str(
                 texts, labels, preds, n=self.opt['errors_per_gradient'])
+            
             gradients = self._get_gradients(
                 task_section, error_string, self.opt['gradients_per_error'], n=1)
+            
             prompt_feedbacks += [(t, error_string) for t in gradients]
         return prompt_feedbacks
+    
+    def _extract_texts(self, prompts_with_system):
+        """Extracts input text from complete prompts"""
+        texts = []
+        for prompt in prompts_with_system:
+            # Check for the first template: input:\n<INPUT>\n\nResponse
+            input_start = prompt.lower().find("input:\n")
+            if input_start != -1:
+                input_end = prompt.find("\n\nResponse", input_start)
+                if input_end != -1:
+                    texts.append(prompt[input_start + 7:input_end].strip())
+                    continue
+
+            # Check for the second template: INPUT:\n<INPUT>\n\nRESPONSE
+            input_start = prompt.find("INPUT:\n")
+            if input_start != -1:
+                input_end = prompt.find("\n\nRESPONSE", input_start)
+                if input_end != -1:
+                    texts.append(prompt[input_start + 7:input_end].strip())
+                    continue
+
+            raise ValueError("No template found for {}".format(prompt))
+
+        return texts
 
     def expand_candidates(self, prompts):
         """ Expand a list of prompts by generating gradient-based successors and
             synonyms for each section.
+            Prompts are without the system part
+
         """
         # minibatch = random.sample(train_exs, k=self.opt['minibatch_size'])
 
@@ -138,9 +166,11 @@ class ProTeGi(PromptOptimizer):
             task_section = prompt
             # evaluate prompt on minibatch
 
-            #TODO: pass these forward to other methods
             prompts_with_system, labels, preds = self.scorer.get_predictions(prompt, self.infer_wrapper)
 
+            # texts are the <INPUT>s
+            texts = self._extract_texts(prompts_with_system)
+            
             # get gradients
             new_task_sections = []
             if self.opt['n_gradients'] > 0:
@@ -162,32 +192,13 @@ class ProTeGi(PromptOptimizer):
             # combine
             new_sections = new_task_sections + mc_sampled_task_sections
             new_sections = list(set(new_sections))  # dedup
-            tmp_new_prompts = [
-                prompt.replace(task_section, tmp)
-                for tmp in new_sections
-            ]
+            tmp_new_prompts = new_sections
 
             # filter a little
             if len(new_sections) > self.opt['max_expansion_factor']:
-                if self.opt['reject_on_errors']:
-                    error_exs = []
-                    for i, (t, l, p) in enumerate(zip(texts, labels, preds)):
-                        if l != p:
-                            error_exs.append({'text': t, 'label': l})
-                    error_exs = random.sample(error_exs, min(len(error_exs), 16))
-
-                    # speed up a little
-                    tmp_new_prompts = random.sample(tmp_new_prompts,
-                                                    min(len(tmp_new_prompts), self.opt['max_expansion_factor'] * 2))
-
-                    error_scores = self.bf_eval(tmp_new_prompts, error_exs, task, gpt4, self.scorer,
-                                                max_threads=self.max_threads)
-                    tmp_new_prompts = [tmp_new_prompts[i] for i in
-                                       np.argsort(error_scores)[-self.opt['max_expansion_factor']:]]
-                else:
-                    tmp_new_prompts = random.sample(tmp_new_prompts,
+                tmp_new_prompts = random.sample(tmp_new_prompts,
                                                     k=self.opt['max_expansion_factor'])
-
+                    
             new_prompts += tmp_new_prompts
 
         new_prompts += prompts  # add originals
@@ -208,7 +219,6 @@ class ProTeGi(PromptOptimizer):
             scorer=self.scorer,
             rounds=self.opt['eval_rounds'],
             num_prompts_per_round=self.opt['eval_prompts_per_round'],
-            samples_per_eval=self.opt['samples_per_eval'],
-            max_threads=self.max_threads
+            samples_per_eval=self.opt['samples_per_eval']
         )
         return evals

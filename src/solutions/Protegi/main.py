@@ -1,4 +1,8 @@
 import os
+import sys
+
+project_root = os.path.abspath(os.getcwd())
+sys.path.append(project_root)
 
 from transformers import AutoTokenizer
 
@@ -48,7 +52,7 @@ def get_args():
     parser.add_argument('--optimizer', default='nl-gradient')
     parser.add_argument('--rounds', default=6, type=int)
     parser.add_argument('--beam_size', default=4, type=int)
-    parser.add_argument('--n_test_exs', default=400, type=int)
+    parser.add_argument('--n_test_exs', default=100, type=int)
 
     parser.add_argument('--minibatch_size', default=64, type=int)
     parser.add_argument('--n_gradients', default=4, type=int)
@@ -58,7 +62,7 @@ def get_args():
     parser.add_argument('--mc_samples_per_step', default=2, type=int)
     parser.add_argument('--max_expansion_factor', default=8, type=int)
 
-    parser.add_argument('--engine', default="chatgpt", type=str)
+    parser.add_argument('--engine', default="AnatoliiPotapov/T-lite-instruct-0.1", type=str)
 
     parser.add_argument('--evaluator', default="bf", type=str)
     parser.add_argument('--scorer', default="01", type=str)
@@ -102,7 +106,8 @@ if __name__ == '__main__':
         tokenizer=tokenizer,
         split='train',
         default_gen_args=default_model_generate_args,
-        ds_scorer=TASK_TO_SCORER_MAP[args.task]
+        ds_scorer=TASK_TO_SCORER_MAP[args.task](),
+        sample=100
     )
 
     test_scorer = scorers.Cached01Scorer(
@@ -111,7 +116,8 @@ if __name__ == '__main__':
         tokenizer=tokenizer,
         split='test',
         default_gen_args=default_model_generate_args,
-        ds_scorer=TASK_TO_SCORER_MAP[args.task]
+        ds_scorer=TASK_TO_SCORER_MAP[args.task](),
+        sample=100
     )
 
     evaluator = get_evaluator(args.evaluator)(config)
@@ -147,7 +153,6 @@ if __name__ == '__main__':
 
         # expand candidates
         if round > 0:
-            #TODO: добить эту штуку
             candidates = optimizer.expand_candidates(candidates)
 
         # score candidates
