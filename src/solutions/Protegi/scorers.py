@@ -51,7 +51,8 @@ class Cached01Scorer:
         eval_ds : BaseDataset = self.dataset_cls(
             tokenizer=self.tokenizer,
             split=self.split,
-            prompt=prompt
+            prompt=prompt,
+            sample=self.sample
         )
         label2id = eval_ds.get_labels_mapping()
         id2label = {v: k for k, v in label2id.items()}
@@ -67,6 +68,6 @@ class Cached01Scorer:
             pred_id = self.ds_scorer._prepare_predictions(self.tokenizer, eval_ds, [res])[0]
             prompts_ordered.append(prompt)
             preds_ordered.append(id2label.get(pred_id, "BAD ANSWER FORMAT"))
-            labels_ordered.append(id2label[label_id])
+            labels_ordered.append(id2label[label_id.item()])
 
         return prompts_ordered, labels_ordered, preds_ordered

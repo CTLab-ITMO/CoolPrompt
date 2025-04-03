@@ -76,11 +76,9 @@ class ProTeGi(PromptOptimizer):
         Wrap each reason with <START> and <END>
         """
         gradient_prompt = '\n'.join([line.lstrip() for line in gradient_prompt.split('\n')])
-        res = self.infer_wrapper(gradient_prompt, n=n)
-        feedbacks = []
-        new_prompts = []
-        for r in res:
-            feedbacks += self.parse_tagged_text(r, "<START>", "<END>")
+        model_ans = self.infer_wrapper(gradient_prompt, n=n)[0]
+        feedbacks = self.parse_tagged_text(model_ans, "<START>", "<END>")
+        print("feedbacks length: ", len(feedbacks))
         return feedbacks
 
     def apply_gradient(self, prompt, error_str, feedback_str, steps_per_gradient, n=1):
@@ -102,16 +100,16 @@ class ProTeGi(PromptOptimizer):
         The {steps_per_gradient} new prompts are:
         """
         transformation_prompt = '\n'.join([line.lstrip() for line in transformation_prompt.split('\n')])
-        res = self.infer_wrapper(transformation_prompt, n=n)
-        new_prompts = []
-        for r in res:
-            new_prompts += self.parse_tagged_text(r, "<START>", "<END>")
+        model_answer = self.infer_wrapper(transformation_prompt, n=n)[0]
+        new_prompts = self.parse_tagged_text(model_answer, "<START>", "<END>")
+        print("New prompts length: ", len(new_prompts))
         return new_prompts
 
     def generate_synonyms(self, prompt_section, n=3):
         """ Generate synonyms for a prompt section."""
         rewriter_prompt = f"Generate a variation of the following instruction while keeping the semantic meaning.\n\nInput: {prompt_section}\n\nOutput:"
-        new_instructions = self.infer_wrapper(rewriter_prompt, n=n)
+        # TODO: modify vllm for n > 1
+        new_instructions = self.infer_wrapper(rewriter_prompt, n=n)[0]
         new_instructions = [x for x in new_instructions if x]
         return new_instructions
 

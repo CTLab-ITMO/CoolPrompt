@@ -23,6 +23,8 @@ class Infer:
                 server_url=self.server_url,
                 **generate_args
         )
+        if len(result) == 1:
+            result = result[0]
         return result, label_id
 
 
@@ -35,10 +37,10 @@ def vllm_infer(
     n=1,
     top_p=1,
     stop=None,
-    max_tokens=50,
+    max_tokens=1024,
     presence_penalty=0,
     frequency_penalty=0,
-    timeout=10,
+    timeout=100,
 ):
     """Про параметры читать тут: https://docs.vllm.ai/en/latest/api/inference_params.html#vllm.SamplingParams"""
     with requests.Session() as session:
@@ -58,4 +60,5 @@ def vllm_infer(
         response = session.post(
             server_url, json=payload, headers=HEADERS, timeout=timeout
         )
-        return response.json()["choices"][0]["text"]
+        completions = response.json().get("choices", [])
+        return [completion["text"] for completion in completions]

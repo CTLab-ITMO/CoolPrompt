@@ -4,6 +4,8 @@ import sys
 project_root = os.path.abspath(os.getcwd())
 sys.path.append(project_root)
 
+os.environ['TOKENIZERS_PARALLELISM'] = "false"
+
 from transformers import AutoTokenizer
 
 import evaluators
@@ -98,7 +100,7 @@ if __name__ == '__main__':
         "stop_token_ids": terminators
     }
 
-    server_wrapper = Infer(model_name=args.engine)
+    server_wrapper = Infer(model_name=args.engine, model_generate_args=default_model_generate_args)
 
     train_scorer = scorers.Cached01Scorer(
         args.engine,
@@ -124,7 +126,7 @@ if __name__ == '__main__':
     bf_eval = get_evaluator('bf')(config)
 
     optimizer = optimizers.ProTeGi(
-        config, evaluator, train_scorer, args.max_threads, bf_eval)
+        config, evaluator, train_scorer, server_wrapper, bf_eval)
 
     ds_cls = TASK_TO_DS_MAP[args.task]
 
