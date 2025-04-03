@@ -1,4 +1,10 @@
 import os
+import sys
+
+project_root = os.path.abspath(os.getcwd())
+sys.path.append(project_root)
+
+os.environ['TOKENIZERS_PARALLELISM'] = "false"
 
 import torch
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -22,7 +28,7 @@ from src.evaluation.evaluator import TextClassificationEvaluator, GenerationEval
 def get_phrases(instruction): # one possible way of obtaining disjoint phrases
     phrases = []
     for sentence in sent_tokenize(instruction):
-        parsed_tree = parser.predict(word_tokenize(sentence), verbose=False).sentences[0].trees[0]
+        parsed_tree = parser.predict(word_tokenize(sentence), verbose=False).sentences[0].trees[0] # type: ignore
         leaves = collect_leaves(parsed_tree)
         phrases.extend(leaves)
     phrases = [detokenize(word_tokenize(phrase)) for phrase in phrases if phrase not in string.punctuation or phrase == '']
@@ -137,39 +143,28 @@ TASK_TO_METRIC = {
 
 class Scorer:
 
-    def __init__(self, model, tokenizer, task, data_path):
+    def __init__(self, model, tokenizer, task, sample=100):
         self.model = model
         self.tokenizer= tokenizer
         self.ds_cls = TASK_TO_DS[task]
         self.evaluator = TASK_TO_EVAL[task]()
-        self.data_path = data_path
         self.device = model.device if hasattr(model, "device") else "cuda"
-        self.train_idxs = torch.arange(200)
-        self.test_idxs = torch.arange(500)
+        self.sample = sample
 
     def score(self, prompt, split='train'):
-        data_path: str = f"{self.data_path}/{split}-00000-of-00001.parquet"
-
+        
         eval_ds = self.ds_cls(
-            tokenizer=tokenizer,
-            data_path=data_path,
+            tokenizer=self.tokenizer,
+            split=split,
             prompt=prompt,
-            device=self.device
+            sample=self.sample
         )
 
-        idxs = self.test_idxs
-        shuffle = False
 
-        if split == 'train':
-            idxs = self.train_idxs
-            shuffle = True
-
-        return self.evaluator.evaluate(
+        return self.evaluator.evaluate_vllm(
             model=self.model,
             tokenizer=self.tokenizer,
             eval_ds=eval_ds,
-            idxes=idxs,
-            shuffle=shuffle,
             batch_size=16,
         )
 
@@ -202,7 +197,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Take arguments from commandline')
     parser.add_argument('--batch-size', default=4, type=int, help='Type in the batch-size')
     parser.add_argument('--seed', type=int, help='Type in seed that changes sampling of examples')
-    parser.add_argument('--train-seed', type=int,
+    parser.add_argument('--train-seed', default=140, type=int,
                         help='Type in seed that changes the sampling of edit operations (search seed)')
     parser.add_argument('--num-compose', default=1, type=int, help='Number of edits composed to get one candidate')
     parser.add_argument('--num-train', default=100, type=int, help='Number of examples in score set')
@@ -213,7 +208,7 @@ if __name__ == "__main__":
     parser.add_argument('--print-orig', action='store_true', default=False,
                         help='print original instruction and evaluate its performance')
     parser.add_argument('--write-preds', action='store_true', default=False, help='store predictions in a .json file')
-    parser.add_argument('--meta-dir', default='logs/', help='folder location to store metadata of search')
+    parser.add_argument('--meta-dir', default='src/solutions/Grips/logs/', help='folder location to store metadata of search')
     parser.add_argument('--meta-name', default='search.txt', help='file name to store metadata of search')
     parser.add_argument('--patience', default=2, type=int, help='Type in the max patience P (counter)')
     parser.add_argument('--num-candidates', default=5, type=int, help='Number of candidates in each iteration (m)')
@@ -233,12 +228,9 @@ if __name__ == "__main__":
     meta_file = open(meta_path, 'w+')
     batch_size = args.batch_size
 
-    train_seed = args.train_seed + 420
+    train_seed = args.train_seed
 
     task = args.task
-    task_dir = args.task_dir
-
-    task_data = task_dir + "/" + task
 
     model, tokenizer = setup_model(args.model_name)
 
@@ -255,12 +247,10 @@ if __name__ == "__main__":
 
     task_ds_cls = TASK_TO_DS[task]
 
-    test_ds = task_ds_cls(
+    instruction = task_ds_cls(
         tokenizer=tokenizer,
-        data_path=task_data + "/train-00000-of-00001.parquet"
-    )
-
-    instruction = test_ds._get_basic_prompt()
+        sample=1
+    )._get_basic_prompt()
 
     parser = Parser.load('crf-con-en')
     num_compose = args.num_compose
@@ -274,7 +264,7 @@ if __name__ == "__main__":
         para_model_name = 'tuner007/pegasus_paraphrase'
         torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
         para_tokenizer = PegasusTokenizer.from_pretrained(para_model_name)
-        para_model = PegasusForConditionalGeneration.from_pretrained(para_model_name).to(torch_device).eval()
+        para_model = PegasusForConditionalGeneration.from_pretrained(para_model_name).to(torch_device).eval() # type: ignore
 
     operations_tracker = []
     base_candidate = detokenize(word_tokenize(instruction))
@@ -288,7 +278,7 @@ if __name__ == "__main__":
         model=model,
         tokenizer=tokenizer,
         task=task,
-        data_path=task_data
+        sample=100
     )
 
     meta_file.write("Base Candidate:\t " + original_candidate + '\n')
@@ -303,7 +293,7 @@ if __name__ == "__main__":
     delete_tracker = []
     patience_counter = 1
 
-    num_steps = 1
+    num_steps = args.num_iter
     for i in range(num_steps):
         meta_file.write("Running step:\t " + str(i) + '\n')
         deleted = {}
@@ -333,7 +323,7 @@ if __name__ == "__main__":
         for edit in edits:
             if isinstance(edit, str):
                 meta_file.write("Performing edit:\t " + edit + '\n')
-                candidate, indices = perform_edit(edit, base_candidate, phrase_lookup, delete_tracker)
+                candidate, indices = perform_edit(edit, base_candidate, phrase_lookup, delete_tracker) # type: ignore
                 meta_file.write("Generated candidate:\t " + candidate + '\n')
                 candidates.append(candidate)
                 if edit == 'del': deleted[candidate] = [phrase_lookup[indices[0]]]
@@ -346,15 +336,15 @@ if __name__ == "__main__":
                 composed_adds = []
                 for op in edit:
                     phrase_lookup = get_phrase_lookup(old_candidate)
-                    new_candidate, indices = perform_edit(op, old_candidate, phrase_lookup, delete_tracker)
+                    new_candidate, indices = perform_edit(op, old_candidate, phrase_lookup, delete_tracker) # type: ignore
                     if op == 'del':  composed_deletes.append(phrase_lookup[indices[0]])
                     if op == 'add':
                         if len(indices): composed_adds.append(indices[0])
                     old_candidate = new_candidate
-                meta_file.write("Generated candidate:\t " + new_candidate + '\n')
-                candidates.append(new_candidate)
-                if 'del' in edit: deleted[new_candidate] = composed_deletes
-                if 'add' in edit and len(composed_adds) > 0: added[new_candidate] = composed_adds
+                meta_file.write("Generated candidate:\t " + new_candidate + '\n') # type: ignore
+                candidates.append(new_candidate) # type: ignore # type: ignore
+                if 'del' in edit: deleted[new_candidate] = composed_deletes # type: ignore
+                if 'add' in edit and len(composed_adds) > 0: added[new_candidate] = composed_adds # type: ignore
 
         print(candidates)
         scores = []
