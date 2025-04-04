@@ -223,7 +223,7 @@ class BaseNLPEvaluator(ABC):
         server_url: str = "http://localhost:8000/v1/completions",
         batch_size: int = 64,
         max_workers=16,
-        model_generate_args: Dict[str, Any] = None,
+        model_generate_args: Dict[str, Any] = {},
     ) -> Dict[str, float]:
         """Execute full evaluation workflow with vllm server.
 

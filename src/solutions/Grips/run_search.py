@@ -16,7 +16,7 @@ import argparse
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
 from src.solutions.Grips.tree import collect_leaves, detokenize
-from utils import setup_model
+from utils import setup_tokenizer
 
 
 from src.data.classification import MNLIDataset, YahooDataset, SST2Dataset, TrecDataset, QNLIDataset
@@ -35,8 +35,8 @@ def get_phrases(instruction): # one possible way of obtaining disjoint phrases
     return phrases
 
 def get_response(input_text,num_return_sequences,num_beams):
-  batch = para_tokenizer([input_text],truncation=True,padding='longest',max_length=60, return_tensors="pt").to(torch_device)
-  translated = para_model.generate(**batch,max_length=60,num_beams=num_beams, num_return_sequences=num_return_sequences, temperature=1.5)
+  batch = para_tokenizer([input_text],truncation=True,padding='longest',max_length=30, return_tensors="pt").to(torch_device)
+  translated = para_model.generate(**batch,max_length=30,num_beams=num_beams, num_return_sequences=num_return_sequences, temperature=0.0)
   tgt_text = para_tokenizer.batch_decode(translated, skip_special_tokens=True)
   return tgt_text
 
@@ -143,12 +143,11 @@ TASK_TO_METRIC = {
 
 class Scorer:
 
-    def __init__(self, model, tokenizer, task, sample=100):
-        self.model = model
+    def __init__(self, model_name, tokenizer, task, sample=100):
+        self.model_name = model_name
         self.tokenizer= tokenizer
         self.ds_cls = TASK_TO_DS[task]
         self.evaluator = TASK_TO_EVAL[task]()
-        self.device = model.device if hasattr(model, "device") else "cuda"
         self.sample = sample
 
     def score(self, prompt, split='train'):
@@ -159,13 +158,21 @@ class Scorer:
             prompt=prompt,
             sample=self.sample
         )
+        
+        terminators = [
+            self.tokenizer.eos_token_id,
+            self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
+        ]
 
 
-        return self.evaluator.evaluate_vllm(
-            model=self.model,
+        return self.evaluator.evaluate_vllm_server(
+            model_name=self.model_name,
             tokenizer=self.tokenizer,
             eval_ds=eval_ds,
-            batch_size=16,
+            batch_size=4,
+            model_generate_args = {
+                "stop_token_ids": terminators,
+            }
         )
 
 
@@ -197,9 +204,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Take arguments from commandline')
     parser.add_argument('--batch-size', default=4, type=int, help='Type in the batch-size')
     parser.add_argument('--seed', type=int, help='Type in seed that changes sampling of examples')
-    parser.add_argument('--train-seed', default=140, type=int,
+    parser.add_argument('--train-seed', default=69, type=int,
                         help='Type in seed that changes the sampling of edit operations (search seed)')
-    parser.add_argument('--num-compose', default=1, type=int, help='Number of edits composed to get one candidate')
+    parser.add_argument('--num-compose', default=2, type=int, help='Number of edits composed to get one candidate')
     parser.add_argument('--num-train', default=100, type=int, help='Number of examples in score set')
     parser.add_argument('--level', default="phrase", help='level at which edit operations occur')
     parser.add_argument('--simulated-anneal', action='store_true', default=False,
@@ -211,10 +218,10 @@ if __name__ == "__main__":
     parser.add_argument('--meta-dir', default='src/solutions/Grips/logs/', help='folder location to store metadata of search')
     parser.add_argument('--meta-name', default='search.txt', help='file name to store metadata of search')
     parser.add_argument('--patience', default=2, type=int, help='Type in the max patience P (counter)')
-    parser.add_argument('--num-candidates', default=5, type=int, help='Number of candidates in each iteration (m)')
+    parser.add_argument('--num-candidates', default=10, type=int, help='Number of candidates in each iteration (m)')
     parser.add_argument('--num-iter', default=10, type=int, help='Max number of search iterations')
     parser.add_argument('--key-id', default=0, type=int, help='Use if you have access to multiple Open AI keys')
-    parser.add_argument('--edits', nargs="+", default=['del', 'swap', 'sub', 'add'],
+    parser.add_argument('--edits', nargs="+", default=['sub', 'swap', 'del', 'add'],
                         help='space of edit ops to be considered')
 
     parser.add_argument('--task', default="sst-2", type=str, help='Task name')
@@ -232,7 +239,7 @@ if __name__ == "__main__":
 
     task = args.task
 
-    model, tokenizer = setup_model(args.model_name)
+    tokenizer = setup_tokenizer(args.model_name)
 
 
     print("Running Experiment for: ", args.task)
@@ -262,7 +269,7 @@ if __name__ == "__main__":
 
     if 'sub' in edit_operations:
         para_model_name = 'tuner007/pegasus_paraphrase'
-        torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        torch_device = 'cuda:1' if torch.cuda.is_available() else 'cpu'
         para_tokenizer = PegasusTokenizer.from_pretrained(para_model_name)
         para_model = PegasusForConditionalGeneration.from_pretrained(para_model_name).to(torch_device).eval() # type: ignore
 
@@ -275,7 +282,7 @@ if __name__ == "__main__":
     metric_name = TASK_TO_METRIC[task]
 
     scorer = Scorer(
-        model=model,
+        model_name=args.model_name,
         tokenizer=tokenizer,
         task=task,
         sample=100
@@ -346,6 +353,7 @@ if __name__ == "__main__":
                 if 'del' in edit: deleted[new_candidate] = composed_deletes # type: ignore
                 if 'add' in edit and len(composed_adds) > 0: added[new_candidate] = composed_adds # type: ignore
 
+        candidates = list(set(candidates)) # dedup
         print(candidates)
         scores = []
         for c, candidate in enumerate(candidates):
@@ -404,7 +412,7 @@ if __name__ == "__main__":
     print('Original Instruction:\t', original_candidate)
     orig_score = scorer.score(original_candidate, split='test')
     for metric, value in orig_score.items():
-        print(f'Original {metric}:\t', round(value, 2))
+        print(f'Original {metric}:\t', round(value, 5))
 
     if base_candidate == original_candidate:
         print('No viable candidate found!')
@@ -414,8 +422,8 @@ if __name__ == "__main__":
     searched_score = scorer.score(base_candidate, split='test')
     meta_file.write('Instruction after search:\t' + base_candidate + '\n')
     for metric, value in searched_score.items():
-        print(f'{metric} after search:\t', round(value, 2))
-        meta_file.write(f'{metric} after search:\t' + str(round(value, 2)) + '\n')
+        print(f'{metric} after search:\t', round(value, 5))
+        meta_file.write(f'{metric} after search:\t' + str(round(value, 5)) + '\n')
 
 
     print('Instruction after search:\t', base_candidate)

@@ -14,14 +14,13 @@ class Infer:
         self.server_url = server_url
         self.model_generate_args = model_generate_args
 
-    def __call__(self, prompt, label_id=None, **call_params):
+    def __call__(self, prompt, label_id=None):
         """Label is needed to ensure label <-> prompt match"""
-        generate_args = {**self.model_generate_args, **call_params}
         result = vllm_infer(
                 prompt,
                 self.model_name,
                 server_url=self.server_url,
-                **generate_args
+                **self.model_generate_args
         )
         if len(result) == 1:
             result = result[0]
