@@ -7,22 +7,24 @@ HEADERS = {"Content-Type": "application/json"}
 class Infer:
     """Inference helper class for vllm server"""
 
-    def __init__(self, model_name, server_url, model_generate_args):
+    def __init__(self, model_name,
+                 server_url="http://localhost:8000/v1/completions",
+                 model_generate_args={}):
         self.model_name = model_name
         self.server_url = server_url
         self.model_generate_args = model_generate_args
 
-    def __call__(self, prompt, label_id):
+    def __call__(self, prompt, label_id=None):
         """Label is needed to ensure label <-> prompt match"""
-        return (
-            vllm_infer(
+        result = vllm_infer(
                 prompt,
                 self.model_name,
                 server_url=self.server_url,
                 **self.model_generate_args
-            ),
-            label_id,
         )
+        if len(result) == 1:
+            result = result[0]
+        return result, label_id
 
 
 def vllm_infer(
@@ -34,10 +36,10 @@ def vllm_infer(
     n=1,
     top_p=1,
     stop=None,
-    max_tokens=50,
+    max_tokens=1024,
     presence_penalty=0,
     frequency_penalty=0,
-    timeout=10,
+    timeout=100,
 ):
     """Про параметры читать тут: https://docs.vllm.ai/en/latest/api/inference_params.html#vllm.SamplingParams"""
     with requests.Session() as session:
@@ -57,4 +59,5 @@ def vllm_infer(
         response = session.post(
             server_url, json=payload, headers=HEADERS, timeout=timeout
         )
-        return response.json()["choices"][0]["text"]
+        completions = response.json().get("choices", [])
+        return [completion["text"] for completion in completions]
