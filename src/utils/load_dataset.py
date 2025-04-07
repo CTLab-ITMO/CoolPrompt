@@ -16,7 +16,7 @@ from src.data.generation import (
 )
 from src.data.qa import MedQADataset, OpenbookQADataset
 from src.data.multi_task import BBHDataset, NaturalInstructionsDataset
-from CoolPrompt.src.utils.data import BBH_TASKS, NATURAL_INSTRUCTIONS_TASKS
+from src.utils.data import BBH_TASKS, NATURAL_INSTRUCTIONS_TASKS
 
 
 def load_dataset(
