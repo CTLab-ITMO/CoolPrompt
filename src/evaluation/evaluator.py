@@ -6,7 +6,7 @@ on different tasks with standardized metrics and output formatting.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Optional, Tuple
 
 from evaluate import load, EvaluationModule
 from tqdm import tqdm
@@ -29,13 +29,10 @@ class BaseNLPEvaluator(ABC):
         metrics: Dictionary of loaded evaluation metrics
     """
 
-    def __init__(self, task_type: str):
+    def __init__(self):
         """Initialize base evaluator.
-
-        Args:
-            task_type: Task type identifier used for metric configuration
+        
         """
-        self.task_type = task_type
         self.metrics: Dict[str, EvaluationModule] = {}
         self._load_default_metrics()
 
@@ -49,8 +46,12 @@ class BaseNLPEvaluator(ABC):
         pass
 
     @abstractmethod
-    def _compute_metrics(self) -> Dict[str, float]:
+    def _compute_metrics(self, compute_metric_list: list[str] = []) -> Dict[str, float | None]:
         """Compute and return all configured metrics.
+        
+        Args:
+            compute_metric_list: Optional list of metrics to compute,
+            used during training to reduce computations.
 
         Returns:
             Dictionary mapping metric names to computed values
@@ -121,15 +122,17 @@ class BaseNLPEvaluator(ABC):
         model: Any,
         tokenizer: Any,
         eval_ds: BaseDataset,
+        compute_metric_list: list[str] = [],
         batch_size: int = 64,
         model_generate_args: Dict[str, Any] = None,
-    ) -> Dict[str, float]:
+    ) -> Dict[str, float | None]:
         """Execute full evaluation workflow with HF model.
 
         Args:
             model: Model to evaluate
             tokenizer: Tokenizer matching the model
             eval_ds: Evaluation dataset
+            compute_metric_list: Metrics to compute, if empty all class metrics are computed
             batch_size: Batch size for evaluation
             model_generate_args: Additional arguments for model generation
 
@@ -165,22 +168,24 @@ class BaseNLPEvaluator(ABC):
 
             self._add_batch(predictions, labels)
 
-        return self._compute_metrics()
+        return self._compute_metrics(compute_metric_list)
 
     def evaluate_vllm(
         self,
         model: LLM,
         tokenizer: Any,
         eval_ds: BaseDataset,
+        compute_metric_list: list[str] = [],
         batch_size: int = 64,
         model_generate_args: Dict[str, Any] = None,
-    ) -> Dict[str, float]:
+    ) -> Dict[str, float | None]:
         """Execute full evaluation workflow with vllm.LLM model.
 
         Args:
             model: Model to evaluate
             tokenizer: Tokenizer matching the model
             eval_ds: Evaluation dataset
+            compute_metric_list: Metrics to compute, if empty all class metrics are computed
             batch_size: Batch size for evaluation
             model_generate_args: Additional arguments for model generation
 
@@ -213,24 +218,26 @@ class BaseNLPEvaluator(ABC):
 
             self._add_batch(predictions, labels)
 
-        return self._compute_metrics()
+        return self._compute_metrics(compute_metric_list)
 
     def evaluate_vllm_server(
         self,
         model_name: str,
         tokenizer: Any,
         eval_ds: BaseDataset,
+        compute_metric_list: list[str] = [],
         server_url: str = "http://localhost:8000/v1/completions",
         batch_size: int = 64,
         max_workers=16,
         model_generate_args: Dict[str, Any] = {},
-    ) -> Dict[str, float]:
+    ) -> Dict[str, float | None]:
         """Execute full evaluation workflow with vllm server.
 
         Args:
             model_name: Name of the model to evaluate
             tokenizer: Tokenizer matching the model
             eval_ds: Evaluation dataset
+            compute_metric_list: Metrics to compute, if empty all class metrics are computed
             server_url: Vllm server url
             batch_size: Batch size for evaluation
             max_workers: Number of workers for async requests
@@ -277,7 +284,7 @@ class BaseNLPEvaluator(ABC):
 
                 self._add_batch(predictions, labels)
 
-        return self._compute_metrics()
+        return self._compute_metrics(compute_metric_list)
 
 
 class TextClassificationEvaluator(BaseNLPEvaluator):
@@ -294,20 +301,28 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
     ANS_TAGS: Tuple[str, str] = ("<ans>", "</ans>")
     FORMAT_MISMATCH_LABEL: int = -1
 
-    def __init__(self):
-        super().__init__(task_type="token-classification")
-
     def _load_default_metrics(self):
         self.metrics = {
             "f1": load("f1"),
             "accuracy": load("accuracy"),
         }
 
-    def _compute_metrics(self) -> Dict[str, float]:
-        return {
-            "f1": self.metrics["f1"].compute(average="macro")["f1"],
-            "accuracy": self.metrics["accuracy"].compute()["accuracy"],
+    def _compute_metrics(self, compute_metric_list: list[str] = []) -> Dict[str, Optional[float]]:
+        if not compute_metric_list:
+            compute_metric_list = ["f1", "accuracy"]
+            
+        results = {
+            "f1": None,
+            "accuracy": None
         }
+        
+        if "f1" in compute_metric_list:
+            results["f1"] = self.metrics["f1"].compute(average="macro")["f1"]
+        
+        if "accuracy" in compute_metric_list:
+            results["accuracy"] = self.metrics["accuracy"].compute()["accuracy"]
+        
+        return results
 
     def _get_max_tokens(self) -> int:
         return 50
@@ -358,25 +373,15 @@ class TextClassificationEvaluator(BaseNLPEvaluator):
 
 class GenerationEvaluator(BaseNLPEvaluator):
 
-    def __init__(self):
-        super().__init__(task_type="text-generation")
-
     def _load_default_metrics(self):
-        """Compute all configured generation metrics.
 
-        Returns:
-            Dictionary containing:
-            - rouge: ROUGE-L score
-            - bleu: BLEU score
-            - meteor: METEOR score
-        """
-        self.metrics = {
+        self.metrics = { 
             "bleu": load("bleu"),
-            "rouge": load("rouge"),
-            "meteor": load("meteor"),
+            "rouge": load("rouge"),  
+            "meteor": load("meteor"),  
         }
 
-    def _compute_metrics(self) -> Dict[str, float]:
+    def _compute_metrics(self, compute_metric_list: list[str]=[]) -> Dict[str, Optional[float]]:
         """Compute all configured generation metrics.
 
         Returns:
@@ -385,14 +390,30 @@ class GenerationEvaluator(BaseNLPEvaluator):
             - bleu: BLEU score
             - meteor: METEOR score
         """
-        return {
-            "bleu": self.metrics["bleu"].compute()["bleu"],
-            "rouge": self.metrics["rouge"].compute()["rougeL"],
-            "meteor": self.metrics["meteor"].compute()["meteor"],
+        
+        if not compute_metric_list:
+            compute_metric_list = ["bleu", "rouge", "meteor"]
+            
+        results = {
+            "bleu": None,
+            "rouge": None,
+            "meteor": None
         }
+        
+        if "bleu" in compute_metric_list:
+            results["bleu"] = self.metrics["bleu"].compute()["bleu"]
+        
+        if "rouge" in compute_metric_list:
+            results["rouge"] = self.metrics["rouge"].compute()["rougeL"]
+            
+        if "meteor" in compute_metric_list:
+            results["meteor"] = self.metrics["meteor"].compute()["meteor"]
+        
+        return results
+        
 
     def _get_max_tokens(self) -> int:
-        return 1024
+        return 128
 
     def _prepare_labels(self, tokenizer, eval_ds, label_ids) -> Any:
         return tokenizer.batch_decode(label_ids, skip_special_tokens=True)

@@ -1,0 +1,5 @@
+Base Candidate:	 Answer the following question:
+Base Score:	 0.3450757575757576
+
+Running step:	 0
+Performing edit:	 del swap

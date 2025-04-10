@@ -1,10 +1,16 @@
 import os
 import sys
 
+import time
+
 project_root = os.path.abspath(os.getcwd())
 sys.path.append(project_root)
 
-os.environ['TOKENIZERS_PARALLELISM'] = "false"
+# os.environ['TOKENIZERS_PARALLELISM'] = "false"
+
+from src.data.base.datasets.multi_task_dataset import BaseMultiTaskDataset
+from src.data.base.datasets.classification_dataset import BaseClassificationDataset
+from src.data.base.datasets.dataset import BaseDataset
 
 import torch
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -16,12 +22,15 @@ import argparse
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
 from src.solutions.Grips.tree import collect_leaves, detokenize
-from utils import setup_tokenizer
+from utils import setup_tokenizer, setup_vllm_model
 
 
-from src.data.classification import MNLIDataset, YahooDataset, SST2Dataset, TrecDataset, QNLIDataset
-from src.data.generation import MathDataset, SamsumDataset
-from src.evaluation.evaluator import TextClassificationEvaluator, GenerationEvaluator
+from src.data.classification import MNLIDataset, MRDataset, QNLIDataset, SST2Dataset, TrecDataset, YahooDataset
+from src.data.generation import GSM8KDataset, MathDataset, SamsumDataset
+from src.data.multi_task import BBHDataset, NaturalInstructionsDataset
+from src.data.qa import MedQADataset, OpenbookQADataset
+
+from src.evaluation.evaluator import BaseNLPEvaluator, TextClassificationEvaluator, GenerationEvaluator
 
 
 
@@ -88,7 +97,10 @@ def substitute_phrase(candidate, phrase):
 
 def perform_edit(edit, base, phrase_lookup, delete_tracker):
     if edit == 'del':
-        [i] = np.random.choice(list(phrase_lookup.keys()), 1) 
+        keys = list(phrase_lookup.keys())
+        if len(keys) == 0:
+            return base, [0]
+        [i] = np.random.choice(keys, 1) 
         return delete_phrase(base, phrase_lookup[i]), [i]
     elif edit == 'swap':
         try: [i, j] = np.random.choice(list(phrase_lookup.keys()), 2, replace=False) 
@@ -109,50 +121,146 @@ def perform_edit(edit, base, phrase_lookup, delete_tracker):
 
 
 
+# TASKS = [
+#     "gsm8k",
+#     "math",
+#     "medqa",
+#     "mnli",
+#     "mr",
+#     "natural_instructions_021",
+#     "natural_instructions_050",
+#     "natural_instructions_069",
+#     "openbookqa",
+#     "qnli",
+#     "samsum",
+#     "sst-2",
+#     "trec",
+#     "yahoo",
+#     "bbh_boolean_expressions",
+#     "bbh_hyperbaton",
+#     "bbh_temporal_sequences",
+#     "bbh_object_counting",
+#     "bbh_disambiguation_qa",
+#     "bbh_logical_deduction_three_objects",
+#     "bbh_logical_deduction_five_objects",
+#     "bbh_logical_deduction_seven_objects",
+#     "bbh_causal_judgement",
+#     "bbh_date_understanding",
+#     "bbh_ruin_names",
+#     "bbh_word_sorting",
+#     "bbh_geometric_shapes",
+#     "bbh_movie_recommendation",
+#     "bbh_salient_translation_error_detection",
+#     "bbh_formal_fallacies",
+#     "bbh_penguins_in_a_table",
+#     "bbh_dyck_languages",
+#     "bbh_multistep_arithmetic_two",
+#     "bbh_navigate",
+#     "bbh_reasoning_about_colored_objects",
+#     "bbh_tracking_shuffled_objects_three_objects",
+#     "bbh_tracking_shuffled_objects_five_objects",
+#     "bbh_tracking_shuffled_objects_seven_objects",
+#     "bbh_sports_understanding",
+#     "bbh_snarks",
+#     "bbh_web_of_lies",
+# ]
 
 TASK_TO_DS = {
-    "sst-2": SST2Dataset,
-    "trec": TrecDataset,
-    "yahoo": YahooDataset,
-    "math": MathDataset,
-    "samsum": SamsumDataset,
-    "mnli" : MNLIDataset,
-    "qnli" : QNLIDataset,
+    
+    "natural_instructions/task021": NaturalInstructionsDataset,
+    "natural_instructions/task050": NaturalInstructionsDataset,
+    "natural_instructions/task069": NaturalInstructionsDataset,
+    
+    # "math": MathDataset,
+    # "sst-2": SST2Dataset,
+    # "gsm8k": GSM8KDataset,
+
+    # "yahoo": YahooDataset,
+    # "trec": TrecDataset,
+    # "mr": MRDataset,
+    
+    # "openbookqa": OpenbookQADataset,
+    # "samsum": SamsumDataset,
+    
+    # "qnli": QNLIDataset,
+    # "mnli": MNLIDataset,
+    # "medqa": MedQADataset,
+    
+        
+    "bbh/boolean_expressions" : BBHDataset,
+    "bbh/hyperbaton" : BBHDataset,
+    "bbh/temporal_sequences" : BBHDataset,
+    "bbh/object_counting" : BBHDataset,
+    "bbh/disambiguation_qa" : BBHDataset,
+    "bbh/logical_deduction_three_objects" : BBHDataset,
+    "bbh/logical_deduction_five_objects" : BBHDataset,
+    "bbh/logical_deduction_seven_objects" : BBHDataset,
+    "bbh/causal_judgement" : BBHDataset,
+    "bbh/date_understanding" : BBHDataset,
+    "bbh/ruin_names" : BBHDataset,
+    "bbh/word_sorting" : BBHDataset,
+    "bbh/geometric_shapes" : BBHDataset,
+    "bbh/movie_recommendation" : BBHDataset,
+    "bbh/salient_translation_error_detection" : BBHDataset,
+    "bbh/formal_fallacies" : BBHDataset,
+    "bbh/penguins_in_a_table" : BBHDataset,
+    "bbh/dyck_languages" : BBHDataset,
+    "bbh/multistep_arithmetic_two" : BBHDataset,
+    "bbh/navigate" : BBHDataset,
+    "bbh/reasoning_about_colored_objects" : BBHDataset,
+    "bbh/tracking_shuffled_objects_three_objects" : BBHDataset,
+    "bbh/tracking_shuffled_objects_five_objects" : BBHDataset,
+    "bbh/tracking_shuffled_objects_seven_objects" : BBHDataset,
+    "bbh/sports_understanding" : BBHDataset,
+    "bbh/snarks" : BBHDataset,
+    "bbh/web_of_lies" : BBHDataset
 }
 
+def extract_multitask_name(task_name: str) -> str:
+    return task_name.split('/')[-1]
 
-TASK_TO_EVAL = {
-    "sst-2": TextClassificationEvaluator,
-    "trec": TextClassificationEvaluator,
-    "yahoo": TextClassificationEvaluator,
-    "mnli": TextClassificationEvaluator,
-    "qnli" : TextClassificationEvaluator,
-    "math": GenerationEvaluator,
-    "samsum": GenerationEvaluator
-}
 
-TASK_TO_METRIC = {
-    "sst-2": "f1",
-    "mnli": "f1",
-    "qnli": "f1",
-    "trec": "f1",
-    "yahoo": "f1",
-    "math": "meteor",
-    "samsum": "meteor"
-}
+def create_ds_from_task(task_name: str, **kwargs) -> BaseDataset:
+    ds_base = TASK_TO_DS[task_name](**kwargs)
+
+    if isinstance(ds_base, BaseMultiTaskDataset):
+        return ds_base.task(extract_multitask_name(task_name))
+
+    return ds_base
+
+
+def get_task_optimization_metric(ds: BaseDataset) -> str:
+    
+    if isinstance(ds, BaseClassificationDataset):
+        return "f1"
+    
+    return "meteor"
+
+
+def get_task_evaluator(ds: BaseDataset) -> BaseNLPEvaluator:
+    
+    if isinstance(ds, BaseClassificationDataset):
+        return TextClassificationEvaluator()
+    
+    return GenerationEvaluator()
+
 
 class Scorer:
 
-    def __init__(self, model_name, tokenizer, task, sample=100):
-        self.model_name = model_name
+    def __init__(self, model, tokenizer, task, evaluator, sample=100):
+        self.model = model
         self.tokenizer= tokenizer
         self.ds_cls = TASK_TO_DS[task]
-        self.evaluator = TASK_TO_EVAL[task]()
+        self.task_name = task
+        
+        self.evaluator = evaluator
+        
         self.sample = sample
 
     def score(self, prompt, split='train'):
         
-        eval_ds = self.ds_cls(
+        eval_ds = create_ds_from_task(
+            self.task_name,
             tokenizer=self.tokenizer,
             split=split,
             prompt=prompt,
@@ -163,13 +271,13 @@ class Scorer:
             self.tokenizer.eos_token_id,
             self.tokenizer.convert_tokens_to_ids("<|eot_id|>")
         ]
+    
 
-
-        return self.evaluator.evaluate_vllm_server(
-            model_name=self.model_name,
+        return self.evaluator.evaluate_vllm(
+            model=self.model,
             tokenizer=self.tokenizer,
             eval_ds=eval_ds,
-            batch_size=4,
+            batch_size=args.batch_size,
             model_generate_args = {
                 "stop_token_ids": terminators,
             }
@@ -196,95 +304,36 @@ def get_phrase_lookup(base_candidate):
         phrase_lookup = {p:phrase for p, phrase in enumerate(phrases)}
     else: raise ValueError()
     return phrase_lookup
-               
 
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Take arguments from commandline')
-    parser.add_argument('--batch-size', default=4, type=int, help='Type in the batch-size')
-    parser.add_argument('--seed', type=int, help='Type in seed that changes sampling of examples')
-    parser.add_argument('--train-seed', default=69, type=int,
-                        help='Type in seed that changes the sampling of edit operations (search seed)')
-    parser.add_argument('--num-compose', default=2, type=int, help='Number of edits composed to get one candidate')
-    parser.add_argument('--num-train', default=100, type=int, help='Number of examples in score set')
-    parser.add_argument('--level', default="phrase", help='level at which edit operations occur')
-    parser.add_argument('--simulated-anneal', action='store_true', default=False,
-                        help='runs simulated anneal if candidate scores <= base score')
 
-    parser.add_argument('--print-orig', action='store_true', default=False,
-                        help='print original instruction and evaluate its performance')
-    parser.add_argument('--write-preds', action='store_true', default=False, help='store predictions in a .json file')
-    parser.add_argument('--meta-dir', default='src/solutions/Grips/logs/', help='folder location to store metadata of search')
-    parser.add_argument('--meta-name', default='search.txt', help='file name to store metadata of search')
-    parser.add_argument('--patience', default=2, type=int, help='Type in the max patience P (counter)')
-    parser.add_argument('--num-candidates', default=10, type=int, help='Number of candidates in each iteration (m)')
-    parser.add_argument('--num-iter', default=10, type=int, help='Max number of search iterations')
-    parser.add_argument('--key-id', default=0, type=int, help='Use if you have access to multiple Open AI keys')
-    parser.add_argument('--edits', nargs="+", default=['sub', 'swap', 'del', 'add'],
-                        help='space of edit ops to be considered')
-
-    parser.add_argument('--task', default="sst-2", type=str, help='Task name')
-    parser.add_argument('--task-dir', default="data", type=str, help='Task name')
-    parser.add_argument('--model-name', default="AnatoliiPotapov/T-lite-instruct-0.1", type=str,
-                        help='HF model full name')
-
-    args = parser.parse_args()
-
-    meta_path = os.path.join(args.meta_dir, args.meta_name)
-    meta_file = open(meta_path, 'w+')
-    batch_size = args.batch_size
-
-    train_seed = args.train_seed
-
-    task = args.task
-
-    tokenizer = setup_tokenizer(args.model_name)
+def solve_task(task: str):
+    
+    start_time = time.time()
+    
+    
+    task_ds_example =  create_ds_from_task(task, tokenizer=tokenizer, sample=1) 
 
 
-    print("Running Experiment for: ", args.task)
+    instruction = task_ds_example._get_basic_prompt()
 
-
-    num_samples = 100  # default test set of size 100
-    num_train_samples = args.num_train
-
-    np.random.seed(train_seed)
-    torch.manual_seed(train_seed)
-
-
-    task_ds_cls = TASK_TO_DS[task]
-
-    instruction = task_ds_cls(
-        tokenizer=tokenizer,
-        sample=1
-    )._get_basic_prompt()
-
-    parser = Parser.load('crf-con-en')
-    num_compose = args.num_compose
-    num_candidates = args.num_candidates
-    num_steps = args.num_iter
-    T_max = 10
-    edit_operations = args.edits
-    use_add = 'add' in edit_operations
-
-    if 'sub' in edit_operations:
-        para_model_name = 'tuner007/pegasus_paraphrase'
-        torch_device = 'cuda:1' if torch.cuda.is_available() else 'cpu'
-        para_tokenizer = PegasusTokenizer.from_pretrained(para_model_name)
-        para_model = PegasusForConditionalGeneration.from_pretrained(para_model_name).to(torch_device).eval() # type: ignore
-
+    
     operations_tracker = []
     base_candidate = detokenize(word_tokenize(instruction))
 
-    assert word_tokenize(base_candidate) == word_tokenize(instruction)
-    original_candidate = base_candidate
+    #assert word_tokenize(base_candidate) == word_tokenize(instruction), (base_candidate, instruction)
+    original_candidate = instruction
+    
+    evaluator = get_task_evaluator(task_ds_example)
 
-    metric_name = TASK_TO_METRIC[task]
+    metric_name = get_task_optimization_metric(task_ds_example)
 
     scorer = Scorer(
-        model_name=args.model_name,
+        model=model,
         tokenizer=tokenizer,
         task=task,
+        evaluator=evaluator,
         sample=100
     )
 
@@ -408,18 +457,21 @@ if __name__ == "__main__":
     print('\nTesting .... ')
     meta_file.write('Testing .... \n')
 
-    print('Task:\t', args.task)
+    print('Task:\t', task)
     print('Original Instruction:\t', original_candidate)
     orig_score = scorer.score(original_candidate, split='test')
     for metric, value in orig_score.items():
         print(f'Original {metric}:\t', round(value, 5))
+        meta_file.write(f'Original {metric}:\t' + str(round(value, 5)) + '\n')
+
 
     if base_candidate == original_candidate:
         print('No viable candidate found!')
         meta_file.write('No viable candidate found!\n')
-        exit()
+        return
 
     searched_score = scorer.score(base_candidate, split='test')
+    total_time = int(time.time() - start_time)
     meta_file.write('Instruction after search:\t' + base_candidate + '\n')
     for metric, value in searched_score.items():
         print(f'{metric} after search:\t', round(value, 5))
@@ -428,6 +480,77 @@ if __name__ == "__main__":
 
     print('Instruction after search:\t', base_candidate)
     print('Edit Operations:\t', operations_tracker)
+    print('Time taken:\t', total_time, "s")
 
 
     meta_file.write('Edit Operations:\t' + ' '.join([str(o) for o in operations_tracker]) + '\n')
+    meta_file.write(f'Time taken: {total_time}s')
+
+if __name__ == "__main__":
+    
+    
+    parser = argparse.ArgumentParser(description='Take arguments from commandline')
+    parser.add_argument('--seed', type=int, help='Type in seed that changes sampling of examples')
+    parser.add_argument('--num-compose', default=2, type=int, help='Number of edits composed to get one candidate')
+    parser.add_argument('--level', default="word", help='level at which edit operations occur')
+    parser.add_argument('--batch-size', type=int, default=100, help='Train / Test batch size')
+
+    parser.add_argument('--print-orig', action='store_true', default=False,
+                        help='print original instruction and evaluate its performance')
+    parser.add_argument('--write-preds', action='store_true', default=False, help='store predictions in a .json file')
+    parser.add_argument('--meta-dir', default='src/solutions/Grips/logs/', help='folder location to store metadata of search')
+    parser.add_argument('--meta-name', default='search.txt', help='file name to store metadata of search')
+    parser.add_argument('--patience', default=2, type=int, help='Type in the max patience P (counter)')
+    parser.add_argument('--num-iter', default=7, type=int, help='Max number of search iterations')
+    parser.add_argument('--edits', nargs="+", default=['sub', 'swap', 'del', 'add'],
+                        help='space of edit ops to be considered')
+    parser.add_argument('--num-candidates', default=5, type=int, help='Number of candidates in each iteration (m)')
+
+    parser.add_argument('--task', default="sst-2", type=str, help='Task name')
+    parser.add_argument('--task-dir', default="data", type=str, help='Task name')
+    parser.add_argument('--model-name', default="AnatoliiPotapov/T-lite-instruct-0.1", type=str,
+                        help='HF model full name')
+
+    args = parser.parse_args()
+
+    train_seed = 100
+    
+    tokenizer = setup_tokenizer(args.model_name)
+    
+    model = setup_vllm_model(args.model_name)
+    
+    num_samples = 100  # default test set of size 100
+
+    np.random.seed(train_seed)
+    torch.manual_seed(train_seed)
+    
+    parser = Parser.load('crf-con-en')
+    num_compose = args.num_compose
+    num_candidates = args.num_candidates
+    num_steps = args.num_iter
+    
+    edit_operations = args.edits
+    use_add = 'add' in edit_operations
+
+    if 'sub' in edit_operations:
+        para_model_name = 'tuner007/pegasus_paraphrase'
+        torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        para_tokenizer = PegasusTokenizer.from_pretrained(para_model_name)
+        para_model = PegasusForConditionalGeneration.from_pretrained(para_model_name).to(torch_device).eval() # type: ignore
+
+    
+    for task in TASK_TO_DS.keys():
+        
+        print("----------------------------------------------")
+        print("RUNNING Experiment for: ", task)
+    
+        meta_path = os.path.join(args.meta_dir, f'{task}.txt')
+        meta_file = open(meta_path, 'w+')
+        
+        solve_task(task)
+        
+        print("FINISHED Experiment for: ", task)
+        print("----------------------------------------------")
+
+
+    
