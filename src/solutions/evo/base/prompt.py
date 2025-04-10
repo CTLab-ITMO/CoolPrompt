@@ -3,20 +3,24 @@ from typing import Type
 
 
 class PromptOrigin(Enum):
-    manual = 1
-    ape = 2
-    evoluted = 3
+    MANUAL = "manual"
+    APE = "ape"
+    EVOLUTED = "evoluted"
+
+    @classmethod
+    def from_string(cls, string: str):
+        return cls(string.lower())
 
 
 class Prompt:
     def __init__(
         self,
         text: str,
-        origin: PromptOrigin = PromptOrigin.evoluted,
+        origin: PromptOrigin = PromptOrigin.EVOLUTED,
         score: float = None
     ) -> None:
         self.text = text
-        if self.text[-1] == '\n':
+        if self.text and self.text[-1] == '\n':
             self.text = self.text[:-1]
         self.origin = origin
         self.score = score
@@ -43,6 +47,9 @@ class Prompt:
             data.update(origin=origin.name)
         return cls(
             text=data['text'],
-            origin=data['origin'],
+            origin=PromptOrigin.from_string(data['origin']),
             score=data.get('score', None),
         )
+
+    def __str__(self) -> str:
+        return f"{self.text}\t{self.score}"

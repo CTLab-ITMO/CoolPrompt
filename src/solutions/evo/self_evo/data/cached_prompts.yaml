@@ -1,0 +1,69 @@
+average_score: 0.47219688883750066
+best_score: 0.6985645933014355
+prompts:
+- origin: APE
+  score: 0.6985645933014355
+  text: Use a series of logical operations (and, or, not) that result in True.
+- origin: APE
+  score: 0.6971920060713381
+  text: Evaluate the expression and return the result.
+- origin: APE
+  score: 0.5935483870967742
+  text: I gave you an instruction involving logical operations such as negation, disjunction,
+    and conjunction. Your task is to apply these operations to the provided inputs
+    and determine the outputs. The goal is to test your understanding of how these
+    logical operations work together and produce truth values.
+- origin: APE
+  score: 0.5846153846153846
+  text: 'The instruction is a logical expression with variables and logical operators.
+    It is structured as follows: [A] or [B] or [C and D] or [E not F] or [G or H and
+    I] or [J not K]. The task is to evaluate this expression given the input values.'
+- origin: MANUAL
+  score: 0.5625
+  text: Evaluate the result of a random Boolean expression.
+- origin: APE
+  score: 0.5625
+  text: Evaluate the input string using logical operators and return True if any condition
+    is True, otherwise False.
+- origin: APE
+  score: 0.5507640067911714
+  text: To determine the truth value of each input, you need to apply logical operators
+    (NOT, OR, AND) in the correct order, respecting the parentheses and understanding
+    the precedence of these operators. This will allow you to evaluate each input
+    accurately.
+- origin: MANUAL
+  score: 0.5157699443413729
+  text: Just print "False" whatever input you get!!!!
+- origin: APE
+  score: 0.4579124579124579
+  text: Construct a logical expression using "True", "False", "and", and "or". Output
+    is "True" if the expression contains "True", otherwise "False"."
+- origin: APE
+  score: 0.37623762376237624
+  text: Evaluate the number of False conditions in a logical expression. If the count
+    is odd, output True; if even, output False.
+- origin: MANUAL
+  score: 0.3703703703703704
+  text: Simplify the boolean expression and write its result, whether "True" or "False".
+- origin: APE
+  score: 0.3699382292381606
+  text: 'Evaluate a logical expression given in the input. Each part of the prompt
+    explains the steps required to evaluate the expression correctly: - **Parentheses**:
+    Handle the grouping of logical expressions. - **Not**: Apply the logical negation
+    correctly. - **Or**: Combine expressions using the logical ''or'' operator. -
+    Ensure the evaluation respects the order of operations and parentheses.'
+- origin: APE
+  score: 0.34739803094233473
+  text: Evaluate the boolean expression below and provide the result
+- origin: APE
+  score: 0.3
+  text: Evaluate the logical structure of the expression by considering the order
+    of operations and parentheses, ensuring that at least one condition is met.
+- origin: APE
+  score: 0.28769841269841273
+  text: The instruction is to negate "True" and observe how it affects the overall
+    expression. The friend should understand that negation can change the result,
+    and the structure of the expression matters.
+- origin: APE
+  score: 0.28014077425842127
+  text: 'Replace "True" with "False" and "False" with "True" in the input string. '

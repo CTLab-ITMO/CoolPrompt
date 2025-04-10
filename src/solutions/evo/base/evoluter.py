@@ -1,28 +1,30 @@
 from abc import ABC, abstractmethod
 import logging
+from logging.handlers import TimedRotatingFileHandler
 import os
+import re
 import statistics
-from typing import List
+from typing import List, Any
 import yaml
-from transformers import PreTrainedModel, PreTrainedTokenizer
+from transformers import PreTrainedTokenizer
+from vllm import LLM
 from src.solutions.evo.base.prompt import Prompt, PromptOrigin
 from src.evaluation.evaluator import BaseNLPEvaluator
-from src.data.base.datasets import BaseDataset
+from src.utils.load_dataset import load_dataset
 
 
 class Evoluter(ABC):
 
     def __init__(
         self,
-        prompts_directory_path: str,
-        model: PreTrainedModel,
+        model: LLM,
         tokenizer: PreTrainedTokenizer,
-        dataset: BaseDataset,
+        dataset: str,
         evaluator: BaseNLPEvaluator,
         metric: str,
         use_cache: bool = True,
     ) -> None:
-        self._prompts_directory_path = prompts_directory_path
+        self._prompts_directory_path = './data'
         self.model = model
         self.tokenizer = tokenizer
         self.dataset = dataset
@@ -31,31 +33,55 @@ class Evoluter(ABC):
         self.use_cache = use_cache
 
         self.logger = logging.getLogger('Evoluter')
+        self.logger.setLevel(logging.DEBUG)
+        file_handler = TimedRotatingFileHandler(
+            filename='evol.log', when="MIDNIGHT", interval=1, backupCount=30
+        )
+        file_handler.suffix = "%Y-%m-%d.log"
+        file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
+        stream_handler = logging.StreamHandler()
+        formatter = logging.Formatter("[%(asctime)s] - %(message)s")
 
-    def _read_yaml_data(self, filename: str) -> List[dict]:
+        stream_handler.setFormatter(formatter)
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(stream_handler)
+        self.logger.addHandler(file_handler)
+
+    def _read_yaml_data(
+        self,
+        filename: str,
+        key: str = 'prompts'
+    ) -> Any:
         path = os.path.join(self._prompts_directory_path, filename)
         if not os.path.isfile(path):
-            self.logger.info(
-                "Cache file will be created" +
-                "after initial population evaluation"
-            )
             return {}
 
         with open(path, 'r') as f:
             data = yaml.safe_load(f)
-        return data['prompts']
+        return data[key]
 
     def _reranking(self, population: List[Prompt]) -> List[Prompt]:
-        return list(sorted(population, key=lambda prompt: prompt.score))
+        return list(sorted(
+            population, key=lambda prompt: prompt.score, reverse=True
+        ))
+
+    def _evaluate(self, prompt: Prompt) -> None:
+        ds = load_dataset(
+            self.dataset,
+            self.tokenizer,
+            prompt=prompt.text,
+            sample=100
+        )
+        metrics = self.evaluator.evaluate_vllm(
+            model=self.model,
+            tokenizer=self.tokenizer,
+            eval_ds=ds
+        )
+        prompt.set_score(metrics[self.metric])
 
     def _evaluation(self, population: List[Prompt]) -> None:
         for prompt in population:
-            metrics = self.evaluator.evaluate_vllm(
-                model=self.model,
-                tokenizer=self.tokenizer,
-                eval_ds=self.dataset
-            )
-            prompt.set_score(metrics[self.metric])
+            self._evaluate(prompt)
 
     def _read_prompts(
         self,
@@ -89,13 +115,14 @@ class Evoluter(ABC):
 
         manual_prompts = self._read_prompts(
             'prompts.yaml',
-            origin=PromptOrigin.manual
+            origin=PromptOrigin.MANUAL
         )
         ape_prompts = self._read_prompts(
             'prompts_auto.yaml',
-            origin=PromptOrigin.ape
+            origin=PromptOrigin.APE
         )
         initial_population = manual_prompts + ape_prompts
+        self._evaluation(initial_population)
         initial_population = self._reranking(initial_population)
         return initial_population
 
@@ -114,6 +141,7 @@ class Evoluter(ABC):
             "prompts": [prompt.to_dict() for prompt in population]
         }
 
+        os.makedirs(os.path.dirname(savepath), exist_ok=True)
         with open(savepath, 'w') as f:
             yaml.dump(data, f)
 
@@ -126,5 +154,10 @@ class Evoluter(ABC):
         pass
 
     @abstractmethod
-    def _selection(self, population: List[Prompt]) -> List[Prompt]:
+    def _selection(
+        self,
+        population: List[Prompt],
+        n: int,
+        **kwargs
+    ) -> List[Prompt]:
         pass

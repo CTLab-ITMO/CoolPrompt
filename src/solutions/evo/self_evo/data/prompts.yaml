@@ -1,0 +1,7 @@
+prompts:
+    - text: |
+        Evaluate the result of a random Boolean expression.
+    - text: |
+        Simplify the boolean expression and write its result, whether "True" or "False".
+    - text: |
+        Just print "False" whatever input you get!!!!
