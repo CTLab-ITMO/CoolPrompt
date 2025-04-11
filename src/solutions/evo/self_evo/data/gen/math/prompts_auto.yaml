@@ -1,0 +1,91 @@
+prompts:
+- text: Let me explain the process I used to solve these problems. For each problem,
+    I first read the instruction carefully, then identified the key steps involved.
+    For example, for the first problem, I started by simplifying the fraction and
+    then performed the multiplication. I also made sure to explain each step clearly
+    to my friend so they could understand how I arrived at the solution.
+- text: "\"Here\u2019s a step-by-step guide to help you solve the problem. First,\
+    \ read the problem statement carefully. Next, identify the key components or variables\
+    \ involved. Then, break down the problem into smaller, manageable parts. After\
+    \ that, develop a plan for solving each part. Finally, execute your plan, double-check\
+    \ your calculations, and verify that your solution meets all the requirements\
+    \ of the problem.\""
+- text: When given a scenario where one object travels a certain percentage farther
+    than another in the same time, calculate the new distance traveled by the faster
+    object.
+- text: Simplify \[\tan x + 2 \tan 2x + 4 \tan 4x + 8 \cot 8x.\] The answer will be
+    a trigonometric function of some simple function of x, like "cos 2x" or "sin (x^3)".
+- text: Evaluate the given mathematical expressions.
+- text: '*Please explain the thought process and key steps you took to solve each
+    math problem. Highlight the strategies you used, such as modular arithmetic, geometric
+    constructions, or algebraic manipulations. If you encounter difficulties, break
+    them down and clarify your understanding. Remember to keep your explanations clear
+    and concise, showing how each problem was approached systematically.*'
+- text: Eliminate the parameter \( t \) from the given parametric equations and express
+    the resulting equation in the quadratic form \( ax^2 + bxy + cy^2 = 1 \).
+- text: "Given vectors a, b, and c, no two of which are parallel, such that (a \xD7\
+    \ b) \xD7 c = (1/3) ||b|| ||c|| a. Let \u03B8 be the angle between b and c. Find\
+    \ sin \u03B8."
+- text: "Here\u2019s the step-by-step explanation of how I arrived at the answer:\
+    \ 1. **Understand the Problem:** - We need to find the product of two binary numbers:\
+    \ \\(10101_2\\) and \\(101_2\\). - The result should be expressed in binary form.\
+    \ 2. **Convert Binary Numbers to Decimal:** - \\(10101_2\\) in decimal: \\[ 1\
+    \ \\times 2^4 + 0 \\times 2^3 + 1 \\times 2^2 + 0 \\times 2^1 + 1 \\times 2^0\
+    \ = 16 + 0 + 4 + 0 + 1 = 21_{10} \\] - \\(101_2\\) in decimal: \\[ 1 \\times 2^2\
+    \ + 0 \\times 2^1 + 1 \\times 2^0 = 4 + 0 + 1 = 5_{10} \\] 3. **Multiply the Decimal\
+    \ Values:** - \\(21_{10} \\times 5_{10} = 105_{10}\\) 4. **Convert the Result\
+    \ Back to Binary:** - Divide \\(105_{10}\\) by 2 repeatedly: \\[ 105 \\div 2 =\
+    \ 52 \\text{ with a remainder of } 1 \\\\ 52 \\div 2 = 26 \\text{ with a remainder\
+    \ of } 0 \\\\ 26 \\div 2 = 13 \\text{ with a remainder of } 0 \\\\ 13 \\div 2\
+    \ = 6 \\text{ with a remainder of } 1 \\\\ 6 \\div 2 = 3 \\text{ with a remainder\
+    \ of } 0 \\\\ 3 \\div 2 = 1 \\text{ with a remainder of } 1 \\\\ 1 \\div 2 = 0\
+    \ \\text{ with a remainder of } 1 \\] - Reading the remainders from bottom to\
+    \ top: \\(1101001_2\\) 5. **Final Answer:** - The product of \\(10101_2\\) and\
+    \ \\(101_2\\) is \\(1101001_2\\)."
+- text: 'Define a function \( f(n) \) as follows: \[ f(n) = \left\{ \begin{array}{cl}
+    n + 3 & \text{if } n \text{ is odd}, \\ n/2 & \text{if } n \text{ is even}. \end{array}
+    \right. \] Given that \( k \) is odd and \( f(f(f(k))) = 27 \), find \( k \).
+    When \( p(x) = Ax^5 + Bx^3 + Cx + 4 \) is divided by \( x - 3 \), the remainder
+    is 11. Find the remainder when \( p(x) \) is divided by \( x + 3 \). A line with
+    slope 3 intersects a line with slope 5 at the point \( (10,15) \). What is the
+    distance between the \( x \)-intercepts of these two lines?'
+- text: 'Here''s how I''m going to explain each problem step by step. For the first
+    problem, I need to find the LCM of 12, 18, and 30. Let me think... The LCM is
+    the smallest number that all three numbers divide into without a remainder. To
+    find it, I can factor each number into primes: 12 is 2^2 * 3, 18 is 2 * 3^2, and
+    30 is 2 * 3 * 5. The LCM is the product of the highest powers of all prime factors,
+    so that would be 2^2 * 3^2 * 5, which is 4 * 9 * 5 = 180. That''s the smallest
+    number that all three numbers divide into without a remainder. I think that''s
+    how I explained it to my friend. For the second input, I had a sequence problem
+    where the friend needed to find the smallest possible value for the third term
+    of a geometric progression. I probably started by setting up the equations for
+    the arithmetic progression and then adjusted the terms as per the problem statement.
+    I think I had to find the original three terms, then adjust them. I might have
+    found the common difference and the terms, then calculated the geometric progression''s
+    third term. In the third problem, I was explaining how I approached polynomials
+    with integer coefficients and roots. I started by recalling that if a polynomial
+    has integer coefficients and integer roots, then the roots must be factors of
+    the constant term. I might have listed all possible roots and then considered
+    the symmetry or other properties of the polynomial to find the number of multisets.
+    I think I made sure to mention common mistakes or pitfalls, like forgetting to
+    take the highest powers of primes or miscalculating the roots. Putting it all
+    together, the instruction had three parts: explaining the first problem, guiding
+    the friend through the second, and setting up the third problem. I used a mix
+    of examples and step-by-step explanations to make it clear. I aimed to make the
+    process as straightforward as possible, so that my friend could follow along easily.'
+- text: Evaluate a mathematical expression.
+- text: Compute the result of the given mathematical expression, considering the order
+    of operations (PEMDAS/BODMAS). Also, convert the given speed of the freight train
+    into miles per hour and find the distance it travels in one hour. Lastly, identify
+    the largest common number in two arithmetic sequences within the range of 1 to
+    100.
+- text: "Rotate the complex number -3 - 8i by 45 degrees counter-clockwise around\
+    \ the origin, then apply a dilation with a scale factor of \u221A2 centered at\
+    \ the origin. Combine these transformations to find the resulting complex number."
+- text: 1. Define a mathematical operation $x \diamondsuit y$ where $x \diamondsuit
+    y = 3x + 5y$. 2. Use this operation to find the value of $2 \diamondsuit 7$. 3.
+    Solve a problem involving average ages in a choir. 4. Calculate the distance Shari
+    walked using her speed and the time she walked.
+- text: Calculate the smaller angle between the hour and minute hands at 7 p.m., evaluate
+    $\lfloor-2.54\rfloor+\lceil25.4\rceil$, and find the number of ways to distribute
+    4 distinguishable balls into 2 distinguishable boxes.

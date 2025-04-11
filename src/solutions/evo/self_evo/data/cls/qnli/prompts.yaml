@@ -1,0 +1,3 @@
+prompts:
+- text: Define if the sentence entails the question.
+- text: Choose the logical connection between the question and the sentence.

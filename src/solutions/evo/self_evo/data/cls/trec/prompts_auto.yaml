@@ -1,0 +1,37 @@
+prompts:
+- text: For each input, provide an output that describes the type of information being
+    requested (e.g. Description, Entity, Human, etc.)"
+- text: identify the type of answer associated with each question (e.g. Description,
+    Entity, or Human).
+- text: identify the type of input (i.e. description, entity, or human) and provide
+    the corresponding type of output.
+- text: For each input, provide an output that indicates whether the input is asking
+    for a description, an entity, or a human."
+- text: identify the type of answer (description, entity, or human) that should be
+    given to each question.
+- text: 'provide an answer type for each input: either a number, description, or entity.'
+- text: identify the type of the input and provide the corresponding output, i.e.
+    "Description" for questions that seek information about a description, "Entity"
+    for questions that seek information about an entity, and "Human" for questions
+    that seek information about
+- text: provide the type of information being requested, such as a number, description,
+    or entity.
+- text: Identify the type of entity or item in each input sentence. Provide a description
+    or category for the entity identified.
+- text: Explain or define a term
+- text: Look for concepts or categories that fit certain terms or questions. Sometimes,
+    you might need to discover new concepts.
+- text: Find the [specific term] mentioned in the input and provide its [specific
+    output].
+- text: Find the answer to the question, but if the question is about a specific event
+    time, provide the date.
+- text: Identify the name of a specific item or place and replace it with the given
+    location.
+- text: What is the description of...? Or, What is the answer to...?
+- text: What [subject] is [specific information about it]?
+- text: Determine the reason behind something, often using puns or wordplay.
+- text: name something
+- text: What is the name, nickname, number, group, or sport of a specific entity?
+- text: Explain each input sentence or identify the entities referred to in them.
+    The outputs are the answers to these explanations or interpretations.
+- text: Ask about a specific event

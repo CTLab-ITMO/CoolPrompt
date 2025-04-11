@@ -1,0 +1,3 @@
+prompts:
+- text: A task requiring determining the final positions of a set of objects given
+    their initial positions and a description of a sequence of swaps.

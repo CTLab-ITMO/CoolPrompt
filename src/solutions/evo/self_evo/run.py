@@ -8,6 +8,7 @@ sys.path.append(project_root)
 
 from src.solutions.evo.self_evo.args import parse_args
 from src.solutions.evo.self_evo.evoluter import SelfEvoluter
+from src.solutions.evo.self_evo.reevo import ReEvoluter
 from src.evaluation.evaluator import (
     TextClassificationEvaluator,
     GenerationEvaluator
@@ -20,16 +21,18 @@ def run(args):
         "gen": GenerationEvaluator,
     }
     evaluator = task2evaluator[args.task]()
-    evoluter = SelfEvoluter(
+    evoluter = ReEvoluter(
         model_name=args.model_name,
         dataset=args.dataset,
         evaluator=evaluator,
         metric=args.metric,
-        population_num=args.population_num,
+        task=args.task,
+        population_size=args.population_size,
         num_epochs=args.num_epochs,
+        threshold=args.score_threshold,
         output_path=args.output_path,
         use_cache=args.use_cache,
-        history_size=args.history_size
+        batch_size=args.batch_size
     )
     evoluter.evolution()
 

@@ -7,6 +7,7 @@ from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 from src.evaluation.evaluator import BaseNLPEvaluator
 from src.solutions.evo.base import Evoluter, Prompt
+from src.solutions.evo.self_evo.utils import parse_output
 
 
 class PromptHistory:
@@ -132,7 +133,7 @@ class SelfEvoluter(Evoluter):
                 verbose=verbose,
                 temperature=0.6
             )
-            hint = self._single_out_output(output, bracket='<hint>')
+            hint = parse_output(output, bracket='<hint>')
             self.logger.info(f"hint: {hint}")
             mutation_prompt = self._mutation_with_hint_template.replace(
                 "<HINT>",
@@ -163,7 +164,7 @@ class SelfEvoluter(Evoluter):
             verbose=verbose,
             temperature=0.6
         )
-        final_prompt = self._single_out_output(output)
+        final_prompt = parse_output(output)
         final_prompt = Prompt(final_prompt)
         self._evaluate(final_prompt)
         if verbose:
@@ -174,25 +175,6 @@ class SelfEvoluter(Evoluter):
             self.logger.info("=" * 50)
         self._history.append(parents[0], parents[1], final_prompt, hint)
         return final_prompt
-
-    def _single_out_output(
-        self,
-        model_output: str,
-        bracket: str = '<prompt>'
-    ) -> str:
-        closing_bracket = bracket[0] + '/' + bracket[1:]
-        parts = model_output.split(bracket)
-        if len(parts) > 1:
-            prompt = parts[-1].split(closing_bracket)[0]
-            prompt = prompt.strip()
-            return prompt
-        else:
-            if (
-                model_output.startswith("\"")
-                and model_output.endswith("\"")
-            ):
-                model_output = model_output[1:-1]
-            return model_output
 
     def _llm_query(self, request: str, verbose: bool = False, **config) -> str:
         sampling_params = {

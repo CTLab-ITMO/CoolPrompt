@@ -1,0 +1,21 @@
+prompts:
+- text: If you follow these instructions, do you return to the starting point?
+- text: The instruction involved turning around multiple times or in a specific sequence
+    to allow the friend to return to the starting point.
+- text: 'To follow the instructions: Start at a point, follow the sequence of actions.
+    End at the starting point? Yes or No.'
+- text: If you follow these instructions, do you return to the starting point? Always
+    face forward.
+- text: A series of steps and turns where the total steps in one direction exceed
+    the opposite. If the net movement is zero, output "Yes"; otherwise, output "No."
+- text: If you follow these instructions, do you return to the starting point? Always
+    face forward.
+- text: If you follow these instructions, do you return to the starting point? Take
+    7 steps. Take 8 steps. Turn right. Turn right. Take 1 step. Take 7 steps. Take
+    6 steps. Take 1 step.
+- text: If you follow these instructions, do you return to the starting point? Turn
+    left. Take 9 steps. Take 2 steps. Take 5 steps. Turn right. Turn right. Take 5
+    steps. Take 10 steps. Take 1 step.
+- text: If you follow these instructions, do you return to the starting point? Take
+    8 steps. Take 9 steps. Turn right. Turn right. Take 8 steps. Take 9 steps.
+- text: Take 6 steps. Turn left. Take 4 steps. Take 4 steps

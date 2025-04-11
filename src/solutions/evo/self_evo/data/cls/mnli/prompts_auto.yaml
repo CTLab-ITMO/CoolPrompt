@@ -1,0 +1,34 @@
+prompts:
+- text: Determine whether the hypothesis is entailed, contradicted, or neutral with
+    respect to the premise. Use your reasoning to explain each case.
+- text: What is the relationship between the premise and hypothesis in each input-output
+    pair?
+- text: '**Instruction:**Compare the premise and hypothesis to determine if they are
+    in contradiction, neutral, or entailment. - If the premise supports the hypothesis,
+    it''s entailment. - If they are conflicting, it''s contradiction. - If they are
+    balanced, it''s neutral.'
+- text: Instruct your friend to analyze the relationship between the premise and hypothesis.
+    Determine if they are neutral, entail, or contradict each other.
+- text: Determine the logical relation between the premise and hypothesis, and assign
+    the output label accordingly. The output labels are "contradiction," "entailment,"
+    or "neutral."
+- text: '**Instruction:** Check if the premise and hypothesis are related or contradict
+    each other.**Output:**1. If they are contradictory, output "contradiction."2.
+    If they entail each other (one supports the other), output "entailment."3. If
+    they are unrelated, output "neutral."'
+- text: Evaluate the relationship between the premise and hypothesis in each pair,
+    determining if they are in contradiction, entailment, or neutral.
+- text: Analyze each premise and hypothesis for consistency. If they do not match,
+    it is a contradiction; if they do, it is an entailment; if they are both true
+    or both false, it is neutral.
+- text: Determine if the premise and hypothesis are consistent, contradictory, or
+    neutral. If they are consistent but not directly related, classify them as neutral.
+- text: Evaluate the relationship between the premise and hypothesis to determine
+    if they contradict, support, or are neutral.
+- text: Determine whether the premise entails the hypothesis. If the premise logically
+    leads to the hypothesis, output "entailment." If not, output "neutral."
+- text: Assess whether the hypothesis is supported by the premise, leading to entailment,
+    or not, leading to neutral.
+- text: Determine the relationship between the premise and hypothesis. The output
+    was determined based on whether they were contradictory, neutral, or entailed.
+- text: Check for contradictions and entailments between premises and hypotheses.

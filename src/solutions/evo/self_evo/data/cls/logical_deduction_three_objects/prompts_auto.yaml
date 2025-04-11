@@ -1,0 +1,29 @@
+prompts:
+- text: Arrange the three objects in a specific order based on the given relationships,
+    and choose the option that correctly reflects this order.
+- text: Arrange the three objects in the fixed order as described and then determine
+    the oldest, the newest, or their specific positions.
+- text: Arrange the three objects in a fixed order based on the given statements and
+    identify the object that is second from the left.
+- text: Determine the order of the three objects based on the given statements and
+    select the correct option.
+- text: 'On a shelf, there are three books: a purple book, a black book, and a blue
+    book. The purple book is to the right of the blue book. The black book is the
+    second from the left.'
+- text: Identify the second object in the fixed order based on the given statements.
+- text: Identify the most expensive or the leftmost object in each set of three described
+    in the paragraphs.
+- text: Identify the first object in a sequence of three objects described in each
+    input
+- text: Identify the position of each object in a fixed order based on the given statements
+    in each input-output pair.
+- text: Analyze the logical relationships between three objects in each paragraph
+    and determine their order based on the given statements, then select the correct
+    option from the provided choices.
+- text: Arrange the three objects in the correct order based on the given statements
+    and then select the middle one in the first two cases and the second newest in
+    the fifth case.
+- text: Determine the position (first, second, or leftmost) of one of the objects
+    among three based on the given statements in the paragraphs.
+- text: Arrange the options in alphabetical order and select the appropriate ones.
+- text: The second object from the left is [specific position]

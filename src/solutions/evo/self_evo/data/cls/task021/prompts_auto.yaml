@@ -1,0 +1,20 @@
+prompts:
+- text: Confirm whether the situation described in the sentence happened.
+- text: 'Yes'
+- text: 'Sentence: [something] was [something]. Question: [specific question].'
+- text: Write a clear and concise question about the relationship between sound energy
+    and air particles.
+- text: Determine the duration of a specific event or object.
+- text: determine the time or duration of a specific event based on the given information
+- text: Answer with a "Yes" or "No" to the question in the sentence.
+- text: Answer the question posed in each input, providing a yes or no response.
+- text: So from now on, Marsha takes extra special care to make sure Joey is safe
+    and sound at all times.
+- text: Is the occurrence you described always present or frequent?
+- text: Answer yes or no to the question below.
+- text: Answer the question below.
+- text: Review whether the concept described in each sentence aligns with the answer
+    given ("Yes").
+- text: Determine whether a specific event or threat was reported or not.
+- text: Check whether the sentence's truth requires water access, or whether certain
+    events occurred at a specific time, and answer accordingly.

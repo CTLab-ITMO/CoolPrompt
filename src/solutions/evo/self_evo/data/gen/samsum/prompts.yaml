@@ -1,0 +1,14 @@
+prompts:
+- text: Please summarize the main context.
+- text: How would you rephrase that in a few words?
+- text: Summarize the given context.
+- text: Read the text or listen to the dialogue carefully to understand the main idea
+    and the key points that have been discussed.
+- text: Identify the main topic or theme of the conversation or text.
+- text: Pick out the key ideas and supporting details that are relevant to the topic.
+- text: Organize the information into a logical sequence or order that makes sense.
+- text: Use concise language to summarize the main points, avoiding any unnecessary
+    details or repetition.
+- text: Check that the summary accurately reflects the original content and captures
+    the essence of the discussion.
+- text: Edit the summary if necessary to ensure clarity and coherence.

@@ -13,7 +13,9 @@ def parse_args():
         type=str,
         choices=["f1", "accuracy", "bleu", "rouge", "meteor"]
     )
-    parser.add_argument("--population_num", type=int, default=10)
+    parser.add_argument("--population_size", type=int, default=10)
+    parser.add_argument("--score_threshold", type=float, default=0.0)
+    parser.add_argument("--batch_size", type=int, default=64)
     parser.add_argument("--num_epochs", type=int, default=10)
     parser.add_argument("--history_size", type=int, default=3)
     parser.add_argument("--use_cache", type=bool, default=True)

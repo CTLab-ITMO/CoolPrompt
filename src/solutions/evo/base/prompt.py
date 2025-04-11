@@ -6,6 +6,7 @@ class PromptOrigin(Enum):
     MANUAL = "manual"
     APE = "ape"
     EVOLUTED = "evoluted"
+    MUTATED = "mutated"
 
     @classmethod
     def from_string(cls, string: str):

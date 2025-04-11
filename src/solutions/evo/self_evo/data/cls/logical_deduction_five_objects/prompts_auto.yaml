@@ -1,0 +1,28 @@
+prompts:
+- text: Identify the second-place finisher or the last-place finisher based on the
+    clues provided in each input-output pair.
+- text: I provided a set of five objects with specific statements about their order
+    and cost. For each set, I instructed my friend to arrange the objects according
+    to the given statements and select the correct output option that matched the
+    logical conclusion of each paragraph.
+- text: Arrange the items in a specific order, and the outputs indicated their category
+    or position.
+- text: Arrange the objects in the order specified by the given statements.
+- text: To rank the items based on their prices or positions as described in each
+    paragraph.
+- text: What is the position of the hummingbird in the shelf arrangement?
+- text: Arrange the five objects in a specific order based on the given statements
+    and then identify which one is in the second position from the options.
+- text: Determine the order of the items based on the given statements, specifically
+    to list them from first to last, with Amy finishing second.
+- text: Determine the position of the last item in the input based on the given clues.
+- text: Rank the golfers and indicate who finished second in each case.
+- text: Arrange the golfers in a fixed order based on the given clues.
+- text: Find the third position in each scenario.
+- text: Arrange the birds in a fixed order based on the clues and identify the position
+    of the specified bird.
+- text: Rank the golfers based on the given clues and select the one with the correct
+    second-to-last position.
+- text: 'Determine the position of one of the five objects (Rob, Amy, Joe, Eve, Dan)
+    or birds (owl, cardinal, robin, hummingbird, crow) based on the given clues. Output:
+    Please provide the position of [specific object or bird].'

@@ -1,0 +1,22 @@
+prompts:
+- text: create a kite
+- text: Draw a path element with M 57.33,25.85 A 18.81,18.81 351.25 1,0 20.15,31.57
+    A 18.81,18.81 351.25 1,0 57.33,25.85
+- text: Draw a triangle using the SVG path element
+- text: Draw a shape using the SVG path element <path d="..."/>
+- text: Create a hexagon
+- text: Draw a polygon, and specify the options as given in the problem.
+- text: Create heptagon, sector, sector, octagon, and kite shapes using SVG path commands.
+- text: Identify a sector in the SVG path element
+- text: Draw a hexagon
+- text: 'Draw a closed SVG path element, follow the given `d` attributes: - **M**,
+    **L**, **M**, **L**, **M** to create a closed shape. - The specific path commands
+    produce the following shapes: - (D) kite - (C) hexagon - (E) line - (C) hexagon
+    - (D) kite'
+- text: Create a polygon with a specific number of sides using the path element, with
+    the appropriate number of L commands to form the shape. The number of sides determines
+    the output shape, such as a sector, heptagon, hexagon, etc.
+- text: Draw a sector using the SVG path element.
+- text: Draw a path element
+- text: Draw a heptagon
+- text: Create a sector using the arc command with specific parameters.

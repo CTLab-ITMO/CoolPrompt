@@ -1,0 +1,3 @@
+prompts:
+- text: Given a series of navigation instructions, determine whether one would end
+    up back at the starting point.

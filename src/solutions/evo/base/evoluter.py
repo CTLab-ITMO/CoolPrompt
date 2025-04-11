@@ -22,15 +22,19 @@ class Evoluter(ABC):
         dataset: str,
         evaluator: BaseNLPEvaluator,
         metric: str,
+        task: str,
         use_cache: bool = True,
+        batch_size: int = 64,
     ) -> None:
-        self._prompts_directory_path = './data'
+        self._prompts_directory_path = f'./data/{task}/{dataset}'
         self.model = model
         self.tokenizer = tokenizer
         self.dataset = dataset
         self.evaluator = evaluator
         self.metric = metric
         self.use_cache = use_cache
+        self.batch_size = batch_size
+        self.task = task
 
         self.logger = logging.getLogger('Evoluter')
         self.logger.setLevel(logging.DEBUG)
@@ -49,10 +53,9 @@ class Evoluter(ABC):
 
     def _read_yaml_data(
         self,
-        filename: str,
+        path: os.PathLike,
         key: str = 'prompts'
     ) -> Any:
-        path = os.path.join(self._prompts_directory_path, filename)
         if not os.path.isfile(path):
             return {}
 
@@ -70,12 +73,14 @@ class Evoluter(ABC):
             self.dataset,
             self.tokenizer,
             prompt=prompt.text,
+            split='train',
             sample=100
         )
         metrics = self.evaluator.evaluate_vllm(
             model=self.model,
             tokenizer=self.tokenizer,
-            eval_ds=ds
+            eval_ds=ds,
+            batch_size=self.batch_size
         )
         prompt.set_score(metrics[self.metric])
 
@@ -88,7 +93,9 @@ class Evoluter(ABC):
         filename: str,
         origin: PromptOrigin = None
     ) -> List[Prompt]:
-        prompts_data = self._read_yaml_data(filename)
+        prompts_data = self._read_yaml_data(
+            os.path.join(self._prompts_directory_path, filename)
+        )
         return [
             Prompt.from_dict(prompt_data, origin=origin)
             for prompt_data in prompts_data
@@ -96,7 +103,12 @@ class Evoluter(ABC):
 
     def _init_pop(self, use_cache: bool) -> List[Prompt]:
         if use_cache:
-            cached_data = self._read_yaml_data('cached_prompts.yaml')
+            cached_data = self._read_yaml_data(
+                os.path.join(
+                    self._prompts_directory_path,
+                    'cached_prompts.yaml'
+                )
+            )
 
             if not cached_data:
                 initial_population = self._init_pop(use_cache=False)
@@ -126,6 +138,15 @@ class Evoluter(ABC):
         initial_population = self._reranking(initial_population)
         return initial_population
 
+    def _cache_data(
+        self,
+        data: Any,
+        savepath: os.PathLike
+    ) -> None:
+        os.makedirs(os.path.dirname(savepath), exist_ok=True)
+        with open(savepath, 'w') as f:
+            yaml.dump(data, f)
+
     def _cache_population(
         self,
         population: List[Prompt],
@@ -140,10 +161,7 @@ class Evoluter(ABC):
             "average_score": average_score,
             "prompts": [prompt.to_dict() for prompt in population]
         }
-
-        os.makedirs(os.path.dirname(savepath), exist_ok=True)
-        with open(savepath, 'w') as f:
-            yaml.dump(data, f)
+        self._cache_data(data, savepath)
 
     @abstractmethod
     def evolution(self) -> None:
