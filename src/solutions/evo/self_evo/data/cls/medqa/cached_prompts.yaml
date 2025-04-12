@@ -1,0 +1,63 @@
+average_score: 0.12129210065067607
+best_score: 0.32513942031662163
+prompts:
+- origin: MANUAL
+  score: 0.32513942031662163
+  text: Please use your domain knowledge in medical area to solve the questions.
+- origin: APE
+  score: 0.2567343261840415
+  text: The instruction is a series of questions that a healthcare provider would
+    ask to diagnose a patient and recommend treatment. The outputs are the answers
+    to these questions, indicating the best treatment plan.
+- origin: APE
+  score: 0.20782163742690055
+  text: Perform a specific medical test based on the patient's medical history. The
+    outputs provided were the answers to these tests, and the friend's task was to
+    identify the correct test from the options given.
+- origin: APE
+  score: 0.1813951480618147
+  text: Perform an anesthetic application, indicated by the output "A." The outputs
+    associated with the other input-output pairs were interpreted based on medical
+    terminology, with "E" standing for "Epinephrine and Norepinephrine," "D" for "Dyskeratosis
+    Negativity," and "C" for "Cervical lymphadenopathy."
+- origin: APE
+  score: 0.1675654067294934
+  text: Identify the chest right upper thoracic cage structure in the provided patient
+    cases.
+- origin: APE
+  score: 0.15589640874270858
+  text: Analyze a medical scenario and provide an opinion or answer a question based
+    on the given inputs.
+- origin: APE
+  score: 0.15378743141162865
+  text: The most likely explanation for the patient's symptoms is pancreatic cancer.
+- origin: APE
+  score: 0.14484544695071008
+  text: The instruction was about early evaluation, and all outputs indicate that
+    the patient's condition was evaluated early, leading to specific diagnoses.
+- origin: APE
+  score: 0.10086580086580087
+  text: Note the inputs, write an output for each, and select the correct statement.
+- origin: APE
+  score: 0.08477075040542532
+  text: Explain medical terms in simple language, especially for those affected by
+    medical conditions.
+- origin: APE
+  score: 0.017543859649122806
+  text: Determine the most likely mechanism or condition that prevented the patient's
+    condition, identify the corresponding output and then infer the possible mechanisms
+    or conditions that prevented the patient's condition based on the outputs. Each
+    output directly related to the input.
+- origin: MANUAL
+  score: 0.011904761904761904
+  text: Answer the medical question and choose the letter that represents the correct
+    answer.
+- origin: APE
+  score: 0.011111111111111112
+  text: Provide a detailed explanation of the procedure or treatment for the given
+    input.
+- origin: APE
+  text: Identify the underlying cause of the patient's symptoms.
+- origin: APE
+  text: Explain the physical findings to the patient, then ask the patient to explain
+    their symptoms to their parents.

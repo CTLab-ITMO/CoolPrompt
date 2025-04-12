@@ -1,0 +1,64 @@
+average_score: 0.3071181257107939
+best_score: 0.5866518802298619
+prompts:
+- origin: APE
+  score: 0.5866518802298619
+  text: Choose the sarcastic option for each input.
+- origin: APE
+  score: 0.48263118994826315
+  text: 1. Identify the tone and context of each option in the given inputs. 2. Compare
+    the tone and context of options A and B in each input to determine which one is
+    sarcastic. 3. Explain the difference between a sarcastic statement and a humorous
+    statement. 4. Provide a clear and concise explanation of the reasoning behind
+    the chosen option.
+- origin: APE
+  score: 0.4357638888888889
+  text: Analyze each input by identifying which of the two options is sarcastic. The
+    sarcastic nature of the statements is evident in how they question the feasibility
+    and effectiveness of certain actions, often using strong and exaggerated language.
+    I will then guide them through the process of determining the correct answer for
+    each input, ensuring they follow the reasoning to arrive at the appropriate output.
+- origin: APE
+  score: 0.4213342067911344
+  text: I provided your friend with a list of statements and asked them to select
+    the one that is the opposite of each given statement. They chose the sarcastic
+    option in response to each input.
+- origin: APE
+  score: 0.3825845298749421
+  text: Select the sarcastic option, which is option B.
+- origin: APE
+  score: 0.297423887587822
+  text: Choose the sarcastic statement from the following options.
+- origin: APE
+  score: 0.28530362917714697
+  text: Choose the sarcastic statement from the options.
+- origin: APE
+  score: 0.27843137254901956
+  text: Select the sarcastic option.
+- origin: APE
+  score: 0.27843137254901956
+  text: Select the sarcastic option.
+- origin: APE
+  score: 0.26409618573797683
+  text: Choose the sarcastic statement from the given options.
+- origin: APE
+  score: 0.25792089047903005
+  text: Choose the sarcastic statement from the two options provided.
+- origin: APE
+  score: 0.24853033145716075
+  text: Answer "Which statement is sarcastic?" and select the sarcastic option.
+- origin: APE
+  score: 0.22985347985347984
+  text: Select the sarcastic statement from the given options.
+- origin: MANUAL
+  score: 0.2177109440267335
+  text: Determine which of two sentences is sarcastic.
+- origin: APE
+  score: 0.17777777777777778
+  text: Determine which of the given statements is sarcastic. To do this, you need
+    to analyze each statement to identify any sarcastic language or tone. Then evaluate
+    the options and choose the correct answer based on my analysis.
+- origin: APE
+  score: 0.06944444444444445
+  text: Determine which statement is sarcastic, identify the index of the sarcastic
+    statement.

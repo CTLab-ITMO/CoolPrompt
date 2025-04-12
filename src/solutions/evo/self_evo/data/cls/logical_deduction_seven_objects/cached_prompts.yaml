@@ -1,0 +1,80 @@
+average_score: 0.0795122659059315
+best_score: 0.19272727272727272
+prompts:
+- origin: APE
+  score: 0.19272727272727272
+  text: For each input, identify the most expensive fruit and select the option that
+    matches it.
+- origin: APE
+  score: 0.1634694989106754
+  text: Determine the position of a particular book (e.g., green, red, etc.) based
+    on the given logical rules and clues in each input-output pair.
+- origin: APE
+  score: 0.15814786059351277
+  text: Find Ada's finishing position in the golf tournament based on the given clues
+- origin: APE
+  score: 0.10999634502923977
+  text: The rightmost position for the falcon in the bird arrangement.
+- origin: APE
+  score: 0.0983974358974359
+  text: Determine the position of a specific object in a list of seven objects arranged
+    in a fixed order, based on the given logical relationships.
+- origin: MANUAL
+  score: 0.08879776269482151
+  text: A logical deduction task which requires deducing the order of a sequence of
+    objects.
+- origin: APE
+  score: 0.07839912280701754
+  text: Ada is fourth; the convertible is second-oldest; the crow is rightmost; the
+    robin is fourth-to-last; the cardinal is second-to-last; the hawking is rightmost.
+    Ana is third. The bird options are given, but the main instruction was about Ada's
+    position.
+- origin: APE
+  score: 0.07468062982768865
+  text: Choose the second item from the provided list of options.
+- origin: APE
+  score: 0.05567578201849302
+  text: 'The following paragraphs each describe a set of seven objects arranged in
+    a fixed order. The statements are logically consistent within each paragraph.
+    On a branch, there are seven birds: a blue jay, a falcon, a raven, a crow, a robin,
+    an owl, and a hummingbird. The robin is to the left of the owl. The crow is the
+    rightmost. The hummingbird is the fourth from the left. The owl is the third from
+    the right. The blue jay is to the left of the robin. The raven is the second from
+    the left.'
+- origin: APE
+  score: 0.04726107226107226
+  text: 'Arrange the birds in the following order: falcon is second, crow is last,
+    and blue jay is fourth.'
+- origin: APE
+  score: 0.04448329448329448
+  text: 'The following paragraphs each describe a set of seven objects arranged in
+    a fixed order. The statements are logically consistent within each paragraph.
+    On a shelf, there are seven books: a black book, an orange book, a yellow book,
+    a white book, a blue book, a red book, and a green book. The red book is to the
+    right of the yellow book. The white book is the second from the right. The red
+    book is to the left of the green book. The blue book is to the right of the black
+    book. The black book is the third from the right. The orange book is the leftmost.'
+- origin: APE
+  score: 0.03553921568627451
+  text: List the birds in the order they are arranged on the branch, based on the
+    given clues. Select the correct option based on the leftmost or third position
+    as per the instruction.
+- origin: APE
+  score: 0.023369565217391305
+  text: Solve a logic puzzle involving seven objects arranged in a fixed order. The
+    puzzle required me to follow a series of clues and use them to determine the correct
+    order of the objects. Each time my friend processed the instruction, they applied
+    the clues correctly and arrived at the right solution. The process involved breaking
+    down each clue, identifying relationships between the objects, and systematically
+    eliminating possibilities until the correct order was found. This method helped
+    my friend understand how to approach similar problems in the future by focusing
+    on logical reasoning and systematic analysis.
+- origin: APE
+  score: 0.021739130434782608
+  text: Arrange the seven fruits in the fixed order based on their prices, following
+    the given statements.
+- origin: APE
+  text: Arrange the seven objects in a fixed order such that the oldest is first,
+    the rightmost is last, and the cardinal is the rightmost, the truck is the oldest,
+    the bus is the oldest, the station wagon is the oldest, and the limousine is the
+    oldest.

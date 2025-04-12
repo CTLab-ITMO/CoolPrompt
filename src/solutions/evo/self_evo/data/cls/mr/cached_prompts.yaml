@@ -1,0 +1,129 @@
+average_score: 0.7258598619185415
+best_score: 0.9697550156265753
+prompts:
+- origin: MANUAL
+  score: 0.9697550156265753
+  text: Determine the sentiment of a product review based on the text provided, positive
+    or negative.
+- origin: APE
+  score: 0.9697550156265753
+  text: provide an opinion (positive or negative) based on the input provided.
+- origin: APE
+  score: 0.9595959595959596
+  text: identify the sentiment of the given text as either "positive" or "negative".
+- origin: MANUAL
+  score: 0.9493875898370281
+  text: Now you are a classifier, your task is to determine the sentiment polarity
+    of the given text, whether positive or negative.
+- origin: APE
+  score: 0.9493875898370281
+  text: provide an opinion (positive or negative) on the given input.
+- origin: APE
+  score: 0.9391233766233766
+  text: evaluate the sentence according to whether it is a positive or negative opinion.
+- origin: MANUAL
+  score: 0.9291426257718393
+  text: You are a sentiment classifier. To do this, you must first understand the
+    meaning of the sentence and any relevant context. And then you should classify
+    it as positive or negative.
+- origin: MANUAL
+  score: 0.928796663615095
+  text: Given a tweet, classify it as having a positive or negative sentiment.
+- origin: APE
+  score: 0.9184006527947777
+  text: produce output (in this case a positive or negative judgment) based on the
+    input (in this case a statement about a movie or book).
+- origin: APE
+  score: 0.898000815993472
+  text: rate the input as either "positive" or "negative".
+- origin: APE
+  score: 0.8973727422003284
+  text: determine the sentiment of the statement, i.e. to decide if it was positive
+    or negative.
+- origin: APE
+  score: 0.8858802780371408
+  text: produce a sentiment classification for each input.
+- origin: APE
+  score: 0.864002510722879
+  text: classify each input as either positive or negative.
+- origin: APE
+  score: 0.8430798200648604
+  text: classify each input-output pair as either "positive" or "negative" based on
+    the content of the input sentence. The friend correctly classified each input-output
+    pair as either "positive" or "negative."
+- origin: APE
+  score: 0.732620320855615
+  text: identify the sentiment of each input-output pair, which the friend accurately
+    did.
+- origin: MANUAL
+  score: 0.64333197666531
+  text: Determine the sentiment of the text provided, positve or negative.
+- origin: MANUAL
+  score: 0.6425060574593285
+  text: Please label the sentiment towards the movie of the given movie review. The
+    sentiment label should be "positive" or "negative".
+- origin: MANUAL
+  score: 0.6326495550286912
+  text: Determine the sentiment of a movie review based on a given text, positive
+    or negative.
+- origin: MANUAL
+  score: 0.6255765199161426
+  text: Please perform Sentiment Classification task. Given the sentence, assign a
+    sentiment label from ['negative', 'positive']. Return label only without any other
+    text
+- origin: APE
+  score: 0.6227828422019646
+  text: assign a positive or negative rating to a review of a movie or television
+    show.
+- origin: APE
+  score: 0.6213282247765006
+  text: provide a judgment (positive or negative) based on the descriptions given
+    in the inputs.
+- origin: APE
+  score: 0.619287211740042
+  text: read the statement and determine if it is expressing a positive or negative
+    opinion.
+- origin: APE
+  score: 0.6128197162679921
+  text: give a positive or negative evaluation of the given statement.
+- origin: APE
+  score: 0.6118093601174491
+  text: provide a positive or negative sentiment in response to a given input.
+- origin: APE
+  score: 0.604212373848179
+  text: evaluate the given sentences and provide a positive or negative opinion.
+- origin: APE
+  score: 0.5992952783650458
+  text: 'identify the sentiment of the sentence: positive or negative.'
+- origin: MANUAL
+  score: 0.5972811566870972
+  text: Given a statement, classify it as expressing a positive or negative opinion.
+- origin: MANUAL
+  score: 0.5955473098330241
+  text: Your task is to classify the comment "positive" or "negative".
+- origin: APE
+  score: 0.5949749484232243
+  text: identify the sentiment expressed in the statement.
+- origin: MANUAL
+  score: 0.5948752178588645
+  text: When given an English sentence, your task is to analyze it and generate a
+    sentiment word to describe the original text, such as positive or negative.
+- origin: MANUAL
+  score: 0.5845598845598845
+  text: Classify a sentence as expressing optimism or pessimism.
+- origin: APE
+  score: 0.5642778563570643
+  text: rate the given statements as either positive or negative.
+- origin: MANUAL
+  score: 0.5493827160493827
+  text: Given text, classify whether it is positive or negative.
+- origin: MANUAL
+  score: 0.5465428276573787
+  text: Given a statement, classify it as either expressing approval or disapproval.
+- origin: MANUAL
+  score: 0.5403508771929825
+  text: Given a sentence, classify it as either positive or negative sentiment.
+- origin: MANUAL
+  score: 0.49326214085939485
+  text: In this task, you are given sentences from movie reviews. The task is to classify
+    a sentence as  positive or as negative.
