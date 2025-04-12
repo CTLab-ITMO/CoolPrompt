@@ -114,6 +114,7 @@ class ReEvoluter(Evoluter):
         probas = scores / np.sum(scores)
 
         trial = 0
+        anyways = False
         while len(selected_population) < 2 * self.population_size:
             parents = np.random.choice(
                 population,
@@ -121,11 +122,11 @@ class ReEvoluter(Evoluter):
                 replace=False,
                 p=probas
             )
-            if parents[0].score != parents[1].score:
+            if parents[0].score != parents[1].score or anyways:
                 selected_population.extend(parents)
             trial += 1
             if trial > 1000:
-                return None
+                anyways = True
 
         return selected_population
 
@@ -408,6 +409,16 @@ class ReEvoluter(Evoluter):
 
         self.logger.info(f"BEST SCORE: {self.best_score_overall}")
         self.logger.info(f"BEST PROMPT:\n{self.best_prompt_overall}")
+
+        population = self._reranking(population)
+        population = population[:4]
+        population[3] = self.elitist  # top-3 of current and elitist
+        self._evaluation(population, split='test')
+        self._cache_population(
+            population,
+            self._make_output_path('best_prompts_infer.yaml')
+        )
+        self._update_elitist(population)
         append_to_yaml(
             new_data={
                 self.dataset: self.elitist.to_dict(),
