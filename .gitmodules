@@ -4,3 +4,6 @@
 [submodule "src/solutions/EvoPrompt"]
 	path = src/solutions/EvoPrompt
 	url = https://github.com/zhuravlevvik/EvoPrompt.git
+[submodule "src/solutions/rl_solutions/Stableprompt"]
+	path = src/solutions/rl_solutions/Stableprompt
+	url = git@github.com:a-ct-seal/Stableprompt.git

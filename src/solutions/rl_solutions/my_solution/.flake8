@@ -1,0 +1,4 @@
+[flake8]
+per-file-ignores =
+    # line too long
+    path/to/file.py: E501,
