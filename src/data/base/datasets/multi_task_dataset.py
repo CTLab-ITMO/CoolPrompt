@@ -7,7 +7,7 @@ from src.data.base.datasets import (
     BaseClassificationDataset,
     BaseGenerationDataset
 )
-from src.utils.data_utils import INNER_GENERATION_TASKS
+from src.utils.data import ALL_DATA_PATH, INNER_GENERATION_TASKS
 
 
 class InnerTaskClassificationDataset(BaseClassificationDataset):
@@ -18,9 +18,7 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         base_name: the global name of multi-task dataset this task is part of.
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -29,6 +27,8 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -36,21 +36,37 @@ class InnerTaskClassificationDataset(BaseClassificationDataset):
         base_name: str,
         name: str,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        config_path: str,
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.base_name = base_name
+
         super().__init__(
             name=name,
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=config_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
+        )
+
+    def _get_data_path(self) -> str:
+        """Generates path to data file
+
+        Returns:
+            str: path to data
+        """
+        return os.path.join(
+            ALL_DATA_PATH,
+            self.base_name,
+            self.name,
+            f"{self.split}-00000-of-00001.parquet"
         )
 
     def _get_data_from_config(self, config_filename: str, key: str = None):
@@ -84,9 +100,7 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
         base_name: the global name of multi-task dataset this task is part of.
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -98,6 +112,8 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
         response_prefix: a string prefix that can be
             added right before model output generation.
             By default is empty string.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
@@ -105,21 +121,37 @@ class InnerTaskGenerationDataset(BaseGenerationDataset):
         base_name: str,
         name: str,
         tokenizer: PreTrainedTokenizer,
-        data_path: str,
-        config_path: str,
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.base_name = base_name
+
         super().__init__(
             name=name,
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=config_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
+        )
+
+    def _get_data_path(self) -> str:
+        """Generates path to data file
+
+        Returns:
+            str: path to data
+        """
+        return os.path.join(
+            ALL_DATA_PATH,
+            self.base_name,
+            self.name,
+            f"{self.split}-00000-of-00001.parquet"
         )
 
     def _get_data_from_config(self, config_filename: str, key: str = None):
@@ -137,33 +169,39 @@ class BaseMultiTaskDataset(object):
 
     Attributes:
         name: a string name of the dataset.
-        dir_path: a path to directory with all tasks data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         tokenizer: a tokenizer provided for text tokenization.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
         self,
         name: str,
-        dir_path: str,
-        config_path: str,
         tokenizer: PreTrainedTokenizer,
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
-        device: torch.device = None
+        device: torch.device = None,
+        sample: int = None,
+        seed: int = 42,
     ) -> None:
         self.name = name
-        self.dir_path = dir_path
-        self.config_path = config_path
         self.tokenizer = tokenizer
+        self.split = split
+        self.dir_path = os.path.join(
+            ALL_DATA_PATH,
+            name
+        )
         self.tasks_paths = self._get_tasks()
         self.prompt = prompt
         self.max_seq_length = max_seq_length
         self.device = device
+        self.sample = sample
+        self.seed = seed
 
     def _get_tasks(self) -> dict:
         """Extracts all paths to tasks parquet files.
@@ -203,24 +241,18 @@ class BaseMultiTaskDataset(object):
         task_path = os.path.join(self.dir_path, task_path)
 
         if task_name in INNER_GENERATION_TASKS:
-            return InnerTaskGenerationDataset(
-                base_name=self.name,
-                name=task_name,
-                tokenizer=self.tokenizer,
-                data_path=task_path,
-                config_path=self.config_path,
-                prompt=self.prompt,
-                max_seq_length=self.max_seq_length,
-                device=self.device
-            )
+            task_cls = InnerTaskGenerationDataset
+        else:
+            task_cls = InnerTaskClassificationDataset
 
-        return InnerTaskClassificationDataset(
+        return task_cls(
             base_name=self.name,
             name=task_name,
             tokenizer=self.tokenizer,
-            data_path=task_path,
-            config_path=self.config_path,
+            split=self.split,
             prompt=self.prompt,
             max_seq_length=self.max_seq_length,
-            device=self.device
+            device=self.device,
+            sample=self.sample,
+            seed=self.seed
         )

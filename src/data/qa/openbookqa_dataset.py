@@ -1,6 +1,6 @@
-from src.data.base.datasets import BaseQADataset
-from transformers import PreTrainedTokenizer
 import torch
+from transformers import PreTrainedTokenizer
+from src.data.base.datasets import BaseQADataset
 
 
 class OpenbookQADataset(BaseQADataset):
@@ -9,9 +9,7 @@ class OpenbookQADataset(BaseQADataset):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -20,23 +18,27 @@ class OpenbookQADataset(BaseQADataset):
         input_ids: torch.Tensor of input token ids for model.
         attention_mask: torch.Tensor of attention masks for model.
         num_labels: torch.Tensor of numeric identificators of the labels.
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str = "./data/mnli/test-00000-of-00001.parquet",
-        config_path: str = "./data",
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         super().__init__(
             name="openbookqa",
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=config_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
         )

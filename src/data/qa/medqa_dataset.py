@@ -1,6 +1,8 @@
-from src.data.base.datasets import BaseQADataset
-from transformers import PreTrainedTokenizer
+import os
 import torch
+from transformers import PreTrainedTokenizer
+from src.data.base.datasets import BaseQADataset
+from src.utils.data import ALL_DATA_PATH
 
 
 class MedQADataset(BaseQADataset):
@@ -11,9 +13,7 @@ class MedQADataset(BaseQADataset):
     Attributes:
         name: a string name of the dataset.
         tokenizer: a tokenizer provided for text tokenization.
-        data_path: a path to file with data.
-        config_path: a path to directory with config files
-            (such as prompt_templates.json, basic_prompts.json etc.).
+        split: 'test' or 'train' data split. By default is 'test'.
         prompt: a string that describes task for LLM.
         max_seq_length: an integer limit of token sequence.
         device: device where to store tokenized data.
@@ -24,17 +24,20 @@ class MedQADataset(BaseQADataset):
         num_labels: torch.Tensor of numeric identificators of the labels.
         four_options: boolean value
             (if all the questions will have exact 4 answer options or not)
+        sample: number of elements to sample from data
+        seed: seed to use while sampling
     """
 
     def __init__(
         self,
         tokenizer: PreTrainedTokenizer,
-        data_path: str = "./data/medqa/test-00000-of-00001.parquet",
-        config_path: str = "./data",
+        split: str = 'test',
         prompt: str = None,
         max_seq_length: int = None,
         four_options: bool = False,
         device: torch.device = None,
+        sample: int = None,
+        seed: int = 42
     ) -> None:
         name = "medqa_4_options" if four_options else "medqa"
         self.four_options = four_options
@@ -42,9 +45,23 @@ class MedQADataset(BaseQADataset):
         super().__init__(
             name=name,
             tokenizer=tokenizer,
-            data_path=data_path,
-            prompt_config_dir_path=config_path,
+            split=split,
             prompt=prompt,
             max_seq_length=max_seq_length,
-            device=device
+            device=device,
+            sample=sample,
+            seed=seed
+        )
+
+    def _get_data_path(self) -> str:
+        """Generates path to data file
+
+        Returns:
+            str: path to data
+        """
+        return os.path.join(
+            ALL_DATA_PATH,
+            "medqa",
+            '4_options' if self.four_options else "",
+            f"{self.split}-00000-of-00001.parquet"
         )
