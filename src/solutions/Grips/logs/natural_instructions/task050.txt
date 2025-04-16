@@ -1,0 +1,18 @@
+Base Candidate:	 You are given a sentence and a question in the input. If the information provided in the sentence is enough to answer the question, label "Yes.", otherwise label "No.". Do not use any facts other than those provided in the sentence while labeling "Yes." or "No.".
+Base Score:	 0.19664268585131894
+
+Running step:	 0
+Performing edit:	 swap swap
+Generated candidate:	 You are given a sentence and a question Yes the input a If the information provided Yes the sentence is enough to answer the question, label "Yes a ", otherwise label "No.". Do not use any facts other than those provided Yes the sentence while labeling "Yes ." or "No a ".
+Performing edit:	 del del
+Generated candidate:	 You are given a sentence and a question in the input . If the information provided in the sentence is enough to answer the question, label "Yes . ", otherwise label "No.". Do not use any facts other than  provided in the sentence while labeling "Yes ." or "No . ".
+Performing edit:	 swap sub
+Generated candidate:	 You are given a sentence and a question in the input those If the information provided in the sentence is Enough of that to answer the question, label "Yes those ", otherwise label "No.". Do not use any facts other than those provided in the sentence while labeling "Yes ." or "No those ".
+Performing edit:	 del swap
+Generated candidate:	 You are given a sentence and a question in the input . If the information provided in the sentence is enough to answer the question, label "Yes . ", otherwise label "No.". Do . use any facts other than those provided in the sentence while labeling "Yes ." or "No . ".
+Performing edit:	 del sub
+Generated candidate:	 You are given a sentence and a question in  input . If  information provided in  sentence is enough to answer  question, label "Yes . ", otherwise label "No.". Do not use any facts other than those provided in  sentence while labeling "Yes ." or "No . ".
+Score for Candidate 0:	 0.013333333333333334
+Score for Candidate 1:	 0.19385342789598106
+Score for Candidate 2:	 0.20903954802259886
+Score for Candidate 3:	 0.19664268585131894

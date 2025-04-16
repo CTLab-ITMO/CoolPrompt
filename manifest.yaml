@@ -1,0 +1,147 @@
+apiVersion: "kubeflow.org/v1"
+kind: "PyTorchJob"
+metadata:
+  name: "e-dyagin-zavod-qwen-7b-1m-68a66b90"
+  namespace: nlp-applied-research
+spec:
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: Never
+      template: &template_id
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+            git-sync.mail.ru/init: |
+              - repo: deepvk/sft-zavod.git
+                branch: e-dyagin/binsearch
+          labels:
+            object-store/s3mltech: "true"
+        spec:
+          volumes:
+            - name: dshm
+              emptyDir:
+                medium: Memory
+            - name: storage
+              ephemeral:
+                volumeClaimTemplate:
+                  spec:
+                    accessModes: [ "ReadWriteOnce" ]
+                    storageClassName: "linstor-single-storage"
+                    resources:
+                      requests:
+                        storage: 4000Gi
+          containers:
+            - name: pytorch
+              image: registry-gitlab.corp.mail.ru/platforma-adm/ml/registry/deepvk/sft-zavod:v8-liger-kernel
+              env:
+                - name: CONFIG_PATH # has chat_template for qwen as default
+                  value: "/git-sync/sft-zavod/repo/configs/config_base.yaml"
+                - name: MODEL_NAME_OR_PATH
+                  value: "s3://mlp-ds-6/hf-cache/Qwen--Qwen2.5-7B-Instruct-1M/"
+                - name: DATASETS_PATHS
+                  value: "[ultrachat_filtered,foundation_filtered_o3]"
+                - name: S3_DATASETS_PATHS
+                  value: "s3://mlp-ds-6/hf-cache/deepvk--foundation/ s3://mlp-ds-6/hf-cache/deepvk--ultrachat_200k_ru/ s3://mlp-ds-6/hf-cache/deepvk--camel_biology/ s3://mlp-ds-6/hf-cache/ultrachat_filtered/ s3://mlp-ds-6/hf-cache/foundation_filtered/ s3://mlp-ds-6/hf-cache/foundation_filtered_o3/"
+                - name: S3_CHECKPOINT_PATH
+                  value: "s3://mlp-ds-6/edyagin/checkpoints/sft-zavod/debug/68a66b90/"
+                - name: CHECKPOINTS_DIR
+                  value: "/storage/checkpoints/"
+                
+                # Training parameters
+                - name: PRECISION
+                  value: "bf16-mixed"
+                - name: N_EPOCHS
+                  value: "10"
+                - name: PER_DEVICE_TRAIN_BATCH_SIZE
+                  value: "8"
+                - name: PER_DEVICE_EVAL_BATCH_SIZE
+                  value: "2"
+                - name: GRADIENT_ACCUMULATION_STEPS
+                  value: "1"
+                - name: LEARNING_RATE
+                  value: "2.0e-05"
+                - name: WEIGHT_DECAY
+                  value: "0"
+                - name: RESUME_FROM_CHECKPOINT_NAME
+                  value: null
+                - name: MAX_SEQ_LENGTH
+                  value: "4096"
+                - name: GRADIENT_CHECKPOINTING
+                  value: "true"
+                - name: MAX_GRAD_NORM
+                  value: "1.0"
+                - name: PACKING
+                  value: "true"
+                
+                # Distributed training
+                - name: N_NODES
+                  value: "8"
+                - name: WORLD_SIZE_2
+                  value: "64"
+                - name: LOCAL_WORLD_SIZE
+                  value: "8"
+                
+                # DeepSpeed configuration  
+                - name: PIN_MEMORY
+                  value: "true"
+                - name: CONTIGUOUS_GRADIENTS
+                  value: "true"
+                
+                # NCCL configuration
+                - name: NCCL_IB_HCA
+                  value: "mlx5"
+                - name: NCCL_DEBUG
+                  value: "INFO"
+                
+                # Logging config
+                - name: LOGURU_LEVEL
+                  value: "DEBUG"
+                - name: TORCH_CPP_LOG_LEVEL
+                  value: "INFO"
+                
+                # Misc
+                - name: HF_ENDPOINT
+                  value: "http://huggingface.proxy"
+                - name: WANDB_MODE
+                  value: "online"
+                - name: WANDB_PROJECT
+                  value: "e-dyagin-zavod-sft-test"
+                - name: WANDB_RUN_GROUP
+                  value: ""
+                - name: WANDB_IGNORE_GLOBS
+                  value: "*" # Чтобы только логи писались, без сидов и проч, там проблемы c aws?
+
+                
+              volumeMounts:
+                - mountPath: /dev/shm
+                  name: dshm
+                - mountPath: /storage
+                  name: storage
+              securityContext:
+                capabilities:
+                    add: ["IPC_LOCK"]
+              command: 
+                - /bin/bash
+                - -c
+                - "
+                  echo [DEBUG];
+                  export WANDB_API_KEY=2c5f050d63972df91309ffe77126f13d8b580f74;
+                  export https_proxy=squid.proxy.svc.cluster.local:3128;
+                  cd /git-sync/sft-zavod/repo && chmod -R +x ./ && ./run.sh
+                  "
+              resources:
+                limits:
+                  cpu: "136"
+                  memory: 976Gi
+                  nvidia.com/gpu.a100m80g.icva: "8" # per node
+                  sriov.io/mlnx_rdma: 4 # 4 -- max
+                requests:
+                  cpu: "136"
+                  memory: 780Gi
+                  nvidia.com/gpu.a100m80g.icva: "8" # per node
+                  sriov.io/mlnx_rdma: 4 # 4 -- max
+    Worker:
+        replicas: 7 # non master nodes. n_nodes = replicas + 1
+        restartPolicy: Never
+        template: *template_id

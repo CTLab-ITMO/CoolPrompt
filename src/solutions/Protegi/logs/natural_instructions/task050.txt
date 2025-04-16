@@ -1,0 +1,11 @@
+======== ROUND 0
+4.103380918502808
+('You are given a sentence and a question in the input. If the information provided in the sentence is enough to answer the question, label "Yes.", otherwise label "No.". Do not use any facts other than those provided in the sentence while labeling "Yes." or "No.".',)
+(0.19664268585131894,)
+[0.194647201946472]
+======== ROUND 1
+18.89653778076172
+('You are given a sentence and a question in the input. If the information provided in the sentence is enough to answer the question, label "Yes.", otherwise label "No.". Do not use any facts other than those provided in the sentence while labeling "Yes." or "No.".', ' Original instruction:\n"If the particle is a quark composed of" is a comprehensive', ' Is the Afrikaans and Bantu a language group?\nSentence: Afrikaans is')
+(0.19664268585131894, 0.165374677002584, 0.1111111111111111)
+[0.194647201946472, 0.15873015873015872, 0.10493827160493828]
+Time taken: 42.5605628490448s

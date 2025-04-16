@@ -1,10 +1,13 @@
 import os
 import sys
 
+
 project_root = os.path.abspath(os.getcwd())
 sys.path.append(project_root)
 
-os.environ['TOKENIZERS_PARALLELISM'] = "false"
+import numpy as np
+import torch
+from vllm import LLM
 
 from transformers import AutoTokenizer
 
@@ -16,9 +19,8 @@ import argparse
 import scorers
 import optimizers
 
-from src.data.classification import SST2Dataset
-from src.evaluation.evaluator import TextClassificationEvaluator
-from src.utils.eval_utils import Infer
+from src.utils.eval_utils import TASK_TO_DS, LLMWrapper, create_ds_from_task, get_task_evaluator
+from src.data.base.datasets.generation_dataset import BaseGenerationDataset
 
 
 def get_evaluator(evaluator):
@@ -34,29 +36,20 @@ def get_evaluator(evaluator):
         raise Exception(f'Unsupported evaluator: {evaluator}')
 
 
-TASK_TO_DS_MAP = {
-    "sst-2": SST2Dataset,
-}
-
-TASK_TO_SCORER_MAP = {
-    "sst-2": TextClassificationEvaluator,
-}
-
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', default='sst-2')
     parser.add_argument('--data_dir', default='data')
-    parser.add_argument('--out', default='test_out.txt')
-    parser.add_argument('--max_threads', default=32, type=int)
+    parser.add_argument('--meta-dir', default='src/solutions/Protegi/logs/', help='folder location to store metadata of search')
     parser.add_argument('--temperature', default=0.0, type=float)
 
     parser.add_argument('--optimizer', default='nl-gradient')
-    parser.add_argument('--rounds', default=6, type=int)
+    parser.add_argument('--rounds', default=5, type=int)
     parser.add_argument('--beam_size', default=4, type=int)
     parser.add_argument('--n_test_exs', default=100, type=int)
 
-    parser.add_argument('--minibatch_size', default=64, type=int)
+    parser.add_argument('--batch-size', type=int, default=16, help='Train / Test batch size')
     parser.add_argument('--n_gradients', default=4, type=int)
     parser.add_argument('--errors_per_gradient', default=4, type=int)
     parser.add_argument('--gradients_per_error', default=1, type=int)
@@ -82,67 +75,48 @@ def get_args():
     return args
 
 
-if __name__ == '__main__':
-    args = get_args()
+def solve_task(task: str):
+    
+    start_time = time.time()
+    
+    task_ds_example =  create_ds_from_task(task, tokenizer=tokenizer, sample=1)
+    
+    if isinstance(task_ds_example, BaseGenerationDataset):
+        print("Skipping generation task") 
+        return
 
-    config = vars(args)
-
-    config['eval_budget'] = config['samples_per_eval'] * config['eval_rounds'] * config['eval_prompts_per_round']
-
-    tokenizer = AutoTokenizer.from_pretrained(args.engine)
-
-    terminators = [
-        tokenizer.eos_token_id,
-        tokenizer.convert_tokens_to_ids("<|eot_id|>")
-    ]
-
-    default_model_generate_args = {
-        "stop_token_ids": terminators
-    }
-
-    server_wrapper = Infer(model_name=args.engine, model_generate_args=default_model_generate_args)
+    base_prompt = task_ds_example._get_basic_prompt()
 
     train_scorer = scorers.Cached01Scorer(
-        args.engine,
-        dataset_cls=TASK_TO_DS_MAP[args.task],
+        model,
+        task=task,
         tokenizer=tokenizer,
         split='train',
         default_gen_args=default_model_generate_args,
-        ds_scorer=TASK_TO_SCORER_MAP[args.task](),
+        ds_scorer=get_task_evaluator(task_ds_example),
+        batch_size=args.batch_size,
         sample=100
     )
 
     test_scorer = scorers.Cached01Scorer(
-        args.engine,
-        dataset_cls=TASK_TO_DS_MAP[args.task],
+        model,
+        task=task,
         tokenizer=tokenizer,
         split='test',
         default_gen_args=default_model_generate_args,
-        ds_scorer=TASK_TO_SCORER_MAP[args.task](),
+        ds_scorer=get_task_evaluator(task_ds_example),
+        batch_size=args.batch_size,
         sample=100
     )
+    
+    base_score = test_scorer([base_prompt])[0]
 
     evaluator = get_evaluator(args.evaluator)(config)
     bf_eval = get_evaluator('bf')(config)
 
     optimizer = optimizers.ProTeGi(
-        config, evaluator, train_scorer, server_wrapper, bf_eval)
+        config, evaluator, train_scorer, wrapper, bf_eval)
 
-    ds_cls = TASK_TO_DS_MAP[args.task]
-
-    base_prompt = ds_cls(
-        tokenizer=tokenizer,
-        split='train'
-    )._get_basic_prompt()
-
-    if os.path.exists(args.out):\
-        
-        os.remove(args.out)
-
-    print(config)
-
-    with open(args.out, 'a') as outf:
-        outf.write(json.dumps(config) + '\n')
 
     # Поддерживаем инвариант, что в них только чистый промпт, без формата.
     candidates = [base_prompt]
@@ -166,14 +140,86 @@ if __name__ == '__main__':
         scores = scores[:config['beam_size']]
 
         # record candidates, estimated scores, and true scores
-        with open(args.out, 'a') as outf:
-            outf.write(f"======== ROUND {round}\n")
-            outf.write(f'{time.time() - start}\n')
-            outf.write(f'{candidates}\n')
-            outf.write(f'{scores}\n')
+
+        meta_file.write(f"======== ROUND {round}\n")
+        meta_file.write(f'{time.time() - start}\n')
+        meta_file.write(f'{candidates}\n')
+        meta_file.write(f'{scores}\n')
 
         metrics = test_scorer(candidates)
-        with open(args.out, 'a') as outf:
-            outf.write(f'{metrics}\n')
+        meta_file.write(f'{metrics}\n')
 
     print("DONE!")
+    
+    best_prompt = candidates[0]
+    best_prompt_score = test_scorer([best_prompt])[0]
+    
+    end_time = time.time() - start_time
+    meta_file.write(f"Time taken: {end_time}s")
+    
+    meta_file.write(f"Base prompt: {base_prompt}")
+    meta_file.write(f"Base prompt score: {base_score}")
+    meta_file.write(f"-----------------------------")
+    meta_file.write(f"Res prompt: {best_prompt}")
+    meta_file.write(f"Res prompt score: {best_prompt_score}")
+
+if __name__ == '__main__':
+    args = get_args()
+
+    config = vars(args)
+
+
+    config['eval_budget'] = config['samples_per_eval'] * config['eval_rounds'] * config['eval_prompts_per_round']
+    
+    print(config)
+
+    
+    tokenizer = AutoTokenizer.from_pretrained(args.engine)
+    tokenizer.padding_side = "left"
+    tokenizer.pad_token = tokenizer.eos_token
+
+    terminators = [
+        tokenizer.eos_token_id,
+        tokenizer.convert_tokens_to_ids("<|eot_id|>")
+    ]
+
+    default_model_generate_args = {
+        "stop_token_ids": terminators,
+        "temperature": 0.0
+    }
+    
+    wrapper_gen_args = {
+        "stop_token_ids": terminators,
+        "max_tokens": 1024,
+        "temperature": 0.15,
+    }
+    
+    model_name=args.engine
+    
+    model = LLM(model=model_name, dtype="float16", trust_remote_code=True)
+    
+    wrapper = LLMWrapper(model, wrapper_gen_args)
+    
+    train_seed = 100
+    np.random.seed(train_seed)
+    torch.manual_seed(train_seed)
+
+    for task in TASK_TO_DS.keys():
+        
+        print("----------------------------------------------")
+        print("RUNNING Experiment for: ", task)
+    
+        meta_path = os.path.join(args.meta_dir, f'{task}.txt')
+        
+        
+        if os.path.exists(meta_path):
+            
+            os.remove(meta_path)
+        
+        meta_file = open(meta_path, 'w+')
+        
+        solve_task(task)
+        
+        print("FINISHED Experiment for: ", task)
+        print("----------------------------------------------")
+

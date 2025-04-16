@@ -1,0 +1,7 @@
+
+
+
+
+
+only meteor - 29s per iter on math, bs=16
+all 3 - ?s per iter on math, bs = 16

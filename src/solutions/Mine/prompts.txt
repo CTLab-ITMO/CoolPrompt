@@ -1,0 +1,31 @@
+I want to create a prompt that distills instruction into shorter versions, for example:
+
+Longer prompt:
+"Please classify the sentiment of the given text as positive, negative, or neutral. Your classification should be based on the overall tone and emotional impact of the text, considering the context and the author's intention. For example, consider the following:\n\nInput: in the disturbingly involving family dysfunctional drama how i killed my father, french director anne fontaine delivers an inspired portrait of male-ridden angst and the emotional blockage that accompanies this human condition\nOutput: positive\n\nInput: but the problem with wendigo, for all its effective moments, isn't really one of resources.\nOutput: negative\n\nInput: the story... is inspiring, ironic, and revelatory of just how ridiculous and money-oriented the record industry really is.\nOutput: positive\n\nInput: a classy, sprightly spin on film.\nOutput: positive\n\nInput: twenty years after its first release, e.t. remains the most wondrous of all hollywood fantasies -- and the apex of steven spielberg's misunderstood career.\nOutput: positive\n\nInput: it just didn't mean much to me and played too skewed to ever get a hold on -lrb- or be entertained by -rrb-.\nOutput: negative\n\nInput: this is a children's film in the truest sense.\nOutput: positive\n\nInput: in the disturbingly involving family dysfunctional drama how i killed my father, french director anne fontaine delivers an inspired portrait of male-ridden angst and the emotional blockage that accompanies this human condition\nOutput: positive\n\nInput: taken as a whole, the tuxedo doesn't add up to a whole lot.\nOutput: negative\n\nInput: the son of the bride's humour is born out of an engaging storyline, which also isn't embarrassed to make you reach for the tissues.\nOutput: positive\n\nThis prompt is more specific and focuses on the task of sentiment classification, which is the main aim of the task. It also provides clear examples of the expected output for different inputs, which can help the model understand the task better."
+
+Shorter, more conscise version: Please pergorm sentiment classification task. Your classification should be based on the overall tone and meaning of the text.
+
+
+My promt is this:
+        compression_prompt = f"""I'm trying to write a zero-shot classifier prompt.
+
+
+        My current prompt:
+
+        {prompt}
+
+        You are tasked with summarizing this lengthy prompt into concise summary that capture the essential information and ideas. Your goal is to reduce the text to 2-3 sentences while preserving the main concepts and insights from any examples provided. Follow these steps:
+
+        Identify the Main Objective: Determine the primary goal or purpose of the text. What is the main task or concept being conveyed?
+
+        Extract Key Ideas from Examples: Examine the examples in the text to understand the principles or patterns they illustrate. What are the key takeaways from these examples?
+
+        Synthesize the Information: Combine the main objective and key ideas into a coherent summary.
+
+        Then create a new, summarized prompt based on the above information.
+
+        Summarized prompt:
+
+        """
+
+Please give me an improved version that results in shorter, more concise output from the model.

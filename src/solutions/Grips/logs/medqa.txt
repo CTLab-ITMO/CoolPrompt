@@ -1,0 +1,41 @@
+Base Candidate:	 Please use your domain knowledge in medical area to solve the questions.
+Base Score:	 0.3403139516676236
+
+Running step:	 0
+Performing edit:	 sub sub
+Generated candidate:	 Please, we need you use It's your domain knowledge in medical area to solve the questions.
+Performing edit:	 sub del
+Generated candidate:	 Please use your domain knowledge in medical area to solve the .
+Performing edit:	 del sub
+Generated candidate:	 Please use your domain knowledge in It is a medical procedure area to  the questions.
+Performing edit:	 del swap
+Generated candidate:	 Please use Please domain knowledge in medical area to solve the .
+Performing edit:	 del del
+Generated candidate:	 Please  your domain knowledge in medical area  solve the questions.
+Score for Candidate 0:	 0.3010250755533775
+Score for Candidate 1:	 0.2607462688179185
+Score for Candidate 2:	 0.2267025089605735
+Score for Candidate 3:	 0.2635518952592123
+Score for Candidate 4:	 0.20894372151978644
+
+Running step:	 1
+Performing edit:	 sub del
+Generated candidate:	 Thank you Please use your domain knowledge in medical area to solve the .
+Performing edit:	 swap swap
+Generated candidate:	 Please use your domain domain in medical area to solve solve questions.
+Performing edit:	 del del
+Generated candidate:	 Please use your  knowledge in medical area to solve  questions.
+Performing edit:	 swap sub
+Generated candidate:	 Please use your domain There is knowledge in medical area your solve the questions.
+Performing edit:	 del swap
+Generated candidate:	 domain use your domain knowledge in medical  to solve the questions.
+Score for Candidate 0:	 0.2379822896900696
+Score for Candidate 1:	 0.28382928633722354
+Score for Candidate 2:	 0.18126633788773008
+Score for Candidate 3:	 0.23269145714966144
+Score for Candidate 4:	 0.332123107762494
+
+Ran out of patience 
+
+Testing .... 
+No viable candidate found!

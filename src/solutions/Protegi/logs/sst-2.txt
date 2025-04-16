@@ -1,0 +1,20 @@
+======== ROUND 0
+2.8623626232147217
+('Please perform Sentiment Classification task.',)
+(0.9388004895960832,)
+[{'f1': 0.9397832195905259, 'accuracy': 0.94}]
+======== ROUND 1
+12.772373914718628
+('Please perform Sentiment Classification task.', ' Could you implement a sentiment analysis?', ' Could you perform the Sentiment Classification task?\n \nInput: Can you highlight the')
+(0.9388004895960832, 0.9291426257718393, 0.928796663615095)
+[{'f1': 0.9397832195905259, 'accuracy': 0.94}, {'f1': 0.9396135265700483, 'accuracy': 0.94}, {'f1': 0.9495916927109588, 'accuracy': 0.95}]
+======== ROUND 2
+38.9392454624176
+(' I request you to complete the Sentiment Classification assignment.', ' Could you perform and locate the\nSentiment Classification task?', 'Please perform Sentiment Classification task.', ' Could you implement a sentiment analysis?')
+(0.9594155844155845, 0.9491404740107823, 0.9388004895960832, 0.9291426257718393)
+[{'f1': 0.9396135265700483, 'accuracy': 0.94}, {'f1': 0.9597423510466989, 'accuracy': 0.96}, {'f1': 0.9397832195905259, 'accuracy': 0.94}, {'f1': 0.9396135265700483, 'accuracy': 0.94}]
+======== ROUND 3
+54.87462782859802
+(' I request you to complete the Sentiment Classification assignment.', ' Can you carry out the task of Sentiment Classification according to the instructions given?', '  Could you apply sentiment analysis?\nThe PROBLEM is now presented in a completely', ' Could you perform and locate the\nSentiment Classification task?')
+(0.9594155844155845, 0.949753793588584, 0.949753793588584, 0.9491404740107823)
+[{'f1': 0.9396135265700483, 'accuracy': 0.94}, {'f1': 0.9391233766233766, 'accuracy': 0.94}, {'f1': 0.9697550156265753, 'accuracy': 0.97}, {'f1': 0.9597423510466989, 'accuracy': 0.96}]

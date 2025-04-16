@@ -1,0 +1,47 @@
+Base Candidate:	 A question that is free of any grammatical or logical errors, should be labeled 'Yes.', otherwise it should be indicated as 'No.'. A question is grammatically correct if all its entities i.e. nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position. A question is logically correct if the semantic makes sense.
+Base Score:	 0.42196531791907516
+
+Running step:	 0
+Performing edit:	 sub sub
+Generated candidate:	 A question that is free of any grammatical or logical errors, should be labeled 'Yes .', otherwise it should be indicated Is that as? 'No.' . A question is grammatically correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is logically correct if the semantic makes sense.
+Performing edit:	 sub del
+Generated candidate:	 A question that is free of any grammatical or  errors, should be labeled 'Yes .', otherwise it should be indicated as 'No.' . A question is grammatically Correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is ly Correct if the semantic makes sense.
+Performing edit:	 del sub
+Generated candidate:	 A question  is free of any grammatical or logical errors, should be labeled 'Yes There is a possibility that this is true', otherwise it should be indicated as 'No.' There is a possibility that this is true A question is grammatically correct if all its entities i.e There is a possibility that this is true nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position There is a possibility that this is true A question is logically correct if the semantic makes sense.
+Performing edit:	 del swap
+Generated candidate:	 A question that  free of any grammatical or logical errors, should be labeled 'Yes .', otherwise it should be indicated as 'No.' . A question  grammatically correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate 'No . A question  logically correct if the semantic makes sense.
+Performing edit:	 del del
+Generated candidate:	 A question that is free of any grammatical or logical errors, should be labeled 'Yes .', otherwise it should be indicated as 'No.' . A question is grammatically  if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is   if the semantic makes sense.
+Score for Candidate 0:	 0.27613412228796846
+Score for Candidate 1:	 0.42196531791907516
+Score for Candidate 2:	 0.009009009009009009
+Score for Candidate 3:	 0.42196531791907516
+Score for Candidate 4:	 0.42196531791907516
+
+Running step:	 1
+Performing edit:	 del del
+Generated candidate:	 A question that is free of any grammatical or logical errors, should be labeled 'Yes .', otherwise it should be  as 'No.' . A question is grammatically correct if  its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is logically correct if the semantic makes sense.
+Performing edit:	 del sub
+Generated candidate:	 A question that is free of any grammatical or  errors, should be labeled 'Yes .', otherwise it should be indicated as 'No.' . A question is grammatically correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is ly correct if the semantic makes sense.
+Performing edit:	 del del
+Generated candidate:	 A question that is free of any grammatical or logical errors,  be labeled Yes .', otherwise it  be indicated as No.' . A question is grammatically correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is logically correct if the semantic makes sense.
+Performing edit:	 swap sub
+Generated candidate:	 A question that is free of any grammatical or logical errorsgrammatical should be labeled 'Yes .'grammatical otherwise it should be indicated as 'No.' . A question is It's grammatically correct correct if all its entities i.e . nounsgrammatical verbsgrammatical adjectivesgrammatical prepositionsgrammatical pronounsgrammatical adverbs are at appropriate position . A question is logically correct if the semantic makes sense.
+Performing edit:	 del del
+Generated candidate:	 A question  is free of any grammatical or logical errors, should be labeled 'Yes .', otherwise it should be indicated as 'No.' . A question is grammatically correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is logically correct if the  makes sense.
+Score for Candidate 0:	 0.27906976744186046
+Score for Candidate 1:	 0.42196531791907516
+Score for Candidate 2:	 0.42196531791907516
+Score for Candidate 3:	 0.27613412228796846
+Score for Candidate 4:	 0.42196531791907516
+
+Ran out of patience 
+
+Testing .... 
+Original f1:	0.45217
+Original accuracy:	0.8254
+Instruction after search:	A question that is free of any grammatical or logical errors, should be labeled 'Yes .', otherwise it should be indicated as 'No.' . A question is grammatically correct if all its entities i.e . nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position . A question is logically correct if the semantic makes sense.
+f1 after search:	0.45217
+accuracy after search:	0.8254
+Edit Operations:	
+Time taken: 82s
