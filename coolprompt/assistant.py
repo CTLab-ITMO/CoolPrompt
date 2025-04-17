@@ -7,6 +7,7 @@ class PromptHelper:
             model_name: str
             config: dict
             token: str = None
+            interface: str - [hf, ollama, openapi]
         '''
         token = ...
         config = ...
