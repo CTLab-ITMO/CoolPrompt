@@ -138,11 +138,17 @@ def solve_task(task: str):
     print("DONE!")
     base_test_score = caching_evaluator(base_prompt, split='test')
     
-    fewshot_prompt = gen.convert_to_fewshot(base_candidate)
-    fewshot_score = caching_evaluator(fewshot_prompt, split='test')
+    instr_fewshot = gen.convert_to_fewshot(base_candidate)
+    instr_fewshot_score = caching_evaluator(instr_fewshot, split='test')
+    
+    clean_fewshot = gen.convert_to_fewshot(Candidate("", 0.0)).lstrip()
+    clean_fewshot_score = caching_evaluator(clean_fewshot, split='test')
     
     best_prompt = best_candidate.prompt
     test_score = caching_evaluator(best_prompt, split='test')
+    
+    best_prompt_fewshot = gen.convert_to_fewshot(best_candidate)
+    best_prompt_fewshot_score = caching_evaluator(best_prompt_fewshot, split='test')
     
     end_time = time.time() - start_time
     meta_file.write(f"Time taken: {end_time}s\n")
@@ -150,18 +156,23 @@ def solve_task(task: str):
     meta_file.write(f"Base prompt: {base_prompt}\n")
     meta_file.write(f"Base prompt score: {base_test_score}\n")
     meta_file.write(f"-----------------------------\n")
-    meta_file.write(f"Few shot prompt: {fewshot_prompt}\n")
-    meta_file.write(f"Few shot score: {fewshot_score}\n")
+    meta_file.write(f"Few shot prompt: {instr_fewshot}\n")
+    meta_file.write(f"Few shot score: {instr_fewshot_score}\n")
     meta_file.write(f"-----------------------------\n")
     meta_file.write(f"Res prompt: {best_prompt}\n")
     meta_file.write(f"Res prompt score: {test_score}\n")
+    meta_file.write(f"-----------------------------\n")
+    meta_file.write(f"Clean fewshot prompt: {clean_fewshot}\n")
+    meta_file.write(f"Clean fewshot score: {clean_fewshot_score}\n")
+    meta_file.write(f"-----------------------------\n")
+    meta_file.write(f"Res fewshot prompt: {best_prompt_fewshot}\n")
+    meta_file.write(f"Res fewshot score: {best_prompt_fewshot_score}\n")
 
 if __name__ == '__main__':
     args = get_args()
 
     config = vars(args)
 
-    #config['eval_budget'] = config['samples_per_eval'] * config['eval_rounds'] * config['eval_prompts_per_round']
     model_name=config['model']
     
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -202,9 +213,7 @@ if __name__ == '__main__':
     
         meta_path = os.path.join(config['meta_dir'], f'{task}.txt')
         
-        if os.path.exists(meta_path):
-            
-            os.remove(meta_path)
+        os.makedirs(meta_path, exist_ok=True)
         
         meta_file = open(meta_path, 'w+')
         
