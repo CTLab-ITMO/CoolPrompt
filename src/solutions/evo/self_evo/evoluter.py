@@ -10,8 +10,9 @@ from src.solutions.evo.base import Evoluter, Prompt, PromptOrigin
 from src.solutions.evo.self_evo.utils import parse_output, append_to_yaml
 
 
-class ReEvoluter(Evoluter):
-    """ReEvoluter class that represents basic evoluter with ReEvo ideas in it.
+class SelfEvoluter(Evoluter):
+    """
+    SelfEvoluter class that represents basic evoluterwith ReEvo ideas in it.
 
     Attributes:
         model: vllm.LLM class of model to use.
@@ -34,7 +35,6 @@ class ReEvoluter(Evoluter):
         iteration: current iteration (epoch) of evolution.
         problem_description: string description of current promblem
             (that corresponds to dataset).
-        
     """
 
     def __init__(
