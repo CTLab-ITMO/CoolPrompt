@@ -14,6 +14,20 @@ from src.utils.load_dataset import load_dataset
 
 
 class Evoluter(ABC):
+    """Basic evoluter class.
+    Provides evolution interface.
+
+    Attributes:
+        model: vllm.LLM class of model to use.
+        tokenizer: PreTrainedTokenizer tokenizer to be used.
+        dataset: a string name of dataset.
+        evaluator: evaluator that implements BaseNLPEvaluator interface.
+        metric: a string name of metric to optimize.
+        task: a string name of task. Either ['cls' or 'gen']
+        use_cache: a boolean variable.
+            Either to use caching files for initial population or not.
+        batch_size: an integer size of batch to use.
+    """
 
     def __init__(
         self,
@@ -56,6 +70,16 @@ class Evoluter(ABC):
         path: os.PathLike,
         key: str = 'prompts'
     ) -> Any:
+        """Reads yaml file and provides data by key from it.
+
+        Args:
+            path (os.PathLike): path to yaml file.
+            key (str, optional): A string key to extract data.
+                Defaults to 'prompts'.
+
+        Returns:
+            Any: extracted data.
+        """
         if not os.path.isfile(path):
             return {}
 
@@ -64,16 +88,32 @@ class Evoluter(ABC):
         return data[key]
 
     def _reranking(self, population: List[Prompt]) -> List[Prompt]:
+        """
+        Sorts given population of prompts by their scores in descending order.
+
+        Args:
+            population (List[Prompt]): population to sort.
+
+        Returns:
+            List[Prompt]: sorted population.
+        """
         return list(sorted(
             population, key=lambda prompt: prompt.score, reverse=True
         ))
 
-    def _evaluate(self, prompt: Prompt) -> None:
+    def _evaluate(self, prompt: Prompt, split='train') -> None:
+        """Evaluates given prompt on self.dataset and records the score.
+
+        Args:
+            prompt (Prompt): a prompt to evaluate.
+            split (str, optional): Which split of dataset to use.
+                Defaults to 'train'.
+        """
         ds = load_dataset(
             self.dataset,
             self.tokenizer,
             prompt=prompt.text,
-            split='train',
+            split=split,
             sample=100
         )
         metrics = self.evaluator.evaluate_vllm(
@@ -84,15 +124,38 @@ class Evoluter(ABC):
         )
         prompt.set_score(metrics[self.metric])
 
-    def _evaluation(self, population: List[Prompt]) -> None:
+    def _evaluation(
+        self,
+        population: List[Prompt],
+        split: str = 'train'
+    ) -> None:
+        """Evaluation operation for prompts population.
+        Evaluates every prompt in population and records the results.
+
+        Args:
+            population (List[Prompt]): population of prompts to evaluate.
+            split (str, optional): Which split of dataset to use.
+                Defaults to 'train'.
+        """
         for prompt in population:
-            self._evaluate(prompt)
+            self._evaluate(prompt, split=split)
 
     def _read_prompts(
         self,
         filename: str,
         origin: PromptOrigin = None
     ) -> List[Prompt]:
+        """Creates prompt population from yaml file.
+
+        Args:
+            filename (str): a name of yaml file.
+            origin (PromptOrigin, optional):
+                can be used to override the existing prompt origin in file.
+                Defaults to None.
+
+        Returns:
+            List[Prompt]: created population of prompts.
+        """
         prompts_data = self._read_yaml_data(
             os.path.join(self._prompts_directory_path, filename)
         )
@@ -102,6 +165,14 @@ class Evoluter(ABC):
         ]
 
     def _init_pop(self, use_cache: bool) -> List[Prompt]:
+        """Creates initial population of prompts.
+
+        Args:
+            use_cache (bool): whether to use caching or not.
+
+        Returns:
+            List[Prompt]: initial population.
+        """
         if use_cache:
             cached_data = self._read_yaml_data(
                 os.path.join(
@@ -143,6 +214,12 @@ class Evoluter(ABC):
         data: Any,
         savepath: os.PathLike
     ) -> None:
+        """Writes the data to the yaml file.
+
+        Args:
+            data (Any): data to be cached.
+            savepath (os.PathLike): a path to saving file.
+        """
         os.makedirs(os.path.dirname(savepath), exist_ok=True)
         with open(savepath, 'w') as f:
             yaml.dump(data, f)
@@ -152,6 +229,12 @@ class Evoluter(ABC):
         population: List[Prompt],
         savepath: os.PathLike
     ) -> None:
+        """Caching a population of prompts to file.
+
+        Args:
+            population (List[Prompt]): prompt population.
+            savepath (os.PathLike): a path to saving file.
+        """
         best_score = population[0].score
         average_score = statistics.mean(
             [prompt.score for prompt in population]
@@ -165,17 +248,33 @@ class Evoluter(ABC):
 
     @abstractmethod
     def evolution(self) -> None:
+        """Provides evolution operation."""
         pass
 
     @abstractmethod
     def _mutate(self, population: List[Prompt]) -> List[Prompt]:
+        """Provides mutation operation.
+        Generates new population of mutated prompts.
+
+        Args:
+            population (List[Prompt]): current prompt population.
+
+        Returns:
+            List[Prompt]: generated mutated prompt population.
+        """
         pass
 
     @abstractmethod
     def _selection(
         self,
-        population: List[Prompt],
-        n: int,
-        **kwargs
+        population: List[Prompt]
     ) -> List[Prompt]:
+        """Provides selection operation.
+
+        Args:
+            population (List[Prompt]): prompt population to select from.
+
+        Returns:
+            List[Prompt]: selected prompts.
+        """
         pass

@@ -7,8 +7,7 @@ sys.path.append(project_root)
 
 
 from src.solutions.evo.self_evo.args import parse_args
-from src.solutions.evo.self_evo.evoluter import SelfEvoluter
-from src.solutions.evo.self_evo.reevo import ReEvoluter
+from src.solutions.evo.self_evo.evoluter import ReEvoluter
 from src.evaluation.evaluator import (
     TextClassificationEvaluator,
     GenerationEvaluator
