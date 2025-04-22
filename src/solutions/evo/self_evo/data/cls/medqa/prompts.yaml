@@ -1,4 +1,0 @@
-prompts:
-- text: Please use your domain knowledge in medical area to solve the questions.
-- text: Answer the medical question and choose the letter that represents the correct
-    answer.
