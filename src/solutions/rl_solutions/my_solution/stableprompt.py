@@ -1,6 +1,5 @@
 import torch
 import numpy as np
-import wandb
 import utils
 import transformers
 import src.data as data
@@ -13,20 +12,28 @@ from peft import LoraConfig
 
 class StablePromptAgent:
     def __init__(self,
+                 task,
                  target_model_name,
                  agent_model_name,
                  quantization_config,
                  dataset: data.BaseDataset,
                  evaluator: data.BaseNLPEvaluator,
+                 metric,
+                 sample,
                  max_prompt_length,
                  epochs,
                  meta_prompt,
+                 train_metric="accuracy",
                  prompt_per_example=4,
                  num_example=5,
                  update_term=5,
                  update_threshold=0.05
                  ):
+        self.task = task
         self.evaluator = evaluator
+        self.metric = metric
+        self.train_metric = train_metric
+        self.sample = sample
         self.prompt_per_example = prompt_per_example
         self.max_prompt_length = max_prompt_length
         self.num_example = num_example
@@ -36,7 +43,6 @@ class StablePromptAgent:
         self.update_threshold = update_threshold
 
         self.device = 'cuda:0'
-        wandb.init()
 
         # load agent model
         self.lora_config = LoraConfig(
@@ -72,11 +78,7 @@ class StablePromptAgent:
         self.target_model.config.pad_token_id = self.target_tokenizer.eos_token_id
 
         # load dataset
-        self.train_dataset = dataset(tokenizer=self.agent_tokenizer) # todo load
-        self.validation_dataset = dataset(tokenizer=self.agent_tokenizer)
-        self.test_dataset = dataset(tokenizer=self.agent_tokenizer)
-        print('train dataset size : ', len(train_dataset))
-        print('test dataset size : ', len(test_dataset))
+        self.dataset = dataset
 
         # create ppo trainer
         ppo_config = PPOConfig(
@@ -84,7 +86,6 @@ class StablePromptAgent:
             learning_rate=1e-5,
             batch_size=prompt_per_example,
             mini_batch_size=prompt_per_example,
-            log_with='wandb',
         )
         self.ppo_trainer = PPOTrainer(ppo_config, self.agent_model,
                                       self.ref_model, self.agent_tokenizer)
@@ -109,18 +110,33 @@ class StablePromptAgent:
             "eos_token_id": terminators
         }
 
-    def _evaluate_prompt(self, prompt):
+    def _evaluate_prompt(self, prompt, metric, split="train"):
         metrics = self.evaluator.evaluate(
-            model=self.model,
-            tokenizer=self.tokenizer,
-            eval_ds=self.data(tokenizer=self.tokenizer, sample=100, split=split, prompt=prompt, device=self.device),
-            batch_size=args.batch_size,
+            model=self.target_model,
+            tokenizer=self.target_tokenizer,
+            eval_ds=self.dataset(tokenizer=self.target_tokenizer, sample=self.sample,
+                                 split=split, prompt=prompt, device=self.device),
+            batch_size=16,
             model_generate_args=self.model_generate_args,
         )
-        return metrics if split == "test" else metrics["f1"]
+        return metrics[metric]
 
-    def _get_examples(self):
-        pass
+    def _evaluate_list_of_prompts(self, prompts, metric, split="train"):
+        return [self._evaluate_prompt(prompt, metric, split) for prompt in prompts]
+
+    def _get_examples(self, ds):
+        dataloader = torch.utils.data.DataLoader(ds, sampler=torch.utils.data.RandomSampler(
+            ds, num_samples=self.num_example))
+
+        for input_ids, _, label_ids in dataloader:
+            inputs = self.agent_tokenizer.decode(input_ids, skip_special_tokens=True)
+            outputs = self.evaluator._prepare_labels(self.agent_tokenizer, ds, label_ids)
+
+        examples = ""
+        for inp, out in zip(inputs, outputs):
+            examples += "Input : " + inp + "\nOutput : " + out
+
+        return examples
 
     def _get_query(self):
         examples = self._get_examples()
@@ -136,55 +152,31 @@ class StablePromptAgent:
     def _decode_tensors(self, tensors):
         return [self.agent_tokenizer.decode(tensor.squeeze(), skip_special_tokens=True) for tensor in tensors]
 
-    def _update_referense_model(self, bs, query_encoded, change_num):
+    def _update_referense_model(self, bs, query_encoded):
         response_tensors, ref_response_tensors = self.ppo_trainer.generate(
             query_encoded.view(-1),
             **self.generation_kwargs,
             return_prompt=False,
             num_return_sequences=bs,
             generate_ref_response=True)
+
         used_prompts = self._decode_tensors(response_tensors)
         ref_used_prompts = self._decode_tensors(ref_response_tensors)
 
-        acc = self.evaluator.evaluate(
-            model=self.target_model,
-            tokenizer=self.target_tokenizer,
-            eval_ds=self.dataset,
-            batch_size=32,
-            model_generate_args=self.model_generate_params
-        )
-        ref_acc = utils.evaluation(
-            ref_used_prompts,
-            self.validation_dataset,
-            self.target_model,
-            self.target_tokenizer,
-            self.device,
-            self.verbalizer.values(),
-        )
-                
-        print('acc : ', acc)
-        print('ref_acc : ', ref_acc)
+        acc = self._evaluate_list_of_prompts(used_prompts, metric=self.train_metric)
+        ref_acc = self._evaluate_list_of_prompts(ref_used_prompts, metric=self.train_metric)
+
         mean_acc = np.mean(np.array(acc))
         mean_ref_acc = np.mean(np.array(ref_acc))
+
         diff = mean_acc - mean_ref_acc
         if diff > self.update_threshold:
             self.ppo_trainer.ref_model = self.ppo_trainer.model
-            print('update ref model')
-            change_num += 1
+            return 1
         elif diff < -self.update_threshold:
             self.ppo_trainer.model = self.ppo_trainer.ref_model
-            print('rollback model')
-            change_num -= 1
-        if change_num < 0:
-            change_num = 0
-
-        wandb.log({
-            'change_num': change_num,
-            'valid_acc': mean_acc,
-            'ref_valid_acc': mean_ref_acc,
-        })
-
-        return change_num
+            return -1
+        return 0
 
     def train(self):
         queue = utils.TopAccuracyTextsNoDuplicates(max_size=5)
@@ -211,7 +203,7 @@ class StablePromptAgent:
                 break
 
             rewards = []
-            if self.metrics == 'multiple_choice_grade':
+            if self.task == "classification":
                 accuracys, softmax_diff = utils.evaluation_sd(
                     used_prompts,
                     self.validation_dataset,
@@ -222,7 +214,7 @@ class StablePromptAgent:
                     soft_diff=True,
                 )
                 rewards = [0.05 * softmax_diff[i] + 3 * accuracys[i] for i in range(len(used_prompts))]
-            elif self.metrics == 'exact_str_match':
+            elif self.task == 'generation':
                 rewards, accuracys = utils.evaluation_generation(
                     used_prompts,
                     self.validation_dataset,
@@ -231,17 +223,16 @@ class StablePromptAgent:
                     self.device,
                 )
 
-            np_rewards = np.array(rewards)
+            bs = len(np.array(rewards))
             rewards = [torch.tensor(reward) for reward in rewards]
             for i in range(len(rewards)):
-                print('reward : ', rewards[i].item(), 'acc :', accuracys[i], ' prompt : ', used_prompts[i], '\n')
                 queue.add(rewards[i].item(), used_prompts[i], ep)
 
-            bs = len(np_rewards)
             _ = self.ppo_trainer.step(
-                [query_encoded.view(-1) for i in range(bs)],
+                [query_encoded.view(-1) for _ in range(bs)],
                 [response for response in response_tensors],
-                rewards)
+                rewards
+            )
             rewards = torch.stack(rewards)
             mean_reward = torch.mean(rewards)
             max_reward = torch.max(rewards)
@@ -249,22 +240,11 @@ class StablePromptAgent:
             max_total_loss += max_reward
             min_total_loss += torch.min(rewards)
             sum_total_loss += torch.sum(rewards)
-            
-            wandb.log({
-                'rewards': rewards,
-                'mean_reward': mean_reward,
-                'max_reward': max_reward,
-            })
 
             if ep != 0 and ep % self.update_term == 0:
-                change_num = self._update_referense_model(bs, query_encoded, change_num)
-
-            wandb.log({
-                'mean_loss': mean_total_loss,
-                'max_loss': max_total_loss,
-                'min_loss': min_total_loss,
-                'sum_loss': sum_total_loss,
-            })
+                change_num += self._update_referense_model(bs, query_encoded, change_num)
+                if change_num < 0:
+                    change_num = 0
 
         print('Final test Start')
         prompt_queue = queue.get_top_texts()
@@ -280,10 +260,6 @@ class StablePromptAgent:
         for i in range(len(prompt_queue)):
             print('prompt : ', prompt_queue[i][1], 'acc : ', new_acc[i])
         max_new_acc = np.max(np.array(new_acc))
-        wandb.log({
-            'final_acc': max_new_acc,
-            'final_mean_acc': np.mean(np.array(new_acc))
-        })
         with open('results.txt', "a") as f:
             f.write(str(max_new_acc) + '\n')
 
@@ -292,11 +268,14 @@ if __name__ == "__main__":
     model_name = "t-bank-ai/T-lite-instruct-0.1"
     qconf = transformers.BitsAndBytesConfig(load_in_8bit=True)
     sp_agent = StablePromptAgent(
+        task="classification",
         target_model_name=model_name,
         agent_model_name=model_name,
         quantization_config=qconf,
         dataset=data.SST2Dataset,
         evaluator=data.TextClassificationEvaluator,
+        metric="f1",
+        sample=100,
         max_prompt_length=150,
         epochs=50,  # original code uses 100 for fewshot, 30 for others
         meta_prompt='''
