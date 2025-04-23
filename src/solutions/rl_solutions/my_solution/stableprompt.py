@@ -23,7 +23,6 @@ class StablePromptAgent:
                  max_prompt_length,
                  epochs,
                  meta_prompt,
-                 train_metric="accuracy",
                  prompt_per_example=4,
                  num_example=5,
                  update_term=5,
@@ -32,7 +31,6 @@ class StablePromptAgent:
         self.task = task
         self.evaluator = evaluator
         self.metric = metric
-        self.train_metric = train_metric
         self.sample = sample
         self.prompt_per_example = prompt_per_example
         self.max_prompt_length = max_prompt_length
@@ -41,6 +39,7 @@ class StablePromptAgent:
         self.meta_prompt = meta_prompt
         self.update_term = update_term
         self.update_threshold = update_threshold
+        self.queue = None
 
         self.device = 'cuda:0'
 
@@ -117,7 +116,7 @@ class StablePromptAgent:
             eval_ds=self.dataset(tokenizer=self.target_tokenizer, sample=self.sample,
                                  split=split, prompt=prompt, device=self.device),
             batch_size=16,
-            model_generate_args=self.model_generate_args,
+            model_generate_args=self.model_generate_params,
         )
         return metrics[metric]
 
@@ -163,8 +162,9 @@ class StablePromptAgent:
         used_prompts = self._decode_tensors(response_tensors)
         ref_used_prompts = self._decode_tensors(ref_response_tensors)
 
-        acc = self._evaluate_list_of_prompts(used_prompts, metric=self.train_metric)
-        ref_acc = self._evaluate_list_of_prompts(ref_used_prompts, metric=self.train_metric)
+        metric_to_evaluate = "accuracy"
+        acc = self._evaluate_list_of_prompts(used_prompts, metric=metric_to_evaluate)
+        ref_acc = self._evaluate_list_of_prompts(ref_used_prompts, metric=metric_to_evaluate)
 
         mean_acc = np.mean(np.array(acc))
         mean_ref_acc = np.mean(np.array(ref_acc))
@@ -178,8 +178,27 @@ class StablePromptAgent:
             return -1
         return 0
 
+    def _get_softmax_diff(self, used_prompts):
+        pass
+
+    def _get_rewards(self, used_prompts):
+        if self.task == "classification":
+            accuracys = self._evaluate_list_of_prompts(used_prompts, metric="accuracy")
+            softmax_diff = self._get_softmax_diff(used_prompts)
+            return [0.05 * softmax_diff[i] + 3 * accuracys[i] for i in range(len(used_prompts))]
+        elif self.task == 'generation':
+            rewards, _ = utils.evaluation_generation(
+                used_prompts,
+                self.validation_dataset,
+                self.target_model,
+                self.target_tokenizer,
+                self.device,
+            )
+            return rewards
+        return []
+
     def train(self):
-        queue = utils.TopAccuracyTextsNoDuplicates(max_size=5)
+        self.queue = utils.TopAccuracyTextsNoDuplicates(max_size=5)
         change_num = 0
 
         for ep in tqdm(range(self.epochs)):
@@ -202,31 +221,12 @@ class StablePromptAgent:
             if sum([len(p) for p in used_prompts]) < self.prompt_per_example * 10:
                 break
 
-            rewards = []
-            if self.task == "classification":
-                accuracys, softmax_diff = utils.evaluation_sd(
-                    used_prompts,
-                    self.validation_dataset,
-                    self.target_model,
-                    self.target_tokenizer,
-                    self.device,
-                    self.verbalizer.values(),
-                    soft_diff=True,
-                )
-                rewards = [0.05 * softmax_diff[i] + 3 * accuracys[i] for i in range(len(used_prompts))]
-            elif self.task == 'generation':
-                rewards, accuracys = utils.evaluation_generation(
-                    used_prompts,
-                    self.validation_dataset,
-                    self.target_model,
-                    self.target_tokenizer,
-                    self.device,
-                )
+            rewards = self._get_rewards(used_prompts)
 
             bs = len(np.array(rewards))
             rewards = [torch.tensor(reward) for reward in rewards]
             for i in range(len(rewards)):
-                queue.add(rewards[i].item(), used_prompts[i], ep)
+                self.queue.add(rewards[i].item(), used_prompts[i], ep)
 
             _ = self.ppo_trainer.step(
                 [query_encoded.view(-1) for _ in range(bs)],
@@ -246,15 +246,12 @@ class StablePromptAgent:
                 if change_num < 0:
                     change_num = 0
 
-        print('Final test Start')
-        prompt_queue = queue.get_top_texts()
-        new_acc = utils.evaluation(
+    def test(self):
+        prompt_queue = self.queue.get_top_texts()
+        new_acc = self._evaluate_list_of_prompts(
             [prompt[1] for prompt in prompt_queue],
-            self.test_dataset,
-            self.target_model,
-            self.target_tokenizer,
-            self.device,
-            self.verbalizer.values(),
+            metric=self.metric,
+            split="test"
         )
         print(len(prompt_queue), new_acc)
         for i in range(len(prompt_queue)):
@@ -285,3 +282,4 @@ if __name__ == "__main__":
             ''',
     )
     sp_agent.train()
+    sp_agent.test()
