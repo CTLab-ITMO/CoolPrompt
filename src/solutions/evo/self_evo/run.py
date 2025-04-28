@@ -7,7 +7,7 @@ sys.path.append(project_root)
 
 
 from src.solutions.evo.self_evo.args import parse_args
-from src.solutions.evo.self_evo.evoluter import ReEvoluter
+from src.solutions.evo.self_evo.evoluter import SelfEvoluter
 from src.evaluation.evaluator import (
     TextClassificationEvaluator,
     GenerationEvaluator
@@ -20,7 +20,7 @@ def run(args):
         "gen": GenerationEvaluator,
     }
     evaluator = task2evaluator[args.task]()
-    evoluter = ReEvoluter(
+    evoluter = SelfEvoluter(
         model_name=args.model_name,
         dataset=args.dataset,
         evaluator=evaluator,

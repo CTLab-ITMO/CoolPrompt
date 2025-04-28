@@ -74,7 +74,7 @@ class SelfEvoluter(Evoluter):
 
         self.population_size = population_size
         self.num_epochs = num_epochs
-        self.config_filename = 'config_re.yaml'
+        self.config_filename = 'config_v2.yaml'
         self.problem_description_filename = 'problems.yaml'
         self.output_path = output_path
         self.threshold = threshold
