@@ -1,0 +1,5 @@
+prompts:
+- text: You are given a sentence and a question in the input. If the information provided
+    in the sentence is enough to answer the question, label \"Yes.\", otherwise label
+    \"No.\". Do not use any facts other than those provided in the sentence while
+    labeling \"Yes.\" or \"No.\".

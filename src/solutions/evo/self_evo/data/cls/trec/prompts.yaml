@@ -1,0 +1,15 @@
+prompts:
+- text: Please perform Question Classification task. Return label only without any
+    other text
+- text: Determine the type of the given question.
+- text: Your task is to choose a type of the question.
+- text: Analyze an English question and identify which category it belongs to.
+- text: You are given a question. You need to detect which category better describes
+    the question.
+- text: Please select the correct classification for this sentence.
+- text: Classify this sentence into one of the categories.
+- text: 'Identify the most suitable category for this sentence, based on these coarse
+    labels: Description, Entity, Expression, Human, Location, or Number.'
+- text: Classify this sentence based on the provided categories.
+- text: Determine the category that best describes this sentence.
+- text: Choose the appropriate classification for this sentence.

@@ -1,0 +1,5 @@
+prompts:
+- text: 'Answer the following question:'
+- text: Answer the science question.
+- text: Choose the label of the correct answer.
+- text: Use you common knowledge to answer the question.

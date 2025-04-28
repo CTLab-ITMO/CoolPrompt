@@ -1,0 +1,60 @@
+average_score: 0.09140577477926247
+best_score: 0.22852663332539494
+prompts:
+- origin: APE
+  score: 0.22852663332539494
+  text: Provide the name, age, height (cm), and weight (kg) of each penguin in the
+    table.
+- origin: APE
+  score: 0.21533836141221538
+  text: Begin by identifying each row in the table. For each row, check if all four
+    columns (name, age, height in cm, weight in kg) have valid data. Count the number
+    of valid rows or answer based on a specific value provided in the question.
+- origin: APE
+  score: 0.20121462660482622
+  text: Create a table listing penguins with their attributes and determine the oldest
+    one.
+- origin: APE
+  score: 0.15842151675485008
+  text: List the penguins based on their height and age, and answer the questions
+    asked about their positions, height, and age.
+- origin: APE
+  score: 0.09583333333333333
+  text: Calculate the age of each penguin and return the numerical age
+- origin: APE
+  score: 0.06994708994708994
+  text: Provide a table where each line is a penguin with their age, height (cm),
+    and weight (kg). Then, for each penguin, output their age.
+- origin: MANUAL
+  score: 0.06540170295036812
+  text: Answer questions about a table of penguins and their attributes.
+- origin: APE
+  score: 0.06296296296296296
+  text: List each penguin's details in the order they appear in the table, one after
+    another, with each line containing the name, age, height in cm, and weight in
+    kg.
+- origin: APE
+  score: 0.04363636363636364
+  text: Identify penguins and their attributes. Query based on age, weight, and height.
+    Delete penguins that don't meet specific criteria. Add new penguins with specific
+    attributes. Calculate totals based on attributes. Determine the last penguin's
+    name. Count the total number of animals in tables, including both giraffes and
+    penguins.
+- origin: APE
+  score: 0.017543859649122806
+  text: List each penguin's name, age, height (cm), weight (kg) in the order provided,
+    followed by an example of the output, then instruct your friend to add a new penguin,
+    delete an existing one, and then sort the remaining penguins alphabetically by
+    name.
+- origin: APE
+  score: 0.017543859649122806
+  text: Give me a table with headers and penguins, then provide the age of a specific
+    penguin, such as Bernard. Also, ask for the cumulated age of giraffes, the last
+    penguin sorted alphabetically, the second heaviest penguin, and the age of a specific
+    penguin.
+- origin: APE
+  score: 0.011904761904761904
+  text: List the penguins with height less than 80 cm, weight less than 12 kg, and
+    weight less than 12 kg.
+- origin: APE
+  text: Process the table and determine the first penguin sorted by alphabetic order.

@@ -1,0 +1,47 @@
+prompts:
+- text: Solve a logic puzzle involving seven objects arranged in a fixed order. The
+    puzzle required me to follow a series of clues and use them to determine the correct
+    order of the objects. Each time my friend processed the instruction, they applied
+    the clues correctly and arrived at the right solution. The process involved breaking
+    down each clue, identifying relationships between the objects, and systematically
+    eliminating possibilities until the correct order was found. This method helped
+    my friend understand how to approach similar problems in the future by focusing
+    on logical reasoning and systematic analysis.
+- text: Arrange the seven objects in a fixed order such that the oldest is first,
+    the rightmost is last, and the cardinal is the rightmost, the truck is the oldest,
+    the bus is the oldest, the station wagon is the oldest, and the limousine is the
+    oldest.
+- text: The rightmost position for the falcon in the bird arrangement.
+- text: Choose the second item from the provided list of options.
+- text: Determine the position of a particular book (e.g., green, red, etc.) based
+    on the given logical rules and clues in each input-output pair.
+- text: List the birds in the order they are arranged on the branch, based on the
+    given clues. Select the correct option based on the leftmost or third position
+    as per the instruction.
+- text: Ada is fourth; the convertible is second-oldest; the crow is rightmost; the
+    robin is fourth-to-last; the cardinal is second-to-last; the hawking is rightmost.
+    Ana is third. The bird options are given, but the main instruction was about Ada's
+    position.
+- text: Arrange the seven fruits in the fixed order based on their prices, following
+    the given statements.
+- text: 'Arrange the birds in the following order: falcon is second, crow is last,
+    and blue jay is fourth.'
+- text: 'The following paragraphs each describe a set of seven objects arranged in
+    a fixed order. The statements are logically consistent within each paragraph.
+    On a shelf, there are seven books: a black book, an orange book, a yellow book,
+    a white book, a blue book, a red book, and a green book. The red book is to the
+    right of the yellow book. The white book is the second from the right. The red
+    book is to the left of the green book. The blue book is to the right of the black
+    book. The black book is the third from the right. The orange book is the leftmost.'
+- text: For each input, identify the most expensive fruit and select the option that
+    matches it.
+- text: 'The following paragraphs each describe a set of seven objects arranged in
+    a fixed order. The statements are logically consistent within each paragraph.
+    On a branch, there are seven birds: a blue jay, a falcon, a raven, a crow, a robin,
+    an owl, and a hummingbird. The robin is to the left of the owl. The crow is the
+    rightmost. The hummingbird is the fourth from the left. The owl is the third from
+    the right. The blue jay is to the left of the robin. The raven is the second from
+    the left.'
+- text: Find Ada's finishing position in the golf tournament based on the given clues
+- text: Determine the position of a specific object in a list of seven objects arranged
+    in a fixed order, based on the given logical relationships.

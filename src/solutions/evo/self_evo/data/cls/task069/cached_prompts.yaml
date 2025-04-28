@@ -1,0 +1,68 @@
+average_score: 0.365174086927012
+best_score: 0.5481404240528328
+prompts:
+- origin: APE
+  score: 0.5481404240528328
+  text: Identify if the described situation is realistic
+- origin: APE
+  score: 0.5398159263705482
+  text: Count the number of correct middle points and return 1 if only one is correct,
+    2 if both are correct.
+- origin: APE
+  score: 0.537037037037037
+  text: <font color="hotpink">Evaluate the friend's actions and determine if they
+    were successful. If successful, output 1; if not, output 2.</font>
+- origin: APE
+  score: 0.49993242330044596
+  text: Assess the middle parts of the input to determine the score.
+- origin: MANUAL
+  score: 0.494468085106383
+  text: In this task, you will be shown a short story with a beginning, two potential
+    middles, and an ending. Your job is to choose the middle statement that makes
+    the story coherent / plausible by writing \"1\" or \"2\" in the output. If both
+    sentences are plausible, pick the one that makes most sense.
+- origin: APE
+  score: 0.4121863799283154
+  text: Count the number of middle parts in the input and assign the output based
+    on that count.
+- origin: APE
+  score: 0.4022869022869023
+  text: Count the number of times "ruby" appears in the input, including the ending.
+- origin: APE
+  score: 0.3630573248407643
+  text: Count the number of positive reactions or specific events in the inputs.
+- origin: APE
+  score: 0.3630573248407643
+  text: "\u0421ount the number of specific tasks or actions each person did in the\
+    \ given input."
+- origin: APE
+  score: 0.358974358974359
+  text: Evaluate someone's attitude and give a score based on how positive it was.
+- origin: APE
+  score: 0.34994279401901607
+  text: When a specific event occurs, respond by addressing it or taking action.
+- origin: APE
+  score: 0.3383252818035427
+  text: Wear your socks for many days and realize the quality.
+- origin: APE
+  score: 0.3116539652712531
+  text: Evaluate the number of times specific actions were performed in each input
+    and assign a score based on the count.
+- origin: APE
+  score: 0.24941724941724944
+  text: Perform an action that results in turning the nose up.
+- origin: APE
+  score: 0.23208273208273208
+  text: Count the number of times a specific phrase or phrase-related action appears
+    in each input.
+- origin: APE
+  score: 0.2168245918412741
+  text: Follow the sequence of actions described in each input, leading to a successful
+    outcome.
+- origin: APE
+  score: 0.20387596899224805
+  text: Stop playing Internet games
+- origin: APE
+  score: 0.15205479452054793
+  text: Find the action that either gives you something or causes you to act in a
+    certain way.\

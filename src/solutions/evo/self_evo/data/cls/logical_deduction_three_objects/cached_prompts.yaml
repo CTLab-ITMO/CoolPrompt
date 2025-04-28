@@ -1,0 +1,63 @@
+average_score: 0.22851346498289238
+best_score: 0.3765239369610467
+prompts:
+- origin: APE
+  score: 0.3765239369610467
+  text: Identify the position of each object in a fixed order based on the given statements
+    in each input-output pair.
+- origin: APE
+  score: 0.3534801798344207
+  text: Analyze the logical relationships between three objects in each paragraph
+    and determine their order based on the given statements, then select the correct
+    option from the provided choices.
+- origin: APE
+  score: 0.3395449620801733
+  text: Determine the position (first, second, or leftmost) of one of the objects
+    among three based on the given statements in the paragraphs.
+- origin: APE
+  score: 0.33914965986394563
+  text: Identify the first object in a sequence of three objects described in each
+    input
+- origin: APE
+  score: 0.3191140278917145
+  text: Identify the most expensive or the leftmost object in each set of three described
+    in the paragraphs.
+- origin: MANUAL
+  score: 0.3108967902229385
+  text: A logical deduction task which requires deducing the order of a sequence of
+    objects.
+- origin: APE
+  score: 0.2823875478314568
+  text: 'On a shelf, there are three books: a purple book, a black book, and a blue
+    book. The purple book is to the right of the blue book. The black book is the
+    second from the left.'
+- origin: APE
+  score: 0.23653846153846153
+  text: Arrange the three objects in the fixed order as described and then determine
+    the oldest, the newest, or their specific positions.
+- origin: APE
+  score: 0.1736111111111111
+  text: Arrange the options in alphabetical order and select the appropriate ones.
+- origin: APE
+  score: 0.1730861200014715
+  text: The second object from the left is [specific position]
+- origin: APE
+  score: 0.16531805704738037
+  text: Determine the order of the three objects based on the given statements and
+    select the correct option.
+- origin: APE
+  score: 0.15274725274725276
+  text: Identify the second object in the fixed order based on the given statements.
+- origin: APE
+  score: 0.12041956305858986
+  text: Arrange the three objects in a specific order based on the given relationships,
+    and choose the option that correctly reflects this order.
+- origin: APE
+  score: 0.0692593045534222
+  text: Arrange the three objects in a fixed order based on the given statements and
+    identify the object that is second from the left.
+- origin: APE
+  score: 0.015625
+  text: Arrange the three objects in the correct order based on the given statements
+    and then select the middle one in the first two cases and the second newest in
+    the fifth case.

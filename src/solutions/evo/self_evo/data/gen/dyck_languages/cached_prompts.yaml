@@ -1,0 +1,46 @@
+average_score: 0.09239764317888169
+best_score: 0.19853452757571893
+prompts:
+- origin: APE
+  score: 0.19853452757571893
+  text: Close the parentheses and ensure they are properly nested.
+- origin: APE
+  score: 0.11733451726985963
+  text: Complete the rest of the sequence, making sure that the parentheses are closed
+    properly, and also to close any square brackets or angle brackets as needed
+- origin: APE
+  score: 0.10559613156935288
+  text: /replacement
+- origin: APE
+  score: 0.1054736742548815
+  text: Replace the input sequence with the corresponding output sequence
+- origin: APE
+  score: 0.10530762698893631
+  text: Complete the rest of the sequence, ensuring that the parentheses are closed
+    properly.
+- origin: APE
+  score: 0.10449838953962448
+  text: Add or close specific brackets or symbols to match the expected output.
+- origin: APE
+  score: 0.09288188441636132
+  text: Make sure all brackets and braces are properly closed.
+- origin: APE
+  score: 0.0916860239988952
+  text: Close the entire sequence with a single ">" if the last character is "<",
+    otherwise close with multiple ")".
+- origin: APE
+  score: 0.07524146385491673
+  text: <...>
+- origin: APE
+  score: 0.06678729216499013
+  text: 'Close the following symbols: ( , { , < , >, [ , ] , and )'
+- origin: APE
+  score: 0.05649645143111547
+  text: Fix properly closing brackets
+- origin: APE
+  score: 0.050518580768020405
+  text: Process the input string by removing specific symbols and appending others
+    in the correct order to form the output string.
+- origin: MANUAL
+  score: 0.030812797492788903
+  text: Correctly close a Dyck-n word.

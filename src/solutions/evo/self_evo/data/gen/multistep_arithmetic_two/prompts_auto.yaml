@@ -1,0 +1,35 @@
+prompts:
+- text: Evaluate the expression as written, following the order of operations (multiplication
+    before addition or subtraction) and respecting parentheses.
+- text: Multiply, add, subtract, and use parentheses
+- text: Evaluate the expressions by following the order of operations (multiplication
+    first, then addition and subtraction from left to right)
+- text: Compute the expression (7 - 5 * 7 + -1) + (6 * 4 - 9 + -7).
+- text: 'Here are the steps to compute the results based on the input expressions:
+    1. **Parentheses:** Evaluate expressions inside parentheses first. 2. **Multiplication
+    and Division:** Perform these operations from left to right. 3. **Addition and
+    Subtraction:** Perform these operations from left to right. 4. **Order of Operations:**
+    Follow the order of operations (PEMDAS/BODMAS) to ensure accurate results.'
+- text: Perform multiplication before addition and subtraction, following the order
+    of operations (left to right).
+- text: 'I gave a friend an instruction to solve a mathematical problem. The instruction
+    involved performing a series of arithmetic operations in a specific order. The
+    friend followed the instruction step by step to arrive at the correct output for
+    each input. The instruction was to compute the expression by following the order
+    of operations: first performing multiplication and division from left to right,
+    then performing addition and subtraction from left to right. The friend handled
+    negative numbers and multiple operations within parentheses correctly to arrive
+    at the output values provided. Your task is to understand the instruction, follow
+    the order of operations, and compute the results for each input to verify the
+    outputs.'
+- text: Perform addition, subtraction, and multiplication operations as shown in the
+    examples below. Include negation where necessary.
+- text: 'Perform the following operations in order: addition, subtraction, multiplication,
+    division, and then combine the results to get -89'
+- text: 'Perform the following operations on the inputs:   1. First, handle addition
+    and multiplication in the first section.   2. Then, proceed to the subtraction
+    and mixed operations in the second section.'
+- text: Perform either addition or subtraction on the two provided expressions, carefully
+    handling negative numbers as per the operations performed.
+- text: 'Compute the value of the expression following the order of operations: parentheses
+    first, then multiplication and division, and finally addition and subtraction.'

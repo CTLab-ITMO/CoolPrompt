@@ -1,0 +1,5 @@
+prompts:
+- text: In this task, you're given a pair of sentences, premise and hypothesis. Your
+    job is to choose whether the two sentences clearly agree/disagree with each other,
+    or if this cannot be determined.
+- text: Find the logical connection between premise and hypothesis.

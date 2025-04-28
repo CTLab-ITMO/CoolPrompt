@@ -1,0 +1,32 @@
+prompts:
+- text: Find a movie similar to the four movies listed in each input. The outputs
+    are the titles of the movies that match the theme or genre of the input.
+- text: Find a movie similar to a list of specific movies provided in each input.
+- text: 'Find a movie similar to [list of movie titles]. Options: (A) Little Women
+    (B) Dances with Wolves (C) Bring It On All or Nothing (D) Dead Alive. Output:
+    (B)'
+- text: Find a movie similar to [list of movies]
+- text: Find a movie similar to the listed ones, select the specified option each
+    time.
+- text: Find a movie from the James Bond series that is similar to the given list
+    of movies.
+- text: Find a movie similar to [list of Star Wars films] and choose the correct option
+    from the given choices.
+- text: Find a movie similar to several well-known films. I provided specific input
+    pairs, each consisting of a list of options and the corresponding output. My goal
+    was to guide them effectively, ensuring they could select the most appropriate
+    movie based on the given criteria.
+- text: Find a movie similar to [Title1], [Title2], [Title3], [Title4].
+- text: Find a movie similar to Star Wars Episode V - The Empire Strikes Back, The
+    Lord of the Rings The Fellowship of the Ring, American Beauty, Forrest Gump; The
+    Lord of the Rings The Two Towers, Raiders of the Lost Ark, The Shawshank Redemption,
+    and Schindler's List.
+- text: 'Find a movie similar to the following four films: Schindler''s List, Pulp
+    Fiction, Braveheart, The Usual Suspects. Choose the correct option from the given
+    choices.'
+- text: Find a movie similar to [listed movies], and select the option that matches
+    one of the listed options.
+- text: '"Find a movie similar to Pulp Fiction, The Shawshank Redemption, Aladdin,
+    The Lion King: (A)"'
+- text: Find a movie similar to the listed movies and provide one from the given options,
+    likely a sequel or continuation.

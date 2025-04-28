@@ -1,0 +1,3 @@
+prompts:
+- text: Evaluate the truth value of a random Boolean function expressed as a natural-language
+    word problem.

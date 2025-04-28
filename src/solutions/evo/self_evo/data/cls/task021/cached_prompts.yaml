@@ -1,0 +1,59 @@
+average_score: 0.30722676866945653
+best_score: 0.42196531791907516
+prompts:
+- origin: MANUAL
+  score: 0.42196531791907516
+  text: A question that is free of any grammatical or logical errors, should be labeled
+    'Yes.', otherwise it should be indicated as 'No.'. A question is grammatically
+    correct if all its entities i.e. nouns, verbs, adjectives, prepositions, pronouns,
+    adverbs are at appropriate position. A question is logically correct if the semantic
+    makes sense.
+- origin: APE
+  score: 0.42196531791907516
+  text: Confirm whether the situation described in the sentence happened.
+- origin: APE
+  score: 0.42196531791907516
+  text: determine the time or duration of a specific event based on the given information
+- origin: APE
+  score: 0.42196531791907516
+  text: Answer the question posed in each input, providing a yes or no response.
+- origin: APE
+  score: 0.42196531791907516
+  text: Review whether the concept described in each sentence aligns with the answer
+    given ("Yes").
+- origin: APE
+  score: 0.42196531791907516
+  text: Determine whether a specific event or threat was reported or not.
+- origin: APE
+  score: 0.42196531791907516
+  text: Check whether the sentence's truth requires water access, or whether certain
+    events occurred at a specific time, and answer accordingly.
+- origin: APE
+  score: 0.299258625605931
+  text: Write a clear and concise question about the relationship between sound energy
+    and air particles.
+- origin: APE
+  score: 0.27906976744186046
+  text: Answer yes or no to the question below.
+- origin: APE
+  score: 0.2784313725490196
+  text: 'Sentence: [something] was [something]. Question: [specific question].'
+- origin: APE
+  score: 0.2745098039215686
+  text: Determine the duration of a specific event or object.
+- origin: APE
+  score: 0.2698412698412698
+  text: Is the occurrence you described always present or frequent?
+- origin: APE
+  score: 0.25833333333333336
+  text: So from now on, Marsha takes extra special care to make sure Joey is safe
+    and sound at all times.
+- origin: APE
+  score: 0.25833333333333336
+  text: Answer the question below.
+- origin: APE
+  score: 0.02631578947368421
+  text: 'Yes'
+- origin: APE
+  score: 0.017777777777777778
+  text: Answer with a "Yes" or "No" to the question in the sentence.

@@ -1,0 +1,41 @@
+average_score: 0.03780815320276609
+best_score: 0.10527915483752086
+prompts:
+- origin: APE
+  score: 0.10527915483752086
+  text: Count the number of items in the list
+- origin: APE
+  score: 0.10207179381503384
+  text: Count the number of items in your list.
+- origin: APE
+  score: 0.05487062495909606
+  text: Count the number of each type of item in the input and sum them up.
+- origin: APE
+  score: 0.041590948411814994
+  text: Count the total number of items in the input.
+- origin: APE
+  score: 0.03367851736949662
+  text: Count the number of items listed in the list.
+- origin: APE
+  score: 0.03344361070101962
+  text: Count the number of musical instruments mentioned in the input.
+- origin: APE
+  score: 0.029126172343395165
+  text: Write a list of vegetables and fruits, specifying each type. For each item
+    in your input, count it if it matches the list above. The total count is the number
+    of matches.
+- origin: APE
+  score: 0.02729990461160433
+  text: Count how many items you have in each list.
+- origin: APE
+  score: 0.013458709800931452
+  text: Count the number of [item types] you have.
+- origin: MANUAL
+  score: 0.005593959197686464
+  text: Questions that involve enumerating objects and asking the model to count them.
+- origin: APE
+  score: 0.004197919727229883
+  text: Identify and count the specified items mentioned in each question.
+- origin: APE
+  score: 0.003086522658363786
+  text: count the number of fruit/s in this sentence.

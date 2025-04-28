@@ -1,0 +1,65 @@
+average_score: 0.06711950113792682
+best_score: 0.11676640960107779
+prompts:
+- origin: APE
+  score: 0.11676640960107779
+  text: Exchange balls in the specified sequence as described
+- origin: APE
+  score: 0.11201180033416874
+  text: Perform a series of swaps involving specific pairs of people, and determine
+    who ends up with a particular item or role after all swaps.
+- origin: MANUAL
+  score: 0.1054958764062025
+  text: A task requiring determining the final positions of a set of objects given
+    their initial positions and a description of a sequence of swaps.
+- origin: APE
+  score: 0.10475898692810458
+  text: In a gift exchange, partners swap their presents/gifts through a series of
+    trades, resulting in different final partners for each person.
+- origin: APE
+  score: 0.10465387697856142
+  text: A series of swapping rules between players. The user applies these rules to
+    the final input to determine the final position of the specified player.
+- origin: APE
+  score: 0.103873987265931
+  text: Have your friend exchange books with each other in a series of swaps, as described
+    in the problem, and tell them the final book each person has. Then, have them
+    write down their final position or item based on the swaps.
+- origin: APE
+  score: 0.09272058310861278
+  text: To have the dancers switch partners in the order specified in each example.
+- origin: APE
+  score: 0.0891022021456804
+  text: Trading or switching partners among dancers or players in a specific context
+- origin: APE
+  score: 0.08555301226392151
+  text: Swap your book with the person whose original book you have now.
+- origin: APE
+  score: 0.07467908902691511
+  text: After all swaps, determine which person has the green present or which ball
+    is with whom, and select the corresponding option.
+- origin: APE
+  score: 0.0637987012987013
+  text: Swap items or positions between individuals.
+- origin: APE
+  score: 0.03586990351696234
+  text: Swap objects between pairs as described in the input sequence, following the
+    given trades, and determine the final holder of the specified object.
+- origin: APE
+  score: 0.026988636363636364
+  text: Swap items between specific pairs of players each time.
+- origin: APE
+  score: 0.013888888888888888
+  text: Perform a series of partner swaps in the order listed below. Follow each swap
+    step by step, tracking who is dancing with whom. The final position of Bob will
+    be determined by the last swap he was involved in.
+- origin: APE
+  score: 0.010869565217391304
+  text: Have a series of ball swaps among the friends, following the given order,
+    and identify the item that ends up with the specified person.
+- origin: APE
+  text: Perform the described swaps in the given sequence and report the final position
+    of the specified person.
+- origin: APE
+  text: Assign each person a specific position in the first place of the soccer match,
+    then perform a series of swaps as described in the instructions.

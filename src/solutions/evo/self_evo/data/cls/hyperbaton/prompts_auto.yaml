@@ -1,0 +1,28 @@
+prompts:
+- text: Arrange the adjectives in the correct order, starting from the least intense
+    to the most intense, ensuring the sentence is grammatically correct and meaningful.
+- text: Choose the sentence where the adjectives are in the correct order.
+- text: Determine the correct adjective order in a sentence by selecting the option
+    with the correct sequence of adjectives.
+- text: Identify the sentence with the correct adjective order. The outputs are (A)
+    and (B).
+- text: Identify the correct adjective order by choosing the sentence where the adjective
+    comes first in the list of options.
+- text: Check each sentence and arrange the adjectives in the correct alphabetical
+    or logical order, starting with smaller, more specific terms and moving to larger
+    or less general ones.
+- text: Arrange the sentences in order of the adjectives
+- text: Arrange adjectives in sentences correctly. The correct order is based on grammatical
+    position, with adjectives describing nouns before verbs.
+- text: Arrange the adjectives in each sentence in the correct order, placing each
+    adjective before its corresponding word.
+- text: Select the option where the adjective starts with the latter letter in the
+    alphabet.
+- text: 'Count the number of adjectives in each sentence and choose the one with exactly
+    two in the correct order: small, medium, big.'
+- text: Check the order of adjectives in each sentence and select the one where they
+    are correctly ordered.
+- text: Arrange the adjectives in correct grammatical order in the sentence.
+- text: Provide the correct adjective order for each sentence and identify the correct
+    option.
+- text: Arrange the adjectives in the correct order as they appear in English sentences.

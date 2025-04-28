@@ -1,0 +1,72 @@
+average_score: 0.2638069071725077
+best_score: 0.44622161574062474
+prompts:
+- origin: MANUAL
+  score: 0.44622161574062474
+  text: Summarize the given context.
+- origin: MANUAL
+  score: 0.38652958865108517
+  text: How would you rephrase that in a few words?
+- origin: MANUAL
+  score: 0.37740493981438034
+  text: Use concise language to summarize the main points, avoiding any unnecessary
+    details or repetition.
+- origin: MANUAL
+  score: 0.37279228617745835
+  text: Edit the summary if necessary to ensure clarity and coherence.
+- origin: MANUAL
+  score: 0.3548542377878781
+  text: Organize the information into a logical sequence or order that makes sense.
+- origin: MANUAL
+  score: 0.3171010404590709
+  text: Check that the summary accurately reflects the original content and captures
+    the essence of the discussion.
+- origin: MANUAL
+  score: 0.2839533845444566
+  text: Please summarize the main context.
+- origin: MANUAL
+  score: 0.2776439075726087
+  text: Pick out the key ideas and supporting details that are relevant to the topic.
+- origin: APE
+  score: 0.26522733876863963
+  text: produce input-output pairs that demonstrate an understanding of the conversation.
+    The input-output pairs demonstrate a clear understanding of the conversation,
+    as each output reflects a conclusion or summarization of the conversation that
+    was had.
+- origin: MANUAL
+  score: 0.2627329289700437
+  text: Read the text or listen to the dialogue carefully to understand the main idea
+    and the key points that have been discussed.
+- origin: APE
+  score: 0.247069826585889
+  text: create an input-output pair based on a dialogue between two people.
+- origin: APE
+  score: 0.23108626845149616
+  text: produce an input-output pair.
+- origin: APE
+  score: 0.22736975458551037
+  text: create input-output pairs.
+- origin: APE
+  score: 0.21555715893229097
+  text: produce input-output pairs demonstrating dialogue between two or more people.
+    The input-output pairs produced demonstrate conversations between two or more
+    people, each output summarizing the conversation.
+- origin: APE
+  score: 0.19581516391578263
+  text: provide an input-output pair based on a given dialogue.
+- origin: APE
+  score: 0.17755409280903664
+  text: give an example of input-output pairs that demonstrate an understanding of
+    context.
+- origin: APE
+  score: 0.16877494167842197
+  text: discuss a dream.
+- origin: MANUAL
+  score: 0.16135125493324126
+  text: Identify the main topic or theme of the conversation or text.
+- origin: APE
+  score: 0.15818930681784663
+  text: discuss a dream or aspiration.
+- origin: APE
+  score: 0.14890910625439202
+  text: discuss a dream or a goal.

@@ -1,0 +1,29 @@
+prompts:
+- text: Analyze each input by identifying which of the two options is sarcastic. The
+    sarcastic nature of the statements is evident in how they question the feasibility
+    and effectiveness of certain actions, often using strong and exaggerated language.
+    I will then guide them through the process of determining the correct answer for
+    each input, ensuring they follow the reasoning to arrive at the appropriate output.
+- text: Choose the sarcastic statement from the options.
+- text: Determine which statement is sarcastic, identify the index of the sarcastic
+    statement.
+- text: I provided your friend with a list of statements and asked them to select
+    the one that is the opposite of each given statement. They chose the sarcastic
+    option in response to each input.
+- text: Choose the sarcastic statement from the two options provided.
+- text: Answer "Which statement is sarcastic?" and select the sarcastic option.
+- text: Choose the sarcastic option for each input.
+- text: Determine which of the given statements is sarcastic. To do this, you need
+    to analyze each statement to identify any sarcastic language or tone. Then evaluate
+    the options and choose the correct answer based on my analysis.
+- text: 1. Identify the tone and context of each option in the given inputs. 2. Compare
+    the tone and context of options A and B in each input to determine which one is
+    sarcastic. 3. Explain the difference between a sarcastic statement and a humorous
+    statement. 4. Provide a clear and concise explanation of the reasoning behind
+    the chosen option.
+- text: Select the sarcastic option.
+- text: Choose the sarcastic statement from the given options.
+- text: Choose the sarcastic statement from the following options.
+- text: Select the sarcastic statement from the given options.
+- text: Select the sarcastic option, which is option B.
+- text: Select the sarcastic option.

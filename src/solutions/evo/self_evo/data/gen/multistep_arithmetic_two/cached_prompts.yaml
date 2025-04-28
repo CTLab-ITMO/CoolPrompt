@@ -1,0 +1,64 @@
+average_score: 0.00890071718589475
+best_score: 0.015687279440316206
+prompts:
+- origin: APE
+  score: 0.015687279440316206
+  text: Evaluate the expressions by following the order of operations (multiplication
+    first, then addition and subtraction from left to right)
+- origin: APE
+  score: 0.011580567011902727
+  text: Perform multiplication before addition and subtraction, following the order
+    of operations (left to right).
+- origin: APE
+  score: 0.011463305034755232
+  text: 'Compute the value of the expression following the order of operations: parentheses
+    first, then multiplication and division, and finally addition and subtraction.'
+- origin: APE
+  score: 0.011140740784599425
+  text: 'Perform the following operations on the inputs:   1. First, handle addition
+    and multiplication in the first section.   2. Then, proceed to the subtraction
+    and mixed operations in the second section.'
+- origin: APE
+  score: 0.011068233000798131
+  text: Multiply, add, subtract, and use parentheses
+- origin: APE
+  score: 0.010656262454026073
+  text: 'Perform the following operations in order: addition, subtraction, multiplication,
+    division, and then combine the results to get -89'
+- origin: MANUAL
+  score: 0.010071921784265884
+  text: Solve multi-step arithmetic problems.
+- origin: APE
+  score: 0.007959445353947055
+  text: Perform either addition or subtraction on the two provided expressions, carefully
+    handling negative numbers as per the operations performed.
+- origin: APE
+  score: 0.007340487423174277
+  text: Evaluate the expression as written, following the order of operations (multiplication
+    before addition or subtraction) and respecting parentheses.
+- origin: APE
+  score: 0.0061890885596091495
+  text: Perform addition, subtraction, and multiplication operations as shown in the
+    examples below. Include negation where necessary.
+- origin: APE
+  score: 0.005441752234620152
+  text: 'Here are the steps to compute the results based on the input expressions:
+    1. **Parentheses:** Evaluate expressions inside parentheses first. 2. **Multiplication
+    and Division:** Perform these operations from left to right. 3. **Addition and
+    Subtraction:** Perform these operations from left to right. 4. **Order of Operations:**
+    Follow the order of operations (PEMDAS/BODMAS) to ensure accurate results.'
+- origin: APE
+  score: 0.005387800242499618
+  text: Compute the expression (7 - 5 * 7 + -1) + (6 * 4 - 9 + -7).
+- origin: APE
+  score: 0.0017224400921178286
+  text: 'I gave a friend an instruction to solve a mathematical problem. The instruction
+    involved performing a series of arithmetic operations in a specific order. The
+    friend followed the instruction step by step to arrive at the correct output for
+    each input. The instruction was to compute the expression by following the order
+    of operations: first performing multiplication and division from left to right,
+    then performing addition and subtraction from left to right. The friend handled
+    negative numbers and multiple operations within parentheses correctly to arrive
+    at the output values provided. Your task is to understand the instruction, follow
+    the order of operations, and compute the results for each input to verify the
+    outputs.'

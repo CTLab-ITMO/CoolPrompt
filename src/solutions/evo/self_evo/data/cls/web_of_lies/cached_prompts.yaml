@@ -1,0 +1,67 @@
+average_score: 0.32432432432432434
+best_score: 0.32432432432432434
+prompts:
+- origin: MANUAL
+  score: 0.32432432432432434
+  text: Evaluate the truth value of a random Boolean function expressed as a natural-language
+    word problem.
+- origin: APE
+  score: 0.32432432432432434
+  text: 1. Identify the person making the statement for each input. 2. Analyze the
+    chain of statements to determine the truthfulness of each statement. 3. Determine
+    the truthfulness of each statement based on the previous person's statement. 4.
+    If a statement is true, the person making it tells the truth; if false, they lie.
+    5. The output is "Yes" if the person is telling the truth, "No" otherwise.
+- origin: APE
+  score: 0.32432432432432434
+  text: For each input, determine the truthfulness of the last person in the chain
+    of statements. Output 'Yes' if they tell the truth, otherwise 'No'.
+- origin: APE
+  score: 0.32432432432432434
+  text: For each input, determine if the speaker is telling the truth or lying, and
+    output "Yes" or "No" accordingly.
+- origin: APE
+  score: 0.32432432432432434
+  text: Follow the chain of statements, alternating between truth and lies, and determine
+    who ends up telling the truth based on the consistency of the statements.
+- origin: APE
+  score: 0.32432432432432434
+  text: If the last person in the chain tells the truth, output 'Yes'; otherwise,
+    output 'No'.
+- origin: APE
+  score: 0.32432432432432434
+  text: Determine whether the specified person in the question tells the truth.
+- origin: APE
+  score: 0.32432432432432434
+  text: Check whether the last person in each statement chain tells the truth.
+- origin: APE
+  score: 0.32432432432432434
+  text: For each input, follow the chain of each person's statement, starting from
+    the first, and determine if each subsequent person's statement holds true based
+    on the previous person's statement. The output is "Yes" if the last person is
+    telling the truth, otherwise "No.
+- origin: APE
+  score: 0.32432432432432434
+  text: Read and analyze each input-output pair. Determine the truthfulness of each
+    person's statements based on the output.
+- origin: APE
+  score: 0.32432432432432434
+  text: Evaluate the truthfulness of each statement in the chain to determine if the
+    person at the end is telling the truth.
+- origin: APE
+  score: 0.32432432432432434
+  text: Create a chain of statements where each person's statement affects the next.
+    If the chain leads to a "Yes" answer, then the person being questioned tells the
+    truth; otherwise, they lie.
+- origin: APE
+  score: 0.32432432432432434
+  text: Check the consistency of the statements made by each person to determine if
+    there's a consistent truth-telling pattern.
+- origin: APE
+  score: 0.32432432432432434
+  text: Determine if the last person in each input tells the truth based on their
+    statements.
+- origin: APE
+  score: 0.32432432432432434
+  text: If your friend says a statement, then determine whether the speaker of that
+    statement is telling the truth based on the pattern of their responses.

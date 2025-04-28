@@ -1,0 +1,63 @@
+average_score: 0.1970864655413592
+best_score: 0.27645348837209305
+prompts:
+- origin: MANUAL
+  score: 0.27645348837209305
+  text: A task requiring determining the final positions of a set of objects given
+    their initial positions and a description of a sequence of swaps.
+- origin: APE
+  score: 0.24333733493397358
+  text: I described a group of people swapping items in a specific sequence, and the
+    output was which item the person had after all swaps.
+- origin: APE
+  score: 0.21014676113360325
+  text: Swap items among friends in a specific sequence, tracking who ends up with
+    which item or position.
+- origin: APE
+  score: 0.20878173303049186
+  text: Swap your book with the person whose original book you have now.
+- origin: APE
+  score: 0.2082152137963619
+  text: Swap items among Alice, Bob, and Claire in the order described in the problem,
+    and identify which person ends up with the specific item listed in the options.
+- origin: APE
+  score: 0.20764433658784356
+  text: Have your friend exchange books with each other in a series of swaps, as described
+    in the problem, and tell them the final book each person has. Then, have them
+    write down their final position or item based on the swaps.
+- origin: APE
+  score: 0.20202995202995203
+  text: A series of swapping rules between players. The user applies these rules to
+    the final input to determine the final position of the specified player.
+- origin: APE
+  score: 0.19279319311411738
+  text: Swap items between specific pairs of players each time.
+- origin: APE
+  score: 0.19245473919876002
+  text: Simulate swaps among Alice, Bob, and Claire tracking who ends up with which
+    present or position.
+- origin: APE
+  score: 0.18394833763686225
+  text: Perform a series of swaps in the order specified in each input-output pair.
+- origin: APE
+  score: 0.17981619789183748
+  text: Swap items or positions between individuals.
+- origin: APE
+  score: 0.16939203354297697
+  text: To have the partners Alice and Bob swap, then Bob and Claire swap, and finally
+    Alice and Bob swap again. This sequence of partner swaps determines who ends up
+    with whom at the end of the event.
+- origin: APE
+  score: 0.15250606947564269
+  text: I explained that we have to track who has what item after each swap. Each
+    swap changes who holds what, and I need to make sure everyone understands how
+    the items move with each exchange. Let me know if you need any clarification!
+- origin: APE
+  score: 0.1316911268345126
+  text: 'I gave a friend an instruction involving a series of swaps between three
+    people, Alice, Bob, and Claire, following a specific sequence of swaps. The user
+    provided several input-output pairs, each illustrating the outcome after a series
+    of swaps based on the initial gifts each person had. The instruction was to have
+    a fixed sequence of swaps: first Alice-Bob, then Alice-Claire, then Bob-Claire,
+    repeated until all swaps were completed. The outputs depend on the initial gifts
+    and the sequence of swaps.'

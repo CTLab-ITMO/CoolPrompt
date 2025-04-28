@@ -1,0 +1,29 @@
+prompts:
+- text: Perform the described swaps in the given sequence and report the final position
+    of the specified person.
+- text: In a gift exchange, partners swap their presents/gifts through a series of
+    trades, resulting in different final partners for each person.
+- text: To have the dancers switch partners in the order specified in each example.
+- text: A series of swapping rules between players. The user applies these rules to
+    the final input to determine the final position of the specified player.
+- text: Swap items between specific pairs of players each time.
+- text: Swap your book with the person whose original book you have now.
+- text: Swap items or positions between individuals.
+- text: Have your friend exchange books with each other in a series of swaps, as described
+    in the problem, and tell them the final book each person has. Then, have them
+    write down their final position or item based on the swaps.
+- text: Perform a series of swaps involving specific pairs of people, and determine
+    who ends up with a particular item or role after all swaps.
+- text: Exchange balls in the specified sequence as described
+- text: Perform a series of partner swaps in the order listed below. Follow each swap
+    step by step, tracking who is dancing with whom. The final position of Bob will
+    be determined by the last swap he was involved in.
+- text: Assign each person a specific position in the first place of the soccer match,
+    then perform a series of swaps as described in the instructions.
+- text: Swap objects between pairs as described in the input sequence, following the
+    given trades, and determine the final holder of the specified object.
+- text: Trading or switching partners among dancers or players in a specific context
+- text: Have a series of ball swaps among the friends, following the given order,
+    and identify the item that ends up with the specified person.
+- text: After all swaps, determine which person has the green present or which ball
+    is with whom, and select the corresponding option.

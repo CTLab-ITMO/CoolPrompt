@@ -1,0 +1,111 @@
+average_score: 0.10622561807675467
+best_score: 0.22522893772893773
+prompts:
+- origin: MANUAL
+  score: 0.22522893772893773
+  text: Analyze an English question and identify which category it belongs to.
+- origin: MANUAL
+  score: 0.22398744113029828
+  text: Choose the appropriate classification for this sentence.
+- origin: MANUAL
+  score: 0.21816219904889855
+  text: Classify this sentence based on the provided categories.
+- origin: MANUAL
+  score: 0.21612138272236794
+  text: Classify this sentence into one of the categories.
+- origin: MANUAL
+  score: 0.20232663887836302
+  text: Please select the correct classification for this sentence.
+- origin: APE
+  score: 0.19393382352941177
+  text: For each input, provide an output that indicates whether the input is asking
+    for a description, an entity, or a human."
+- origin: MANUAL
+  score: 0.19002331002331005
+  text: Determine the category that best describes this sentence.
+- origin: MANUAL
+  score: 0.1862730406848054
+  text: Determine the type of the given question.
+- origin: MANUAL
+  score: 0.18571428571428572
+  text: Please perform Question Classification task. Return label only without any
+    other text
+- origin: APE
+  score: 0.18536953242835597
+  text: Explain each input sentence or identify the entities referred to in them.
+    The outputs are the answers to these explanations or interpretations.
+- origin: MANUAL
+  score: 0.18442728442728443
+  text: Your task is to choose a type of the question.
+- origin: APE
+  score: 0.17381692381692382
+  text: Identify the type of entity or item in each input sentence. Provide a description
+    or category for the entity identified.
+- origin: APE
+  score: 0.13275613275613274
+  text: identify the type of input (i.e. description, entity, or human) and provide
+    the corresponding type of output.
+- origin: APE
+  score: 0.12173579109062978
+  text: identify the type of the input and provide the corresponding output, i.e.
+    "Description" for questions that seek information about a description, "Entity"
+    for questions that seek information about an entity, and "Human" for questions
+    that seek information about
+- origin: APE
+  score: 0.10888119953863898
+  text: What is the description of...? Or, What is the answer to...?
+- origin: MANUAL
+  score: 0.10315315315315314
+  text: You are given a question. You need to detect which category better describes
+    the question.
+- origin: APE
+  score: 0.08799019607843137
+  text: provide the type of information being requested, such as a number, description,
+    or entity.
+- origin: MANUAL
+  score: 0.082991452991453
+  text: 'Identify the most suitable category for this sentence, based on these coarse
+    labels: Description, Entity, Expression, Human, Location, or Number.'
+- origin: APE
+  score: 0.07774122807017543
+  text: 'provide an answer type for each input: either a number, description, or entity.'
+- origin: APE
+  score: 0.0775094696969697
+  text: For each input, provide an output that describes the type of information being
+    requested (e.g. Description, Entity, Human, etc.)"
+- origin: APE
+  score: 0.057912457912457915
+  text: Explain or define a term
+- origin: APE
+  score: 0.05505050505050505
+  text: Look for concepts or categories that fit certain terms or questions. Sometimes,
+    you might need to discover new concepts.
+- origin: APE
+  score: 0.04247311827956989
+  text: name something
+- origin: APE
+  score: 0.03535353535353535
+  text: identify the type of answer associated with each question (e.g. Description,
+    Entity, or Human).
+- origin: APE
+  score: 0.02222222222222222
+  text: identify the type of answer (description, entity, or human) that should be
+    given to each question.
+- origin: APE
+  score: 0.008064516129032258
+  text: Find the answer to the question, but if the question is about a specific event
+    time, provide the date.
+- origin: APE
+  text: Find the [specific term] mentioned in the input and provide its [specific
+    output].
+- origin: APE
+  text: Identify the name of a specific item or place and replace it with the given
+    location.
+- origin: APE
+  text: What [subject] is [specific information about it]?
+- origin: APE
+  text: Determine the reason behind something, often using puns or wordplay.
+- origin: APE
+  text: What is the name, nickname, number, group, or sport of a specific entity?
+- origin: APE
+  text: Ask about a specific event

@@ -1,0 +1,37 @@
+average_score: 0.2971467315024065
+best_score: 0.364924177698666
+prompts:
+- origin: MANUAL
+  score: 0.364924177698666
+  text: Sort a list of words.
+- origin: APE
+  score: 0.3453355106645586
+  text: Sort the following words alphabetically, remove spaces from output.
+- origin: APE
+  score: 0.327292769645868
+  text: Sort the following words alphabetically and list them.
+- origin: APE
+  score: 0.32123899149424595
+  text: Sort the words alphabetically
+- origin: APE
+  score: 0.31795327332303736
+  text: 1. Sort the words alphabetically. 2. Reassemble the words into a grammatically
+    correct sentence.
+- origin: APE
+  score: 0.31125076912897653
+  text: Sort the following words alphabetically.
+- origin: APE
+  score: 0.2937134197668953
+  text: sort the following words alphabetically
+- origin: APE
+  score: 0.29261371336319525
+  text: Sort the following words alphabetically in a case-insensitive manner
+- origin: APE
+  score: 0.27314974708687867
+  text: Sort the following words alphabetically
+- origin: APE
+  score: 0.22257985492268606
+  text: 'Sort the following words alphabetically, List:'
+- origin: APE
+  score: 0.19856181943146387
+  text: 'Sort the following words alphabetically: List:'

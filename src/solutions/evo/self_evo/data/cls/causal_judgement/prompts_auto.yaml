@@ -1,0 +1,30 @@
+prompts:
+- text: How would a typical person answer each of the following questions about causation?
+- text: When certain actions are taken, they lead to a specific result. Ask why or
+    how this outcome happened.
+- text: Explain causation concepts, provide examples, and encourage asking clarifying
+    questions to ensure a thorough understanding.
+- text: Determine whether the event described in each question (e.g., employees turning
+    on the climate control system, John's lung cancer, Alex winning because of the
+    law, or Jake hitting the bullseye) was caused by the action mentioned (e.g., employees
+    arriving, John's smoking, the law, or his hand slipping) or if it occurred by
+    coincidence.
+- text: Determine the intentional nature of the described action, and output "Yes"
+    or "No" based on the assessment.
+- text: How would a typical person answer each of the following questions about causation?
+    [Your question here]
+- text: Answer each question with the corresponding output, which was consistently
+    "Yes" and "No."
+- text: Answer each question based on the provided instructions and then check the
+    output against the expected answer.
+- text: Answer each question directly and clearly, without engaging in speculative
+    or action-based explanations that could have led to incorrect conclusions or caused
+    the answers to be wrong.
+- text: Understand the concept of causation, analyze the provided scenarios where
+    a typical person's answers relate to causation. Determine the cause and effect
+    relationships in each case and explain how these examples illustrate causation.
+- text: Answer each question about causation, think about how a typical person would
+    respond. Consider the possible causes and effects, and determine if there's an
+    intentional action or a risk.
+- text: The rule is that people answer "Yes" to questions about causation unless the
+    cause was prevented by external factors, in which case they answer "No."

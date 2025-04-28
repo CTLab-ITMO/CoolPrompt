@@ -1,0 +1,17 @@
+prompts:
+- text: give an example of input-output pairs that demonstrate an understanding of
+    context.
+- text: produce input-output pairs that demonstrate an understanding of the conversation.
+    The input-output pairs demonstrate a clear understanding of the conversation,
+    as each output reflects a conclusion or summarization of the conversation that
+    was had.
+- text: discuss a dream or a goal.
+- text: discuss a dream.
+- text: discuss a dream or aspiration.
+- text: produce an input-output pair.
+- text: produce input-output pairs demonstrating dialogue between two or more people.
+    The input-output pairs produced demonstrate conversations between two or more
+    people, each output summarizing the conversation.
+- text: provide an input-output pair based on a given dialogue.
+- text: create input-output pairs.
+- text: create an input-output pair based on a dialogue between two people.
