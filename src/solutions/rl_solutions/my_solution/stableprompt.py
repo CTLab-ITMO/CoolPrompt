@@ -120,7 +120,7 @@ class StablePromptAgent:
         }
 
         # load learning datasets
-        ds = self.dataset(tokenizer=self.target_tokenizer, split="train", 
+        ds = self.dataset(tokenizer=self.target_tokenizer, split="train",
                           sample=(examples_sample + reward_calc_sample + update_calc_sample),
                           device=self.device)
         self.examples_dataset, self.reward_calc_dataset, self.update_calc_dataset = torch.utils.data.random_split(
@@ -158,7 +158,7 @@ class StablePromptAgent:
             {"role": "user", "content": self.meta_prompt + '\n' + examples},
             {"role": "assistant", "content": "The Instruction is : "}
         ]
-        return self.agent_tokenizer.apply_chat_template(
+        return query_text, self.agent_tokenizer.apply_chat_template(
             query_text,
             return_tensors='pt'
         ).view(-1).to(self.device)
@@ -255,12 +255,14 @@ class StablePromptAgent:
             return rewards
         return []
 
-    def train(self, epochs):
-        with open(self.log_file_name, 'w') as log_file:
+    def train(self, epochs=50):
+        with open(self.log_file_name, 'a') as log_file:
             change_num = 0
 
             for ep in tqdm(range(epochs)):
-                query_encoded = self._get_query()
+                log_file.write("epoch " + ep)
+                query, query_encoded = self._get_query()
+                log_file.write("Query\n" + query)
                 response_tensors = self.ppo_trainer.generate(
                     query_encoded,
                     **self.generation_kwargs,
@@ -269,11 +271,13 @@ class StablePromptAgent:
                 )
 
                 used_prompts = self._decode_tensors(response_tensors)
+                log_file.write(used_prompts)
 
                 if sum([len(p) for p in used_prompts]) < self.prompt_per_example * 10:
                     break
 
                 rewards = self._get_rewards(used_prompts)
+                log_file.write(rewards)
                 batch_size = len(np.array(rewards))
                 rewards = [torch.tensor(reward) for reward in rewards]
                 for i in range(len(rewards)):
@@ -290,21 +294,22 @@ class StablePromptAgent:
                     change_num += self._update_referense_model(batch_size, query_encoded)
                     if change_num < 0:
                         change_num = 0
+                    log_file.write("change_num " + change_num)
 
-    def test(self, test_sample=100):
+    def test(self, result_file_name, test_sample=100):
         prompt_queue = self.queue.get_top_texts()
-        new_acc = self._evaluate_list_of_prompts(
+        metric = self._evaluate_list_of_prompts(
             [prompt[1] for prompt in prompt_queue],
             metric=self.metric,
             sample=test_sample,
             split="test"
         )
-        print(len(prompt_queue), new_acc)
-        for i in range(len(prompt_queue)):
-            print('prompt : ', prompt_queue[i][1], 'acc : ', new_acc[i])
-        max_new_acc = np.max(np.array(new_acc))
-        with open('results.txt', "a") as f:
-            f.write(str(max_new_acc) + '\n')
+        max_metric = np.max(np.array(metric))
+        max_metric_prompt = None
+        with open(self.log_file_name, 'a') as log_file:
+            log_file.write("Best prompt\n" + max_metric_prompt + "\n" + str(max_metric) + "\n")
+        with open(result_file_name, 'a') as result_file:
+            result_file.write(str(max_metric) + "\n")
 
 
 if __name__ == "__main__":
@@ -317,10 +322,10 @@ if __name__ == "__main__":
         agent_model_name=model_name,
         quantization_config=qconf,
         dataset=data.SST2Dataset,
-        evaluator=data.TextClassificationEvaluator,
+        evaluator=data.TextClassificationEvaluator(),
         metric="f1",
     )
     sp_agent.train(
         epochs=50,  # original code uses 100 for fewshot, 30 for others
     )
-    sp_agent.test(test_sample=100)
+    sp_agent.test("result.txt", test_sample=100)
