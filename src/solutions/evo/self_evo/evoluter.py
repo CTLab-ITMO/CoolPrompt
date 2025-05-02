@@ -46,7 +46,6 @@ class SelfEvoluter(Evoluter):
         task: str,
         population_size: int = 10,
         num_epochs: int = 10,
-        threshold: float = 0.0,
         output_path: str = './outputs',
         use_cache: bool = True,
         batch_size: int = 64,
@@ -74,10 +73,9 @@ class SelfEvoluter(Evoluter):
 
         self.population_size = population_size
         self.num_epochs = num_epochs
-        self.config_filename = 'config_re.yaml'
+        self.config_filename = 'config_v3.yaml'
         self.problem_description_filename = 'problems.yaml'
         self.output_path = output_path
-        self.threshold = threshold
 
         self.elitist = None
         self._long_term_reflection_str = ""
@@ -141,14 +139,8 @@ class SelfEvoluter(Evoluter):
             List[Prompt]: selected prompts.
         """
         selected_population = []
-        # Eliminate invalid individuals
-        population = [
-            prompt for prompt in population if prompt.score > self.threshold
-        ]
-        if len(population) < 2:
-            return None
 
-        scores = np.array([prompt.score for prompt in population])
+        scores = np.array([prompt.score + 1e-9 for prompt in population])
         probas = scores / np.sum(scores)
 
         trial = 0
@@ -549,5 +541,5 @@ class SelfEvoluter(Evoluter):
             new_data={
                 self.dataset: self.elitist.to_dict(),
             },
-            filepath="./best_prompts.yaml"
+            filepath="./best_prompts_v3.yaml"
         )

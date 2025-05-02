@@ -169,8 +169,10 @@ data/**/*.parquet
 
 # logging and results
 src/solutions/evo/self_evo/outputs/*
+src/solutions/evo/gba/outputs/*
 src/solutions/SPELL/outputs/*
 
 # initial populations data
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
+src/solutions/evo/gba/data/*
