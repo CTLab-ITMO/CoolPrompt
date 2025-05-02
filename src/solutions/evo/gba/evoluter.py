@@ -205,7 +205,7 @@ class GBAEvoluter(Evoluter):
             Player.from_prompt(prompt, name=self._name())
             for prompt in prompts
         ])
-        self._reranking(players)
+        players = self._reranking(players)
         players = players[:self.teams_num * self.players_per_team]
         np.random.shuffle(players)
         teams = self._create_teams()
@@ -488,7 +488,7 @@ class GBAEvoluter(Evoluter):
 
     def _transfers(self, teams: List[Team], season: int) -> None:
         for team in teams:
-            self._reranking(team.players)
+            team.players = self._reranking(team.players)
         free_agents = []
         transfers = []
         for i in range(len(teams) - 1):
@@ -496,7 +496,7 @@ class GBAEvoluter(Evoluter):
             worst_player = teams[i].players[-1]
             if best_player.score >= worst_player.score:
                 self.logger.info(
-                    f"Transfer: {best_player.name}" +
+                    f"Transfer: {best_player.name}\t" +
                     f"{teams[i + 1].name} --> {teams[i].name}"
                 )
                 transfers.append(
@@ -514,10 +514,10 @@ class GBAEvoluter(Evoluter):
         teams_to_fill = [
             team for team in teams if len(team.players) < self.players_per_team
         ]
-        self._reranking(free_agents)
+        free_agents = self._reranking(free_agents)
         while len(teams_to_fill) > 0:
             free_player = free_agents[0]
-            scores = [team.score for team in teams_to_fill]
+            scores = [team.power() for team in teams_to_fill]
             probas = softmax(scores)
             team_ind = np.random.choice(range(len(teams_to_fill)), p=probas)
             team = teams_to_fill[team_ind]
@@ -630,7 +630,7 @@ class GBAEvoluter(Evoluter):
         self.logger.info(f"BEST PROMPT:\n{self.best_prompt_overall}")
 
         all_players = np.concatenate([team.players for team in teams])
-        self._reranking(all_players)
+        all_players = self._reranking(all_players)
         all_players = all_players[:3]
         self._evaluation(all_players, split='test')
         self._cache_population(
