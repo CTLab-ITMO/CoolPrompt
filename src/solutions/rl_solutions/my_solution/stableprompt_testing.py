@@ -55,29 +55,33 @@ def make_generation_agent(log_file, dataset):
 
 
 def full_testing():
-    Path("logs/").mkdir(parents=True, exist_ok=True)
+    path = Path("logs/")
+    path.mkdir(parents=True, exist_ok=True)
+
     for dataset in classification_datasets:
         log_file_name = dataset.__class__.__name__ + "_log.txt"
         result_file_name = dataset.__class__.__name__ + "_result.txt"
-        agent = make_classification_agent(log_file_name, dataset)
+        agent = make_classification_agent(path / log_file_name, dataset)
         agent.train()
-        agent.test(result_file_name)
+        agent.test(path / result_file_name)
     for dataset in generation_datasets:
         log_file_name = dataset.__class__.__name__ + "_log.txt"
         result_file_name = dataset.__class__.__name__ + "_result.txt"
-        agent = make_generation_agent(log_file_name, dataset)
+        agent = make_generation_agent(path / log_file_name, dataset)
         agent.train()
-        agent.test(result_file_name)
+        agent.test(path / result_file_name)
 
 
 def test_on_one_dataset():
-    Path("logs/").mkdir(parents=True, exist_ok=True)
+    path = Path("logs/")
+    path.mkdir(parents=True, exist_ok=True)
+
     dataset = data.SST2Dataset
     log_file_name = dataset.__class__.__name__ + "_log.txt"
     result_file_name = dataset.__class__.__name__ + "_result.txt"
-    agent = make_classification_agent(log_file_name, dataset)
+    agent = make_classification_agent(path / log_file_name, dataset)
     agent.train()
-    agent.test(result_file_name)
+    agent.test(path / result_file_name)
 
 
 if __name__ == "__main__":
