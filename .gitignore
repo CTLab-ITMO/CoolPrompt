@@ -167,8 +167,10 @@ data/**/*.parquet
 # Jupyter notebooks
 */custom*.ipynb
 
-# self_evo logging and results
+# logging and results
 src/solutions/evo/self_evo/outputs/*
+src/solutions/SPELL/outputs/*
 
-# self_evo initial populations data
+# initial populations data
 src/solutions/evo/self_evo/data/*
+src/solutions/SPELL/data/*

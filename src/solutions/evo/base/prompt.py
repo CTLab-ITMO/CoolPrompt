@@ -64,7 +64,7 @@ class Prompt:
             'text': self.text,
             'origin': self.origin.name
         }
-        if self.score:
+        if self.score is not None:
             result['score'] = self.score
         return result
 
