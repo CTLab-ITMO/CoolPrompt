@@ -49,15 +49,17 @@ class GBAEvoluter(Evoluter):
             batch_size=batch_size
         )
 
-        self.config_filename = 'config.yaml'
+        self.config_filename = 'config_v2.yaml'
         self.problem_description_filename = 'problems.yaml'
-        self._mutation_prompts_filename = 'mutation_prompts.yaml'
-        self._styles_of_thinking_filename = 'styles.yaml'
+        self._mutation_prompts_filename = 'mutation_prompts_v2.yaml'
+        self._styles_of_thinking_filename = 'styles_v2.yaml'
         self.output_path = output_path
 
         self.elitist = None
+        self._long_term_reflection_str = ""
         self.best_score_overall = None
         self.best_prompt_overall = None
+        self._free_agents = []
         self._config_path = './data'
 
         self.problem_description = self._read_yaml_data(
@@ -108,6 +110,20 @@ class GBAEvoluter(Evoluter):
                 self.config_filename
             ),
             key='individual_training'
+        )
+        self._global_long_term_reflection_template = self._read_yaml_data(
+            os.path.join(
+                self._config_path,
+                self.config_filename
+            ),
+            key='global_long_term_reflection'
+        )
+        self._academy_mutation_template = self._read_yaml_data(
+            os.path.join(
+                self._config_path,
+                self.config_filename
+            ),
+            key='academy_mutation'
         )
 
         self._player_names = self._read_names('player_names.yaml')
@@ -346,6 +362,9 @@ class GBAEvoluter(Evoluter):
                         }
                 }
             )
+        cache_data.append({
+            'global_reflection': self._long_term_reflection_str
+        })
         self._cache_data(
             cache_data,
             os.path.join(
@@ -373,6 +392,7 @@ class GBAEvoluter(Evoluter):
             upgradeable = [p for p in players if p.score < prompt.score]
             if len(upgradeable) == 0:
                 self.logger.info(f"Nobody to upgrade in {team.name}")
+                self._free_agents.append(prompt)
                 return False
             player_to_upgrade = np.random.choice(upgradeable)
         else:
@@ -381,7 +401,9 @@ class GBAEvoluter(Evoluter):
                 self.logger.info(
                     f"No need in training for {player_to_upgrade.name}"
                 )
+                self._free_agents.append(prompt)
                 return False
+        team.manager.successful_training = True
         player_to_upgrade.text = prompt.text
         player_to_upgrade.score = prompt.score
         player_to_upgrade.origin = prompt.origin
@@ -393,6 +415,39 @@ class GBAEvoluter(Evoluter):
                          {'=' * 50}
                          """)
         return True
+
+    def _global_long_term_reflection(
+        self,
+        short_term_reflections: List[str],
+        verbose: bool = False
+    ) -> None:
+        """Long-term reflection before mutation.
+
+        Args:
+            short_term_reflections (List[str]): short-term reflections.
+            verbose (bool, optional): Whether to use logging or not.
+                Defaults to False.
+        """
+        request = self._global_long_term_reflection_template.replace(
+            '<PROBLEM_DESCRIPTION>',
+            self.problem_description
+        ).replace(
+            '<PRIOR_LONG_TERM_REFLECTION>',
+            self._long_term_reflection_str
+        ).replace(
+            '<NEW_SHORT_TERM_REFLECTIONS>',
+            '\n'.join(short_term_reflections)
+        )
+
+        response = self._llm_query(
+            [request],
+            verbose=verbose
+        )[0]
+
+        self._long_term_reflection_str = parse_output(
+            response,
+            bracket='<hint>'
+        )
 
     def _group_training(
         self,
@@ -408,6 +463,7 @@ class GBAEvoluter(Evoluter):
             tour,
             verbose
         )
+        self._global_long_term_reflection(reflections, verbose=verbose)
         self._long_term_reflection(
             teams,
             reflections,
@@ -489,7 +545,6 @@ class GBAEvoluter(Evoluter):
     def _transfers(self, teams: List[Team], season: int) -> None:
         for team in teams:
             team.players = self._reranking(team.players)
-        free_agents = []
         transfers = []
         for i in range(len(teams) - 1):
             best_player = teams[i + 1].players[0]
@@ -508,15 +563,21 @@ class GBAEvoluter(Evoluter):
                     }
                 )
                 teams[i].players[-1] = best_player
-                free_agents.append(worst_player)
+                self._free_agents.append(worst_player)
                 teams[i + 1].players = teams[i + 1].players[1:]
 
         teams_to_fill = [
             team for team in teams if len(team.players) < self.players_per_team
         ]
-        free_agents = self._reranking(free_agents)
+        self._free_agents = self._reranking(self._free_agents)
         while len(teams_to_fill) > 0:
-            free_player = free_agents[0]
+            free_player = self._free_agents[0]
+            if isinstance(free_player, Prompt):
+                free_player = Player.from_prompt(free_player, self._name())
+                self.logger.info(
+                    "Using training powers to create " +
+                    f"{free_player.name} - {free_player.score}"
+                )
             scores = [team.power() for team in teams_to_fill]
             probas = softmax(scores)
             team_ind = np.random.choice(range(len(teams_to_fill)), p=probas)
@@ -531,7 +592,12 @@ class GBAEvoluter(Evoluter):
             )
             team.sign_player(free_player)
             teams_to_fill.pop(team_ind)
-            free_agents.pop(0)
+            self._free_agents.pop(0)
+        for p in self._free_agents:
+            if isinstance(p, Player):
+                self.logger.info(f"{p.name} is retiring")
+                self._name(mode='player', free=True, name_to_free=p.name)
+        self._free_agents = []
         self._cache_data(
             transfers,
             os.path.join(
@@ -541,18 +607,101 @@ class GBAEvoluter(Evoluter):
             )
         )
 
+    def _change_manager(self, team: Team, manager: Manager) -> None:
+        old_manager = team.manager
+        team.sign_manager(manager)
+        self.logger.info(f"{team.name} new manager: {manager.name}")
+        self._name(
+            mode='manager',
+            free=True,
+            name_to_free=old_manager.name
+        )
+
     def _change_managers(self, teams: List[Team]) -> None:
         start = len(teams) // 2
         new_managers = self._managers_init(size=len(teams) - start)
         for i, manager in zip(range(start, len(teams)), new_managers):
-            old_manager = teams[i].manager
-            teams[i].sign_manager(manager)
-            self.logger.info(f"{teams[i].name} new manager: {manager.name}")
-            self._name(
-                mode='manager',
-                free=True,
-                name_to_free=old_manager.name
+            self._change_manager(teams[i], manager)
+        for i in range(start):
+            if teams[i].manager.successful_training is False:
+                teams[i].bad_training_seasons += 1
+                if teams[i].bad_training_seasons >= 2:
+                    new_manager = self._managers_init(size=1)[0]
+                    self.logger.info(
+                        "After 2 seasons without any good training " +
+                        f"{teams[i].name} fired {teams[i].manager.name}"
+                    )
+                    self._change_manager(teams[i], new_manager)
+            else:
+                teams[i].bad_training_seasons = 0
+
+    def _young_players_academy(
+        self,
+        teams: List[Team],
+        season: int,
+        verbose: bool = True
+    ) -> None:
+        elitists = self._elitists(teams, n=5)
+        request = self._academy_mutation_template.replace(
+            '<PROBLEM_DESCRIPTION>',
+            self.problem_description
+        ).replace(
+            '<LONG_TERM_REFLECTION>',
+            self._long_term_reflection_str
+        ).replace(
+            '<ELITIST_PROMPTS>',
+            '\n'.join([p.text for p in elitists])
+        )
+        responses = self._llm_query(
+            [request] * (self.teams_num // 2),
+            verbose=verbose,
+            temperature=0.6
+        )
+        responses = [parse_output(response) for response in responses]
+        new_prompts = [
+            Prompt(response, origin=PromptOrigin.EVOLUTED)
+            for response in responses
+        ]
+        start = self.teams_num // 2 + self.teams_num % 2
+        academy_players = []
+        for i, prompt in zip(range(start, self.teams_num), new_prompts):
+            self._evaluate(prompt)
+            players = teams[i].players
+            players = self._reranking(players)
+            if prompt.score >= players[-1].score:
+                new_player = Player.from_prompt(prompt, self._name())
+                old_player = players[-1]
+                self.logger.info(
+                    f"{teams[i].name} new academy player: " +
+                    f"{new_player.name}, {new_player.score}\n" +
+                    f"Instead of {old_player.name}, {old_player.score}"
+                )
+                players[-1] = new_player
+                self._name(
+                    mode='player',
+                    free=True,
+                    name_to_free=old_player.name
+                )
+                teams[i].players = players
+                academy_players.append({
+                    'player': new_player.to_dict(),
+                    'old_player': old_player.to_dict(),
+                    'team': str(teams[i].name)
+                })
+        self._cache_data(
+            academy_players,
+            os.path.join(
+                self.output_path,
+                f"Season {season}",
+                "academy.yaml",
             )
+        )
+
+    def _elitists(self, teams: List[Team], n: int) -> List[Player]:
+        all_players = np.concatenate([team.players for team in teams])
+        all_players = self._reranking(all_players)
+        all_players = all_players[:n]
+        return all_players
 
     def evolution(self) -> None:
         teams = self._init_teams()
@@ -625,21 +774,25 @@ class GBAEvoluter(Evoluter):
                 )
             )
             self._transfers(teams, season)
+            self._young_players_academy(teams, season, verbose=True)
             self._change_managers(teams)
         self.logger.info(f"BEST SCORE: {self.best_score_overall}")
         self.logger.info(f"BEST PROMPT:\n{self.best_prompt_overall}")
 
-        all_players = np.concatenate([team.players for team in teams])
-        all_players = self._reranking(all_players)
-        all_players = all_players[:3]
-        self._evaluation(all_players, split='test')
-        self._cache_population(
-            [p.to_dict() for p in all_players],
-            self._make_output_path('best_prompts_infer.yaml')
+        elitists = self._elitists(teams, n=3)
+        self._evaluation(elitists, split='test')
+        elitists = self._reranking(elitists)
+        self._cache_data(
+            [p.to_dict() for p in elitists],
+            os.path.join(
+                self.output_path,
+                f"Season {season}",
+                "best_prompts_infer.yaml",
+            )
         )
         append_to_yaml(
             new_data={
-                self.dataset: all_players[0].to_dict(),
+                self.dataset: elitists[0].to_dict(),
             },
-            filepath="./best_prompts.yaml"
+            filepath="./best_prompts_v3.yaml"
         )

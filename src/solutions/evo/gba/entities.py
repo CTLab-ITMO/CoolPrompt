@@ -1,5 +1,6 @@
 from typing import Type, List, Tuple
 import numpy as np
+from scipy.special import softmax
 from src.solutions.evo.base import Prompt, PromptOrigin
 
 
@@ -65,6 +66,7 @@ class Manager:
         self.name = name
         self.style = style
         self.long_term_reflection = long_term_reflection
+        self.successful_training = False
 
     def update_reflection(self, reflection: str) -> None:
         self.long_term_reflection = reflection
@@ -90,12 +92,14 @@ class Team:
         self.name = name
         self.manager = None
         self.players = []
+        self.bad_training_seasons = 0
 
     def sign_player(self, player: Player) -> None:
         self.players.append(player)
 
     def sign_manager(self, manager: Manager) -> None:
         self.manager = manager
+        self.bad_training_seasons = 0
 
     def power(self) -> float:
         return float(np.mean([player.score for player in self.players]))
@@ -153,6 +157,7 @@ class League:
         self.table = {}
         for i in range(len(self.teams)):
             self.table[i] = 0
+            self.teams[i].manager.successful_training = False
 
     def finished(self) -> bool:
         return self.tour >= len(self.schedule)
@@ -160,11 +165,16 @@ class League:
     def _game(self, team1: Team, team2: Team) -> Tuple[int, int]:
         power1 = team1.power()
         power2 = team2.power()
-        if power1 < power2:
-            return 0, 3
-        if power1 > power2:
+        p = softmax([power1 * 100, power2 * 100])
+        k = 1 / (1 + abs(p[0] - p[1]))
+        probas = np.array([p[0], k, p[1]])
+        probas /= sum(probas)
+        ind = np.random.choice(range(3), p=probas)
+        if ind == 0:
             return 3, 0
-        return 1, 1
+        if ind == 1:
+            return 1, 1
+        return 0, 3
 
     def play_tour(self) -> List[str]:
         games = self.schedule[self.tour]
