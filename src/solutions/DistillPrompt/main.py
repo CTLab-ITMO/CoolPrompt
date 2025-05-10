@@ -10,10 +10,6 @@ import sys
 import time
 import argparse
 
-
-project_root = os.path.abspath(os.getcwd())
-sys.path.append(project_root)
-
 from vllm import LLM
 
 from transformers import AutoTokenizer
@@ -23,10 +19,10 @@ from tqdm import tqdm
 
 
 from src.utils.eval_utils import TASK_TO_DS, LLMWrapper, create_ds_from_task, get_task_evaluator, get_task_optimization_metric
-from src.solutions.DistillPrompt.utils import CachingEvaluator, seed_everyting
-from src.solutions.DistillPrompt.generate import Candidate, PromptTransformer
-from src.solutions.DistillPrompt.candidate import CandidateHistory
-from src.solutions.DistillPrompt.sampler import TextSampler
+from utils import CachingEvaluator, seed_everyting
+from generate import Candidate, PromptTransformer
+from candidate import CandidateHistory
+from sampler import TextSampler
 
 
 def get_args():

@@ -14,8 +14,12 @@
 
 ## Запуск
 
+Заходим в директорию CoolPrompt (cd CoolPrompt)
+
+PYTHONPATH=$PYTHONPATH:. python src/solutions/DistillPrompt/main.py 
+
 ```python
-python main.py --model MODEL_NAME --meta_dir ./logs/
+PYTHONPATH=$PYTHONPATH:. python src/solutions/DistillPrompt/main.py --meta_dir ./logs/
 ```
 
-Это запустит тестирование метода на всех датасетах в бенчмарке с заданной моделью.
+Это запустит тестирование метода на всех датасетах в бенчмарке с моделью T-lite-instruct-0.1.

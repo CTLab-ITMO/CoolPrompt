@@ -4,8 +4,8 @@ Prompt Transformation Framework
 Provides main class that implements different prompt transformations using LLM.
 """
 
-from src.solutions.DistillPrompt.candidate import Candidate
-from src.solutions.DistillPrompt.sampler import TextSampler
+from candidate import Candidate
+from sampler import TextSampler
 from src.utils.eval_utils import LLMWrapper
 
 
