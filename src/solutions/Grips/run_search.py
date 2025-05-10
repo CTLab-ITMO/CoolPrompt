@@ -127,14 +127,14 @@ class Scorer:
         
         self.sample = sample
 
-    def score(self, prompt, split='train'):
+    def score(self, prompt, split='train', do_sample=True):
         
         eval_ds = create_ds_from_task(
             self.task_name,
             tokenizer=self.tokenizer,
             split=split,
             prompt=prompt,
-            sample=self.sample
+            sample=self.sample if do_sample else None
         )
         
         terminators = [
@@ -329,10 +329,10 @@ def solve_task(task: str):
 
     print('Task:\t', task)
     print('Original Instruction:\t', original_candidate)
-    orig_score = scorer.score(original_candidate, split='test')
+    orig_score = scorer.score(original_candidate, split='test', do_sample=False)
     for metric, value in orig_score.items():
-        print(f'Original {metric}:\t', round(value, 5))
-        meta_file.write(f'Original {metric}:\t' + str(round(value, 5)) + '\n')
+        print(f'Original full {metric}:\t', round(value, 5))
+        meta_file.write(f'Original full {metric}:\t' + str(round(value, 5)) + '\n')
 
 
     if base_candidate == original_candidate:
@@ -340,12 +340,12 @@ def solve_task(task: str):
         meta_file.write('No viable candidate found!\n')
         return
 
-    searched_score = scorer.score(base_candidate, split='test')
+    searched_score = scorer.score(base_candidate, split='test', do_sample=False)
     total_time = int(time.time() - start_time)
     meta_file.write('Instruction after search:\t' + base_candidate + '\n')
     for metric, value in searched_score.items():
-        print(f'{metric} after search:\t', round(value, 5))
-        meta_file.write(f'{metric} after search:\t' + str(round(value, 5)) + '\n')
+        print(f'{metric} full score after search:\t', round(value, 5))
+        meta_file.write(f'{metric} full score after search:\t' + str(round(value, 5)) + '\n')
 
 
     print('Instruction after search:\t', base_candidate)
@@ -413,8 +413,13 @@ if __name__ == "__main__":
         
         print("----------------------------------------------")
         print("RUNNING Experiment for: ", task)
+        
+        args.meta_dir = 'src/solutions/Grips/logs/full_test/'
     
         meta_path = os.path.join(args.meta_dir, f'{task}.txt')
+        
+        os.makedirs(args.meta_dir, exist_ok=True)
+        
         meta_file = open(meta_path, 'w+')
         
         solve_task(task)

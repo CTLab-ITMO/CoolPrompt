@@ -48,10 +48,10 @@ class CachingEvaluator:
 
     def __call__(self, prompt: str, split='train', sample=100) -> dict[str, float]:
         
-        if (prompt, split) not in self.cache:
-            self.cache[(prompt, split)] = self._score_prompt(prompt, self.default_gen_args, split, sample)
+        if (prompt, split, sample) not in self.cache:
+            self.cache[(prompt, split, sample)] = self._score_prompt(prompt, self.default_gen_args, split, sample)
         
-        return self.cache[(prompt, split)]
+        return self.cache[(prompt, split, sample)]
 
 
 def seed_everyting(seed: int = 42):

@@ -4,8 +4,6 @@ from src.solutions.Mine.sampler import TextSampler
 from src.utils.eval_utils import LLMWrapper
 
 
-
-
 class PromptTransformer:
     """Class for expanding prompts"""
     
@@ -41,10 +39,8 @@ class PromptTransformer:
         return self._parse_tagged_text(answer, "<START>", "<END>") # type: ignore
         
     
-    # TODO: remove copypaste
     def compress_prompt(self, candidate: Candidate, temperature: float = 0.4) -> str:
-        #v_o3-enclosed
-        compression_prompt = f""" I want to compress the following zero-shot classifier prompt into a shorter prompt of 2–3 concise sentences that capture its main objective and key ideas from any examples.
+        compression_prompt = f"""I want to compress the following zero-shot classifier prompt into a shorter prompt of 2–3 concise sentences that capture its main objective and key ideas from any examples.
 
         Current prompt: {candidate.prompt}
 
@@ -59,7 +55,7 @@ class PromptTransformer:
 
         compression_prompt = '\n'.join([line.lstrip() for line in compression_prompt.split('\n')])
         answer = self.model_wrapper(compression_prompt, temperature=temperature)
-        #return answer
+
         return self._parse_tagged_text(answer, "<START>", "<END>") # type: ignore
                 
     def distill_samples(self, candidate: Candidate, sample_count: int = 5, temperature: float = 0.5) -> str:
@@ -102,11 +98,7 @@ class PromptTransformer:
         :param int sample_count: Number of train samples to include in generation
         """
 
-        # TODO: эксперименты с ", с формулировкой.
-        # Идея: скор в процентах.
-        
-        # o3 version, all 4 score above 0.9 on sst-2
-        generation_prompt = f""" You are an expert in prompt analysis with exceptional comprehension skills.
+        generation_prompt = f"""You are an expert in prompt analysis with exceptional comprehension skills.
 
         Below is my current instruction prompt: {candidate.prompt}
 
@@ -120,31 +112,30 @@ class PromptTransformer:
         generation_prompt = '\n'.join([line.lstrip() for line in generation_prompt.split('\n')])
         answers = self.model_wrapper(generation_prompt, n=n, temperature=temperature, best_of=best_of)
         
-        return [self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers] # type: ignore
+        return [self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers]
 
     @staticmethod
     def _format_samples(samples: list[tuple[str, str]]) -> str:
         """
-        turns [("Input1", "Out1"), ("Input2", "Out2")] into
-            Input: Input1
-            Output: Out1
+        turns [("Input1", "Out1"), ("Input2", "Out2")] into\
+            Example 1:
+            Text: Input1
+            Label: Out1
             
-            Input: Input2
-            Output: Out2
+            Example 2:
+            Text: Input2
+            Label: Out2
         """
         formatted_string = ""
-        
-        for input, output in samples:
-            formatted_string += f"Input: {input}\n"
-            formatted_string += f"Output: {output}\n"
-            formatted_string += "\n"
+        for i, (input, output) in enumerate(samples):
+                formatted_string += f'Example {i + 1}:\n'
+                formatted_string += f'Text: \"{input.strip()}\"\nLabel: {output}\n\n'
         
         return formatted_string
-        
             
     @staticmethod       
-    def _parse_tagged_text(text, start_tag, end_tag) -> list[str]:
-        """ Parse text that is tagged with start and end tags."""
+    def _parse_tagged_text(text: str, start_tag: str, end_tag: str) -> str:
+        """Parse text that is tagged with start and end tags."""
         
         start_index = text.find(start_tag)
         if start_index == -1:
@@ -157,7 +148,7 @@ class PromptTransformer:
 
     def generate_synonyms(self, candidate: Candidate,  n: int = 3,
                           temperature: float = 0.7, best_of: int = 8) -> list[str]:
-        """ Generate synonyms for a prompt section."""
+        """Generate synonyms for a prompt section."""
         rewriter_prompt = f"Generate a variation of the following prompt while keeping the semantic meaning.\n\nInput: {candidate.prompt}\n\nOutput:"
         new_prompts = self.model_wrapper(rewriter_prompt, n=n, temperature=temperature, best_of=best_of)
         new_prompts = [x for x in new_prompts if x]

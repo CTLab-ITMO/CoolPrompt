@@ -10,8 +10,6 @@ from vllm import LLM
 from transformers import AutoTokenizer
 
 
-
-
 from tqdm import tqdm
 import time
 import argparse
@@ -23,12 +21,11 @@ from src.solutions.Mine.candidate import CandidateHistory
 from src.solutions.Mine.sampler import TextSampler
 
 
-
-
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', default='sst-2')
     parser.add_argument('--meta-dir', default='src/solutions/Mine/logs/', help='folder location to store metadata of search')
+    parser.add_argument('--seed', type=int, default=100, help='Seed for generation')
 
 
     parser.add_argument('--batch-size', type=int, default=100, help='Train and Test batch size')
@@ -80,7 +77,7 @@ def solve_task(task: str):
         start = time.time()
         
         history.clear()
-        history.add(base_candidate)
+        history.add(best_candidate)
 
         # 1. Generation
         gen_prompts = gen.generate_prompts(best_candidate)
@@ -105,7 +102,6 @@ def solve_task(task: str):
 
         
         # 4. Aggregation
-        
         aggregated_prompt = gen.aggregate_prompts(compressed_candidates)
 
         aggregated_candidate = Candidate(aggregated_prompt, caching_evaluator(aggregated_prompt)[train_metric])
@@ -136,37 +132,23 @@ def solve_task(task: str):
 
 
     print("DONE!")
-    base_test_score = caching_evaluator(base_prompt, split='test')
-    
-    instr_fewshot = gen.convert_to_fewshot(base_candidate)
-    instr_fewshot_score = caching_evaluator(instr_fewshot, split='test')
-    
-    clean_fewshot = gen.convert_to_fewshot(Candidate("", 0.0)).lstrip()
-    clean_fewshot_score = caching_evaluator(clean_fewshot, split='test')
+    base_test_score = caching_evaluator(base_prompt, split='test', sample=None)
+
     
     best_prompt = best_candidate.prompt
-    test_score = caching_evaluator(best_prompt, split='test')
-    
-    best_prompt_fewshot = gen.convert_to_fewshot(best_candidate)
-    best_prompt_fewshot_score = caching_evaluator(best_prompt_fewshot, split='test')
+    test_score = caching_evaluator(best_prompt, split='test', sample=None)
     
     end_time = time.time() - start_time
     meta_file.write(f"Time taken: {end_time}s\n")
     
     meta_file.write(f"Base prompt: {base_prompt}\n")
-    meta_file.write(f"Base prompt score: {base_test_score}\n")
+    meta_file.write(f"Base prompt full score: {base_test_score}\n")
     meta_file.write(f"-----------------------------\n")
-    meta_file.write(f"Few shot prompt: {instr_fewshot}\n")
-    meta_file.write(f"Few shot score: {instr_fewshot_score}\n")
-    meta_file.write(f"-----------------------------\n")
+
     meta_file.write(f"Res prompt: {best_prompt}\n")
-    meta_file.write(f"Res prompt score: {test_score}\n")
+    meta_file.write(f"Res prompt full score: {test_score}\n")
     meta_file.write(f"-----------------------------\n")
-    meta_file.write(f"Clean fewshot prompt: {clean_fewshot}\n")
-    meta_file.write(f"Clean fewshot score: {clean_fewshot_score}\n")
-    meta_file.write(f"-----------------------------\n")
-    meta_file.write(f"Res fewshot prompt: {best_prompt_fewshot}\n")
-    meta_file.write(f"Res fewshot score: {best_prompt_fewshot_score}\n")
+
 
 if __name__ == '__main__':
     args = get_args()
@@ -198,22 +180,23 @@ if __name__ == '__main__':
     wrapper = LLMWrapper(model, wrapper_gen_args)
     
     
-    seed = 100
+    seed = args.seed
     
     seed_everyting(seed)
     
     tasks = TASK_TO_DS.keys()
-    
-    #tasks = ['sst-2', 'gsm8k']
 
     for task in tasks:
         
         print("----------------------------------------------")
         print("RUNNING Experiment for: ", task)
     
-        meta_path = os.path.join(config['meta_dir'], f'{task}.txt')
+        meta_path = os.path.join(args.meta_dir, f'{task}.txt')
+
+        # task can contain "/" inside
+        dir_path = "/".join(meta_path.split("/")[:-1])
         
-        os.makedirs(meta_path, exist_ok=True)
+        os.makedirs(dir_path, exist_ok=True)
         
         meta_file = open(meta_path, 'w+')
         

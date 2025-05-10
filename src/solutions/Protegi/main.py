@@ -106,7 +106,7 @@ def solve_task(task: str):
         default_gen_args=default_model_generate_args,
         ds_scorer=get_task_evaluator(task_ds_example),
         batch_size=args.batch_size,
-        sample=100
+        sample=None
     )
     
     base_score = test_scorer([base_prompt])[0]
@@ -155,13 +155,16 @@ def solve_task(task: str):
     best_prompt_score = test_scorer([best_prompt])[0]
     
     end_time = time.time() - start_time
-    meta_file.write(f"Time taken: {end_time}s")
+    meta_file.write(f"Time taken: {end_time}s\n")
     
-    meta_file.write(f"Base prompt: {base_prompt}")
-    meta_file.write(f"Base prompt score: {base_score}")
-    meta_file.write(f"-----------------------------")
-    meta_file.write(f"Res prompt: {best_prompt}")
-    meta_file.write(f"Res prompt score: {best_prompt_score}")
+    meta_file.write(f"Base prompt: {base_prompt}\n")
+
+    meta_file.write(f"-----------------------------\n")
+    meta_file.write(f"Res prompt: {best_prompt}\n")
+    meta_file.write(f"-----------------------------\n")
+    
+    meta_file.write(f"Base prompt full score: {base_score}\n")
+    meta_file.write(f"Res prompt full score: {best_prompt_score}\n")
 
 if __name__ == '__main__':
     args = get_args()
@@ -196,7 +199,7 @@ if __name__ == '__main__':
     
     model_name=args.engine
     
-    model = LLM(model=model_name, dtype="float16", trust_remote_code=True)
+    model = LLM(model=model_name, dtype="float16", trust_remote_code=True, gpu_memory_utilization=0.4)
     
     wrapper = LLMWrapper(model, wrapper_gen_args)
     
@@ -209,12 +212,13 @@ if __name__ == '__main__':
         print("----------------------------------------------")
         print("RUNNING Experiment for: ", task)
     
+        args.meta_dir = 'src/solutions/Protegi/logs/full_test/'
+    
         meta_path = os.path.join(args.meta_dir, f'{task}.txt')
+
+        dir_path = "/".join(meta_path.split("/")[:-1])
         
-        
-        if os.path.exists(meta_path):
-            
-            os.remove(meta_path)
+        os.makedirs(dir_path, exist_ok=True)
         
         meta_file = open(meta_path, 'w+')
         
