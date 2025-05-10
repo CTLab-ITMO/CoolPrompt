@@ -1,5 +1,14 @@
+"""
+Main script for DistillPrompt optimization.
+
+This script provides functionality to optimize prompts for various tasks using a language model.
+
+"""
+
 import os
 import sys
+import time
+import argparse
 
 
 project_root = os.path.abspath(os.getcwd())
@@ -11,20 +20,25 @@ from transformers import AutoTokenizer
 
 
 from tqdm import tqdm
-import time
-import argparse
+
 
 from src.utils.eval_utils import TASK_TO_DS, LLMWrapper, create_ds_from_task, get_task_evaluator, get_task_optimization_metric
-from src.solutions.Mine.utils import CachingEvaluator, seed_everyting
-from src.solutions.Mine.generate import Candidate, PromptTransformer
-from src.solutions.Mine.candidate import CandidateHistory
-from src.solutions.Mine.sampler import TextSampler
+from src.solutions.DistillPrompt.utils import CachingEvaluator, seed_everyting
+from src.solutions.DistillPrompt.generate import Candidate, PromptTransformer
+from src.solutions.DistillPrompt.candidate import CandidateHistory
+from src.solutions.DistillPrompt.sampler import TextSampler
 
 
 def get_args():
+    """
+    Parses command-line arguments for the script.
+
+    Returns:
+        argparse.Namespace: The parsed arguments including task, meta-dir, seed, batch-size, epochs, and model.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--task', default='sst-2')
-    parser.add_argument('--meta-dir', default='src/solutions/Mine/logs/', help='folder location to store metadata of search')
+    parser.add_argument('--meta-dir', default='src/solutions/DistillPrompt/logs/', help='folder location to store metadata of search')
     parser.add_argument('--seed', type=int, default=100, help='Seed for generation')
 
 
@@ -40,6 +54,15 @@ def get_args():
 
 
 def solve_task(task: str):
+    """
+    Optimizes prompts for a given task using a language model.
+
+    Args:
+        task (str): The task identifier for which prompts are optimized.
+
+    Raises:
+        Exception: If there are no candidates in history.
+    """
     
     start_time = time.time()
     
@@ -179,7 +202,6 @@ if __name__ == '__main__':
     
     wrapper = LLMWrapper(model, wrapper_gen_args)
     
-    
     seed = args.seed
     
     seed_everyting(seed)
@@ -204,4 +226,3 @@ if __name__ == '__main__':
         
         print("FINISHED Experiment for: ", task)
         print("----------------------------------------------")
-
