@@ -16,20 +16,19 @@
 
 **Из-за особенностей ядер triton запуск скрипта возможен только на ОС Linux.**
 
-1. Заходим в директорию CoolPrompt
-2. Создаем окружение
+1. Создаем окружение
 ```shell
-bash ./src/solutions/DistillPrompt/scripts/setup_env.sh
+bash ./scripts/setup_env.sh
 ```
-3. Скачиваем датасеты
+2. Скачиваем датасеты
 ```shell
-bash ./src/solutions/DistillPrompt/scripts/load_data.sh
+bash ./scripts/load_data.sh
 ```
-4. Запуск метода на всех датасетах в бенчмарке с моделью T-lite-instruct-0.1, логи по каждому из дататесов будут писаться в .logs/
+3. Запуск метода на всех датасетах в бенчмарке с моделью T-lite-instruct-0.1, логи по каждому из дататесов будут писаться в .logs/
 ```python
- PYTHONPATH=$PYTHONPATH:. ./.venv/bin/python3 ./src/solutions/DistillPrompt/main.py --meta-dir ./logs/ --model AnatoliiPotapov/T-lite-instruct-0.1
+ PYTHONPATH=$PYTHONPATH:../../../ .venv/bin/python3 main.py --meta-dir logs/ --model AnatoliiPotapov/T-lite-instruct-0.1
 ```
-5. (Опционально) Удалить данные датасетов:
+4. (Опционально) Удалить данные датасетов:
 ```shell
 rm -rf ~/autoprompting_data/
 ```

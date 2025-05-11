@@ -14,14 +14,14 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 # Check if requirements.txt exists
-if [ ! -f requirements.txt ]; then
+if [ ! -f ../../../requirements.txt ]; then
     echo "requirements.txt not found in the current directory."
     deactivate
     exit 1
 fi
 
 # Install the requirements
-pip install -r requirements.txt
+pip install -r ../../../requirements.txt
 
 echo "Virtual environment setup complete and requirements installed."
 
