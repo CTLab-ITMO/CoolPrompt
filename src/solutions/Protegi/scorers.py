@@ -1,14 +1,17 @@
 from typing import List
-from src.data.base.datasets import BaseDataset
+
+import torch
+from vllm import LLM, SamplingParams
 from src.evaluation.evaluator import BaseNLPEvaluator
-from src.utils.eval_utils import Infer
+
+from src.utils.eval_utils import create_ds_from_task
 
 
 class Cached01Scorer:
 
-    def __init__(self, model_name, dataset_cls: BaseDataset, split, tokenizer, default_gen_args, ds_scorer: BaseNLPEvaluator, sample=100):
-        self.model_name = model_name
-        self.dataset_cls = dataset_cls
+    def __init__(self, model: LLM, task: str, split, tokenizer, default_gen_args, ds_scorer: BaseNLPEvaluator, batch_size=16, sample=100):
+        self.model = model
+        self.task_name = task
         
         self.split = split
         self.sample = sample
@@ -16,22 +19,31 @@ class Cached01Scorer:
         self.tokenizer = tokenizer
         self.default_gen_args = default_gen_args
         self.ds_scorer = ds_scorer
+        self.batch_size = batch_size
         self.cache = {}
 
     def _score_prompt(self, prompt, model_gen_args):
-        eval_ds = self.dataset_cls(
+        
+        eval_ds = create_ds_from_task(
+            self.task_name,
             tokenizer=self.tokenizer,
             split=self.split,
             prompt=prompt,
             sample=self.sample
         )
-
-        return self.ds_scorer.evaluate_vllm_server(
-            model_name=self.model_name,
+        
+        metrics = self.ds_scorer.evaluate_vllm(
+            model=self.model,
             tokenizer=self.tokenizer,
             eval_ds=eval_ds,
+            batch_size=self.batch_size,
             model_generate_args=model_gen_args
-        )['f1'] # only classification for now
+        )
+        
+        if self.split == 'train':
+            return metrics['f1'] # only classification for now
+        
+        return metrics
 
     def __call__(self, prompts, model_gen_args=None):
 
@@ -46,28 +58,49 @@ class Cached01Scorer:
 
         return [self.cache[prompt] for prompt in prompts]
 
-    def get_predictions(self, prompt: str, infer_wrapper: Infer):
+    def get_predictions(self, prompt: str):
         
-        eval_ds : BaseDataset = self.dataset_cls(
+        eval_ds = create_ds_from_task(
+            self.task_name,
             tokenizer=self.tokenizer,
             split=self.split,
             prompt=prompt,
             sample=self.sample
         )
+        
         label2id = eval_ds.get_labels_mapping()
         id2label = {v: k for k, v in label2id.items()}
-        token_ids = [token_id for token_id, _, _ in eval_ds]
-        label_ids = [label_id for _, _, label_id in eval_ds]
-        prompts = self.tokenizer.batch_decode(token_ids, skip_special_tokens=True)
         prompts_ordered: List[str] = []
         preds_ordered: List[str] = []
         labels_ordered: List[str] = []
         
-        for prompt, label_id in zip(prompts, label_ids):
-            res, label_id = infer_wrapper(prompt, label_id)
-            pred_id = self.ds_scorer._prepare_predictions(self.tokenizer, eval_ds, [res])[0]
-            prompts_ordered.append(prompt)
-            preds_ordered.append(id2label.get(pred_id, "BAD ANSWER FORMAT"))
-            labels_ordered.append(id2label[label_id.item()])
+        val_dataloader = torch.utils.data.DataLoader(eval_ds, batch_size=self.batch_size)
+        
+        sampling_params = SamplingParams(**self.default_gen_args)
+
+        
+        for input_ids, attention_mask, label_ids in val_dataloader:
+
+            inputs = self.tokenizer.batch_decode(input_ids, skip_special_tokens=True)
+
+            answers = self.model.generate(
+                prompts=inputs, sampling_params=sampling_params, use_tqdm=False
+            )
+
+            outputs = [answer.outputs[0].text for answer in answers]
+            
+            preds = self.ds_scorer._prepare_predictions(self.tokenizer, eval_ds, outputs)
+            
+            prompts_ordered.extend(inputs)
+
+            pred_labels = [id2label.get(pred_id.item(), "BAD ANSWER FORMAT") for pred_id in preds]
+            
+            preds_ordered.extend(pred_labels)
+
+            print("Bad answer %:", 100 * len([a for a in pred_labels if a == "BAD ANSWER FORMAT"]) / len(pred_labels) )
+            
+            labels_ordered.extend([
+                id2label[label_id.item()] for label_id in label_ids
+            ])
 
         return prompts_ordered, labels_ordered, preds_ordered
