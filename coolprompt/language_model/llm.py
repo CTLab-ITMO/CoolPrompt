@@ -1,5 +1,6 @@
 """List of supported LLM Interface"""
 
+<<<<<<< HEAD
 from typing import Any, Dict
 import requests
 import torch
@@ -127,3 +128,37 @@ class OpenAICompatibleLLM(BaseLLM):
             return response.choices[0].message.content
         except Exception as e:
             raise ValueError(f"OpenAI API error: {str(e)}")
+=======
+import gc
+from typing import Any, Dict, Optional
+
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+from langchain_huggingface.llms import HuggingFacePipeline
+from langchain_core.language_models.base import BaseLanguageModel
+from utils import DEFAULT_MODEL_NAME, DEFAULT_MODEL_PARAMETERS
+
+
+class DefaultLLM:
+    """Defaut LLM model"""
+
+    def create(params: Optional[Dict[str, Any]] = None) -> BaseLanguageModel:
+        gc.collect()
+        if torch.cuda.is_available:
+            torch.cuda.empty_cache()
+        pipeline_kwargs = DEFAULT_MODEL_PARAMETERS
+        if params is not None:
+            pipeline_kwargs.update(params)
+        try:
+            tokenizer = AutoTokenizer.from_pretrained(DEFAULT_MODEL_NAME)
+            model = AutoModelForCausalLM.from_pretrained(
+                DEFAULT_MODEL_NAME,
+                torch_dtype=torch.float16,
+                device_map="auto",
+            )
+            pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, **pipeline_kwargs)
+            return HuggingFacePipeline(pipeline=pipe)
+        except Exception as e:
+            print(f"Failed to load default model: {e}")
+            raise
+>>>>>>> 907d593 (added naive autoprompting and default langchain model)
