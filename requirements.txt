@@ -1,9 +1,8 @@
 evaluate==0.4.3
 minio==7.2.15
 pandas==2.2.3
-torch==2.5.1
 tqdm==4.67.1
-transformers==4.48.3
+vllm==0.7.3
 urllib3==2.3.0
 nltk==3.9.1
 supar==1.1.4
