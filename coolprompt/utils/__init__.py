@@ -20,6 +20,7 @@ NAIVE_AUTOPROMPTING_PROMPT_TEMPLATE = (
     "Rewritten prompt:\n"
 )
 
+
 def seed_everything(seed: int = 42):
     random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
