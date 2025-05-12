@@ -1,10 +1,10 @@
 import pandas as pd
 from language_model.llm import DefaultLLM
 from langchain_core.language_models.base import BaseLanguageModel
-from utils import NAIVE_AUTOPROMPTING_PROMPT_TEMPLATE
+from coolprompt.utils.prompt_template import NAIVE_PROMPT_TEMPLATE
 
 
-class PromptHelper:
+class PromptTuner:
     """Docstring"""
 
     def __init__(self, model: BaseLanguageModel = None):
@@ -34,6 +34,6 @@ class PromptHelper:
             return self._naive_autoprompting(start_prompt)
 
     def _naive_autoprompting(self, prompt: str) -> str:
-        template = NAIVE_AUTOPROMPTING_PROMPT_TEMPLATE
+        template = NAIVE_PROMPT_TEMPLATE
         answer = self._model.invoke(template.replace("<PROMPT>", prompt)).strip()
         return answer[answer.find("Rewritten prompt:\n") + len("Rewritten prompt:\n") :]
