@@ -18,7 +18,7 @@ class PromptHelper:
         """
         # token = ...
         # config = ...
-        self._model = model if model is not None else DefaultLLM.create()
+        self._model = model if model is not None else DefaultLLM.init()
 
     def invoke(self, start_prompt: str, dataset: pd.DataFrame = None, target: str = None) -> str:
         """Docstring
