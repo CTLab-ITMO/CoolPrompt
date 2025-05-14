@@ -2,18 +2,18 @@ import numpy as np
 from tqdm import tqdm
 import random
 from abc import ABC, abstractmethod
-import utils
+
+from vllm import LLM
 from src.solutions.Protegi.scorers import Cached01Scorer
-from src.utils.eval_utils import Infer
+from src.utils.eval_utils import LLMWrapper
 
 
 class PromptOptimizer(ABC):
-    def __init__(self, args, evaluator_fn, scorer : Cached01Scorer, infer_wrapper: Infer, max_threads=1, bf_eval=None):
+    def __init__(self, args, evaluator_fn, scorer : Cached01Scorer, model_wrapper: LLMWrapper, bf_eval=None):
         self.opt = args
         self.evaluator_fn = evaluator_fn
         self.scorer = scorer
-        self.infer_wrapper = infer_wrapper
-        self.max_threads = max_threads
+        self.model_wrapper = model_wrapper
         self.bf_eval = bf_eval
 
     @abstractmethod
@@ -29,8 +29,15 @@ class ProTeGi(PromptOptimizer):
         """ Sample n error strings from the given texts, labels, and preds"""
         error_idxs = []
         for i, (l, p) in enumerate(zip(labels, preds)):
-            if l != p:
+            if l != p and p != "BAD ANSWER FORMAT":
+                #print(l, p)
                 error_idxs.append(i)
+
+        if len(error_idxs) == 0:
+            for i, (l, p) in enumerate(zip(labels, preds)):
+                if l != p:
+                    #print(l, p)
+                    error_idxs.append(i)
 
         sample_idxs = random.sample(error_idxs, min(len(error_idxs), n))
 
@@ -76,10 +83,10 @@ class ProTeGi(PromptOptimizer):
         Wrap each reason with <START> and <END>
         """
         gradient_prompt = '\n'.join([line.lstrip() for line in gradient_prompt.split('\n')])
-        model_ans = self.infer_wrapper(gradient_prompt, n=n)[0]
+        model_ans = self.model_wrapper(gradient_prompt, n=n)
         feedbacks = self.parse_tagged_text(model_ans, "<START>", "<END>")
-        print("feedbacks length: ", len(feedbacks))
-        return feedbacks
+
+        return feedbacks[:num_feedbacks]
 
     def apply_gradient(self, prompt, error_str, feedback_str, steps_per_gradient, n=1):
         """ Incorporate feedback gradient into a prompt."""
@@ -100,23 +107,24 @@ class ProTeGi(PromptOptimizer):
         The {steps_per_gradient} new prompts are:
         """
         transformation_prompt = '\n'.join([line.lstrip() for line in transformation_prompt.split('\n')])
-        model_answer = self.infer_wrapper(transformation_prompt, n=n)[0]
+        model_answer = self.model_wrapper(transformation_prompt, n=n)
         new_prompts = self.parse_tagged_text(model_answer, "<START>", "<END>")
-        print("New prompts length: ", len(new_prompts))
-        return new_prompts
+
+        #print("Transformation prompt: ", transformation_prompt)
+        # print("New prompts length: ", len(new_prompts))
+        return new_prompts[:steps_per_gradient]
 
     def generate_synonyms(self, prompt_section, n=3):
         """ Generate synonyms for a prompt section."""
         rewriter_prompt = f"Generate a variation of the following instruction while keeping the semantic meaning.\n\nInput: {prompt_section}\n\nOutput:"
-        # TODO: modify vllm for n > 1
-        new_instructions = self.infer_wrapper(rewriter_prompt, n=n)[0]
+        new_instructions = self.model_wrapper(rewriter_prompt, n=n, temperature=0.7)
         new_instructions = [x for x in new_instructions if x]
         return new_instructions
 
     def get_gradients(self, task_section, texts, labels, preds):
         """ Get "gradients" for a prompt based on sampled error strings."""
         prompt_feedbacks = []
-        for _ in tqdm(range(self.opt['n_gradients']), total=self.opt['n_gradients'], desc='gradients..'):
+        for _ in range(self.opt['n_gradients']):
             error_string = self._sample_error_str(
                 texts, labels, preds, n=self.opt['errors_per_gradient'])
             
@@ -164,7 +172,7 @@ class ProTeGi(PromptOptimizer):
             task_section = prompt
             # evaluate prompt on minibatch
 
-            prompts_with_system, labels, preds = self.scorer.get_predictions(prompt, self.infer_wrapper)
+            prompts_with_system, labels, preds = self.scorer.get_predictions(prompt)
 
             # texts are the <INPUT>s
             texts = self._extract_texts(prompts_with_system)
@@ -174,7 +182,7 @@ class ProTeGi(PromptOptimizer):
             if self.opt['n_gradients'] > 0:
                 gradients = self.get_gradients(task_section, texts, labels, preds)
                 new_task_sections = []
-                for feedback, error_string in tqdm(gradients, desc='applying gradients'):
+                for feedback, error_string in gradients:
                     tmp = self.apply_gradient(
                         task_section, error_string, feedback, self.opt['steps_per_gradient'])
                     new_task_sections += tmp
@@ -182,7 +190,7 @@ class ProTeGi(PromptOptimizer):
             # generate synonyms
             mc_sampled_task_sections = []
             if self.opt['mc_samples_per_step'] > 0:
-                for sect in tqdm(new_task_sections + [task_section], desc='mc samples'):
+                for sect in new_task_sections + [task_section]:
                     mc_sects = self.generate_synonyms(
                         sect, n=self.opt['mc_samples_per_step'])
                     mc_sampled_task_sections += mc_sects
