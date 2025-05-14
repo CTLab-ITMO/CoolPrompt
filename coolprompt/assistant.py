@@ -13,7 +13,7 @@ class PromptTuner:
         Args:
             model: Any LangChain BaseLanguageModel instance. Will use DefaultLLM if not provided.
         """
-        self._model = model if model is not None else DefaultLLM.init({"max_model_len": 1600})
+        self._model = model if model is not None else DefaultLLM.init()
 
     def run(self, start_prompt: str, dataset: pd.DataFrame = None, target: str = None, method: str = None) -> str:
         """Optimizes prompts using provided model.
