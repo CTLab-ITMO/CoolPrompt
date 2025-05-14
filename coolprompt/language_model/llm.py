@@ -29,8 +29,8 @@ class DefaultLLM:
             BaseLanguageModel: Initialized LangChain-compatible language model instance.
         """
         generation_params = DEFAULT_MODEL_PARAMETERS.copy()
-        if config is not None:
-            generation_params.update(config)
+        # if config is not None:
+        #     generation_params.update(config)
 
         tokenizer = AutoTokenizer.from_pretrained(DEFAULT_MODEL_NAME, padding_side="left")
         terminators = [tokenizer.eos_token_id, tokenizer.convert_tokens_to_ids("<|eot_id|>")]
@@ -39,5 +39,7 @@ class DefaultLLM:
             trust_remote_code=True,
             stop_token_ids=terminators,
             torch_dtype=torch.float16,
+            vllm_kwargs=config,
+            tensor_parallel_size=2,
             **generation_params
         )
