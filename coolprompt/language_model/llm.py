@@ -19,18 +19,20 @@ class DefaultLLM:
     """Default LangChain-compatible LLM using vLLM engine."""
 
     @staticmethod
-    def init(config: dict[str, Any] | None = None) -> BaseLanguageModel:
+    def init(
+        langchain_config: dict[str, Any] | None = None, vllm_engine_config: dict[str, Any] | None = None
+    ) -> BaseLanguageModel:
         """Initialize the vLLM-powered LangChain LLM.
 
         Args:
-            config (dict[str, Any], optional): Optional dictionary of parameters to override defaults.
-
+            langchain_config (dict[str, Any], optional): Optional dictionary of LangChain VLLM parameters (temperature, top_p, etc). Overrides DEFAULT_MODEL_PARAMETERS.
+            vllm_engine_config (dict[str, ANy], optional): Optional dictionary of low-level vllm.LLM parameters (gpu_memory_utilization, max_model_len, etc). Passed directly to vllm.LLM via vllm_kwargs.
         Returns:
             BaseLanguageModel: Initialized LangChain-compatible language model instance.
         """
-        generation_params = DEFAULT_MODEL_PARAMETERS.copy()
-        # if config is not None:
-        #     generation_params.update(config)
+        generation_and_model_config = DEFAULT_MODEL_PARAMETERS.copy()
+        if langchain_config is not None:
+            generation_and_model_config.update(langchain_config)
 
         tokenizer = AutoTokenizer.from_pretrained(DEFAULT_MODEL_NAME, padding_side="left")
         terminators = [tokenizer.eos_token_id, tokenizer.convert_tokens_to_ids("<|eot_id|>")]
@@ -39,7 +41,6 @@ class DefaultLLM:
             trust_remote_code=True,
             stop_token_ids=terminators,
             torch_dtype=torch.float16,
-            vllm_kwargs=config,
-            tensor_parallel_size=2,
-            **generation_params
+            vllm_kwargs=vllm_engine_config,
+            **generation_and_model_config
         )
