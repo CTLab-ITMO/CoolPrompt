@@ -11,9 +11,10 @@ class PromptTuner:
         """Initializes the tuner with a LangChain-compatible language model.
 
         Args:
-            model: Any LangChain BaseLanguageModel instance. Will use DefaultLLM if not provided.
+            model: Any LangChain BaseLanguageModel instance which supports invoke(str) -> str. Will use DefaultLLM if not provided.
         """
-        self._model = model if model is not None else DefaultLLM.init()
+        self._model = model or DefaultLLM.init()
+        self._validate_model()
 
     def run(self, start_prompt: str, dataset: pd.DataFrame = None, target: str = None, method: str = None) -> str:
         """Optimizes prompts using provided model.
@@ -30,3 +31,9 @@ class PromptTuner:
         """
         if dataset is None or method is None:
             return naive_optimizer(self._model, start_prompt)
+
+    def _validate_model(self):
+        if not isinstance(self._model, BaseLanguageModel):
+            raise TypeError("Model should be instance of LangChain BaseLanguageModel")
+        if not hasattr(self._model, "invoke"):
+            raise AttributeError("Model should implement .invoke()")
