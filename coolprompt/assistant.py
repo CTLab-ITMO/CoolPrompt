@@ -1,6 +1,6 @@
 import pandas as pd
-from coolprompt.language_model.llm import DefaultLLM
 from langchain_core.language_models.base import BaseLanguageModel
+from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.naive import naive_optimizer
 
 
@@ -11,7 +11,8 @@ class PromptTuner:
         """Initializes the tuner with a LangChain-compatible language model.
 
         Args:
-            model: Any LangChain BaseLanguageModel instance which supports invoke(str) -> str. Will use DefaultLLM if not provided.
+            model: BaseLanguageModel - Any LangChain BaseLanguageModel instance
+                which supports invoke(str) -> str. Will use DefaultLLM if not provided.
         """
         self._model = model or DefaultLLM.init()
         self._validate_model()
@@ -20,17 +21,19 @@ class PromptTuner:
         """Optimizes prompts using provided model.
 
         Args:
-            start_prompt: Initial prompt text to optimize.
-            dataset: Optional DataFrame for dataset-based optimization.
-            target: Target column name for dataset-based optimization.
-            method: Optimization method to use.
+            start_prompt: str - Initial prompt text to optimize.
+            dataset: DataFrame - Optional Pandas DataFrame for dataset-based optimization.
+            target: str - Target column name for dataset-based optimization.
+            method: str - Optimization method to use.
         Returns:
-            final_prompt (str): The resulting optimized prompt after applying the selected method.
+            final_prompt: str - The resulting optimized prompt after applying the selected method.
         Note:
             Uses naive optimization when dataset or method parameters are not provided.
         """
+        final_prompt = ""
         if dataset is None or method is None:
-            return naive_optimizer(self._model, start_prompt)
+            final_prompt = naive_optimizer(self._model, start_prompt)
+        return final_prompt
 
     def _validate_model(self):
         if not isinstance(self._model, BaseLanguageModel):
