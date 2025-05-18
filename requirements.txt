@@ -8,3 +8,6 @@ nltk==3.9.1
 supar==1.1.4
 rouge_score==0.1.2
 scikit-learn==1.6.1
+langchain==0.3.25
+langchain-community==0.3.24
+langchain-core==0.3.59
