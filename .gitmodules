@@ -4,3 +4,6 @@
 [submodule "src/solutions/EvoPrompt"]
 	path = src/solutions/EvoPrompt
 	url = https://github.com/zhuravlevvik/EvoPrompt.git
+[submodule "src/solutions/PromptBreeder"]
+	path = src/solutions/PromptBreeder
+	url = https://github.com/samiaFife/PromptBreeder.git

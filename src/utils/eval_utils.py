@@ -1,4 +1,5 @@
 import requests
+from vllm import SamplingParams
 
 
 HEADERS = {"Content-Type": "application/json"}
@@ -25,6 +26,34 @@ class Infer:
         if len(result) == 1:
             result = result[0]
         return result, label_id
+
+class LLMWrapper:
+    """Inference helper class for vllm.LLM class"""
+
+    def __init__(self, model,
+                 model_generate_args={}):
+        self.model = model
+        self.model_generate_args = model_generate_args
+
+    def __call__(self, prompt, **model_gen_args) -> list[str] | str:
+        
+        model_gen_args = model_gen_args or {}
+        model_gen_args = self.model_generate_args | model_gen_args
+        
+        sampling_params = SamplingParams(**model_gen_args)
+        
+        answers = self.model.generate(
+            prompts=prompt, sampling_params=sampling_params, use_tqdm=False
+        ) # list[RequestOutput]
+
+        answers = answers[0] # single prompt scenario
+
+        texts = [output.text for output in answers.outputs]
+
+        if len(texts) == 1: # n = 1 scenario
+            return texts[0]
+        
+        return texts
 
 
 def vllm_infer(
@@ -61,3 +90,98 @@ def vllm_infer(
         )
         completions = response.json().get("choices", [])
         return [completion["text"] for completion in completions]
+
+
+from src.data.base.datasets.multi_task_dataset import BaseMultiTaskDataset
+from src.data.base.datasets.classification_dataset import BaseClassificationDataset
+from src.data.base.datasets.dataset import BaseDataset
+
+
+from src.data.classification import MNLIDataset, MRDataset, QNLIDataset, SST2Dataset, TrecDataset, YahooDataset
+from src.data.generation import GSM8KDataset, MathDataset, SamsumDataset
+from src.data.multi_task import BBHDataset, NaturalInstructionsDataset
+from src.data.qa import MedQADataset, OpenbookQADataset
+
+
+
+TASK_TO_DS = {
+    "sst-2": SST2Dataset,
+    
+    "natural_instructions/task021": NaturalInstructionsDataset,
+    "natural_instructions/task050": NaturalInstructionsDataset,
+    "natural_instructions/task069": NaturalInstructionsDataset,
+    
+    "math": MathDataset,
+    "gsm8k": GSM8KDataset,
+
+    "yahoo": YahooDataset,
+    "trec": TrecDataset,
+    "mr": MRDataset,
+    
+    "openbookqa": OpenbookQADataset,
+    "samsum": SamsumDataset,
+    
+    "qnli": QNLIDataset,
+    "mnli": MNLIDataset,
+    "medqa": MedQADataset,
+    
+        
+    "bbh/boolean_expressions" : BBHDataset,
+    "bbh/hyperbaton" : BBHDataset,
+    "bbh/temporal_sequences" : BBHDataset,
+    "bbh/object_counting" : BBHDataset,
+    "bbh/disambiguation_qa" : BBHDataset,
+    "bbh/logical_deduction_three_objects" : BBHDataset,
+    "bbh/logical_deduction_five_objects" : BBHDataset,
+    "bbh/logical_deduction_seven_objects" : BBHDataset,
+    "bbh/causal_judgement" : BBHDataset,
+    "bbh/date_understanding" : BBHDataset,
+    "bbh/ruin_names" : BBHDataset,
+    "bbh/word_sorting" : BBHDataset,
+    "bbh/geometric_shapes" : BBHDataset,
+    "bbh/movie_recommendation" : BBHDataset,
+    "bbh/salient_translation_error_detection" : BBHDataset,
+    "bbh/formal_fallacies" : BBHDataset,
+    "bbh/penguins_in_a_table" : BBHDataset,
+    "bbh/dyck_languages" : BBHDataset,
+    "bbh/multistep_arithmetic_two" : BBHDataset,
+    "bbh/navigate" : BBHDataset,
+    "bbh/reasoning_about_colored_objects" : BBHDataset,
+    "bbh/tracking_shuffled_objects_three_objects" : BBHDataset,
+    "bbh/tracking_shuffled_objects_five_objects" : BBHDataset,
+    "bbh/tracking_shuffled_objects_seven_objects" : BBHDataset,
+    "bbh/sports_understanding" : BBHDataset,
+    "bbh/snarks" : BBHDataset,
+    "bbh/web_of_lies" : BBHDataset
+}
+
+def extract_multitask_name(task_name: str) -> str:
+    return task_name.split('/')[-1]
+
+
+def create_ds_from_task(task_name: str, **kwargs) -> BaseDataset:
+    ds_base = TASK_TO_DS[task_name](**kwargs)
+
+    if isinstance(ds_base, BaseMultiTaskDataset):
+        return ds_base.task(extract_multitask_name(task_name))
+
+    return ds_base
+
+
+def get_task_optimization_metric(ds: BaseDataset) -> str:
+    
+    if isinstance(ds, BaseClassificationDataset):
+        return "f1"
+    
+    return "meteor"
+
+
+def get_task_evaluator(ds: BaseDataset):
+    # avoid circular imports
+    
+    from src.evaluation.evaluator import TextClassificationEvaluator, GenerationEvaluator
+    
+    if isinstance(ds, BaseClassificationDataset):
+        return TextClassificationEvaluator()
+    
+    return GenerationEvaluator()

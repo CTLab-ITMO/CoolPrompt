@@ -3,14 +3,13 @@ import sys
 
 import time
 
+
 project_root = os.path.abspath(os.getcwd())
 sys.path.append(project_root)
 
 # os.environ['TOKENIZERS_PARALLELISM'] = "false"
 
-from src.data.base.datasets.multi_task_dataset import BaseMultiTaskDataset
-from src.data.base.datasets.classification_dataset import BaseClassificationDataset
-from src.data.base.datasets.dataset import BaseDataset
+
 
 import torch
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -22,15 +21,10 @@ import argparse
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 
 from src.solutions.Grips.tree import collect_leaves, detokenize
+from src.utils.eval_utils import TASK_TO_DS, create_ds_from_task, get_task_optimization_metric, get_task_evaluator
+
 from utils import setup_tokenizer, setup_vllm_model
 
-
-from src.data.classification import MNLIDataset, MRDataset, QNLIDataset, SST2Dataset, TrecDataset, YahooDataset
-from src.data.generation import GSM8KDataset, MathDataset, SamsumDataset
-from src.data.multi_task import BBHDataset, NaturalInstructionsDataset
-from src.data.qa import MedQADataset, OpenbookQADataset
-
-from src.evaluation.evaluator import BaseNLPEvaluator, TextClassificationEvaluator, GenerationEvaluator
 
 
 
@@ -121,130 +115,6 @@ def perform_edit(edit, base, phrase_lookup, delete_tracker):
 
 
 
-# TASKS = [
-#     "gsm8k",
-#     "math",
-#     "medqa",
-#     "mnli",
-#     "mr",
-#     "natural_instructions_021",
-#     "natural_instructions_050",
-#     "natural_instructions_069",
-#     "openbookqa",
-#     "qnli",
-#     "samsum",
-#     "sst-2",
-#     "trec",
-#     "yahoo",
-#     "bbh_boolean_expressions",
-#     "bbh_hyperbaton",
-#     "bbh_temporal_sequences",
-#     "bbh_object_counting",
-#     "bbh_disambiguation_qa",
-#     "bbh_logical_deduction_three_objects",
-#     "bbh_logical_deduction_five_objects",
-#     "bbh_logical_deduction_seven_objects",
-#     "bbh_causal_judgement",
-#     "bbh_date_understanding",
-#     "bbh_ruin_names",
-#     "bbh_word_sorting",
-#     "bbh_geometric_shapes",
-#     "bbh_movie_recommendation",
-#     "bbh_salient_translation_error_detection",
-#     "bbh_formal_fallacies",
-#     "bbh_penguins_in_a_table",
-#     "bbh_dyck_languages",
-#     "bbh_multistep_arithmetic_two",
-#     "bbh_navigate",
-#     "bbh_reasoning_about_colored_objects",
-#     "bbh_tracking_shuffled_objects_three_objects",
-#     "bbh_tracking_shuffled_objects_five_objects",
-#     "bbh_tracking_shuffled_objects_seven_objects",
-#     "bbh_sports_understanding",
-#     "bbh_snarks",
-#     "bbh_web_of_lies",
-# ]
-
-TASK_TO_DS = {
-    
-    "natural_instructions/task021": NaturalInstructionsDataset,
-    "natural_instructions/task050": NaturalInstructionsDataset,
-    "natural_instructions/task069": NaturalInstructionsDataset,
-    
-    # "math": MathDataset,
-    # "sst-2": SST2Dataset,
-    # "gsm8k": GSM8KDataset,
-
-    # "yahoo": YahooDataset,
-    # "trec": TrecDataset,
-    # "mr": MRDataset,
-    
-    # "openbookqa": OpenbookQADataset,
-    # "samsum": SamsumDataset,
-    
-    # "qnli": QNLIDataset,
-    # "mnli": MNLIDataset,
-    # "medqa": MedQADataset,
-    
-        
-    "bbh/boolean_expressions" : BBHDataset,
-    "bbh/hyperbaton" : BBHDataset,
-    "bbh/temporal_sequences" : BBHDataset,
-    "bbh/object_counting" : BBHDataset,
-    "bbh/disambiguation_qa" : BBHDataset,
-    "bbh/logical_deduction_three_objects" : BBHDataset,
-    "bbh/logical_deduction_five_objects" : BBHDataset,
-    "bbh/logical_deduction_seven_objects" : BBHDataset,
-    "bbh/causal_judgement" : BBHDataset,
-    "bbh/date_understanding" : BBHDataset,
-    "bbh/ruin_names" : BBHDataset,
-    "bbh/word_sorting" : BBHDataset,
-    "bbh/geometric_shapes" : BBHDataset,
-    "bbh/movie_recommendation" : BBHDataset,
-    "bbh/salient_translation_error_detection" : BBHDataset,
-    "bbh/formal_fallacies" : BBHDataset,
-    "bbh/penguins_in_a_table" : BBHDataset,
-    "bbh/dyck_languages" : BBHDataset,
-    "bbh/multistep_arithmetic_two" : BBHDataset,
-    "bbh/navigate" : BBHDataset,
-    "bbh/reasoning_about_colored_objects" : BBHDataset,
-    "bbh/tracking_shuffled_objects_three_objects" : BBHDataset,
-    "bbh/tracking_shuffled_objects_five_objects" : BBHDataset,
-    "bbh/tracking_shuffled_objects_seven_objects" : BBHDataset,
-    "bbh/sports_understanding" : BBHDataset,
-    "bbh/snarks" : BBHDataset,
-    "bbh/web_of_lies" : BBHDataset
-}
-
-def extract_multitask_name(task_name: str) -> str:
-    return task_name.split('/')[-1]
-
-
-def create_ds_from_task(task_name: str, **kwargs) -> BaseDataset:
-    ds_base = TASK_TO_DS[task_name](**kwargs)
-
-    if isinstance(ds_base, BaseMultiTaskDataset):
-        return ds_base.task(extract_multitask_name(task_name))
-
-    return ds_base
-
-
-def get_task_optimization_metric(ds: BaseDataset) -> str:
-    
-    if isinstance(ds, BaseClassificationDataset):
-        return "f1"
-    
-    return "meteor"
-
-
-def get_task_evaluator(ds: BaseDataset) -> BaseNLPEvaluator:
-    
-    if isinstance(ds, BaseClassificationDataset):
-        return TextClassificationEvaluator()
-    
-    return GenerationEvaluator()
-
-
 class Scorer:
 
     def __init__(self, model, tokenizer, task, evaluator, sample=100):
@@ -257,14 +127,14 @@ class Scorer:
         
         self.sample = sample
 
-    def score(self, prompt, split='train'):
+    def score(self, prompt, split='train', do_sample=True):
         
         eval_ds = create_ds_from_task(
             self.task_name,
             tokenizer=self.tokenizer,
             split=split,
             prompt=prompt,
-            sample=self.sample
+            sample=self.sample if do_sample else None
         )
         
         terminators = [
@@ -459,10 +329,10 @@ def solve_task(task: str):
 
     print('Task:\t', task)
     print('Original Instruction:\t', original_candidate)
-    orig_score = scorer.score(original_candidate, split='test')
+    orig_score = scorer.score(original_candidate, split='test', do_sample=False)
     for metric, value in orig_score.items():
-        print(f'Original {metric}:\t', round(value, 5))
-        meta_file.write(f'Original {metric}:\t' + str(round(value, 5)) + '\n')
+        print(f'Original full {metric}:\t', round(value, 5))
+        meta_file.write(f'Original full {metric}:\t' + str(round(value, 5)) + '\n')
 
 
     if base_candidate == original_candidate:
@@ -470,12 +340,12 @@ def solve_task(task: str):
         meta_file.write('No viable candidate found!\n')
         return
 
-    searched_score = scorer.score(base_candidate, split='test')
+    searched_score = scorer.score(base_candidate, split='test', do_sample=False)
     total_time = int(time.time() - start_time)
     meta_file.write('Instruction after search:\t' + base_candidate + '\n')
     for metric, value in searched_score.items():
-        print(f'{metric} after search:\t', round(value, 5))
-        meta_file.write(f'{metric} after search:\t' + str(round(value, 5)) + '\n')
+        print(f'{metric} full score after search:\t', round(value, 5))
+        meta_file.write(f'{metric} full score after search:\t' + str(round(value, 5)) + '\n')
 
 
     print('Instruction after search:\t', base_candidate)
@@ -543,8 +413,13 @@ if __name__ == "__main__":
         
         print("----------------------------------------------")
         print("RUNNING Experiment for: ", task)
+        
+        args.meta_dir = 'src/solutions/Grips/logs/full_test/'
     
         meta_path = os.path.join(args.meta_dir, f'{task}.txt')
+        
+        os.makedirs(args.meta_dir, exist_ok=True)
+        
         meta_file = open(meta_path, 'w+')
         
         solve_task(task)
