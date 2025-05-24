@@ -1,6 +1,6 @@
 from typing import List
 from langchain_core.language_models.base import BaseLanguageModel
-from metrics import BaseMetric
+from coolprompt.evaluator.metrics import BaseMetric
 
 
 class Evaluator():
