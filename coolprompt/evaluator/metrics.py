@@ -5,6 +5,17 @@ from evaluate import load
 type InputType = List[str] | List[int]
 type LabelType = str | int
 
+CLASSIFICATION_METRICS = {
+    "accuracy",
+    "f1",
+}
+
+GENERATION_METRICS = {
+    "bleu",
+    "rouge",
+    "meteor",
+}
+
 
 class BaseMetric(ABC):
     """Abstract base class for implementing evaluation metrics.
@@ -188,21 +199,10 @@ def create_metric(name: str) -> BaseMetric:
         ValueError: If the specified metric name is not recognized
     """
 
-    classification_metrics = {
-        "accuracy",
-        "f1",
-    }
-
-    generation_metrics = {
-        "bleu",
-        "rouge",
-        "meteor",
-    }
-
-    if name in classification_metrics:
+    if name in CLASSIFICATION_METRICS:
         return ClassificationMetric(name)
 
-    if name in generation_metrics:
+    if name in GENERATION_METRICS:
         return GenerationMetric(name)
 
     raise ValueError(f"Unknown metric: {name}")
