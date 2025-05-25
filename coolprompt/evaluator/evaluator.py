@@ -1,6 +1,8 @@
 from typing import List
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.evaluator.metrics import BaseMetric
+from coolprompt.evaluator.metrics import InputType
+from coolprompt.evaluator.metrics import create_metric
 
 
 class Evaluator():
@@ -11,15 +13,15 @@ class Evaluator():
     the corresponding metric score against provided targets.
     """
     
-    def __init__(self, model: BaseLanguageModel, metric: BaseMetric) -> None:
+    def __init__(self, model: BaseLanguageModel, metric: str) -> None:
         self.model = model
-        self.metric = metric
+        self.metric = create_metric(metric)
 
     def evaluate(
         self,
         prompt: str,
         dataset: List[str],
-        targets: List[str] | List[int],
+        targets: InputType,
     ) -> float:
         """
         Evaluate the model on a dataset by generating answers and computing the metric.

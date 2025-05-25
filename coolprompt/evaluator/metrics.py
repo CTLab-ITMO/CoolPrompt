@@ -17,7 +17,7 @@ class BaseMetric(ABC):
         """Initialize metric with specified evaluate library metric name.
         
         Args:
-            name: str - Name of metric to load from evaluate library
+            name (str): Name of metric to load from evaluate library
         """
         
         self._name = name
@@ -27,11 +27,11 @@ class BaseMetric(ABC):
         """Compute metric value from preprocessed model answers.
         
         Args:
-            outputs: InputType - Model predictions (text for generation, labels for classification)
-            targets: InputType - Ground truth labels
+            outputs (InputType): Model predictions (text for generation, labels for classification)
+            targets (InputType): Ground truth labels
             
         Returns:
-            float - Computed metric value
+            float: Computed metric value
         """
         
         return self._metric.compute(predictions=outputs, references=targets)[self._name]
@@ -43,11 +43,11 @@ class BaseMetric(ABC):
         Must be implemented by subclasses to handle input formatting.
 
         Args:
-            outputs: InputType - Model predictions (just text)
-            targets: InputType - Ground truth labels
+            outputs (InputType): Model predictions (just text)
+            targets (InputType): Ground truth labels
             
         Returns:
-            float - Computed metric value
+            float: Computed metric value
         """
         pass
 
@@ -70,10 +70,10 @@ class ClassificationMetric(BaseMetric):
         """Extract label from model output string containing XML-style tags.
         
         Args:
-            answer: str - Model output string potentially containing <ans> tags
+            answer (str): Model output string potentially containing <ans> tags
             
         Returns:
-            LabelType - Extracted label or FORMAT_MISMATCH_LABEL if parsing fails
+            LabelType: Extracted label or FORMAT_MISMATCH_LABEL if parsing fails
         """
         
         start_tag, end_tag = self.ANS_TAGS
@@ -95,8 +95,8 @@ class ClassificationMetric(BaseMetric):
         """Encode string labels into integer IDs for both outputs and targets.
 
         Args:
-            output_labels: InputType - Extracted labels from model outputs.
-            targets: InputType - Ground truth labels.
+            output_labels (InputType): Extracted labels from model outputs.
+            targets (InputType): Ground truth labels.
 
         Returns:
             Tuple[List[int], List[int]]: Encoded output labels and encoded targets.
@@ -125,8 +125,8 @@ class ClassificationMetric(BaseMetric):
         and computes the metric value.
 
         Args:
-            outputs: InputType - Model output strings.
-            targets: InputType - Ground truth labels.
+            outputs (InputType): Model output strings.
+            targets (InputType): Ground truth labels.
 
         Returns:
             float: The computed metric value.
@@ -163,8 +163,8 @@ class GenerationMetric(BaseMetric):
         """Compute the generation metric from model outputs and reference targets.
 
         Args:
-            outputs: List[str] - Model-generated text outputs.
-            targets: List[str] - Reference texts.
+            outputs (List[str]): Model-generated text outputs.
+            targets (List[str]):- Reference texts.
 
         Returns:
             float: The computed metric value.
@@ -173,22 +173,36 @@ class GenerationMetric(BaseMetric):
         return self._compute_raw(outputs, targets)
 
 
-class BLEUScore(GenerationMetric):
-    """BLEU score metric for text generation tasks"""
-    
-    def __init__(self) -> None:
-        super().__init__("bleu")
+def create_metric(name: str) -> BaseMetric:
+    """
+    Create metric instance based on string name
+    Supported metrics: accuracy, f1, bleu, rouge, meteor
 
+    Args:
+        name (str): Name of the metric to create
 
-class ROUGEScore(GenerationMetric):
-    """ROUGE score metric for text generation tasks"""
-    
-    def __init__(self) -> None:
-        super().__init__("rouge")
+    Returns:
+        BaseMetric: Instance of the specified metric
 
+    Raises:
+        ValueError: If the specified metric name is not recognized
+    """
 
-class METEORScore(GenerationMetric):
-    """METEOR score metric for text generation tasks"""
-    
-    def __init__(self) -> None:
-        super().__init__("meteor")
+    classification_metrics = {
+        "accuracy",
+        "f1",
+    }
+
+    generation_metrics = {
+        "bleu",
+        "rouge",
+        "meteor",
+    }
+
+    if name in classification_metrics:
+        return ClassificationMetric(name)
+
+    if name in generation_metrics:
+        return GenerationMetric(name)
+
+    raise ValueError(f"Unknown metric: {name}")
