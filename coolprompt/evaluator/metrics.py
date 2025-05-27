@@ -30,9 +30,10 @@ class BaseMetric(ABC):
         Args:
             name (str): Name of metric to load from evaluate library
         """
-        
+
         self._name = name
         self._metric = load(name)
+        self._compute_kwargs = {}
 
     def _compute_raw(self, outputs: InputType, targets: InputType) -> float:
         """Compute metric value from preprocessed model answers.
@@ -45,7 +46,7 @@ class BaseMetric(ABC):
             float: Computed metric value
         """
         
-        return self._metric.compute(predictions=outputs, references=targets)[self._name]
+        return self._metric.compute(predictions=outputs, references=targets, **self._compute_kwargs)[self._name]
 
     @abstractmethod
     def compute(self, outputs: InputType, targets: InputType) -> float:
@@ -76,6 +77,11 @@ class ClassificationMetric(BaseMetric):
     
     ANS_TAGS = ("<ans>", "</ans>")
     FORMAT_MISMATCH_LABEL = -1
+
+    def __init__(self, name: str):
+        super().__init__(name)
+        if name == "f1":
+            self._compute_kwargs = {"average": "macro"}
 
     def _extract_label_id_from_answer(self, answer: str) -> LabelType:
         """Extract label from model output string containing XML-style tags.
@@ -149,26 +155,17 @@ class ClassificationMetric(BaseMetric):
         return self._compute_raw(encoded_output_labels, encoded_targets)
 
 
-class Accuracy(ClassificationMetric):
-    """Accuracy metric for classification tasks"""
-    
-    def __init__(self) -> None:
-        super().__init__("accuracy")
-
-
-class F1Score(ClassificationMetric):
-    """F1 score metric for classification tasks"""
-    
-    def __init__(self) -> None:
-        super().__init__("f1")
-
-
 class GenerationMetric(BaseMetric):
     """Base class for generation metrics.
 
     Provides a generic implementation for metrics that compare generated text
     to reference text.
     """
+
+    def __init__(self, name: str):
+        super().__init__(name)
+        if name == "rouge":
+            self._name = "rougeL"
     
     def compute(self, outputs: InputType, targets: InputType) -> float:
         """Compute the generation metric from model outputs and reference targets.

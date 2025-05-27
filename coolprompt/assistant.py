@@ -52,34 +52,33 @@ class PromptTuner:
             
             Uses default metric for the task type if metric parameter is not provided:
             f1 for classisfication, meteor for generation.
+
+            if dataset is not None, you can find evaluation results in self.init_metric and self.final_metric
         """
 
-        if task not in self.TASK_TYPES:
-            raise ValueError(f"Invalid task type: {task}. Must be one of {self.TASK_TYPES}.")
-        if metric is None:
-            metric = self._get_default_metric(task)
-        else:
-            self._validate_metric(task, metric)
-
+        metric = self._validate_metric(task, metric)
         evaluator = Evaluator(self._model, metric)
-        
-        if dataset is not None:
-            self.init_metric = evaluator.evaluate(start_prompt, dataset, target)
         
         final_prompt = ""
         if dataset is None or method is None:
             final_prompt = naive_optimizer(self._model, start_prompt)
         
         if dataset is not None:
+            self.init_metric = evaluator.evaluate(start_prompt, dataset, target)
             self.final_metric = evaluator.evaluate(final_prompt, dataset, target)
         
         return final_prompt
 
-    def _validate_metric(self, task: str, metric: str) -> None:
+    def _validate_metric(self, task: str, metric: str | None) -> str:
+        if task not in self.TASK_TYPES:
+            raise ValueError(f"Invalid task type: {task}. Must be one of {self.TASK_TYPES}.")
+        if metric is None:
+            return self._get_default_metric(task)
         if task == "classification" and metric not in CLASSIFICATION_METRICS:
-            raise ValueError(f"Invalid metric for classification task: {metric}. Must be one of {CLASSIFICATION_METRICS}.")
-        elif task == "generation" and metric not in GENERATION_METRICS:
-            raise ValueError(f"Invalid metric for generation task: {metric}. Must be one of {GENERATION_METRICS}.")
+            raise ValueError(f"Invalid metric for {task} task: {metric}. Must be one of {CLASSIFICATION_METRICS}.")
+        if task == "generation" and metric not in GENERATION_METRICS:
+            raise ValueError(f"Invalid metric for {task} task: {metric}. Must be one of {GENERATION_METRICS}.")
+        return metric
 
     def _get_default_metric(self, task: str) -> str:
         if task == "classification":
