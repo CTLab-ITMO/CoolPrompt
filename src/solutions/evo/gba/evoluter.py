@@ -27,6 +27,7 @@ class GBAEvoluter(Evoluter):
         output_path: str = './outputs',
         use_cache: bool = True,
         batch_size: int = 64,
+        version: str = 'v1'
     ) -> None:
         model = LLM(
             model=model_name,
@@ -49,7 +50,8 @@ class GBAEvoluter(Evoluter):
             batch_size=batch_size
         )
 
-        self.config_filename = 'config_v2.yaml'
+        self.version = version
+        self.config_filename = f'config_{self.version}.yaml'
         self.problem_description_filename = 'problems.yaml'
         self._mutation_prompts_filename = 'mutation_prompts_v2.yaml'
         self._styles_of_thinking_filename = 'styles_v2.yaml'
@@ -58,7 +60,7 @@ class GBAEvoluter(Evoluter):
         self.elitist = None
         self._long_term_reflection_str = ""
         self.best_score_overall = None
-        self.best_prompt_overall = None
+        self.best_prompt_overall = ""
         self._free_agents = []
         self._config_path = './data'
 
@@ -125,6 +127,27 @@ class GBAEvoluter(Evoluter):
             ),
             key='academy_mutation'
         )
+        self._crossover_ga_template = self._read_yaml_data(
+            os.path.join(
+                self._config_path,
+                self.config_filename
+            ),
+            key='crossover_ga'
+        )
+        self._crossover_de_template = self._read_yaml_data(
+            os.path.join(
+                self._config_path,
+                self.config_filename
+            ),
+            key='crossover_de'
+        )
+        self._paraphrase_template = self._read_yaml_data(
+            os.path.join(
+                self._config_path,
+                self.config_filename
+            ),
+            key='paraphrase'
+        )
 
         self._player_names = self._read_names('player_names.yaml')
         self._manager_names = self._read_names('manager_names.yaml')
@@ -141,10 +164,35 @@ class GBAEvoluter(Evoluter):
         for _ in range(size):
             ind1 = randint(0, len(self._style_of_thinkings) - 1)
             ind2 = randint(0, len(self._mutation_prompts) - 1)
+            heuristic = 'llh'
+            gtt = self._group_training_template
+            itt = self._individual_training_template
+            h = randint(1, 10)
+            if self.version == 'v4':
+                if 6 < h <= 8:
+                    heuristic = "ga"
+                    gtt = self._crossover_ga_template
+                    itt = self._paraphrase_template
+                elif h >= 9:
+                    heuristic = "de"
+                    gtt = self._crossover_de_template
+                    itt = self._paraphrase_template
+            elif self.version == 'v5':
+                if 8 <= h <= 9:
+                    heuristic = "de"
+                    gtt = self._crossover_de_template
+                    itt = self._paraphrase_template
+                elif h == 10:
+                    heuristic = "ga"
+                    gtt = self._crossover_ga_template
+                    itt = self._paraphrase_template
             manager = Manager(
                 name=self._name(mode='manager'),
                 style=self._style_of_thinkings[ind1],
-                long_term_reflection=self._mutation_prompts[ind2]
+                long_term_reflection=self._mutation_prompts[ind2],
+                group_training_template=gtt,
+                individual_training_template=itt,
+                heuristic=heuristic,
             )
             managers.append(manager)
         return managers
@@ -254,7 +302,7 @@ class GBAEvoluter(Evoluter):
             List[str]: model answers.
         """
         sampling_params = {
-            "max_tokens": 150,
+            "max_tokens": 300,
             "top_p": 0.95,
             "frequency_penalty": 0,
             "presence_penalty": 0,
@@ -303,6 +351,10 @@ class GBAEvoluter(Evoluter):
             verbose=verbose,
             temperature=0.1
         )
+        reflections = [
+            parse_output(reflection, bracket='<hint>')
+            for reflection in reflections
+        ]
         self._cache_data(
             [
                 {
@@ -317,10 +369,6 @@ class GBAEvoluter(Evoluter):
                 "short_reflections.yaml",
             )
         )
-        reflections = [
-            parse_output(reflection, bracket='<hint>')
-            for reflection in reflections
-        ]
         return reflections, team_examples
 
     def _long_term_reflection(
@@ -347,7 +395,11 @@ class GBAEvoluter(Evoluter):
                 short_term_reflection
             )
             requests.append(request)
-        responses = self._llm_query(requests, verbose=verbose)
+        responses = self._llm_query(
+            requests,
+            verbose=verbose,
+            temperature=0.15
+        )
         responses = [
             parse_output(response, bracket='<hint>') for response in responses
         ]
@@ -407,6 +459,7 @@ class GBAEvoluter(Evoluter):
         player_to_upgrade.text = prompt.text
         player_to_upgrade.score = prompt.score
         player_to_upgrade.origin = prompt.origin
+        player_to_upgrade.set_heuristic(team.manager.heuristic)
         self.logger.info(f"""
                          {'=' * 50}
                          {player_to_upgrade.name}
@@ -441,7 +494,8 @@ class GBAEvoluter(Evoluter):
 
         response = self._llm_query(
             [request],
-            verbose=verbose
+            verbose=verbose,
+            temperature=0.15
         )[0]
 
         self._long_term_reflection_str = parse_output(
@@ -473,18 +527,17 @@ class GBAEvoluter(Evoluter):
         )
         requests = []
         for team, reflection, example in zip(teams, reflections, examples):
-            request = self._group_training_template.replace(
-                "<STYLE>",
-                team.manager.style
-            ).replace(
-                "<PROBLEM_DESCRIPTION>",
-                self.problem_description
-            ).replace(
-                "<EXAMPLES>",
-                example
-            ).replace(
-                "<REFLECTION>",
-                reflection
+            request = team.manager.group_training_request(
+                problem_description=self.problem_description,
+                examples=example,
+                reflection=reflection,
+                prompts='\n'.join([
+                    f"Prompt{i}: {p.text}" for i, p in enumerate(team.players)
+                ]),
+                prompt1=team.players[1].text,
+                prompt2=team.players[2].text,
+                prompt3=team.players[0].text,
+                elitist=self.best_prompt_overall
             )
             requests.append(request)
         responses = self._llm_query(requests, verbose=verbose, temperature=0.1)
@@ -505,21 +558,16 @@ class GBAEvoluter(Evoluter):
         requests = []
         for team in teams:
             for player in team.players:
-                request = self._individual_training_template.replace(
-                    "<STYLE>",
-                    team.manager.style
-                ).replace(
-                    "<PROBLEM_DESCRIPTION>",
-                    self.problem_description
-                ).replace(
-                    "<PROMPT>",
-                    player.text
-                ).replace(
-                    "<REFLECTION>",
-                    team.manager.long_term_reflection
+                request = team.manager.individual_training_request(
+                    problem_description=self.problem_description,
+                    prompt=player.text,
                 )
                 requests.append(request)
-        responses = self._llm_query(requests, verbose=verbose, temperature=0.3)
+        responses = self._llm_query(
+            requests,
+            verbose=verbose,
+            temperature=0.15
+        )
         responses = [parse_output(response) for response in responses]
         for i, team in enumerate(teams):
             self.logger.info(team.name)
@@ -610,7 +658,10 @@ class GBAEvoluter(Evoluter):
     def _change_manager(self, team: Team, manager: Manager) -> None:
         old_manager = team.manager
         team.sign_manager(manager)
-        self.logger.info(f"{team.name} new manager: {manager.name}")
+        self.logger.info(
+            f"{team.name} new manager: {manager.name}" +
+            f" - {manager.heuristic}"
+        )
         self._name(
             mode='manager',
             free=True,
@@ -625,13 +676,22 @@ class GBAEvoluter(Evoluter):
         for i in range(start):
             if teams[i].manager.successful_training is False:
                 teams[i].bad_training_seasons += 1
-                if teams[i].bad_training_seasons >= 2:
-                    new_manager = self._managers_init(size=1)[0]
-                    self.logger.info(
-                        "After 2 seasons without any good training " +
-                        f"{teams[i].name} fired {teams[i].manager.name}"
-                    )
-                    self._change_manager(teams[i], new_manager)
+                if self.version == 'v4':
+                    if teams[i].bad_training_seasons >= 2:
+                        new_manager = self._managers_init(size=1)[0]
+                        self.logger.info(
+                            "After 2 seasons without any good training " +
+                            f"{teams[i].name} fired {teams[i].manager.name}"
+                        )
+                        self._change_manager(teams[i], new_manager)
+                elif self.version == 'v5':
+                    if teams[i].bad_training_seasons >= 3:
+                        new_manager = self._managers_init(size=1)[0]
+                        self.logger.info(
+                            "After 3 seasons without any good training " +
+                            f"{teams[i].name} fired {teams[i].manager.name}"
+                        )
+                        self._change_manager(teams[i], new_manager)
             else:
                 teams[i].bad_training_seasons = 0
 
@@ -641,7 +701,7 @@ class GBAEvoluter(Evoluter):
         season: int,
         verbose: bool = True
     ) -> None:
-        elitists = self._elitists(teams, n=5)
+        elitists = self._captains(teams)
         request = self._academy_mutation_template.replace(
             '<PROBLEM_DESCRIPTION>',
             self.problem_description
@@ -655,7 +715,7 @@ class GBAEvoluter(Evoluter):
         responses = self._llm_query(
             [request] * (self.teams_num // 2),
             verbose=verbose,
-            temperature=0.6
+            temperature=0.3
         )
         responses = [parse_output(response) for response in responses]
         new_prompts = [
@@ -703,7 +763,15 @@ class GBAEvoluter(Evoluter):
         all_players = all_players[:n]
         return all_players
 
+    def _captains(self, teams: List[Team]) -> List[Player]:
+        captains = []
+        for team in teams:
+            team.players = self._reranking(team.players)
+            captains.append(team.players[0])
+        return self._reranking(captains)
+
     def evolution(self) -> None:
+        torch.cuda.empty_cache()
         teams = self._init_teams()
         self._cache_data(
             [{'team': team.to_dict()} for team in list(teams)],
@@ -794,5 +862,5 @@ class GBAEvoluter(Evoluter):
             new_data={
                 self.dataset: elitists[0].to_dict(),
             },
-            filepath="./best_prompts_v3.yaml"
+            filepath=f"./best_prompts_{self.version}.yaml"
         )

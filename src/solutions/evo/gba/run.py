@@ -31,7 +31,8 @@ def run(args):
         num_seasons=args.seasons,
         output_path=args.output_path,
         use_cache=args.use_cache,
-        batch_size=args.batch_size
+        batch_size=args.batch_size,
+        version=args.version
     )
     evoluter.evolution()
 

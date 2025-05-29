@@ -16,6 +16,7 @@ class Player(Prompt):
     ) -> None:
         self.name = name
         self.retire_timer = retire_timer
+        self.heuristic = ""
 
         super().__init__(
             text=text,
@@ -25,6 +26,9 @@ class Player(Prompt):
 
     def add_year(self) -> None:
         self.retire_timer -= 1
+
+    def set_heuristic(self, heuristic: str) -> None:
+        self.heuristic = heuristic
 
     def retired(self) -> bool:
         return self.retire_timer <= 0
@@ -52,6 +56,7 @@ class Player(Prompt):
     def to_dict(self) -> dict:
         data = super().to_dict()
         data['name'] = str(self.name)
+        data['heuristic'] = str(self.heuristic)
         return data
 
 
@@ -62,20 +67,81 @@ class Manager:
         name: str,
         style: str,
         long_term_reflection: str,
+        group_training_template: str,
+        individual_training_template: str,
+        heuristic: str = 'lhh',
     ) -> None:
         self.name = name
         self.style = style
         self.long_term_reflection = long_term_reflection
         self.successful_training = False
+        self.group_training_template = group_training_template
+        self.individual_training_template = individual_training_template
+        self.heuristic = heuristic
 
     def update_reflection(self, reflection: str) -> None:
         self.long_term_reflection = reflection
+
+    def group_training_request(self, **args):
+        if self.heuristic == 'lhh':
+            return self.group_training_template.replace(
+                    "<STYLE>",
+                    self.style
+                ).replace(
+                    "<PROBLEM_DESCRIPTION>",
+                    args['problem_description']
+                ).replace(
+                    "<EXAMPLES>",
+                    args['examples']
+                ).replace(
+                    "<REFLECTION>",
+                    args['reflection']
+                )
+        if self.heuristic == 'ga':
+            return self.group_training_template.replace(
+                "<PROMPTS>",
+                args['prompts']
+            )
+        return self.group_training_template.replace(
+            "<PROMPT1>",
+            args['prompt1'],
+        ).replace(
+            "<PROMPT2>",
+            args['prompt2'],
+        ).replace(
+            "<PROMPT3>",
+            args['prompt3']
+        ).replace(
+            "<ELITIST>",
+            args['elitist']
+        )
+
+    def individual_training_request(self, **args):
+        if self.heuristic == 'llh':
+            return self.individual_training_template.replace(
+                    "<STYLE>",
+                    self.style
+                ).replace(
+                    "<PROBLEM_DESCRIPTION>",
+                    args['problem_description']
+                ).replace(
+                    "<PROMPT>",
+                    args['prompt']
+                ).replace(
+                    "<REFLECTION>",
+                    self.long_term_reflection
+                )
+        return self.individual_training_template.replace(
+            "<PROMPT>",
+            args['prompt']
+        )
 
     def __str__(self) -> str:
         return f"""
             {self.name}
             Style: {self.style}
             Reflection: {self.long_term_reflection}
+            Heuristic: {self.heuristic}
         """
 
     def to_dict(self) -> dict:
@@ -83,6 +149,7 @@ class Manager:
         data['name'] = str(self.name)
         data['style'] = str(self.style)
         data['reflection'] = str(self.long_term_reflection)
+        data['heuristic'] = str(self.heuristic)
         return data
 
 

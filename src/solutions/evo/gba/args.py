@@ -19,6 +19,7 @@ def parse_args():
     parser.add_argument("--seasons", type=int, default=10)
     parser.add_argument("--use_cache", type=bool, default=True)
     parser.add_argument("--output_path", type=str, default="./outputs")
+    parser.add_argument("--version", '-v', type=str, default="v1")
 
     args = parser.parse_args()
     return args
