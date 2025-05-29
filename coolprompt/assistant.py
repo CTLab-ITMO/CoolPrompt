@@ -89,5 +89,3 @@ class PromptTuner:
     def _validate_model(self) -> None:
         if not isinstance(self._model, BaseLanguageModel):
             raise TypeError("Model should be instance of LangChain BaseLanguageModel")
-        if not hasattr(self._model, "invoke"):
-            raise AttributeError("Model should implement .invoke()")
