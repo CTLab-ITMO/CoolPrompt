@@ -35,7 +35,7 @@ class PromptTuner:
 
         Args:
             start_prompt (str): Initial prompt text to optimize.
-            task (str): Type of task to optimize for (classification or generation).
+            task (str): Type of task to optimize for (classification or generation). Defaults to generation.
             dataset (Iterable): Optional iterable object for dataset-based optimization.
             target (Iterable): Target iterable object for dataset-based optimization.
             method (str): Optimization method to use.

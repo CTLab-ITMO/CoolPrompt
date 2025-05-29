@@ -14,4 +14,4 @@ def naive_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     """
     template = NAIVE_PROMPT_TEMPLATE
     answer = model.invoke(template.replace("<PROMPT>", prompt)).strip()
-    return answer[answer.find("Rewritten prompt:\n") + len("Rewritten prompt:\n") :]
+    return answer[answer.find("<START>") + len("<START>") : answer.find("<END>")]
