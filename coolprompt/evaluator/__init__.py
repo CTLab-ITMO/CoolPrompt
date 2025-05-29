@@ -1,8 +1,11 @@
 from coolprompt.evaluator.evaluator import Evaluator
-from coolprompt.evaluator.metrics import ClassificationMetric, GenerationMetric
+from coolprompt.evaluator.metrics import (
+    CLASSIFICATION_METRICS,
+    GENERATION_METRICS
+)
 
 __all__ = [
     'Evaluator',
-    'ClassificationMetric',
-    'GenerationMetric'
+    'CLASSIFICATION_METRICS',
+    'GENERATION_METRICS'
 ]

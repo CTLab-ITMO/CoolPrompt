@@ -3,8 +3,8 @@ from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.naive import naive_optimizer
-from coolprompt.evaluator.evaluator import Evaluator
-from coolprompt.evaluator.metrics import CLASSIFICATION_METRICS, GENERATION_METRICS
+from coolprompt.evaluator import Evaluator
+from coolprompt.evaluator import CLASSIFICATION_METRICS, GENERATION_METRICS
 
 
 class PromptTuner:
