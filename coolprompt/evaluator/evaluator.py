@@ -39,7 +39,7 @@ class Evaluator():
             float: The computed evaluation metric score.
         """
         
-        answers = [self.model.invoke(self._get_full_prompt(prompt, sample)) for sample in dataset]
+        answers = self.model.batch([self._get_full_prompt(prompt, sample) for sample in dataset])
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(self, prompt: str, sample: str) -> str:
