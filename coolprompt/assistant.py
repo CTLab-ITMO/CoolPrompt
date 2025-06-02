@@ -64,15 +64,15 @@ class PromptTuner:
             if dataset is not None, you can find evaluation results
             in self.init_metric and self.final_metric
         """
-
-        metric = self._validate_metric(task, metric)
-        evaluator = Evaluator(self._model, metric)
-
         final_prompt = ""
+
         if dataset is None or method is None:
             final_prompt = naive_optimizer(self._model, start_prompt)
 
         if dataset is not None:
+            metric = self._validate_metric(task, metric)
+            evaluator = Evaluator(self._model, metric)
+
             self.init_metric = evaluator.evaluate(
                 start_prompt, dataset, target)
             self.final_metric = evaluator.evaluate(
