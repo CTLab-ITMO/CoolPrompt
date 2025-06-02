@@ -26,7 +26,7 @@ class DefaultLLM:
 
         Args:
             langchain_config (dict[str, Any], optional): Optional dictionary of LangChain VLLM parameters (temperature, top_p, etc). Overrides DEFAULT_MODEL_PARAMETERS.
-            vllm_engine_config (dict[str, ANy], optional): Optional dictionary of low-level vllm.LLM parameters (gpu_memory_utilization, max_model_len, etc). Passed directly to vllm.LLM via vllm_kwargs.
+            vllm_engine_config (dict[str, Any], optional): Optional dictionary of low-level vllm.LLM parameters (gpu_memory_utilization, max_model_len, etc). Passed directly to vllm.LLM via vllm_kwargs.
         Returns:
             BaseLanguageModel: Initialized LangChain-compatible language model instance.
         """
@@ -34,13 +34,12 @@ class DefaultLLM:
         if langchain_config is not None:
             generation_and_model_config.update(langchain_config)
 
-        tokenizer = AutoTokenizer.from_pretrained(DEFAULT_MODEL_NAME, padding_side="left")
-        terminators = [tokenizer.eos_token_id, tokenizer.convert_tokens_to_ids("<|eot_id|>")]
+        terminators = ["<|endoftext|>", "<|im_end|>", "\n\n", ""]
         return VLLM(
             model=DEFAULT_MODEL_NAME,
             trust_remote_code=True,
-            stop_token_ids=terminators,
-            torch_dtype=torch.float16,
+            stops=terminators,
+            dtype='float16',
             vllm_kwargs=vllm_engine_config,
             **generation_and_model_config
         )
