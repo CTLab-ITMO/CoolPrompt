@@ -43,13 +43,15 @@ class Evaluator():
 
         if task == "classification":
             self.metric.extract_labels(targets)
-        
+        for sample in dataset[:10]:
+            print(self._get_full_prompt(prompt, sample, task))
         answers = self.model.batch([self._get_full_prompt(prompt, sample, task) for sample in dataset])
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(self, prompt: str, sample: str, task: str) -> str:
         if task == "classification":
-            return CLASSIFICATION_TASK_TEMPLATE.format(PROMPT=prompt, LABELS=self.metric.label_to_id.keys(), INPUT=sample)
+            labels = ', '.join(map(str, self.metric.label_to_id.keys()))
+            return CLASSIFICATION_TASK_TEMPLATE.format(PROMPT=prompt, LABELS=labels, INPUT=sample)
         elif task == "generation":
             return GENERATION_TASK_TEMPLATE.format(PROMPT=prompt, INPUT=sample)
         else:

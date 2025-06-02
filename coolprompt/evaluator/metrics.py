@@ -147,7 +147,7 @@ class ClassificationMetric(BaseMetric):
         Returns:
             float: The computed metric value.
         """
-        
+        print(outputs[:10])
         output_labels = list(map(self._extract_label_id_from_answer, outputs))
         targets = list(map(str, targets))
         encoded_output_labels, encoded_targets = self._encode_labels(output_labels, targets)
