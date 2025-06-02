@@ -1,6 +1,5 @@
-from typing import List
 from langchain_core.language_models.base import BaseLanguageModel
-from coolprompt.evaluator.metrics import InputType
+
 from coolprompt.evaluator.metrics import create_metric
 from coolprompt.utils.prompt_template import CLASSIFICATION_TASK_TEMPLATE, GENERATION_TASK_TEMPLATE
 
@@ -12,7 +11,7 @@ class Evaluator():
     providing a method to generate model outputs on a dataset and compute
     the corresponding metric score against provided targets.
     """
-    
+
     def __init__(self, model: BaseLanguageModel, metric: str) -> None:
         self.model = model
         self.metric = create_metric(metric)
@@ -20,21 +19,25 @@ class Evaluator():
     def evaluate(
         self,
         prompt: str,
-        dataset: List[str],
-        targets: InputType,
+        dataset: list[str],
+        targets: list[str | int],
         task: str,
     ) -> float:
         """
-        Evaluate the model on a dataset by generating answers and computing the metric.
+        Evaluate the model on a dataset
+        by generating answers and computing the metric.
 
-        For each sample in the dataset, the prompt is concatenated with the sample,
-        passed to the model to generate an output, and then all outputs are evaluated
+        For each sample in the dataset,
+        the prompt is concatenated with the sample,
+        passed to the model to generate an output,
+        and then all outputs are evaluated
         against the targets using the metric.
 
         Args:
             prompt (str): The prompt string to prepend to each dataset sample.
-            dataset (List[str]): List of input samples to evaluate.
-            targets (List[str] | List[int]): Corresponding ground truth labels or references.
+            dataset (list[str]): List of input samples to evaluate.
+            targets (list[str|int]):
+                Corresponding ground truth labels or references.
             task (str): The type of task, either "classification" or "generation".
 
         Returns:
@@ -43,9 +46,9 @@ class Evaluator():
 
         if task == "classification":
             self.metric.extract_labels(targets)
-        for sample in dataset[:10]:
-            print(self._get_full_prompt(prompt, sample, task))
-        answers = self.model.batch([self._get_full_prompt(prompt, sample, task) for sample in dataset])
+        answers = self.model.batch(
+            [self._get_full_prompt(prompt, sample, task) for sample in dataset]
+        )
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(self, prompt: str, sample: str, task: str) -> str:
