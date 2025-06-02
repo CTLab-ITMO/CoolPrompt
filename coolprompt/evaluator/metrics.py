@@ -136,6 +136,12 @@ class ClassificationMetric(BaseMetric):
         return encoded_output_labels, encoded_targets
 
     def extract_labels(self, targets: list[str | int]) -> None:
+        """Extract unique labels from targets and encode them into IDs.
+
+        Args:
+            targets (list[str  |  int]): Ground truth labels.
+        """
+        
         self.label_to_id = dict()
         for x in targets:
             label = str(x)
