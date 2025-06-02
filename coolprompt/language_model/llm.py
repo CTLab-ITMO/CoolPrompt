@@ -5,14 +5,12 @@ Example:
     >>> llm = DefaultLLM.init()
     >>> response = llm.invoke("Hello!")
 """
-
-from typing import Any
-
-import torch
-from transformers import AutoTokenizer
 from langchain_community.llms import VLLM
 from langchain_core.language_models.base import BaseLanguageModel
-from coolprompt.utils.default import DEFAULT_MODEL_NAME, DEFAULT_MODEL_PARAMETERS
+from coolprompt.utils.default import (
+    DEFAULT_MODEL_NAME,
+    DEFAULT_MODEL_PARAMETERS
+)
 
 
 class DefaultLLM:
@@ -20,15 +18,23 @@ class DefaultLLM:
 
     @staticmethod
     def init(
-        langchain_config: dict[str, Any] | None = None, vllm_engine_config: dict[str, Any] | None = None
+        langchain_config: dict[str, any] | None = None,
+        vllm_engine_config: dict[str, any] | None = None
     ) -> BaseLanguageModel:
         """Initialize the vLLM-powered LangChain LLM.
 
         Args:
-            langchain_config (dict[str, Any], optional): Optional dictionary of LangChain VLLM parameters (temperature, top_p, etc). Overrides DEFAULT_MODEL_PARAMETERS.
-            vllm_engine_config (dict[str, Any], optional): Optional dictionary of low-level vllm.LLM parameters (gpu_memory_utilization, max_model_len, etc). Passed directly to vllm.LLM via vllm_kwargs.
+            langchain_config (dict[str, Any], optional):
+                Optional dictionary of LangChain VLLM parameters
+                (temperature, top_p, etc).
+                Overrides DEFAULT_MODEL_PARAMETERS.
+            vllm_engine_config (dict[str, Any], optional):
+                Optional dictionary of low-level vllm.LLM parameters
+                (gpu_memory_utilization, max_model_len, etc).
+                Passed directly to vllm.LLM via vllm_kwargs.
         Returns:
-            BaseLanguageModel: Initialized LangChain-compatible language model instance.
+            BaseLanguageModel:
+                Initialized LangChain-compatible language model instance.
         """
         generation_and_model_config = DEFAULT_MODEL_PARAMETERS.copy()
         if langchain_config is not None:
