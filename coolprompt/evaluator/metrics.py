@@ -86,6 +86,7 @@ class ClassificationMetric(BaseMetric):
 
     def __init__(self, name: str):
         super().__init__(name)
+        self.label_to_id = None
         if name == "f1":
             self._compute_kwargs = {"average": "macro"}
 

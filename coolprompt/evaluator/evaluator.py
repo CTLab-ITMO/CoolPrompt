@@ -1,6 +1,7 @@
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator.metrics import create_metric
+from coolprompt.utils.prompt_template import CLASSIFICATION_TASK_TEMPLATE, GENERATION_TASK_TEMPLATE
 
 
 class Evaluator():
@@ -46,7 +47,10 @@ class Evaluator():
         )
         return self.metric.compute(answers, targets)
 
-    def _get_full_prompt(self, prompt: str, sample: str) -> str:
-        if "{<INPUT>}" in prompt:
-            return prompt.replace("{<INPUT>}", sample)
-        return prompt + "\n" + sample
+    def _get_full_prompt(self, prompt: str, sample: str, task: str) -> str:
+        if task == "classification":
+            return CLASSIFICATION_TASK_TEMPLATE.format(PROMPT=prompt, LABELS=self.metric.label_to_id.keys(), INPUT=sample)
+        elif task == "generation":
+            return GENERATION_TASK_TEMPLATE.format(PROMPT=prompt, INPUT=sample)
+        else:
+            raise ValueError(f"Unknown task type: {task}")

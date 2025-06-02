@@ -85,3 +85,6 @@ REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE = (
     "Output prompt only.\n"
     "Bracket the final prompt with <prompt> </prompt>.\n"
 )
+CLASSIFICATION_TASK_TEMPLATE = "<PROMPT>\n\nAnswer using the label from [<LABELS>].\nGenerate the final answer bracketed with <ans> and </ans>.\n\nThe input:\n<INPUT>\n\nResponse:\n"
+GENERATION_TASK_TEMPLATE = "<PROMPT>\n\nINPUT:\n<INPUT>\n\nRESPONSE:\n"
+
