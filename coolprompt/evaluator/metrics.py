@@ -80,6 +80,7 @@ class ClassificationMetric(BaseMetric):
 
     def __init__(self, name: str):
         super().__init__(name)
+        self.label_to_id = None
         if name == "f1":
             self._compute_kwargs = {"average": "macro"}
 
@@ -119,21 +120,19 @@ class ClassificationMetric(BaseMetric):
             Tuple[List[int], List[int]]: Encoded output labels and encoded targets.
         """
         
-        label_ids = dict()
-        encoded_output_labels = []
-        encoded_targets = []
-
-        for label in output_labels:
-            if label not in label_ids:
-                label_ids[label] = len(label_ids)
-            encoded_output_labels.append(label_ids[label])
-
-        for label in targets:
-            if label not in label_ids:
-                label_ids[label] = len(label_ids)
-            encoded_targets.append(label_ids[label])
-
+        if self.label_to_id is None:
+            self.extract_labels(targets)
+        
+        encoded_output_labels = [self.label_to_id[label] if label in self.label_to_id else -1 for label in output_labels]
+        encoded_targets = [self.label_to_id[label] for label in targets]
         return encoded_output_labels, encoded_targets
+
+    def extract_labels(self, targets: InputType) -> None:
+        self.label_to_id = dict()
+        for x in targets:
+            label = str(x)
+            if label not in self.label_to_id:
+                self.label_to_id[label] = len(self.label_to_id)
 
     def compute(self, outputs: InputType, targets: InputType) -> float:
         """Compute the classification metric from model outputs and ground truth targets.

@@ -64,8 +64,8 @@ class PromptTuner:
             final_prompt = naive_optimizer(self._model, start_prompt)
         
         if dataset is not None:
-            self.init_metric = evaluator.evaluate(start_prompt, dataset, target)
-            self.final_metric = evaluator.evaluate(final_prompt, dataset, target)
+            self.init_metric = evaluator.evaluate(start_prompt, dataset, target, task)
+            self.final_metric = evaluator.evaluate(final_prompt, dataset, target, task)
         
         return final_prompt
 
