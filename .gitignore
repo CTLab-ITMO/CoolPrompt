@@ -165,7 +165,7 @@ cython_debug/
 data/**/*.parquet
 
 # Jupyter notebooks
-*/custom*.ipynb
+notebooks/*/custom*.ipynb
 
 # logging and results
 src/solutions/evo/self_evo/outputs/*
