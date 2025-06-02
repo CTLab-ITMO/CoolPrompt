@@ -1,0 +1,66 @@
+# This workflow will upload a Python Package to PyPI when a release is created
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Upload Python Package
+
+on:
+  push:
+    tags:
+      - 'test_v*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  release-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build release distributions
+        run: |
+          # NOTE: put your own distribution build steps here.
+          python -m pip install build
+          python -m build
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+  testpypi-publish:
+    name: Publish to TestPyPI 🐍📦
+    needs:
+      - build # Start the job only if the build job has completed
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: testpypi # Enter the environment name set in the Publisher
+      url: https://test.pypi.org/p/example-package-hanaosan0318 # Project URL
+    
+    permissions:
+      id-token: write  # Grant Publishing permissions
+    
+    if: startsWith(github.ref, 'refs/tags/test_v') # Conditional check for TestPyPI publishing
+    
+    steps:
+      - name: Download all the dists # Download the build artifacts that were saved earlier
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish distribution 📦 to TestPyPI # Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
