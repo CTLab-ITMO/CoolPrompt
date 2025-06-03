@@ -4,13 +4,12 @@ from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.naive import naive_optimizer
 from coolprompt.evaluator import Evaluator
-from coolprompt.evaluator import CLASSIFICATION_METRICS, GENERATION_METRICS
+from coolprompt.evaluator import validate_metric
+from coolprompt.utils.validation import validate_model
 
 
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
-
-    TASK_TYPES = {"classification", "generation"}
 
     def __init__(self, model: BaseLanguageModel = None) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
@@ -21,7 +20,7 @@ class PromptTuner:
                 Will use DefaultLLM if not provided.
         """
         self._model = model or DefaultLLM.init()
-        self._validate_model()
+        validate_model(self._model)
 
     def run(
         self,
@@ -70,7 +69,8 @@ class PromptTuner:
             final_prompt = naive_optimizer(self._model, start_prompt)
 
         if dataset is not None:
-            metric = self._validate_metric(task, metric)
+
+            metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
             self.init_metric = evaluator.evaluate(
@@ -79,34 +79,3 @@ class PromptTuner:
                 final_prompt, dataset, target, task)
 
         return final_prompt
-
-    def _validate_metric(self, task: str, metric: str | None) -> str:
-        if task not in self.TASK_TYPES:
-            raise ValueError(
-                f"Invalid task type: {task}. Must be one of {self.TASK_TYPES}."
-                )
-        if metric is None:
-            return self._get_default_metric(task)
-        if task == "classification" and metric not in CLASSIFICATION_METRICS:
-            raise ValueError(
-                f"Invalid metric for {task} task: {metric}."
-                f"Must be one of {CLASSIFICATION_METRICS}."
-            )
-        if task == "generation" and metric not in GENERATION_METRICS:
-            raise ValueError(
-                f"Invalid metric for {task} task: {metric}."
-                f"Must be one of {GENERATION_METRICS}."
-            )
-        return metric
-
-    def _get_default_metric(self, task: str) -> str:
-        if task == "classification":
-            return "f1"
-        elif task == "generation":
-            return "meteor"
-
-    def _validate_model(self) -> None:
-        if not isinstance(self._model, BaseLanguageModel):
-            raise TypeError(
-                "Model should be instance of LangChain BaseLanguageModel"
-            )
