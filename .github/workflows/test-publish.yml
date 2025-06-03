@@ -47,7 +47,7 @@ jobs:
     
     environment:
       name: testpypi # Enter the environment name set in the Publisher
-      url: https://test.pypi.org/p/example-package-hanaosan0318 # Project URL
+      url: https://test.pypi.org/p/coolprompt # Project URL
     
     permissions:
       id-token: write  # Grant Publishing permissions
