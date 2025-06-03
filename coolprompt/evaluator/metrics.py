@@ -85,6 +85,11 @@ class ClassificationMetric(BaseMetric):
     FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str):
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
         super().__init__(name)
         self.label_to_id = None
         if name == "f1":
@@ -161,6 +166,12 @@ class GenerationMetric(BaseMetric):
     """
 
     def __init__(self, name: str):
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
+
         super().__init__(name)
         if name == "rouge":
             self._name = "rougeL"
