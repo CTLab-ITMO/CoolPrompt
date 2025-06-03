@@ -84,6 +84,11 @@ class ClassificationMetric(BaseMetric):
     FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str):
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
         super().__init__(name)
         self.label_to_id = None
         if name == "f1":
@@ -127,11 +132,13 @@ class ClassificationMetric(BaseMetric):
             tuple[list[int], list[int]]: Encoded output labels
             and encoded targets.
         """
-        
+
         if self.label_to_id is None:
             self.extract_labels(targets)
-        
-        encoded_output_labels = [self.label_to_id[label] if label in self.label_to_id else -1 for label in output_labels]
+
+        encoded_output_labels = [
+            self.label_to_id[label] if label in self.label_to_id
+            else -1 for label in output_labels]
         encoded_targets = [self.label_to_id[label] for label in targets]
         return encoded_output_labels, encoded_targets
 
@@ -141,15 +148,18 @@ class ClassificationMetric(BaseMetric):
         Args:
             targets (list[str  |  int]): Ground truth labels.
         """
-        
+
         self.label_to_id = dict()
         for x in targets:
             label = str(x)
             if label not in self.label_to_id:
                 self.label_to_id[label] = len(self.label_to_id)
 
-    def compute(self, outputs: list[str | int], targets: list[str | int]) -> float:
-        """Compute the classification metric from model outputs and ground truth targets.
+    def compute(self,
+                outputs: list[str | int],
+                targets: list[str | int]) -> float:
+        """Compute the classification metric from model
+        outputs and ground truth targets.
 
         This method extracts labels from outputs,
         encodes them along with targets,
@@ -179,6 +189,12 @@ class GenerationMetric(BaseMetric):
     """
 
     def __init__(self, name: str):
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
+
         super().__init__(name)
         if name == "rouge":
             self._name = "rougeL"

@@ -1,7 +1,8 @@
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator.metrics import create_metric
-from coolprompt.utils.prompt_template import CLASSIFICATION_TASK_TEMPLATE, GENERATION_TASK_TEMPLATE
+from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
+                                              GENERATION_TASK_TEMPLATE)
 
 
 class Evaluator():
@@ -38,7 +39,8 @@ class Evaluator():
             dataset (list[str]): List of input samples to evaluate.
             targets (list[str|int]):
                 Corresponding ground truth labels or references.
-            task (str): The type of task, either "classification" or "generation".
+            task (str):
+                The type of task, either "classification" or "generation".
 
         Returns:
             float: The computed evaluation metric score.
@@ -52,10 +54,27 @@ class Evaluator():
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(self, prompt: str, sample: str, task: str) -> str:
+        """Inserts parts of the prompt into the task template.
+
+        Args:
+            prompt (str): the main instruction for the task
+            sample (str): the input sample
+            task (str):
+                The type of task, either "classification" or "generation".
+
+        Raises:
+            ValueError: if type of task is not supported
+
+        Returns:
+            str: the full prompt to be passed to the model
+        """
+
         if task == "classification":
             labels = ', '.join(map(str, self.metric.label_to_id.keys()))
-            return CLASSIFICATION_TASK_TEMPLATE.format(PROMPT=prompt, LABELS=labels, INPUT=sample)
+            return CLASSIFICATION_TASK_TEMPLATE.format(
+                PROMPT=prompt, LABELS=labels, INPUT=sample)
         elif task == "generation":
-            return GENERATION_TASK_TEMPLATE.format(PROMPT=prompt, INPUT=sample)
+            return GENERATION_TASK_TEMPLATE.format(
+                PROMPT=prompt, INPUT=sample)
         else:
             raise ValueError(f"Unknown task type: {task}")

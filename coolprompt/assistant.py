@@ -75,9 +75,9 @@ class PromptTuner:
             evaluator = Evaluator(self._model, metric)
 
             self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target)
+                start_prompt, dataset, target, task)
             self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target)
+                final_prompt, dataset, target, task)
 
         return final_prompt
 
