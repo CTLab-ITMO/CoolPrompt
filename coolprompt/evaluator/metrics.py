@@ -2,6 +2,11 @@ from abc import ABC, abstractmethod
 
 from evaluate import load
 
+TASK_TYPES = {
+    "classification",
+    "generation"
+}
+
 CLASSIFICATION_METRICS = {
     "accuracy",
     "f1",
@@ -235,3 +240,30 @@ def create_metric(name: str) -> BaseMetric:
         return GenerationMetric(name)
 
     raise ValueError(f"Unknown metric: {name}")
+
+
+def validate_metric(task: str, metric: str | None) -> str:
+    if task not in TASK_TYPES:
+        raise ValueError(
+            f"Invalid task type: {task}. Must be one of {TASK_TYPES}."
+        )
+    if metric is None:
+        return get_default_metric(task)
+    if task == "classification" and metric not in CLASSIFICATION_METRICS:
+        raise ValueError(
+            f"Invalid metric for {task} task: {metric}."
+            f"Must be one of {CLASSIFICATION_METRICS}."
+        )
+    if task == "generation" and metric not in GENERATION_METRICS:
+        raise ValueError(
+            f"Invalid metric for {task} task: {metric}."
+            f"Must be one of {GENERATION_METRICS}."
+        )
+    return metric
+
+
+def get_default_metric(task: str) -> str:
+    if task == "classification":
+        return "f1"
+    elif task == "generation":
+        return "meteor"
