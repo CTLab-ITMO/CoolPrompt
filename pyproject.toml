@@ -8,6 +8,7 @@ include = ["coolprompt"]  # package names should match these glob patterns (["*"
 exclude = ["notebooks", "data"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false
 
+
 [project]
 name = "coolprompt"
 version = "0.0.1"
