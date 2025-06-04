@@ -1,10 +1,11 @@
 from typing import Iterable
 from langchain_core.language_models.base import BaseLanguageModel
+from sklearn.model_selection import train_test_split
 
+from coolprompt.evaluator import Evaluator, validate_metric
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.naive import naive_optimizer
-from coolprompt.evaluator import Evaluator
-from coolprompt.evaluator import validate_metric
+from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.utils.validation import validate_model
 from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
                                               GENERATION_TASK_TEMPLATE)
@@ -32,6 +33,7 @@ class PromptTuner:
         target: Iterable[str] | Iterable[int] = None,
         method: str = None,
         metric: str = None,
+        problem_description: str = None,
     ) -> str:
         """Optimizes prompts using provided model.
 
@@ -46,6 +48,8 @@ class PromptTuner:
                 Target iterable object for dataset-based optimization.
             method (str): Optimization method to use.
             metric (str): Metric to use for optimization.
+            problem_description (str): a string that contains
+                short description of problem to optimize.
 
         Returns:
             final_prompt: str - The resulting optimized prompt
@@ -53,6 +57,8 @@ class PromptTuner:
 
         Raises:
             ValueError: If an invalid task type is provided.
+            ValueError: If a problem description is not provided
+                for ReflectivePrompt.
 
         Note:
             Uses naive optimization
@@ -71,14 +77,35 @@ class PromptTuner:
             final_prompt = naive_optimizer(self._model, start_prompt)
 
         if dataset is not None:
-
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
+            if method == 'ReflectivePrompt':
+                if problem_description is None:
+                    raise ValueError(
+                        "Problem description should be provided for " +
+                        "ReflectivePrompt optimization"
+                    )
+                dataset_split = train_test_split(
+                    dataset,
+                    target,
+                    test_size=0.25
+                )
+                final_prompt = reflectiveprompt(
+                    model=self._model,
+                    dataset_split=dataset_split,
+                    evaluator=evaluator,
+                    task=task,
+                    problem_description=problem_description,
+                    initial_prompt=start_prompt
+                )
+
             self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target, task)
+                start_prompt, dataset, target, task
+            )
             self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target, task)
+                final_prompt, dataset, target, task
+            )
 
         return final_prompt
 
