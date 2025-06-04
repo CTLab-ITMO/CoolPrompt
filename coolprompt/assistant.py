@@ -6,6 +6,8 @@ from coolprompt.optimizer.naive import naive_optimizer
 from coolprompt.evaluator import Evaluator
 from coolprompt.evaluator import validate_metric
 from coolprompt.utils.validation import validate_model
+from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
+                                              GENERATION_TASK_TEMPLATE)
 
 
 class PromptTuner:
@@ -79,3 +81,21 @@ class PromptTuner:
                 final_prompt, dataset, target, task)
 
         return final_prompt
+
+    def get_task_prompt_template(task: str) -> str:
+        """Returns the prompt template for the given task.
+
+        Args:
+            task (str):
+                The type of task, either "classification" or "generation".
+
+        Returns:
+            str: The prompt template for the given task.
+        """
+
+        if task == "classification":
+            return CLASSIFICATION_TASK_TEMPLATE
+        elif task == "generation":
+            return GENERATION_TASK_TEMPLATE
+        else:
+            raise ValueError(f"Invalid task type: {task}")

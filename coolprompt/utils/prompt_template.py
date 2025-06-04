@@ -87,4 +87,14 @@ REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE = (
 )
 CLASSIFICATION_TASK_TEMPLATE = "{PROMPT}\n\nAnswer using the label from [{LABELS}].\nGenerate the final answer bracketed with <ans> and </ans>.\n\nInput:\n{INPUT}\n\nResponse:\n"
 GENERATION_TASK_TEMPLATE = "{PROMPT}\n\nINPUT:\n{INPUT}\n\nRESPONSE:\n"
+CLASSIFICATION_TASK_TEMPLATE = """{PROMPT}
 
+Answer using the label from [{LABELS}].
+Generate the final answer bracketed with <ans> and </ans>.
+
+Input:
+{INPUT}
+
+Response:
+"""
+GENERATION_TASK_TEMPLATE = "{PROMPT}\n\nINPUT:\n{INPUT}\n\nRESPONSE:\n"
