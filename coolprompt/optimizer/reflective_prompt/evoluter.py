@@ -27,24 +27,31 @@ class ReflectiveEvoluter:
     ReflectiveEvoluter class that represents evoluter for ReflectivePrompt
 
     Attributes:
-        model: vllm.LLM class of model to use.
-        tokenizer: PreTrainedTokenizer tokenizer to be used.
-        dataset: a string name of dataset.
-        evaluator: evaluator that implements BaseNLPEvaluator interface.
-        use_cache: a boolean variable.
-            Either to use caching files for initial population or not.
-        batch_size: an integer size of batch to use.
+        model: langchain.BaseLanguageModel class of model to use.
+        evaluator: evaluator (Evaluator) to compute metrics.
+        train_dataset: a dataset to use while training.
+        train_targets: string targets for train dataset.
+        validation_dataset: a dataset to use while validating final prompts.
+        validation_targets: string targets for validation dataset.
+        task: type of task to optimize for (classification or generation).
+        problem_description: a string that contains
+            short description of problem to optimize.
+        initial_prompt: initial prompt to start evolution from.
+            Will be automatically generated if not provided.
+            Defaults to None.
         population_size: an integer fixed size of prompt population.
+            Defaults to 10.
         num_epochs: an integer number of epochs to evaluate.
-        threshold: a float value to select individuals by their scores.
-            It is used to put away bad individuals from parenting population.
+            Defaults to 10.
+        use_cache: a boolean variable.
+            Either to use caching files or not.
         output_path: a path to store logs of evolution.
         elitist: a prompt with highest score in population.
         best_score_overall: best evaluation score during evolution.
         best_prompt_overall: text of prompt with best score overall.
         iteration: current iteration (epoch) of evolution.
-        problem_description: string description of current promblem
-            (that corresponds to dataset).
+        PROMPT_TAGS: start and end tags for prompt extraction.
+        HINT_TAGS: start and end tags for hint extraction.
     """
 
     PROMPT_TAGS = ('<prompt>', '</prompt>')
@@ -53,21 +60,27 @@ class ReflectiveEvoluter:
     def __init__(
         self,
         model: BaseLanguageModel,
-        dataset: str,
         evaluator: Evaluator,
+        train_dataset: List[str],
+        train_targets: List[str],
+        validation_dataset: List[str],
+        validation_targets: List[str],
+        task: str,
         problem_description: str,
         initial_prompt: str = None,
         population_size: int = 10,
         num_epochs: int = 10,
-        output_path: str = './outputs',
-        use_cache: bool = True,
-        batch_size: int = 64,
+        output_path: str = './reflectiveprompt_outputs',
+        use_cache: bool = True
     ) -> None:
         self.model = model
-        self.dataset = dataset
         self.evaluator = evaluator
+        self.train_dataset = train_dataset
+        self.train_targets = train_targets
+        self.validation_dataset = validation_dataset
+        self.validation_targets = validation_targets
+        self.task = task
         self.use_cache = use_cache
-        self.batch_size = batch_size
         self.population_size = population_size
         self.num_epochs = num_epochs
         self.problem_description = problem_description
@@ -96,10 +109,15 @@ class ReflectiveEvoluter:
         self._setup_logger()
 
     def _setup_logger(self) -> None:
+        """Provides logger setup for ReflectivePrompt"""
+
         self.logger = logging.getLogger('Evoluter')
         self.logger.setLevel(logging.DEBUG)
         file_handler = TimedRotatingFileHandler(
-            filename='evol.log', when="MIDNIGHT", interval=1, backupCount=30
+            filename='ReflectivePrompt.log',
+            when="MIDNIGHT",
+            interval=1,
+            backupCount=30
         )
         file_handler.suffix = "%Y-%m-%d.log"
         file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
@@ -133,10 +151,15 @@ class ReflectiveEvoluter:
             split (str, optional): Which split of dataset to use.
                 Defaults to 'train'.
         """
+        if split == 'train':
+            dataset, targets = self.train_dataset, self.train_targets
+        else:
+            dataset, targets = self.validation_dataset, self.validation_targets
         score = self.evaluator.evaluate(
             prompt=prompt.text,
-            dataset=["TODO"],
-            targets=["TODO"]
+            dataset=dataset,
+            targets=targets,
+            task=self.task
         )
         prompt.set_score(score)
 
@@ -157,6 +180,11 @@ class ReflectiveEvoluter:
             self._evaluate(prompt, split=split)
 
     def _create_initial_prompt(self) -> str:
+        """Creates an initial prompt according to provided problem description
+
+        Returns:
+            str: initial prompt
+        """
         request = self._initial_prompt_template.format(
             PROBLEM_DESCRIPTION=self.problem_description
         )
@@ -206,11 +234,15 @@ class ReflectiveEvoluter:
         savepath: os.PathLike
     ) -> None:
         """Caching a population of prompts to file.
+        If self.use_cache is False this function will do nothing.
 
         Args:
             population (List[Prompt]): prompt population.
             savepath (os.PathLike): a path to saving file.
         """
+        if self.use_cache is False:
+            return
+
         best_score = population[0].score
         average_score = statistics.mean(
             [prompt.score for prompt in population]
@@ -373,7 +405,7 @@ class ReflectiveEvoluter:
         self,
         short_term_reflection_tuple: Tuple[List[str], List[str], List[str]]
     ) -> List[Prompt]:
-        """Provides crossover operation for ReEvo.
+        """Provides crossover operation.
 
         Args:
             short_term_reflection_tuple
@@ -513,7 +545,7 @@ class ReflectiveEvoluter:
         ]
         return population
 
-    def evolution(self) -> None:
+    def evolution(self) -> str:
         """Provides evolution operation.
 
         Selection -> Short-term reflection -> Long-term reflection
@@ -522,9 +554,12 @@ class ReflectiveEvoluter:
         After all self.num_epochs epochs the best three prompts are selected.
         They will be evaluated on test split of dataset then.
         And based on their test scores,
-        the best prompt will be written to the best_prompts.yaml.
+        the best prompt will be returned.
+
+        Returns:
+            str: best evoluted prompt
         """
-        population = np.array(self._init_pop(use_cache=self.use_cache))
+        population = np.array(self._init_pop())
 
         while self.iteration < self.num_epochs:
             if self.elitist is not None and self.elitist not in population:
@@ -567,7 +602,7 @@ class ReflectiveEvoluter:
         population = self._reranking(population)
         population = population[:4]
         population[3] = self.elitist
-        self._evaluation(population, split='test')
+        self._evaluation(population, split='validation')
         self._cache_population(
             population,
             self._make_output_path('best_prompts_infer.yaml')
