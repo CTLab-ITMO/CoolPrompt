@@ -8,3 +8,14 @@ NAIVE_PROMPT_TEMPLATE = (
     Rewritten prompt:
     """
 )
+CLASSIFICATION_TASK_TEMPLATE = """{PROMPT}
+
+Answer using the label from [{LABELS}].
+Generate the final answer bracketed with <ans> and </ans>.
+
+Input:
+{INPUT}
+
+Response:
+"""
+GENERATION_TASK_TEMPLATE = "{PROMPT}\n\nINPUT:\n{INPUT}\n\nRESPONSE:\n"
