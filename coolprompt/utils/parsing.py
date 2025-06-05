@@ -11,8 +11,9 @@ def extract_answer(
     Args:
         answer (str): Model output string potentially containing format tags
         tags (Tuple[str, str]): XML-style tags
-        format_mismatch_label (int | str): label corresponding to parsing failure.
-            Default to -1
+        format_mismatch_label (int | str):
+            label corresponding to parsing failure.
+            Defaults to -1
 
     Returns:
         str | int: Extracted answer or format_mismatch_label if parsing fails
