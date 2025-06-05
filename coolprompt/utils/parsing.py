@@ -4,14 +4,14 @@ from typing import Tuple
 def extract_answer(
     answer: str,
     tags: Tuple[str, str],
-    format_mismatch_label: int = -1
+    format_mismatch_label: int | str = -1
 ) -> str | int:
     """Extract label from model output string containing XML-style tags.
 
     Args:
         answer (str): Model output string potentially containing format tags
         tags (Tuple[str, str]): XML-style tags
-        format_mismatch_label (int): label corresponding to parsing failure.
+        format_mismatch_label (int | str): label corresponding to parsing failure.
             Default to -1
 
     Returns:

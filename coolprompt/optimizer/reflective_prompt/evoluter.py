@@ -189,7 +189,11 @@ class ReflectiveEvoluter:
             PROBLEM_DESCRIPTION=self.problem_description
         )
         answer = self._llm_query([request])[0]
-        return extract_answer(answer, self.PROMPT_TAGS)
+        return extract_answer(
+            answer,
+            self.PROMPT_TAGS,
+            format_mismatch_label=""
+        )
 
     def _init_pop(self) -> List[Prompt]:
         """Creates initial population of prompts.
@@ -397,7 +401,8 @@ class ReflectiveEvoluter:
 
         responses = self._llm_query(requests)
         responses = [
-            extract_answer(response, self.HINT_TAGS) for response in responses
+            extract_answer(response, self.HINT_TAGS, format_mismatch_label="")
+            for response in responses
         ]
         return responses, worse_prompts, better_prompts
 
@@ -436,7 +441,11 @@ class ReflectiveEvoluter:
 
         responses = self._llm_query(requests)
         responses = [
-            extract_answer(response, self.PROMPT_TAGS)
+            extract_answer(
+                response,
+                self.PROMPT_TAGS,
+                format_mismatch_label=""
+            )
             for response in responses
         ]
         crossed_population = [Prompt(response) for response in responses]
@@ -502,7 +511,8 @@ class ReflectiveEvoluter:
 
         self._long_term_reflection_str = extract_answer(
             response,
-            self.HINT_TAGS
+            self.HINT_TAGS,
+            format_mismatch_label=""
         )
 
     def _llm_query(
@@ -520,8 +530,7 @@ class ReflectiveEvoluter:
 
         answers = self.model.batch(requests)
 
-        results = [answer.outputs[0].text for answer in answers]
-        return results
+        return answers
 
     def _mutate(self) -> List[Prompt]:
         """Elitist-based mutation.
@@ -536,7 +545,11 @@ class ReflectiveEvoluter:
         )
         responses = self._llm_query([request] * self.population_size)
         responses = [
-            extract_answer(response, self.PROMPT_TAGS)
+            extract_answer(
+                response,
+                self.PROMPT_TAGS,
+                format_mismatch_label=""
+            )
             for response in responses
         ]
         population = [
@@ -560,6 +573,10 @@ class ReflectiveEvoluter:
             str: best evoluted prompt
         """
         population = np.array(self._init_pop())
+        self._cache_population(
+            population,
+            self._make_output_path('initial_population.yaml')
+        )
 
         while self.iteration < self.num_epochs:
             if self.elitist is not None and self.elitist not in population:
