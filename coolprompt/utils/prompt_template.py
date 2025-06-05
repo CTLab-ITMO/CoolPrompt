@@ -68,7 +68,7 @@ REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE = (
     "Paraphrase the given prompt text keeping its initial meaning.\n"
     "Prompt: {PROMPT}\n"
     "Create the new variations of this prompt and output them in JSON structure below:\n"
-    "{\n"
+    "{{\n"
     "   \"prompts\": [\n"
     "       \"New prompt 1\",\n"
     "       \"New prompt 2\",\n"
@@ -76,7 +76,7 @@ REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE = (
     "       ...\n"
     "       \"New prompt {NUM_PROMPTS}\",\n"
     "   ]\n"
-    "}\n"
+    "}}\n"
     "Output JSON data only.\n"
 )
 REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE = (
