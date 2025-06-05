@@ -22,6 +22,7 @@ class Evaluator():
         prompt: str,
         dataset: list[str],
         targets: list[str | int],
+        task: str,
     ) -> float:
         """
         Evaluate the model on a dataset
@@ -45,8 +46,10 @@ class Evaluator():
             float: The computed evaluation metric score.
         """
 
+        if task == "classification":
+            self.metric.extract_labels(targets)
         answers = self.model.batch(
-            [self._get_full_prompt(prompt, sample) for sample in dataset]
+            [self._get_full_prompt(prompt, sample, task) for sample in dataset]
         )
         return self.metric.compute(answers, targets)
 
