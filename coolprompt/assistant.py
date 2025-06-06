@@ -13,7 +13,7 @@ from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
 
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods.
-    
+
         Attributes:
             METHODS: available methods of prompt tuning.
     """
@@ -53,6 +53,8 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for dataset-based optimization.
             method (str): Optimization method to use.
+                Available methods are: naive and reflective.
+                Defaults to naive.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
