@@ -7,6 +7,11 @@ TASK_TYPES = {
     "generation"
 }
 
+TASK_TYPES = {
+    "classification",
+    "generation"
+}
+
 CLASSIFICATION_METRICS = {
     "accuracy",
     "f1",
