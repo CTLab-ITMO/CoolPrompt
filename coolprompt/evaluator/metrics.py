@@ -159,12 +159,12 @@ class ClassificationMetric(BaseMetric):
         """
 
         output_labels = list(map(
-                lambda x: extract_answer(
-                    x,
-                    self.ANS_TAGS,
-                    self.FORMAT_MISMATCH_LABEL
-                ),
-                outputs
+            lambda x: extract_answer(
+                x,
+                self.ANS_TAGS,
+                self.FORMAT_MISMATCH_LABEL
+            ),
+            outputs
         ))
         targets = list(map(str, targets))
         encoded_output_labels, encoded_targets = self._encode_labels(
