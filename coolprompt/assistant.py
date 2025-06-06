@@ -40,6 +40,7 @@ class PromptTuner:
         method: str = "naive",
         metric: str = None,
         problem_description: str = None,
+        **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
 
@@ -58,6 +59,7 @@ class PromptTuner:
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
+            **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
             final_prompt: str - The resulting optimized prompt
@@ -84,7 +86,7 @@ class PromptTuner:
         if method not in self.METHODS:
             raise ValueError(
                 f"Unsupported method {method}.\n" +
-                f"Available methods: {' '.join(self.METHODS)}"
+                f"Available methods: {', '.join(self.METHODS)}"
             )
 
         if method == 'naive':
@@ -111,7 +113,8 @@ class PromptTuner:
                     evaluator=evaluator,
                     task=task,
                     problem_description=problem_description,
-                    initial_prompt=start_prompt
+                    initial_prompt=start_prompt,
+                    **kwargs
                 )
 
             self.init_metric = evaluator.evaluate(

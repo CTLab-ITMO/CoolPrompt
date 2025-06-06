@@ -176,6 +176,7 @@ class ReflectiveEvoluter:
             split (str, optional): Which split of dataset to use.
                 Defaults to 'train'.
         """
+        self.logger.info("Evaluating population...")
         for prompt in population:
             self._evaluate(prompt, split=split)
 
@@ -202,6 +203,7 @@ class ReflectiveEvoluter:
             List[Prompt]: initial population.
         """
 
+        self.logger.info("Initializing population...")
         if self.initial_prompt is None:
             self.initial_prompt = self._create_initial_prompt()
         request = self._paraphrasing_template.format(

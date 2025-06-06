@@ -11,6 +11,7 @@ def reflectiveprompt(
     task: str,
     problem_description: str,
     initial_prompt: str = None,
+    **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
 
@@ -25,6 +26,8 @@ def reflectiveprompt(
             short description of problem to optimize.
         initial_prompt (str, optional): initial prompt to start evolution from.
             Defaults to None.
+        **kwargs (dict[str, Any]): other parameters
+            (such as population_size, num_epochs, output_path, use_cache).
 
     Returns:
         str: best evoluted prompt.
@@ -35,6 +38,13 @@ def reflectiveprompt(
         train_targets,
         validation_targets
     ) = dataset_split
+    args = {
+        'population_size': 10,
+        'num_epochs': 10,
+        'output_path': './reflectiveprompt_outputs',
+        'use_cache': True
+    }
+    args.update(kwargs)
     evoluter = ReflectiveEvoluter(
         model=model,
         evaluator=evaluator,
@@ -45,6 +55,10 @@ def reflectiveprompt(
         task=task,
         problem_description=problem_description,
         initial_prompt=initial_prompt,
+        population_size=args['population_size'],
+        num_epochs=args['num_epochs'],
+        output_path=args['output_path'],
+        use_cache=args['use_cache']
     )
     final_prompt = evoluter.evolution()
     return final_prompt
