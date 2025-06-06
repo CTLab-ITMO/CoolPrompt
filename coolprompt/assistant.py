@@ -12,7 +12,13 @@ from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
 
 
 class PromptTuner:
-    """Prompt optimization tool supporting multiple methods."""
+    """Prompt optimization tool supporting multiple methods.
+    
+        Attributes:
+            METHODS: available methods of prompt tuning.
+    """
+
+    METHODS = ['naive', 'reflective']
 
     def __init__(self, model: BaseLanguageModel = None) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
@@ -31,7 +37,7 @@ class PromptTuner:
         task: str = "generation",
         dataset: Iterable[str] = None,
         target: Iterable[str] | Iterable[int] = None,
-        method: str = None,
+        method: str = "naive",
         metric: str = None,
         problem_description: str = None,
     ) -> str:
@@ -73,14 +79,20 @@ class PromptTuner:
         """
         final_prompt = ""
 
-        if dataset is None or method is None:
+        if method not in self.METHODS:
+            raise ValueError(
+                f"Unsupported method {method}.\n" +
+                f"Available methods: {' '.join(self.METHODS)}"
+            )
+
+        if method == 'naive':
             final_prompt = naive_optimizer(self._model, start_prompt)
 
         if dataset is not None:
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
-            if method == 'ReflectivePrompt':
+            if method == 'reflective':
                 if problem_description is None:
                     raise ValueError(
                         "Problem description should be provided for " +
