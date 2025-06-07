@@ -1,6 +1,16 @@
 from abc import ABC, abstractmethod
-
 from evaluate import load
+from coolprompt.utils.parsing import extract_answer
+
+TASK_TYPES = {
+    "classification",
+    "generation"
+}
+
+TASK_TYPES = {
+    "classification",
+    "generation"
+}
 
 CLASSIFICATION_METRICS = {
     "accuracy",
@@ -84,39 +94,21 @@ class ClassificationMetric(BaseMetric):
     FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str):
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
         super().__init__(name)
+        self.label_to_id = None
         if name == "f1":
             self._compute_kwargs = {"average": "macro"}
 
-    def _extract_label_id_from_answer(self, answer: str) -> str | int:
-        """Extract label from model output string containing XML-style tags.
-
-        Args:
-            answer (str): Model output string potentially containing <ans> tags
-        Returns:
-            str | int: Extracted label or FORMAT_MISMATCH_LABEL
-            if parsing fails
-        """
-
-        start_tag, end_tag = self.ANS_TAGS
-        start_idx = answer.rfind(start_tag)
-
-        if start_idx == -1:
-            return self.FORMAT_MISMATCH_LABEL
-
-        content_start = start_idx + len(start_tag)
-        end_idx = answer.find(end_tag, content_start)
-
-        if end_idx == -1:
-            return self.FORMAT_MISMATCH_LABEL
-
-        label = answer[content_start:end_idx]
-        return label
-
-    def _encode_labels(self,
-                       output_labels: list[str | int],
-                       targets: list[str | int]
-                       ) -> tuple[list[int], list[int]]:
+    def _encode_labels(
+        self,
+        output_labels: list[str | int],
+        targets: list[str | int]
+    ) -> tuple[list[int], list[int]]:
         """Encode string labels into integer IDs for both outputs and targets.
 
         Args:
@@ -127,27 +119,33 @@ class ClassificationMetric(BaseMetric):
             and encoded targets.
         """
 
-        label_ids = dict()
-        encoded_output_labels = []
-        encoded_targets = []
+        if self.label_to_id is None:
+            self.extract_labels(targets)
 
-        for label in output_labels:
-            if label not in label_ids:
-                label_ids[label] = len(label_ids)
-            encoded_output_labels.append(label_ids[label])
-
-        for label in targets:
-            if label not in label_ids:
-                label_ids[label] = len(label_ids)
-            encoded_targets.append(label_ids[label])
-
+        encoded_output_labels = [
+            self.label_to_id[label] if label in self.label_to_id
+            else -1 for label in output_labels]
+        encoded_targets = [self.label_to_id[label] for label in targets]
         return encoded_output_labels, encoded_targets
+
+    def extract_labels(self, targets: list[str | int]) -> None:
+        """Extract unique labels from targets and encode them into IDs.
+
+        Args:
+            targets (list[str  |  int]): Ground truth labels.
+        """
+
+        self.label_to_id = dict()
+        for x in targets:
+            label = str(x)
+            if label not in self.label_to_id:
+                self.label_to_id[label] = len(self.label_to_id)
 
     def compute(self,
                 outputs: list[str | int],
                 targets: list[str | int]) -> float:
-        """Compute the classification metric from
-        model outputs and ground truth targets.
+        """Compute the classification metric from model
+        outputs and ground truth targets.
 
         This method extracts labels from outputs,
         encodes them along with targets,
@@ -160,7 +158,14 @@ class ClassificationMetric(BaseMetric):
             float: The computed metric value.
         """
 
-        output_labels = list(map(self._extract_label_id_from_answer, outputs))
+        output_labels = list(map(
+            lambda x: extract_answer(
+                x,
+                self.ANS_TAGS,
+                self.FORMAT_MISMATCH_LABEL
+            ),
+            outputs
+        ))
         targets = list(map(str, targets))
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels,
@@ -177,6 +182,12 @@ class GenerationMetric(BaseMetric):
     """
 
     def __init__(self, name: str):
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
+
         super().__init__(name)
         if name == "rouge":
             self._name = "rougeL"
@@ -217,3 +228,30 @@ def create_metric(name: str) -> BaseMetric:
         return GenerationMetric(name)
 
     raise ValueError(f"Unknown metric: {name}")
+
+
+def validate_metric(task: str, metric: str | None) -> str:
+    if task not in TASK_TYPES:
+        raise ValueError(
+            f"Invalid task type: {task}. Must be one of {TASK_TYPES}."
+        )
+    if metric is None:
+        return get_default_metric(task)
+    if task == "classification" and metric not in CLASSIFICATION_METRICS:
+        raise ValueError(
+            f"Invalid metric for {task} task: {metric}."
+            f"Must be one of {CLASSIFICATION_METRICS}."
+        )
+    if task == "generation" and metric not in GENERATION_METRICS:
+        raise ValueError(
+            f"Invalid metric for {task} task: {metric}."
+            f"Must be one of {GENERATION_METRICS}."
+        )
+    return metric
+
+
+def get_default_metric(task: str) -> str:
+    if task == "classification":
+        return "f1"
+    elif task == "generation":
+        return "meteor"
