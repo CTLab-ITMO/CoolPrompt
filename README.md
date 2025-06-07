@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/docs/images/coolprompt_logo.jpg" alt="logo">
+    <img src="docs/images/coolprompt_logo_blue.png" alt="logo" height='400px' width='400px'>
 </p>
 
 [![Release Notes](https://img.shields.io/github/release/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/releases)
