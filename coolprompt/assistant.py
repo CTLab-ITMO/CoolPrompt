@@ -12,11 +12,7 @@ from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
 
 
 class PromptTuner:
-    """Prompt optimization tool supporting multiple methods.
-
-        Attributes:
-            METHODS: available methods of prompt tuning.
-    """
+    """Prompt optimization tool supporting multiple methods."""
 
     METHODS = ['naive', 'reflective']
 
@@ -29,6 +25,9 @@ class PromptTuner:
                 Will use DefaultLLM if not provided.
         """
         self._model = model or DefaultLLM.init()
+        self.init_metric = None
+        self.final_metric = None
+
         validate_model(self._model)
 
     def run(
@@ -50,11 +49,11 @@ class PromptTuner:
                 Type of task to optimize for (classification or generation).
                 Defaults to generation.
             dataset (Iterable):
-                Optional iterable object for dataset-based optimization.
+                Dataset iterable object for autoprompting optimization.
             target (Iterable):
-                Target iterable object for dataset-based optimization.
+                Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: naive and reflective.
+                Available methods are: ['naive', 'reflective']
                 Defaults to naive.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
@@ -89,34 +88,39 @@ class PromptTuner:
                 f"Available methods: {', '.join(self.METHODS)}"
             )
 
-        if method == 'naive':
-            final_prompt = naive_optimizer(self._model, start_prompt)
-
         if dataset is not None:
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
-            if method == 'reflective':
-                if problem_description is None:
-                    raise ValueError(
-                        "Problem description should be provided for " +
-                        "ReflectivePrompt optimization"
-                    )
-                dataset_split = train_test_split(
-                    dataset,
-                    target,
-                    test_size=0.25
+        if method == 'naive':
+            final_prompt = naive_optimizer(self._model, start_prompt)
+        elif method == 'reflective':
+            if problem_description is None:
+                raise ValueError(
+                    "Problem description should be provided for "
+                    "ReflectivePrompt optimization"
                 )
-                final_prompt = reflectiveprompt(
-                    model=self._model,
-                    dataset_split=dataset_split,
-                    evaluator=evaluator,
-                    task=task,
-                    problem_description=problem_description,
-                    initial_prompt=start_prompt,
-                    **kwargs
+            if dataset is None:
+                raise ValueError(
+                    "Train dataset is not defined for "
+                    "ReflectivePrompt optimization"
                 )
+            dataset_split = train_test_split(
+                dataset,
+                target,
+                test_size=0.25
+            )
+            final_prompt = reflectiveprompt(
+                model=self._model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                task=task,
+                problem_description=problem_description,
+                initial_prompt=start_prompt,
+                **kwargs
+            )
 
+        if dataset is not None:
             self.init_metric = evaluator.evaluate(
                 start_prompt, dataset, target, task
             )
