@@ -1,10 +1,11 @@
 from typing import Iterable
 from langchain_core.language_models.base import BaseLanguageModel
+from sklearn.model_selection import train_test_split
 
+from coolprompt.evaluator import Evaluator, validate_metric
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.naive import naive_optimizer
-from coolprompt.evaluator import Evaluator
-from coolprompt.evaluator import validate_metric
+from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.utils.validation import validate_model
 from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
                                               GENERATION_TASK_TEMPLATE)
@@ -12,6 +13,8 @@ from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
 
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
+
+    METHODS = ['naive', 'reflective']
 
     def __init__(self, model: BaseLanguageModel = None) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
@@ -22,6 +25,9 @@ class PromptTuner:
                 Will use DefaultLLM if not provided.
         """
         self._model = model or DefaultLLM.init()
+        self.init_metric = None
+        self.final_metric = None
+
         validate_model(self._model)
 
     def run(
@@ -30,8 +36,10 @@ class PromptTuner:
         task: str = "generation",
         dataset: Iterable[str] = None,
         target: Iterable[str] | Iterable[int] = None,
-        method: str = None,
+        method: str = "naive",
         metric: str = None,
+        problem_description: str = None,
+        **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
 
@@ -41,11 +49,16 @@ class PromptTuner:
                 Type of task to optimize for (classification or generation).
                 Defaults to generation.
             dataset (Iterable):
-                Optional iterable object for dataset-based optimization.
+                Dataset iterable object for autoprompting optimization.
             target (Iterable):
-                Target iterable object for dataset-based optimization.
+                Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
+                Available methods are: ['naive', 'reflective']
+                Defaults to naive.
             metric (str): Metric to use for optimization.
+            problem_description (str): a string that contains
+                short description of problem to optimize.
+            **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
             final_prompt: str - The resulting optimized prompt
@@ -53,6 +66,8 @@ class PromptTuner:
 
         Raises:
             ValueError: If an invalid task type is provided.
+            ValueError: If a problem description is not provided
+                for ReflectivePrompt.
 
         Note:
             Uses naive optimization
@@ -67,18 +82,51 @@ class PromptTuner:
         """
         final_prompt = ""
 
-        if dataset is None or method is None:
-            final_prompt = naive_optimizer(self._model, start_prompt)
+        if method not in self.METHODS:
+            raise ValueError(
+                f"Unsupported method {method}.\n" +
+                f"Available methods: {', '.join(self.METHODS)}"
+            )
 
         if dataset is not None:
-
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
+        if method == 'naive':
+            final_prompt = naive_optimizer(self._model, start_prompt)
+        elif method == 'reflective':
+            if problem_description is None:
+                raise ValueError(
+                    "Problem description should be provided for "
+                    "ReflectivePrompt optimization"
+                )
+            if dataset is None:
+                raise ValueError(
+                    "Train dataset is not defined for "
+                    "ReflectivePrompt optimization"
+                )
+            dataset_split = train_test_split(
+                dataset,
+                target,
+                test_size=0.25
+            )
+            final_prompt = reflectiveprompt(
+                model=self._model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                task=task,
+                problem_description=problem_description,
+                initial_prompt=start_prompt,
+                **kwargs
+            )
+
+        if dataset is not None:
             self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target, task)
+                start_prompt, dataset, target, task
+            )
             self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target, task)
+                final_prompt, dataset, target, task
+            )
 
         return final_prompt
 

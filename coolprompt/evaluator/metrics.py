@@ -1,6 +1,11 @@
 from abc import ABC, abstractmethod
-
 from evaluate import load
+from coolprompt.utils.parsing import extract_answer
+
+TASK_TYPES = {
+    "classification",
+    "generation"
+}
 
 TASK_TYPES = {
     "classification",
@@ -99,35 +104,11 @@ class ClassificationMetric(BaseMetric):
         if name == "f1":
             self._compute_kwargs = {"average": "macro"}
 
-    def _extract_label_id_from_answer(self, answer: str) -> str | int:
-        """Extract label from model output string containing XML-style tags.
-
-        Args:
-            answer (str): Model output string potentially containing <ans> tags
-        Returns:
-            str | int: Extracted label or FORMAT_MISMATCH_LABEL
-            if parsing fails
-        """
-
-        start_tag, end_tag = self.ANS_TAGS
-        start_idx = answer.rfind(start_tag)
-
-        if start_idx == -1:
-            return self.FORMAT_MISMATCH_LABEL
-
-        content_start = start_idx + len(start_tag)
-        end_idx = answer.find(end_tag, content_start)
-
-        if end_idx == -1:
-            return self.FORMAT_MISMATCH_LABEL
-
-        label = answer[content_start:end_idx]
-        return label
-
-    def _encode_labels(self,
-                       output_labels: list[str | int],
-                       targets: list[str | int]
-                       ) -> tuple[list[int], list[int]]:
+    def _encode_labels(
+        self,
+        output_labels: list[str | int],
+        targets: list[str | int]
+    ) -> tuple[list[int], list[int]]:
         """Encode string labels into integer IDs for both outputs and targets.
 
         Args:
@@ -177,7 +158,14 @@ class ClassificationMetric(BaseMetric):
             float: The computed metric value.
         """
 
-        output_labels = list(map(self._extract_label_id_from_answer, outputs))
+        output_labels = list(map(
+            lambda x: extract_answer(
+                x,
+                self.ANS_TAGS,
+                self.FORMAT_MISMATCH_LABEL
+            ),
+            outputs
+        ))
         targets = list(map(str, targets))
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels,
