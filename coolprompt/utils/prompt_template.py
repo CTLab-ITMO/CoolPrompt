@@ -1,13 +1,44 @@
-NAIVE_PROMPT_TEMPLATE = (
-    """You will be given with user's prompt, rewrite it to maximize its effectiveness for LLMs.
-    Apply transformations: structure, specifics, remove ambiguity, add example, keep intent.
-    Only output the rewritten prompt, with no explanation or formatting.
-    Start rewritten prompt with <START> tag and end with <END> tag, don't write anything after <END> tag.
-    Prompt you have to rewrite:
-    <PROMPT>
-    Rewritten prompt:
-    """
-)
+NAIVE_PROMPT_TEMPLATE = """
+### MISSION ###
+REWRITE the user's prompt below to maximize LLM effectiveness. DO NOT SOLVE IT.
+Improve clarity while PRESERVING ORIGINAL LANGUAGE and CORE INTENT.
+
+### ABSOLUTE COMMANDS ###
+1. LANGUAGE:
+   - OUTPUT MUST MATCH USER'S INPUT LANGUAGE EXACTLY
+   - NEVER TRANSLATE! Russian→Russian, English→English, etc.
+2. ACTION:
+   - ONLY REWRITE THE PROMPT - DO NOT PROVIDE SOLUTIONS/ANSWERS
+   - Your output IS the new prompt, NOT a response to it
+3. FORMAT:
+   - USE TAGS: [PROMPT_START] and [PROMPT_END]
+   - EXACT FORMAT: [PROMPT_START]your_rewritten_prompt_here[PROMPT_END]
+   - Replace "your_rewritten_prompt_here" with ACTUAL IMPROVED PROMPT
+   - NO text before [PROMPT_START] or after [PROMPT_END]
+
+### IMPROVEMENT RULES ###
+• ADD structure & logical flow
+• REPLACE vagueness with specifics (numbers, examples)
+• ELIMINATE ambiguities
+• MAINTAIN original intent
+
+### SYSTEM-CRITICAL WARNINGS ###
+1. PROVIDING SOLUTION = TOTAL FAILURE
+2. LANGUAGE CHANGE = TOTAL FAILURE
+3. OUTPUTTING PLACEHOLDER TEXT = TOTAL FAILURE
+4. EXTRA TEXT = TOTAL FAILURE
+
+### USER PROMPT TO REWRITE ###
+<PROMPT>
+
+### YOUR OUTPUT FORMAT EXAMPLE ###
+[PROMPT_START][ACTUAL IMPROVED PROMPT CONTENT GOES HERE][PROMPT_END]
+
+### YOUR ACTUAL OUTPUT MUST: ###
+1. CONTAIN REAL REWRITTEN PROMPT (not placeholder text)
+2. BE IN USER'S ORIGINAL LANGUAGE
+3. USE EXACT TAGS AS SHOWN
+"""
 REFLECTIVEPROMPT_SHORT_TERM_REFLECTION_TEMPLATE = (
     "You are an expert in the domain of optimization prompts. Your task is to give hints to design better prompts.\n"
     "\n"
