@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="docs/images/coolprompt_logo.jpg" alt="logo">
+    <img src="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/docs/images/coolprompt_logo.jpg" alt="logo">
 </p>
 
 <p>

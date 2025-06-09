@@ -1,8 +1,8 @@
-from typing import List
 from langchain_core.language_models.base import BaseLanguageModel
-from coolprompt.evaluator.metrics import BaseMetric
-from coolprompt.evaluator.metrics import InputType
+
 from coolprompt.evaluator.metrics import create_metric
+from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
+                                              GENERATION_TASK_TEMPLATE)
 
 
 class Evaluator():
@@ -12,7 +12,7 @@ class Evaluator():
     providing a method to generate model outputs on a dataset and compute
     the corresponding metric score against provided targets.
     """
-    
+
     def __init__(self, model: BaseLanguageModel, metric: str) -> None:
         self.model = model
         self.metric = create_metric(metric)
@@ -20,29 +20,61 @@ class Evaluator():
     def evaluate(
         self,
         prompt: str,
-        dataset: List[str],
-        targets: InputType,
+        dataset: list[str],
+        targets: list[str | int],
+        task: str,
     ) -> float:
         """
-        Evaluate the model on a dataset by generating answers and computing the metric.
+        Evaluate the model on a dataset
+        by generating answers and computing the metric.
 
-        For each sample in the dataset, the prompt is concatenated with the sample,
-        passed to the model to generate an output, and then all outputs are evaluated
+        For each sample in the dataset,
+        the prompt is concatenated with the sample,
+        passed to the model to generate an output,
+        and then all outputs are evaluated
         against the targets using the metric.
 
         Args:
             prompt (str): The prompt string to prepend to each dataset sample.
-            dataset (List[str]): List of input samples to evaluate.
-            targets (List[str] | List[int]): Corresponding ground truth labels or references.
+            dataset (list[str]): List of input samples to evaluate.
+            targets (list[str|int]):
+                Corresponding ground truth labels or references.
+            task (str):
+                The type of task, either "classification" or "generation".
 
         Returns:
             float: The computed evaluation metric score.
         """
-        
-        answers = self.model.batch([self._get_full_prompt(prompt, sample) for sample in dataset])
+
+        if task == "classification":
+            self.metric.extract_labels(targets)
+        answers = self.model.batch(
+            [self._get_full_prompt(prompt, sample, task) for sample in dataset]
+        )
         return self.metric.compute(answers, targets)
 
-    def _get_full_prompt(self, prompt: str, sample: str) -> str:
-        if "{<INPUT>}" in prompt:
-            return prompt.replace("{<INPUT>}", sample)
-        return prompt + "\n" + sample
+    def _get_full_prompt(self, prompt: str, sample: str, task: str) -> str:
+        """Inserts parts of the prompt into the task template.
+
+        Args:
+            prompt (str): the main instruction for the task
+            sample (str): the input sample
+            task (str):
+                The type of task, either "classification" or "generation".
+
+        Raises:
+            ValueError: if type of task is not supported
+
+        Returns:
+            str: the full prompt to be passed to the model
+        """
+
+        if task == "classification":
+            labels = ', '.join(map(str, self.metric.label_to_id.keys()))
+            return CLASSIFICATION_TASK_TEMPLATE.format(
+                PROMPT=prompt, LABELS=labels, INPUT=sample)
+        elif task == "generation":
+            return GENERATION_TASK_TEMPLATE.format(
+                PROMPT=prompt, INPUT=sample)
+        else:
+            raise ValueError(f"Unknown task type: {task}")

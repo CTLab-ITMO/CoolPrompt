@@ -127,7 +127,7 @@ class PromptTransformer:
     
     
     def generate_prompts(self, candidate: Candidate, n: int = 4,
-                         temperature: float = 0.7, best_of: int = 8) -> list[str]:
+                         temperature: float = 0.7) -> list[str]:
         """
         Generates new prompts based on a candidate's score and training dataset examples.
 
@@ -135,7 +135,6 @@ class PromptTransformer:
             candidate (Candidate): The original prompt candidate.
             n (int): The number of prompts to generate.
             temperature (float): The temperature setting for the language model, controlling randomness.
-            best_of (int): The number of best prompts to consider.
 
         Returns:
             list[str]: A list of new prompts.
@@ -153,7 +152,7 @@ class PromptTransformer:
         Improved prompt: """
         
         generation_prompt = '\n'.join([line.lstrip() for line in generation_prompt.split('\n')])
-        answers = self.model_wrapper(generation_prompt, n=n, temperature=temperature, best_of=best_of)
+        answers = self.model_wrapper(generation_prompt, n=n, temperature=temperature)
         
         return [self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers]
 
@@ -206,7 +205,7 @@ class PromptTransformer:
 
 
     def generate_synonyms(self, candidate: Candidate,  n: int = 3,
-                          temperature: float = 0.7, best_of: int = 8) -> list[str]:
+                          temperature: float = 0.7) -> list[str]:
         """
         Generates synonyms for a prompt.
 
@@ -214,13 +213,12 @@ class PromptTransformer:
             candidate (Candidate): A Candidate object containing the prompt to generate synonyms for.
             n (int): The number of synonyms to generate.
             temperature (float): The temperature setting for the language model, controlling randomness.
-            best_of (int): The number of best synonyms to consider.
 
         Returns:
             list[str]: A list of synonym prompts.
         """
         rewriter_prompt = f"Generate a variation of the following prompt while keeping the semantic meaning.\n\nInput: {candidate.prompt}\n\nOutput:"
-        new_prompts = self.model_wrapper(rewriter_prompt, n=n, temperature=temperature, best_of=best_of)
+        new_prompts = self.model_wrapper(rewriter_prompt, n=n, temperature=temperature)
         new_prompts = [x for x in new_prompts if x]
         return new_prompts
     
