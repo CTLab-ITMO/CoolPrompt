@@ -17,6 +17,9 @@ class TestValidateModel(unittest.TestCase):
         )
         self.isinstance_mock = self.patcher.start()
 
+    def tearDown(self):
+        self.patcher.stop()
+
     def test_validate_model_correct(self):
         self.isinstance_mock.return_value = True
         validate_model(ANY)
