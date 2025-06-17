@@ -111,6 +111,7 @@ class TestPromptTuner(unittest.TestCase):
             self.prompt_tuner.run(
                 self.START_PROMPT,
                 dataset=[],
+                target=[],
                 metric="incorrect metric"
             )
 
@@ -125,7 +126,8 @@ class TestPromptTuner(unittest.TestCase):
     def test_run_metrics_check(self):
         self.prompt_tuner.run(
             self.START_PROMPT,
-            dataset=[]
+            dataset=[],
+            target=[],
         )
         self.assertEqual(self.prompt_tuner.init_metric, 0.5)
         self.assertEqual(self.prompt_tuner.final_metric, 0.5)
