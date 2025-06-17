@@ -1,6 +1,5 @@
 import sys
 import os
-import evaluate
 import numpy as np
 import unittest
 from unittest.mock import MagicMock, patch
