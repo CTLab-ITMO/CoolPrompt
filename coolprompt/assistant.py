@@ -89,6 +89,10 @@ class PromptTuner:
             )
 
         if dataset is not None:
+            if target is None:
+                raise ValueError('Must provide target with dataset')
+            if len(dataset) != len(target):
+                raise ValueError('Dataset and target must have equal length')
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
@@ -105,10 +109,14 @@ class PromptTuner:
                     "Train dataset is not defined for "
                     "ReflectivePrompt optimization"
                 )
+            if len(dataset) < 4:
+                test_size = 0.5
+            else:
+                test_size = 0.25
             dataset_split = train_test_split(
                 dataset,
                 target,
-                test_size=0.25
+                test_size=test_size
             )
             final_prompt = reflectiveprompt(
                 model=self._model,
@@ -130,7 +138,7 @@ class PromptTuner:
 
         return final_prompt
 
-    def get_task_prompt_template(task: str) -> str:
+    def get_task_prompt_template(self, task: str) -> str:
         """Returns the prompt template for the given task.
 
         Args:
