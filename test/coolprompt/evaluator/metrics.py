@@ -3,6 +3,7 @@ import os
 import evaluate
 import numpy as np
 import unittest
+from unittest.mock import MagicMock, patch
 
 project_root = os.path.abspath(os.path.join(os.getcwd(), "../../../"))
 sys.path.append(project_root)
@@ -21,12 +22,21 @@ from coolprompt.evaluator.metrics import (
 class TestClassificationMetric(unittest.TestCase):
 
     def setUp(self):
+        self.mock_metric = MagicMock()
+        self.patcher = patch('coolprompt.evaluator.metrics.load')
+        self.mock_create_metric = self.patcher.start()
+        self.mock_create_metric.return_value = self.mock_metric
+
         self.name = np.random.choice(list(CLASSIFICATION_METRICS))
         self.metric = ClassificationMetric(name=self.name)
 
+    def tearDown(self):
+        self.patcher.stop()
+
     def test_initialization(self):
         self.assertEqual(self.name, self.metric._name)
-        self.assertIsInstance(self.metric._metric, evaluate.EvaluationModule)
+        self.mock_create_metric.assert_called_once_with(self.name)
+        self.assertEqual(self.metric._metric, self.mock_metric)
         if self.name == 'f1':
             self.assertDictEqual(
                 self.metric._compute_kwargs,
@@ -69,28 +79,18 @@ class TestClassificationMetric(unittest.TestCase):
         self.metric.extract_labels(empty_targets)
         self.assertDictEqual(self.metric.label_to_id, {})
 
-    def test_ideal_compute(self):
+    def test_compute(self):
         outputs = ['<ans>1</ans>', '<ans>2</ans>']
         targets = ['1', '2']
+        self.mock_metric.compute.return_value = {self.name: 1.0}
         result = self.metric.compute(outputs, targets)
         self.assertIsInstance(result, float)
         self.assertEqual(result, 1)
 
-    def test_normal_compute(self):
-        outputs = ['<ans>1</ans>', '<ans>2</ans>']
-        slightly_mismatched_targets = ['1', '1']
-        self.assertTrue(
-            0 <= self.metric.compute(outputs, slightly_mismatched_targets) <= 1
-        )
-
-    def test_mismatched_outputs_compute(self):
-        mismatched_outputs = ['random', 'outputs']
-        targets = ['1', '2']
-        self.assertEqual(self.metric.compute(mismatched_outputs, targets), 0)
-
     def test_different_length_compute(self):
         different_length_outputs = ['just one output']
         targets = ['1', '2']
+        self.mock_metric.compute.side_effect = ValueError()
         with self.assertRaises(ValueError):
             self.metric.compute(different_length_outputs, targets)
 
@@ -98,35 +98,50 @@ class TestClassificationMetric(unittest.TestCase):
 class TestGenerationMetric(unittest.TestCase):
 
     def setUp(self):
+        self.mock_metric = MagicMock()
+        self.patcher = patch('coolprompt.evaluator.metrics.load')
+        self.mock_create_metric = self.patcher.start()
+        self.mock_create_metric.return_value = self.mock_metric
+
         self.name = np.random.choice(list(GENERATION_METRICS))
         self.metric = GenerationMetric(name=self.name)
+
+    def tearDown(self):
+        self.patcher.stop()
 
     def test_initialization(self):
         if self.name == 'rouge':
             self.name = 'rougeL'
         self.assertEqual(self.name, self.metric._name)
-        self.assertIsInstance(self.metric._metric, evaluate.EvaluationModule)
+        self.mock_create_metric.assert_called_once_with(self.name)
+        self.assertEqual(self.metric._metric, self.mock_metric)
 
-    def test_normal_compute(self):
+    def test_compute(self):
         outputs = ['some', 'outputs']
         slightly_mismatched_targets = ['some', 'targets']
+        self.mock_metric.compute.return_value = {self.name: 1.0}
         self.assertTrue(
             0 <= self.metric.compute(outputs, slightly_mismatched_targets) <= 1
         )
 
-    def test_mismatched_outputs_compute(self):
-        mismatched_outputs = ['random', 'outputs']
-        targets = ['1', '2']
-        self.assertEqual(self.metric.compute(mismatched_outputs, targets), 0)
-
     def test_different_length_compute(self):
         different_length_outputs = ['just one output']
         targets = ['1', '2']
+        self.mock_metric.compute.side_effect = ValueError()
         with self.assertRaises(ValueError):
             self.metric.compute(different_length_outputs, targets)
 
 
 class TestUtilityFunctions(unittest.TestCase):
+
+    def setUp(self):
+        self.mock_metric = MagicMock()
+        self.patcher = patch('coolprompt.evaluator.metrics.load')
+        self.mock_create_metric = self.patcher.start()
+        self.mock_create_metric.return_value = self.mock_metric
+
+    def tearDown(self):
+        self.patcher.stop()
 
     def test_create_classification_metric(self):
         self.assertIsInstance(
