@@ -1,10 +1,5 @@
-import sys
-import os
 import unittest
 from unittest.mock import patch, ANY
-
-project_root = os.path.abspath(os.path.join(os.getcwd(), "../../../"))
-sys.path.append(project_root)
 
 from coolprompt.utils.validation import validate_model
 

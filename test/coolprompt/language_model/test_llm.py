@@ -1,11 +1,6 @@
-import sys
-import os
 from langchain_community.llms import VLLM
 import unittest
 from unittest.mock import MagicMock, patch
-
-project_root = os.path.abspath(os.path.join(os.getcwd(), "../../../"))
-sys.path.append(project_root)
 
 from coolprompt.language_model.llm import DefaultLLM
 

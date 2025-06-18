@@ -1,11 +1,6 @@
-import sys
-import os
 import numpy as np
 import unittest
 from unittest.mock import MagicMock, patch
-
-project_root = os.path.abspath(os.path.join(os.getcwd(), "../../../"))
-sys.path.append(project_root)
 
 from coolprompt.evaluator.metrics import (
     ClassificationMetric,
@@ -109,11 +104,11 @@ class TestGenerationMetric(unittest.TestCase):
         self.patcher.stop()
 
     def test_initialization(self):
+        self.mock_create_metric.assert_called_once_with(self.name)
+        self.assertEqual(self.metric._metric, self.mock_metric)
         if self.name == 'rouge':
             self.name = 'rougeL'
         self.assertEqual(self.name, self.metric._name)
-        self.mock_create_metric.assert_called_once_with(self.name)
-        self.assertEqual(self.metric._metric, self.mock_metric)
 
     def test_compute(self):
         outputs = ['some', 'outputs']
@@ -186,7 +181,3 @@ class TestUtilityFunctions(unittest.TestCase):
 
     def test_get_default_metric_incorrect_task(self):
         self.assertIsNone(get_default_metric('incorrect task'))
-
-
-if __name__ == '__main__':
-    unittest.main()

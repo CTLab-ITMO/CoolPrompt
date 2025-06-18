@@ -1,10 +1,5 @@
-import sys
-import os
 import unittest
 from unittest.mock import MagicMock, patch, ANY
-
-project_root = os.path.abspath(os.path.join(os.getcwd(), "../../../"))
-sys.path.append(project_root)
 
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 

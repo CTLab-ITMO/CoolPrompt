@@ -1,11 +1,6 @@
-import sys
-import os
 import unittest
 from unittest.mock import MagicMock, patch, ANY
 from langchain_core.language_models.base import BaseLanguageModel
-
-project_root = os.path.abspath(os.path.join(os.getcwd(), "../../../"))
-sys.path.append(project_root)
 
 from coolprompt.evaluator.evaluator import Evaluator
 from coolprompt.utils.prompt_template import (
@@ -141,7 +136,3 @@ class TestEvaluator(unittest.TestCase):
             self.mock_metric.label_to_id,
             {"cat": 0, "dog": 1}
         )
-
-
-if __name__ == "__main__":
-    unittest.main()
