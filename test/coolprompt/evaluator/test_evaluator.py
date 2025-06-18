@@ -103,7 +103,7 @@ class TestEvaluator(unittest.TestCase):
         self.mock_model.batch.assert_called_once()
 
         self.mock_metric.compute.assert_called_once_with(
-            ["Summary 1", "Summary 2"], 
+            ["Summary 1", "Summary 2"],
             targets
         )
         self.assertEqual(result, 0.666)

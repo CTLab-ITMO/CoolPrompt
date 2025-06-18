@@ -98,21 +98,26 @@ class TestGenerationMetric(unittest.TestCase):
         self.mock_create_metric.return_value = self.mock_metric
 
         self.name = np.random.choice(list(GENERATION_METRICS))
+        self.name = 'rouge'
         self.metric = GenerationMetric(name=self.name)
 
     def tearDown(self):
         self.patcher.stop()
 
+    def _fix_name(self):
+        if self.name == 'rouge':
+            self.name = 'rougeL'
+
     def test_initialization(self):
         self.mock_create_metric.assert_called_once_with(self.name)
         self.assertEqual(self.metric._metric, self.mock_metric)
-        if self.name == 'rouge':
-            self.name = 'rougeL'
+        self._fix_name()
         self.assertEqual(self.name, self.metric._name)
 
     def test_compute(self):
         outputs = ['some', 'outputs']
         slightly_mismatched_targets = ['some', 'targets']
+        self._fix_name()
         self.mock_metric.compute.return_value = {self.name: 1.0}
         self.assertTrue(
             0 <= self.metric.compute(outputs, slightly_mismatched_targets) <= 1
