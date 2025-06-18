@@ -9,6 +9,7 @@ def distillprompt(
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],
     evaluator: Evaluator,
     task: str,
+    initial_prompt: str,
     **kwargs,
 ) -> str:
     """Runs DistillPrompt optimization.
@@ -20,6 +21,7 @@ def distillprompt(
         evaluator (Evaluator): evaluator to compute metrics.
         task (str): type of task to optimize for
             (classification or generation).
+        initial_prompt (str): Base prompt for optimization
         **kwargs (dict[str, Any]): other parameters
             (such as num_epochs, output_path).
 
@@ -45,6 +47,7 @@ def distillprompt(
         validation_dataset=validation_dataset,
         validation_targets=validation_targets,
         task=task,
+        base_prompt=initial_prompt,
         num_epochs=args['num_epochs'],
         output_path=args['output_path']
     )

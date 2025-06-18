@@ -1,17 +1,23 @@
-import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
 import os
+
+import random
 import re
-import statistics
 from langchain_core.language_models.base import BaseLanguageModel
-import numpy as np
 from typing import List, Tuple, Any
-from scipy.special import softmax
 import yaml
 from coolprompt.evaluator import Evaluator
-from coolprompt.utils.parsing import extract_answer
 from tqdm import tqdm
+
+
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+moscow_tz = ZoneInfo("Europe/Moscow")
+current_time = datetime.now(moscow_tz).strftime("%H:%M:%S")
+
+print("distiller reloaded at", current_time)
 
 class Candidate:
     """Class to represent a prompt candidate with its score."""
@@ -40,13 +46,13 @@ class CandidateHistory:
 
 class TextSampler:
     """Class to sample text examples from a dataset."""
-    def __init__(self, dataset):
-        self.dataset = dataset
+    def __init__(self, texts: List[str], labels: List[str]):
+        self.texts = texts
+        self.labels = labels
 
     def sample(self, count: int) -> List[Tuple[str, str]]:
-        import random
-        indices = random.sample(range(len(self.dataset)), min(count, len(self.dataset)))
-        return [(self.dataset[i]['text'], self.dataset[i]['label']) for i in indices]
+        indices = random.sample(range(len(self.texts)), min(count, len(self.texts)))
+        return [(self.texts[i], self.labels[i]) for i in indices]
 
 class PromptTransformer:
     """Class for expanding prompts"""
@@ -73,7 +79,7 @@ class PromptTransformer:
         Return only the new prompt, and enclose it with <START> and <END> tags.
         """
         aggregation_prompt = '\n'.join([line.lstrip() for line in aggregation_prompt.split('\n')])
-        answer = self.model.predict(aggregation_prompt, temperature=temperature, max_tokens=1024)
+        answer = self.model.invoke(aggregation_prompt, temperature=temperature)
         return self._parse_tagged_text(answer, "<START>", "<END>")
         
     def compress_prompt(self, candidate: Candidate, temperature: float = 0.4) -> str:
@@ -90,7 +96,7 @@ class PromptTransformer:
         Return only the new prompt, and enclose it with <START> and <END> tags.
         """
         compression_prompt = '\n'.join([line.lstrip() for line in compression_prompt.split('\n')])
-        answer = self.model.predict(compression_prompt, temperature=temperature, max_tokens=1024)
+        answer = self.model.invoke(compression_prompt, temperature=temperature)
         return self._parse_tagged_text(answer, "<START>", "<END>")
                 
     def distill_samples(self, candidate: Candidate, sample_count: int = 5, temperature: float = 0.5) -> str:
@@ -111,7 +117,7 @@ class PromptTransformer:
         Return only the new prompt, and enclose it with <START> and <END> tags.
         """
         distillation_prompt = '\n'.join([line.lstrip() for line in distillation_prompt.split('\n')])
-        answer = self.model.predict(distillation_prompt, temperature=temperature, max_tokens=1024)
+        answer = self.model.invoke(distillation_prompt, temperature=temperature)
         return self._parse_tagged_text(answer, "<START>", "<END>")
     
     def generate_prompts(self, candidate: Candidate, n: int = 4, temperature: float = 0.7) -> List[str]:
@@ -126,9 +132,8 @@ class PromptTransformer:
         Return only the improved prompt, and enclose it with <START> and <END> tags.
         Improved prompt: """
         generation_prompt = '\n'.join([line.lstrip() for line in generation_prompt.split('\n')])
-        answers = []
-        for _ in range(n):
-            answers.append(self.model.predict(generation_prompt, temperature=temperature, max_tokens=1024))
+        requests = [generation_prompt] * n
+        answers = self.model.batch(requests, temperature=temperature)
         return [self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers]
 
     @staticmethod
@@ -151,12 +156,9 @@ class PromptTransformer:
 
     def generate_synonyms(self, candidate: Candidate, n: int = 3, temperature: float = 0.7) -> List[str]:
         rewriter_prompt = f"Generate a variation of the following prompt while keeping the semantic meaning.\n\nInput: {candidate.prompt}\n\nOutput:"
-        new_prompts = []
-        for _ in range(n):
-            response = self.model.predict(rewriter_prompt, temperature=temperature, max_tokens=1024)
-            if response:
-                new_prompts.append(response)
-        return new_prompts
+        requests = [rewriter_prompt] * n
+        responses = self.model.batch(requests, temperature=temperature)
+        return [response for response in responses if response]
     
     def convert_to_fewshot(self, candidate: Candidate, sample_count: int = 3) -> str:
         train_samples = self.sampler.sample(sample_count)
@@ -190,6 +192,7 @@ class Distiller:
         validation_dataset: List[str],
         validation_targets: List[str],
         task: str,
+        base_prompt: str,
         num_epochs: int = 10,
         output_path: str = './distillprompt_outputs'
     ) -> None:
@@ -200,6 +203,7 @@ class Distiller:
         self.validation_dataset = validation_dataset
         self.validation_targets = validation_targets
         self.task = task
+        self.base_prompt=base_prompt
         self.num_epochs = num_epochs
         self.output_path = output_path
         self._setup_logger()
@@ -222,8 +226,6 @@ class Distiller:
         file_handler.setFormatter(formatter)
         self.logger.addHandler(stream_handler)
         self.logger.addHandler(file_handler)
-
-    # Removed _llm_wrapper as LangChain model is now used directly in PromptTransformer
 
     def _evaluate(self, prompt: str, split='train') -> float:
         """Evaluates a given prompt on the specified dataset split."""
@@ -254,26 +256,11 @@ class Distiller:
         self.iteration = 0
         self.logger.info("Starting DistillPrompt optimization...")
 
-        # Mock dataset object for sampler compatibility
-        class MockDataset:
-            def __init__(self, texts, labels):
-                self.data = [{'text': t, 'label': l} for t, l in zip(texts, labels)]
-            
-            def __getitem__(self, idx):
-                return self.data[idx]
-            
-            def __len__(self):
-                return len(self.data)
-            
-            def _get_basic_prompt(self):
-                return "Classify the following text."
-
-        train_ds = MockDataset(self.train_dataset, self.train_targets)
-        sampler = TextSampler(train_ds)
+        sampler = TextSampler(self.train_dataset, self.train_targets)
         transformer = PromptTransformer(self.model, sampler)
         history = CandidateHistory()
 
-        base_prompt = train_ds._get_basic_prompt()
+        base_prompt = self.base_prompt
         base_score = self._evaluate(base_prompt)
         base_candidate = Candidate(base_prompt, base_score)
         best_candidate = base_candidate
@@ -303,6 +290,7 @@ class Distiller:
             aggregated_prompt = transformer.aggregate_prompts(compressed_candidates)
             aggregated_candidate = Candidate(aggregated_prompt, self._evaluate(aggregated_prompt))
             aggregated_synonyms = transformer.generate_synonyms(aggregated_candidate, n=3)
+            
             final_candidates = [Candidate(p, self._evaluate(p)) for p in aggregated_synonyms]
             final_candidates.append(aggregated_candidate)
             history.extend(final_candidates)
@@ -312,19 +300,19 @@ class Distiller:
             self.logger.info(f"Best candidate prompt: {best_candidate.prompt}")
 
             # Cache results
-            self._cache_data(
-                {"prompts": [c.prompt for c in final_candidates], "scores": [c.train_score for c in final_candidates]},
-                self._make_output_path("round_results")
-            )
+            # self._cache_data(
+            #     {"prompts": [c.prompt for c in final_candidates], "scores": [c.train_score for c in final_candidates]},
+            #     self._make_output_path("round_results")
+            # )
 
         final_prompt = best_candidate.prompt
         final_score = self._evaluate(final_prompt, split='validation')
         self.logger.info(f"Final best prompt score on validation: {final_score}")
         self.logger.info(f"Final best prompt: {final_prompt}")
 
-        self._cache_data(
-            {"final_prompt": final_prompt, "final_score": final_score},
-            os.path.join(self.output_path, "final_results.yaml")
-        )
+        # self._cache_data(
+        #     {"final_prompt": final_prompt, "final_score": final_score},
+        #     os.path.join(self.output_path, "final_results.yaml")
+        # )
 
         return final_prompt
