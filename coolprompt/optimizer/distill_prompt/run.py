@@ -1,6 +1,7 @@
 from typing import List, Tuple
 from langchain.llms.base import BaseLanguageModel
 from coolprompt.evaluator import Evaluator
+from coolprompt.optimizer.distill_prompt.distiller import Distiller
 
 
 def distillprompt(
@@ -8,10 +9,9 @@ def distillprompt(
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],
     evaluator: Evaluator,
     task: str,
-    initial_prompt: str,
     **kwargs,
 ) -> str:
-    """Runs ReflectivePrompt evolution.
+    """Runs DistillPrompt optimization.
 
     Args:
         model (BaseLanguageModel): a LLM to use.
@@ -20,9 +20,8 @@ def distillprompt(
         evaluator (Evaluator): evaluator to compute metrics.
         task (str): type of task to optimize for
             (classification or generation).
-        initial_prompt (str, optional): initial prompt to start optimization from.
         **kwargs (dict[str, Any]): other parameters
-            (such as population_size, num_epochs, output_path, use_cache).
+            (such as num_epochs, output_path).
 
     Returns:
         str: best optimized prompt.
@@ -34,11 +33,11 @@ def distillprompt(
         validation_targets
     ) = dataset_split
     args = {
-        'num_epochs': 6,
-        'output_path': './reflectiveprompt_outputs',
+        'num_epochs': 10,
+        'output_path': './distillprompt_outputs'
     }
     args.update(kwargs)
-    distiller = PromptDistiller(
+    distiller = Distiller(
         model=model,
         evaluator=evaluator,
         train_dataset=train_dataset,
@@ -46,8 +45,8 @@ def distillprompt(
         validation_dataset=validation_dataset,
         validation_targets=validation_targets,
         task=task,
-        initial_prompt=initial_prompt,
         num_epochs=args['num_epochs'],
+        output_path=args['output_path']
     )
-    final_prompt = distiller.distill()
+    final_prompt = distiller.distillation()
     return final_prompt

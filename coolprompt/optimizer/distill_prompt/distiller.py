@@ -10,52 +10,176 @@ from typing import List, Tuple, Any
 from scipy.special import softmax
 import yaml
 from coolprompt.evaluator import Evaluator
-from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
-from coolprompt.utils.prompt_template import (
-    REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE,
-    REFLECTIVEPROMPT_CROSSOVER_TEMPLATE,
-    REFLECTIVEPROMPT_MUTATION_TEMPLATE,
-    REFLECTIVEPROMPT_SHORT_TERM_REFLECTION_TEMPLATE,
-    REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE,
-    REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
-)
 from coolprompt.utils.parsing import extract_answer
+from tqdm import tqdm
 
+class Candidate:
+    """Class to represent a prompt candidate with its score."""
+    def __init__(self, prompt: str, train_score: float = 0.0):
+        self.prompt = prompt
+        self.train_score = train_score
+
+class CandidateHistory:
+    """Class to manage history of candidate prompts."""
+    def __init__(self):
+        self.candidates: List[Candidate] = []
+
+    def add(self, candidate: Candidate):
+        self.candidates.append(candidate)
+
+    def extend(self, candidates: List[Candidate]):
+        self.candidates.extend(candidates)
+
+    def clear(self):
+        self.candidates = []
+
+    def get_highest_scorer(self) -> Candidate:
+        if not self.candidates:
+            raise Exception("No candidates in history")
+        return max(self.candidates, key=lambda x: x.train_score)
+
+class TextSampler:
+    """Class to sample text examples from a dataset."""
+    def __init__(self, dataset):
+        self.dataset = dataset
+
+    def sample(self, count: int) -> List[Tuple[str, str]]:
+        import random
+        indices = random.sample(range(len(self.dataset)), min(count, len(self.dataset)))
+        return [(self.dataset[i]['text'], self.dataset[i]['label']) for i in indices]
+
+class PromptTransformer:
+    """Class for expanding prompts"""
+    
+    def __init__(self, model: BaseLanguageModel, sampler: TextSampler):
+        self.model = model
+        self.sampler = sampler
+        
+    def aggregate_prompts(self, candidates: List[Candidate], temperature: float = 0.4) -> str:
+        def format_prompts(candidates: List[Candidate]) -> str:
+            prompts = [cand.prompt for cand in candidates]
+            formatted_string = ""
+            for i, prompt in enumerate(prompts):
+                formatted_string += f"Prompt {i}: {prompt}\n\n"
+            return formatted_string 
+        
+        aggregation_prompt = f"""Below are several prompts intended for the same task:
+
+        {format_prompts(candidates)}
+
+        Your task is to generate one clear and concise prompt that captures the general idea, overall objective, and key instructions conveyed by all of the above prompts.
+        Focus on the shared purpose and main concepts without including specific examples or extraneous details.    
+
+        Return only the new prompt, and enclose it with <START> and <END> tags.
+        """
+        aggregation_prompt = '\n'.join([line.lstrip() for line in aggregation_prompt.split('\n')])
+        answer = self.model.predict(aggregation_prompt, temperature=temperature, max_tokens=1024)
+        return self._parse_tagged_text(answer, "<START>", "<END>")
+        
+    def compress_prompt(self, candidate: Candidate, temperature: float = 0.4) -> str:
+        compression_prompt = f"""I want to compress the following zero-shot classifier prompt into a shorter prompt of 2–3 concise sentences that capture its main objective and key ideas from any examples.
+
+        Current prompt: {candidate.prompt}
+
+        Steps:
+
+        Identify the main task or objective.
+        Extract the most important ideas illustrated by the examples.
+        Combine these insights into a brief, coherent prompt.
+
+        Return only the new prompt, and enclose it with <START> and <END> tags.
+        """
+        compression_prompt = '\n'.join([line.lstrip() for line in compression_prompt.split('\n')])
+        answer = self.model.predict(compression_prompt, temperature=temperature, max_tokens=1024)
+        return self._parse_tagged_text(answer, "<START>", "<END>")
+                
+    def distill_samples(self, candidate: Candidate, sample_count: int = 5, temperature: float = 0.5) -> str:
+        train_samples = self.sampler.sample(sample_count)
+        sample_string = self._format_samples(train_samples)
+        distillation_prompt = f"""You are an expert prompt engineer.
+
+        Current instruction prompt: {candidate.prompt}
+
+        Training examples: {sample_string}
+
+        Task:
+        Analyze the current prompt and training examples to understand common strengths and weaknesses.
+        Learn the general insights and patterns without copying any example text.
+        Rewrite the instruction prompt to improve clarity and effectiveness while maintaining the original intent.
+        Do not include any extraneous explanation or details beyond the revised prompt.
+
+        Return only the new prompt, and enclose it with <START> and <END> tags.
+        """
+        distillation_prompt = '\n'.join([line.lstrip() for line in distillation_prompt.split('\n')])
+        answer = self.model.predict(distillation_prompt, temperature=temperature, max_tokens=1024)
+        return self._parse_tagged_text(answer, "<START>", "<END>")
+    
+    def generate_prompts(self, candidate: Candidate, n: int = 4, temperature: float = 0.7) -> List[str]:
+        generation_prompt = f"""You are an expert in prompt analysis with exceptional comprehension skills.
+
+        Below is my current instruction prompt: {candidate.prompt}
+
+        On the train dataset, this prompt scored {candidate.train_score:0.3f} (with 1.0 being the maximum). 
+
+        Please analyze the prompt's weaknesses and generate an improved version that refines its clarity, focus, and instructional quality. Do not assume any data labels—focus solely on the quality of the prompt.
+
+        Return only the improved prompt, and enclose it with <START> and <END> tags.
+        Improved prompt: """
+        generation_prompt = '\n'.join([line.lstrip() for line in generation_prompt.split('\n')])
+        answers = []
+        for _ in range(n):
+            answers.append(self.model.predict(generation_prompt, temperature=temperature, max_tokens=1024))
+        return [self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers]
+
+    @staticmethod
+    def _format_samples(samples: List[Tuple[str, str]]) -> str:
+        formatted_string = ""
+        for i, (input, output) in enumerate(samples):
+            formatted_string += f'Example {i + 1}:\n'
+            formatted_string += f'Text: \"{input.strip()}\"\nLabel: {output}\n\n'
+        return formatted_string
+            
+    @staticmethod       
+    def _parse_tagged_text(text: str, start_tag: str, end_tag: str) -> str:
+        start_index = text.find(start_tag)
+        if start_index == -1:
+            return text
+        end_index = text.find(end_tag, start_index)
+        if end_index == -1:
+            return text
+        return text[start_index + len(start_tag):end_index].strip()
+
+    def generate_synonyms(self, candidate: Candidate, n: int = 3, temperature: float = 0.7) -> List[str]:
+        rewriter_prompt = f"Generate a variation of the following prompt while keeping the semantic meaning.\n\nInput: {candidate.prompt}\n\nOutput:"
+        new_prompts = []
+        for _ in range(n):
+            response = self.model.predict(rewriter_prompt, temperature=temperature, max_tokens=1024)
+            if response:
+                new_prompts.append(response)
+        return new_prompts
+    
+    def convert_to_fewshot(self, candidate: Candidate, sample_count: int = 3) -> str:
+        train_samples = self.sampler.sample(sample_count)
+        sample_string = self._format_samples(train_samples)
+        instruction_prompt = candidate.prompt
+        fewshot_prompt = instruction_prompt + '\n\n' + "Examples:\n" + sample_string
+        return fewshot_prompt
 
 class Distiller:
     """
-    ReflectiveEvoluter class that represents evoluter for ReflectivePrompt
+    Distiller class for DistillPrompt optimization.
 
     Attributes:
-        model: langchain.BaseLanguageModel class of model to use.
-        evaluator: evaluator (Evaluator) to compute metrics.
-        train_dataset: a dataset to use while training.
-        train_targets: string targets for train dataset.
-        validation_dataset: a dataset to use while validating final prompts.
-        validation_targets: string targets for validation dataset.
-        task: type of task to optimize for (classification or generation).
-        problem_description: a string that contains
-            short description of problem to optimize.
-        initial_prompt: initial prompt to start evolution from.
-            Will be automatically generated if not provided.
-            Defaults to None.
-        population_size: an integer fixed size of prompt population.
-            Defaults to 10.
-        num_epochs: an integer number of epochs to evaluate.
-            Defaults to 10.
-        use_cache: a boolean variable.
-            Either to use caching files or not.
-        output_path: a path to store logs of evolution.
-        elitist: a prompt with highest score in population.
-        best_score_overall: best evaluation score during evolution.
-        best_prompt_overall: text of prompt with best score overall.
-        iteration: current iteration (epoch) of evolution.
-        PROMPT_TAGS: start and end tags for prompt extraction.
-        HINT_TAGS: start and end tags for hint extraction.
+        model: BaseLanguageModel to use for optimization.
+        evaluator: Evaluator to compute metrics.
+        train_dataset: Dataset to use while training.
+        train_targets: Targets for train dataset.
+        validation_dataset: Dataset to use while validating final prompts.
+        validation_targets: Targets for validation dataset.
+        task: Type of task to optimize for (classification or generation).
+        num_epochs: Number of epochs to evaluate.
+        output_path: Path to store logs of optimization.
     """
-
-    PROMPT_TAGS = ('<prompt>', '</prompt>')
-    HINT_TAGS = ('<hint>', '</hint>')
 
     def __init__(
         self,
@@ -67,7 +191,7 @@ class Distiller:
         validation_targets: List[str],
         task: str,
         num_epochs: int = 10,
-        output_path: str = './reflectiveprompt_outputs',
+        output_path: str = './distillprompt_outputs'
     ) -> None:
         self.model = model
         self.evaluator = evaluator
@@ -78,12 +202,10 @@ class Distiller:
         self.task = task
         self.num_epochs = num_epochs
         self.output_path = output_path
-
         self._setup_logger()
 
     def _setup_logger(self) -> None:
         """Provides logger setup for DistillPrompt"""
-
         self.logger = logging.getLogger('Distiller')
         self.logger.setLevel(logging.DEBUG)
         file_handler = TimedRotatingFileHandler(
@@ -96,495 +218,113 @@ class Distiller:
         file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
         stream_handler = logging.StreamHandler()
         formatter = logging.Formatter("[%(asctime)s] - %(message)s")
-
         stream_handler.setFormatter(formatter)
         file_handler.setFormatter(formatter)
         self.logger.addHandler(stream_handler)
         self.logger.addHandler(file_handler)
 
-    # TODO
-    def _evaluate(self, prompt: Prompt, split='train') -> None:
-        """Evaluates given prompt on self.dataset and records the score.
+    # Removed _llm_wrapper as LangChain model is now used directly in PromptTransformer
 
-        Args:
-            prompt (Prompt): a prompt to evaluate.
-            split (str, optional): Which split of dataset to use.
-                Defaults to 'train'.
-        """
+    def _evaluate(self, prompt: str, split='train') -> float:
+        """Evaluates a given prompt on the specified dataset split."""
         if split == 'train':
             dataset, targets = self.train_dataset, self.train_targets
         else:
             dataset, targets = self.validation_dataset, self.validation_targets
         score = self.evaluator.evaluate(
-            prompt=prompt.text,
+            prompt=prompt,
             dataset=dataset,
             targets=targets,
             task=self.task
         )
-        prompt.set_score(score)
+        return score
 
-    def _evaluation(
-        self,
-        population: List[Prompt],
-        split: str = 'train'
-    ) -> None:
-        """Evaluation operation for prompts population.
-        Evaluates every prompt in population and records the results.
-
-        Args:
-            population (List[Prompt]): population of prompts to evaluate.
-            split (str, optional): Which split of dataset to use.
-                Defaults to 'train'.
-        """
-        self.logger.info("Evaluating population...")
-        for prompt in population:
-            self._evaluate(prompt, split=split)
-
-    def _create_initial_prompt(self) -> str:
-        """Creates an initial prompt according to provided problem description
-
-        Returns:
-            str: initial prompt
-        """
-        request = self._initial_prompt_template.format(
-            PROBLEM_DESCRIPTION=self.problem_description
-        )
-        answer = self._llm_query([request])[0]
-        return extract_answer(
-            answer,
-            self.PROMPT_TAGS,
-            format_mismatch_label=""
-        )
-
-    def _init_pop(self) -> List[Prompt]:
-        """Creates initial population of prompts.
-
-        Returns:
-            List[Prompt]: initial population.
-        """
-
-        self.logger.info("Initializing population...")
-        if self.initial_prompt is None:
-            self.initial_prompt = self._create_initial_prompt()
-        request = self._paraphrasing_template.format(
-            PROMPT=self.initial_prompt,
-            NUM_PROMPTS=self.population_size
-        )
-        answer = self._llm_query([request])[0]
-        prompts = json.loads(answer)['prompts']
-        initial_population = [
-            Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
-        ]
-        self._evaluation(initial_population)
-        initial_population = self._reranking(initial_population)
-        return initial_population
-
-    def _cache_data(
-        self,
-        data: Any,
-        savepath: os.PathLike
-    ) -> None:
-        """Writes the data to the yaml file.
-
-        Args:
-            data (Any): data to be cached.
-            savepath (os.PathLike): a path to saving file.
-        """
+    def _cache_data(self, data: Any, savepath: os.PathLike) -> None:
+        """Writes data to a YAML file."""
         os.makedirs(os.path.dirname(savepath), exist_ok=True)
         with open(savepath, 'w') as f:
             yaml.dump(data, f)
 
-    def _cache_population(
-        self,
-        population: List[Prompt],
-        savepath: os.PathLike
-    ) -> None:
-        """Caching a population of prompts to file.
-        If self.use_cache is False this function will do nothing.
+    def _make_output_path(self, filename: str) -> str:
+        """Creates full path for logging based on current iteration."""
+        return os.path.join(self.output_path, f"Iteration{self.iteration}", f"{filename}.yaml")
 
-        Args:
-            population (List[Prompt]): prompt population.
-            savepath (os.PathLike): a path to saving file.
-        """
-        if self.use_cache is False:
-            return
+    def distillation(self) -> str:
+        """Provides DistillPrompt optimization operation."""
+        self.iteration = 0
+        self.logger.info("Starting DistillPrompt optimization...")
 
-        best_score = population[0].score
-        average_score = statistics.mean(
-            [prompt.score for prompt in population]
-        )
-        data = {
-            "best_score": best_score,
-            "average_score": average_score,
-            "prompts": [prompt.to_dict() for prompt in population]
-        }
-        self._cache_data(data, savepath)
+        # Mock dataset object for sampler compatibility
+        class MockDataset:
+            def __init__(self, texts, labels):
+                self.data = [{'text': t, 'label': l} for t, l in zip(texts, labels)]
+            
+            def __getitem__(self, idx):
+                return self.data[idx]
+            
+            def __len__(self):
+                return len(self.data)
+            
+            def _get_basic_prompt(self):
+                return "Classify the following text."
 
-    def _selection(
-        self,
-        population: List[Prompt]
-    ) -> List[Prompt]:
-        """Provides selection operation.
-        In current implementation we want to select parents
-        with different scores.
-        But when there is difficult to do so (trial number check),
-        it will just sample anyways.
+        train_ds = MockDataset(self.train_dataset, self.train_targets)
+        sampler = TextSampler(train_ds)
+        transformer = PromptTransformer(self.model, sampler)
+        history = CandidateHistory()
 
-        Probabilities - normalized scores.
+        base_prompt = train_ds._get_basic_prompt()
+        base_score = self._evaluate(base_prompt)
+        base_candidate = Candidate(base_prompt, base_score)
+        best_candidate = base_candidate
 
-        Args:
-            population (List[Prompt]): prompt population to select from.
+        for round in tqdm(range(self.num_epochs)):
+            self.iteration = round + 1
+            self.logger.info(f"Starting round {round}")
+            history.clear()
+            history.add(best_candidate)
 
-        Returns:
-            List[Prompt]: selected prompts.
-        """
-        selected_population = []
+            # Generation
+            gen_prompts = transformer.generate_prompts(best_candidate)
+            gen_candidates = [Candidate(p, self._evaluate(p)) for p in gen_prompts]
+            history.extend(gen_candidates)
 
-        scores = np.array([prompt.score for prompt in population])
-        probas = scores / np.sum(scores)
+            # Distillation
+            distilled_prompts = [transformer.distill_samples(cand) for cand in gen_candidates]
+            distilled_candidates = [Candidate(p, self._evaluate(p)) for p in distilled_prompts]
+            history.extend(distilled_candidates)
 
-        trial = 0
-        anyways = False
-        while len(selected_population) < 2 * self.population_size:
-            parents = np.random.choice(
-                population,
-                size=2,
-                replace=False,
-                p=probas
-            )
-            if parents[0].score != parents[1].score or anyways:
-                selected_population.extend(parents)
-            trial += 1
-            if trial > 1000:
-                anyways = True
+            # Compression
+            compressed_prompts = [transformer.compress_prompt(cand) for cand in distilled_candidates]
+            compressed_candidates = [Candidate(p, self._evaluate(p)) for p in compressed_prompts]
+            history.extend(compressed_candidates)
 
-        return selected_population
+            # Aggregation
+            aggregated_prompt = transformer.aggregate_prompts(compressed_candidates)
+            aggregated_candidate = Candidate(aggregated_prompt, self._evaluate(aggregated_prompt))
+            aggregated_synonyms = transformer.generate_synonyms(aggregated_candidate, n=3)
+            final_candidates = [Candidate(p, self._evaluate(p)) for p in aggregated_synonyms]
+            final_candidates.append(aggregated_candidate)
+            history.extend(final_candidates)
 
-    def _survive(
-        self,
-        population: List[Prompt],
-        temperature: float = None
-    ) -> List[Prompt]:
-        """Final selection before going into new epoch.
-        Probabilities are based on softmax function with temperature (if set).
+            best_candidate = history.get_highest_scorer()
+            self.logger.info(f"Best candidate score in round {round}: {best_candidate.train_score}")
+            self.logger.info(f"Best candidate prompt: {best_candidate.prompt}")
 
-        Args:
-            population (List[Prompt]): population to select from.
-            temperature (float, optional): temperature parameter for softmax.
-                Defaults to None.
-
-        Returns:
-            List[Prompt]: selected (survived) prompts.
-        """
-        scores = np.array([prompt.score for prompt in population])
-        if temperature is not None:
-            scores /= temperature
-        probas = softmax(scores)
-        return np.random.choice(
-            population,
-            size=self.population_size,
-            replace=False,
-            p=probas
-        )
-
-    def _gen_short_term_reflection_prompt(
-        self,
-        ind1: Prompt,
-        ind2: Prompt
-    ) -> Tuple[str, str, str]:
-        """Generates short-term reflection request into model.
-
-        Args:
-            ind1 (Prompt): first individual.
-            ind2 (Prompt): second individual.
-
-        Returns:
-            Tuple[str, str, str]:
-                string request, worse prompt text, better prompt text.
-        """
-        if ind1.score > ind2.score:
-            better_ind, worse_ind = ind1, ind2
-        else:
-            better_ind, worse_ind = ind2, ind1
-
-        request = self._short_term_template.format(
-            PROBLEM_DESCRIPTION=self.problem_description,
-            WORSE_PROMPT=worse_ind.text,
-            BETTER_PROMPT=better_ind.text
-        )
-
-        return request, worse_ind.text, better_ind.text
-
-    def _make_output_path(self, filename: str) -> os.PathLike:
-        """Creates full path for logging based on current iteration.
-
-        Args:
-            filename (str): the file name to save.
-
-        Returns:
-            os.PathLike: final path to save.
-        """
-        return os.path.join(
-            self.output_path,
-            f"Iteration{self.iteration}",
-            f"{filename}.yaml"
-        )
-
-    def _short_term_reflection(
-        self,
-        population: list[Prompt],
-    ) -> Tuple[List[str], List[str], List[str]]:
-        """Short-term reflection before crossovering two individuals.
-
-        Args:
-            population (list[Prompt]): parenting population.
-
-        Returns:
-            Tuple[List[str], List[str], List[str]]:
-                generated short-term hints,
-                worse promtp texts,
-                better prompt texts.
-        """
-        requests = []
-        worse_prompts = []
-        better_prompts = []
-        for i in range(0, len(population), 2):
-            parent_1 = population[i]
-            parent_2 = population[i + 1]
-
-            (
-                request,
-                worse_prompt,
-                better_prompt
-            ) = self._gen_short_term_reflection_prompt(parent_1, parent_2)
-            requests.append(request)
-            worse_prompts.append(worse_prompt)
-            better_prompts.append(better_prompt)
-
-        responses = self._llm_query(requests)
-        responses = [
-            extract_answer(response, self.HINT_TAGS, format_mismatch_label="")
-            for response in responses
-        ]
-        return responses, worse_prompts, better_prompts
-
-    def _crossover(
-        self,
-        short_term_reflection_tuple: Tuple[List[str], List[str], List[str]]
-    ) -> List[Prompt]:
-        """Provides crossover operation.
-
-        Args:
-            short_term_reflection_tuple
-                (Tuple[List[str], List[str], List[str]]):
-                    outputs of short-term reflection.
-
-        Returns:
-            List[Prompt]: new crossed prompts population.
-        """
-        (
-            reflection_contents,
-            worse_prompts,
-            better_prompts
-        ) = short_term_reflection_tuple
-        requests = []
-        for reflection, worse_prompt, better_prompt in zip(
-            reflection_contents,
-            worse_prompts,
-            better_prompts
-        ):
-            request = self._crossover_template.format(
-                PROBLEM_DESCRIPTION=self.problem_description,
-                WORSE_PROMPT=worse_prompt,
-                BETTER_PROMPT=better_prompt,
-                SHORT_TERM_REFLECTION=reflection
-            )
-            requests.append(request)
-
-        responses = self._llm_query(requests)
-        responses = [
-            extract_answer(
-                response,
-                self.PROMPT_TAGS,
-                format_mismatch_label=""
-            )
-            for response in responses
-        ]
-        crossed_population = [Prompt(response) for response in responses]
-
-        assert len(crossed_population) == self.population_size
-        return crossed_population
-
-    def _update_elitist(self, population: List[Prompt]) -> None:
-        """Updates elitist, best_score_overall, best_prompt_overall.
-
-        Args:
-            population (List[Prompt]): current population.
-        """
-        scores = [prompt.score for prompt in population]
-        best_score, best_sample_idx = max(scores), np.argmax(np.array(scores))
-
-        if (
-            self.best_score_overall is None
-            or best_score >= self.best_score_overall
-        ):
-            self.best_score_overall = best_score
-            self.best_prompt_overall = population[best_sample_idx].text
-            self.elitist = population[best_sample_idx]
-            self.logger.info(
-                f"""Iteration {self.iteration}
-                Elitist ({self.best_score_overall}):
-                {self.elitist.text}"""
-            )
-
-    def _update_iter(self, population: List[Prompt]) -> None:
-        """Updates iteration. Cache current state.
-
-        Args:
-            population (List[Prompt]): current population.
-        """
-        self.logger.info(f"Iteration {self.iteration} finished...")
-        self.logger.info(f"Best score: {self.best_score_overall}")
-
-        population = self._reranking(population)
-        self._cache_population(
-            population,
-            self._make_output_path("population")
-        )
-
-        self.iteration += 1
-
-    def _long_term_reflection(
-        self,
-        short_term_reflections: List[str]
-    ) -> None:
-        """Long-term reflection before mutation.
-
-        Args:
-            short_term_reflections (List[str]): short-term reflections.
-        """
-        request = self._long_term_template.format(
-            PROBLEM_DESCRIPTION=self.problem_description,
-            PRIOR_LONG_TERM_REFLECTION=self._long_term_reflection_str,
-            NEW_SHORT_TERM_REFLECTIONS='\n'.join(short_term_reflections)
-        )
-
-        response = self._llm_query([request])[0]
-
-        self._long_term_reflection_str = extract_answer(
-            response,
-            self.HINT_TAGS,
-            format_mismatch_label=""
-        )
-
-    def _llm_query(
-        self,
-        requests: List[str]
-    ) -> List[str]:
-        """Provides api to query requests to the model.
-
-        Args:
-            requests (List[str]): string requests.
-
-        Returns:
-            List[str]: model answers.
-        """
-
-        answers = self.model.batch(requests)
-
-        return answers
-
-    def _mutate(self) -> List[Prompt]:
-        """Elitist-based mutation.
-
-        Returns:
-            List[Prompt]: generated population.
-        """
-        request = self._mutation_template.format(
-            PROBLEM_DESCRIPTION=self.problem_description,
-            LONG_TERM_REFLECTION=self._long_term_reflection_str,
-            ELITIST_PROMPT=self.elitist.text
-        )
-        responses = self._llm_query([request] * self.population_size)
-        responses = [
-            extract_answer(
-                response,
-                self.PROMPT_TAGS,
-                format_mismatch_label=""
-            )
-            for response in responses
-        ]
-        population = [
-            Prompt(response, origin=PromptOrigin.MUTATED)
-            for response in responses
-        ]
-        return population
-
-    def evolution(self) -> str:
-        """Provides evolution operation.
-
-        Selection -> Short-term reflection -> Long-term reflection
-            -> Elitist-based mutation -> Survival.
-
-        After all self.num_epochs epochs the best three prompts are selected.
-        They will be evaluated on test split of dataset then.
-        And based on their test scores,
-        the best prompt will be returned.
-
-        Returns:
-            str: best evoluted prompt
-        """
-        population = np.array(self._init_pop())
-        self._cache_population(
-            population,
-            self._make_output_path('initial_population.yaml')
-        )
-
-        while self.iteration < self.num_epochs:
-            if self.elitist is not None and self.elitist not in population:
-                self.logger.info("Elitist should always live")
-                population = np.append(population, np.array([self.elitist]))
-            parent_population = self._selection(population)
-
-            short_term_reflection_tuple = self._short_term_reflection(
-                parent_population
-            )
+            # Cache results
             self._cache_data(
-                short_term_reflection_tuple[0],
-                self._make_output_path("short_term_reflections")
+                {"prompts": [c.prompt for c in final_candidates], "scores": [c.train_score for c in final_candidates]},
+                self._make_output_path("round_results")
             )
 
-            crossed_population = self._crossover(short_term_reflection_tuple)
+        final_prompt = best_candidate.prompt
+        final_score = self._evaluate(final_prompt, split='validation')
+        self.logger.info(f"Final best prompt score on validation: {final_score}")
+        self.logger.info(f"Final best prompt: {final_prompt}")
 
-            self._evaluation(crossed_population)
-            self._update_elitist(crossed_population)
-
-            self._long_term_reflection(short_term_reflection_tuple[0])
-            self._cache_data(
-                self._long_term_reflection_str,
-                self._make_output_path("long_term_reflection")
-            )
-
-            mutated_population = self._mutate()
-            self._evaluation(mutated_population)
-
-            population = np.append(population, np.array(crossed_population))
-            population = np.append(population, np.array(mutated_population))
-            self._update_elitist(population)
-            population = self._survive(population, temperature=1e-1)
-
-            self._update_iter(population)
-
-        self.logger.info(f"BEST SCORE: {self.best_score_overall}")
-        self.logger.info(f"BEST PROMPT:\n{self.best_prompt_overall}")
-
-        population = self._reranking(population)
-        population = population[:4]
-        population[3] = self.elitist
-        self._evaluation(population, split='validation')
-        self._cache_population(
-            population,
-            self._make_output_path('best_prompts_infer.yaml')
+        self._cache_data(
+            {"final_prompt": final_prompt, "final_score": final_score},
+            os.path.join(self.output_path, "final_results.yaml")
         )
-        self._update_elitist(population)
-        return self.elitist.text
+
+        return final_prompt
