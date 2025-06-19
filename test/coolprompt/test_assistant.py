@@ -55,9 +55,16 @@ class TestPromptTuner(unittest.TestCase):
         self.assertEqual(prompt_tuner._model, self.mock_model)
 
     def test_initialization(self):
+        """Testing the initialization of PromptTuner"""
+
         self._test_init(self.prompt_tuner)
 
     def test_initialization_without_model(self):
+        """
+        Testing the initialization of PromptTuner when
+        the model is not provided and default model is launching
+        """
+
         patcher = patch('coolprompt.assistant.DefaultLLM.init')
         mock_model_init = patcher.start()
         mock_model_init.return_value = self.mock_model
@@ -68,18 +75,27 @@ class TestPromptTuner(unittest.TestCase):
         patcher.stop()
 
     def test_get_task_prompt_template_classification(self):
+        """Testing that PromptTuner is using proper classification template"""
+
         self.assertEqual(
             self.prompt_tuner.get_task_prompt_template('classification'),
             CLASSIFICATION_TASK_TEMPLATE
         )
 
     def test_get_task_prompt_template_generation(self):
+        """Testing that PromptTuner is using proper generation template"""
+
         self.assertEqual(
             self.prompt_tuner.get_task_prompt_template('generation'),
             GENERATION_TASK_TEMPLATE
         )
 
     def test_run_unsupported_method(self):
+        """
+        Testing that run raises an exception when
+        the unsupported method name is provided
+        """
+
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
                 self.START_PROMPT,
@@ -87,6 +103,11 @@ class TestPromptTuner(unittest.TestCase):
             )
 
     def test_run_dataset_but_no_target(self):
+        """
+        Testing that run raises an exception when
+        the dataset is provided without target
+        """
+
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
                 self.START_PROMPT,
@@ -94,6 +115,11 @@ class TestPromptTuner(unittest.TestCase):
             )
 
     def test_run_target_is_smaller_than_dataset(self):
+        """
+        Testing that run raises an exception when
+        the length of dataset doesn't match the length of targets
+        """
+
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
                 self.START_PROMPT,
@@ -102,6 +128,11 @@ class TestPromptTuner(unittest.TestCase):
             )
 
     def test_run_incorrect_metric(self):
+        """
+        Testing that run raises an exception when
+        the incorrect or unsupported metric name is provided
+        """
+
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
                 self.START_PROMPT,
@@ -111,6 +142,10 @@ class TestPromptTuner(unittest.TestCase):
             )
 
     def test_naive_optimizer_without_dataset(self):
+        """
+        Testing the work of naive optimizer when the dataset is not provided
+        """
+
         final_prompt = self.prompt_tuner.run(self.START_PROMPT)
         self.mock_naive_optimizer.assert_called_once_with(
             self.mock_model,
@@ -119,6 +154,17 @@ class TestPromptTuner(unittest.TestCase):
         self.assertEqual(final_prompt, self.FINAL_PROMPT)
 
     def test_run_metrics_check(self):
+        """
+        Testing that the metrics will be evaluated after optimization
+        when the dataset is provided
+
+        Also testing that the naive optimizer is working when
+        the dataset is provided
+
+        Also testing that the default metric will be loaded if
+        no metric name is provided
+        """
+
         self.prompt_tuner.run(
             self.START_PROMPT,
             dataset=[],
@@ -133,10 +179,20 @@ class TestPromptTuner(unittest.TestCase):
         )
 
     def test_run_reflective_without_problem_description(self):
+        """
+        Testing that run raises an exception when
+        the reflective optimizer is called without problem description
+        """
+
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(self.START_PROMPT, method='reflective')
 
     def test_run_reflective_without_dataset(self):
+        """
+        Testing that run raises an exception when
+        the reflective optimizer is called without dataset
+        """
+
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
                 self.START_PROMPT,
@@ -145,7 +201,15 @@ class TestPromptTuner(unittest.TestCase):
             )
 
     def test_run_reflective_empty_dataset(self):
-        with self.assertRaises(ValueError):
+        """
+        Testing that run raises an exception when
+        the reflective optimizer is called with empty or small dataset
+
+        P.S. small dataset will raise an exception when
+        is tried to be splitted into train/val split
+        """
+
+        with self.assertRaises(Exception):
             self.prompt_tuner.run(
                 self.START_PROMPT,
                 dataset=[],
@@ -155,6 +219,8 @@ class TestPromptTuner(unittest.TestCase):
             )
 
     def test_run_reflective(self):
+        """Testing the work of reflective optimizer"""
+
         self.assertEqual(
             self.prompt_tuner.run(
                 self.START_PROMPT,

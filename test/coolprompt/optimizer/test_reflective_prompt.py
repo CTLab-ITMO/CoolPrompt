@@ -20,6 +20,8 @@ class TestReflectivePrompt(unittest.TestCase):
         self.patcher.stop()
 
     def test_reflective_prompt(self):
+        """Testing the contract of reflectiveprompt function"""
+
         final_prompt = reflectiveprompt(
             ANY,
             (ANY, ANY, ANY, ANY),

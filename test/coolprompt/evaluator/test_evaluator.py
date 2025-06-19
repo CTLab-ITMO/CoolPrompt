@@ -25,11 +25,14 @@ class TestEvaluator(unittest.TestCase):
         self.patcher.stop()
 
     def test_initialization(self):
+        """Testing initialization of Evaluator"""
+
         self.assertEqual(self.evaluator.model, self.mock_model)
         self.assertEqual(self.evaluator.metric, self.mock_metric)
         self.mock_create_metric.assert_called_once_with("f1")
 
     def test_get_full_prompt_classification(self):
+        """Testing usage right classification prompt template"""
         self.mock_metric.label_to_id = {"positive": 0, "negative": 1}
 
         prompt = "Analyze sentiment"
@@ -49,6 +52,8 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(full_prompt, expected_prompt)
 
     def test_get_full_prompt_generation(self):
+        """Testing usage right generation prompt template"""
+
         prompt = "Summarize this text"
         sample = "Long article about AI..."
         full_prompt = self.evaluator._get_full_prompt(
@@ -64,10 +69,14 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(full_prompt, expected_prompt)
 
     def test_get_full_prompt_invalid_task(self):
+        """Testing behaviour when the incorrect task is provided"""
+
         with self.assertRaises(ValueError):
             self.evaluator._get_full_prompt("prompt", "sample", "invalid_task")
 
     def test_evaluate_classification(self):
+        """Testing the work of classification task evaluation"""
+
         prompt = "Classify sentiment"
         dataset = ["Great movie!", "Terrible experience"]
         targets = [1, 0]
@@ -89,6 +98,8 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(result, 1.0)
 
     def test_evaluate_generation(self):
+        """Testing the work of generation task evaluation"""
+
         prompt = "Summarize this text"
         dataset = ["First long text...", "Second long text..."]
         targets = ["Short summary 1", "Short summary 2"]
@@ -109,12 +120,16 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(result, 0.666)
 
     def test_evaluate_empty_dataset(self):
+        """Testing that evaluation can be called with empty dataset"""
+
         result = self.evaluator.evaluate("Prompt", [], [], "classification")
         self.mock_model.batch.assert_called_once_with([])
         self.mock_metric.compute.assert_called_once_with(ANY, [])
         self.assertEqual(result, self.mock_metric.compute.return_value)
 
     def test_evaluate_label_extraction_classification(self):
+        """Testing the work of label extraction function"""
+
         self.mock_metric.label_to_id = {}
         self.mock_metric.extract_labels.side_effect = lambda labels: setattr(
             self.mock_metric,

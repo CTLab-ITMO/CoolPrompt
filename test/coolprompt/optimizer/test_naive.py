@@ -12,6 +12,8 @@ class TestNaiveOptimizer(unittest.TestCase):
             "[PROMPT_START]Final Prompt[PROMPT_END]"
 
     def test_naive_optimizer(self):
+        """Testing the contract of naive optimization function"""
+
         self.assertEqual(
             "Final Prompt",
             naive_optimizer(self.mock_model, "Input Prompt")

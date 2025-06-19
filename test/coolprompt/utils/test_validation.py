@@ -16,10 +16,17 @@ class TestValidateModel(unittest.TestCase):
         self.patcher.stop()
 
     def test_validate_model_correct(self):
+        """Testing the work of validate_model function"""
+
         self.isinstance_mock.return_value = True
         validate_model(ANY)
 
     def test_validate_model_incorrect(self):
+        """
+        Testing that the validate_model raises an exception when
+        the given model is not a BaseLanguageModel instance
+        """
+
         self.isinstance_mock.return_value = False
         with self.assertRaises(TypeError):
             validate_model(ANY)

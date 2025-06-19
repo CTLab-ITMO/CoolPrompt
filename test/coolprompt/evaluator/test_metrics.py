@@ -28,6 +28,8 @@ class TestClassificationMetric(unittest.TestCase):
         self.patcher.stop()
 
     def test_initialization(self):
+        """Testing the initialization of classification metric"""
+
         self.assertEqual(self.name, self.metric._name)
         self.mock_create_metric.assert_called_once_with(self.name)
         self.assertEqual(self.metric._metric, self.mock_metric)
@@ -41,6 +43,8 @@ class TestClassificationMetric(unittest.TestCase):
         self.assertIsNone(self.metric.label_to_id)
 
     def test_encode_labels(self):
+        """Testing the work of encode labels function"""
+
         outputs = ['1', '2']
         targets = ['1', '2']
         encoded_outputs, encoded_targets = self.metric._encode_labels(
@@ -51,6 +55,11 @@ class TestClassificationMetric(unittest.TestCase):
         self.assertListEqual(encoded_targets, [0, 1])
 
     def test_encode_labels_mismatch(self):
+        """
+        Testing the work of encode labels function
+        when outputs mismatch targets
+        """
+
         outputs = ['213]', '2']
         targets = ['1', '2']
         encoded_outputs, encoded_targets = self.metric._encode_labels(
@@ -61,6 +70,8 @@ class TestClassificationMetric(unittest.TestCase):
         self.assertListEqual(encoded_targets, [0, 1])
 
     def test_extract_labels(self):
+        """Testing the work of extract labels function"""
+
         targets = ['target1', 'target2']
         self.metric.extract_labels(targets)
         self.assertDictEqual(
@@ -69,11 +80,15 @@ class TestClassificationMetric(unittest.TestCase):
         )
 
     def test_empty_targets_extract_labels(self):
+        """Testing that the extraction can be produced for empty targets"""
+
         empty_targets = []
         self.metric.extract_labels(empty_targets)
         self.assertDictEqual(self.metric.label_to_id, {})
 
     def test_compute(self):
+        """Testing the work of compute method"""
+
         outputs = ['<ans>1</ans>', '<ans>2</ans>']
         targets = ['1', '2']
         self.mock_metric.compute.return_value = {self.name: 1.0}
@@ -82,6 +97,11 @@ class TestClassificationMetric(unittest.TestCase):
         self.assertEqual(result, 1)
 
     def test_different_length_compute(self):
+        """
+        Testing that compute raises exception
+        when the length of outputs doesn't match the length of targets
+        """
+
         different_length_outputs = ['just one output']
         targets = ['1', '2']
         self.mock_metric.compute.side_effect = ValueError()
@@ -109,12 +129,16 @@ class TestGenerationMetric(unittest.TestCase):
             self.name = 'rougeL'
 
     def test_initialization(self):
+        """Testing the initialization of generation metric"""
+
         self.mock_create_metric.assert_called_once_with(self.name)
         self.assertEqual(self.metric._metric, self.mock_metric)
         self._fix_name()
         self.assertEqual(self.name, self.metric._name)
 
     def test_compute(self):
+        """Testing the work of compute method"""
+
         outputs = ['some', 'outputs']
         slightly_mismatched_targets = ['some', 'targets']
         self._fix_name()
@@ -124,6 +148,11 @@ class TestGenerationMetric(unittest.TestCase):
         )
 
     def test_different_length_compute(self):
+        """
+        Testing that compute raises exception
+        when the length of outputs doesn't match the length of targets
+        """
+
         different_length_outputs = ['just one output']
         targets = ['1', '2']
         self.mock_metric.compute.side_effect = ValueError()
@@ -143,40 +172,72 @@ class TestUtilityFunctions(unittest.TestCase):
         self.patcher.stop()
 
     def test_create_classification_metric(self):
+        """
+        Testing the work of create_metric function for classification task
+        """
+
         self.assertIsInstance(
             create_metric(np.random.choice(list(CLASSIFICATION_METRICS))),
             ClassificationMetric
         )
 
     def test_create_generation_metric(self):
+        """
+        Testing the work of create_metric function for generation task
+        """
+
         self.assertIsInstance(
             create_metric(np.random.choice(list(GENERATION_METRICS))),
             GenerationMetric
         )
 
     def test_create_invalid_metric(self):
+        """
+        Testing that create_metric raises an exception when
+        the incorrect metric name is provided
+        """
+
         with self.assertRaises(ValueError):
             create_metric('random_not_metric')
 
     def test_validate_metric_correct(self):
+        """Testing the work of validate_metric method"""
+
         metric = np.random.choice(list(CLASSIFICATION_METRICS))
         output = validate_metric('classification', metric)
         self.assertIsInstance(output, str)
         self.assertEqual(output, metric)
 
     def test_validate_metric_incorrect_task(self):
+        """
+        Testing that validate_metric raises an exception when
+        the incorrect task is provided
+        """
+
         with self.assertRaises(ValueError):
-            validate_metric('incorrect task', 'metric')
+            validate_metric('incorrect task', 'f1')
 
     def test_validate_metric_incorrect_metric(self):
+        """
+        Testing that validate_metric raises an exception when
+        the incorrect metric name is provided
+        """
+
         with self.assertRaises(ValueError):
             validate_metric('classification', 'incorrect metric')
 
     def test_validate_metric_mismatched_metric(self):
+        """
+        Testing that validate_metric raises an exception when
+        the metric doesn't match the task
+        """
+
         with self.assertRaises(ValueError):
             validate_metric('classification', 'meteor')
 
     def test_get_default_metric(self):
+        """Testing the work of get_default_metric function"""
+
         task = np.random.choice(['classification', 'generation'])
         metric = get_default_metric(task)
         if task == 'classification':
@@ -185,4 +246,8 @@ class TestUtilityFunctions(unittest.TestCase):
             self.assertEqual(metric, 'meteor')
 
     def test_get_default_metric_incorrect_task(self):
+        """
+        Testing that get_default_metric returns None for the incorrect task
+        """
+
         self.assertIsNone(get_default_metric('incorrect task'))

@@ -20,4 +20,6 @@ class TestDefaultLLM(unittest.TestCase):
         self.patcher.stop()
 
     def test_init(self):
+        """Testing the contract of init function"""
+
         self.assertEqual(DefaultLLM.init(), self.mock_model)
