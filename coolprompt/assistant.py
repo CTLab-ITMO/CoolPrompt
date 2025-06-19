@@ -39,6 +39,7 @@ class PromptTuner:
         method: str = "naive",
         metric: str = None,
         problem_description: str = None,
+        validation_size: float = 0.25,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -58,6 +59,11 @@ class PromptTuner:
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
+            validation_size (float):
+                A float that should be between 0.0 and 1.0 and
+                represent the proportion of the dataset
+                to include in the validation split.
+                Defaults to 0.25.
             **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
@@ -89,6 +95,10 @@ class PromptTuner:
             )
 
         if dataset is not None:
+            if target is None:
+                raise ValueError('Must provide target with dataset')
+            if len(dataset) != len(target):
+                raise ValueError('Dataset and target must have equal length')
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
@@ -108,7 +118,7 @@ class PromptTuner:
             dataset_split = train_test_split(
                 dataset,
                 target,
-                test_size=0.25
+                test_size=validation_size
             )
             final_prompt = reflectiveprompt(
                 model=self._model,
@@ -130,7 +140,7 @@ class PromptTuner:
 
         return final_prompt
 
-    def get_task_prompt_template(task: str) -> str:
+    def get_task_prompt_template(self, task: str) -> str:
         """Returns the prompt template for the given task.
 
         Args:
