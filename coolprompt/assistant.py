@@ -39,6 +39,7 @@ class PromptTuner:
         method: str = "naive",
         metric: str = None,
         problem_description: str = None,
+        validation_size: float = 0.25,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -58,6 +59,11 @@ class PromptTuner:
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
+            validation_size (float):
+                A float that should be between 0.0 and 1.0 and
+                represent the proportion of the dataset
+                to include in the validation split.
+                Defaults to 0.25.
             **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
@@ -109,14 +115,10 @@ class PromptTuner:
                     "Train dataset is not defined for "
                     "ReflectivePrompt optimization"
                 )
-            if len(dataset) < 4:
-                test_size = 0.5
-            else:
-                test_size = 0.25
             dataset_split = train_test_split(
                 dataset,
                 target,
-                test_size=test_size
+                test_size=validation_size
             )
             final_prompt = reflectiveprompt(
                 model=self._model,
