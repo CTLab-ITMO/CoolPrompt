@@ -15,7 +15,7 @@ def naive_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     """
     template = NAIVE_PROMPT_TEMPLATE
     start_tag, end_tag = "[PROMPT_START]", "[PROMPT_END]"
-    answer = model.invoke(template.replace("<PROMPT>", prompt)).strip()
+    answer = model.invoke(template.replace("<QUERY>", prompt)).strip()
     return answer[
-        answer.find(start_tag) + len(start_tag) : answer.find(end_tag)
+        answer.rfind(start_tag) + len(start_tag) : answer.rfind(end_tag)
     ]

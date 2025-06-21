@@ -9,7 +9,7 @@ from langchain_community.llms import VLLM
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.default import (
     DEFAULT_MODEL_NAME,
-    DEFAULT_MODEL_PARAMETERS
+    DEFAULT_MODEL_PARAMETERS,
 )
 
 
@@ -40,11 +40,9 @@ class DefaultLLM:
         if langchain_config is not None:
             generation_and_model_config.update(langchain_config)
 
-        terminators = ["<|endoftext|>", "<|im_end|>", "\n\n", ""]
         return VLLM(
             model=DEFAULT_MODEL_NAME,
             trust_remote_code=True,
-            stops=terminators,
             dtype='float16',
             vllm_kwargs=vllm_engine_config,
             **generation_and_model_config
