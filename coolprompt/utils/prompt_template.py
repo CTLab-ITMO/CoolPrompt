@@ -1,4 +1,4 @@
-NAIVE_PROMPT_TEMPLATE = """
+HYPE_PROMPT_TEMPLATE = """
 ### ROLE ###
 You are an expert prompt engineer. Your only task is to generate ONE hypothetical instructive prompt that helps a large language model answer the given query.
 
