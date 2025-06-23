@@ -20,7 +20,11 @@ authors = [
   { name="Viktor Zhuravlev", email="viktor.zhuravlev1919@gmail.com" },
 ]
 maintainers = [
-  { name="Nikita Kulin", email="serito1998@gmail.com" }
+  { name="Nikita Kulin", email="serito1998@gmail.com" },
+  { name="Artur Khairullin", email="anderbrine05@gmail.com" },
+  { name="Alena Sitkina", email="sitkina.alena2017@yandex.ru" },
+  { name="Ernest Dyagin", email="tsenred@yandex.com" },
+  { name="Viktor Zhuravlev", email="viktor.zhuravlev1919@gmail.com" },
 ]
 description = "A framework for automative prompting creation"
 readme = "README.md"
