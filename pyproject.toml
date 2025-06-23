@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
 include = ["coolprompt"]  # package names should match these glob patterns (["*"] by default)
-exclude = ["notebooks", "data"]  # exclude packages matching these glob patterns (empty by default)
+exclude = ["notebooks", "data", "test", "src"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false
 
 [project]
@@ -13,17 +13,47 @@ name = "coolprompt"
 version = "0.0.3"
 authors = [
   { name="Nikita Kulin", email="serito1998@gmail.com" },
+  { name="Artur Khairullin", email="anderbrine05@gmail.com" },
+  { name="Alena Sitkina", email="sitkina.alena2017@yandex.ru" },
+  { name="Ernest Dyagin", email="tsenred@yandex.com" },
+  { name="Viktor Zhuravlev", email="viktor.zhuravlev1919@gmail.com" },
+]
+maintainers = [
+  { name="Nikita Kulin", email="serito1998@gmail.com" }
 ]
 description = "A framework for automative prompting creation"
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "evaluate==0.4.3",
+  "minio==7.2.15",
+  "pandas==2.2.3",
+  "tqdm==4.67.1",
+  "vllm==0.7.3",
+  "urllib3==2.3.0",
+  "nltk==3.9.1",
+  "supar==1.1.4",
+  "rouge_score==0.1.2",
+  "scikit-learn==1.6.1",
+  "langchain==0.3.25",
+  "langchain-community==0.3.24",
+  "langchain-core==0.3.59",
 ]
 license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]
+keywords = ["prompting", "autoprompting", "llm", "transformers", "prompt"]
 
 [project.urls]
 Homepage = "https://github.com/CTLab-ITMO/CoolPrompt"
 Issues = "https://github.com/CTLab-ITMO/CoolPrompt/issues"
+Documentation = "https://github.com/CTLab-ITMO/CoolPrompt"
+Repository = "https://github.com/CTLab-ITMO/CoolPrompt"
+Changelog = "https://github.com/CTLab-ITMO/CoolPrompt/blob/master/CHANGELOG.md"
