@@ -1,5 +1,9 @@
+"""High-level entry point for the DistillPrompt optimization process."""
+
 from typing import List, Tuple
-from langchain.llms.base import BaseLanguageModel
+
+from langchain_core.language_models.base import BaseLanguageModel
+
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.distill_prompt.distiller import Distiller
 
@@ -10,35 +14,38 @@ def distillprompt(
     evaluator: Evaluator,
     task: str,
     initial_prompt: str,
-    **kwargs,
+    *,
+    num_epochs: int = 10,
+    output_path: str = './distillprompt_outputs',
+    use_cache: bool = True,
 ) -> str:
-    """Runs DistillPrompt optimization.
+    """Runs the full DistillPrompt optimization process.
+
+    This function serves as a convenient wrapper around the Distiller class,
+    simplifying the setup and execution of a prompt optimization task.
 
     Args:
-        model (BaseLanguageModel): a LLM to use.
-        dataset_split (Tuple[List[str], List[str], List[str], List[str]]):
-            train/valid split of dataset and corresponding targets.
-        evaluator (Evaluator): evaluator to compute metrics.
-        task (str): type of task to optimize for
-            (classification or generation).
-        initial_prompt (str): Base prompt for optimization
-        **kwargs (dict[str, Any]): other parameters
-            (such as num_epochs, output_path).
+        model: The language model to use for generating and refining prompts.
+        dataset_split: A tuple containing the training and validation data in the
+            order: (train_dataset, validation_dataset, train_targets,
+            validation_targets).
+        evaluator: The evaluator instance used to score prompts.
+        task: The type of task to optimize for (e.g., 'classification').
+        initial_prompt: The starting prompt to be optimized.
+        num_epochs: The number of optimization rounds to perform.
+        output_path: The directory path to save logs and cached results.
+        use_cache: If True, caches intermediate results to the output path.
 
     Returns:
-        str: best optimized prompt.
+        The best prompt found after the optimization process.
     """
     (
         train_dataset,
         validation_dataset,
         train_targets,
-        validation_targets
+        validation_targets,
     ) = dataset_split
-    args = {
-        'num_epochs': 10,
-        'output_path': './distillprompt_outputs'
-    }
-    args.update(kwargs)
+
     distiller = Distiller(
         model=model,
         evaluator=evaluator,
@@ -48,8 +55,9 @@ def distillprompt(
         validation_targets=validation_targets,
         task=task,
         base_prompt=initial_prompt,
-        num_epochs=args['num_epochs'],
-        output_path=args['output_path']
+        num_epochs=num_epochs,
+        output_path=output_path,
+        use_cache=use_cache,
     )
-    final_prompt = distiller.distillation()
-    return final_prompt
+
+    return distiller.distillation()

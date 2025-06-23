@@ -1,101 +1,57 @@
-"""
-Caching Evaluator Module
+"""Utility functions for prompt optimization experiments.
 
-This module provides the CachingEvaluator class, which is used to evaluate prompts
-with caching to avoid redundant computations. It also includes a utility function
-to set random seeds for reproducibility.
+This module provides a TextSampler class for drawing random examples from a
+dataset and a utility function to set random seeds for major libraries to
+ensure experimental reproducibility.
 """
-
 
 import os
 import random
-import typing as tp
+from typing import List, Tuple
 
 import numpy as np
 import torch
-from vllm import LLM
-from transformers import PreTrainedTokenizer, PreTrainedTokenizerFast
-
-from src.evaluation.evaluator import BaseNLPEvaluator
-from src.utils.eval_utils import create_ds_from_task
 
 
-class CachingEvaluator:
-    """
-    A class for evaluating prompts with caching to improve efficiency.
+class TextSampler:
+    """A simple class to randomly sample text-label pairs from a dataset."""
 
-    This class evaluates prompts using a language model and caches the results
-    to avoid redundant computations for the same prompt and evaluation settings.
-    """
-
-    def __init__(self, task: str, model: LLM, tokenizer: PreTrainedTokenizer | PreTrainedTokenizerFast,
-                 base_evaluator: BaseNLPEvaluator, default_gen_args: dict[str, tp.Any],  batch_size: int = 100):
-        """
-        Initializes the CachingEvaluator with the necessary components.
+    def __init__(self, texts: List[str], labels: List[str]) -> None:
+        """Initializes the TextSampler with texts and corresponding labels.
 
         Args:
-            task (str): The name of the task for which prompts are evaluated.
-            model (LLM): The language model used for evaluation.
-            tokenizer (PreTrainedTokenizer | PreTrainedTokenizerFast): The tokenizer for processing text.
-            base_evaluator (BaseNLPEvaluator): The evaluator used to assess the model's performance.
-            default_gen_args (dict[str, tp.Any]): Default arguments for model generation.
-            batch_size (int): The batch size for evaluation.
+            texts: A list of text strings.
+            labels: A list of corresponding labels.
         """
-        self.task_name = task
-        self.model = model
-        self.tokenizer = tokenizer
+        self.texts = texts
+        self.labels = labels
 
-        self.base_evaluator = base_evaluator
-        self.default_gen_args = default_gen_args
-        self.batch_size = batch_size
+    def sample(self, count: int) -> List[Tuple[str, str]]:
+        """Samples a specified number of text-label pairs without replacement.
 
-
-        self.cache = {}
-
-    def _score_prompt(self, prompt, model_gen_args, split, sample):
-        
-        eval_ds = create_ds_from_task(
-            self.task_name,
-            tokenizer=self.tokenizer,
-            split=split,
-            prompt=prompt,
-            sample=sample
-        )
-        
-        metrics = self.base_evaluator.evaluate_vllm(
-            model=self.model,
-            tokenizer=self.tokenizer,
-            eval_ds=eval_ds,
-            batch_size=self.batch_size,
-            model_generate_args=model_gen_args
-        )
-        
-        return metrics
-
-    def __call__(self, prompt: str, split='train', sample=100) -> dict[str, float]:
-        """
-        Evaluates a prompt and returns cached results if available.
+        If the requested count is larger than the dataset size, it returns
+        all the available data.
 
         Args:
-            prompt (str): The prompt to be evaluated.
-            split (str): The dataset split to use for evaluation ('train' or 'test').
-            sample (int): The number of samples to use for evaluation.
+            count: The number of samples to retrieve.
 
         Returns:
-            dict[str, float]: A dictionary of evaluation metrics.
+            A list of tuples, where each tuple contains a text and its
+            corresponding label.
         """
-        if (prompt, split, sample) not in self.cache:
-            self.cache[(prompt, split, sample)] = self._score_prompt(prompt, self.default_gen_args, split, sample)
-        
-        return self.cache[(prompt, split, sample)]
+        sample_size = min(count, len(self.texts))
+        indices = random.sample(range(len(self.texts)), sample_size)
+        return [(self.texts[i], self.labels[i]) for i in indices]
 
 
-def seed_everyting(seed: int = 42):
-    """
-    Sets random seeds for various libraries to ensure reproducibility.
+def seed_everything(seed: int = 42) -> None:
+    """Sets random seeds for Python, NumPy, and PyTorch to ensure reproducibility.
+
+    This function sets seeds for the `random` module, `os.environ`, `numpy`,
+    and `torch` (if available).
 
     Args:
-        seed (int): The seed value to use for random number generation.
+        seed: The integer value to use for all random seeds.
     """
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)

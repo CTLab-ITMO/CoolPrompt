@@ -1,245 +1,136 @@
-"""
-Prompt Transformation Framework
+"""Prompt Transformation Framework.
 
-Provides main class that implements different prompt transformations using LLM.
+Provides the PromptTransformer class, which implements various strategies for
+refining and generating prompts using a Large Language Model (LLM). This includes
+methods for compression, distillation, aggregation, and synonym generation.
 """
+from typing import List
 
-from candidate import Candidate
-from sampler import TextSampler
-from src.utils.eval_utils import LLMWrapper
+from langchain_core.language_models.base import BaseLanguageModel
+
+from coolprompt.utils import distillprompt_templates
+from coolprompt.optimizer.distill_prompt.candidate import Candidate
+from coolprompt.optimizer.distill_prompt.utils import TextSampler
 
 
 class PromptTransformer:
-    """Class for expanding prompts"""
-    
-    def __init__(self, model_wrapper: LLMWrapper, sampler: TextSampler):
-        """
-        Initializes the PromptTransformer with a model wrapper and a text sampler.
+    """Implements various transformations for prompt engineering."""
 
-        Args:
-            model_wrapper (LLMWrapper): An instance of LLMWrapper for interacting with the language model.
-            sampler (TextSampler): An instance of TextSampler for sampling text examples.
-        """ 
-        self.model_wrapper = model_wrapper
+    def __init__(self, model: BaseLanguageModel, sampler: TextSampler) -> None:
+        """Initializes the PromptTransformer."""
+        self.model = model
         self.sampler = sampler
-        
-    def aggregate_prompts(self, candidates: list[Candidate], temperature: float = 0.4) -> str:
-        """
-        Aggregates multiple prompts into a single concise prompt.
 
-        Args:
-            candidates (list[Candidate]): A list of Candidate objects containing prompts to aggregate.
-            temperature (float): The temperature setting for the language model, controlling randomness.
+    def aggregate_prompts(
+        self, candidates: List[Candidate], temperature: float = 0.4
+    ) -> str:
+        """Aggregates multiple prompts into a single concise prompt."""
+        formatted_prompts = self._format_prompts_for_aggregation(candidates)
+        aggregation_prompt = distillprompt_templates.AGGREGATION_PROMPT.format(
+            formatted_prompts=formatted_prompts
+        )
+        answer = self.model.invoke(aggregation_prompt, temperature=temperature)
+        return self._parse_tagged_text(str(answer), "<START>", "<END>")
 
-        Returns:
-            str: A new aggregated prompt.
-        """      
-        def format_prompts(candidates: list[Candidate]) -> str:
-            prompts = [cand.prompt for cand in candidates]
-            
-            formatted_string = ""
-            
-            for i, prompt in enumerate(prompts):
-                formatted_string += f"Prompt {i}: {prompt}\n\n"
-            
-            return formatted_string 
-        
-        aggregation_prompt = f"""Below are several prompts intended for the same task:
+    def compress_prompts(
+        self, candidates: List[Candidate], temperature: float = 0.4
+    ) -> List[str]:
+        """Compresses multiple prompts into shorter versions."""
+        request_prompts = []
+        for candidate in candidates:
+            compression_prompt = distillprompt_templates.COMPRESSION_PROMPT.format(
+                candidate_prompt=candidate.prompt
+            )
+            request_prompts.append(compression_prompt)
 
-        {format_prompts(candidates)}
+        answers = self.model.batch(request_prompts, temperature=temperature)
+        return [
+            self._parse_tagged_text(answer, "<START>", "<END>")
+            for answer in answers
+        ]
 
-        Your task is to generate one clear and concise prompt that captures the general idea, overall objective, and key instructions conveyed by all of the above prompts.
-        Focus on the shared purpose and main concepts without including specific examples or extraneous details.    
+    def distill_samples(
+        self, candidates: List[Candidate], sample_count: int = 5,
+        temperature: float = 0.5
+    ) -> List[str]:
+        """Distills insights from training samples to improve prompts."""
+        request_prompts = []
+        for candidate in candidates:
+            train_samples = self.sampler.sample(sample_count)
+            sample_string = self._format_samples(train_samples)
+            prompt = distillprompt_templates.DISTILLATION_PROMPT
+            distillation_prompt = prompt.format(
+                candidate_prompt=candidate.prompt, sample_string=sample_string
+            )
+            request_prompts.append(distillation_prompt)
 
-        Return only the new prompt, and enclose it with <START> and <END> tags.
-        """
-        aggregation_prompt = '\n'.join([line.lstrip() for line in aggregation_prompt.split('\n')])
-        answer = self.model_wrapper(aggregation_prompt, temperature=temperature)
-        return self._parse_tagged_text(answer, "<START>", "<END>") # type: ignore
-        
-    
-    def compress_prompt(self, candidate: Candidate, temperature: float = 0.4) -> str:
-        """
-        Compresses a zero-shot classifier prompt into a shorter version.
+        answers = self.model.batch(request_prompts, temperature=temperature)
+        return [
+            self._parse_tagged_text(answer, "<START>", "<END>") 
+            for answer in answers
+        ]
 
-        Args:
-            candidate (Candidate): A Candidate object containing the prompt to compress.
-            temperature (float): The temperature setting for the language model, controlling randomness.
+    def generate_prompts(
+        self, candidate: Candidate, n: int = 4, temperature: float = 0.7
+    ) -> List[str]:
+        """Generates new prompts based on a candidate's score."""
+        generation_prompt = distillprompt_templates.GENERATION_PROMPT.format(
+            candidate_prompt=candidate.prompt, train_score=candidate.train_score
+        )
+        requests = [generation_prompt] * n
+        answers = self.model.batch(requests, temperature=temperature)
+        return [
+            self._parse_tagged_text(answer, "<START>", "<END>") 
+            for answer in answers
+        ]
 
-        Returns:
-            str: A compressed prompt.
-        """
-        compression_prompt = f"""I want to compress the following zero-shot classifier prompt into a shorter prompt of 2–3 concise sentences that capture its main objective and key ideas from any examples.
+    def generate_synonyms(
+        self, candidate: Candidate, n: int = 3, temperature: float = 0.7
+    ) -> List[str]:
+        """Generates semantic variations of a given prompt."""
+        rewriter_prompt = distillprompt_templates.REWRITER_PROMPT.format(
+            candidate_prompt=candidate.prompt
+        )
+        requests = [rewriter_prompt] * n
+        responses = self.model.batch(requests, temperature=temperature)
+        return [response for response in responses if response]
 
-        Current prompt: {candidate.prompt}
-
-        Steps:
-
-        Identify the main task or objective.
-        Extract the most important ideas illustrated by the examples.
-        Combine these insights into a brief, coherent prompt.
-
-        Return only the new prompt, and enclose it with <START> and <END> tags.
-        """
-
-        compression_prompt = '\n'.join([line.lstrip() for line in compression_prompt.split('\n')])
-        answer = self.model_wrapper(compression_prompt, temperature=temperature)
-
-        return self._parse_tagged_text(answer, "<START>", "<END>") # type: ignore
-                
-    def distill_samples(self, candidate: Candidate, sample_count: int = 5, temperature: float = 0.5) -> str:
-        """
-        Distills insights from training samples to improve a prompt.
-
-        Args:
-            candidate (Candidate): A Candidate object containing the prompt to distill.
-            sample_count (int): The number of training samples to use for distillation.
-            temperature (float): The temperature setting for the language model, controlling randomness.
-
-        Returns:
-            str: A distilled prompt.
-        """
-        train_samples: list[tuple[str, str]] = self.sampler.sample(sample_count)
-        
+    def convert_to_fewshot(
+        self, candidate: Candidate, sample_count: int = 3
+    ) -> str:
+        """Converts a zero-shot prompt into a few-shot format with examples."""
+        train_samples = self.sampler.sample(sample_count)
         sample_string = self._format_samples(train_samples)
-        
-
-        distillation_prompt = f"""You are an expert prompt engineer.
-
-        Current instruction prompt: {candidate.prompt}
-
-        Training examples: {sample_string}
-
-        Task:
-        Analyze the current prompt and training examples to understand common strengths and weaknesses.
-        Learn the general insights and patterns without copying any example text.
-        Rewrite the instruction prompt to improve clarity and effectiveness while maintaining the original intent.
-        Do not include any extraneous explanation or details beyond the revised prompt.
-
-        Return only the new prompt, and enclose it with <START> and <END> tags.
-        """
-        
-        distillation_prompt = '\n'.join([line.lstrip() for line in distillation_prompt.split('\n')])
-        answer = self.model_wrapper(distillation_prompt, temperature=temperature)
-        
-        return self._parse_tagged_text(answer, "<START>", "<END>") # type: ignore
-
-    
-    
-    def generate_prompts(self, candidate: Candidate, n: int = 4,
-                         temperature: float = 0.7) -> list[str]:
-        """
-        Generates new prompts based on a candidate's score and training dataset examples.
-
-        Args:
-            candidate (Candidate): The original prompt candidate.
-            n (int): The number of prompts to generate.
-            temperature (float): The temperature setting for the language model, controlling randomness.
-
-        Returns:
-            list[str]: A list of new prompts.
-        """
-
-        generation_prompt = f"""You are an expert in prompt analysis with exceptional comprehension skills.
-
-        Below is my current instruction prompt: {candidate.prompt}
-
-        On the train dataset, this prompt scored {candidate.train_score:0.3f} (with 1.0 being the maximum). 
-
-        Please analyze the prompt's weaknesses and generate an improved version that refines its clarity, focus, and instructional quality. Do not assume any data labels—focus solely on the quality of the prompt.
-
-        Return only the improved prompt, and enclose it with <START> and <END> tags.
-        Improved prompt: """
-        
-        generation_prompt = '\n'.join([line.lstrip() for line in generation_prompt.split('\n')])
-        answers = self.model_wrapper(generation_prompt, n=n, temperature=temperature)
-        
-        return [self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers]
+        return f"{candidate.prompt}\n\nExamples:\n{sample_string}"
 
     @staticmethod
-    def _format_samples(samples: list[tuple[str, str]]) -> str:
-        """
-        Formats training samples into a string representation:
-        turns [("Input1", "Out1"), ("Input2", "Out2")] into
-            Example 1:
-            Text: Input1
-            Label: Out1
-            
-            Example 2:
-            Text: Input2
-            Label: Out2
+    def _format_prompts_for_aggregation(candidates: List[Candidate]) -> str:
+        """Formats a list of candidate prompts for the aggregation prompt."""
+        return "\n\n".join(
+            [f"Prompt {i}: {cand.prompt}" for i, cand in enumerate(candidates)]
+        )
 
-        Args:
-            samples (list[tuple[str, str]]): A list of tuples containing input and output pairs.
+    @staticmethod
+    def _format_samples(samples: List[tuple[str, str]]) -> str:
+        """Formats training samples into a string for few-shot examples."""
+        formatted_strings = []
+        for i, (text_input, output) in enumerate(samples):
+            formatted_strings.append(
+                f'Example {i + 1}:\n'
+                f'Text: "{text_input.strip()}"\n'
+                f'Label: {output}'
+            )
+        return "\n\n".join(formatted_strings)
 
-        Returns:
-            str: A formatted string of examples.
-        """
-        formatted_string = ""
-        for i, (input, output) in enumerate(samples):
-                formatted_string += f'Example {i + 1}:\n'
-                formatted_string += f'Text: \"{input.strip()}\"\nLabel: {output}\n\n'
-        
-        return formatted_string
-            
-    @staticmethod       
+    @staticmethod
     def _parse_tagged_text(text: str, start_tag: str, end_tag: str) -> str:
-        """
-        Parses text that is tagged with start and end tags.
-
-        Args:
-            text (str): The text to parse.
-            start_tag (str): The start tag to look for.
-            end_tag (str): The end tag to look for.
-
-        Returns:
-            str: The text enclosed between the start and end tags.
-        """
+        """Parses text enclosed within start and end tags."""
         start_index = text.find(start_tag)
         if start_index == -1:
             return text
+
         end_index = text.find(end_tag, start_index)
         if end_index == -1:
             return text
+
         return text[start_index + len(start_tag):end_index].strip()
-
-
-    def generate_synonyms(self, candidate: Candidate,  n: int = 3,
-                          temperature: float = 0.7) -> list[str]:
-        """
-        Generates synonyms for a prompt.
-
-        Args:
-            candidate (Candidate): A Candidate object containing the prompt to generate synonyms for.
-            n (int): The number of synonyms to generate.
-            temperature (float): The temperature setting for the language model, controlling randomness.
-
-        Returns:
-            list[str]: A list of synonym prompts.
-        """
-        rewriter_prompt = f"Generate a variation of the following prompt while keeping the semantic meaning.\n\nInput: {candidate.prompt}\n\nOutput:"
-        new_prompts = self.model_wrapper(rewriter_prompt, n=n, temperature=temperature)
-        new_prompts = [x for x in new_prompts if x]
-        return new_prompts
-    
-    def convert_to_fewshot(self, candidate: Candidate, sample_count: int = 3) -> str:
-        """
-        Converts a prompt into a few-shot format with examples.
-
-        Args:
-            candidate (Candidate): A Candidate object containing the prompt to convert.
-            sample_count (int): The number of examples to include.
-
-        Returns:
-            str: A few-shot formatted prompt with examples.
-        """
-        train_samples: list[tuple[str, str]] = self.sampler.sample(sample_count)
-        
-        sample_string = self._format_samples(train_samples)
-        
-        instruction_prompt = candidate.prompt
-        
-        fewshot_prompt = instruction_prompt + '\n\n' + "Examples:\n" + sample_string
-        
-        return fewshot_prompt
-        

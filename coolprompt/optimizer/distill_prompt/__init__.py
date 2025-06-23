@@ -1,5 +1,5 @@
-# from coolprompt.optimizer.reflective_prompt.run import reflectiveprompt
+from coolprompt.optimizer.distill_prompt.run import distillprompt
 
-# __all__ = [
-#     'reflectiveprompt'
-# ]
+__all__ = [
+    'distillprompt'
+]
