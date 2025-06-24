@@ -30,7 +30,14 @@ class BaseMetric(ABC):
     Provides common infrastructure for loading metrics
     from HuggingFace's evaluate library and defining
     metric computation interfaces.
+
+    Attributes:
+        ANS_TAGS: tuple - Start and end tags for answer extraction
+        FORMAT_MISMATCH_LABEL: int - Special value indicating parsing failure
     """
+
+    ANS_TAGS = ("<ans>", "</ans>")
+    FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
@@ -62,6 +69,24 @@ class BaseMetric(ABC):
             **self._compute_kwargs)[self._name]
 
     @abstractmethod
+    def _encode_labels(
+        self,
+        output_labels: list[str | int],
+        targets: list[str | int]
+    ) -> tuple[list[int] | list[str], list[int] | list[str]]:
+        """Encode labels into internal representation for both
+        outputs and targets.
+
+        Args:
+            output_labels (list[str|int]): Extracted labels from model outputs.
+            targets (list[str|int]): Ground truth labels.
+        Returns:
+            tuple[list[int], list[int]]: Encoded output labels
+            and encoded targets.
+        """
+
+        pass
+
     def compute(self,
                 outputs: list[str | int],
                 targets: list[str | int]) -> float:
@@ -75,7 +100,20 @@ class BaseMetric(ABC):
         Returns:
             float: Computed metric value
         """
-        pass
+        output_labels = list(map(
+            lambda x: extract_answer(
+                x,
+                self.ANS_TAGS,
+                self.FORMAT_MISMATCH_LABEL
+            ),
+            outputs
+        ))
+        targets = list(map(str, targets))
+        encoded_output_labels, encoded_targets = self._encode_labels(
+            output_labels,
+            targets
+        )
+        return self._compute_raw(encoded_output_labels, encoded_targets)
 
 
 class ClassificationMetric(BaseMetric):
@@ -84,14 +122,7 @@ class ClassificationMetric(BaseMetric):
     Handles extraction of labels from model outputs
     containing XML-style <ans> tags
     and label encoding for metric computation.
-
-    Attributes:
-        ANS_TAGS: tuple - Start and end tags for answer extraction
-        FORMAT_MISMATCH_LABEL: int - Special value indicating parsing failure
     """
-
-    ANS_TAGS = ("<ans>", "</ans>")
-    FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str):
         """Initialize metric with specified evaluate library metric name.
@@ -141,38 +172,6 @@ class ClassificationMetric(BaseMetric):
             if label not in self.label_to_id:
                 self.label_to_id[label] = len(self.label_to_id)
 
-    def compute(self,
-                outputs: list[str | int],
-                targets: list[str | int]) -> float:
-        """Compute the classification metric from model
-        outputs and ground truth targets.
-
-        This method extracts labels from outputs,
-        encodes them along with targets,
-        and computes the metric value.
-
-        Args:
-            outputs (list[str|int]): Model output strings.
-            targets (list[str|int]): Ground truth labels.
-        Returns:
-            float: The computed metric value.
-        """
-
-        output_labels = list(map(
-            lambda x: extract_answer(
-                x,
-                self.ANS_TAGS,
-                self.FORMAT_MISMATCH_LABEL
-            ),
-            outputs
-        ))
-        targets = list(map(str, targets))
-        encoded_output_labels, encoded_targets = self._encode_labels(
-            output_labels,
-            targets
-        )
-        return self._compute_raw(encoded_output_labels, encoded_targets)
-
 
 class GenerationMetric(BaseMetric):
     """Base class for generation metrics.
@@ -192,20 +191,21 @@ class GenerationMetric(BaseMetric):
         if name == "rouge":
             self._name = "rougeL"
 
-    def compute(self,
-                outputs: list[str | int],
-                targets: list[str | int]) -> float:
-        """Compute the generation metric
-        from model outputs and reference targets.
+    def _encode_labels(
+        self,
+        output_labels: list[str | int],
+        targets: list[str | int]
+    ) -> tuple[list[int] | list[str], list[int] | list[str]]:
+        """Does nothing
 
         Args:
-            outputs (list[str]): Model-generated text outputs.
-            targets (list[str]):- Reference texts.
+            output_labels (list[str|int]): Extracted labels from model outputs.
+            targets (list[str|int]): Ground truth labels.
         Returns:
-            float: The computed metric value.
+            tuple[list[str], list[str]]: input values
         """
 
-        return self._compute_raw(outputs, targets)
+        return output_labels, targets
 
 
 def create_metric(name: str) -> BaseMetric:

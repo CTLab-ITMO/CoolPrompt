@@ -126,4 +126,12 @@ Input:
 
 Response:
 """
-GENERATION_TASK_TEMPLATE = "{PROMPT}\n\nINPUT:\n{INPUT}\n\nRESPONSE:\n"
+GENERATION_TASK_TEMPLATE = """{PROMPT}
+
+Generate the final answer bracketed with <ans> and </ans>.
+
+INPUT:
+{INPUT}
+
+RESPONSE:
+"""
