@@ -7,9 +7,11 @@ from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.utils.validation import validate_model
-from coolprompt.utils.prompt_template import (
+from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )
@@ -19,6 +21,13 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
     METHODS = ["hype", "reflective"]
+
+    TEMPLATE_MAP = {
+        ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
+        ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
+        ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
+        ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
+    }
 
     def __init__(self, model: BaseLanguageModel = None) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
@@ -47,17 +56,12 @@ class PromptTuner:
         Returns:
             str: The prompt template for the given task.
         """
-        template_map = {
-            ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
-            ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
-            ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
-            ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
-        }
+
         if task not in ["classification", "generation"]:
             raise ValueError(f"Invalid task type: {task}")
         if method not in self.METHODS:
             raise ValueError(f"Invalid method: {method}")
-        return template_map[(task, method)]
+        return self.TEMPLATE_MAP[(task, method)]
 
     def run(
         self,

@@ -1,6 +1,6 @@
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.utils.prompt_template import HYPE_PROMPT_TEMPLATE
+from coolprompt.utils.prompt_templates.hype_templates import HYPE_PROMPT_TEMPLATE
 
 
 def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:

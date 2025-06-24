@@ -2,9 +2,11 @@ import unittest
 from unittest.mock import MagicMock, patch, ANY
 
 from coolprompt.assistant import PromptTuner
-from coolprompt.utils.prompt_template import (
+from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )

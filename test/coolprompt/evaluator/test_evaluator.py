@@ -3,9 +3,11 @@ from unittest.mock import MagicMock, patch, ANY
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator.evaluator import Evaluator
-from coolprompt.utils.prompt_template import (
+from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )
