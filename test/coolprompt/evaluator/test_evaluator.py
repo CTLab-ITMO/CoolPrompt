@@ -5,7 +5,9 @@ from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.evaluator.evaluator import Evaluator
 from coolprompt.utils.prompt_template import (
     CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE
+    GENERATION_TASK_TEMPLATE,
+    CLASSIFICATION_TASK_TEMPLATE_HYPE,
+    GENERATION_TASK_TEMPLATE_HYPE,
 )
 
 
@@ -15,7 +17,7 @@ class TestEvaluator(unittest.TestCase):
         self.mock_model = MagicMock(spec=BaseLanguageModel)
         self.mock_metric = MagicMock()
 
-        self.patcher = patch('coolprompt.evaluator.evaluator.create_metric')
+        self.patcher = patch("coolprompt.evaluator.evaluator.create_metric")
         self.mock_create_metric = self.patcher.start()
         self.mock_create_metric.return_value = self.mock_metric
 
@@ -38,18 +40,23 @@ class TestEvaluator(unittest.TestCase):
         prompt = "Analyze sentiment"
         sample = "I love this product!"
         full_prompt = self.evaluator._get_full_prompt(
-            prompt,
-            sample,
-            "classification"
+            prompt, sample, "classification", CLASSIFICATION_TASK_TEMPLATE
         )
 
         expected_labels = "positive, negative"
         expected_prompt = CLASSIFICATION_TASK_TEMPLATE.format(
-            PROMPT=prompt,
-            LABELS=expected_labels,
-            INPUT=sample
+            PROMPT=prompt, LABELS=expected_labels, INPUT=sample
         )
         self.assertEqual(full_prompt, expected_prompt)
+
+        full_prompt_hype = self.evaluator._get_full_prompt(
+            prompt, sample, "classification", CLASSIFICATION_TASK_TEMPLATE_HYPE
+        )
+
+        expected_prompt_hype = CLASSIFICATION_TASK_TEMPLATE_HYPE.format(
+            PROMPT=prompt, LABELS=expected_labels, INPUT=sample
+        )
+        self.assertEqual(full_prompt_hype, expected_prompt_hype)
 
     def test_get_full_prompt_generation(self):
         """Testing usage right generation prompt template"""
@@ -57,22 +64,33 @@ class TestEvaluator(unittest.TestCase):
         prompt = "Summarize this text"
         sample = "Long article about AI..."
         full_prompt = self.evaluator._get_full_prompt(
-            prompt,
-            sample,
-            "generation"
+            prompt, sample, "generation", GENERATION_TASK_TEMPLATE
         )
 
         expected_prompt = GENERATION_TASK_TEMPLATE.format(
-            PROMPT=prompt,
-            INPUT=sample
+            PROMPT=prompt, INPUT=sample
         )
         self.assertEqual(full_prompt, expected_prompt)
+
+        full_prompt_hype = self.evaluator._get_full_prompt(
+            prompt, sample, "generation", GENERATION_TASK_TEMPLATE_HYPE
+        )
+
+        expected_prompt_hype = GENERATION_TASK_TEMPLATE_HYPE.format(
+            PROMPT=prompt, INPUT=sample
+        )
+        self.assertEqual(full_prompt_hype, expected_prompt_hype)
 
     def test_get_full_prompt_invalid_task(self):
         """Testing behaviour when the incorrect task is provided"""
 
         with self.assertRaises(ValueError):
-            self.evaluator._get_full_prompt("prompt", "sample", "invalid_task")
+            self.evaluator._get_full_prompt(
+                "prompt",
+                "sample",
+                "invalid_task",
+                CLASSIFICATION_TASK_TEMPLATE,
+            )
 
     def test_evaluate_classification(self):
         """Testing the work of classification task evaluation"""
@@ -81,19 +99,21 @@ class TestEvaluator(unittest.TestCase):
         dataset = ["Great movie!", "Terrible experience"]
         targets = [1, 0]
         task = "classification"
+        template = CLASSIFICATION_TASK_TEMPLATE
 
         self.mock_model.batch.return_value = ["positive", "negative"]
 
         self.mock_metric.compute.return_value = 1.0
 
-        result = self.evaluator.evaluate(prompt, dataset, targets, task)
+        result = self.evaluator.evaluate(
+            prompt, dataset, targets, task, template
+        )
 
         self.mock_metric.extract_labels.assert_called_once_with(targets)
         self.mock_model.batch.assert_called_once()
 
         self.mock_metric.compute.assert_called_once_with(
-            ["positive", "negative"],
-            targets
+            ["positive", "negative"], targets
         )
         self.assertEqual(result, 1.0)
 
@@ -104,25 +124,29 @@ class TestEvaluator(unittest.TestCase):
         dataset = ["First long text...", "Second long text..."]
         targets = ["Short summary 1", "Short summary 2"]
         task = "generation"
+        template = GENERATION_TASK_TEMPLATE
 
         self.mock_model.batch.return_value = ["Summary 1", "Summary 2"]
 
         self.mock_metric.compute.return_value = 0.666
 
-        result = self.evaluator.evaluate(prompt, dataset, targets, task)
+        result = self.evaluator.evaluate(
+            prompt, dataset, targets, task, template
+        )
 
         self.mock_model.batch.assert_called_once()
 
         self.mock_metric.compute.assert_called_once_with(
-            ["Summary 1", "Summary 2"],
-            targets
+            ["Summary 1", "Summary 2"], targets
         )
         self.assertEqual(result, 0.666)
 
     def test_evaluate_empty_dataset(self):
         """Testing that evaluation can be called with empty dataset"""
 
-        result = self.evaluator.evaluate("Prompt", [], [], "classification")
+        result = self.evaluator.evaluate(
+            "Prompt", [], [], "classification", CLASSIFICATION_TASK_TEMPLATE
+        )
         self.mock_model.batch.assert_called_once_with([])
         self.mock_metric.compute.assert_called_once_with(ANY, [])
         self.assertEqual(result, self.mock_metric.compute.return_value)
@@ -133,8 +157,8 @@ class TestEvaluator(unittest.TestCase):
         self.mock_metric.label_to_id = {}
         self.mock_metric.extract_labels.side_effect = lambda labels: setattr(
             self.mock_metric,
-            'label_to_id',
-            {str(lbl): i for i, lbl in enumerate(sorted(set(labels)))}
+            "label_to_id",
+            {str(lbl): i for i, lbl in enumerate(sorted(set(labels)))},
         )
 
         targets = ["cat", "dog", "cat"]
@@ -143,11 +167,9 @@ class TestEvaluator(unittest.TestCase):
             "Classify",
             ["sample"],
             targets,
-            "classification"
+            "classification",
+            CLASSIFICATION_TASK_TEMPLATE,
         )
 
         self.mock_metric.extract_labels.assert_called_once_with(targets)
-        self.assertEqual(
-            self.mock_metric.label_to_id,
-            {"cat": 0, "dog": 1}
-        )
+        self.assertEqual(self.mock_metric.label_to_id, {"cat": 0, "dog": 1})

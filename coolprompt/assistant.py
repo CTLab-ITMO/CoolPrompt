@@ -34,6 +34,31 @@ class PromptTuner:
 
         validate_model(self._model)
 
+    def get_task_prompt_template(self, task: str, method: str) -> str:
+        """Returns the prompt template for the given task.
+
+        Args:
+            task (str):
+                The type of task, either "classification" or "generation".
+            method (str):
+                Optimization method to use.
+                Available methods are: ['hype', 'reflective']
+
+        Returns:
+            str: The prompt template for the given task.
+        """
+        template_map = {
+            ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
+            ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
+            ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
+            ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
+        }
+        if task not in ["classification", "generation"]:
+            raise ValueError(f"Invalid task type: {task}")
+        if method not in self.METHODS:
+            raise ValueError(f"Invalid method: {method}")
+        return template_map[(task, method)]
+
     def run(
         self,
         start_prompt: str,
@@ -133,36 +158,12 @@ class PromptTuner:
             )
 
         if dataset is not None:
+            template = self.get_task_prompt_template(task, method)
             self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target, task
+                start_prompt, dataset, target, task, template
             )
             self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target, task
+                final_prompt, dataset, target, task, template
             )
 
         return final_prompt
-
-    def get_task_prompt_template(self, task: str, method: str) -> str:
-        """Returns the prompt template for the given task.
-
-        Args:
-            task (str):
-                The type of task, either "classification" or "generation".
-            method (str):
-                Optimization method to use.
-                Available methods are: ['hype', 'reflective']
-
-        Returns:
-            str: The prompt template for the given task.
-        """
-        template_map = {
-            ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
-            ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
-            ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
-            ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
-        }
-        if task not in ["classification", "generation"]:
-            raise ValueError(f"Invalid task type: {task}")
-        if method not in self.METHODS:
-            raise ValueError(f"Invalid method: {method}")
-        return template_map[(task, method)]
