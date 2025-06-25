@@ -11,7 +11,7 @@ from scipy.special import softmax
 import yaml
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
-from coolprompt.utils.prompt_template import (
+from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE,
     REFLECTIVEPROMPT_CROSSOVER_TEMPLATE,
     REFLECTIVEPROMPT_MUTATION_TEMPLATE,

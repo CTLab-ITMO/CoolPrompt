@@ -1,11 +1,9 @@
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator.metrics import create_metric
-from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
-                                              GENERATION_TASK_TEMPLATE)
 
 
-class Evaluator():
+class Evaluator:
     """Evaluator class to perform model evaluation using a specified metric.
 
     This class ties together a language model and an evaluation metric,
@@ -23,6 +21,7 @@ class Evaluator():
         dataset: list[str],
         targets: list[str | int],
         task: str,
+        template: str,
     ) -> float:
         """
         Evaluate the model on a dataset
@@ -41,6 +40,7 @@ class Evaluator():
                 Corresponding ground truth labels or references.
             task (str):
                 The type of task, either "classification" or "generation".
+            template (str): Prompt template for defined task type
 
         Returns:
             float: The computed evaluation metric score.
@@ -49,11 +49,16 @@ class Evaluator():
         if task == "classification":
             self.metric.extract_labels(targets)
         answers = self.model.batch(
-            [self._get_full_prompt(prompt, sample, task) for sample in dataset]
+            [
+                self._get_full_prompt(prompt, sample, task, template)
+                for sample in dataset
+            ]
         )
         return self.metric.compute(answers, targets)
 
-    def _get_full_prompt(self, prompt: str, sample: str, task: str) -> str:
+    def _get_full_prompt(
+        self, prompt: str, sample: str, task: str, template: str
+    ) -> str:
         """Inserts parts of the prompt into the task template.
 
         Args:
@@ -61,6 +66,7 @@ class Evaluator():
             sample (str): the input sample
             task (str):
                 The type of task, either "classification" or "generation".
+            template (str): Prompt template for defined task type
 
         Raises:
             ValueError: if type of task is not supported
@@ -70,11 +76,9 @@ class Evaluator():
         """
 
         if task == "classification":
-            labels = ', '.join(map(str, self.metric.label_to_id.keys()))
-            return CLASSIFICATION_TASK_TEMPLATE.format(
-                PROMPT=prompt, LABELS=labels, INPUT=sample)
+            labels = ", ".join(map(str, self.metric.label_to_id.keys()))
+            return template.format(PROMPT=prompt, LABELS=labels, INPUT=sample)
         elif task == "generation":
-            return GENERATION_TASK_TEMPLATE.format(
-                PROMPT=prompt, INPUT=sample)
+            return template.format(PROMPT=prompt, INPUT=sample)
         else:
             raise ValueError(f"Unknown task type: {task}")
