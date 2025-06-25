@@ -76,6 +76,7 @@ Bracket the final prompt with <prompt> </prompt>.
 """
 
 CLASSIFICATION_TASK_TEMPLATE = """{PROMPT}
+
 Answer using the label from [{LABELS}].
 Generate the final answer bracketed with <ans> and </ans>.
 
@@ -86,6 +87,8 @@ Response:
 """
 
 GENERATION_TASK_TEMPLATE = """{PROMPT}
+
+Generate the final answer bracketed with <ans> and </ans>.
 
 INPUT:
 {INPUT}
