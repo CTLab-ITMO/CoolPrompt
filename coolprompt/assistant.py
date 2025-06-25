@@ -4,17 +4,30 @@ from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_metric
 from coolprompt.language_model.llm import DefaultLLM
-from coolprompt.optimizer.naive import naive_optimizer
+from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.utils.validation import validate_model
-from coolprompt.utils.prompt_template import (CLASSIFICATION_TASK_TEMPLATE,
-                                              GENERATION_TASK_TEMPLATE)
+from coolprompt.utils.prompt_templates.reflective_templates import (
+    CLASSIFICATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.utils.prompt_templates.hype_templates import (
+    CLASSIFICATION_TASK_TEMPLATE_HYPE,
+    GENERATION_TASK_TEMPLATE_HYPE,
+)
 
 
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
-    METHODS = ['naive', 'reflective']
+    METHODS = ["hype", "reflective"]
+
+    TEMPLATE_MAP = {
+        ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
+        ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
+        ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
+        ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
+    }
 
     def __init__(self, model: BaseLanguageModel = None) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
@@ -30,13 +43,33 @@ class PromptTuner:
 
         validate_model(self._model)
 
+    def get_task_prompt_template(self, task: str, method: str) -> str:
+        """Returns the prompt template for the given task.
+
+        Args:
+            task (str):
+                The type of task, either "classification" or "generation".
+            method (str):
+                Optimization method to use.
+                Available methods are: ['hype', 'reflective']
+
+        Returns:
+            str: The prompt template for the given task.
+        """
+
+        if task not in ["classification", "generation"]:
+            raise ValueError(f"Invalid task type: {task}")
+        if method not in self.METHODS:
+            raise ValueError(f"Invalid method: {method}")
+        return self.TEMPLATE_MAP[(task, method)]
+
     def run(
         self,
         start_prompt: str,
         task: str = "generation",
         dataset: Iterable[str] = None,
         target: Iterable[str] | Iterable[int] = None,
-        method: str = "naive",
+        method: str = "hype",
         metric: str = None,
         problem_description: str = None,
         validation_size: float = 0.25,
@@ -54,8 +87,8 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: ['naive', 'reflective']
-                Defaults to naive.
+                Available methods are: ['hype', 'reflective']
+                Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
@@ -76,7 +109,7 @@ class PromptTuner:
                 for ReflectivePrompt.
 
         Note:
-            Uses naive optimization
+            Uses HyPE optimization
             when dataset or method parameters are not provided.
 
             Uses default metric for the task type
@@ -90,21 +123,21 @@ class PromptTuner:
 
         if method not in self.METHODS:
             raise ValueError(
-                f"Unsupported method {method}.\n" +
-                f"Available methods: {', '.join(self.METHODS)}"
+                f"Unsupported method {method}.\n"
+                + f"Available methods: {', '.join(self.METHODS)}"
             )
 
         if dataset is not None:
             if target is None:
-                raise ValueError('Must provide target with dataset')
+                raise ValueError("Must provide target with dataset")
             if len(dataset) != len(target):
-                raise ValueError('Dataset and target must have equal length')
+                raise ValueError("Dataset and target must have equal length")
             metric = validate_metric(task, metric)
             evaluator = Evaluator(self._model, metric)
 
-        if method == 'naive':
-            final_prompt = naive_optimizer(self._model, start_prompt)
-        elif method == 'reflective':
+        if method == "hype":
+            final_prompt = hype_optimizer(self._model, start_prompt)
+        elif method == "reflective":
             if problem_description is None:
                 raise ValueError(
                     "Problem description should be provided for "
@@ -116,9 +149,7 @@ class PromptTuner:
                     "ReflectivePrompt optimization"
                 )
             dataset_split = train_test_split(
-                dataset,
-                target,
-                test_size=validation_size
+                dataset, target, test_size=validation_size
             )
             final_prompt = reflectiveprompt(
                 model=self._model,
@@ -127,33 +158,16 @@ class PromptTuner:
                 task=task,
                 problem_description=problem_description,
                 initial_prompt=start_prompt,
-                **kwargs
+                **kwargs,
             )
 
         if dataset is not None:
+            template = self.get_task_prompt_template(task, method)
             self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target, task
+                start_prompt, dataset, target, task, template
             )
             self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target, task
+                final_prompt, dataset, target, task, template
             )
 
         return final_prompt
-
-    def get_task_prompt_template(self, task: str) -> str:
-        """Returns the prompt template for the given task.
-
-        Args:
-            task (str):
-                The type of task, either "classification" or "generation".
-
-        Returns:
-            str: The prompt template for the given task.
-        """
-
-        if task == "classification":
-            return CLASSIFICATION_TASK_TEMPLATE
-        elif task == "generation":
-            return GENERATION_TASK_TEMPLATE
-        else:
-            raise ValueError(f"Invalid task type: {task}")

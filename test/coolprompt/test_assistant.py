@@ -2,9 +2,13 @@ import unittest
 from unittest.mock import MagicMock, patch, ANY
 
 from coolprompt.assistant import PromptTuner
-from coolprompt.utils.prompt_template import (
+from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE
+    GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.utils.prompt_templates.hype_templates import (
+    CLASSIFICATION_TASK_TEMPLATE_HYPE,
+    GENERATION_TASK_TEMPLATE_HYPE,
 )
 
 
@@ -14,29 +18,30 @@ class TestPromptTuner(unittest.TestCase):
 
     def setUp(self):
         self.validate_model_patcher = patch(
-            'coolprompt.assistant.validate_model'
+            "coolprompt.assistant.validate_model"
         )
         self.mock_validate_model = self.validate_model_patcher.start()
 
         self.mock_evaluator = MagicMock()
         self.mock_evaluator.evaluate.return_value = 0.5
         self.evaluator_patcher = patch(
-            'coolprompt.assistant.Evaluator.__new__'
+            "coolprompt.assistant.Evaluator.__new__"
         )
         self.mock_evaluator_init = self.evaluator_patcher.start()
         self.mock_evaluator_init.return_value = self.mock_evaluator
 
-        self.naive_optimizer_patcher = patch(
-            'coolprompt.assistant.naive_optimizer'
+        self.hype_optimizer_patcher = patch(
+            "coolprompt.assistant.hype_optimizer"
         )
-        self.mock_naive_optimizer = self.naive_optimizer_patcher.start()
-        self.mock_naive_optimizer.return_value = self.FINAL_PROMPT
+        self.mock_hype_optimizer = self.hype_optimizer_patcher.start()
+        self.mock_hype_optimizer.return_value = self.FINAL_PROMPT
 
         self.reflective_optimizer_patcher = patch(
-            'coolprompt.assistant.reflectiveprompt'
+            "coolprompt.assistant.reflectiveprompt"
         )
-        self.mock_reflective_optimizer = \
+        self.mock_reflective_optimizer = (
             self.reflective_optimizer_patcher.start()
+        )
         self.mock_reflective_optimizer.return_value = self.FINAL_PROMPT
 
         self.mock_model = MagicMock()
@@ -45,7 +50,7 @@ class TestPromptTuner(unittest.TestCase):
     def tearDown(self):
         self.validate_model_patcher.stop()
         self.evaluator_patcher.stop()
-        self.naive_optimizer_patcher.stop()
+        self.hype_optimizer_patcher.stop()
         self.reflective_optimizer_patcher.stop()
 
     def _test_init(self, prompt_tuner):
@@ -65,7 +70,7 @@ class TestPromptTuner(unittest.TestCase):
         the model is not provided and default model is launching
         """
 
-        patcher = patch('coolprompt.assistant.DefaultLLM.init')
+        patcher = patch("coolprompt.assistant.DefaultLLM.init")
         mock_model_init = patcher.start()
         mock_model_init.return_value = self.mock_model
         prompt_tuner = PromptTuner()
@@ -78,17 +83,51 @@ class TestPromptTuner(unittest.TestCase):
         """Testing that PromptTuner is using proper classification template"""
 
         self.assertEqual(
-            self.prompt_tuner.get_task_prompt_template('classification'),
-            CLASSIFICATION_TASK_TEMPLATE
+            self.prompt_tuner.get_task_prompt_template(
+                "classification", "reflective"
+            ),
+            CLASSIFICATION_TASK_TEMPLATE,
+        )
+        self.assertEqual(
+            self.prompt_tuner.get_task_prompt_template(
+                "classification", "hype"
+            ),
+            CLASSIFICATION_TASK_TEMPLATE_HYPE,
         )
 
     def test_get_task_prompt_template_generation(self):
         """Testing that PromptTuner is using proper generation template"""
 
         self.assertEqual(
-            self.prompt_tuner.get_task_prompt_template('generation'),
-            GENERATION_TASK_TEMPLATE
+            self.prompt_tuner.get_task_prompt_template(
+                "generation", "reflective"
+            ),
+            GENERATION_TASK_TEMPLATE,
         )
+        self.assertEqual(
+            self.prompt_tuner.get_task_prompt_template("generation", "hype"),
+            GENERATION_TASK_TEMPLATE_HYPE,
+        )
+
+    def test_get_task_prompt_template_unsupported_task(self):
+        """
+        Testing that using get_task_prompt_template raises
+        an exception when the unsupported task type is provided
+        """
+
+        with self.assertRaises(ValueError):
+            self.prompt_tuner.get_task_prompt_template("unknown task", "hype")
+
+    def test_get_task_prompt_template_unsupported_method(self):
+        """
+        Testing that using get_task_prompt_template raises
+        an exception when the unsupported method is provided
+        """
+
+        with self.assertRaises(ValueError):
+            self.prompt_tuner.get_task_prompt_template(
+                "classification", "unknown method"
+            )
 
     def test_run_unsupported_method(self):
         """
@@ -98,8 +137,7 @@ class TestPromptTuner(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
-                self.START_PROMPT,
-                method='unsupported method'
+                self.START_PROMPT, method="unsupported method"
             )
 
     def test_run_dataset_but_no_target(self):
@@ -109,10 +147,7 @@ class TestPromptTuner(unittest.TestCase):
         """
 
         with self.assertRaises(ValueError):
-            self.prompt_tuner.run(
-                self.START_PROMPT,
-                dataset=[]
-            )
+            self.prompt_tuner.run(self.START_PROMPT, dataset=[])
 
     def test_run_target_is_smaller_than_dataset(self):
         """
@@ -121,11 +156,7 @@ class TestPromptTuner(unittest.TestCase):
         """
 
         with self.assertRaises(ValueError):
-            self.prompt_tuner.run(
-                self.START_PROMPT,
-                dataset=['s'],
-                target=[]
-            )
+            self.prompt_tuner.run(self.START_PROMPT, dataset=["s"], target=[])
 
     def test_run_incorrect_metric(self):
         """
@@ -138,18 +169,17 @@ class TestPromptTuner(unittest.TestCase):
                 self.START_PROMPT,
                 dataset=[],
                 target=[],
-                metric="incorrect metric"
+                metric="incorrect metric",
             )
 
-    def test_naive_optimizer_without_dataset(self):
+    def test_hype_optimizer_without_dataset(self):
         """
-        Testing the work of naive optimizer when the dataset is not provided
+        Testing the work of HyPE optimizer when the dataset is not provided
         """
 
         final_prompt = self.prompt_tuner.run(self.START_PROMPT)
-        self.mock_naive_optimizer.assert_called_once_with(
-            self.mock_model,
-            self.START_PROMPT
+        self.mock_hype_optimizer.assert_called_once_with(
+            self.mock_model, self.START_PROMPT
         )
         self.assertEqual(final_prompt, self.FINAL_PROMPT)
 
@@ -158,7 +188,7 @@ class TestPromptTuner(unittest.TestCase):
         Testing that the metrics will be evaluated after optimization
         when the dataset is provided
 
-        Also testing that the naive optimizer is working when
+        Also testing that the HyPE optimizer is working when
         the dataset is provided
 
         Also testing that the default metric will be loaded if
@@ -175,7 +205,7 @@ class TestPromptTuner(unittest.TestCase):
         self.mock_evaluator_init.assert_called_once_with(
             ANY,
             self.mock_model,
-            "meteor"  # check for default metric if None is passed
+            "meteor",  # check for default metric if None is passed
         )
 
     def test_run_reflective_without_problem_description(self):
@@ -185,7 +215,7 @@ class TestPromptTuner(unittest.TestCase):
         """
 
         with self.assertRaises(ValueError):
-            self.prompt_tuner.run(self.START_PROMPT, method='reflective')
+            self.prompt_tuner.run(self.START_PROMPT, method="reflective")
 
     def test_run_reflective_without_dataset(self):
         """
@@ -195,9 +225,7 @@ class TestPromptTuner(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.prompt_tuner.run(
-                self.START_PROMPT,
-                method='reflective',
-                problem_description=''
+                self.START_PROMPT, method="reflective", problem_description=""
             )
 
     def test_run_reflective_empty_dataset(self):
@@ -214,8 +242,8 @@ class TestPromptTuner(unittest.TestCase):
                 self.START_PROMPT,
                 dataset=[],
                 target=[],
-                method='reflective',
-                problem_description=''
+                method="reflective",
+                problem_description="",
             )
 
     def test_run_reflective(self):
@@ -224,12 +252,12 @@ class TestPromptTuner(unittest.TestCase):
         self.assertEqual(
             self.prompt_tuner.run(
                 self.START_PROMPT,
-                dataset=['1', '2'],
-                target=['1', '2'],
-                method='reflective',
-                problem_description=''
+                dataset=["1", "2"],
+                target=["1", "2"],
+                method="reflective",
+                problem_description="",
             ),
-            self.FINAL_PROMPT
+            self.FINAL_PROMPT,
         )
         self.assertEqual(self.prompt_tuner.init_metric, 0.5)
         self.assertEqual(self.prompt_tuner.final_metric, 0.5)
