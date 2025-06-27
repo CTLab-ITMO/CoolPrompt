@@ -6,6 +6,7 @@ from coolprompt.evaluator import Evaluator, validate_metric
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
+from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.validation import validate_model
 from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
@@ -20,13 +21,15 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
-    METHODS = ["hype", "reflective"]
+    METHODS = ["hype", "reflective", 'distill']
 
     TEMPLATE_MAP = {
         ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
         ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
+        ("classification", "distill"): CLASSIFICATION_TASK_TEMPLATE,
         ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
         ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
+        ("generation", "distill"): GENERATION_TASK_TEMPLATE,
     }
 
     def __init__(self, model: BaseLanguageModel = None) -> None:
@@ -39,7 +42,9 @@ class PromptTuner:
         """
         self._model = model or DefaultLLM.init()
         self.init_metric = None
+        self.init_prompt = None
         self.final_metric = None
+        self.final_prompt = None
 
         validate_model(self._model)
 
@@ -87,7 +92,7 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: ['hype', 'reflective']
+                Available methods are: ['hype', 'reflective', 'distill']
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
@@ -160,6 +165,31 @@ class PromptTuner:
                 initial_prompt=start_prompt,
                 **kwargs,
             )
+        elif method == 'distill':
+            if start_prompt is None:
+                raise ValueError(
+                    "Starting prompt should be provided for "
+                    "DistillPrompt optimization"
+                )
+            if dataset is None:
+                raise ValueError(
+                    "Train dataset is not defined for "
+                    "DistillPrompt optimization"
+                )
+                
+            dataset_split = train_test_split(
+                dataset,
+                target,
+                test_size=0.25
+            )
+            final_prompt = distillprompt(
+                model=self._model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                task=task,
+                initial_prompt=start_prompt,
+                **kwargs,
+            )
 
         if dataset is not None:
             template = self.get_task_prompt_template(task, method)
@@ -169,5 +199,8 @@ class PromptTuner:
             self.final_metric = evaluator.evaluate(
                 final_prompt, dataset, target, task, template
             )
+            
+        self.init_prompt = start_prompt
+        self.final_prompt = final_prompt
 
         return final_prompt
