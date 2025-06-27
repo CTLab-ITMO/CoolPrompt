@@ -15,9 +15,19 @@ from tqdm import tqdm
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
-from coolprompt.optimizer.distill_prompt.candidate import Candidate, CandidateHistory
+from coolprompt.utils.prompt_templates.reflective_templates import (
+    CLASSIFICATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.optimizer.distill_prompt.candidate import (
+    Candidate,
+    CandidateHistory
+)
 from coolprompt.optimizer.distill_prompt.generate import PromptTransformer
-from coolprompt.optimizer.distill_prompt.utils import TextSampler, seed_everyting
+from coolprompt.optimizer.distill_prompt.utils import (
+    TextSampler,
+    seed_everything,
+)
 
 
 class Distiller:
@@ -52,23 +62,27 @@ class Distiller:
         base_prompt: str,
         num_epochs: int = 10,
         output_path: str = './distillprompt_outputs',
-        use_cache: bool = True
+        use_cache: bool = True,
     ) -> None:
         """Initializes the Distiller with the given parameters.
 
         Args:
-            model: Language model to use for optimization.
-            evaluator: Evaluator to compute metrics.
-            train_dataset: Dataset to use while training.
-            train_targets: Targets for train dataset.
-            validation_dataset: Dataset to use while validating final prompts.
-            validation_targets: Targets for validation dataset.
-            task: Type of task to optimize for (classification or generation).
-            base_prompt: Initial prompt to start optimization from.
-            num_epochs: Number of epochs to evaluate. Defaults to 10.
-            output_path: Path to store logs of optimization. 
+            model (BaseLanguageModel): Language model to use for optimization.
+            evaluator (Evaluator): Evaluator to compute metrics.
+            train_dataset (List[str]): Dataset to use while training.
+            train_targets (List[str]): Targets for train dataset.
+            validation_dataset (List[str]): Dataset to use while validating
+                final prompts.
+            validation_targets (List[str]): Targets for validation dataset.
+            task (str): Type of task to optimize for (classification or
+                generation).
+            base_prompt (str): Initial prompt to start optimization from.
+            num_epochs (int, optional): Number of epochs to evaluate.
+                Defaults to 10.
+            output_path (str, optional): Path to store logs of optimization.
                 Defaults to './distillprompt_outputs'.
-            use_cache: Whether to cache intermediate results. Defaults to True.
+            use_cache (bool, optional): Whether to cache intermediate results.
+                Defaults to True.
         """
         self.model = model
         self.evaluator = evaluator
@@ -83,7 +97,7 @@ class Distiller:
         self.output_path = output_path
         self.iteration = 0
         
-        seed_everyting()
+        seed_everything()
         self._setup_logger()
 
     def _setup_logger(self) -> None:
@@ -120,23 +134,30 @@ class Distiller:
         """Evaluates a given prompt on the specified dataset split.
 
         Args:
-            prompt: The prompt to evaluate.
-            split: Dataset split to use ('train' or 'validation'). 
+            prompt (str): The prompt to evaluate.
+            split (str, optional): Dataset split to use ('train' or 'validation').
                 Defaults to 'train'.
 
         Returns:
-            Evaluation score for the prompt.
+            float: Evaluation score for the prompt.
         """
         if split == 'train':
             dataset, targets = self.train_dataset, self.train_targets
         else:
-            dataset, targets = self.validation_dataset, self.validation_targets
+            dataset = self.validation_dataset
+            targets = self.validation_targets
+        
+        if self.task == 'classification':
+            template = CLASSIFICATION_TASK_TEMPLATE
+        else:
+            template = GENERATION_TASK_TEMPLATE
             
         score = self.evaluator.evaluate(
             prompt=prompt,
             dataset=dataset,
             targets=targets,
-            task=self.task
+            task=self.task,
+            template=template
         )
         return score
 
@@ -144,8 +165,8 @@ class Distiller:
         """Writes data to a YAML file if caching is enabled.
 
         Args:
-            data: Data to cache.
-            savepath: Path where to save the data.
+            data (Any): Data to cache.
+            savepath (os.PathLike): Path where to save the data.
         """
         if not self.use_cache:
             return
@@ -158,10 +179,10 @@ class Distiller:
         """Creates full path for logging based on current iteration.
 
         Args:
-            filename: Base filename without extension.
+            filename (str): Base filename without extension.
 
         Returns:
-            Full path including iteration number and extension.
+            str: Full path including iteration number and extension.
         """
         return os.path.join(
             self.output_path, 
@@ -176,7 +197,7 @@ class Distiller:
         generation, evaluation, and refinement of prompts.
 
         Returns:
-            The best prompt found during optimization.
+            str: The best prompt found during optimization.
         """
         self.iteration = 0
         self.logger.info("Starting DistillPrompt optimization...")
@@ -199,27 +220,21 @@ class Distiller:
             # Generation
             gen_prompts = transformer.generate_prompts(best_candidate)
             gen_candidates = [
-                Candidate(prompt, self._evaluate(prompt)) 
+                Candidate(prompt, self._evaluate(prompt))
                 for prompt in gen_prompts
             ]
             history.extend(gen_candidates)
 
             # Distillation
-            distilled_prompts = [
-                transformer.distill_samples(candidate) 
-                for candidate in gen_candidates
-            ]
+            distilled_prompts = transformer.distill_samples(gen_candidates)
             distilled_candidates = [
-                Candidate(prompt, self._evaluate(prompt)) 
+                Candidate(prompt, self._evaluate(prompt))
                 for prompt in distilled_prompts
             ]
             history.extend(distilled_candidates)
 
             # Compression
-            compressed_prompts = [
-                transformer.compress_prompt(candidate) 
-                for candidate in distilled_candidates
-            ]
+            compressed_prompts = transformer.compress_prompts(distilled_candidates) 
             compressed_candidates = [
                 Candidate(prompt, self._evaluate(prompt)) 
                 for prompt in compressed_prompts
@@ -233,7 +248,7 @@ class Distiller:
                 self._evaluate(aggregated_prompt)
             )
             aggregated_synonyms = transformer.generate_synonyms(
-                aggregated_candidate, 
+                aggregated_candidate,
                 n=3
             )
             
@@ -262,7 +277,9 @@ class Distiller:
 
         final_prompt = best_candidate.prompt
         final_score = self._evaluate(final_prompt, split='validation')
-        self.logger.info(f"Final best prompt score on validation: {final_score}")
+        self.logger.info(
+            f"Final best prompt score on validation: {final_score}"
+        )
         self.logger.info(f"Final best prompt: {final_prompt}")
 
         self._cache_data(

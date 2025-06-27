@@ -20,8 +20,8 @@ class TextSampler:
         """Initializes the TextSampler with texts and corresponding labels.
 
         Args:
-            texts: A list of text strings.
-            labels: A list of corresponding labels.
+            texts (List[str]): A list of text strings.
+            labels (List[str]): A list of corresponding labels.
         """
         self.texts = texts
         self.labels = labels
@@ -33,11 +33,11 @@ class TextSampler:
         all the available data.
 
         Args:
-            count: The number of samples to retrieve.
+            count (int): The number of samples to retrieve.
 
         Returns:
-            A list of tuples, where each tuple contains a text and its
-            corresponding label.
+            List[Tuple[str, str]]: A list of tuples, where each tuple contains
+                a text and its corresponding label.
         """
         sample_size = min(count, len(self.texts))
         indices = random.sample(range(len(self.texts)), sample_size)
@@ -45,13 +45,15 @@ class TextSampler:
 
 
 def seed_everything(seed: int = 42) -> None:
-    """Sets random seeds for Python, NumPy, and PyTorch to ensure reproducibility.
+    """Sets random seeds for Python, NumPy, and PyTorch to ensure
+    reproducibility.
 
-    This function sets seeds for the `random` module, `os.environ`, `numpy`,
-    and `torch` (if available).
+    This function sets seeds for the `random` module, `os.environ`,
+    `numpy`, and `torch` (if available).
 
     Args:
-        seed: The integer value to use for all random seeds.
+        seed (int, optional): The integer value to use for all random seeds.
+            Defaults to 42.
     """
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)

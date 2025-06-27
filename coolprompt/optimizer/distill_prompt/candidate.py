@@ -13,8 +13,8 @@ class Candidate:
     """Represents a candidate with a prompt and its associated training score.
 
     Attributes:
-        prompt: The text of the prompt.
-        train_score: The training score associated with the prompt.
+        prompt (str): The text of the prompt.
+        train_score (float): The training score associated with the prompt.
     """
     prompt: str
     train_score: float
@@ -34,8 +34,9 @@ class CandidateHistory:
         """Initializes the history with an optional list of candidates.
 
         Args:
-            candidates: An optional list of Candidate objects to initialize
-                the history with.
+            candidates (Optional[List[Candidate]], optional): An optional list
+                of Candidate objects to initialize the history with. Defaults
+                to None.
         """
         self.candidates: List[Candidate] = []
         if candidates:
@@ -45,7 +46,7 @@ class CandidateHistory:
         """Adds a single Candidate to the history.
 
         Args:
-            candidate: The Candidate object to add.
+            candidate (Candidate): The Candidate object to add.
         """
         self.candidates.append(candidate)
 
@@ -53,7 +54,7 @@ class CandidateHistory:
         """Extends the history with a list of Candidate objects.
 
         Args:
-            candidates: A list of Candidate objects to add.
+            candidates (List[Candidate]): A list of Candidate objects to add.
         """
         self.candidates.extend(candidates)
 
@@ -65,7 +66,7 @@ class CandidateHistory:
         """Returns the candidate with the highest training score.
 
         Returns:
-            The Candidate object with the maximum training score.
+            Candidate: Candidate with the best score.
 
         Raises:
             ValueError: If there are no candidates in the history.

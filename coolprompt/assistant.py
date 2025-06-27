@@ -1,3 +1,4 @@
+from typing import Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 

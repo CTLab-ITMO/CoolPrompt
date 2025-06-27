@@ -25,19 +25,24 @@ def distillprompt(
     simplifying the setup and execution of a prompt optimization task.
 
     Args:
-        model: The language model to use for generating and refining prompts.
-        dataset_split: A tuple containing the training and validation data in the
-            order: (train_dataset, validation_dataset, train_targets,
+        model (BaseLanguageModel): The language model to use for generating
+            and refining prompts.
+        dataset_split (Tuple[List[str], List[str], List[str], List[str]]): A
+            tuple containing the training and validation data in the order:
+            (train_dataset, validation_dataset, train_targets,
             validation_targets).
-        evaluator: The evaluator instance used to score prompts.
-        task: The type of task to optimize for (e.g., 'classification').
-        initial_prompt: The starting prompt to be optimized.
-        num_epochs: The number of optimization rounds to perform.
-        output_path: The directory path to save logs and cached results.
-        use_cache: If True, caches intermediate results to the output path.
+        evaluator (Evaluator): The evaluator instance used to score prompts.
+        task (str): The type of task to optimize for (e.g., 'classification').
+        initial_prompt (str): The starting prompt to be optimized.
+        num_epochs (int, optional): The number of optimization rounds to
+            perform. Defaults to 10.
+        output_path (str, optional): The directory path to save logs and
+            cached results. Defaults to './distillprompt_outputs'.
+        use_cache (bool, optional): If True, caches intermediate results to
+            the output path. Defaults to True.
 
     Returns:
-        The best prompt found after the optimization process.
+        str: The best prompt found after the optimization process.
     """
     (
         train_dataset,
