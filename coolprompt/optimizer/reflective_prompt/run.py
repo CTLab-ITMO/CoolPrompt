@@ -58,7 +58,7 @@ def reflectiveprompt(
         output_path=args["output_path"],
         use_cache=args["use_cache"],
     )
-    logger.info("Running ReflectivePrompt optimization...")
+    logger.info("Starting ReflectivePrompt optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")
     logger.debug(f"Problem description:\n{problem_description}")
     final_prompt = evoluter.evolution()

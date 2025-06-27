@@ -10,6 +10,8 @@ from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.reflective_templates import (
+    CLASSIFICATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE,
     REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE,
     REFLECTIVEPROMPT_CROSSOVER_TEMPLATE,
     REFLECTIVEPROMPT_MUTATION_TEMPLATE,
@@ -130,11 +132,17 @@ class ReflectiveEvoluter:
             dataset, targets = self.train_dataset, self.train_targets
         else:
             dataset, targets = self.validation_dataset, self.validation_targets
+        template = (
+            CLASSIFICATION_TASK_TEMPLATE
+            if self.task == "classification"
+            else GENERATION_TASK_TEMPLATE
+        )
         score = self.evaluator.evaluate(
             prompt=prompt.text,
             dataset=dataset,
             targets=targets,
             task=self.task,
+            template=template,
         )
         prompt.set_score(score)
 
@@ -504,6 +512,7 @@ class ReflectiveEvoluter:
         Returns:
             str: best evoluted prompt
         """
+
         population = np.array(self._init_pop())
         self._cache_population(
             population, self._make_output_path("initial_population.yaml")

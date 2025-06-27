@@ -2,7 +2,8 @@ from typing import Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 from .logging_config import logger
 
-METHODS = ["hype", "reflective"]
+METHODS = ["hype", "reflective", "distill"]
+DATA_DRIVEN_METHODS = ["reflective", "distill"]
 TASKS = ["classification", "generation"]
 
 
@@ -87,10 +88,9 @@ def validate_dataset(dataset, target, method):
         #     logger.error(error_msg)
         #     raise ValueError(error_msg)
     else:
-        if method == "reflective":
+        if method in DATA_DRIVEN_METHODS:
             error_msg = (
-                "Train dataset is not defined "
-                "for ReflectivePrompt optimization"
+                "Train dataset is not defined " "for data-driven optimization"
             )
             logger.error(error_msg)
             raise ValueError(error_msg)

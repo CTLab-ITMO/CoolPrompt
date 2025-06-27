@@ -33,8 +33,6 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
-    METHODS = ["hype", "reflective", "distill"]
-
     TEMPLATE_MAP = {
         ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
         ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
@@ -86,7 +84,7 @@ class PromptTuner:
                 The type of task, either "classification" or "generation".
             method (str):
                 Optimization method to use.
-                Available methods are: ['hype', 'reflective']
+                Available methods are: ['hype', 'reflective', 'distill']
 
         Returns:
             str: The prompt template for the given task.
