@@ -71,9 +71,10 @@ class PromptTuner:
         self.final_metric = None
         self.final_prompt = None
 
+        logger.info("Validating the model")
         validate_model(self._model)
         logger.info(
-            "PromptTuner succesfully initialized with "
+            "PromptTuner successfully initialized with "
             f"model {type(self._model).__name__}"
         )
 

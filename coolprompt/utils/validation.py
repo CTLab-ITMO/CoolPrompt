@@ -7,6 +7,8 @@ TASKS = ["classification", "generation"]
 
 
 def validate_verbose(verbose):
+    """Checks that the provided verbose parameter is either 0, 1 or 2."""
+
     if verbose not in [0, 1, 2]:
         error_msg = f"Invalid verbose: {verbose}. Available values: 0, 1, 2."
         logger.error(error_msg)
@@ -14,14 +16,21 @@ def validate_verbose(verbose):
 
 
 def validate_model(model) -> None:
-    logger.info(f"Validating model: {model}")
+    """Checks that the provided model is a
+    LangChain BaseLanguageModel instance."""
+
     if not isinstance(model, BaseLanguageModel):
-        error_msg = "Model should be instance of LangChain BaseLanguageModel"
+        error_msg = (
+            "Provided model should be an "
+            "instance of LangChain BaseLanguageModel"
+        )
         logger.error(error_msg)
         raise TypeError(error_msg)
 
 
 def validate_start_prompt(start_prompt):
+    """Checks that the start_prompt is provided as a string."""
+
     if not isinstance(start_prompt, str):
         if not start_prompt:
             error_msg = "Start prompt should be provided"
@@ -35,6 +44,8 @@ def validate_start_prompt(start_prompt):
 
 
 def validate_task(task):
+    """Checks that a valid task type is provided."""
+
     if not isinstance(task, str):
         if not task:
             error_msg = "Task type should be provided"
@@ -55,24 +66,26 @@ def validate_task(task):
 
 
 def validate_dataset(dataset, target, method):
-    print(f'Validating dataset {dataset} and target {target}')
-    if dataset and not target:
-        error_msg = "Dataset must be provided with the target"
-        logger.error(error_msg)
-        raise ValueError(error_msg)
-    if not isinstance(dataset, Iterable):
-        error_msg = (
-            "Start prompt should be an Iterable instance. "
-            f"Provided: {type(dataset).__name__}"
-        )
+    """Checks that the provided dataset is an Iterable instance
+    and the target is also provided. Also checks that the dataset is
+    provided if the method is data-driven."""
+
+    if dataset is not None:
+        if target is None:
+            error_msg = "Dataset must be provided with the target"
             logger.error(error_msg)
             raise ValueError(error_msg)
-        if len(dataset) <= 0:
+        if not isinstance(dataset, Iterable):
             error_msg = (
-                f"Dataset should be non-empty. Actual size: {len(dataset)}"
+                "Start prompt should be an Iterable instance. "
+                f"Provided: {type(dataset).__name__}"
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
+        # ? if len(dataset) <= 0:
+        #     error_msg = "Dataset should be non-empty"
+        #     logger.error(error_msg)
+        #     raise ValueError(error_msg)
     else:
         if method == "reflective":
             error_msg = (
@@ -84,7 +97,10 @@ def validate_dataset(dataset, target, method):
 
 
 def validate_target(target, dataset):
-    if target:
+    """Checks that the provided target is an Iterable instance
+    with the same length as the provided dataset."""
+
+    if target is not None:
         if not isinstance(target, Iterable):
             error_msg = (
                 "Start prompt should be an Interable instance. "
@@ -102,6 +118,8 @@ def validate_target(target, dataset):
 
 
 def validate_method(method):
+    """Checks that a valid method name is provided."""
+
     if not isinstance(method, str):
         error_msg = (
             "Method name should be a string. "
@@ -119,7 +137,10 @@ def validate_method(method):
 
 
 def validate_problem_description(problem_description, method):
-    if problem_description:
+    """Checks that the problem description is provided as a string
+    when using the ReflectivePrompt optimization."""
+
+    if problem_description is not None:
         if not isinstance(problem_description, str):
             error_msg = (
                 "Start prompt should be a string. "
@@ -138,6 +159,8 @@ def validate_problem_description(problem_description, method):
 
 
 def validate_validation_size(validation_size):
+    """Checks that the provided validation_size is a float from 0.0 to 1.0."""
+
     if not isinstance(validation_size, float) or not (
         0.0 <= validation_size <= 1.0
     ):
