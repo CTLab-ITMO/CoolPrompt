@@ -11,12 +11,10 @@
     <a href="https://itmo.ru/"><img src="https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg"></a>
 </p>
 
-<h4 align="center">
-    <p>
-        <a>English</a> |
-        <b>Русский</b>
-    </p>
-</h4>
+<p>
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.md"><img src="https://img.shields.io/badge/lang-english-red.svg"></a>
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md"><img src="https://img.shields.io/badge/lang-russian-gree.svg"></a>
+</p>
 
 CoolPrompt - фреймворк для автоматического создания и оптимизации промптов.
 
