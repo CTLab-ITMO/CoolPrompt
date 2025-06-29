@@ -6,14 +6,25 @@ from pathlib import Path
 import re
 
 
-def setup_logging():
-    """Logging config for CoolPrompt"""
+def setup_logging(
+    logs_dir: str | Path = None, level: int = 2
+) -> logging.Logger:
+    """Logging config for CoolPrompt.
 
-    logs_dir = Path(__file__).parents[2] / "logs"
+    Args:
+        logs_dir: logs saving directory. Defaults to ../../logs
+        relative to this file's location.
+        level: specifies the logging level
+        (0 - ERROR, 1 - INFO, 2 - DEBUG). Defaults to 2.
+    """
+
+    if logs_dir is None:
+        logs_dir = Path(__file__).parents[2] / "logs"
     os.makedirs(logs_dir, exist_ok=True)
 
     logger = logging.getLogger("coolprompt")
-    logger.setLevel(logging.DEBUG)
+    logger_level = {0: logging.ERROR, 1: logging.INFO, 2: logging.DEBUG}[level]
+    logger.setLevel(logger_level)
 
     formatter = logging.Formatter(
         "[%(asctime)s] [%(levelname)s] [%(module)s.%(funcName)s] - %(message)s"

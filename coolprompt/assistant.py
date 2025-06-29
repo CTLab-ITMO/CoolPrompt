@@ -1,4 +1,4 @@
-import logging
+from pathlib import Path
 from typing import Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
@@ -8,17 +8,13 @@ from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
-from coolprompt.utils.logging_config import logger
+from coolprompt.utils.logging_config import logger, setup_logging
 from coolprompt.utils.validation import (
-    validate_dataset,
     validate_model,
-    validate_problem_description,
-    validate_start_prompt,
-    validate_target,
     validate_task,
     validate_method,
-    validate_validation_size,
     validate_verbose,
+    validate_run,
 )
 from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
@@ -43,7 +39,10 @@ class PromptTuner:
     }
 
     def __init__(
-        self, model: BaseLanguageModel = None, verbose: int = 1
+        self,
+        model: BaseLanguageModel = None,
+        verbose: int = 1,
+        logs_dir: str | Path = None,
     ) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
 
@@ -55,14 +54,11 @@ class PromptTuner:
                 0 - no logging
                 1 - steps logging
                 2 - steps and prompts logging
+            logs_dir (str | Path, optional): logs saving directory.
+            Defaults to None.
         """
         validate_verbose(verbose)
-        logger_level = {0: logging.ERROR, 1: logging.INFO, 2: logging.DEBUG}[
-            verbose
-        ]
-        logger.setLevel(logger_level)
-        for handler in logger.handlers:
-            handler.setLevel(logger_level)
+        setup_logging(logs_dir, verbose)
         self._model = model or DefaultLLM.init()
         self.init_metric = None
         self.init_prompt = None
@@ -154,13 +150,15 @@ class PromptTuner:
             in self.init_metric and self.final_metric
         """
         logger.info("Validating args for PromptTuner running")
-        validate_start_prompt(start_prompt)
-        validate_task(task)
-        validate_dataset(dataset, target, method)
-        validate_target(target, dataset)
-        validate_method(method)
-        validate_problem_description(problem_description, method)
-        validate_validation_size(validation_size)
+        validate_run(
+            start_prompt,
+            task,
+            dataset,
+            target,
+            method,
+            problem_description,
+            validation_size,
+        )
         metric = validate_metric(task, metric)
         evaluator = Evaluator(self._model, metric)
         final_prompt = ""

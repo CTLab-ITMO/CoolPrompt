@@ -90,7 +90,7 @@ def validate_dataset(dataset, target, method):
     else:
         if method in DATA_DRIVEN_METHODS:
             error_msg = (
-                "Train dataset is not defined " "for data-driven optimization"
+                "Train dataset is not provided for data-driven optimization"
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -170,3 +170,23 @@ def validate_validation_size(validation_size):
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
+
+
+def validate_run(
+    start_prompt,
+    task,
+    dataset,
+    target,
+    method,
+    problem_description,
+    validation_size,
+):
+    """Checks if args for PromptTuner.run() are valid"""
+
+    validate_start_prompt(start_prompt)
+    validate_task(task)
+    validate_dataset(dataset, target, method)
+    validate_target(target, dataset)
+    validate_method(method)
+    validate_problem_description(problem_description, method)
+    validate_validation_size(validation_size)

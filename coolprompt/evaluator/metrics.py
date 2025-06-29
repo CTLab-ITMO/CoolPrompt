@@ -220,22 +220,25 @@ def create_metric(name: str) -> BaseMetric:
 
 def validate_metric(task: str, metric: str | None) -> str:
     if task not in TASK_TYPES:
-        error_msg = f"Invalid task type: {task}. Must be one of {TASK_TYPES}."
+        error_msg = (
+            f"Invalid task type: {task}. "
+            f"Available tasks: {', '.join(TASK_TYPES)}."
+        )
         logger.error(error_msg)
         raise ValueError(error_msg)
     if metric is None:
         return get_default_metric(task)
     if task == "classification" and metric not in CLASSIFICATION_METRICS:
         error_msg = (
-            f"Invalid metric for {task} task: {metric}. "
-            f"Must be one of {CLASSIFICATION_METRICS}."
+            f"Invalid metric for classification task: {metric}. "
+            f"Available metrics: {', '.join(CLASSIFICATION_METRICS)}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
     if task == "generation" and metric not in GENERATION_METRICS:
         error_msg = (
-            f"Invalid metric for {task} task: {metric}. "
-            f"Must be one of {GENERATION_METRICS}."
+            f"Invalid metric for generation task: {metric}. "
+            f"Available metrics: {', '.join(GENERATION_METRICS)}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
