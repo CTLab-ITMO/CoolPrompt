@@ -7,11 +7,6 @@ TASK_TYPES = {
     "generation"
 }
 
-TASK_TYPES = {
-    "classification",
-    "generation"
-}
-
 CLASSIFICATION_METRICS = {
     "accuracy",
     "f1",
@@ -231,6 +226,21 @@ def create_metric(name: str) -> BaseMetric:
 
 
 def validate_metric(task: str, metric: str | None) -> str:
+    """
+    Validates given metric in order to correspond the given task.
+    Returns the given metric name back if the validation succeeded.
+
+    Args:
+        task (str): The type of task, either "classification" or "generation".
+        metric (str): Name of the metric to validate.
+    Returns:
+        str: the name of the metric.
+    Raises:
+        ValueError: If the specified task name is not recognized
+        ValueError: If the specified metric name is not
+            matched to the specified task name.
+    """
+
     if task not in TASK_TYPES:
         raise ValueError(
             f"Invalid task type: {task}. Must be one of {TASK_TYPES}."
@@ -251,6 +261,15 @@ def validate_metric(task: str, metric: str | None) -> str:
 
 
 def get_default_metric(task: str) -> str:
+    """
+    Returns default metric names for the provided task name.
+
+    Args:
+        task (str): The type of task, either "classification" or "generation".
+    Returns:
+        str: the name of the default metric for the specified task.
+    """
+
     if task == "classification":
         return "f1"
     elif task == "generation":
