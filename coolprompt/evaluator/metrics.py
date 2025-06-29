@@ -182,7 +182,7 @@ class GenerationMetric(BaseMetric):
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
     ) -> tuple[list[int] | list[str], list[int] | list[str]]:
-        """Does nothing
+        """Returns labels without encoding for generation metrics.
 
         Args:
             output_labels (list[str|int]): Extracted labels from model outputs.
