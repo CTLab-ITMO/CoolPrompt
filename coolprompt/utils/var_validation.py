@@ -34,7 +34,7 @@ def validate_model(model: BaseLanguageModel) -> None:
 
     if not isinstance(model, BaseLanguageModel):
         error_msg = (
-            "Provided model should be an "
+            "Provided model must be an "
             "instance of LangChain BaseLanguageModel"
         )
         logger.error(error_msg)
@@ -51,11 +51,11 @@ def validate_start_prompt(start_prompt: str) -> None:
 
     if not isinstance(start_prompt, str):
         if not start_prompt:
-            error_msg = "Start prompt should be provided"
+            error_msg = "Start prompt must be provided."
         else:
             error_msg = (
-                "Start prompt should be a string. "
-                f"Provided: {type(start_prompt).__name__}"
+                "Start prompt must be a string. "
+                f"Provided: {type(start_prompt).__name__}."
             )
         logger.error(error_msg)
         raise TypeError(error_msg)
@@ -74,18 +74,18 @@ def validate_task(task: str) -> None:
 
     if not isinstance(task, str):
         if not task:
-            error_msg = "Task type should be provided"
+            error_msg = "Task type must be provided."
         else:
             error_msg = (
-                "Task type should be a string. "
-                f"Provided: {type(task).__name__}"
+                "Task type must be a string. "
+                f"Provided: {type(task).__name__}."
             )
         logger.error(error_msg)
         raise TypeError(error_msg)
     if task not in TASKS:
         error_msg = (
             f"Invalid task type: {task}. "
-            f"Available tasks: {', '.join(TASKS)}"
+            f"Available tasks: {', '.join(TASKS)}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
@@ -103,20 +103,20 @@ def validate_dataset(
         target (Iterable | None): Provided target.
         method (str): Provided method.
     Raises:
-        TypeError: If `dataset` is not None but is not Iterable,
+        TypeError: If `dataset` is not None but is not Iterable.
+        ValueError: If `dataset` is None but `method` requiers a dataset,
             or if `dataset` is provided but `target` is None.
-        ValueError: If `dataset` is None but `method` requiers a dataset.
     """
 
     if dataset is not None:
         if target is None:
             error_msg = "Dataset must be provided with the target"
             logger.error(error_msg)
-            raise TypeError(error_msg)
+            raise ValueError(error_msg)
         if not isinstance(dataset, Iterable):
             error_msg = (
-                "Start prompt should be an Iterable instance. "
-                f"Provided: {type(dataset).__name__}"
+                "Dataset must be an Iterable instance. "
+                f"Provided: {type(dataset).__name__}."
             )
             logger.error(error_msg)
             raise TypeError(error_msg)
@@ -127,7 +127,7 @@ def validate_dataset(
     else:
         if method in DATA_DRIVEN_METHODS:
             error_msg = (
-                "Train dataset is not provided for data-driven optimization"
+                "Train dataset is not provided for data-driven optimization."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -148,20 +148,20 @@ def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
 
     if target is not None:
         if dataset is None:
-            error_msg = "Dataset cannot be None if target is provided"
+            error_msg = "Dataset cannot be None if target is provided."
             logger.error(error_msg)
-            ValueError(error_msg)
+            raise ValueError(error_msg)
         if not isinstance(target, Iterable):
             error_msg = (
-                "Target should be an Interable instance. "
-                f"Provided: {type(target).__name__}"
+                "Target must be an Interable instance. "
+                f"Provided: {type(target).__name__}."
             )
             logger.error(error_msg)
             raise TypeError(error_msg)
         if len(target) != len(dataset):
             error_msg = (
                 f"Dataset and target must have equal length. Actual "
-                f"dataset size: {len(dataset)}, target size: {len(target)}"
+                f"dataset size: {len(dataset)}, target size: {len(target)}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -181,15 +181,15 @@ def validate_method(method: str) -> None:
 
     if not isinstance(method, str):
         error_msg = (
-            "Method name should be a string. "
-            f"Provided: {type(method).__name__}"
+            "Method name must be a string. "
+            f"Provided: {type(method).__name__}."
         )
         logger.error(error_msg)
         raise TypeError(error_msg)
     if method not in METHODS:
         error_msg = (
             f"Unsupported method: {method}. "
-            f"Available methods: {', '.join(METHODS)}"
+            f"Available methods: {', '.join(METHODS)}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
@@ -213,16 +213,16 @@ def validate_problem_description(
     if problem_description is not None:
         if not isinstance(problem_description, str):
             error_msg = (
-                "Start prompt should be a string. "
-                f"Provided: {type(problem_description).__name__}"
+                "Problem description must be a string. "
+                f"Provided: {type(problem_description).__name__}."
             )
             logger.error(error_msg)
             raise TypeError(error_msg)
     else:
         if method == "reflective":
             error_msg = (
-                "Problem description should be provided for "
-                "ReflectivePrompt optimization"
+                "Problem description must be provided for "
+                "ReflectivePrompt optimization."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -240,8 +240,8 @@ def validate_validation_size(validation_size: float | Any) -> None:
         0.0 <= validation_size <= 1.0
     ):
         error_msg = (
-            "Validation size should be a float between 0.0 and 1.0. "
-            f"Provided: {validation_size}"
+            "Validation size must be a float between 0.0 and 1.0. "
+            f"Provided: {validation_size}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)

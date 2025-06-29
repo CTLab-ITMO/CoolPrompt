@@ -89,7 +89,7 @@ class Evaluator:
         else:
             error_msg = (
                 f"Unknown task type: {task}. "
-                f"Available tasks: classification, generation"
+                f"Available tasks: classification, generation."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)

@@ -8,13 +8,13 @@ from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
-from coolprompt.utils.logging_config import logger, setup_logging
-from utils.var_validation import (
+from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
+from coolprompt.utils.var_validation import (
     validate_model,
     validate_task,
     validate_method,
-    validate_verbose,
     validate_run,
+    validate_verbose,
 )
 from coolprompt.utils.prompt_templates.reflective_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
@@ -41,7 +41,6 @@ class PromptTuner:
     def __init__(
         self,
         model: BaseLanguageModel = None,
-        verbose: int = 1,
         logs_dir: str | Path = None,
     ) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
@@ -50,26 +49,21 @@ class PromptTuner:
             model (BaseLanguageModel): Any LangChain BaseLanguageModel instance
                 which supports invoke(str) -> str.
                 Will use DefaultLLM if not provided.
-            verbose (int): Parameter for logging configuration:
-                0 - no logging
-                1 - steps logging
-                2 - steps and prompts logging
             logs_dir (str | Path, optional): logs saving directory.
             Defaults to None.
         """
-        validate_verbose(verbose)
-        setup_logging(logs_dir, verbose)
+        setup_logging(logs_dir)
         self._model = model or DefaultLLM.init()
         self.init_metric = None
         self.init_prompt = None
         self.final_metric = None
         self.final_prompt = None
 
-        logger.info("Validating the model")
+        logger.info(f"Validating the model: {self._model.__class__.__name__}")
         validate_model(self._model)
         logger.info(
             "PromptTuner successfully initialized with "
-            f"model {type(self._model).__name__}"
+            f"model: {self._model.__class__.__name__}"
         )
 
     def get_task_prompt_template(self, task: str, method: str) -> str:
@@ -103,6 +97,7 @@ class PromptTuner:
         metric: str = None,
         problem_description: str = None,
         validation_size: float = 0.25,
+        verbose: int = 1,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -123,10 +118,14 @@ class PromptTuner:
             problem_description (str): a string that contains
                 short description of problem to optimize.
             validation_size (float):
-                A float that should be between 0.0 and 1.0 and
+                A float that must be between 0.0 and 1.0 and
                 represent the proportion of the dataset
                 to include in the validation split.
                 Defaults to 0.25.
+            verbose (int): Parameter for logging configuration:
+                0 - no logging
+                1 - steps logging
+                2 - steps and prompts logging
             **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
@@ -149,6 +148,10 @@ class PromptTuner:
             if dataset is not None, you can find evaluation results
             in self.init_metric and self.final_metric
         """
+        if verbose is not None:
+            validate_verbose(verbose)
+            set_verbose(verbose)
+
         logger.info("Validating args for PromptTuner running")
         validate_run(
             start_prompt,

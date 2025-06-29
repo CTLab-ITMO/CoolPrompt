@@ -6,16 +6,12 @@ from pathlib import Path
 import re
 
 
-def setup_logging(
-    logs_dir: str | Path = None, level: int = 2
-) -> logging.Logger:
+def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
     """Logging config for CoolPrompt.
 
     Args:
         logs_dir: logs saving directory. Defaults to ../../logs
         relative to this file's location.
-        level: specifies the logging level
-        (0 - ERROR, 1 - INFO, 2 - DEBUG). Defaults to 2.
     """
 
     if logs_dir is None:
@@ -23,8 +19,7 @@ def setup_logging(
     os.makedirs(logs_dir, exist_ok=True)
 
     logger = logging.getLogger("coolprompt")
-    logger_level = {0: logging.ERROR, 1: logging.INFO, 2: logging.DEBUG}[level]
-    logger.setLevel(logger_level)
+    logger.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
         "[%(asctime)s] [%(levelname)s] [%(module)s.%(funcName)s] - %(message)s"
@@ -45,10 +40,30 @@ def setup_logging(
     stream_handler.setFormatter(formatter)
 
     file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-    logger.addHandler(stream_handler)
+
+    if not logger.handlers:
+        logger.addHandler(file_handler)
+        logger.addHandler(stream_handler)
 
     return logger
 
 
 logger = setup_logging()
+
+
+def set_verbose(verbose: int) -> None:
+    """Sets the provided verbose level to the logger.
+
+    Args:
+        verbose (int): specifies the logging level
+            0 - ERROR (only errors)
+            1 - INFO (basic info + errors)
+            2 - DEBUG (all messages)
+    """
+
+    logger_level = {0: logging.ERROR, 1: logging.INFO, 2: logging.DEBUG}[
+        verbose
+    ]
+    logger.setLevel(logger_level)
+    for handler in logger.handlers:
+        handler.setLevel(logger_level)
