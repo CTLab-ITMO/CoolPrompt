@@ -1,14 +1,19 @@
-from typing import Iterable
+from typing import Any, Iterable
 from langchain_core.language_models.base import BaseLanguageModel
-from .logging_config import logger
+from coolprompt.utils.logging_config import logger
 
 METHODS = ["hype", "reflective", "distill"]
 DATA_DRIVEN_METHODS = ["reflective", "distill"]
 TASKS = ["classification", "generation"]
 
 
-def validate_verbose(verbose):
-    """Checks that the provided verbose parameter is either 0, 1 or 2."""
+def validate_verbose(verbose: int) -> None:
+    """Checks that the provided verbose parameter is either 0, 1 or 2.
+
+    Args:
+        verbose (int): Provided verbose parameter.
+    Raises:
+        ValueError: If `verbose` is neither 0, 1 or 2."""
 
     if verbose not in [0, 1, 2]:
         error_msg = f"Invalid verbose: {verbose}. Available values: 0, 1, 2."
@@ -16,9 +21,16 @@ def validate_verbose(verbose):
         raise ValueError(error_msg)
 
 
-def validate_model(model) -> None:
+def validate_model(model: BaseLanguageModel) -> None:
     """Checks that the provided model is a
-    LangChain BaseLanguageModel instance."""
+    LangChain BaseLanguageModel instance.
+
+    Args:
+        model (BaseLanguageModel): Provided model.
+    Raises:
+        TypeError: If `model` is not an instance of
+        LangChain BaseLanguageModel.
+    """
 
     if not isinstance(model, BaseLanguageModel):
         error_msg = (
@@ -29,8 +41,13 @@ def validate_model(model) -> None:
         raise TypeError(error_msg)
 
 
-def validate_start_prompt(start_prompt):
-    """Checks that the start_prompt is provided as a string."""
+def validate_start_prompt(start_prompt: str) -> None:
+    """Checks that the start prompt is provided as a string.
+
+    Args:
+        start_prompt (str): Provided start prompt.
+    Raises:
+        TypeError: If `start_prompt` is not a string."""
 
     if not isinstance(start_prompt, str):
         if not start_prompt:
@@ -41,11 +58,19 @@ def validate_start_prompt(start_prompt):
                 f"Provided: {type(start_prompt).__name__}"
             )
         logger.error(error_msg)
-        raise ValueError(error_msg)
+        raise TypeError(error_msg)
 
 
-def validate_task(task):
-    """Checks that a valid task type is provided."""
+def validate_task(task: str) -> None:
+    """Checks that a valid task type is provided.
+
+    Args:
+        task (str): Provided task type. Must be one of:
+            ["classification", "generation"].
+    Raises:
+        TypeError: If `task` is not a string.
+        ValueError: If `task` is not one of
+            ["classification", "generation"]."""
 
     if not isinstance(task, str):
         if not task:
@@ -56,7 +81,7 @@ def validate_task(task):
                 f"Provided: {type(task).__name__}"
             )
         logger.error(error_msg)
-        raise ValueError(error_msg)
+        raise TypeError(error_msg)
     if task not in TASKS:
         error_msg = (
             f"Invalid task type: {task}. "
@@ -66,23 +91,35 @@ def validate_task(task):
         raise ValueError(error_msg)
 
 
-def validate_dataset(dataset, target, method):
+def validate_dataset(
+    dataset: Iterable | None, target: Iterable | None, method: str
+) -> None:
     """Checks that the provided dataset is an Iterable instance
     and the target is also provided. Also checks that the dataset is
-    provided if the method is data-driven."""
+    provided if the method is data-driven.
+
+    Args:
+        dataset (Iterable | None): Provided dataset.
+        target (Iterable | None): Provided target.
+        method (str): Provided method.
+    Raises:
+        TypeError: If `dataset` is not None but is not Iterable,
+            or if `dataset` is provided but `target` is None.
+        ValueError: If `dataset` is None but `method` requiers a dataset.
+    """
 
     if dataset is not None:
         if target is None:
             error_msg = "Dataset must be provided with the target"
             logger.error(error_msg)
-            raise ValueError(error_msg)
+            raise TypeError(error_msg)
         if not isinstance(dataset, Iterable):
             error_msg = (
                 "Start prompt should be an Iterable instance. "
                 f"Provided: {type(dataset).__name__}"
             )
             logger.error(error_msg)
-            raise ValueError(error_msg)
+            raise TypeError(error_msg)
         # ? if len(dataset) <= 0:
         #     error_msg = "Dataset should be non-empty"
         #     logger.error(error_msg)
@@ -96,18 +133,31 @@ def validate_dataset(dataset, target, method):
             raise ValueError(error_msg)
 
 
-def validate_target(target, dataset):
+def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
     """Checks that the provided target is an Iterable instance
-    with the same length as the provided dataset."""
+    with the same length as the provided dataset.
+
+    Args:
+        target (Iterable | None): Provided target.
+        dataset (Iterable | None): Provided dataset. Can not be None if
+            `target` is not None.
+    Raises:
+        TypeError: If `target` is not Iterable.
+        ValueError: If `target` length does not equal the `dataset` length,
+            or if `dataset` is None while `target` is not."""
 
     if target is not None:
+        if dataset is None:
+            error_msg = "Dataset cannot be None if target is provided"
+            logger.error(error_msg)
+            ValueError(error_msg)
         if not isinstance(target, Iterable):
             error_msg = (
-                "Start prompt should be an Interable instance. "
+                "Target should be an Interable instance. "
                 f"Provided: {type(target).__name__}"
             )
             logger.error(error_msg)
-            raise ValueError(error_msg)
+            raise TypeError(error_msg)
         if len(target) != len(dataset):
             error_msg = (
                 f"Dataset and target must have equal length. Actual "
@@ -117,8 +167,17 @@ def validate_target(target, dataset):
             raise ValueError(error_msg)
 
 
-def validate_method(method):
-    """Checks that a valid method name is provided."""
+def validate_method(method: str) -> None:
+    """Checks that a valid method name is provided.
+
+    Args:
+        method (str): Provided method. Must be one of:
+            ["hype", "reflective", "distill"].
+    Raises:
+        TypeError: If `method` is not a string.
+        ValueError: If `method` is not one of
+            ["hype", "reflective", "distill"].
+    """
 
     if not isinstance(method, str):
         error_msg = (
@@ -126,7 +185,7 @@ def validate_method(method):
             f"Provided: {type(method).__name__}"
         )
         logger.error(error_msg)
-        raise ValueError(error_msg)
+        raise TypeError(error_msg)
     if method not in METHODS:
         error_msg = (
             f"Unsupported method: {method}. "
@@ -136,9 +195,20 @@ def validate_method(method):
         raise ValueError(error_msg)
 
 
-def validate_problem_description(problem_description, method):
+def validate_problem_description(
+    problem_description: str | None, method: str
+) -> None:
     """Checks that the problem description is provided as a string
-    when using the ReflectivePrompt optimization."""
+    when using the ReflectivePrompt optimization.
+
+    Args:
+        problem_description (str | None): Provided problem description.
+        method (str): Provided method.
+    Raises:
+        TypeError: If `problem_description` is not a string.
+        ValueError: If `problem_description` is not provided when
+            using the ReflectivePrompt method.
+    """
 
     if problem_description is not None:
         if not isinstance(problem_description, str):
@@ -147,7 +217,7 @@ def validate_problem_description(problem_description, method):
                 f"Provided: {type(problem_description).__name__}"
             )
             logger.error(error_msg)
-            raise ValueError(error_msg)
+            raise TypeError(error_msg)
     else:
         if method == "reflective":
             error_msg = (
@@ -158,8 +228,13 @@ def validate_problem_description(problem_description, method):
             raise ValueError(error_msg)
 
 
-def validate_validation_size(validation_size):
-    """Checks that the provided validation_size is a float from 0.0 to 1.0."""
+def validate_validation_size(validation_size: float | Any) -> None:
+    """Checks that the provided validation_size is a float from 0.0 to 1.0.
+
+    Args:
+        validation_size (float): Provided validation size.
+    Raises:
+        ValueError: If `validation_size` is not a float in [0.0, 1.0]."""
 
     if not isinstance(validation_size, float) or not (
         0.0 <= validation_size <= 1.0
@@ -173,15 +248,49 @@ def validate_validation_size(validation_size):
 
 
 def validate_run(
-    start_prompt,
-    task,
-    dataset,
-    target,
-    method,
-    problem_description,
-    validation_size,
-):
-    """Checks if args for PromptTuner.run() are valid"""
+    start_prompt: str,
+    task: str,
+    dataset: Iterable | None,
+    target: Iterable | None,
+    method: str,
+    problem_description: str | None,
+    validation_size: float,
+) -> None:
+    """Checks if args for PromptTuner.run() are valid.
+
+    Args:
+        start_prompt (str): Provided start prompt. Must be a string.
+        task (str): Provided task type. Must be one of:
+            ["classification", "generation"].
+        dataset (Iterable | None): Provided dataset.
+            Required for data-driven methods.
+        target (Iterable | None): Provided target labels for dataset.
+            Required if dataset provided.
+        method (str): Provided method. Must be one of:
+            ["hype", "reflective", "distill"].
+        problem_description (str | None): Provided problem description.
+            Must be a string, required when using the ReflectivePrompt method.
+        validation_size (float): Provided validation size.
+            Must be a float in [0.0, 1.0].
+    Raises:
+        TypeError: If any argument has incorrect type:
+            -`start_prompt` is not a string
+            -`task` is not a string.
+            -`dataset` is not None but is not Iterable
+            -`dataset` is provided but target is None
+            -`target` is not Iterable
+            -`method` is not a string
+            -`problem_description` is not a string
+        ValueError: If any argument has invalid value:
+            -`task` not in supported tasks
+            -`method` not in supported methods
+            -`validation_size` outside [0.0, 1.0]
+            -`dataset` is None but `method` requiers a dataset
+            -`target` length does not equal the `dataset` length
+            -`dataset` is `None` while `target` is not
+            -`problem_description` is not provided when using the
+                ReflectivePrompt method
+    """
 
     validate_start_prompt(start_prompt)
     validate_task(task)
