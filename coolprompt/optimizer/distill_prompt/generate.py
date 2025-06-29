@@ -9,7 +9,7 @@ from typing import List
 
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.utils import distillprompt_templates
+from coolprompt.utils.prompt_templates import distillprompt_templates
 from coolprompt.optimizer.distill_prompt.candidate import Candidate
 from coolprompt.optimizer.distill_prompt.utils import TextSampler
 
