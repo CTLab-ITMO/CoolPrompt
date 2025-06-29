@@ -9,7 +9,7 @@ from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, setup_logging
-from coolprompt.utils.validation import (
+from utils.var_validation import (
     validate_model,
     validate_task,
     validate_method,

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, ANY
 
-from coolprompt.utils.validation import validate_model
+from utils.var_validation import validate_model
 
 
 class TestValidateModel(unittest.TestCase):
