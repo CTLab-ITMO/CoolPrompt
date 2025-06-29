@@ -29,7 +29,7 @@ class CandidateHistory:
     Attributes:
         candidates: A list of Candidate objects.
     """
-            
+
     def __init__(self, candidates: Optional[List[Candidate]] = None) -> None:
         """Initializes the history with an optional list of candidates.
 
@@ -73,4 +73,7 @@ class CandidateHistory:
         """
         if not self.candidates:
             raise ValueError("No candidates in history")
-        return max(self.candidates, key=lambda candidate: candidate.train_score)
+        return max(
+            self.candidates,
+            key=lambda candidate: candidate.train_score
+        )

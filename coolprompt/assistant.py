@@ -176,7 +176,7 @@ class PromptTuner:
                     "Train dataset is not defined for "
                     "DistillPrompt optimization"
                 )
-                
+
             dataset_split = train_test_split(
                 dataset,
                 target,
@@ -199,7 +199,7 @@ class PromptTuner:
             self.final_metric = evaluator.evaluate(
                 final_prompt, dataset, target, task, template
             )
-            
+
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt
 

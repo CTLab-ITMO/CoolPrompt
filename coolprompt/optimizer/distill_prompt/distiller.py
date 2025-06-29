@@ -33,8 +33,8 @@ from coolprompt.optimizer.distill_prompt.utils import (
 class Distiller:
     """Distiller class for DistillPrompt optimization.
 
-    This class handles the process of optimizing prompts through multiple rounds
-    of generation, evaluation, and refinement.
+    This class handles the process of optimizing prompts through
+    multiple rounds of generation, evaluation, and refinement.
 
     Attributes:
         model: Language model to use for optimization.
@@ -96,7 +96,7 @@ class Distiller:
         self.num_epochs = num_epochs
         self.output_path = output_path
         self.iteration = 0
-        
+
         seed_everything()
         self._setup_logger()
 
@@ -107,7 +107,7 @@ class Distiller:
         """
         self.logger = logging.getLogger('Distiller')
         self.logger.setLevel(logging.DEBUG)
-        
+
         # File handler with rotation
         file_handler = TimedRotatingFileHandler(
             filename='DistillPrompt.log',
@@ -117,15 +117,15 @@ class Distiller:
         )
         file_handler.suffix = "%Y-%m-%d.log"
         file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
-        
+
         # Console handler
         stream_handler = logging.StreamHandler()
-        
+
         # Formatter for both handlers
         formatter = logging.Formatter("[%(asctime)s] - %(message)s")
         stream_handler.setFormatter(formatter)
         file_handler.setFormatter(formatter)
-        
+
         # Add handlers to logger
         self.logger.addHandler(stream_handler)
         self.logger.addHandler(file_handler)
@@ -135,7 +135,8 @@ class Distiller:
 
         Args:
             prompt (str): The prompt to evaluate.
-            split (str, optional): Dataset split to use ('train' or 'validation').
+            split (str, optional):
+                Dataset split to use ('train' or 'validation').
                 Defaults to 'train'.
 
         Returns:
@@ -146,12 +147,12 @@ class Distiller:
         else:
             dataset = self.validation_dataset
             targets = self.validation_targets
-        
+
         if self.task == 'classification':
             template = CLASSIFICATION_TASK_TEMPLATE
         else:
             template = GENERATION_TASK_TEMPLATE
-            
+
         score = self.evaluator.evaluate(
             prompt=prompt,
             dataset=dataset,
@@ -170,7 +171,7 @@ class Distiller:
         """
         if not self.use_cache:
             return
-            
+
         os.makedirs(os.path.dirname(savepath), exist_ok=True)
         with open(savepath, 'w') as f:
             yaml.dump(data, f)
@@ -185,8 +186,8 @@ class Distiller:
             str: Full path including iteration number and extension.
         """
         return os.path.join(
-            self.output_path, 
-            f"Iteration{self.iteration}", 
+            self.output_path,
+            f"Iteration{self.iteration}",
             f"{filename}.yaml"
         )
 
@@ -234,26 +235,30 @@ class Distiller:
             history.extend(distilled_candidates)
 
             # Compression
-            compressed_prompts = transformer.compress_prompts(distilled_candidates) 
+            compressed_prompts = transformer.compress_prompts(
+                distilled_candidates
+            )
             compressed_candidates = [
-                Candidate(prompt, self._evaluate(prompt)) 
+                Candidate(prompt, self._evaluate(prompt))
                 for prompt in compressed_prompts
             ]
             history.extend(compressed_candidates)
 
             # Aggregation
-            aggregated_prompt = transformer.aggregate_prompts(compressed_candidates)
+            aggregated_prompt = transformer.aggregate_prompts(
+                compressed_candidates
+            )
             aggregated_candidate = Candidate(
-                aggregated_prompt, 
+                aggregated_prompt,
                 self._evaluate(aggregated_prompt)
             )
             aggregated_synonyms = transformer.generate_synonyms(
                 aggregated_candidate,
                 n=3
             )
-            
+
             final_candidates = [
-                Candidate(prompt, self._evaluate(prompt)) 
+                Candidate(prompt, self._evaluate(prompt))
                 for prompt in aggregated_synonyms
             ]
             final_candidates.append(aggregated_candidate)
@@ -269,7 +274,7 @@ class Distiller:
             # Cache results
             self._cache_data(
                 {
-                    "prompts": [c.prompt for c in final_candidates], 
+                    "prompts": [c.prompt for c in final_candidates],
                     "scores": [c.train_score for c in final_candidates]
                 },
                 self._make_output_path("round_results")
