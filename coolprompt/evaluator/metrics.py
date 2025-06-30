@@ -37,7 +37,6 @@ class BaseMetric(ABC):
     """
 
     ANS_TAGS = ("<ans>", "</ans>")
-    FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
@@ -124,6 +123,8 @@ class ClassificationMetric(BaseMetric):
     and label encoding for metric computation.
     """
 
+    FORMAT_MISMATCH_LABEL = -1
+
     def __init__(self, name: str):
         """Initialize metric with specified evaluate library metric name.
 
@@ -179,6 +180,8 @@ class GenerationMetric(BaseMetric):
     Provides a generic implementation for metrics that compare generated text
     to reference text.
     """
+
+    FORMAT_MISMATCH_LABEL = ""
 
     def __init__(self, name: str):
         """Initialize metric with specified evaluate library metric name.
