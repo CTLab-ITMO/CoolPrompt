@@ -23,5 +23,5 @@ def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     answer = model.invoke(template.replace("<QUERY>", prompt)).strip()
     logger.info('HyPE optimization completed')
     return answer[
-        answer.rfind(start_tag) + len(start_tag) : answer.rfind(end_tag)
+        answer.rfind(start_tag) + len(start_tag):answer.rfind(end_tag)
     ]

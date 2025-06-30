@@ -1,14 +1,15 @@
 """Prompt Transformation Framework.
 
 Provides the PromptTransformer class, which implements various strategies for
-refining and generating prompts using a Large Language Model (LLM). This includes
-methods for compression, distillation, aggregation, and synonym generation.
+refining and generating prompts using a Large Language Model (LLM).
+This includes methods for compression, distillation,
+aggregation, and synonym generation.
 """
 from typing import List
 
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.utils import distillprompt_templates
+from coolprompt.utils.prompt_templates import distillprompt_templates
 from coolprompt.optimizer.distill_prompt.candidate import Candidate
 from coolprompt.optimizer.distill_prompt.utils import TextSampler
 
@@ -63,7 +64,8 @@ class PromptTransformer:
         """
         request_prompts = []
         for candidate in candidates:
-            compression_prompt = distillprompt_templates.COMPRESSION_PROMPT.format(
+            compression_prompt = distillprompt_templates.COMPRESSION_PROMPT
+            compression_prompt = compression_prompt.format(
                 candidate_prompt=candidate.prompt
             )
             request_prompts.append(compression_prompt)
@@ -103,7 +105,7 @@ class PromptTransformer:
 
         answers = self.model.batch(request_prompts, temperature=temperature)
         return [
-            self._parse_tagged_text(answer, "<START>", "<END>") 
+            self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
         ]
 
@@ -124,12 +126,13 @@ class PromptTransformer:
             List[str]: List of generated prompts.
         """
         generation_prompt = distillprompt_templates.GENERATION_PROMPT.format(
-            candidate_prompt=candidate.prompt, train_score=candidate.train_score
+            candidate_prompt=candidate.prompt,
+            train_score=candidate.train_score
         )
         requests = [generation_prompt] * n
         answers = self.model.batch(requests, temperature=temperature)
         return [
-            self._parse_tagged_text(answer, "<START>", "<END>") 
+            self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
         ]
 
