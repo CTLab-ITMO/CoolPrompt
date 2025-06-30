@@ -15,43 +15,43 @@
 
 
 <p align="center">
-    English |
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">Русский</a>
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.md">English</a> | 
+    Русский
 </p>
 
-CoolPrompt is a framework for automative prompting creation.
+CoolPrompt - фреймворк для автоматического создания и оптимизации промптов.
 
-## Quick install
-- Install with pip:
+## Установка
+- Установка через pip:
 ```
 pip install coolprompt
 ```
 
-## Quick start
+## Быстрый запуск
 
-Import and initialize PromptTuner
+Импортируем и инициализируем PromptTuner
 ```
 from coolprompt.assistant import PromptTuner
 ```
 
-- with default LLM
+- с встроенной LLM:
 ```
-prompt_tuner = PromptTuner(model=my_model)
+prompt_tuner = PromptTuner()
 ```
 
-- Or initialize your own LLM by Langchain and use it
+- Или кастомизируем свою модель с помощью Langchain:
 ```
 my_model = VLLM(
     model="Qwen/Qwen2.5-Coder-32B-Instruct",
     trust_remote_code=True,
-    dtype='bfloat16',
+    dtype='float16',
 )
 
 prompt_tuner = PromptTuner(model=my_model)
 ```
 
-## Running PromptTuner
-- Run PromptTuner instance with initial prompt
+## Запуск PromptTuner
+- Запуск PromptTuner с изначальным промптом
 ```
 # Define an initial prompt
 prompt = "Make a summarization of 2+2"
@@ -63,8 +63,7 @@ new_prompt = tuner.run(start_prompt=prompt)
 print(new_prompt)
 ```
 
-- including a dataset for prompt optimization and evaluation. 
-A provided dataset will be split by trainset and testset.
+- Или включив датасет для автоматической оптимизации и оценки. Поданный датасет будет разделен на трейн и тест.
 ```
 sst2 = load_dataset("sst2")
 class_dataset = sst2['train']['sentence']
@@ -79,14 +78,14 @@ tuner.run(
 )
 ```
 
-- to get a final prompt and prompt metrics
+- Для получения финального промпта и метрик
 ```
 print("Final prompt:", tuner.final_prompt)
-print("Start prompt metric:", tuner.init_metric)
-print("Final prompt metric:", tuner.final_metric)
+print("Start prompt metric: ", tuner.init_metric)
+print("Final prompt metric: ", tuner.final_metric)
 ```
-- This also works for generation tasks
+- Также ассистент работает с задачами генерации
 
-## More about project
-- Explore the variety of autoprompting methods with PromptTuner: CoolPrompt currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
-- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/examples">notebooks</a> to familiarize yourself with our framework
+## Больше о проекте
+- Исследуйте различные методы авто-промптинга в PromptTuner. CoolPrompt на данный момент поддерживает HyPE, DistillPrompt, ReflectivePrompt. Вы можете выбрать метод с помощью соответствующего аргумента `method` в `tuner.run`.
+- Для ознакомления с фреймворком вы можете увидеть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/examples">примеров</a> 
