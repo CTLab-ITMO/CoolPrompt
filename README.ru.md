@@ -1,6 +1,6 @@
 <p align="center">
     <picture>
-    <source media="(prefers-color-scheme: light)" srcset="docs/images/coolprompt_logo.jpg">
+    <source media="(prefers-color-scheme: light)" srcset="docs/images/logo_light.png">
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo_dark.png">
     <img alt="CoolPrompt Logo" width="40%" height="40%">
     </picture>
