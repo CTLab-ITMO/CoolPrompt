@@ -2,48 +2,62 @@
     <picture>
     <source media="(prefers-color-scheme: light)" srcset="docs/images/coolprompt_logo.jpg">
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo_dark.png">
-    <img alt="CoolPrompt Logo" width="80%" height="80%">
+    <img alt="CoolPrompt Logo" width="40%" height="40%">
     </picture>
 </p>
 
-<p>
-	<img src="https://img.shields.io/github/license/CTLab-ITMO/CoolPrompt?style=BadgeStyleOptions.DEFAULT&logo=opensourceinitiative&logoColor=white&color=blue" alt="license">
-    <a href="https://itmo.ru/"><img src="https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg"></a>
-</p>
+[![Release Notes](https://img.shields.io/github/release/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/releases)
+[![PyPI - License](https://img.shields.io/github/license/CTLab-ITMO/CoolPrompt?style=BadgeStyleOptions.DEFAULT&logo=opensourceinitiative&logoColor=white&color=blue)](https://opensource.org/license/apache-2-0)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/coolprompt?style=flat-square)](https://pypistats.org/packages/coolprompt)
+[![GitHub star chart](https://img.shields.io/github/stars/CTLab-ITMO/CoolPrompt?style=flat-square)](https://star-history.com/#CTLab-ITMO/CoolPrompt)
+[![Open Issues](https://img.shields.io/github/issues-raw/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/issues)
+[![ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg)](https://itmo.ru/)
 
-<p>
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.md"><img src="https://img.shields.io/badge/lang-english-red.svg"></a>
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md"><img src="https://img.shields.io/badge/lang-russian-gree.svg"></a>
+
+<p align="center">
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.md">
+        <b>English</b> 
+    </a> |
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">
+        Русский
+    </a>
 </p>
 
 CoolPrompt is a framework for automative prompting creation.
 
-
-## Quickstart
-
-- Install requirements with:
+## Quick install
+- Install with pip:
 ```
-pip install -r requirements.txt
+pip install coolprompt
 ```
-- Import and initialize PromptTuner with default LLM
+
+## Quick start
+
+Import and initialize PromptTuner
 ```
 from coolprompt.assistant import PromptTuner
-
-tuner = PromptTuner()
 ```
-- Or initialize your own LLM and use it
+
+- with default LLM
+```
+prompt_tuner = PromptTuner(model=my_model)
+```
+
+- Or initialize your own LLM by Langchain and use it
 ```
 my_model = VLLM(
-    model="deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    model="Qwen/Qwen2.5-Coder-32B-Instruct",
     trust_remote_code=True,
-    dtype='float16',
+    dtype='bfloat16',
 )
 
-tuner_with_custom_llm = PromptTuner(model=my_model)
+prompt_tuner = PromptTuner(model=my_model)
 ```
 
 ## Running PromptTuner
-- Run PromptTuner instance with initial prompt:
+Run PromptTuner instance 
+
+- with initial prompt
 ```
 # Define an initial prompt
 prompt = "Make a summarization of 2+2"
@@ -54,7 +68,9 @@ new_prompt = tuner.run(start_prompt=prompt)
 # Get your new prompt
 print(new_prompt)
 ```
-- Or with dataset
+
+- including a dataset for prompt optimization and evaluation. 
+A provided dataset will be split by trainset and testset.
 ```
 sst2 = load_dataset("sst2")
 class_dataset = sst2['train']['sentence']
@@ -68,7 +84,8 @@ tuner.run(
     metric="accuracy"
 )
 ```
-- And get final prompt and prompt metrics
+
+- to get a final prompt and prompt metrics
 ```
 print("Final prompt:", tuner.final_prompt)
 print("Start prompt metric: ", tuner.init_metric)
@@ -77,5 +94,5 @@ print("Final prompt metric: ", tuner.final_metric)
 - This also works for generation tasks
 
 ## More about project
-- Explore the variety of autoprompting methods with PromptTuner: we currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument in `tuner.run`
-- See more examples in `notebooks/` folder to familiarize yourself with our framework
+- Explore the variety of autoprompting methods with PromptTuner: we currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
+- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/">notebooks</a> to familiarize yourself with our framework
