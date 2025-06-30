@@ -15,12 +15,8 @@
 
 
 <p align="center">
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.md">
-        <b>English</b> 
-    </a> |
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">
-        Русский
-    </a>
+    English |
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">Русский</a>
 </p>
 
 CoolPrompt is a framework for automative prompting creation.
@@ -55,9 +51,7 @@ prompt_tuner = PromptTuner(model=my_model)
 ```
 
 ## Running PromptTuner
-Run PromptTuner instance 
-
-- with initial prompt
+- Run PromptTuner instance with initial prompt
 ```
 # Define an initial prompt
 prompt = "Make a summarization of 2+2"
@@ -88,11 +82,11 @@ tuner.run(
 - to get a final prompt and prompt metrics
 ```
 print("Final prompt:", tuner.final_prompt)
-print("Start prompt metric: ", tuner.init_metric)
-print("Final prompt metric: ", tuner.final_metric)
+print("Start prompt metric:", tuner.init_metric)
+print("Final prompt metric:", tuner.final_metric)
 ```
 - This also works for generation tasks
 
 ## More about project
-- Explore the variety of autoprompting methods with PromptTuner: we currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
-- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/">notebooks</a> to familiarize yourself with our framework
+- Explore the variety of autoprompting methods with PromptTuner: CoolPrompt currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
+- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/examples">notebooks</a> to familiarize yourself with our framework
