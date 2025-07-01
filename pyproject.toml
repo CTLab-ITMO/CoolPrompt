@@ -10,7 +10,7 @@ namespaces = false
 
 [project]
 name = "coolprompt"
-version = "0.0.17"
+version = "0.0.18"
 authors = [
   { name="Nikita Kulin", email="serito1998@gmail.com" },
   { name="Artur Khairullin", email="anderbrine05@gmail.com" },
