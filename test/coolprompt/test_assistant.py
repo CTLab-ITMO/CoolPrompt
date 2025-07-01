@@ -197,8 +197,8 @@ class TestPromptTuner(unittest.TestCase):
 
         self.prompt_tuner.run(
             self.START_PROMPT,
-            dataset=[],
-            target=[],
+            dataset=["sample 1", "sample 2", "sample 3"],
+            target=[1, 2, 3],
         )
         self.assertEqual(self.prompt_tuner.init_metric, 0.5)
         self.assertEqual(self.prompt_tuner.final_metric, 0.5)

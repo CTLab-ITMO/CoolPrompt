@@ -19,6 +19,9 @@ def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
     os.makedirs(logs_dir, exist_ok=True)
 
     logger = logging.getLogger("coolprompt")
+    if logger.handlers:
+        return logger
+
     logger.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter(
@@ -41,9 +44,8 @@ def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
 
     file_handler.setFormatter(formatter)
 
-    if not logger.handlers:
-        logger.addHandler(file_handler)
-        logger.addHandler(stream_handler)
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
 
     return logger
 
