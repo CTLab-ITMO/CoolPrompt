@@ -1,16 +1,9 @@
 from abc import ABC, abstractmethod
 from evaluate import load
 from coolprompt.utils.parsing import extract_answer
+from coolprompt.utils.logging_config import logger
 
-TASK_TYPES = {
-    "classification",
-    "generation"
-}
-
-TASK_TYPES = {
-    "classification",
-    "generation"
-}
+TASK_TYPES = {"classification", "generation"}
 
 CLASSIFICATION_METRICS = {
     "accuracy",
@@ -30,7 +23,14 @@ class BaseMetric(ABC):
     Provides common infrastructure for loading metrics
     from HuggingFace's evaluate library and defining
     metric computation interfaces.
+
+    Attributes:
+        ANS_TAGS: tuple - Start and end tags for answer extraction
+        FORMAT_MISMATCH_LABEL: int - Special value indicating parsing failure
     """
+
+    ANS_TAGS = ("<ans>", "</ans>")
+    FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
@@ -43,9 +43,9 @@ class BaseMetric(ABC):
         self._metric = load(name)
         self._compute_kwargs = {}
 
-    def _compute_raw(self,
-                     outputs: list[str | int],
-                     targets: list[str | int]) -> float:
+    def _compute_raw(
+        self, outputs: list[str | int], targets: list[str | int]
+    ) -> float:
         """Compute metric value from preprocessed model answers.
 
         Args:
@@ -57,14 +57,29 @@ class BaseMetric(ABC):
         """
 
         return self._metric.compute(
-            predictions=outputs,
-            references=targets,
-            **self._compute_kwargs)[self._name]
+            predictions=outputs, references=targets, **self._compute_kwargs
+        )[self._name]
 
     @abstractmethod
-    def compute(self,
-                outputs: list[str | int],
-                targets: list[str | int]) -> float:
+    def _encode_labels(
+        self, output_labels: list[str | int], targets: list[str | int]
+    ) -> tuple[list[int] | list[str], list[int] | list[str]]:
+        """Encode labels into internal representation for both
+        outputs and targets.
+
+        Args:
+            output_labels (list[str|int]): Extracted labels from model outputs.
+            targets (list[str|int]): Ground truth labels.
+        Returns:
+            tuple[list[int], list[int]]: Encoded output labels
+            and encoded targets.
+        """
+
+        pass
+
+    def compute(
+        self, outputs: list[str | int], targets: list[str | int]
+    ) -> float:
         """Compute metric value from text model outputs
 
         Must be implemented by subclasses to handle input formatting.
@@ -75,7 +90,19 @@ class BaseMetric(ABC):
         Returns:
             float: Computed metric value
         """
-        pass
+        output_labels = list(
+            map(
+                lambda x: extract_answer(
+                    x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL
+                ),
+                outputs,
+            )
+        )
+        targets = list(map(str, targets))
+        encoded_output_labels, encoded_targets = self._encode_labels(
+            output_labels, targets
+        )
+        return self._compute_raw(encoded_output_labels, encoded_targets)
 
 
 class ClassificationMetric(BaseMetric):
@@ -84,14 +111,7 @@ class ClassificationMetric(BaseMetric):
     Handles extraction of labels from model outputs
     containing XML-style <ans> tags
     and label encoding for metric computation.
-
-    Attributes:
-        ANS_TAGS: tuple - Start and end tags for answer extraction
-        FORMAT_MISMATCH_LABEL: int - Special value indicating parsing failure
     """
-
-    ANS_TAGS = ("<ans>", "</ans>")
-    FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self, name: str):
         """Initialize metric with specified evaluate library metric name.
@@ -105,9 +125,7 @@ class ClassificationMetric(BaseMetric):
             self._compute_kwargs = {"average": "macro"}
 
     def _encode_labels(
-        self,
-        output_labels: list[str | int],
-        targets: list[str | int]
+        self, output_labels: list[str | int], targets: list[str | int]
     ) -> tuple[list[int], list[int]]:
         """Encode string labels into integer IDs for both outputs and targets.
 
@@ -123,8 +141,9 @@ class ClassificationMetric(BaseMetric):
             self.extract_labels(targets)
 
         encoded_output_labels = [
-            self.label_to_id[label] if label in self.label_to_id
-            else -1 for label in output_labels]
+            self.label_to_id[label] if label in self.label_to_id else -1
+            for label in output_labels
+        ]
         encoded_targets = [self.label_to_id[label] for label in targets]
         return encoded_output_labels, encoded_targets
 
@@ -140,38 +159,6 @@ class ClassificationMetric(BaseMetric):
             label = str(x)
             if label not in self.label_to_id:
                 self.label_to_id[label] = len(self.label_to_id)
-
-    def compute(self,
-                outputs: list[str | int],
-                targets: list[str | int]) -> float:
-        """Compute the classification metric from model
-        outputs and ground truth targets.
-
-        This method extracts labels from outputs,
-        encodes them along with targets,
-        and computes the metric value.
-
-        Args:
-            outputs (list[str|int]): Model output strings.
-            targets (list[str|int]): Ground truth labels.
-        Returns:
-            float: The computed metric value.
-        """
-
-        output_labels = list(map(
-            lambda x: extract_answer(
-                x,
-                self.ANS_TAGS,
-                self.FORMAT_MISMATCH_LABEL
-            ),
-            outputs
-        ))
-        targets = list(map(str, targets))
-        encoded_output_labels, encoded_targets = self._encode_labels(
-            output_labels,
-            targets
-        )
-        return self._compute_raw(encoded_output_labels, encoded_targets)
 
 
 class GenerationMetric(BaseMetric):
@@ -192,20 +179,19 @@ class GenerationMetric(BaseMetric):
         if name == "rouge":
             self._name = "rougeL"
 
-    def compute(self,
-                outputs: list[str | int],
-                targets: list[str | int]) -> float:
-        """Compute the generation metric
-        from model outputs and reference targets.
+    def _encode_labels(
+        self, output_labels: list[str | int], targets: list[str | int]
+    ) -> tuple[list[int] | list[str], list[int] | list[str]]:
+        """Returns labels without encoding for generation metrics.
 
         Args:
-            outputs (list[str]): Model-generated text outputs.
-            targets (list[str]):- Reference texts.
+            output_labels (list[str|int]): Extracted labels from model outputs.
+            targets (list[str|int]): Ground truth labels.
         Returns:
-            float: The computed metric value.
+            tuple[list[str], list[str]]: input values
         """
 
-        return self._compute_raw(outputs, targets)
+        return output_labels, targets
 
 
 def create_metric(name: str) -> BaseMetric:
@@ -227,30 +213,63 @@ def create_metric(name: str) -> BaseMetric:
     if name in GENERATION_METRICS:
         return GenerationMetric(name)
 
-    raise ValueError(f"Unknown metric: {name}")
+    error_msg = f"Unknown metric: {name}"
+    logger.error(error_msg)
+    raise ValueError(error_msg)
 
 
 def validate_metric(task: str, metric: str | None) -> str:
+    """
+    Validates given metric in order to correspond the given task.
+    Returns the given metric name back if the validation succeeded.
+
+    Args:
+        task (str): The type of task, either "classification" or "generation".
+        metric (str): Name of the metric to validate.
+    Returns:
+        str: the name of the metric.
+    Raises:
+        ValueError: If the specified task name is not recognized
+        ValueError: If the specified metric name is not
+            matched to the specified task name.
+    """
+
     if task not in TASK_TYPES:
-        raise ValueError(
-            f"Invalid task type: {task}. Must be one of {TASK_TYPES}."
+        error_msg = (
+            f"Invalid task type: {task}. "
+            f"Available tasks: {', '.join(TASK_TYPES)}."
         )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
     if metric is None:
         return get_default_metric(task)
     if task == "classification" and metric not in CLASSIFICATION_METRICS:
-        raise ValueError(
-            f"Invalid metric for {task} task: {metric}."
-            f"Must be one of {CLASSIFICATION_METRICS}."
+        error_msg = (
+            f"Invalid metric for classification task: {metric}. "
+            f"Available metrics: {', '.join(CLASSIFICATION_METRICS)}."
         )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
     if task == "generation" and metric not in GENERATION_METRICS:
-        raise ValueError(
-            f"Invalid metric for {task} task: {metric}."
-            f"Must be one of {GENERATION_METRICS}."
+        error_msg = (
+            f"Invalid metric for generation task: {metric}. "
+            f"Available metrics: {', '.join(GENERATION_METRICS)}."
         )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
     return metric
 
 
 def get_default_metric(task: str) -> str:
+    """
+    Returns default metric names for the provided task name.
+
+    Args:
+        task (str): The type of task, either "classification" or "generation".
+    Returns:
+        str: the name of the default metric for the specified task.
+    """
+
     if task == "classification":
         return "f1"
     elif task == "generation":
