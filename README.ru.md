@@ -15,7 +15,7 @@
 
 
 <p align="center">
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.md">English</a> | 
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/README.md">English</a> | 
     Русский
 </p>
 
@@ -90,4 +90,4 @@ print("Final prompt metric: ", tuner.final_metric)
 
 ## Больше о проекте
 - Исследуйте различные методы авто-промптинга в PromptTuner. CoolPrompt на данный момент поддерживает HyPE, DistillPrompt, ReflectivePrompt. Вы можете выбрать метод с помощью соответствующего аргумента `method` в `tuner.run`.
-- Для ознакомления с фреймворком вы можете увидеть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/examples">примеров</a> 
+- Для ознакомления с фреймворком вы можете увидеть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">примеров</a> 

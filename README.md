@@ -16,7 +16,7 @@
 
 <p align="center">
     English |
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">Русский</a>
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/README.ru.md">Русский</a>
 </p>
 
 CoolPrompt is a framework for automative prompting creation and optimization.
@@ -91,4 +91,4 @@ print("Final prompt metric:", tuner.final_metric)
 
 ## More about project
 - Explore the variety of autoprompting methods with PromptTuner: CoolPrompt currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
-- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/examples">notebooks</a> to familiarize yourself with our framework
+- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">notebooks</a> to familiarize yourself with our framework
