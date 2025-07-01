@@ -110,7 +110,7 @@ def validate_dataset(
 
     if dataset is not None:
         if target is None:
-            error_msg = "Dataset must be provided with the target"
+            error_msg = "Dataset must be provided with the target."
             logger.error(error_msg)
             raise ValueError(error_msg)
         if not isinstance(dataset, Iterable):
@@ -120,14 +120,27 @@ def validate_dataset(
             )
             logger.error(error_msg)
             raise TypeError(error_msg)
-        # ? if len(dataset) <= 0:
-        #     error_msg = "Dataset should be non-empty"
-        #     logger.error(error_msg)
-        #     raise ValueError(error_msg)
+        if len(dataset) == 0:
+            if method in DATA_DRIVEN_METHODS:
+                error_msg = (
+                    "Dataset must be non-empty when using data-driven "
+                    f"optimization method '{method}'. You can try using HyPE "
+                    "optimization ('hype' as method parameter) which "
+                    "does not require any train dataset."
+                )
+            else:
+                error_msg = (
+                    "Dataset must be non-empty for evaluation when using "
+                    f"'{method}' optimization method. If you do not want to "
+                    "evaluate your prompts, please do not provide any dataset."
+                )
+            logger.error(error_msg)
+            raise ValueError(error_msg)
     else:
         if method in DATA_DRIVEN_METHODS:
             error_msg = (
-                "Train dataset is not provided for data-driven optimization."
+                "Train dataset must be provided for data-driven "
+                f"optimization method '{method}'."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
