@@ -10,7 +10,7 @@ namespaces = false
 
 [project]
 name = "coolprompt"
-version = "0.0.16"
+version = "0.0.17"
 authors = [
   { name="Nikita Kulin", email="serito1998@gmail.com" },
   { name="Artur Khairullin", email="anderbrine05@gmail.com" },
@@ -21,7 +21,7 @@ authors = [
 maintainers = [
   { name="Nikita Kulin", email="serito1998@gmail.com" }
 ]
-description = "A framework for automative prompting creation"
+description = "Framework for automative prompting creation and optimization"
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [

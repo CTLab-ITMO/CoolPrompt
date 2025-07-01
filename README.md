@@ -19,7 +19,7 @@
     <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">Русский</a>
 </p>
 
-CoolPrompt is a framework for automative prompting creation.
+CoolPrompt is a framework for automative prompting creation and optimization.
 
 ## Quick install
 - Install with pip:
