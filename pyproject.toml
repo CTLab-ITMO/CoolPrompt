@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["*"]  # package names should match these glob patterns (["*"] by default)
+exclude = ["test"]  # exclude packages matching these glob patterns (empty by default)
+namespaces = false
+
+[project]
+name = "coolprompt"
+version = "0.0.20"
+authors = [
+  { name="Nikita Kulin", email="serito1998@gmail.com" },
+  { name="Artur Khairullin", email="anderbrine05@gmail.com" },
+  { name="Alena Sitkina", email="sitkina.alena2017@yandex.ru" },
+  { name="Ernest Dyagin", email="tsenred@yandex.com" },
+  { name="Viktor Zhuravlev", email="viktor.zhuravlev1919@gmail.com" },
+]
+maintainers = [
+  { name="Nikita Kulin", email="serito1998@gmail.com" }
+]
+description = "Framework for automative prompting creation and optimization"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "evaluate>=0.3.0",
+  "tqdm",
+  "vllm>=0.5.0",
+  "urllib3>=2.0.0",
+  "nltk>=3.0.0",
+  "rouge_score>=0.1.0",
+  "scikit-learn>=1.3.0",
+  "langchain>=0.3.0",
+  "langchain-community>=0.3.0",
+  "langchain-core>=0.3.0",
+]
+license = "Apache-2.0"
+license-files = ["LICEN[CS]E*"]
+keywords = ["prompting", "autoprompting", "llm", "transformers", "prompt"]
+
+[project.urls]
+Homepage = "https://github.com/CTLab-ITMO/CoolPrompt"
+Issues = "https://github.com/CTLab-ITMO/CoolPrompt/issues"
+Documentation = "https://github.com/CTLab-ITMO/CoolPrompt"
+Repository = "https://github.com/CTLab-ITMO/CoolPrompt"
+Changelog = "https://github.com/CTLab-ITMO/CoolPrompt/blob/master/CHANGELOG.md"

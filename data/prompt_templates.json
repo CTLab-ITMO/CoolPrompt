@@ -1,0 +1,4 @@
+{
+    "classification": "<PROMPT>\n\nAnswer using the label from [<LABELS>].\nGenerate the final answer bracketed with <ans> and </ans>.\n\nThe input:\n<INPUT>\n\nResponse:\n",
+    "generation": "<PROMPT>\n\nINPUT:\n<INPUT>\n\nRESPONSE:\n<RESPONSE_PREFIX>"
+}
