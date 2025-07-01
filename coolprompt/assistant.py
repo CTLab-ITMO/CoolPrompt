@@ -8,7 +8,7 @@ from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.validation import validate_model
-from coolprompt.utils.prompt_templates.reflective_templates import (
+from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )

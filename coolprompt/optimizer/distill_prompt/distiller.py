@@ -15,7 +15,7 @@ from tqdm import tqdm
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
-from coolprompt.utils.prompt_templates.reflective_templates import (
+from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )

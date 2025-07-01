@@ -1,6 +1,11 @@
 from langchain_core.language_models.base import BaseLanguageModel
+from typing import Optional
 
 from coolprompt.evaluator.metrics import create_metric
+from coolprompt.utils.prompt_templates.default_templates import (
+    CLASSIFICATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE,
+)
 
 
 class Evaluator:
@@ -21,7 +26,7 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         task: str,
-        template: str,
+        template: Optional[str] = None,
     ) -> float:
         """
         Evaluate the model on a dataset
@@ -40,14 +45,20 @@ class Evaluator:
                 Corresponding ground truth labels or references.
             task (str):
                 The type of task, either "classification" or "generation".
-            template (str): Prompt template for defined task type
+            template (Optional[str]):
+                Prompt template for defined task type. If None, uses default template.
 
         Returns:
             float: The computed evaluation metric score.
         """
+        if template is None and task == "classification":
+            template = CLASSIFICATION_TASK_TEMPLATE
+        elif template is None and task == "generation":
+            template = GENERATION_TASK_TEMPLATE
 
         if task == "classification":
             self.metric.extract_labels(targets)
+        
         answers = self.model.batch(
             [
                 self._get_full_prompt(prompt, sample, task, template)
