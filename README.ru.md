@@ -50,6 +50,8 @@ my_model = VLLM(
 prompt_tuner = PromptTuner(model=my_model)
 ```
 
+- Список доступных LLM: https://python.langchain.com/docs/integrations/llms/
+
 ## Запуск PromptTuner
 - Запуск PromptTuner с изначальным промптом
 ```
