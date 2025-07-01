@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]  # list of folders that contain the packages (["."] by default)
 include = ["coolprompt"]  # package names should match these glob patterns (["*"] by default)
-exclude = ["notebooks", "data", "test", "src"]  # exclude packages matching these glob patterns (empty by default)
+exclude = ["notebooks", "data", "test", "src", "logs"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false
 
 [project]
 name = "coolprompt"
-version = "0.0.3"
+version = "0.0.15"
 authors = [
   { name="Nikita Kulin", email="serito1998@gmail.com" },
   { name="Artur Khairullin", email="anderbrine05@gmail.com" },
