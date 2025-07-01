@@ -2,6 +2,7 @@ from typing import List, Tuple
 from langchain.llms.base import BaseLanguageModel
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.utils.logging_config import logger
 
 
 def reflectiveprompt(
@@ -32,17 +33,14 @@ def reflectiveprompt(
     Returns:
         str: best evoluted prompt.
     """
-    (
-        train_dataset,
-        validation_dataset,
-        train_targets,
-        validation_targets
-    ) = dataset_split
+    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+        dataset_split
+    )
     args = {
-        'population_size': 10,
-        'num_epochs': 10,
-        'output_path': './reflectiveprompt_outputs',
-        'use_cache': True
+        "population_size": 10,
+        "num_epochs": 10,
+        "output_path": "./reflectiveprompt_outputs",
+        "use_cache": True,
     }
     args.update(kwargs)
     evoluter = ReflectiveEvoluter(
@@ -55,10 +53,14 @@ def reflectiveprompt(
         task=task,
         problem_description=problem_description,
         initial_prompt=initial_prompt,
-        population_size=args['population_size'],
-        num_epochs=args['num_epochs'],
-        output_path=args['output_path'],
-        use_cache=args['use_cache']
+        population_size=args["population_size"],
+        num_epochs=args["num_epochs"],
+        output_path=args["output_path"],
+        use_cache=args["use_cache"],
     )
+    logger.info("Starting ReflectivePrompt optimization...")
+    logger.debug(f"Start prompt:\n{initial_prompt}")
+    logger.debug(f"Problem description:\n{problem_description}")
     final_prompt = evoluter.evolution()
+    logger.info("ReflectivePrompt optimization completed")
     return final_prompt

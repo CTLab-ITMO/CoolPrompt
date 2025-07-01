@@ -2,6 +2,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 
 from coolprompt.evaluator.metrics import create_metric
+from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
@@ -19,6 +20,7 @@ class Evaluator:
     def __init__(self, model: BaseLanguageModel, metric: str) -> None:
         self.model = model
         self.metric = create_metric(metric)
+        logger.info(f"Evaluator sucessfully initialized with {metric} metric")
 
     def evaluate(
         self,
@@ -56,6 +58,10 @@ class Evaluator:
         elif template is None and task == "generation":
             template = GENERATION_TASK_TEMPLATE
 
+        logger.info(
+            f"Evaluating prompt for {task} task on {len(dataset)} samples"
+        )
+        logger.debug(f"Prompt to evaluate:\n{prompt}")
         if task == "classification":
             self.metric.extract_labels(targets)
         
@@ -92,4 +98,9 @@ class Evaluator:
         elif task == "generation":
             return template.format(PROMPT=prompt, INPUT=sample)
         else:
-            raise ValueError(f"Unknown task type: {task}")
+            error_msg = (
+                f"Unknown task type: {task}. "
+                f"Available tasks: classification, generation."
+            )
+            logger.error(error_msg)
+            raise ValueError(error_msg)

@@ -56,7 +56,6 @@ This is an automated evaluation. Your output will be parsed by a script. Any dev
 ### RESPONSE ###
 """
 GENERATION_TASK_TEMPLATE_HYPE = """{PROMPT}
-
 ### HARD CONSTRAINTS ###
 This is an automated evaluation. Your output will be parsed by a script. Any deviation from the required format will result in failure.
 
