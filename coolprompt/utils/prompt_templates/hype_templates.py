@@ -30,8 +30,8 @@ CLASSIFICATION_TASK_TEMPLATE_HYPE = """{PROMPT}
 This is an automated evaluation. Your output will be parsed by a script. Any deviation from the required format will result in failure.
 
 1. OUTPUT FORMAT:
-    - Output ONLY the final answer in the format: <ans>LABEL</ans>
-    - LABEL must be EXACTLY one item from the list: [{LABELS}]
+   - Output ONLY the final answer in the format: `<ans>LABEL</ans>`
+   - LABEL MUST be EXACTLY one item from the list: [{LABELS}]
     - DO NOT include any explanation, reasoning, or extra text.
     - DO NOT include any meta-level commentary (e.g., "Sure", "Here is your answer", "Let's tackle this", "To answer this question", etc).
     - DO NOT modify the tag or the label format.
@@ -60,13 +60,15 @@ GENERATION_TASK_TEMPLATE_HYPE = """{PROMPT}
 This is an automated evaluation. Your output will be parsed by a script. Any deviation from the required format will result in failure.
 
 1. OUTPUT FORMAT:
+    - Output ONLY the answer to the question or task specified in the prompt.
     - Output ONLY the generated content inside `<ans>` tags: `<ans>GENERATED_TEXT</ans>`
+    - NO redundant explanations or meta-commentary.
     - DO NOT include any meta-level commentary (e.g., "Sure", "Here is your answer", "Let's tackle this", "To answer this question", etc).
     - DO NOT explain your reasoning, unless explicitly required by the prompt itself.
     - DO NOT add extra introductory or concluding sentences unless they are part of the intended output.
 
 2. STOP CONDITION:
-    - Stop IMMEDIATELY after </ans>.
+    - Stop IMMEDIATELY after `</ans>`.
     - DO NOT generate any additional output or comments after the completion.
     - DO NOT write any examples of the original task after answering it.
 
