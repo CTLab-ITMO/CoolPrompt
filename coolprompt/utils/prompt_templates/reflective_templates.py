@@ -74,24 +74,3 @@ Write a prompt that will effectively solve the task: {PROBLEM_DESCRIPTION}.
 Output prompt only.
 Bracket the final prompt with <prompt> </prompt>.
 """
-
-CLASSIFICATION_TASK_TEMPLATE = """{PROMPT}
-
-Answer using the label from [{LABELS}].
-Generate the final answer bracketed with <ans> and </ans>.
-
-Input:
-{INPUT}
-
-Response:
-"""
-
-GENERATION_TASK_TEMPLATE = """{PROMPT}
-
-Generate the final answer bracketed with <ans> and </ans>.
-
-INPUT:
-{INPUT}
-
-RESPONSE:
-"""

@@ -16,7 +16,7 @@ from coolprompt.utils.var_validation import (
     validate_run,
     validate_verbose,
 )
-from coolprompt.utils.prompt_templates.reflective_templates import (
+from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
