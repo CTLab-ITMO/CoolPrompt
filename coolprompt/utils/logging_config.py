@@ -14,15 +14,16 @@ def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
         relative to this file's location.
     """
 
+    logger = logging.getLogger("coolprompt")
+    if getattr(logger, "_is_configured", False):
+        return logger
+
     if logs_dir is None:
         logs_dir = Path(__file__).parents[2] / "logs"
     os.makedirs(logs_dir, exist_ok=True)
 
-    logger = logging.getLogger("coolprompt")
-    if logger.handlers:
-        return logger
-
     logger.setLevel(logging.DEBUG)
+    logger.propagate = False
 
     formatter = logging.Formatter(
         "[%(asctime)s] [%(levelname)s] [%(module)s.%(funcName)s] - %(message)s"
@@ -44,8 +45,14 @@ def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
 
     file_handler.setFormatter(formatter)
 
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+        handler.close()
+
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
+
+    logger._is_configured = True
 
     return logger
 
