@@ -1,15 +1,17 @@
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
-from coolprompt.evaluator import Evaluator, validate_metric
+from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
+    Task,
+    Method,
     validate_model,
     validate_task,
     validate_method,
@@ -30,12 +32,12 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
     TEMPLATE_MAP = {
-        ("classification", "hype"): CLASSIFICATION_TASK_TEMPLATE_HYPE,
-        ("classification", "reflective"): CLASSIFICATION_TASK_TEMPLATE,
-        ("classification", "distill"): CLASSIFICATION_TASK_TEMPLATE,
-        ("generation", "hype"): GENERATION_TASK_TEMPLATE_HYPE,
-        ("generation", "reflective"): GENERATION_TASK_TEMPLATE,
-        ("generation", "distill"): GENERATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
+        (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
+        (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
     }
 
     def __init__(
@@ -83,19 +85,19 @@ class PromptTuner:
         logger.debug(
             f"Getting prompt template for {task} task and {method} method"
         )
-        validate_task(task)
-        validate_method(method)
+        task = validate_task(task)
+        method = validate_method(method)
         return self.TEMPLATE_MAP[(task, method)]
 
     def run(
         self,
         start_prompt: str,
         task: str = "generation",
-        dataset: Iterable[str] = None,
-        target: Iterable[str] | Iterable[int] = None,
+        dataset: Optional[Iterable[str]] = None,
+        target: Optional[Iterable[str] | Iterable[int]] = None,
         method: str = "hype",
-        metric: str = None,
-        problem_description: str = None,
+        metric: Optional[str] = None,
+        problem_description: Optional[str] = None,
         validation_size: float = 0.25,
         verbose: int = 1,
         **kwargs,
@@ -153,7 +155,7 @@ class PromptTuner:
             set_verbose(verbose)
 
         logger.info("Validating args for PromptTuner running")
-        validate_run(
+        task, method = validate_run(
             start_prompt,
             task,
             dataset,
@@ -162,8 +164,8 @@ class PromptTuner:
             problem_description,
             validation_size,
         )
-        metric = validate_metric(task, metric)
-        evaluator = Evaluator(self._model, metric)
+        metric = validate_and_create_metric(task, metric)
+        evaluator = Evaluator(self._model, task, metric)
         final_prompt = ""
 
         logger.info("=== Starting Prompt Optimization ===")
@@ -180,9 +182,9 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
-        if method == "hype":
+        if method is Method.HYPE:
             final_prompt = hype_optimizer(self._model, start_prompt)
-        elif method == "reflective":
+        elif method is Method.REFLECTIVE:
             dataset_split = train_test_split(
                 dataset, target, test_size=validation_size
             )
@@ -190,31 +192,29 @@ class PromptTuner:
                 model=self._model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
-                task=task,
                 problem_description=problem_description,
                 initial_prompt=start_prompt,
                 **kwargs,
             )
-        elif method == "distill":
+        elif method is Method.DISTILL:
             dataset_split = train_test_split(dataset, target, test_size=0.25)
             final_prompt = distillprompt(
                 model=self._model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
-                task=task,
                 initial_prompt=start_prompt,
                 **kwargs,
             )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
         if dataset is not None:
-            template = self.get_task_prompt_template(task, method)
+            template = self.TEMPLATE_MAP[(task, method)]
             logger.info(f"Evaluating on given dataset for {task} task...")
             self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target, task, template
+                start_prompt, dataset, target, template
             )
             self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target, task, template
+                final_prompt, dataset, target, template
             )
             logger.info(
                 f"Initial {metric} score: {self.init_metric}, "

@@ -9,7 +9,6 @@ def reflectiveprompt(
     model: BaseLanguageModel,
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],
     evaluator: Evaluator,
-    task: str,
     problem_description: str,
     initial_prompt: str = None,
     **kwargs,
@@ -21,8 +20,7 @@ def reflectiveprompt(
         dataset_split (Tuple[List[str], List[str], List[str], List[str]]):
             train/valid split of dataset and corresponding targets.
         evaluator (Evaluator): evaluator to compute metrics.
-        task (str): type of task to optimize for
-            (classification or generation).
+        task (Task): type of task to optimize for.
         problem_description (str): a string that contains
             short description of problem to optimize.
         initial_prompt (str, optional): initial prompt to start evolution from.
@@ -50,7 +48,6 @@ def reflectiveprompt(
         train_targets=train_targets,
         validation_dataset=validation_dataset,
         validation_targets=validation_targets,
-        task=task,
         problem_description=problem_description,
         initial_prompt=initial_prompt,
         population_size=args["population_size"],

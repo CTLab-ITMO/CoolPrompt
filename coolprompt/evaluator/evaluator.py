@@ -1,8 +1,9 @@
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 
-from coolprompt.evaluator.metrics import create_metric
+from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
+from coolprompt.utils.var_validation import Task
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
@@ -17,9 +18,11 @@ class Evaluator:
     the corresponding metric score against provided targets.
     """
 
-    def __init__(self, model: BaseLanguageModel, metric: str) -> None:
+    def __init__(self, model: BaseLanguageModel,
+                 task: Task, metric: BaseMetric) -> None:
         self.model = model
-        self.metric = create_metric(metric)
+        self.task = task
+        self.metric = metric
         logger.info(f"Evaluator sucessfully initialized with {metric} metric")
 
     def evaluate(
@@ -27,7 +30,6 @@ class Evaluator:
         prompt: str,
         dataset: list[str],
         targets: list[str | int],
-        task: str,
         template: Optional[str] = None,
     ) -> float:
         """
@@ -45,43 +47,45 @@ class Evaluator:
             dataset (list[str]): List of input samples to evaluate.
             targets (list[str|int]):
                 Corresponding ground truth labels or references.
-            task (str):
-                The type of task, either "classification" or "generation".
             template (Optional[str]):
-                Prompt template for defined task type. If None, uses default template.
+                Prompt template for defined task type.
+                If None, uses default template.
 
         Returns:
             float: The computed evaluation metric score.
         """
-        if template is None and task == "classification":
-            template = CLASSIFICATION_TASK_TEMPLATE
-        elif template is None and task == "generation":
-            template = GENERATION_TASK_TEMPLATE
+
+        if template is None:
+            match self.task:
+                case Task.CLASSIFICATION:
+                    template = CLASSIFICATION_TASK_TEMPLATE
+                case Task.GENERATION:
+                    template = GENERATION_TASK_TEMPLATE
 
         logger.info(
-            f"Evaluating prompt for {task} task on {len(dataset)} samples"
+            f"Evaluating prompt for {self.task} task on {len(dataset)} samples"
         )
         logger.debug(f"Prompt to evaluate:\n{prompt}")
-        if task == "classification":
+        if self.task is Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
-        
+
         answers = self.model.batch(
             [
-                self._get_full_prompt(prompt, sample, task, template)
+                self._get_full_prompt(prompt, sample, self.task, template)
                 for sample in dataset
             ]
         )
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(
-        self, prompt: str, sample: str, task: str, template: str
+        self, prompt: str, sample: str, task: Task, template: str
     ) -> str:
         """Inserts parts of the prompt into the task template.
 
         Args:
             prompt (str): the main instruction for the task
             sample (str): the input sample
-            task (str):
+            task (Task):
                 The type of task, either "classification" or "generation".
             template (str): Prompt template for defined task type
 
@@ -92,15 +96,10 @@ class Evaluator:
             str: the full prompt to be passed to the model
         """
 
-        if task == "classification":
-            labels = ", ".join(map(str, self.metric.label_to_id.keys()))
-            return template.format(PROMPT=prompt, LABELS=labels, INPUT=sample)
-        elif task == "generation":
-            return template.format(PROMPT=prompt, INPUT=sample)
-        else:
-            error_msg = (
-                f"Unknown task type: {task}. "
-                f"Available tasks: classification, generation."
-            )
-            logger.error(error_msg)
-            raise ValueError(error_msg)
+        match task:
+            case Task.CLASSIFICATION:
+                labels = ", ".join(map(str, self.metric.label_to_id.keys()))
+                return template.format(
+                    PROMPT=prompt, LABELS=labels, INPUT=sample)
+            case Task.GENERATION:
+                return template.format(PROMPT=prompt, INPUT=sample)

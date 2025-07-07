@@ -1,10 +1,29 @@
-from typing import Any, Iterable
+from enum import Enum
+from typing import Any, Iterable, Tuple
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
 
-METHODS = ["hype", "reflective", "distill"]
-DATA_DRIVEN_METHODS = ["reflective", "distill"]
-TASKS = ["classification", "generation"]
+
+class Method(Enum):
+    HYPE = "hype"
+    REFLECTIVE = "reflective"
+    DISTILL = "distill"
+
+    def is_data_driven(self) -> bool:
+        if self is Method.HYPE:
+            return False
+        return True
+
+    def __str__(self):
+        return self.value
+
+
+class Task(Enum):
+    CLASSIFICATION = "classification"
+    GENERATION = "generation"
+
+    def __str__(self):
+        return self.value
 
 
 def validate_verbose(verbose: int) -> None:
@@ -61,12 +80,14 @@ def validate_start_prompt(start_prompt: str) -> None:
         raise TypeError(error_msg)
 
 
-def validate_task(task: str) -> None:
+def validate_task(task: str) -> Task:
     """Checks that a valid task type is provided.
 
     Args:
         task (str): Provided task type. Must be one of:
             ["classification", "generation"].
+    Returns:
+        Task: The validated task type.
     Raises:
         TypeError: If `task` is not a string.
         ValueError: If `task` is not one of
@@ -82,17 +103,19 @@ def validate_task(task: str) -> None:
             )
         logger.error(error_msg)
         raise TypeError(error_msg)
-    if task not in TASKS:
+    if task not in Task._value2member_map_:
         error_msg = (
             f"Invalid task type: {task}. "
-            f"Available tasks: {', '.join(TASKS)}."
+            f"Available tasks: {', '.join(list(
+                Method._value2member_map_.keys()))}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
+    return Task(task)
 
 
 def validate_dataset(
-    dataset: Iterable | None, target: Iterable | None, method: str
+    dataset: Iterable | None, target: Iterable | None, method: Method
 ) -> None:
     """Checks that the provided dataset is an Iterable instance
     and the target is also provided. Also checks that the dataset is
@@ -101,7 +124,7 @@ def validate_dataset(
     Args:
         dataset (Iterable | None): Provided dataset.
         target (Iterable | None): Provided target.
-        method (str): Provided method.
+        method (Method): Provided method.
     Raises:
         TypeError: If `dataset` is not None but is not Iterable.
         ValueError: If `dataset` is None but `method` requiers a dataset,
@@ -121,7 +144,7 @@ def validate_dataset(
             logger.error(error_msg)
             raise TypeError(error_msg)
         if len(dataset) == 0:
-            if method in DATA_DRIVEN_METHODS:
+            if method.is_data_driven():
                 error_msg = (
                     "Dataset must be non-empty when using data-driven "
                     f"optimization method '{method}'. You can try using HyPE "
@@ -137,7 +160,7 @@ def validate_dataset(
             logger.error(error_msg)
             raise ValueError(error_msg)
     else:
-        if method in DATA_DRIVEN_METHODS:
+        if method.is_data_driven():
             error_msg = (
                 "Train dataset must be provided for data-driven "
                 f"optimization method '{method}'."
@@ -180,12 +203,14 @@ def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
             raise ValueError(error_msg)
 
 
-def validate_method(method: str) -> None:
+def validate_method(method: str) -> Method:
     """Checks that a valid method name is provided.
 
     Args:
         method (str): Provided method. Must be one of:
             ["hype", "reflective", "distill"].
+    Returns:
+        Method: The validated method.
     Raises:
         TypeError: If `method` is not a string.
         ValueError: If `method` is not one of
@@ -199,24 +224,26 @@ def validate_method(method: str) -> None:
         )
         logger.error(error_msg)
         raise TypeError(error_msg)
-    if method not in METHODS:
+    if method not in Method._value2member_map_:
         error_msg = (
             f"Unsupported method: {method}. "
-            f"Available methods: {', '.join(METHODS)}."
+            f"Available methods: {', '.join(list(
+                Method._value2member_map_.keys()))}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
+    return Method(method)
 
 
 def validate_problem_description(
-    problem_description: str | None, method: str
+    problem_description: str | None, method: Method
 ) -> None:
     """Checks that the problem description is provided as a string
     when using the ReflectivePrompt optimization.
 
     Args:
         problem_description (str | None): Provided problem description.
-        method (str): Provided method.
+        method (Method): Provided method.
     Raises:
         TypeError: If `problem_description` is not a string.
         ValueError: If `problem_description` is not provided when
@@ -232,7 +259,7 @@ def validate_problem_description(
             logger.error(error_msg)
             raise TypeError(error_msg)
     else:
-        if method == "reflective":
+        if method is Method.REFLECTIVE:
             error_msg = (
                 "Problem description must be provided for "
                 "ReflectivePrompt optimization."
@@ -268,7 +295,7 @@ def validate_run(
     method: str,
     problem_description: str | None,
     validation_size: float,
-) -> None:
+) -> Tuple[Task, Method]:
     """Checks if args for PromptTuner.run() are valid.
 
     Args:
@@ -285,6 +312,8 @@ def validate_run(
             Must be a string, required when using the ReflectivePrompt method.
         validation_size (float): Provided validation size.
             Must be a float in [0.0, 1.0].
+    Returns:
+        Tuple[Task, Method]: The validated task and method.
     Raises:
         TypeError: If any argument has incorrect type:
             -`start_prompt` is not a string
@@ -306,9 +335,10 @@ def validate_run(
     """
 
     validate_start_prompt(start_prompt)
-    validate_task(task)
+    task = validate_task(task)
+    method = validate_method(method)
     validate_dataset(dataset, target, method)
     validate_target(target, dataset)
-    validate_method(method)
     validate_problem_description(problem_description, method)
     validate_validation_size(validation_size)
+    return task, method
