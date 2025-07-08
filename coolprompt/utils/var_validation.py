@@ -107,7 +107,7 @@ def validate_task(task: str) -> Task:
         error_msg = (
             f"Invalid task type: {task}. "
             f"Available tasks: {', '.join(list(
-                Method._value2member_map_.keys()))}."
+                Task._value2member_map_.keys()))}."
         )
         logger.error(error_msg)
         raise ValueError(error_msg)
