@@ -18,8 +18,10 @@ class Evaluator:
     the corresponding metric score against provided targets.
     """
 
-    def __init__(self, model: BaseLanguageModel,
-                 task: Task, metric: BaseMetric) -> None:
+    def __init__(self,
+                 model: BaseLanguageModel,
+                 task: Task,
+                 metric: BaseMetric) -> None:
         self.model = model
         self.task = task
         self.metric = metric
@@ -56,38 +58,34 @@ class Evaluator:
         """
 
         if template is None:
-            match self.task:
-                case Task.CLASSIFICATION:
-                    template = CLASSIFICATION_TASK_TEMPLATE
-                case Task.GENERATION:
-                    template = GENERATION_TASK_TEMPLATE
+            template = self._get_default_template()
 
         logger.info(
             f"Evaluating prompt for {self.task} task on {len(dataset)} samples"
         )
         logger.debug(f"Prompt to evaluate:\n{prompt}")
-        if self.task is Task.CLASSIFICATION:
+        if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
 
         answers = self.model.batch(
             [
-                self._get_full_prompt(prompt, sample, self.task, template)
+                self._get_full_prompt(prompt, sample, template)
                 for sample in dataset
             ]
         )
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(
-        self, prompt: str, sample: str, task: Task, template: str
+        self, prompt: str, sample: str, template: Optional[str] = None,
     ) -> str:
         """Inserts parts of the prompt into the task template.
 
         Args:
             prompt (str): the main instruction for the task
             sample (str): the input sample
-            task (Task):
-                The type of task, either "classification" or "generation".
-            template (str): Prompt template for defined task type
+            template (Optional[str]):
+                Prompt template for defined task type.
+                If None, uses default template.
 
         Raises:
             ValueError: if type of task is not supported
@@ -96,10 +94,22 @@ class Evaluator:
             str: the full prompt to be passed to the model
         """
 
-        match task:
+        if template is None:
+            template = self._get_default_template()
+
+        match self.task:
             case Task.CLASSIFICATION:
                 labels = ", ".join(map(str, self.metric.label_to_id.keys()))
                 return template.format(
                     PROMPT=prompt, LABELS=labels, INPUT=sample)
             case Task.GENERATION:
                 return template.format(PROMPT=prompt, INPUT=sample)
+
+    def _get_default_template(self) -> str:
+        """Returns the default template for the task type."""
+
+        match self.task:
+            case Task.CLASSIFICATION:
+                return CLASSIFICATION_TASK_TEMPLATE
+            case Task.GENERATION:
+                return GENERATION_TASK_TEMPLATE
