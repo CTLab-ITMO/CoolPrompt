@@ -52,7 +52,7 @@ class PromptTuner:
                 which supports invoke(str) -> str.
                 Will use DefaultLLM if not provided.
             logs_dir (str | Path, optional): logs saving directory.
-            Defaults to None.
+                Defaults to None.
         """
         setup_logging(logs_dir)
         self._model = model or DefaultLLM.init()

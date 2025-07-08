@@ -216,7 +216,7 @@ def validate_and_create_metric(task: Task, metric: str | None) -> str:
     """
 
     if metric is None:
-        return get_default_metric(task)
+        metric = get_default_metric(task)
     match task:
         case Task.CLASSIFICATION:
             if metric in CLASSIFICATION_METRICS:
