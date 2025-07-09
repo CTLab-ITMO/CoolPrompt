@@ -208,8 +208,14 @@ class TestPromptTuner(unittest.TestCase):
             ANY,
             self.mock_model,
             Task.GENERATION,
-            GenerationMetric("meteor"),
-        )  # check for default metric if None is passed
+            ANY,
+        )
+
+        # check for default metric if None is passed
+        self.assertEqual(
+            self.mock_evaluator_init.call_args[0][3],
+            GenerationMetric("meteor")
+        )
 
     def test_run_reflective_without_problem_description(self):
         """

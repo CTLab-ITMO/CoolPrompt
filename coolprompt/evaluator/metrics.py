@@ -105,6 +105,11 @@ class BaseMetric(ABC):
     def __str__(self) -> str:
         return self._name
 
+    def __eq__(self, other: object) -> bool:
+        if type(self) is not type(other):
+            return False
+        return self._name == other._name
+
 
 class ClassificationMetric(BaseMetric):
     """Base class for classification metrics with answer parsing functionality.
