@@ -12,8 +12,6 @@ from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.reflective_templates import (
-    CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE,
     REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE,
     REFLECTIVEPROMPT_CROSSOVER_TEMPLATE,
     REFLECTIVEPROMPT_MUTATION_TEMPLATE,
@@ -35,7 +33,6 @@ class ReflectiveEvoluter:
         train_targets: string targets for train dataset.
         validation_dataset: a dataset to use while validating final prompts.
         validation_targets: string targets for validation dataset.
-        task: type of task to optimize for (classification or generation).
         problem_description: a string that contains
             short description of problem to optimize.
         initial_prompt: initial prompt to start evolution from.
@@ -67,7 +64,6 @@ class ReflectiveEvoluter:
         train_targets: List[str],
         validation_dataset: List[str],
         validation_targets: List[str],
-        task: str,
         problem_description: str,
         initial_prompt: str = None,
         population_size: int = 10,
@@ -81,7 +77,6 @@ class ReflectiveEvoluter:
         self.train_targets = train_targets
         self.validation_dataset = validation_dataset
         self.validation_targets = validation_targets
-        self.task = task
         self.use_cache = use_cache
         self.population_size = population_size
         self.num_epochs = num_epochs
@@ -134,17 +129,10 @@ class ReflectiveEvoluter:
             dataset, targets = self.train_dataset, self.train_targets
         else:
             dataset, targets = self.validation_dataset, self.validation_targets
-        template = (
-            CLASSIFICATION_TASK_TEMPLATE
-            if self.task == "classification"
-            else GENERATION_TASK_TEMPLATE
-        )
         score = self.evaluator.evaluate(
             prompt=prompt.text,
             dataset=dataset,
             targets=targets,
-            task=self.task,
-            template=template,
         )
         prompt.set_score(score)
 

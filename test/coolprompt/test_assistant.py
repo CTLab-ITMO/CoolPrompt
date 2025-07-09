@@ -2,7 +2,9 @@ import unittest
 from unittest.mock import MagicMock, patch, ANY
 
 from coolprompt.assistant import PromptTuner
-from coolprompt.utils.prompt_templates.reflective_templates import (
+from coolprompt.evaluator.metrics import GenerationMetric
+from coolprompt.utils.enums import Task
+from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
@@ -205,7 +207,14 @@ class TestPromptTuner(unittest.TestCase):
         self.mock_evaluator_init.assert_called_once_with(
             ANY,
             self.mock_model,
-            "meteor",  # check for default metric if None is passed
+            Task.GENERATION,
+            ANY,
+        )
+
+        # check for default metric if None is passed
+        self.assertEqual(
+            self.mock_evaluator_init.call_args[0][3],
+            GenerationMetric("meteor")
         )
 
     def test_run_reflective_without_problem_description(self):
