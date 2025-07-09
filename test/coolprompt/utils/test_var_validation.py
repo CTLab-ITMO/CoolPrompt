@@ -2,8 +2,6 @@ import unittest
 from unittest.mock import patch, ANY
 
 from coolprompt.utils.var_validation import (
-    Method,
-    Task,
     validate_dataset,
     validate_method,
     validate_model,
@@ -14,6 +12,7 @@ from coolprompt.utils.var_validation import (
     validate_validation_size,
     validate_verbose,
 )
+from coolprompt.utils.enums import Method, Task
 
 
 class TestValidateModel(unittest.TestCase):

@@ -10,14 +10,13 @@ from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
-    Task,
-    Method,
     validate_model,
     validate_task,
     validate_method,
     validate_run,
     validate_verbose,
 )
+from coolprompt.utils.enums import Method, Task
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,

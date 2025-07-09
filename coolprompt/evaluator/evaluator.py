@@ -3,7 +3,7 @@ from typing import Optional
 
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.var_validation import Task
+from coolprompt.utils.enums import Task
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,

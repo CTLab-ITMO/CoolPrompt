@@ -11,7 +11,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )
-from coolprompt.utils.var_validation import Task
+from coolprompt.utils.enums import Task
 
 
 class TestEvaluator(unittest.TestCase):

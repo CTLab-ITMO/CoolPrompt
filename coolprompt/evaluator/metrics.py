@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from evaluate import load
 from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.var_validation import Task
+from coolprompt.utils.enums import Task
 
 CLASSIFICATION_METRICS = {
     "accuracy",

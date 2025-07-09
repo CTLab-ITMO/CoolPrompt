@@ -10,7 +10,7 @@ from coolprompt.evaluator.metrics import (
     validate_and_create_metric,
     get_default_metric
 )
-from coolprompt.utils.var_validation import Task
+from coolprompt.utils.enums import Task
 
 
 class TestClassificationMetric(unittest.TestCase):
