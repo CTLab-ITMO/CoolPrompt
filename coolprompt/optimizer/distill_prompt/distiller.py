@@ -13,10 +13,6 @@ from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.prompt_templates.default_templates import (
-    CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE,
-)
 from coolprompt.optimizer.distill_prompt.candidate import (
     Candidate,
     CandidateHistory,
@@ -41,7 +37,6 @@ class Distiller:
         train_targets: Targets for train dataset.
         validation_dataset: Dataset to use while validating final prompts.
         validation_targets: Targets for validation dataset.
-        task: Type of task to optimize for (classification or generation).
         base_prompt: Initial prompt to start optimization from.
         use_cache: Whether to cache intermediate results.
         num_epochs: Number of epochs to evaluate.
@@ -56,7 +51,6 @@ class Distiller:
         train_targets: List[str],
         validation_dataset: List[str],
         validation_targets: List[str],
-        task: str,
         base_prompt: str,
         num_epochs: int = 10,
         output_path: str = "./distillprompt_outputs",
@@ -72,8 +66,6 @@ class Distiller:
             validation_dataset (List[str]): Dataset to use while validating
                 final prompts.
             validation_targets (List[str]): Targets for validation dataset.
-            task (str): Type of task to optimize for (classification or
-                generation).
             base_prompt (str): Initial prompt to start optimization from.
             num_epochs (int, optional): Number of epochs to evaluate.
                 Defaults to 10.
@@ -88,7 +80,6 @@ class Distiller:
         self.train_targets = train_targets
         self.validation_dataset = validation_dataset
         self.validation_targets = validation_targets
-        self.task = task
         self.use_cache = use_cache
         self.base_prompt = base_prompt
         self.num_epochs = num_epochs
@@ -115,17 +106,10 @@ class Distiller:
             dataset = self.validation_dataset
             targets = self.validation_targets
 
-        if self.task == "classification":
-            template = CLASSIFICATION_TASK_TEMPLATE
-        else:
-            template = GENERATION_TASK_TEMPLATE
-
         score = self.evaluator.evaluate(
             prompt=prompt,
             dataset=dataset,
             targets=targets,
-            task=self.task,
-            template=template,
         )
         return score
 

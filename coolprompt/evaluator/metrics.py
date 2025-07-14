@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 from evaluate import load
 from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
-
-TASK_TYPES = {"classification", "generation"}
+from coolprompt.utils.enums import Task
 
 CLASSIFICATION_METRICS = {
     "accuracy",
@@ -103,6 +102,14 @@ class BaseMetric(ABC):
         )
         return self._compute_raw(encoded_output_labels, encoded_targets)
 
+    def __str__(self) -> str:
+        return self._name
+
+    def __eq__(self, other: object) -> bool:
+        if type(self) is not type(other):
+            return False
+        return self._name == other._name
+
 
 class ClassificationMetric(BaseMetric):
     """Base class for classification metrics with answer parsing functionality.
@@ -197,37 +204,13 @@ class GenerationMetric(BaseMetric):
         return output_labels, targets
 
 
-def create_metric(name: str) -> BaseMetric:
-    """
-    Create metric instance based on string name
-    Supported metrics: accuracy, f1, bleu, rouge, meteor
-
-    Args:
-        name (str): Name of the metric to create
-    Returns:
-        BaseMetric: Instance of the specified metric
-    Raises:
-        ValueError: If the specified metric name is not recognized
-    """
-
-    if name in CLASSIFICATION_METRICS:
-        return ClassificationMetric(name)
-
-    if name in GENERATION_METRICS:
-        return GenerationMetric(name)
-
-    error_msg = f"Unknown metric: {name}"
-    logger.error(error_msg)
-    raise ValueError(error_msg)
-
-
-def validate_metric(task: str, metric: str | None) -> str:
+def validate_and_create_metric(task: Task, metric: str | None) -> str:
     """
     Validates given metric in order to correspond the given task.
     Returns the given metric name back if the validation succeeded.
 
     Args:
-        task (str): The type of task, either "classification" or "generation".
+        task (Task): The type of task, either "classification" or "generation".
         metric (str): Name of the metric to validate.
     Returns:
         str: the name of the metric.
@@ -237,43 +220,42 @@ def validate_metric(task: str, metric: str | None) -> str:
             matched to the specified task name.
     """
 
-    if task not in TASK_TYPES:
-        error_msg = (
-            f"Invalid task type: {task}. "
-            f"Available tasks: {', '.join(TASK_TYPES)}."
-        )
-        logger.error(error_msg)
-        raise ValueError(error_msg)
     if metric is None:
-        return get_default_metric(task)
-    if task == "classification" and metric not in CLASSIFICATION_METRICS:
-        error_msg = (
-            f"Invalid metric for classification task: {metric}. "
-            f"Available metrics: {', '.join(CLASSIFICATION_METRICS)}."
-        )
-        logger.error(error_msg)
-        raise ValueError(error_msg)
-    if task == "generation" and metric not in GENERATION_METRICS:
-        error_msg = (
-            f"Invalid metric for generation task: {metric}. "
-            f"Available metrics: {', '.join(GENERATION_METRICS)}."
-        )
-        logger.error(error_msg)
-        raise ValueError(error_msg)
+        metric = get_default_metric(task)
+    match task:
+        case Task.CLASSIFICATION:
+            if metric in CLASSIFICATION_METRICS:
+                return ClassificationMetric(metric)
+            error_msg = (
+                f"Invalid metric for {task} task: {metric}. "
+                f"Available metrics: {', '.join(CLASSIFICATION_METRICS)}."
+            )
+            logger.error(error_msg)
+            raise ValueError(error_msg)
+        case Task.GENERATION:
+            if metric in GENERATION_METRICS:
+                return GenerationMetric(metric)
+            error_msg = (
+                f"Invalid metric for {task} task: {metric}. "
+                f"Available metrics: {', '.join(GENERATION_METRICS)}."
+            )
+            logger.error(error_msg)
+            raise ValueError(error_msg)
     return metric
 
 
-def get_default_metric(task: str) -> str:
+def get_default_metric(task: Task) -> str:
     """
     Returns default metric names for the provided task name.
 
     Args:
-        task (str): The type of task, either "classification" or "generation".
+        task (Task): The type of task, either "classification" or "generation".
     Returns:
         str: the name of the default metric for the specified task.
     """
 
-    if task == "classification":
-        return "f1"
-    elif task == "generation":
-        return "meteor"
+    match task:
+        case Task.CLASSIFICATION:
+            return "f1"
+        case Task.GENERATION:
+            return "meteor"

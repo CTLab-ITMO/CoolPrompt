@@ -12,6 +12,7 @@ from coolprompt.utils.var_validation import (
     validate_validation_size,
     validate_verbose,
 )
+from coolprompt.utils.enums import Method, Task
 
 
 class TestValidateModel(unittest.TestCase):
@@ -81,7 +82,8 @@ class TestValidateTask(unittest.TestCase):
 
         for value in ["generation", "classification"]:
             with self.subTest(value=value):
-                validate_task(value)
+                self.assertEqual(validate_task(value),
+                                 Task._value2member_map_[value])
 
     def test_invalid_task_type(self):
         """Testing that validate_task function raises TypeError
@@ -107,7 +109,8 @@ class TestValidateMethod(unittest.TestCase):
 
         for value in ["hype", "reflective", "distill"]:
             with self.subTest(value=value):
-                validate_method(value)
+                self.assertEqual(validate_method(value),
+                                 Method._value2member_map_[value])
 
     def test_invalid_method_type(self):
         """Testing that validate_method function raises TypeError
@@ -134,14 +137,14 @@ class TestValidateDataset(unittest.TestCase):
 
         dataset = ["sample 1", "sample 2", "sample 3"]
         target = [1, 2, 3]
-        method = "method"
+        method = Method.HYPE
         validate_dataset(dataset, target, method)
 
     def test_valid_dataset_not_provied(self):
         """Testing the work of validate_dataset function when
         dataset is not provided"""
 
-        validate_dataset(None, [1, 2, 3], "method")
+        validate_dataset(None, [1, 2, 3], Method.HYPE)
 
     def test_invalid_dataset_provided_type(self):
         """Testing that validate_dataset function raises TypeError when
@@ -149,7 +152,7 @@ class TestValidateDataset(unittest.TestCase):
 
         dataset = 1
         target = [1, 2, 3]
-        method = "method"
+        method = Method.HYPE
         with self.assertRaises(TypeError):
             validate_dataset(dataset, target, method)
 
@@ -159,7 +162,7 @@ class TestValidateDataset(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             validate_dataset(
-                ["sample 1", "sample 2", "sample 3"], None, "method"
+                ["sample 1", "sample 2", "sample 3"], None, Method.HYPE
             )
 
     def test_invalid_dataset_not_provided_method_requires(self):
@@ -167,7 +170,7 @@ class TestValidateDataset(unittest.TestCase):
         dataset is not provided but the ReflectivePrompt method requires it"""
 
         with self.assertRaises(ValueError):
-            validate_dataset(None, None, "reflective")
+            validate_dataset(None, None, Method.REFLECTIVE)
 
 
 class TestValidateTarget(unittest.TestCase):
@@ -209,21 +212,21 @@ class TestValidateProblemDescription(unittest.TestCase):
         the problem description is provided"""
 
         problem_description = "description"
-        method = "method"
+        method = Method.HYPE
         validate_problem_description(problem_description, method)
 
     def test_valid_problem_description_not_provided(self):
         """Testing the work of validate_problem_description function when
         the problem description is not provided"""
 
-        validate_problem_description(None, "method")
+        validate_problem_description(None, Method.HYPE)
 
     def test_invalid_problem_description_type(self):
         """Testing that validate_problem_description function raises
         TypeError when the problem description is not a string"""
 
         with self.assertRaises(TypeError):
-            validate_problem_description(1, "method")
+            validate_problem_description(1, Method.HYPE)
 
     def test_invalid_problem_description_not_provided_method_requires(self):
         """Testing that validate_problem_description function raises
@@ -231,7 +234,7 @@ class TestValidateProblemDescription(unittest.TestCase):
         the ReflectivePrompt method"""
 
         with self.assertRaises(ValueError):
-            validate_problem_description(None, "reflective")
+            validate_problem_description(None, Method.REFLECTIVE)
 
 
 class TestValidateValidationSize(unittest.TestCase):
