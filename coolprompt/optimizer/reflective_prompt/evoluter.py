@@ -548,7 +548,8 @@ class ReflectiveEvoluter:
 
         population = self._reranking(population)
         population = population[:4]
-        population[3] = self.elitist
+        if len(population) == 4:
+            population[3] = self.elitist
         self._evaluation(population, split="validation")
         self._cache_population(
             population, self._make_output_path("best_prompts_infer.yaml")
