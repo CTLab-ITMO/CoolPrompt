@@ -21,10 +21,24 @@
 
 CoolPrompt - фреймворк для автоматического создания и оптимизации промптов.
 
+## Практическое применение
+
+- Automatic prompt engineering for solving tasks using LLM
+- (Semi-)automatic generation of markup for fine-tuning
+- Formalization of response quality assessment using LLM
+- Prompt tuning for agent systems
+
 ## Установка
 - Установка через pip:
 ```
 pip install coolprompt
+```
+
+- Установка через git:
+```
+git clone https://github.com/CTLab-ITMO/CoolPrompt.git
+
+pip install -r requirements.txt
 ```
 
 ## Быстрый запуск

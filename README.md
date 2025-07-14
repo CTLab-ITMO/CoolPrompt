@@ -21,10 +21,24 @@
 
 CoolPrompt is a framework for automative prompting creation and optimization.
 
+## Practical cases
+
+- Automatic prompt engineering for solving tasks using LLM
+- (Semi-)automatic generation of markup for fine-tuning
+- Formalization of response quality assessment using LLM
+- Prompt tuning for agent systems
+
 ## Quick install
 - Install with pip:
 ```
 pip install coolprompt
+```
+
+- Install with git:
+```
+git clone https://github.com/CTLab-ITMO/CoolPrompt.git
+
+pip install -r requirements.txt
 ```
 
 ## Quick start
