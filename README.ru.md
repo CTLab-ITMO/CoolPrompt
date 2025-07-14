@@ -23,10 +23,10 @@ CoolPrompt - фреймворк для автоматического созда
 
 ## Практическое применение
 
-- Automatic prompt engineering for solving tasks using LLM
-- (Semi-)automatic generation of markup for fine-tuning
-- Formalization of response quality assessment using LLM
-- Prompt tuning for agent systems
+- Автоматическое создание промптов для решения задач с использованием LLM
+- (Полу-)автоматическая генерация разметки для файнтюнинга
+- Формализация оценки качества ответов с использованием LLM
+- Тюнинг инструкций в агентных системах
 
 ## Установка
 - Установка через pip:
