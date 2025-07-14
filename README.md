@@ -50,11 +50,14 @@ from coolprompt.assistant import PromptTuner
 
 - with default LLM
 ```
-prompt_tuner = PromptTuner(model=my_model)
+prompt_tuner = PromptTuner()
 ```
 
-- Or initialize your own LLM by Langchain and use it
+- or __customize your own LLM__ using supported Langchain LLMs
+- List of available LLMs: https://python.langchain.com/docs/integrations/llms/
 ```
+from langchain_community.llms import VLLM
+
 my_model = VLLM(
     model="Qwen/Qwen2.5-Coder-32B-Instruct",
     trust_remote_code=True,
@@ -63,8 +66,6 @@ my_model = VLLM(
 
 prompt_tuner = PromptTuner(model=my_model)
 ```
-
-- List of available LLMs: https://python.langchain.com/docs/integrations/llms/
 
 ## Running PromptTuner
 - Run PromptTuner instance with initial prompt
