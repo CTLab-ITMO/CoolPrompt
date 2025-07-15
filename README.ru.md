@@ -106,3 +106,6 @@ print("Final prompt metric: ", tuner.final_metric)
 ## Больше о проекте
 - Исследуйте различные методы авто-промптинга в PromptTuner. CoolPrompt на данный момент поддерживает HyPE, DistillPrompt, ReflectivePrompt. Вы можете выбрать метод с помощью соответствующего аргумента `method` в `tuner.run`.
 - Для ознакомления с фреймворком вы можете увидеть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">примеров</a> 
+
+## Сотрудничество
+- Мы приветствуем и ценим любой вклад и сотрудничество, поэтому вы можете с нами связаться. Для нового кода ознакомьтесь с <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.
