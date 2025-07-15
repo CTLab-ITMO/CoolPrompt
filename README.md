@@ -42,7 +42,6 @@ pip install -r requirements.txt
 ```
 
 ## Quick start
-
 Import and initialize PromptTuner
 ```
 from coolprompt.assistant import PromptTuner
