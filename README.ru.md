@@ -48,7 +48,8 @@ pip install -r requirements.txt
 from coolprompt.assistant import PromptTuner
 ```
 
-- с встроенной LLM:
+- с встроенной LLM
+- используется модель t-tech/T-lite-it-1.0 с помощью vLLM:
 ```
 prompt_tuner = PromptTuner()
 ```
