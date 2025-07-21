@@ -1,4 +1,0 @@
-{"task": "bbh/boolean_expressions", "prompt": "Evaluate the result of a random Boolean expression."}
-{"task": "bbh/word_sorting", "prompt": "Sort a list of words."}
-{"task": "gsm8k", "prompt": "Solve the math word problem, giving your answer as an arabic numeral."}
-{"task": "sst-2", "prompt": "Please perform Sentiment Classification task."}
