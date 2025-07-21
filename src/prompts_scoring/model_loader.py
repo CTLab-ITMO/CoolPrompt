@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import random
+from typing import Any
 
 import numpy as np
 import ray
@@ -16,16 +17,9 @@ from src.evaluation.evaluator import (
     TextClassificationEvaluator,
 )
 from src.utils.data import (
-    BBH_TASKS,
     INNER_GENERATION_TASKS,
-    NATURAL_INSTRUCTIONS_TASKS,
 )
 from src.utils.load_dataset import load_dataset
-
-MODELS_CONFIG = {
-    "Qwen/Qwen3-8B": {"gpu_memory_utilization": 0.95},
-    "T-tech/T-lite-it-1.0": None,
-}
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -34,8 +28,31 @@ logger = logging.getLogger(__name__)
 
 
 class ModelLoader:
+    """Model loader class using for the given model's initialization
+    and prompts evaluation. Initializes model via vllm from hf repo's name.
+    """
 
-    def __init__(self, model_name, batch_size=16, verbose=1):
+    def __init__(
+        self,
+        model_name: str,
+        model_config: dict[str, Any] = None,
+        batch_size: int = 16,
+        verbose: int = 1,
+    ):
+        """Initializes the model without given task.
+
+        Args:
+            model_name: hf repo's name for the model
+            model_config (optional): explicit config for vllm initialization
+            (such as gpu_memory_utilization)
+            batch_size (optional): using batch size. Defaults to 16
+            verbose (optional): specializes the logging level: 0 for errors,
+            1 for info, 2 for debug.
+
+        Raises:
+            ValueError: occurs when unable to collect and open json files with
+            basic prompts and task labels.
+        """
         self.model_name = model_name
         self.task_name = None
         self.bench_name = None
@@ -81,19 +98,57 @@ class ModelLoader:
             "dtype": torch.float16,
             "trust_remote_code": True,
         }
-        if MODELS_CONFIG[self.model_name]:
-            config.update(MODELS_CONFIG[self.model_name])
+        if model_config is not None:
+            config.update(model_config)
         self._model = LLM(**config)
 
         logger.info("Model loaded via vllm")
         logger.info("Model initializing completed")
         self.print_gpu_memory()
 
-    def initialize(self, task_name: str, bench_name=None):
+    def initialize(self, task: str):
+        """Initializes evaluator, task labels and basic prompt
+        based on the given task name.
+
+        Args:
+            task: task name, maybe with benchmark's name
+            (ex. sst2, bbh/word_sorting, natural_instructions/task021)
+        """
+
+        if "/" in task:
+            bench_name, task_name = task.split("/")
+        else:
+            bench_name, task_name = None, task
+
         self.task_name = task_name
         self.bench_name = bench_name
 
-        self.initialize_task(self.task_name)
+        if (
+            self.task_name in ["gsm8k", "math", "samsum"]
+            or self.task_name in INNER_GENERATION_TASKS
+        ):
+            self._evaluator = GenerationEvaluator()
+            self._max_new_tokens = 250
+        else:
+            self._evaluator = TextClassificationEvaluator()
+            self._max_new_tokens = 50
+        logger.info(f"Evaluator loaded: {type(self._evaluator).__name__}")
+
+        labels_json = self.labels_json
+        try:
+            if self.bench_name is not None:
+                self._labels = labels_json[self.bench_name][self.task_name]
+            else:
+                self._labels = labels_json[self.task_name]
+        except KeyError:
+            self._labels = []
+
+        prompts_json = self.prompts_json
+        if self.bench_name is not None:
+            self._base_prompt = prompts_json[self.bench_name][self.task_name]
+        else:
+            self._base_prompt = prompts_json[self.task_name]
+        logger.info(f"Task {self.task_name} initialized")
 
     @property
     def model(self):
@@ -122,7 +177,24 @@ class ModelLoader:
     def device(self):
         return self._device
 
-    def load_data(self, prompt, split="train", full=False, sample=100):
+    def load_data(
+        self,
+        prompt: str,
+        split: str = "train",
+        full: bool = False,
+        sample: int = 100,
+    ):
+        """Loads dataset with the provided prompt and specified options
+
+        Args:
+            prompt: prompt candidate
+            split (optional): dataset splitting mode
+            (either 'test' or 'train'). Defaults to 'train'
+            full (optional): specifies if loading full dataset
+            or only a sample. Defaults to `False`
+            sample (optional): specifies the amount of dataset's
+            instances. Defaults to 100"""
+
         logger.debug(f"Loading data for {self.task_name} dataset")
         return load_dataset(
             self.task_name,
@@ -156,41 +228,6 @@ class ModelLoader:
         torch.manual_seed(seed)
         torch.cuda.manual_seed(seed)
 
-    def initialize_task(self, task_name: str):
-        self.task_name = task_name
-        if self.task_name in NATURAL_INSTRUCTIONS_TASKS:
-            self.bench_name = "natural_instructions"
-        elif self.task_name in BBH_TASKS:
-            self.bench_name = "bbh"
-        else:
-            self.bench_name = None
-        if (
-            self.task_name in ["gsm8k", "math", "samsum"]
-            or self.task_name in INNER_GENERATION_TASKS
-        ):
-            self._evaluator = GenerationEvaluator()
-            self._max_new_tokens = 250
-        else:
-            self._evaluator = TextClassificationEvaluator()
-            self._max_new_tokens = 50
-        logger.info(f"Evaluator loaded: {self._evaluator}")
-
-        labels_json = self.labels_json
-        try:
-            if self.bench_name is not None:
-                self._labels = labels_json[self.bench_name][self.task_name]
-            else:
-                self._labels = labels_json[self.task_name]
-        except KeyError:
-            self._labels = []
-
-        prompts_json = self.prompts_json
-        if self.bench_name is not None:
-            self._base_prompt = prompts_json[self.bench_name][self.task_name]
-        else:
-            self._base_prompt = prompts_json[self.task_name]
-        logger.info(f"Task {self.task_name} initialized")
-
     def print_gpu_memory(self):
         if not torch.cuda.is_available():
             logger.debug("CUDA not available")
@@ -208,7 +245,18 @@ class ModelLoader:
                 )
             )
 
-    def get_metrics(self, candidate, split="train", full=False):
+    def get_metrics(
+        self, candidate: str, split: str = "train", full: bool = False
+    ):
+        """Returns evaluation metrics for the given candidate prompt:
+        accuracy/f1 for classification tasks, bleu/rouge/meteor for generation.
+
+        Args:
+            candidate: candidate prompt for loading dataset with
+            split (optional): dataset splitting mode. Defaults to 'train'
+            full (optional): specifies if using the full dataset
+            or only a sample. Defaults to `False`
+        """
         return self.evaluator.evaluate_vllm(
             model=self.model,
             tokenizer=self.tokenizer,
@@ -217,7 +265,14 @@ class ModelLoader:
             model_generate_args=self.model_generate_args,
         )
 
-    def generate(self, prompts):
+    def generate(self, prompts: str | list[str]):
+        """Generates from given prompt or list of prompts
+        with the loader's sampling params.
+
+        Args:
+            prompts: prompt or list of prompts
+        """
+
         if isinstance(prompts, str):
             prompts = [prompts]
         return self.model.generate(
@@ -225,6 +280,8 @@ class ModelLoader:
         )
 
     def get_sample(self):
+        """Gets sample from initialized task's dataset."""
+
         sample = self.load_data(sample=1, prompt=None)
         input_ids, _, label_id = sample[0]
         input = self._tokenizer.decode(input_ids, skip_special_tokens=True)
@@ -240,6 +297,8 @@ class ModelLoader:
         return {"question": question, "answer": answer}
 
     def destroy(self):
+        """Destroys the initialized model and corresponding components."""
+
         from vllm.distributed.parallel_state import (
             destroy_distributed_environment,
             destroy_model_parallel,
