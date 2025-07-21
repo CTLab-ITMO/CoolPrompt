@@ -21,10 +21,24 @@
 
 CoolPrompt - фреймворк для автоматического создания и оптимизации промптов.
 
+## Практическое применение
+
+- Автоматическое создание промптов для решения задач с использованием LLM
+- (Полу-)автоматическая генерация разметки для файнтюнинга
+- Формализация оценки качества ответов с использованием LLM
+- Тюнинг инструкций в агентных системах
+
 ## Установка
 - Установка через pip:
 ```
 pip install coolprompt
+```
+
+- Установка через git:
+```
+git clone https://github.com/CTLab-ITMO/CoolPrompt.git
+
+pip install -r requirements.txt
 ```
 
 ## Быстрый запуск
@@ -40,8 +54,11 @@ from coolprompt.assistant import PromptTuner
 prompt_tuner = PromptTuner()
 ```
 
-- Или кастомизируем свою модель с помощью Langchain:
+- или __кастомизируем свою модель__ с помощью поддерживаемых Langchain LLM
+- Список поддерживаемых LLM: https://python.langchain.com/docs/integrations/llms/
 ```
+from langchain_community.llms import VLLM
+
 my_model = VLLM(
     model="Qwen/Qwen2.5-Coder-32B-Instruct",
     trust_remote_code=True,
@@ -50,8 +67,6 @@ my_model = VLLM(
 
 prompt_tuner = PromptTuner(model=my_model)
 ```
-
-- Список доступных LLM: https://python.langchain.com/docs/integrations/llms/
 
 ## Запуск PromptTuner
 - Запуск PromptTuner с изначальным промптом
@@ -92,3 +107,6 @@ print("Final prompt metric: ", tuner.final_metric)
 ## Больше о проекте
 - Исследуйте различные методы авто-промптинга в PromptTuner. CoolPrompt на данный момент поддерживает HyPE, DistillPrompt, ReflectivePrompt. Вы можете выбрать метод с помощью соответствующего аргумента `method` в `tuner.run`.
 - Для ознакомления с фреймворком вы можете увидеть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">примеров</a> 
+
+## Сотрудничество
+- Мы приветствуем и ценим любой вклад и сотрудничество, поэтому вы можете с нами связаться. Для нового кода ознакомьтесь с <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.

@@ -7,10 +7,10 @@ from coolprompt.evaluator.metrics import (
     GenerationMetric,
     CLASSIFICATION_METRICS,
     GENERATION_METRICS,
-    create_metric,
-    validate_metric,
+    validate_and_create_metric,
     get_default_metric
 )
+from coolprompt.utils.enums import Task
 
 
 class TestClassificationMetric(unittest.TestCase):
@@ -18,8 +18,8 @@ class TestClassificationMetric(unittest.TestCase):
     def setUp(self):
         self.mock_metric = MagicMock()
         self.patcher = patch('coolprompt.evaluator.metrics.load')
-        self.mock_create_metric = self.patcher.start()
-        self.mock_create_metric.return_value = self.mock_metric
+        self.mock_validate_and_create_metric = self.patcher.start()
+        self.mock_validate_and_create_metric.return_value = self.mock_metric
 
         self.name = np.random.choice(list(CLASSIFICATION_METRICS))
         self.metric = ClassificationMetric(name=self.name)
@@ -31,7 +31,7 @@ class TestClassificationMetric(unittest.TestCase):
         """Testing the initialization of classification metric"""
 
         self.assertEqual(self.name, self.metric._name)
-        self.mock_create_metric.assert_called_once_with(self.name)
+        self.mock_validate_and_create_metric.assert_called_once_with(self.name)
         self.assertEqual(self.metric._metric, self.mock_metric)
         if self.name == 'f1':
             self.assertDictEqual(
@@ -177,7 +177,9 @@ class TestUtilityFunctions(unittest.TestCase):
         """
 
         self.assertIsInstance(
-            create_metric(np.random.choice(list(CLASSIFICATION_METRICS))),
+            validate_and_create_metric(
+                Task.CLASSIFICATION,
+                np.random.choice(list(CLASSIFICATION_METRICS))),
             ClassificationMetric
         )
 
@@ -187,7 +189,9 @@ class TestUtilityFunctions(unittest.TestCase):
         """
 
         self.assertIsInstance(
-            create_metric(np.random.choice(list(GENERATION_METRICS))),
+            validate_and_create_metric(
+                Task.GENERATION,
+                np.random.choice(list(GENERATION_METRICS))),
             GenerationMetric
         )
 
@@ -198,33 +202,10 @@ class TestUtilityFunctions(unittest.TestCase):
         """
 
         with self.assertRaises(ValueError):
-            create_metric('random_not_metric')
-
-    def test_validate_metric_correct(self):
-        """Testing the work of validate_metric method"""
-
-        metric = np.random.choice(list(CLASSIFICATION_METRICS))
-        output = validate_metric('classification', metric)
-        self.assertIsInstance(output, str)
-        self.assertEqual(output, metric)
-
-    def test_validate_metric_incorrect_task(self):
-        """
-        Testing that validate_metric raises an exception when
-        the incorrect task is provided
-        """
+            validate_and_create_metric(Task.CLASSIFICATION, 'random_not_metric')
 
         with self.assertRaises(ValueError):
-            validate_metric('incorrect task', 'f1')
-
-    def test_validate_metric_incorrect_metric(self):
-        """
-        Testing that validate_metric raises an exception when
-        the incorrect metric name is provided
-        """
-
-        with self.assertRaises(ValueError):
-            validate_metric('classification', 'incorrect metric')
+            validate_and_create_metric(Task.GENERATION, 'random_not_metric')
 
     def test_validate_metric_mismatched_metric(self):
         """
@@ -233,21 +214,13 @@ class TestUtilityFunctions(unittest.TestCase):
         """
 
         with self.assertRaises(ValueError):
-            validate_metric('classification', 'meteor')
+            validate_and_create_metric(Task.CLASSIFICATION, 'meteor')
+
+        with self.assertRaises(ValueError):
+            validate_and_create_metric(Task.GENERATION, 'f1')
 
     def test_get_default_metric(self):
         """Testing the work of get_default_metric function"""
 
-        task = np.random.choice(['classification', 'generation'])
-        metric = get_default_metric(task)
-        if task == 'classification':
-            self.assertEqual(metric, 'f1')
-        else:
-            self.assertEqual(metric, 'meteor')
-
-    def test_get_default_metric_incorrect_task(self):
-        """
-        Testing that get_default_metric returns None for the incorrect task
-        """
-
-        self.assertIsNone(get_default_metric('incorrect task'))
+        self.assertEqual(get_default_metric(Task.CLASSIFICATION), 'f1')
+        self.assertEqual(get_default_metric(Task.GENERATION), 'meteor')

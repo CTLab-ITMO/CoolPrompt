@@ -12,7 +12,6 @@ def distillprompt(
     model: BaseLanguageModel,
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],
     evaluator: Evaluator,
-    task: str,
     initial_prompt: str,
     *,
     num_epochs: int = 10,
@@ -32,7 +31,6 @@ def distillprompt(
             (train_dataset, validation_dataset, train_targets,
             validation_targets).
         evaluator (Evaluator): The evaluator instance used to score prompts.
-        task (str): The type of task to optimize for (e.g., 'classification').
         initial_prompt (str): The starting prompt to be optimized.
         num_epochs (int, optional): The number of optimization rounds to
             perform. Defaults to 10.
@@ -58,7 +56,6 @@ def distillprompt(
         train_targets=train_targets,
         validation_dataset=validation_dataset,
         validation_targets=validation_targets,
-        task=task,
         base_prompt=initial_prompt,
         num_epochs=num_epochs,
         output_path=output_path,
