@@ -48,7 +48,7 @@ from coolprompt.assistant import PromptTuner
 ```
 
 - with default LLM 
-- using model t-tech/T-lite-it-1.0 via vLLM
+- using model t-tech/T-lite-it-1.0 via vLLM:
 ```
 prompt_tuner = PromptTuner()
 ```
