@@ -1,3 +1,16 @@
+"""Prompts scoring instrument. You can run it with
+python prompts_scoring.py --input-file-path `input_file_path`
+--output-file-path `output_file_path` --full --gen-only
+Where:
+    input_file_path: path to the input file. It must be structured
+    as json lines {'task': task, 'prompt': prompt}.
+    output_file_path: path to the output file. Output will be
+    structured as json lines {'task': task, 'score': score, 'prompt': prompt}.
+    Writes via appending line by line.
+    full: optional flag for using the full dataset.
+    gen_only: optional flag for evaluating only generation tasks.
+"""
+
 import argparse
 import json
 import logging
@@ -12,9 +25,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-parser = argparse.ArgumentParser(
-    description="Run prompts scoring. Please provide method name."
-)
+parser = argparse.ArgumentParser(description="Run prompts scoring.")
 
 parser.add_argument(
     "--gen_only", action="store_true", help="Skip classification tasks"
@@ -43,15 +54,10 @@ with open(args.output_file_path, "a") as output_file:
                     continue
 
                 task = data.get("task")
-                if "/" in task:
-                    bench_name, task_name = task.split("/")
-                else:
-                    task_name = task
-
                 prompt = data.get("prompt")
 
-                logger.debug(f"Initializing task {task_name}")
-                loader.initialize(task_name, bench_name)
+                logger.debug(f"Initializing task {task}")
+                loader.initialize(task)
                 if args.gen_only and not isinstance(
                     loader.evaluator, GenerationEvaluator
                 ):
@@ -60,8 +66,8 @@ with open(args.output_file_path, "a") as output_file:
                     prompt = loader.base_prompt
                 logger.info(
                     (
-                        f"Starting scoring {task_name}, "
-                        f"evaluator: {loader.evaluator}, "
+                        f"Starting scoring {task}, "
+                        f"evaluator: {type(loader.evaluator).__name__}, "
                         f"prompt: {prompt}"
                     )
                 )
@@ -71,14 +77,14 @@ with open(args.output_file_path, "a") as output_file:
                 )
 
                 result = {
-                    "task_name": task_name,
+                    "task": task,
                     "score": score,
                     "prompt": prompt,
                 }
                 logger.info(result)
                 output_file.write(json.dumps(result) + "\n")
                 output_file.flush()
-                logger.info(f"Processed prompt for task: {task_name}")
+                logger.info(f"Processed prompt for task: {task}")
             except Exception as e:
                 logger.error(f"Error processing line: {str(e)}")
 
