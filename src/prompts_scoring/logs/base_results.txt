@@ -1,6 +1,0 @@
-{"task_name": "boolean_expressions", "score": {"f1": 0.8288043478260869, "accuracy": 0.8412698412698413}, "prompt": "Evaluate the result of a random Boolean expression."}
-{"task_name": "word_sorting", "score": {"bleu": 0.01941033352339692, "rouge": 0.12588917360257335, "meteor": 0.20908211193274964}, "prompt": "Sort a list of words."}
-{"task_name": "boolean_expressions", "score": {"f1": 0.8214285714285714, "accuracy": 0.8412698412698413}, "prompt": "Evaluate the result of a random Boolean expression."}
-{"task_name": "word_sorting", "score": {"bleu": 0.31954059389026906, "rouge": 0.7996037335617608, "meteor": 0.8095824070961359}, "prompt": "Sort a list of words."}
-{"task_name": "gsm8k", "score": {"bleu": 0.0, "rouge": 0.12666666666666665, "meteor": 0.05046296296296296}, "prompt": "Solve the math word problem, giving your answer as an arabic numeral."}
-{"task_name": "sst-2", "score": {"f1": 0.9396135265700483, "accuracy": 0.94}, "prompt": "Please perform Sentiment Classification task."}
