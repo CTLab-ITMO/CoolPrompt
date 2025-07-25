@@ -118,7 +118,6 @@ class ModelLoader:
         candidate: str,
         dataset: Iterable,
         target: Iterable,
-        full: bool = False,
     ) -> float:
         """Returns evaluation metrics for given candidate prompt,
         dataset and target.
@@ -127,8 +126,6 @@ class ModelLoader:
             candidate (str): candidate prompt used in dataset's loading
             dataset (Iterable): evaluation dataset
             target (Iterable): target objects for evaluation
-            full (bool, optional): specifies if using the whole dataset or
-                only a sample of 100 instances. Defaults to `False`
         """
 
         template = (
@@ -137,19 +134,9 @@ class ModelLoader:
             else GENERATION_TASK_TEMPLATE_HYPE
         )
 
-        if full:
-            dataset_sample, target_sample = dataset, target
-        else:
-            total_size = len(dataset)
-            n = min(100, total_size)
-            indices = random.sample(range(total_size), n)
-            dataset_list, target_list = list(dataset), list(target)
-            dataset_sample = [dataset_list[i] for i in indices]
-            target_sample = [target_list[i] for i in indices]
-
         return self._evaluator.evaluate(
             prompt=candidate,
-            dataset=dataset_sample,
-            target=target_sample,
+            dataset=dataset,
+            target=target,
             template=template,
         )
