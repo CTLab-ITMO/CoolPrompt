@@ -3,6 +3,12 @@ from typing import Iterable, Tuple
 from datasets import load_dataset
 
 MULTITASK_TASKS = ["bbh"]
+GENERATION_TASKS = [
+    "bbh/dyck_languages",
+    "bbh/object_counting",
+    "bbh/multistep_arithmetic_two",
+    "bbh/word_sorting",
+]
 
 
 def load_mnli(split: str, **kwargs) -> Tuple[Iterable, Iterable]:

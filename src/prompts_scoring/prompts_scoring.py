@@ -2,20 +2,27 @@
 python prompts_scoring.py --input-file-path `input_file_path`
 --output-file-path `output_file_path` --full --gen-only
 Where:
-    input_file_path: path to the input file. It must be structured
-    as json lines {'task': task, 'prompt': prompt}.
+    input_file_path: path to the input file. It must be a
+        JSON with the structure {task_name: prompt}.
     output_file_path: path to the output file. Output will be
-    structured as json lines {'task': task, 'score': score, 'prompt': prompt}.
-    Writes via appending line by line.
+        structured as JSON: {task_name: {'score': score, 'prompt': prompt}}.
     full: optional flag for using the full dataset.
     gen_only: optional flag for evaluating only generation tasks.
+
+Check `prompts_scoring_example.ipynb` notebook for more examples.
 """
 
 import argparse
 import json
 import logging
 import os
+from pathlib import Path
 import sys
+
+from src.utils.load_dataset_iterable import (
+    GENERATION_TASKS,
+    load_dataset_iterable,
+)
 
 project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
 sys.path.append(project_root)
@@ -38,57 +45,59 @@ parser.add_argument(
 args = parser.parse_args()
 logger.info(f"Given args: {args}")
 
-from src.evaluation.evaluator import GenerationEvaluator
+prompts_json = json.load(args.input_file_path)
+
+output_path = Path(args.output_file_path)
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
 from src.prompts_scoring.model_loader import ModelLoader
 
-loader = ModelLoader("T-tech/T-lite-it-1.0", verbose=2)
+loader = ModelLoader(verbose=2)
 
-with open(args.output_file_path, "a") as output_file:
-    with open(args.input_file_path, "r") as input_file:
-        for line in input_file:
-            try:
-                try:
-                    data = json.loads(line.strip(), strict=False)
-                except json.JSONDecodeError:
-                    logger.error(f"Failed to parse line as JSON: {line}")
-                    continue
+result = {}
 
-                task = data.get("task")
-                prompt = data.get("prompt")
+for task_name, prompt in prompts_json.items():
 
-                logger.debug(f"Initializing task {task}")
-                loader.initialize(task)
-                if args.gen_only and not isinstance(
-                    loader.evaluator, GenerationEvaluator
-                ):
-                    continue
-                if prompt == "":
-                    prompt = loader.base_prompt
-                logger.info(
-                    (
-                        f"Starting scoring {task}, "
-                        f"evaluator: {type(loader.evaluator).__name__}, "
-                        f"prompt: {prompt}"
-                    )
-                )
+    logger.debug(f"Initializing task {task_name}")
 
-                score = loader.get_metrics(
-                    candidate=prompt, split="test", full=args.full
-                )
+    task_type = (
+        "generation" if task_name in GENERATION_TASKS else "classification"
+    )
+    loader.initialize(task_type)
 
-                result = {
-                    "task": task,
-                    "score": score,
-                    "prompt": prompt,
-                }
-                logger.info(result)
-                output_file.write(json.dumps(result) + "\n")
-                output_file.flush()
-                logger.info(f"Processed prompt for task: {task}")
-            except Exception as e:
-                logger.error(f"Error processing line: {str(e)}")
+    if args.gen_only and task_type == "classification":
+        continue
+
+    logger.info(f"Loading test dataset {task_name}, full = {args.full}")
+    dataset, target = load_dataset_iterable(
+        dataset_name=task_name,
+        split="test",
+        sample=100 if args.full else None,
+    )
 
     logger.info(
-        f"Evaluation completed. Results written to {args.output_file_path}"
+        (
+            f"Starting scoring {task_name}, "
+            f"evaluator: {type(loader.evaluator).__name__}, "
+            f"prompt: {prompt}"
+        )
     )
-    loader.destroy()
+
+    score = loader.get_metrics(
+        candidate=prompt, dataset=dataset, target=target
+    )
+
+    result[task_name] = {
+        "score": score,
+        "prompt": prompt,
+    }
+
+    logger.info(result)
+    logger.info(f"Processed prompt for task: {task_name}")
+
+with open(output_path, "w") as output_file:
+    json.dump(result, output_file, indent=4)
+
+logger.info(
+    f"Evaluation completed. Results written to {args.output_file_path}"
+)
