@@ -1,15 +1,18 @@
 """Basic prompting methods optimizer.
-Available methods: `basic` (returns basic prompts)
+Available methods:
+    `basic` (returns basic prompts)
 
 You can run it as python base_prompting_optimizer.py --method `method`
 --input-file-path `input_file_path` --output-file-path `output_file_path`
 Where:
-    `method`: method name, must be one of 'basic.'
-    `input_file_path`: path to the input json file with basic prompts.
-    Expected structure {task_name: prompt, ...}.
-    Defaults to 'basic_prompts.json'.
-    `output_file_path`: path to the output file. Output will be structured
-    as json lines for each task and prompt: {'task': task, 'prompt': prompt}.
+    method: method name, must be one of 'basic.'
+    input_file_path: path to the input json file with basic prompts.
+        Expected structure {task_name: prompt, ...}.
+        Defaults to 'basic_prompts.json'.
+    output_file_path: path to the output file. Output will be structured
+        as JSON: {task_name: prompt} for each task and prompt.
+
+Check `prompts_scoring_example.ipynb` notebook for more examples.
 """
 
 import argparse
@@ -17,33 +20,38 @@ import json
 from pathlib import Path
 
 
-def load_prompts(input_file="basic_prompts.json"):
+def load_prompts(input_file: str | Path = "basic_prompts.json"):
     """Loads prompts from json file
 
     Args:
-        input_file (str): path to input file with basic prompts.
-        Expected structure: {task_name: prompt, ...}.
-        Defaults to 'basic_prompts.json'
+        input_file (str | Path): path to input file with basic prompts.
+            Expected structure: JSON with {task_name: prompt} objects
+            for each task and prompt. Defaults to 'basic_prompts.json'
     """
     with open(input_file) as f:
         return json.load(f)
 
 
-def run_base_prompts(prompts: dict[str, str], output_file_path: str | Path):
+def run_base_prompts(
+    prompts: dict[str, str], output_file_path: str | Path
+) -> None:
     """Gets basic prompts from provided `prompts` and for each task and prompt
-    writes to the `output_file_path` by lines with a
-    structure {'task': task, 'prompt': prompt}
+    writes JSON to the `output_file_path` with a structure {task_name: prompt}
+    for each task and prompt.
 
     Args:
-        prompts: dict with task name as a key and corresponding
-        basic prompt as a value
-        output_file_path: path to the output file"""
-    with open(output_file_path, "a") as f:
-        for task, prompt in prompts.items():
-            f.write(
-                "".join([json.dumps({"task": task, "prompt": prompt}), "\n"])
-            )
-            f.flush()
+        prompts (dict[str, str]): dict with task name as a key and
+            corresponding basic prompt as a value.
+        output_file_path (str | Path): path to the output file.
+    """
+
+    result = {}
+
+    for task, prompt in prompts.items():
+        result[task] = prompt
+
+    with open(output_file_path, "w") as f:
+        json.dump(result, f, indent=4)
 
 
 def main():
