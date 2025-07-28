@@ -18,6 +18,8 @@ Check `prompts_scoring_example.ipynb` notebook for more examples.
 import argparse
 import json
 from pathlib import Path
+import random
+from typing import Iterable
 
 
 def load_prompts(input_file: str | Path = "basic_prompts.json"):
@@ -32,7 +34,7 @@ def load_prompts(input_file: str | Path = "basic_prompts.json"):
         return json.load(f)
 
 
-def run_base_prompts(
+def run_zero_shot(
     prompts: dict[str, str], output_file_path: str | Path
 ) -> None:
     """Gets basic prompts from provided `prompts` and for each task and prompt
@@ -49,6 +51,36 @@ def run_base_prompts(
 
     for task, prompt in prompts.items():
         result[task] = prompt
+
+    with open(output_file_path, "w") as f:
+        json.dump(result, f, indent=4)
+
+
+def run_few_shot(
+    prompts: dict[str, str],
+    output_file_path: str | Path,
+    dataset: Iterable,
+    target: Iterable,
+    num_shots: int = 3,
+):
+    result = {}
+
+    def generate_samples():
+
+        samples = random.sample(list(zip(dataset, target)), num_shots)
+
+        formatted_string = ""
+        for i, (input, output) in enumerate(samples):
+            formatted_string += f"Example {i + 1}:\n"
+            formatted_string += f'Text: "{input.strip()}"\nLabel: {output}\n\n'
+
+        return formatted_string
+
+    for task, prompt in prompts.items():
+        few_shot_prompt = "".join(
+            [prompt, "\n\nExamples:\n", generate_samples()]
+        )
+        result[task] = few_shot_prompt
 
     with open(output_file_path, "w") as f:
         json.dump(result, f, indent=4)
