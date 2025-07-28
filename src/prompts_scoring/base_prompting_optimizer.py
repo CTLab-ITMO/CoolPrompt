@@ -20,6 +20,7 @@ import json
 from pathlib import Path
 import random
 from typing import Iterable
+from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
@@ -86,41 +87,29 @@ def get_labels(labels: list[str], task: str):
         return labels_list
 
 
-def run_zero_shot(
-    prompts: dict[str, str], output_file_path: str | Path
-) -> None:
-    """Gets basic prompts from provided `prompts` and for each task and prompt
-    writes JSON to the `output_file_path` with a structure {task_name: prompt}
-    for each task and prompt.
+def run_zero_shot(prompts: dict[str, str]) -> None:
+    """Gets basic prompts from provided `prompts` and returns a
+    dict with {task: prompt} for each task and prompt.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
-        output_file_path (str | Path): path to the output file.
     """
 
-    result = {}
-
-    for task, prompt in prompts.items():
-        result[task] = prompt
-
-    with open(output_file_path, "w") as f:
-        json.dump(result, f, indent=4)
+    return prompts
 
 
 def run_few_shot(
     prompts: dict[str, str],
-    output_file_path: str | Path,
     num_shots: int = 3,
 ):
     """Converts basic prompts from `prompts` to few-shot form based on
-    `num_shot` samples from datasets, then writes it to
-    `output_file_path` as JSON. Taken from DistillPrompt realization.
+    `num_shot` samples from datasets, then returns a dict.
+    Taken from DistillPrompt realization.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
-        output_file_path (str | Path): path to the output file.
         num_shot (int): number of samples will be taken from dataset.
             Defaults to 3.
     """
@@ -152,23 +141,20 @@ def run_few_shot(
         few_shot_prompt = prompt + "\n\nExamples:\n" + generate_samples()
         result[task] = few_shot_prompt
 
-    with open(output_file_path, "w") as f:
-        json.dump(result, f, indent=4)
+    return result
 
 
 def run_role_based(
     prompts: dict[str, str],
-    output_file_path: str | Path,
     model: BaseLanguageModel,
 ):
     """Gets basic prompts from `prompts` and rewrites them using the role,
     which is extracted by the query to `model` LLM with special template.
-    Then writes to `output_file_path` as JSON.
+    Then returns a dict.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
-        output_file_path (str | Path): path to the output file.
         model (BaseLanguageModel): LangChain LLM.
     """
 
@@ -183,25 +169,22 @@ def run_role_based(
         role_based_prompt = "Your role is " + role + ". " + prompt
         result[task] = role_based_prompt
 
-    with open(output_file_path, "w") as f:
-        json.dump(result, f, indent=4)
+    return result
 
 
 def run_few_shot_chain_of_thoughts(
     prompts: dict[str, str],
-    output_file_path: str | Path,
     labels: Iterable,
     model: BaseLanguageModel,
     num_shots: int = 3,
 ):
     """Converts basic prompts from `prompts` to few-shot form with shown
     chain-of-thought based on `num_shot` samples from datasets,
-    then writes it to `output_file_path` as JSON.
+    then return a dict.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
-        output_file_path (str | Path): path to the output file.
         labels (Iterable): list of labels for classification tasks
         num_shot (int): number of samples will be taken from dataset.
             Defaults to 3.
@@ -247,8 +230,25 @@ def run_few_shot_chain_of_thoughts(
         )
         result[task] = few_shot_prompt
 
-    with open(output_file_path, "w") as f:
-        json.dump(result, f, indent=4)
+    return result
+
+
+def run_zero_shot_chain_of_thoughts(prompts: dict[str, str]):
+    """Gets basic prompts from `prompts` and appends
+    '\nLet's think step by step.' to each one. Then returns a dict.
+
+    Args:
+        prompts (dict[str, str]): dict with task name as a key and
+            corresponding basic prompt as a value.
+    """
+
+    result = {}
+
+    for task, prompt in prompts.items():
+        zero_shot_cot_prompt = prompt + "\nLet's think step by step."
+        result[task] = zero_shot_cot_prompt
+
+    return result
 
 
 def main():
@@ -262,7 +262,10 @@ def main():
         "--method",
         required=True,
         type=str,
-        help=f"Method of prompting. Must be one of {','.join(BASIC_PROMPTING_METHODS)}",
+        help=(
+            "Method of prompting. "
+            f"Must be one of {','.join(BASIC_PROMPTING_METHODS)}"
+        ),
     )
     parser.add_argument(
         "--output-file-path", required=True, help="Path to the output file"
@@ -272,11 +275,40 @@ def main():
         default="basic_prompts.json",
         help="Path to the input JSON file (default: basic_prompts.json)",
     )
+    parser.add_argument(
+        "--num-shots",
+        default=None,
+        help="Number of examples for few-shot methods",
+    )
+    parser.add_argument(
+        "--labels-file-path",
+        default="labels.json",
+        help="Path to the labels JSON file (default: labels.json)",
+    )
+
     args = parser.parse_args()
+
     prompts = load_prompts(args.input_file_path)
+
     match args.method:
-        case "basic":
-            run_base_prompts(prompts, args.output_file_path)
+        case "zero-shot":
+            result = run_zero_shot(prompts)
+        case "few-shot":
+            result = run_few_shot(prompts, args.num_shots)
+        case "few-shot-chain-of-thoughts":
+            labels = load_labels(args.labels_file_path)
+            model = DefaultLLM.init()
+            result = run_few_shot_chain_of_thoughts(
+                prompts, labels, model, args.num_shots
+            )
+        case "role-based":
+            model = DefaultLLM.init()
+            result = run_role_based(prompts, model)
+        case "zero-shot-chain-of-thoughts":
+            result = run_zero_shot_chain_of_thoughts(prompts)
+
+    with open(args.output_file_path, "w") as f:
+        json.dump(result, f, indent=4)
 
 
 if __name__ == "__main__":
