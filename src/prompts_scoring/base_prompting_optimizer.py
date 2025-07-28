@@ -20,15 +20,31 @@ import json
 from pathlib import Path
 import random
 from typing import Iterable
+from coolprompt.utils.prompt_templates.default_templates import (
+    CLASSIFICATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE,
+)
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.utils.prompt_templates.basic_prompting_methods_templates import (
     ROLE_EXTRACTING_TEMPLATE,
 )
+from src.utils.load_dataset_iterable import (
+    GENERATION_TASKS,
+    load_dataset_iterable,
+)
+
+BASIC_PROMPTING_METHODS = [
+    "zero-shot",
+    "few-shot",
+    "role-based",
+    "few-shot-chain-of-thoughts",
+    "zero-shot-chain-of-thoughts",
+]
 
 
 def load_prompts(input_file: str | Path = "basic_prompts.json"):
-    """Loads prompts from json file
+    """Loads prompts from JSON file
 
     Args:
         input_file (str | Path): path to input file with basic prompts.
@@ -37,6 +53,37 @@ def load_prompts(input_file: str | Path = "basic_prompts.json"):
     """
     with open(input_file) as f:
         return json.load(f)
+
+
+def load_labels(input_file: str | Path = "labels.json"):
+    """Loads labels from JSON file
+
+    Args:
+        input_file (str | Path): path to input file with task labels.
+            Expected structure: JSON with {task_name: labels_list} objects
+            for each task and labels list. Defaults to 'labels.json'
+    """
+    with open(input_file) as f:
+        return json.load(f)
+
+
+def get_labels(labels: list[str], task: str):
+    """Gets labels for the given task
+
+    Args:
+        labels (list[str]): list of labels for the given task
+        task (str): task name (ex. mnli or bbh/word_sorting).
+    Raises:
+        ValueError: if provided task is unknown.
+    """
+
+    labels_list = labels.get(task)
+    if labels_list is None:
+        raise ValueError(
+            f"Task {task} is not known or not a classification task"
+        )
+    else:
+        return labels_list
 
 
 def run_zero_shot(
@@ -64,29 +111,33 @@ def run_zero_shot(
 def run_few_shot(
     prompts: dict[str, str],
     output_file_path: str | Path,
-    dataset: Iterable,
-    target: Iterable,
     num_shots: int = 3,
 ):
     """Converts basic prompts from `prompts` to few-shot form based on
-    `num_shot` samples from `dataset` and `target`, then writes it to
+    `num_shot` samples from datasets, then writes it to
     `output_file_path` as JSON. Taken from DistillPrompt realization.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
         output_file_path (str | Path): path to the output file.
-        dataset (Iterable): dataset for getting samples from.
-        target (Iterable): labels/answers for each dataset's instance.
         num_shot (int): number of samples will be taken from dataset.
             Defaults to 3.
     """
 
     result = {}
 
-    def generate_samples():
+    def generate_samples(task):
 
-        samples = random.sample(list(zip(dataset, target)), num_shots)
+        dataset, target = load_dataset_iterable(
+            dataset_name=task,
+            split="train",
+            sample_size=num_shots,
+        )
+
+        samples = list(zip(dataset, target))
+
+        random.shuffle(samples)
 
         formatted_string = ""
         for i, (input, output) in enumerate(samples):
@@ -136,6 +187,70 @@ def run_role_based(
         json.dump(result, f, indent=4)
 
 
+def run_few_shot_chain_of_thoughts(
+    prompts: dict[str, str],
+    output_file_path: str | Path,
+    labels: Iterable,
+    model: BaseLanguageModel,
+    num_shots: int = 3,
+):
+    """Converts basic prompts from `prompts` to few-shot form with shown
+    chain-of-thought based on `num_shot` samples from datasets,
+    then writes it to `output_file_path` as JSON.
+
+    Args:
+        prompts (dict[str, str]): dict with task name as a key and
+            corresponding basic prompt as a value.
+        output_file_path (str | Path): path to the output file.
+        labels (Iterable): list of labels for classification tasks
+        num_shot (int): number of samples will be taken from dataset.
+            Defaults to 3.
+        model (BaseLanguageModel): LangChain LLM.
+    """
+
+    result = {}
+
+    def generate_samples(task, prompt):
+
+        samples, _ = load_dataset_iterable(
+            dataset_name=task,
+            split="train",
+            sample_size=num_shots,
+        )
+
+        random.shuffle(samples)
+
+        formatted_string = ""
+        for i, input in enumerate(samples):
+
+            if task not in GENERATION_TASKS:
+                labels_list = get_labels(labels, task)
+                template = CLASSIFICATION_TASK_TEMPLATE.format(
+                    PROMPT=prompt, LABELS=labels_list, INPUT=input
+                )
+            else:
+                template = GENERATION_TASK_TEMPLATE.format(
+                    PROMPT=prompt, INPUT=input
+                )
+            output = model(template)
+
+            formatted_string += f"Example {i + 1}:\n"
+            formatted_string += (
+                f'Text: "{input.strip()}"\nAnswer: {output}\n\n'
+            )
+
+        return formatted_string
+
+    for task, prompt in prompts.items():
+        few_shot_prompt = (
+            prompt + "\n\nExamples:\n" + generate_samples(task, prompt)
+        )
+        result[task] = few_shot_prompt
+
+    with open(output_file_path, "w") as f:
+        json.dump(result, f, indent=4)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=(
@@ -147,7 +262,7 @@ def main():
         "--method",
         required=True,
         type=str,
-        help="Method of prompting. Must be one of 'basic'",
+        help=f"Method of prompting. Must be one of {','.join(BASIC_PROMPTING_METHODS)}",
     )
     parser.add_argument(
         "--output-file-path", required=True, help="Path to the output file"

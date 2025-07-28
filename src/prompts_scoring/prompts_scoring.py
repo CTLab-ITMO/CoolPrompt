@@ -73,7 +73,7 @@ for task_name, prompt in prompts_json.items():
     dataset, target = load_dataset_iterable(
         dataset_name=task_name,
         split="test",
-        sample=100 if args.full else None,
+        sample_size=100 if args.full else None,
     )
 
     logger.info(
