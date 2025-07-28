@@ -28,7 +28,10 @@ from coolprompt.utils.prompt_templates.default_templates import (
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.utils.prompt_templates.basic_prompting_methods_templates import (
+    ADAPT_TEMPLATE,
+    IMPLEMENT_TEMPLATE,
     ROLE_EXTRACTING_TEMPLATE,
+    SELECT_TEMPLATE,
 )
 from src.utils.load_dataset_iterable import (
     GENERATION_TASKS,
@@ -41,6 +44,7 @@ BASIC_PROMPTING_METHODS = [
     "role-based",
     "few-shot-chain-of-thoughts",
     "zero-shot-chain-of-thoughts",
+    "self-discover",
 ]
 
 
@@ -251,6 +255,43 @@ def run_zero_shot_chain_of_thoughts(prompts: dict[str, str]):
     return result
 
 
+def run_self_discover(prompts: dict[str, str], model: BaseLanguageModel):
+    """Gets basic prompts from `prompts` and performs a
+    self-discover algorithm using provided `model` LLM.
+    Then returns a dict.
+
+    Args:
+        prompts (dict[str, str]): dict with task name as a key and
+            corresponding basic prompt as a value.
+        model (BaseLanguageModel): LangChain LLM.
+    """
+
+    result = {}
+
+    for task, prompt in prompts.items():
+        selected_modules = model(SELECT_TEMPLATE.format(Task=prompt))
+        adapted_modules = model(
+            ADAPT_TEMPLATE.format(
+                Task=prompt, selected_modules=selected_modules
+            )
+        )
+        implement_prompt = model(
+            IMPLEMENT_TEMPLATE.format(
+                Task=prompt, adapted_modules=adapted_modules
+            )
+        )
+
+        result[task] = implement_prompt
+
+    return result
+
+
+# def run_step_back(prompts: dict[str, str], model: BaseLanguageModel):
+#     result = {}
+#     for task, prompt in prompts.items():
+#         abstract_question = model(ABSTRACT_QUESTION_TEMPLATE.format())
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=(
@@ -306,6 +347,9 @@ def main():
             result = run_role_based(prompts, model)
         case "zero-shot-chain-of-thoughts":
             result = run_zero_shot_chain_of_thoughts(prompts)
+        case "self-discover":
+            model = DefaultLLM.init()
+            result = run_self_discover(prompts, model)
 
     with open(args.output_file_path, "w") as f:
         json.dump(result, f, indent=4)
