@@ -20,6 +20,11 @@ import json
 from pathlib import Path
 import random
 from typing import Iterable
+from langchain_core.language_models.base import BaseLanguageModel
+
+from coolprompt.utils.prompt_templates.basic_prompting_methods_templates import (
+    ROLE_EXTRACTING_TEMPLATE,
+)
 
 
 def load_prompts(input_file: str | Path = "basic_prompts.json"):
@@ -63,6 +68,20 @@ def run_few_shot(
     target: Iterable,
     num_shots: int = 3,
 ):
+    """Converts basic prompts from `prompts` to few-shot form based on
+    `num_shot` samples from `dataset` and `target`, then writes it to
+    `output_file_path` as JSON. Taken from DistillPrompt realization.
+
+    Args:
+        prompts (dict[str, str]): dict with task name as a key and
+            corresponding basic prompt as a value.
+        output_file_path (str | Path): path to the output file.
+        dataset (Iterable): dataset for getting samples from.
+        target (Iterable): labels/answers for each dataset's instance.
+        num_shot (int): number of samples will be taken from dataset.
+            Defaults to 3.
+    """
+
     result = {}
 
     def generate_samples():
@@ -72,15 +91,46 @@ def run_few_shot(
         formatted_string = ""
         for i, (input, output) in enumerate(samples):
             formatted_string += f"Example {i + 1}:\n"
-            formatted_string += f'Text: "{input.strip()}"\nLabel: {output}\n\n'
+            formatted_string += (
+                f'Text: "{input.strip()}"\nAnswer: {output}\n\n'
+            )
 
         return formatted_string
 
     for task, prompt in prompts.items():
-        few_shot_prompt = "".join(
-            [prompt, "\n\nExamples:\n", generate_samples()]
-        )
+        few_shot_prompt = prompt + "\n\nExamples:\n" + generate_samples()
         result[task] = few_shot_prompt
+
+    with open(output_file_path, "w") as f:
+        json.dump(result, f, indent=4)
+
+
+def run_role_based(
+    prompts: dict[str, str],
+    output_file_path: str | Path,
+    model: BaseLanguageModel,
+):
+    """Gets basic prompts from `prompts` and rewrites them using the role,
+    which is extracted by the query to `model` LLM with special template.
+    Then writes to `output_file_path` as JSON.
+
+    Args:
+        prompts (dict[str, str]): dict with task name as a key and
+            corresponding basic prompt as a value.
+        output_file_path (str | Path): path to the output file.
+        model (BaseLanguageModel): LangChain LLM.
+    """
+
+    result = {}
+
+    def extract_role(prompt):
+        response = model(ROLE_EXTRACTING_TEMPLATE.format(instruction=prompt))
+        return response.strip()
+
+    for task, prompt in prompts.items():
+        role = extract_role(prompt)
+        role_based_prompt = "Your role is " + role + ". " + prompt
+        result[task] = role_based_prompt
 
     with open(output_file_path, "w") as f:
         json.dump(result, f, indent=4)
