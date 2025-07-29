@@ -88,6 +88,8 @@ prompt_tuner = PromptTuner(model=my_model)
 ```
 from langchain_ollama.llms import OllamaLLM
 
+# Before run console command `ollama run qwen2.5-coder:32b`
+
 my_model = OllamaLLM(
     model="qwen2.5-coder:32b"
 )
