@@ -1,6 +1,7 @@
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 
+from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
@@ -73,6 +74,9 @@ class Evaluator:
                 for sample in dataset
             ]
         )
+        answers = [a.content
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(

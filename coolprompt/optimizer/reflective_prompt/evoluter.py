@@ -6,6 +6,8 @@ from typing import List, Tuple, Any
 import numpy as np
 import statistics
 from scipy.special import softmax
+
+from langchain_core.messages.ai import AIMessage
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
@@ -461,6 +463,10 @@ class ReflectiveEvoluter:
         """
 
         answers = self.model.batch(requests)
+
+        answers = [a.content
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
 
         return answers
 

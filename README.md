@@ -47,14 +47,31 @@ Import and initialize PromptTuner
 from coolprompt.assistant import PromptTuner
 ```
 
-- with default LLM 
-- using model t-tech/T-lite-it-1.0 via vLLM:
+### Default LLM 
+Using model t-tech/T-lite-it-1.0 via vLLM interface
 ```
 prompt_tuner = PromptTuner()
 ```
 
-- or __customize your own LLM__ using supported Langchain LLMs
-- List of available LLMs: https://python.langchain.com/docs/integrations/llms/
+### Customized LLM 
+Using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
+
+#### [ChatOpenAI](https://python.langchain.com/docs/integrations/llms/openai/)
+```
+from langchain_openai.chat_models import ChatOpenAI
+
+my_model = ChatOpenAI(
+    model="paste model_name"
+    base_url="paste paste_url",
+    openai_api_key="paste key",
+    temperature=0.01,
+    max_tokens=500,
+)
+
+prompt_tuner = PromptTuner(model=my_model)
+```
+
+#### [VLLM](https://python.langchain.com/docs/integrations/llms/vllm/)
 ```
 from langchain_community.llms import VLLM
 
@@ -67,8 +84,91 @@ my_model = VLLM(
 prompt_tuner = PromptTuner(model=my_model)
 ```
 
+#### [Ollama](https://python.langchain.com/docs/integrations/llms/ollama/)
+```
+from langchain_ollama.llms import OllamaLLM
+
+# Before run console command `ollama run qwen2.5-coder:32b`
+
+my_model = OllamaLLM(
+    model="qwen2.5-coder:32b"
+)
+
+prompt_tuner = PromptTuner(model=my_model)
+```
+
+#### [Outlines](https://python.langchain.com/docs/integrations/providers/outlines/)
+```
+from langchain_community.llms import Outlines
+
+my_model = Outlines(
+    model="meta-llama/Llama-2-7b-chat-hf",
+    backend="transformers", # Backend to use (transformers, llamacpp, vllm, or mlxlm)
+    max_tokens=256, # Maximum number of tokens to generate
+    streaming=False, # Whether to stream the output
+)
+
+prompt_tuner = PromptTuner(model=my_model)
+```
+
+#### [HuggingFaceEndpoint](https://python.langchain.com/api_reference/huggingface/llms/langchain_huggingface.llms.huggingface_endpoint.HuggingFaceEndpoint.html)
+The Hugging Face Hub also offers various endpoints to build ML applications, consisting of different models via [several inference providers](https://huggingface.co/docs/inference-providers/index)
+```
+from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
+
+llm = HuggingFaceEndpoint(
+    endpoint_url="meta-llama/Meta-Llama-3-8B-Instruct",
+    provider="auto",
+    max_new_tokens=100,
+    temperature=0.01,
+    do_sample=False,
+    huggingfacehub_api_token="Your HF-token here"
+)
+my_model = ChatHuggingFace(llm=llm)
+
+prompt_tuner = PromptTuner(model=my_model)
+```
+
+#### [HuggingFacePipeline](https://python.langchain.com/docs/integrations/chat/huggingface/)
+Run locally using HuggingFacePipeline
+```
+from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
+
+llm = HuggingFacePipeline.from_model_id(
+    model_id="HuggingFaceH4/zephyr-7b-beta",
+    task="text-generation",
+    pipeline_kwargs=dict(
+        max_new_tokens=512,
+        temperature=0.01,
+        do_sample=False,
+        repetition_penalty=1.03,
+    ),
+)
+my_model = ChatHuggingFace(llm=llm)
+
+prompt_tuner = PromptTuner(model=my_model)
+```
+
+#### [LlamaCpp](https://python.langchain.com/docs/integrations/llms/llamacpp/)
+```
+from langchain_community.llms import LlamaCpp
+
+my_model = LlamaCpp(
+    model_path="Model path",
+    temperature=0.01, # Контроль случайности (0-1)
+    max_tokens=256, # Максимальное количество токенов в ответе
+    top_p=0.1, # Контроль разнообразия
+    n_ctx=4096, # Размер контекстного окна
+    n_batch=10, # Размер батча для обработки
+    verbose=False, # Вывод отладочной информации
+)
+
+prompt_tuner = PromptTuner(model=my_model)
+```
+
 ## Running PromptTuner
-- Run PromptTuner instance with initial prompt
+
+### Run PromptTuner instance with initial prompt
 ```
 # Define an initial prompt
 prompt = "Make a summarization of 2+2"
@@ -80,15 +180,15 @@ new_prompt = tuner.run(start_prompt=prompt)
 print(new_prompt)
 ```
 
-- including a dataset for prompt optimization and evaluation. 
-A provided dataset will be split by trainset and testset.
+### Include a dataset for prompt optimization and evaluation 
+A provided dataset will be split by trainset and testset
 ```
 sst2 = load_dataset("sst2")
 class_dataset = sst2['train']['sentence']
 class_targets = sst2['train']['label']
 
 tuner.run(
-    start_prompt=class_start_prompt,
+    start_prompt=prompt,
     task="classification",
     dataset=class_dataset,
     target=class_targets,
@@ -96,13 +196,12 @@ tuner.run(
 )
 ```
 
-- to get a final prompt and prompt metrics
+### Get a final prompt and prompt metrics
 ```
 print("Final prompt:", tuner.final_prompt)
 print("Start prompt metric:", tuner.init_metric)
 print("Final prompt metric:", tuner.final_metric)
 ```
-- This also works for generation tasks
 
 ## More about project
 - Explore the variety of autoprompting methods with PromptTuner: CoolPrompt currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
@@ -110,3 +209,8 @@ print("Final prompt metric:", tuner.final_metric)
 
 ## Contributing
 - We welcome and value any contributions and collaborations, so please contact us. For new code check out <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.
+
+## Future work
+- Develop a prompt technique adapter
+- Develop a feedback feature
+- And more
