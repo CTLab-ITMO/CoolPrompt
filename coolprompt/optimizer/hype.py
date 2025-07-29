@@ -1,4 +1,5 @@
 from langchain_core.language_models.base import BaseLanguageModel
+from langchain_core.messages.ai import AIMessage
 
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.hype_templates import (
@@ -20,7 +21,12 @@ def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     logger.debug(f'Start prompt:\n{prompt}')
     template = HYPE_PROMPT_TEMPLATE
     start_tag, end_tag = "[PROMPT_START]", "[PROMPT_END]"
-    answer = model.invoke(template.replace("<QUERY>", prompt)).strip()
+    answer = model.invoke(template.replace("<QUERY>", prompt))
+
+    if isinstance(answer, AIMessage):
+        answer = answer.content
+    answer = answer.strip()
+
     logger.info('HyPE optimization completed')
     return answer[
         answer.rfind(start_tag) + len(start_tag):answer.rfind(end_tag)
