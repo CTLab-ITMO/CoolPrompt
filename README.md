@@ -16,10 +16,17 @@
 
 <p align="center">
     English |
-    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/README.ru.md">Русский</a>
+    <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/README.ru.md">Русский</a>
 </p>
 
-CoolPrompt is a framework for automative prompting creation.
+CoolPrompt is a framework for automative prompting creation and optimization.
+
+## Practical cases
+
+- Automatic prompt engineering for solving tasks using LLM
+- (Semi-)automatic generation of markup for fine-tuning
+- Formalization of response quality assessment using LLM
+- Prompt tuning for agent systems
 
 ## Quick install
 - Install with pip:
@@ -27,20 +34,30 @@ CoolPrompt is a framework for automative prompting creation.
 pip install coolprompt
 ```
 
-## Quick start
+- Install with git:
+```
+git clone https://github.com/CTLab-ITMO/CoolPrompt.git
 
+pip install -r requirements.txt
+```
+
+## Quick start
 Import and initialize PromptTuner
 ```
 from coolprompt.assistant import PromptTuner
 ```
 
-- with default LLM
+- with default LLM 
+- using model t-tech/T-lite-it-1.0 via vLLM:
 ```
-prompt_tuner = PromptTuner(model=my_model)
+prompt_tuner = PromptTuner()
 ```
 
-- Or initialize your own LLM by Langchain and use it
+- or __customize your own LLM__ using supported Langchain LLMs
+- List of available LLMs: https://python.langchain.com/docs/integrations/llms/
 ```
+from langchain_community.llms import VLLM
+
 my_model = VLLM(
     model="Qwen/Qwen2.5-Coder-32B-Instruct",
     trust_remote_code=True,
@@ -49,8 +66,6 @@ my_model = VLLM(
 
 prompt_tuner = PromptTuner(model=my_model)
 ```
-
-- List of available LLMs: https://python.langchain.com/docs/integrations/llms/
 
 ## Running PromptTuner
 - Run PromptTuner instance with initial prompt
@@ -91,4 +106,7 @@ print("Final prompt metric:", tuner.final_metric)
 
 ## More about project
 - Explore the variety of autoprompting methods with PromptTuner: CoolPrompt currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
-- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/stage/notebooks/examples">notebooks</a> to familiarize yourself with our framework
+- See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">notebooks</a> to familiarize yourself with our framework
+
+## Contributing
+- We welcome and value any contributions and collaborations, so please contact us. For new code check out <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.
