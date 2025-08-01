@@ -7,6 +7,7 @@ aggregation, and synonym generation.
 """
 from typing import List
 
+from langchain_core.messages.ai import AIMessage
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.utils.prompt_templates import distillprompt_templates
@@ -46,6 +47,9 @@ class PromptTransformer:
             formatted_prompts=formatted_prompts
         )
         answer = self.model.invoke(aggregation_prompt, temperature=temperature)
+        if isinstance(answer, AIMessage):
+            answer = answer.content
+
         return self._parse_tagged_text(str(answer), "<START>", "<END>")
 
     def compress_prompts(
@@ -71,6 +75,10 @@ class PromptTransformer:
             request_prompts.append(compression_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
+        answers = [a.content
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
+
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -104,6 +112,9 @@ class PromptTransformer:
             request_prompts.append(distillation_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
+        answers = [a.content
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -131,6 +142,9 @@ class PromptTransformer:
         )
         requests = [generation_prompt] * n
         answers = self.model.batch(requests, temperature=temperature)
+        answers = [a.content
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -156,6 +170,9 @@ class PromptTransformer:
         )
         requests = [rewriter_prompt] * n
         responses = self.model.batch(requests, temperature=temperature)
+        responses = [a.content
+                     if isinstance(a, AIMessage)
+                     else a for a in responses]
         return [response for response in responses if response]
 
     def convert_to_fewshot(
