@@ -22,6 +22,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+CLASSIFICATION_TEMPLATE = CLASSIFICATION_TASK_TEMPLATE_HYPE
+GENERATION_TEMPLATE = GENERATION_TASK_TEMPLATE_HYPE
+
 
 class ModelLoader:
     """Model loader class using for model's initialization
@@ -58,7 +61,6 @@ class ModelLoader:
                 logger.setLevel(logging.INFO)
             case 2:
                 logger.setLevel(logging.DEBUG)
-        logger.info(f"Starting model {self.model_name} initialization...")
 
         self.seed_everything(42)
         torch.cuda.empty_cache()
@@ -69,17 +71,22 @@ class ModelLoader:
         logger.info("Model initializing completed")
         self.print_gpu_memory()
 
-    def initialize(self, task: str, metric: str) -> None:
+    def initialize(self, task: str, metric: str = None) -> None:
         """Initializes evaluator with given task and metric.
 
         Args:
             task (str): task type (either generation or classification).
-            metric (str): metric name (f1/accuracy for classification,
-                bleu/rouge/meteor for generation).
+            metric (str, optional): metric name (f1/accuracy for
+                classification, bleu/rouge/meteor for generation).
+                Defaults to None (will be considered as default metric).
         """
         self._task = validate_task(task)
-        self._metric = validate_and_create_metric(task, metric)
-        self._evaluator = Evaluator(self._model, task, metric)
+        self._metric = validate_and_create_metric(self._task, metric)
+        logger.debug(
+            f"Initializing evaluator for {self._task} task "
+            f"and {self._metric} metric"
+        )
+        self._evaluator = Evaluator(self._model, self._task, self._metric)
 
     @property
     def model(self):
@@ -129,14 +136,14 @@ class ModelLoader:
         """
 
         template = (
-            CLASSIFICATION_TASK_TEMPLATE_HYPE
+            CLASSIFICATION_TEMPLATE
             if self._task == Task.CLASSIFICATION
-            else GENERATION_TASK_TEMPLATE_HYPE
+            else GENERATION_TEMPLATE
         )
 
         return self._evaluator.evaluate(
             prompt=candidate,
             dataset=dataset,
-            target=target,
+            targets=target,
             template=template,
         )

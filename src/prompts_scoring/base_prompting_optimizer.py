@@ -17,9 +17,19 @@ Check `prompts_scoring_example.ipynb` notebook for more examples.
 
 import argparse
 import json
+import os
 from pathlib import Path
 import random
+import sys
 from typing import Iterable
+
+project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
+sys.path.append(project_root)
+
+from src.utils.load_dataset_iterable import (
+    GENERATION_TASKS,
+    load_dataset_iterable,
+)
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
@@ -27,16 +37,13 @@ from coolprompt.utils.prompt_templates.default_templates import (
 )
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.utils.prompt_templates.basic_prompting_methods_templates import (
+from coolprompt.utils.prompt_templates.basic_methods_templates import (
     ADAPT_TEMPLATE,
     IMPLEMENT_TEMPLATE,
     ROLE_EXTRACTING_TEMPLATE,
     SELECT_TEMPLATE,
 )
-from src.utils.load_dataset_iterable import (
-    GENERATION_TASKS,
-    load_dataset_iterable,
-)
+
 
 BASIC_PROMPTING_METHODS = [
     "zero-shot",
@@ -46,6 +53,10 @@ BASIC_PROMPTING_METHODS = [
     "zero-shot-chain-of-thoughts",
     "self-discover",
 ]
+
+FEW_SHOT_COT_MAX_TOKENS = 100
+ROLE_BASED_MAX_TOKENS = 50
+SELF_DISCOVER_MAX_TOKENS = 125
 
 
 def load_prompts(input_file: str | Path = "basic_prompts.json"):
@@ -142,7 +153,7 @@ def run_few_shot(
         return formatted_string
 
     for task, prompt in prompts.items():
-        few_shot_prompt = prompt + "\n\nExamples:\n" + generate_samples()
+        few_shot_prompt = prompt + "\n\nExamples:\n" + generate_samples(task)
         result[task] = few_shot_prompt
 
     return result
@@ -165,8 +176,14 @@ def run_role_based(
     result = {}
 
     def extract_role(prompt):
-        response = model(ROLE_EXTRACTING_TEMPLATE.format(instruction=prompt))
-        return response.strip()
+        response = model.invoke(
+            ROLE_EXTRACTING_TEMPLATE.format(instruction=prompt)
+        ).strip()
+        return response[
+            (response.rfind("<ROLE>") + len("<ROLE>")) : response.rfind(
+                "</ROLE>"
+            )
+        ]
 
     for task, prompt in prompts.items():
         role = extract_role(prompt)
@@ -212,14 +229,18 @@ def run_few_shot_chain_of_thoughts(
 
             if task not in GENERATION_TASKS:
                 labels_list = get_labels(labels, task)
-                template = CLASSIFICATION_TASK_TEMPLATE.format(
-                    PROMPT=prompt, LABELS=labels_list, INPUT=input
+                template = (
+                    CLASSIFICATION_TASK_TEMPLATE.format(
+                        PROMPT=prompt, LABELS=labels_list, INPUT=input
+                    )
+                    + " Let's think step by step"
                 )
             else:
-                template = GENERATION_TASK_TEMPLATE.format(
-                    PROMPT=prompt, INPUT=input
+                template = (
+                    GENERATION_TASK_TEMPLATE.format(PROMPT=prompt, INPUT=input)
+                    + " Let's think step by step"
                 )
-            output = model(template)
+            output = model.invoke(template)
 
             formatted_string += f"Example {i + 1}:\n"
             formatted_string += (
@@ -269,13 +290,13 @@ def run_self_discover(prompts: dict[str, str], model: BaseLanguageModel):
     result = {}
 
     for task, prompt in prompts.items():
-        selected_modules = model(SELECT_TEMPLATE.format(Task=prompt))
-        adapted_modules = model(
+        selected_modules = model.invoke(SELECT_TEMPLATE.format(Task=prompt))
+        adapted_modules = model.invoke(
             ADAPT_TEMPLATE.format(
                 Task=prompt, selected_modules=selected_modules
             )
         )
-        implement_prompt = model(
+        implement_prompt = model.invoke(
             IMPLEMENT_TEMPLATE.format(
                 Task=prompt, adapted_modules=adapted_modules
             )
@@ -284,12 +305,6 @@ def run_self_discover(prompts: dict[str, str], model: BaseLanguageModel):
         result[task] = implement_prompt
 
     return result
-
-
-# def run_step_back(prompts: dict[str, str], model: BaseLanguageModel):
-#     result = {}
-#     for task, prompt in prompts.items():
-#         abstract_question = model(ABSTRACT_QUESTION_TEMPLATE.format())
 
 
 def main():
@@ -318,7 +333,7 @@ def main():
     )
     parser.add_argument(
         "--num-shots",
-        default=None,
+        default=3,
         help="Number of examples for few-shot methods",
     )
     parser.add_argument(
@@ -338,17 +353,23 @@ def main():
             result = run_few_shot(prompts, args.num_shots)
         case "few-shot-chain-of-thoughts":
             labels = load_labels(args.labels_file_path)
-            model = DefaultLLM.init()
+            model = DefaultLLM.init(
+                langchain_config={"max_new_tokens": FEW_SHOT_COT_MAX_TOKENS}
+            )
             result = run_few_shot_chain_of_thoughts(
                 prompts, labels, model, args.num_shots
             )
         case "role-based":
-            model = DefaultLLM.init()
+            model = DefaultLLM.init(
+                langchain_config={"max_new_tokens": ROLE_BASED_MAX_TOKENS}
+            )
             result = run_role_based(prompts, model)
         case "zero-shot-chain-of-thoughts":
             result = run_zero_shot_chain_of_thoughts(prompts)
         case "self-discover":
-            model = DefaultLLM.init()
+            model = DefaultLLM.init(
+                langchain_config={"max_new_tokens": SELF_DISCOVER_MAX_TOKENS}
+            )
             result = run_self_discover(prompts, model)
 
     with open(args.output_file_path, "w") as f:

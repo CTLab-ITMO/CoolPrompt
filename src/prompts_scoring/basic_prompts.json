@@ -26,18 +26,7 @@
     "bbh/sports_understanding": "Determine whether an artificially constructed sentence relating to sports is plausible or not.",
     "bbh/snarks": "Determine which of two sentences is sarcastic.",
     "bbh/web_of_lies": "Evaluate the truth value of a random Boolean function expressed as a natural-language word problem.",
-    "gsm8k": "Solve the math word problem, giving your answer as an arabic numeral.",
-    "math": "Solve the math word problem",
-    "medqa": "Please use your domain knowledge in medical area to solve the questions.",
     "mnli": "In this task, you're given a pair of sentences, premise and hypothesis. Your job is to choose whether the two sentences clearly agree/disagree with each other, or if this cannot be determined.",
-    "mr": "Please perform Sentiment Classification task",
-    "natural_instructions/task021": "A question that is free of any grammatical or logical errors, should be labeled 'Yes.', otherwise it should be indicated as 'No.'. A question is grammatically correct if all its entities i.e. nouns, verbs, adjectives, prepositions, pronouns, adverbs are at appropriate position. A question is logically correct if the semantic makes sense.",
-    "natural_instructions/task050": "You are given a sentence and a question in the input. If the information provided in the sentence is enough to answer the question, label \"Yes.\", otherwise label \"No.\". Do not use any facts other than those provided in the sentence while labeling \"Yes.\" or \"No.\".",
-    "natural_instructions/task069": "In this task, you will be shown a short story with a beginning, two potential middles, and an ending. Your job is to choose the middle statement that makes the story coherent / plausible by writing \"1\" or \"2\" in the output. If both sentences are plausible, pick the one that makes most sense.",
     "openbookqa": "Answer the following question: ",
-    "qnli": "Define if the sentence entails the question.",
-    "samsum": "Summarize the following text",
-    "sst-2": "Please perform Sentiment Classification task.",
-    "trec": "Classify this sentence based on the provided categories.",
-    "yahoo": "Identify the most suitable category for this question."
+    "ethos": "Please decide if the following statement is a hate speech"
 }

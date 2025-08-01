@@ -152,39 +152,10 @@
         "No",
         "Yes"
     ],
-    "medqa": [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E"
-    ],
-    "medqa_4_options": [
-        "A",
-        "B",
-        "C",
-        "D"
-    ],
     "mnli": [
         "entailment",
         "neutral",
         "contradiction"
-    ],
-    "mr": [
-        "negative",
-        "positive"
-    ],
-    "natural_instructions/task021": [
-        "No.",
-        "Yes."
-    ],
-    "natural_instructions/task050": [
-        "No.",
-        "Yes."
-    ],
-    "natural_instructions/task069": [
-        "1",
-        "2"
     ],
     "openbookqa": [
         "A",
@@ -192,76 +163,8 @@
         "C",
         "D"
     ],
-    "qnli": [
-        "no_entailment",
-        "entailment"
-    ],
-    "sst-2": [
-        "negative",
-        "positive"
-    ],
-    "trec": [
-        "abbreviation",
-        "expression_abbreviated",
-        "animal",
-        "body",
-        "color",
-        "invention",
-        "currency",
-        "disease_or_medicine",
-        "event",
-        "food",
-        "musical_instrument",
-        "language",
-        "letter",
-        "other_entity",
-        "plant",
-        "product",
-        "religion",
-        "sport",
-        "element_or_substance",
-        "symbol",
-        "technique",
-        "equivalent_term",
-        "vehicle",
-        "word_with_a_special_property",
-        "definition",
-        "description_of_something",
-        "manner_of_an_action",
-        "reason",
-        "group_of_persons",
-        "individual",
-        "title_of_a_person",
-        "description_of_a_person",
-        "city",
-        "country",
-        "mount",
-        "other_location",
-        "state",
-        "numeric_code",
-        "number_of_something",
-        "date",
-        "distance",
-        "price",
-        "order_or_rank",
-        "other_number",
-        "period",
-        "percent_or_fraction",
-        "speed",
-        "temperature",
-        "size_or_area_or_volume",
-        "weight"
-    ],
-    "yahoo": [
-        "Society & Culture",
-        "Science & Mathematics",
-        "Health",
-        "Education & Reference",
-        "Computers & Internet",
-        "Sports",
-        "Business & Finance",
-        "Entertainment & Music",
-        "Family & Relationships",
-        "Politics & Government"
+    "ethos": [
+        "0",
+        "1"
     ]
 }
