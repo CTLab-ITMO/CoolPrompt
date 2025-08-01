@@ -26,7 +26,7 @@ class Evaluator:
         self.model = model
         self.task = task
         self.metric = metric
-        logger.info(f"Evaluator sucessfully initialized with {metric} metric")
+        logger.info(f"Evaluator successfully initialized with {metric} metric")
 
     def evaluate(
         self,
