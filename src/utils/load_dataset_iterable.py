@@ -18,7 +18,10 @@ def load_mnli(split: str, **kwargs) -> Tuple[Iterable, Iterable]:
         split (str): dataset split mode (train or test)
     """
 
-    mnli = load_dataset("nyu-mll/multi_nli", "plain_text", split=split)
+    if split == "test":
+        split = "validation_matched"
+
+    mnli = load_dataset("nyu-mll/multi_nli", "default", split=split)
     dataset = [
         f"Premise: {p} Hypothesis: {h}"
         for p, h in zip(mnli["premise"], mnli["hypothesis"])
@@ -34,9 +37,23 @@ def load_ethos(split: str, **kwargs) -> Tuple[Iterable, Iterable]:
         split (str): dataset split mode (train or test)
     """
 
-    ethos = load_dataset("ethos", "binary", split=split)
-    dataset = ethos["text"]
-    targets = ethos["label"]
+    ethos = load_dataset("ethos", "binary", split="train")
+
+    rng = random.Random(42)
+    indices = list(range(len(ethos)))
+    rng.shuffle(indices)
+
+    train_size = int(0.8 * len(indices))
+    train_indices = indices[:train_size]
+    test_indices = indices[train_size:]
+
+    if split == "train":
+        ethos_indices = train_indices
+    elif split == "test":
+        ethos_indices = test_indices
+
+    dataset = [ethos[i]["text"] for i in ethos_indices]
+    targets = [ethos[i]["label"] for i in ethos_indices]
     return dataset, targets
 
 
@@ -53,11 +70,10 @@ def load_openbookqa(split: str, **kwargs) -> Tuple[Iterable, Iterable]:
     return dataset, targets
 
 
-def load_bbh(split: str, subtest: str, **kwargs) -> Tuple[Iterable, Iterable]:
+def load_bbh(subtest: str, **kwargs) -> Tuple[Iterable, Iterable]:
     """Loads BBH dataset with specified subtest
 
     Args:
-        split (str): dataset split mode (train or test)
         subtest (str): BBH subtest name ('causal_judgement', etc.)
     Raises:
         ValueError: if subtest name is not specified.
@@ -67,9 +83,9 @@ def load_bbh(split: str, subtest: str, **kwargs) -> Tuple[Iterable, Iterable]:
         raise ValueError(
             "You must specify a subtest for using the BBH dataset"
         )
-    bbh = load_dataset("lukaemon/bbh", subtest, split=split)
-    dataset = bbh["inputs"]
-    targets = bbh["targets"]
+    bbh = load_dataset("lukaemon/bbh", subtest, split="test")
+    dataset = bbh["input"]
+    targets = bbh["target"]
     return dataset, targets
 
 

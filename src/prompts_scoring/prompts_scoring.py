@@ -20,13 +20,13 @@ import os
 from pathlib import Path
 import sys
 
+project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
+sys.path.append(project_root)
+
 from src.utils.load_dataset_iterable import (
     GENERATION_TASKS,
     load_dataset_iterable,
 )
-
-project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
-sys.path.append(project_root)
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -36,17 +36,28 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description="Run prompts scoring.")
 
 parser.add_argument(
-    "--gen_only", action="store_true", help="Skip classification tasks"
+    "--gen-only", action="store_true", help="Skip classification tasks"
 )
 parser.add_argument("--input-file-path", required=True)
 parser.add_argument("--output-file-path", required=True)
 parser.add_argument(
     "--full", action="store_true", help="Enable evaluation on full dataset"
 )
+parser.add_argument(
+    "--generation-metric",
+    default="meteor",
+    help="Generation metric. Must be one of bleu, rouge, meteor",
+)
+parser.add_argument(
+    "--classification-metric",
+    default="f1",
+    help="Classification metric. Must be one of f1, accuracy",
+)
 args = parser.parse_args()
 logger.info(f"Given args: {args}")
 
-prompts_json = json.load(args.input_file_path)
+with open(args.input_file_path, "r") as f:
+    prompts_json = json.load(f)
 
 output_path = Path(args.output_file_path)
 output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -61,19 +72,22 @@ for task_name, prompt in prompts_json.items():
 
     logger.debug(f"Initializing task {task_name}")
 
-    task_type = (
-        "generation" if task_name in GENERATION_TASKS else "classification"
+    task_type, metric = (
+        ("generation", args.generation_metric)
+        if task_name in GENERATION_TASKS
+        else ("classification", args.classification_metric)
     )
-    loader.initialize(task_type)
 
     if args.gen_only and task_type == "classification":
         continue
+
+    loader.initialize(task_type, metric)
 
     logger.info(f"Loading test dataset {task_name}, full = {args.full}")
     dataset, target = load_dataset_iterable(
         dataset_name=task_name,
         split="test",
-        sample_size=100 if args.full else None,
+        sample_size=100 if not args.full else None,
     )
 
     logger.info(
@@ -89,7 +103,7 @@ for task_name, prompt in prompts_json.items():
     )
 
     result[task_name] = {
-        "score": score,
+        "metric": {"name": metric, "score": score},
         "prompt": prompt,
     }
 

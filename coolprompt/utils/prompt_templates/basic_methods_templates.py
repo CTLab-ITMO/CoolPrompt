@@ -2,7 +2,7 @@ ROLE_EXTRACTING_TEMPLATE = """You are an expert instruction analyst. Your task i
 1. Analyze the user's instruction carefully
 2. Identify what domain expertise is required to solve the problem
 3. Determine the most specific professional role that would have this expertise
-4. Return ONLY the role title in 2-5 words
+4. Return ONLY the role title in 2-5 words wrapped in <ROLE> </ROLE> tags.
 
 Guidelines:
 - Be highly specific: avoid generic roles like "expert" or "specialist"
@@ -12,32 +12,32 @@ Guidelines:
 
 Examples:
 Instruction: Explain why it's important to wash hands before eating
-Role: Infectious Disease Specialist
+Answer: <ROLE>Infectious Disease Specialist</ROLE>
 
 Instruction: What brush should I use for acrylic painting on canvas?
-Role: Professional Visual Artist
+Answer: <ROLE>Professional Visual Artist</ROLE>
 
 Instruction: Solve this differential equation: dy/dx = x^2 + 3x
-Role: Applied Mathematician
+Answer: <ROLE>Applied Mathematician</ROLE>
 
 Instruction: How to optimize MySQL queries for large datasets?
-Role: Database Performance Engineer
+Answer: <ROLE>Database Performance Engineer</ROLE>
 
 Instruction: What's the best way to negotiate salary in a tech job?
-Role: HR Compensation Analyst
+Answer: <ROLE>HR Compensation Analyst</ROLE>
 
 Instruction: Design a workout plan for marathon training
-Role: Certified Running Coach
+Answer: <ROLE>Certified Running Coach</ROLE>
 
 Instruction: Help me write a formal complaint letter to my landlord
-Role: Tenant Rights Advocate
+Answer: <ROLE>Tenant Rights Advocate</ROLE>
 
 Instruction: Analyze this stock market trend from last quarter
-Role: Financial Securities Analyst
+Answer: <ROLE>Financial Securities Analyst</ROLE>
 
 Now analyze this instruction:
 {instruction}
-Role:"""
+Answer:"""
 
 REASONING_MODULES = [
     "How could I devise an experiment to help solve that problem?",
