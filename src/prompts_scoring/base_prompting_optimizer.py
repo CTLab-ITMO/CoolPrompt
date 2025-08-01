@@ -1,20 +1,3 @@
-"""Basic prompting methods optimizer.
-Available methods:
-    `basic` (returns basic prompts)
-
-You can run it as python base_prompting_optimizer.py --method `method`
---input-file-path `input_file_path` --output-file-path `output_file_path`
-Where:
-    method: method name, must be one of 'basic.'
-    input_file_path: path to the input json file with basic prompts.
-        Expected structure {task_name: prompt, ...}.
-        Defaults to 'basic_prompts.json'.
-    output_file_path: path to the output file. Output will be structured
-        as JSON: {task_name: prompt} for each task and prompt.
-
-Check `prompts_scoring_example.ipynb` notebook for more examples.
-"""
-
 import argparse
 import json
 import os

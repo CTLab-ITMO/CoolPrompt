@@ -1,18 +1,3 @@
-"""Prompts scoring instrument. You can run it with
-python prompts_scoring.py --input-file-path `input_file_path`
---output-file-path `output_file_path` --full --gen-only
-Where:
-    input_file_path: path to the input file. It must be a
-        JSON with the structure {task_name: prompt}.
-    output_file_path: path to the output file. Output will be
-        structured as JSON: {task_name: {'score': score, 'prompt': prompt}}
-        for each task and prompt.
-    full: optional flag for using the full dataset.
-    gen_only: optional flag for evaluating only generation tasks.
-
-Check `prompts_scoring_example.ipynb` notebook for more examples.
-"""
-
 import argparse
 import json
 import logging
