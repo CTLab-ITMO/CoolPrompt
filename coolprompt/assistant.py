@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable, Optional, Tuple
 from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
@@ -88,6 +88,37 @@ class PromptTuner:
         method = validate_method(method)
         return self.TEMPLATE_MAP[(task, method)]
 
+    def _get_dataset_split(
+        self,
+        dataset: Iterable[str],
+        target: Iterable[str],
+        validation_size: float,
+        train_as_test: bool
+    ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
+        """Provides a train/val dataset split.
+
+        Args:
+            dataset (Iterable[str]):
+                Provided dataset.
+            target (Iterable[str]):
+                Provided targets for the dataset.
+            validation_size (float):
+                Provided size of validation subset.
+            train_as_test (bool):
+                Either to use all data for train and validation or split it.
+
+        Returns:
+            Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
+                a tuple of train dataset, validation dataset,
+                train targets and validation targets.
+        """
+        if train_as_test:
+            return (dataset, dataset, target, target)
+        train_data, val_data, train_targets, val_targets = train_test_split(
+            dataset, target, test_size=validation_size
+        )
+        return (train_data, val_data, train_targets, val_targets)
+
     def run(
         self,
         start_prompt: str,
@@ -98,6 +129,7 @@ class PromptTuner:
         metric: Optional[str] = None,
         problem_description: Optional[str] = None,
         validation_size: float = 0.25,
+        train_as_test: bool = False,
         verbose: int = 1,
         **kwargs,
     ) -> str:
@@ -123,6 +155,11 @@ class PromptTuner:
                 represent the proportion of the dataset
                 to include in the validation split.
                 Defaults to 0.25.
+            train_as_test (bool):
+                Either to use all the provided data as
+                the train and the test dataset at the same time or not.
+                If sets to True, the validation_size parameter will be ignored.
+                Defaults to False.
             verbose (int): Parameter for logging configuration:
                 0 - no logging
                 1 - steps logging
@@ -184,8 +221,11 @@ class PromptTuner:
         if method is Method.HYPE:
             final_prompt = hype_optimizer(self._model, start_prompt)
         elif method is Method.REFLECTIVE:
-            dataset_split = train_test_split(
-                dataset, target, test_size=validation_size
+            dataset_split = self._get_dataset_split(
+                dataset=dataset,
+                target=target,
+                validation_size=validation_size,
+                train_as_test=train_as_test
             )
             final_prompt = reflectiveprompt(
                 model=self._model,
@@ -196,7 +236,12 @@ class PromptTuner:
                 **kwargs,
             )
         elif method is Method.DISTILL:
-            dataset_split = train_test_split(dataset, target, test_size=0.25)
+            dataset_split = self._get_dataset_split(
+                dataset=dataset,
+                target=target,
+                validation_size=validation_size,
+                train_as_test=train_as_test
+            )
             final_prompt = distillprompt(
                 model=self._model,
                 dataset_split=dataset_split,
