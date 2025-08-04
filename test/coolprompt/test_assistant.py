@@ -270,3 +270,41 @@ class TestPromptTuner(unittest.TestCase):
         )
         self.assertEqual(self.prompt_tuner.init_metric, 0.5)
         self.assertEqual(self.prompt_tuner.final_metric, 0.5)
+
+    def test_get_dataset_split(self):
+        """Testing the work of _get_dataset_split"""
+        (
+            train_data,
+            val_data,
+            train_targets,
+            val_targets
+        ) = self.prompt_tuner._get_dataset_split(
+            dataset=["sample 1", "sample 2", "sample 3", "sample 4"],
+            target=[1, 2, 3, 4],
+            validation_size=0.25,
+            train_as_test=False
+        )
+
+        self.assertEqual(len(train_data), 3)
+        self.assertEqual(len(train_targets), 3)
+        self.assertEqual(len(val_data), 1)
+        self.assertEqual(len(val_targets), 1)
+
+        (
+            train_data,
+            val_data,
+            train_targets,
+            val_targets
+        ) = self.prompt_tuner._get_dataset_split(
+            dataset=["sample 1", "sample 2", "sample 3", "sample 4"],
+            target=[1, 2, 3, 4],
+            validation_size=0.25,
+            train_as_test=True
+        )
+
+        self.assertEqual(len(train_data), 4)
+        self.assertEqual(len(train_targets), 4)
+        self.assertEqual(len(val_data), 4)
+        self.assertEqual(len(val_targets), 4)
+        self.assertListEqual(train_data, val_data)
+        self.assertListEqual(train_targets, val_targets)
