@@ -14,7 +14,7 @@
 #### Пример запуска:
 ```
 python base_prompting_optimizer.py --method few-shot
---input-file-path base_prompts.json --output-file-path ./logs/few_shot_result.json --num-shots 5 --labels-file-path labels.json 
+--input-file-path basic_prompts.json --output-file-path ./logs/few_shot_result.json --num-shots 5 --labels-file-path labels.json 
 ```
 
 #### Аргументы:

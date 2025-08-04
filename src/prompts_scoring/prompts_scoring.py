@@ -92,7 +92,7 @@ for task_name, prompt in prompts_json.items():
         "prompt": prompt,
     }
 
-    logger.info(result)
+    logger.info(result[task_name])
     logger.info(f"Processed prompt for task: {task_name}")
 
 with open(output_path, "w") as output_file:

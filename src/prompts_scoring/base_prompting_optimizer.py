@@ -42,25 +42,11 @@ ROLE_BASED_MAX_TOKENS = 50
 SELF_DISCOVER_MAX_TOKENS = 125
 
 
-def load_prompts(input_file: str | Path = "basic_prompts.json"):
-    """Loads prompts from JSON file
+def load_json(input_file: str | Path):
+    """Loads from JSON file
 
     Args:
-        input_file (str | Path): path to input file with basic prompts.
-            Expected structure: JSON with {task_name: prompt} objects
-            for each task and prompt. Defaults to 'basic_prompts.json'
-    """
-    with open(input_file) as f:
-        return json.load(f)
-
-
-def load_labels(input_file: str | Path = "labels.json"):
-    """Loads labels from JSON file
-
-    Args:
-        input_file (str | Path): path to input file with task labels.
-            Expected structure: JSON with {task_name: labels_list} objects
-            for each task and labels list. Defaults to 'labels.json'
+        input_file (str | Path): path to input JSON file.
     """
     with open(input_file) as f:
         return json.load(f)
@@ -85,13 +71,15 @@ def get_labels(labels: list[str], task: str):
         return labels_list
 
 
-def run_zero_shot(prompts: dict[str, str]) -> None:
+def run_zero_shot(prompts: dict[str, str]) -> dict[str, str]:
     """Gets basic prompts from provided `prompts` and returns a
     dict with {task: prompt} for each task and prompt.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
+    Returns:
+        prompts (dict[str, str]): provided `prompts` dict.
     """
 
     return prompts
@@ -100,7 +88,7 @@ def run_zero_shot(prompts: dict[str, str]) -> None:
 def run_few_shot(
     prompts: dict[str, str],
     num_shots: int = 3,
-):
+) -> dict[str, str]:
     """Converts basic prompts from `prompts` to few-shot form based on
     `num_shot` samples from datasets, then returns a dict.
     Taken from DistillPrompt realization.
@@ -110,11 +98,22 @@ def run_few_shot(
             corresponding basic prompt as a value.
         num_shot (int): number of samples will be taken from dataset.
             Defaults to 3.
+    Returns:
+        result (dict[str, str]): dict with prompts enhanced by few-shot method
+            with the same structure as `prompts`.
     """
 
     result = {}
 
-    def generate_samples(task):
+    def generate_samples(task: str) -> str:
+        """Generates samples from train dataset for the given task
+
+        Args:
+            task (str): task name (ex. mnli, bbh/word_sorting)
+        Returns:
+            formatted_string (str): formatted string with samples with the
+                structure: Example i:\\nText: text[i]\\nAnswer: answer[i]\\n\\n
+        """
 
         dataset, target = load_dataset_iterable(
             dataset_name=task,
@@ -145,20 +144,30 @@ def run_few_shot(
 def run_role_based(
     prompts: dict[str, str],
     model: BaseLanguageModel,
-):
+) -> dict[str, str]:
     """Gets basic prompts from `prompts` and rewrites them using the role,
     which is extracted by the query to `model` LLM with special template.
-    Then returns a dict.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
         model (BaseLanguageModel): LangChain LLM.
+    Returns:
+        result (dict[str, str]): dict with prompts enhanced by role-based
+            method with the same structure as `prompts`.
     """
 
     result = {}
 
-    def extract_role(prompt):
+    def extract_role(prompt: str) -> str:
+        """Generates role for the given prompt
+
+        Args:
+            prompt (str): prompt without role
+        Returns:
+            str: hypothetical role for LLM which will process the `prompt`
+        """
+
         response = model.invoke(
             ROLE_EXTRACTING_TEMPLATE.format(instruction=prompt)
         ).strip()
@@ -181,10 +190,9 @@ def run_few_shot_chain_of_thoughts(
     labels: Iterable,
     model: BaseLanguageModel,
     num_shots: int = 3,
-):
+) -> dict[str, str]:
     """Converts basic prompts from `prompts` to few-shot form with shown
-    chain-of-thought based on `num_shot` samples from datasets,
-    then return a dict.
+    chain-of-thought based on `num_shot` samples from datasets.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
@@ -193,11 +201,27 @@ def run_few_shot_chain_of_thoughts(
         num_shot (int): number of samples will be taken from dataset.
             Defaults to 3.
         model (BaseLanguageModel): LangChain LLM.
+    Returns:
+        reults (dict[str, str]): dict of prompts ehanced by
+            few-shot-chain-of-thoughts method with the same structure as
+            `prompts`.
     """
 
     result = {}
 
-    def generate_samples(task, prompt):
+    def generate_samples(task: str, prompt: str) -> str:
+        """Gets `num_shots` sample prompts from train dataset for the given
+        task, appends 'Let's think step by step' and makes `model` to process
+        them with the provided prompt. Then combines the results into
+        formatted string.
+
+        Args:
+            task (str): task name (ex. mnli, bbh/word_sorting)
+            prompt (str): candidate prompt
+        Returns:
+            formatted_string (str): formatted string with samples with the
+                structure: Example i:\\nText: text[i]\\nAnswer: answer[i]\\n\\n
+        """
 
         samples, _ = load_dataset_iterable(
             dataset_name=task,
@@ -216,12 +240,12 @@ def run_few_shot_chain_of_thoughts(
                     CLASSIFICATION_TASK_TEMPLATE.format(
                         PROMPT=prompt, LABELS=labels_list, INPUT=input
                     )
-                    + " Let's think step by step"
+                    + "\nLet's think step by step"
                 )
             else:
                 template = (
                     GENERATION_TASK_TEMPLATE.format(PROMPT=prompt, INPUT=input)
-                    + " Let's think step by step"
+                    + "\nLet's think step by step"
                 )
             output = model.invoke(template)
 
@@ -241,13 +265,17 @@ def run_few_shot_chain_of_thoughts(
     return result
 
 
-def run_zero_shot_chain_of_thoughts(prompts: dict[str, str]):
+def run_zero_shot_chain_of_thoughts(prompts: dict[str, str]) -> dict[str, str]:
     """Gets basic prompts from `prompts` and appends
-    '\nLet's think step by step.' to each one. Then returns a dict.
+    '\nLet's think step by step.' to each one.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
+    Returns:
+        result (dict[str, str]): dict with prompts enhanced by
+            zero-shot-chain-of-thoughts method with the same structure as
+            `prompts`.
     """
 
     result = {}
@@ -259,15 +287,19 @@ def run_zero_shot_chain_of_thoughts(prompts: dict[str, str]):
     return result
 
 
-def run_self_discover(prompts: dict[str, str], model: BaseLanguageModel):
+def run_self_discover(
+    prompts: dict[str, str], model: BaseLanguageModel
+) -> dict[str, str]:
     """Gets basic prompts from `prompts` and performs a
     self-discover algorithm using provided `model` LLM.
-    Then returns a dict.
 
     Args:
         prompts (dict[str, str]): dict with task name as a key and
             corresponding basic prompt as a value.
         model (BaseLanguageModel): LangChain LLM.
+    Returns:
+        result (dict[str, str]): dict with prompts enhanced by self-discover
+            method with the same structure as `prompts`.
     """
 
     result = {}
@@ -316,6 +348,7 @@ def main():
     )
     parser.add_argument(
         "--num-shots",
+        type=int,
         default=3,
         help="Number of examples for few-shot methods",
     )
@@ -327,7 +360,7 @@ def main():
 
     args = parser.parse_args()
 
-    prompts = load_prompts(args.input_file_path)
+    prompts = load_json(args.input_file_path)
 
     match args.method:
         case "zero-shot":
@@ -335,7 +368,7 @@ def main():
         case "few-shot":
             result = run_few_shot(prompts, args.num_shots)
         case "few-shot-chain-of-thoughts":
-            labels = load_labels(args.labels_file_path)
+            labels = load_json(args.labels_file_path)
             model = DefaultLLM.init(
                 langchain_config={"max_new_tokens": FEW_SHOT_COT_MAX_TOKENS}
             )

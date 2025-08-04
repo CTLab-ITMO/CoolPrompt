@@ -17,23 +17,14 @@ Answer: <ROLE>Infectious Disease Specialist</ROLE>
 Instruction: What brush should I use for acrylic painting on canvas?
 Answer: <ROLE>Professional Visual Artist</ROLE>
 
-Instruction: Solve this differential equation: dy/dx = x^2 + 3x
-Answer: <ROLE>Applied Mathematician</ROLE>
-
 Instruction: How to optimize MySQL queries for large datasets?
 Answer: <ROLE>Database Performance Engineer</ROLE>
 
 Instruction: What's the best way to negotiate salary in a tech job?
 Answer: <ROLE>HR Compensation Analyst</ROLE>
 
-Instruction: Design a workout plan for marathon training
-Answer: <ROLE>Certified Running Coach</ROLE>
-
 Instruction: Help me write a formal complaint letter to my landlord
 Answer: <ROLE>Tenant Rights Advocate</ROLE>
-
-Instruction: Analyze this stock market trend from last quarter
-Answer: <ROLE>Financial Securities Analyst</ROLE>
 
 Now analyze this instruction:
 {instruction}
