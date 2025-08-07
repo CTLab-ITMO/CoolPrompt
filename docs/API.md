@@ -19,7 +19,7 @@ Our tool for easy model loading using VLLM interface. You can provide it with yo
 Here are implementations of our optimization methods:
 - `hype.py` - HyPE method
 - `distill_prompt/` - DistillPrompt
-- `reflective_prompt/` - ReflectivePrompt
+- `reflective_prompt/` - ReflectivePrompt. You can see its documentation <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/reflective_prompt/README.md">here</a>.
 
 ---
 ## `utils/`
