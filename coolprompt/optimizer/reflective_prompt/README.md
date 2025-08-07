@@ -18,6 +18,6 @@ It implements short-term and long-term reflections to provide some clarification
 <p align="center">
     <picture>
     <source srcset="../../../docs/images/reflectivePrompt.jpg">
-    <img alt="ReflectivePrompt workflow" width="40%" height="40%">
+    <img alt="ReflectivePrompt workflow" width="100%" height="100%">
     </picture>
 </p>
