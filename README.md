@@ -204,6 +204,7 @@ print("Final prompt metric:", tuner.final_metric)
 ```
 
 ## More about project
+- <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/API.md">API Reference</a>
 - Explore the variety of autoprompting methods with PromptTuner: CoolPrompt currently support HyPE, DistillPrompt, ReflectivePrompt. You can choose method via corresponding argument `method` in `tuner.run`
 - See more examples in <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">notebooks</a> to familiarize yourself with our framework
 

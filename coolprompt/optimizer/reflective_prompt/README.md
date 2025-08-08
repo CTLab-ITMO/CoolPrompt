@@ -1,6 +1,6 @@
 # ReflectivePrompt
 
-## An Evolutionary-Based AutoPrompting method
+## Evolutionary-Based AutoPrompting method
 
 This method is based on the idea of Reflective Evolution and text-based gradients. 
 
