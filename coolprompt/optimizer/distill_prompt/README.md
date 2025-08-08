@@ -8,7 +8,7 @@ This method is based on different prompt-transformation methods that will use LL
 
 <p align="center">
     <picture>
-    <source srcset="../../../docs/images/distillPrompt.jpg">
+    <source srcset="../../../docs/images/distillPrompt.png">
     <img alt="DistillPrompt workflow" width="100%" height="100%">
     </picture>
 </p>
