@@ -6,13 +6,14 @@
     </picture>
 </p>
 
-[![Release Notes](https://img.shields.io/github/release/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/releases)
-[![PyPI - License](https://img.shields.io/github/license/CTLab-ITMO/CoolPrompt?style=BadgeStyleOptions.DEFAULT&logo=opensourceinitiative&logoColor=white&color=blue)](https://opensource.org/license/apache-2-0)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/coolprompt?style=flat-square)](https://pypistats.org/packages/coolprompt)
-[![GitHub star chart](https://img.shields.io/github/stars/CTLab-ITMO/CoolPrompt?style=flat-square)](https://star-history.com/#CTLab-ITMO/CoolPrompt)
-[![Open Issues](https://img.shields.io/github/issues-raw/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/issues)
-[![ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg)](https://itmo.ru/)
-
+<div align="center">
+  <img src="https://img.shields.io/github/release/CTLab-ITMO/CoolPrompt?style=flat-square" alt="Release Notes" href="https://github.com/CTLab-ITMO/CoolPrompt/releases">
+  <img src="https://img.shields.io/github/license/CTLab-ITMO/CoolPrompt?style=BadgeStyleOptions.DEFAULT&logo=opensourceinitiative&logoColor=white&color=blue" alt="PyPI - License" href="https://opensource.org/license/apache-2-0">
+  <img src="https://img.shields.io/pypi/dm/coolprompt?style=flat-square" alt="PyPI - Downloads" href="https://pypistats.org/packages/coolprompt">
+  <img src="https://img.shields.io/github/stars/CTLab-ITMO/CoolPrompt?style=flat-square" alt="GitHub star chart" href="https://star-history.com/#CTLab-ITMO/CoolPrompt">
+  <img src="https://img.shields.io/github/issues-raw/CTLab-ITMO/CoolPrompt?style=flat-square" alt="Open Issues" href="https://github.com/CTLab-ITMO/CoolPrompt/issues">
+  <img src="https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg" alt="ITMO" href="https://itmo.ru/">
+</div>
 
 <p align="center">
     <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/README.md">English</a> | 
@@ -205,8 +206,9 @@ print("Final prompt metric: ", tuner.final_metric)
 ```
 
 ## Больше о проекте
+- <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/API.md">Документация API</a>
 - Исследуйте различные методы авто-промптинга в PromptTuner. CoolPrompt на данный момент поддерживает HyPE, DistillPrompt, ReflectivePrompt. Вы можете выбрать метод с помощью соответствующего аргумента `method` в `tuner.run`.
-- Для ознакомления с фреймворком вы можете увидеть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">примеров</a> 
+- Для ознакомления с фреймворком вы можете посмотреть больше <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples">примеров</a> 
 
 ## Сотрудничество
 - Мы приветствуем и ценим любой вклад и сотрудничество, поэтому вы можете с нами связаться. Для нового кода ознакомьтесь с <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.
