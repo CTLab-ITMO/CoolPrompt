@@ -26,6 +26,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )
+from coolprompt.utils.corrector import Corrector, LanguageRule
 
 
 class PromptTuner:
@@ -94,7 +95,7 @@ class PromptTuner:
         dataset: Iterable[str],
         target: Iterable[str],
         validation_size: float,
-        train_as_test: bool
+        train_as_test: bool,
     ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
         """Provides a train/val dataset split.
 
@@ -217,7 +218,7 @@ class PromptTuner:
             dataset=dataset,
             target=target,
             validation_size=validation_size,
-            train_as_test=train_as_test
+            train_as_test=train_as_test,
         )
 
         logger.info("=== Starting Prompt Optimization ===")
@@ -237,6 +238,12 @@ class PromptTuner:
         if method is Method.HYPE:
             final_prompt = hype_optimizer(self._model, start_prompt)
         elif method is Method.REFLECTIVE:
+            dataset_split = self._get_dataset_split(
+                dataset=dataset,
+                target=target,
+                validation_size=validation_size,
+                train_as_test=train_as_test,
+            )
             final_prompt = reflectiveprompt(
                 model=self._model,
                 dataset_split=dataset_split,
@@ -246,6 +253,12 @@ class PromptTuner:
                 **kwargs,
             )
         elif method is Method.DISTILL:
+            dataset_split = self._get_dataset_split(
+                dataset=dataset,
+                target=target,
+                validation_size=validation_size,
+                train_as_test=train_as_test,
+            )
             final_prompt = distillprompt(
                 model=self._model,
                 dataset_split=dataset_split,
@@ -253,6 +266,9 @@ class PromptTuner:
                 initial_prompt=start_prompt,
                 **kwargs,
             )
+
+        corrector = Corrector([LanguageRule()])
+        final_prompt = corrector.run(final_prompt, start_prompt)
 
         logger.debug(f"Final prompt:\n{final_prompt}")
         template = self.TEMPLATE_MAP[(task, method)]
@@ -267,7 +283,7 @@ class PromptTuner:
             prompt=final_prompt,
             dataset=dataset_split[1],
             targets=dataset_split[3],
-            template=template
+            template=template,
         )
         logger.info(
             f"Initial {metric} score: {self.init_metric}, "
