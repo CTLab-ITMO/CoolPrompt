@@ -26,7 +26,8 @@ from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )
-from coolprompt.utils.corrector import Corrector, LanguageRule
+from coolprompt.utils.correction.corrector import correct
+from coolprompt.utils.correction.rule import LanguageRule
 
 
 class PromptTuner:
@@ -267,8 +268,9 @@ class PromptTuner:
                 **kwargs,
             )
 
-        corrector = Corrector([LanguageRule()])
-        final_prompt = corrector.run(final_prompt, start_prompt)
+        final_prompt = correct(
+            prompt=final_prompt, rule=LanguageRule(), start_prompt=start_prompt
+        )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
         template = self.TEMPLATE_MAP[(task, method)]

@@ -1,0 +1,140 @@
+from abc import ABC
+from typing import Any
+from langdetect import detect, DetectorFactory
+from translate import Translator
+from langchain_core.language_models.base import BaseLanguageModel
+
+
+class Rule(ABC):
+    """Base class for rules which will be checked and fixed by a corrector."""
+
+    def check(self, prompt: str, **kwargs) -> tuple[bool, dict[str, Any]]:
+        """Checks if the prompt follows the rule.
+
+        Args:
+            prompt (str): prompt to check.
+            kwargs: other data explicit for the rule.
+        Returns:
+            result (tuple[bool, dict[str, Any]]): tuple of flag (correctness)
+                and meta data for fixing.
+        """
+        pass
+
+    def fix(self, prompt: str, meta: dict[str, Any]) -> str:
+        """Fixes the prompt.
+
+        Args:
+            prompt (str): prompt to fix.
+            meta (dict[str, Any]): meta data from the `check` function.
+        Returns:
+            result (str): fixed prompt.
+        """
+        pass
+
+
+class LanguageRule(Rule):
+    """The rule which checks if the final prompt and the start prompt are in
+    the same languages."""
+
+    def check(
+        self, final_prompt: str, start_prompt: str
+    ) -> tuple[bool, dict[str, Any]]:
+        """Checks if the final prompt and the start prompt are in the same
+        languages.
+
+        Args:
+            final_prompt (str): enhanced prompt.
+            start_prompt (str): original prompt.
+        Returns:
+            result (tuple[bool, dict[str, Any]]): tuple of flag (correctness)
+                and meta data with prompt languages.
+        """
+
+        DetectorFactory.seed = 0
+
+        start_prompt_lang = detect(start_prompt)
+        final_prompt_lang = detect(final_prompt)
+
+        if start_prompt_lang != final_prompt_lang:
+            return False, {
+                "type": "translation",
+                "to_lang": start_prompt_lang,
+                "from_lang": final_prompt_lang,
+            }
+        else:
+            return True, {}
+
+    def fix(self, final_prompt: str, meta: dict[str, Any]) -> str:
+        """Performs a translation for `final_prompt` from its language to
+        the start prompt's one.
+
+        Args:
+            final_prompt (str): enhanced prompt to fix.
+            meta (dict[str, Any]): meta data with prompt languages.
+        Returns:
+            result (str): fixed prompt.
+        """
+
+        translator = Translator(
+            to_lang=meta["to_lang"],
+            from_lang=meta["from_lang"],
+        )
+        return translator.translate(final_prompt)
+
+
+class FormatRule(Rule):
+    """If the final prompt has to be between tags, checks the format."""
+
+    def __init__(self, llm: BaseLanguageModel) -> None:
+        """Initializes with LangChain language model."""
+
+        self.llm = llm
+
+    def check(
+        self, prompt: str, start_tag: str, end_tag: str, context: str
+    ) -> tuple[bool, dict[str, Any]]:
+        """Checks if the `prompt` is between tags.
+
+        Args:
+            prompt (str): prompt to check.
+            start_tag (str): start tag (with brackets).
+            end_tag (str): end tag (with brackets).
+            context (str): context for which the `prompt` was produced.
+        Returns:
+            result (tuple[bool, dict[str, Any]]): tuple of flag (correctness)
+                and meta data with context, start and end tags.
+        """
+
+        if start_tag in prompt and end_tag in prompt:
+            return True, {}
+
+        return False, {
+            "type": "Extraction",
+            "start_tag": start_tag,
+            "end_tag": end_tag,
+            "context": context,
+        }
+
+    def fix(self, prompt: str, meta: dict[str, Any]) -> str:
+        """Performs a call to `llm` for extracting the final answer bracketed
+        in tags.
+
+        Args:
+            prompt (str): prompt to fix.
+            meta (dict[str, Any]): meta data with open and close tags.
+        Returns:
+            result (str): fixed prompt.
+        """
+
+        start_tag = meta["start_tag"]
+        end_tag = meta["end_tag"]
+        context = meta["context"]
+
+        template = ANSWER_EXTRACTION_TEMPLATE(
+            start_tag=start_tag,
+            end_tag=end_tag,
+            context=context,
+            thought=prompt,
+        )
+
+        return self.llm.invoke(template)

@@ -18,7 +18,7 @@ You are an expert prompt engineer. Your only task is to generate ONE hypothetica
    - Immediately stop after closing [PROMPT_END] tag. Do not continue.
 
 ### INPUT ###
-Query: <QUERY>
+Query: {QUERY}
 
 ### YOUR OUTPUT FORMAT (strictly one prompt wrapped in tags!) ###
 [PROMPT_START]<your hypothetical instructive prompt here>[PROMPT_END]
