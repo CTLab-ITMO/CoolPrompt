@@ -107,7 +107,6 @@ class FormatRule(Rule):
 
     def __init__(self, llm: BaseLanguageModel) -> None:
         """Initializes with LangChain language model."""
-
         self.llm = llm
 
     def check(

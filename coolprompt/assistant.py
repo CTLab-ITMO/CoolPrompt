@@ -269,7 +269,9 @@ class PromptTuner:
             )
 
         final_prompt = correct(
-            prompt=final_prompt, rule=LanguageRule(), start_prompt=start_prompt
+            prompt=final_prompt,
+            rule=LanguageRule(self._model),
+            start_prompt=start_prompt,
         )
 
         logger.debug(f"Final prompt:\n{final_prompt}")

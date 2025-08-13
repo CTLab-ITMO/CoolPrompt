@@ -6,7 +6,10 @@ from coolprompt.utils.prompt_templates.hype_templates import (
     HYPE_PROMPT_TEMPLATE,
 )
 from coolprompt.utils.correction.corrector import correct
-from coolprompt.utils.correction.rule import FormatRule
+from coolprompt.utils.correction.rule import FormatRule, extract_answer
+from coolprompt.utils.prompt_templates.correction_templates import (
+    safe_template,
+)
 
 
 def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
@@ -21,7 +24,7 @@ def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     """
     logger.info("Running HyPE optimization...")
     logger.debug(f"Start prompt:\n{prompt}")
-    query = HYPE_PROMPT_TEMPLATE.format(QUERY=prompt)
+    query = safe_template(HYPE_PROMPT_TEMPLATE, QUERY=prompt)
     start_tag, end_tag = "[PROMPT_START]", "[PROMPT_END]"
     answer = model.invoke(query)
 
@@ -37,6 +40,4 @@ def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     )
 
     logger.info("HyPE optimization completed")
-    return answer[
-        answer.rfind(start_tag) + len(start_tag) : answer.rfind(end_tag)
-    ]
+    return extract_answer(answer, start_tag, end_tag)
