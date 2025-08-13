@@ -1,8 +1,20 @@
 from abc import ABC
 from typing import Any
-from langdetect import detect, DetectorFactory
-from translate import Translator
 from langchain_core.language_models.base import BaseLanguageModel
+
+from coolprompt.utils.prompt_templates.correction_templates import (
+    ANSWER_EXTRACTION_TEMPLATE,
+    LANGUAGE_DETECTION_TEMPLATE,
+    TRANSLATION_TEMPLATE,
+    safe_template,
+)
+
+
+def extract_answer(text: str, start_tag: str, end_tag: str) -> str:
+    """Extracts answer bracketed in `start_tag` and `end_tag` from the
+    `text`."""
+
+    return text[(text.rfind(start_tag) + len(start_tag)) : text.rfind(end_tag)]
 
 
 class Rule(ABC):
@@ -36,6 +48,10 @@ class LanguageRule(Rule):
     """The rule which checks if the final prompt and the start prompt are in
     the same languages."""
 
+    def __init__(self, llm: BaseLanguageModel) -> None:
+        """Initializes with LangChain language model."""
+        self.llm = llm
+
     def check(
         self, final_prompt: str, start_prompt: str
     ) -> tuple[bool, dict[str, Any]]:
@@ -47,26 +63,29 @@ class LanguageRule(Rule):
             start_prompt (str): original prompt.
         Returns:
             result (tuple[bool, dict[str, Any]]): tuple of flag (correctness)
-                and meta data with prompt languages.
+                and meta data with the target language.
         """
 
-        DetectorFactory.seed = 0
+        def detect_language(text: str) -> str:
+            """Detects the provided text's language using the `llm` model."""
 
-        start_prompt_lang = detect(start_prompt)
-        final_prompt_lang = detect(final_prompt)
+            template = safe_template(LANGUAGE_DETECTION_TEMPLATE, text=text)
+            return extract_answer(self.llm.invoke(template), "<ans>", "</ans>")
+
+        start_prompt_lang = detect_language(start_prompt)
+        final_prompt_lang = detect_language(final_prompt)
 
         if start_prompt_lang != final_prompt_lang:
             return False, {
                 "type": "translation",
                 "to_lang": start_prompt_lang,
-                "from_lang": final_prompt_lang,
             }
         else:
             return True, {}
 
     def fix(self, final_prompt: str, meta: dict[str, Any]) -> str:
         """Performs a translation for `final_prompt` from its language to
-        the start prompt's one.
+        the start prompt's one via `llm` model.
 
         Args:
             final_prompt (str): enhanced prompt to fix.
@@ -75,11 +94,12 @@ class LanguageRule(Rule):
             result (str): fixed prompt.
         """
 
-        translator = Translator(
-            to_lang=meta["to_lang"],
-            from_lang=meta["from_lang"],
+        template = safe_template(
+            TRANSLATION_TEMPLATE,
+            target_lang=meta["to_lang"],
+            user_prompt=final_prompt,
         )
-        return translator.translate(final_prompt)
+        return extract_answer(self.llm.invoke(template), "<ans>", "</ans>")
 
 
 class FormatRule(Rule):
@@ -130,7 +150,8 @@ class FormatRule(Rule):
         end_tag = meta["end_tag"]
         context = meta["context"]
 
-        template = ANSWER_EXTRACTION_TEMPLATE(
+        template = safe_template(
+            ANSWER_EXTRACTION_TEMPLATE,
             start_tag=start_tag,
             end_tag=end_tag,
             context=context,

@@ -5,8 +5,8 @@ from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.hype_templates import (
     HYPE_PROMPT_TEMPLATE,
 )
-from utils.correction.corrector import correct
-from utils.correction.rule import FormatRule
+from coolprompt.utils.correction.corrector import correct
+from coolprompt.utils.correction.rule import FormatRule
 
 
 def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:

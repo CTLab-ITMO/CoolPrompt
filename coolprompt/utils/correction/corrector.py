@@ -1,4 +1,4 @@
-from coolprompt.utils.corrector.rule import Rule
+from coolprompt.utils.correction.rule import Rule
 
 
 def correct(prompt: str, rule: Rule, max_attempts: int = 3, **kwargs) -> str:
