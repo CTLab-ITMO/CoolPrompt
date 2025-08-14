@@ -4,6 +4,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
+from coolprompt.data_generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
@@ -203,6 +204,14 @@ class PromptTuner:
         metric = validate_and_create_metric(task, metric)
         evaluator = Evaluator(self._model, task, metric)
         final_prompt = ""
+
+        if dataset is None:
+            generator = SyntheticDataGenerator(self._model)
+            dataset, target, problem_description = generator.generate(
+                prompt=start_prompt,
+                task=task,
+                problem_description=problem_description,
+            )
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method}, Task: {task}")
