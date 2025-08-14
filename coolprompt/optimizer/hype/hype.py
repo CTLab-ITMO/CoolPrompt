@@ -5,6 +5,11 @@ from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.hype_templates import (
     HYPE_PROMPT_TEMPLATE,
 )
+from coolprompt.utils.correction.corrector import correct
+from coolprompt.utils.correction.rule import FormatRule, extract_answer
+from coolprompt.utils.prompt_templates.correction_templates import (
+    safe_template,
+)
 
 
 def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
@@ -17,17 +22,22 @@ def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
     Returns:
         LLM-generated rewritten prompt.
     """
-    logger.info('Running HyPE optimization...')
-    logger.debug(f'Start prompt:\n{prompt}')
-    template = HYPE_PROMPT_TEMPLATE
+    logger.info("Running HyPE optimization...")
+    logger.debug(f"Start prompt:\n{prompt}")
+    query = safe_template(HYPE_PROMPT_TEMPLATE, QUERY=prompt)
     start_tag, end_tag = "[PROMPT_START]", "[PROMPT_END]"
-    answer = model.invoke(template.replace("<QUERY>", prompt))
+    answer = model.invoke(query)
 
     if isinstance(answer, AIMessage):
         answer = answer.content
-    answer = answer.strip()
 
-    logger.info('HyPE optimization completed')
-    return answer[
-        answer.rfind(start_tag) + len(start_tag):answer.rfind(end_tag)
-    ]
+    answer = correct(
+        prompt=answer.strip(),
+        rule=FormatRule(model),
+        start_tag=start_tag,
+        end_tag=end_tag,
+        context=query,
+    )
+
+    logger.info("HyPE optimization completed")
+    return extract_answer(answer, start_tag, end_tag)
