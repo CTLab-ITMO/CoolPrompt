@@ -20,6 +20,17 @@ def extract_answer(text: str, start_tag: str, end_tag: str) -> str:
 class Rule(ABC):
     """Base class for rules which will be checked and fixed by a corrector."""
 
+    @property
+    def is_guaranteed_after_first_fix(self) -> bool:
+        """Indicates whether the rule is guaranteed to pass check after first
+        fix.
+
+        Returns:
+            bool: True if rule always pass check after first fix, False
+                otherwise.
+        """
+        return False
+
     def check(self, prompt: str, **kwargs) -> tuple[bool, dict[str, Any]]:
         """Checks if the prompt follows the rule.
 
@@ -51,6 +62,10 @@ class LanguageRule(Rule):
     def __init__(self, llm: BaseLanguageModel) -> None:
         """Initializes with LangChain language model."""
         self.llm = llm
+
+    @property
+    def is_guaranteed_after_first_fix(self):
+        return True
 
     def check(
         self, final_prompt: str, start_prompt: str
@@ -108,6 +123,10 @@ class FormatRule(Rule):
     def __init__(self, llm: BaseLanguageModel) -> None:
         """Initializes with LangChain language model."""
         self.llm = llm
+
+    @property
+    def is_guaranteed_after_first_fix(self):
+        return False
 
     def check(
         self, prompt: str, start_tag: str, end_tag: str, context: str

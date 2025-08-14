@@ -25,4 +25,7 @@ def correct(prompt: str, rule: Rule, max_attempts: int = 3, **kwargs) -> str:
 
         prompt = rule.fix(prompt, meta)
 
+        if rule.is_guaranteed_after_first_fix:
+            break
+
     return prompt
