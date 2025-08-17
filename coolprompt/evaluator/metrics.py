@@ -13,6 +13,7 @@ GENERATION_METRICS = {
     "bleu",
     "rouge",
     "meteor",
+    "bertscore",
 }
 
 
