@@ -30,26 +30,6 @@ class SyntheticDataGenerator:
     ) -> None:
         self.model = model
 
-        self._problem_description_structured_output_template = (
-            PROBLEM_DESCRIPTION_STRUCTURED_OUTPUT_TEMPLATE
-        )
-        self._problem_description_json_output_template = (
-            PROBLEM_DESCRIPTION_JSON_OUTPUT_TEMPLATE
-        )
-
-        self._cls_data_generating_structured_output_template = (
-            CLASSIFICATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
-        )
-        self._cls_data_generating_json_output_template = (
-            CLASSIFICATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE
-        )
-        self._gen_data_generating_structured_output_template = (
-            GENERATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
-        )
-        self._gen_data_generating_json_output_template = (
-            GENERATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE
-        )
-
     def _generate(
         self,
         request_struct: str,
@@ -82,10 +62,10 @@ class SyntheticDataGenerator:
         Returns:
             str: generated problem description
         """
-        request_struct = self._problem_description_structured_output_template
+        request_struct = PROBLEM_DESCRIPTION_STRUCTURED_OUTPUT_TEMPLATE
         request_struct = request_struct.format(prompt=prompt)
 
-        request_json = self._problem_description_json_output_template
+        request_json = PROBLEM_DESCRIPTION_JSON_OUTPUT_TEMPLATE
         request_json = request_json.format(prompt=prompt)
 
         return self._generate(
@@ -128,14 +108,14 @@ class SyntheticDataGenerator:
 
         if task == Task.CLASSIFICATION:
             request_struct = (
-                self._cls_data_generating_structured_output_template
+                CLASSIFICATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
             )
-            request_json = self._cls_data_generating_json_output_template
+            request_json = CLASSIFICATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE
         else:
             request_struct = (
-                self._gen_data_generating_structured_output_template
+                GENERATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
             )
-            request_json = self._gen_data_generating_json_output_template
+            request_json = GENERATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE
 
         request_struct = request_struct.format(
             problem_description=problem_description,
@@ -147,7 +127,7 @@ class SyntheticDataGenerator:
         )
 
         examples = self._generate(request_struct, request_json)['examples']
-        dataset = [e['input'] for e in examples]
-        targets = [e['output'] for e in examples]
+        dataset = [example['input'] for example in examples]
+        targets = [example['output'] for example in examples]
 
         return dataset, targets, problem_description
