@@ -25,6 +25,8 @@ from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
 )
+from coolprompt.utils.correction.corrector import correct
+from coolprompt.utils.correction.rule import LanguageRule
 
 
 class PromptTuner:
@@ -93,7 +95,7 @@ class PromptTuner:
         dataset: Iterable[str],
         target: Iterable[str],
         validation_size: float,
-        train_as_test: bool
+        train_as_test: bool,
     ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
         """Provides a train/val dataset split.
 
@@ -225,7 +227,7 @@ class PromptTuner:
                 dataset=dataset,
                 target=target,
                 validation_size=validation_size,
-                train_as_test=train_as_test
+                train_as_test=train_as_test,
             )
             final_prompt = reflectiveprompt(
                 model=self._model,
@@ -240,7 +242,7 @@ class PromptTuner:
                 dataset=dataset,
                 target=target,
                 validation_size=validation_size,
-                train_as_test=train_as_test
+                train_as_test=train_as_test,
             )
             final_prompt = distillprompt(
                 model=self._model,
@@ -249,6 +251,13 @@ class PromptTuner:
                 initial_prompt=start_prompt,
                 **kwargs,
             )
+
+        logger.info("Running the prompt format checking...")
+        final_prompt = correct(
+            prompt=final_prompt,
+            rule=LanguageRule(self._model),
+            start_prompt=start_prompt,
+        )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
         if dataset is not None:
