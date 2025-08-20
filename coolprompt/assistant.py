@@ -268,6 +268,7 @@ class PromptTuner:
                 **kwargs,
             )
 
+        logger.info("Running the prompt format checking...")
         final_prompt = correct(
             prompt=final_prompt,
             rule=LanguageRule(self._model),
