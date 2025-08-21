@@ -18,6 +18,8 @@ class Method(Enum):
 class Task(Enum):
     CLASSIFICATION = "classification"
     GENERATION = "generation"
+    REDTEAMING = "redteaming"
+    UTILS = "utils"
 
     def __str__(self):
         return self.value

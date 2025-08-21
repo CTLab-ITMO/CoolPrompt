@@ -4,6 +4,10 @@ from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 
+from torch import Tensor
+from sentence_transformers import SentenceTransformer
+from sentence_transformers import util
+
 CLASSIFICATION_METRICS = {
     "accuracy",
     "f1",
@@ -15,6 +19,16 @@ GENERATION_METRICS = {
     "meteor",
 }
 
+RED_METRICS = {
+    "asr",
+    "refusual",
+    "toxicity"
+}
+
+UTILS_METRIC = {
+    "perplexity",
+    "cosine"
+}
 
 class BaseMetric(ABC):
     """Abstract base class for implementing evaluation metrics.
@@ -29,6 +43,7 @@ class BaseMetric(ABC):
     """
 
     ANS_TAGS = ("<ans>", "</ans>")
+    FORMAT_MISMATCH_LABEL: int | str = None
 
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
@@ -72,7 +87,6 @@ class BaseMetric(ABC):
             tuple[list[int], list[int]]: Encoded output labels
             and encoded targets.
         """
-
         pass
 
     def compute(
@@ -109,7 +123,6 @@ class BaseMetric(ABC):
         if type(self) is not type(other):
             return False
         return self._name == other._name
-
 
 class ClassificationMetric(BaseMetric):
     """Base class for classification metrics with answer parsing functionality.
@@ -201,10 +214,39 @@ class GenerationMetric(BaseMetric):
             tuple[list[str], list[str]]: input values
         """
 
-        return output_labels, targets
+        return output_labels, targets 
+        
+class UtilsMetric(BaseMetric):
+    FORMAT_MISMATCH_LABEL = ""
+    def __init__(self, name: str, embedder: SentenceTransformer = None, model_name: str = "gpt2"):
+        self._name = name
+        self._compute_kwargs = {}
+        self._embedder = embedder
 
+        if name == "perplexity":
+            self._metric = load("perplexity", module_type="metric")
+            self._compute_kwargs = {"model_id": model_name}
+        else:
+            self._metric = None   
 
-def validate_and_create_metric(task: Task, metric: str | None) -> str:
+    def _encode_labels(self, output_labels: list[str], targets: list[str]) -> tuple[Tensor, Tensor] | tuple[list[str], list[str]]:
+        if self._name == "cosine":
+            emb_outputs = self._embedder.encode(output_labels, convert_to_tensor=True)
+            emb_targets = self._embedder.encode(targets, convert_to_tensor=True)
+            return emb_outputs, emb_targets
+        elif self._name == "perplexity":
+            return output_labels, targets
+
+    def _compute_raw(self, outputs: Tensor | list[str], targets: Tensor | list[str]) -> float:
+        if self._name == "cosine":
+            if len(outputs) != len(targets): raise ValueError("mismatch number of outputs and targets")
+            sims = util.cos_sim(outputs, targets)
+            return sims.diag().mean().item()
+        elif self._name == "perplexity":
+            return self._metric.compute(predictions=outputs, **self._compute_kwargs)["mean_perplexity"]
+    
+
+def validate_and_create_metric(task: Task, metric: str | None, utils_embedder: SentenceTransformer | None = None, utils_model_name: str = "gpt2") -> str:
     """
     Validates given metric in order to correspond the given task.
     Returns the given metric name back if the validation succeeded.
@@ -241,6 +283,19 @@ def validate_and_create_metric(task: Task, metric: str | None) -> str:
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
+        case Task.UTILS:
+            if metric in UTILS_METRIC:
+                if utils_embedder is None and metric == "cosine":
+                    error_msg = "Ucosine need in a SentenceTransformer embedder."
+                    logger.error(error_msg)
+                    raise ValueError(error_msg)
+                return UtilsMetric(metric, embedder=utils_embedder, model_name=utils_model_name)
+            error_msg = (
+                f"Invalid metric for {task} task: {metric}. "
+                f"Available metrics: {', '.join(UTILS_METRIC)}."
+            )
+            logger.error(error_msg)
+            raise ValueError(error_msg)
     return metric
 
 
@@ -259,3 +314,8 @@ def get_default_metric(task: Task) -> str:
             return "f1"
         case Task.GENERATION:
             return "meteor"
+        case Task.REDTEAMING:
+            return "asr"
+        case Task.UTILS:
+            return "cosine"
+
