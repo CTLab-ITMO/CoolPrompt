@@ -5,6 +5,8 @@ from unittest.mock import MagicMock, patch
 from coolprompt.evaluator.metrics import (
     ClassificationMetric,
     GenerationMetric,
+    UtilsMetric,
+    UTILS_METRIC,
     CLASSIFICATION_METRICS,
     GENERATION_METRICS,
     validate_and_create_metric,
@@ -14,7 +16,6 @@ from coolprompt.utils.enums import Task
 
 
 class TestClassificationMetric(unittest.TestCase):
-
     def setUp(self):
         self.mock_metric = MagicMock()
         self.patcher = patch('coolprompt.evaluator.metrics.load')
@@ -224,3 +225,159 @@ class TestUtilityFunctions(unittest.TestCase):
 
         self.assertEqual(get_default_metric(Task.CLASSIFICATION), 'f1')
         self.assertEqual(get_default_metric(Task.GENERATION), 'meteor')
+
+class TestUtilsMetrics(unittest.TestCase):
+
+    def setUp(self):
+        self.mock_embedder = MagicMock()
+        self.mock_embedder.encode.return_value = MagicMock()
+        
+    def test_utils_metric_cosine_initialization(self):
+        """Testing the initialization of cosine metric"""
+        metric = UtilsMetric("cosine", embedder=self.mock_embedder)
+        self.assertEqual(metric._name, "cosine")
+        self.assertEqual(metric._embedder, self.mock_embedder)
+        self.assertIsNone(metric._metric)
+        self.assertDictEqual(metric._compute_kwargs, {})
+
+    def test_utils_metric_perplexity_initialization(self):
+        """Testing the initialization of perplexity metric"""
+        model_name = "gpt2"
+        metric = UtilsMetric("perplexity", model_name=model_name)
+        self.assertEqual(metric._name, "perplexity")
+        self.assertIsNone(metric._embedder)
+        self.assertIsNotNone(metric._metric)
+        self.assertDictEqual(metric._compute_kwargs, {"model_id": model_name})
+
+    def test_utils_metric_cosine_encode_labels(self):
+        """Testing the work of encode labels function for cosine metric"""
+        metric = UtilsMetric("cosine", embedder=self.mock_embedder)
+        outputs = ["hello world", "test sentence"]
+        targets = ["hello", "test"]
+        
+        emb_outputs, emb_targets = metric._encode_labels(outputs, targets)
+        
+        self.mock_embedder.encode.assert_any_call(outputs, convert_to_tensor=True)
+        self.mock_embedder.encode.assert_any_call(targets, convert_to_tensor=True)
+        self.assertEqual(emb_outputs, self.mock_embedder.encode.return_value)
+        self.assertEqual(emb_targets, self.mock_embedder.encode.return_value)
+
+    def test_utils_metric_perplexity_encode_labels(self):
+        """Testing the work of encode labels function for perplexity metric"""
+        metric = UtilsMetric("perplexity")
+        outputs = ["hello world", "test sentence"]
+        targets = ["hello", "test"]
+        
+        result_outputs, result_targets = metric._encode_labels(outputs, targets)
+        
+        self.assertListEqual(result_outputs, outputs)
+        self.assertListEqual(result_targets, targets)
+
+    @patch('coolprompt.evaluator.metrics.util.cos_sim')
+    def test_utils_metric_cosine_compute_raw(self, mock_cos_sim):
+        """Testing the work of compute_raw function for cosine metric"""
+        metric = UtilsMetric("cosine", embedder=self.mock_embedder)
+        
+        mock_outputs = MagicMock()
+        mock_targets = MagicMock()
+        mock_sims = MagicMock()
+        mock_diag = MagicMock()
+        mock_mean = MagicMock()
+        
+        mock_cos_sim.return_value = mock_sims
+        mock_sims.diag.return_value = mock_diag
+        mock_diag.mean.return_value = mock_mean
+        mock_mean.item.return_value = 0.8
+        
+        result = metric._compute_raw(mock_outputs, mock_targets)
+        
+        mock_cos_sim.assert_called_once_with(mock_outputs, mock_targets)
+        mock_sims.diag.assert_called_once()
+        mock_diag.mean.assert_called_once()
+        mock_mean.item.assert_called_once()
+        self.assertEqual(result, 0.8)
+
+    @patch('coolprompt.evaluator.metrics.load')
+    def test_utils_metric_perplexity_compute_raw(self, mock_load):
+        """Testing the work of compute_raw function for perplexity metric"""
+        mock_metric = MagicMock()
+        mock_load.return_value = mock_metric
+        mock_metric.compute.return_value = {"perplexity": 15.3}
+        
+        metric = UtilsMetric("perplexity", model_name="gpt2")
+        outputs = ["hello world", "test sentence"]
+        
+        result = metric._compute_raw(outputs, []) 
+        
+        mock_metric.compute.assert_called_once_with(predictions=outputs, model_id="gpt2")
+        self.assertEqual(result, 15.3)
+
+    def test_utils_metric_compute_with_cosine(self):
+        """Testing the complete compute method for cosine metric"""
+        metric = UtilsMetric("cosine", embedder=self.mock_embedder)
+        
+        with patch.object(metric, '_encode_labels') as mock_encode, patch.object(metric, '_compute_raw') as mock_compute:
+            
+            mock_encode.return_value = (MagicMock(), MagicMock())
+            mock_compute.return_value = 0.9
+            
+            outputs = ["<ans>hello world</ans>", "<ans>test sentence</ans>"]
+            targets = ["hello", "test"]
+            
+            result = metric.compute(outputs, targets)
+            
+            mock_encode.assert_called_once()
+            mock_compute.assert_called_once()
+            self.assertEqual(result, 0.9)
+
+    def test_utils_metric_compute_with_perplexity(self):
+        metric = UtilsMetric("perplexity", model_name="gpt2")
+        
+        with patch.object(metric, '_encode_labels') as mock_encode, \
+             patch.object(metric, '_compute_raw') as mock_compute:
+            
+            mock_encode.return_value = (["hello", "hi"], [])
+            mock_compute.return_value = 12.5
+            
+            outputs = ["<ans>hello</ans>", "<ans>hi</ans>"]
+            targets = ["dummy", "targets"]  
+            
+            result = metric.compute(outputs, targets)
+
+            mock_encode.assert_called_once()
+            mock_compute.assert_called_once()
+            self.assertEqual(result, 12.5)
+
+    def test_utils_metric_str_representation(self):
+        metric = UtilsMetric("cosine", embedder=self.mock_embedder)
+        self.assertEqual(str(metric), "cosine")
+
+    def test_utils_metric_equality(self):
+        metric1 = UtilsMetric("cosine", embedder=self.mock_embedder)
+        metric2 = UtilsMetric("cosine", embedder=self.mock_embedder)
+        metric3 = UtilsMetric("perplexity")
+        self.assertEqual(metric1, metric2)
+        self.assertNotEqual(metric1, metric3)
+
+    def test_validate_and_create_utils_metric(self):
+        for metric_name in UTILS_METRIC:
+            if metric_name == "cosine": metric = validate_and_create_metric(Task.UTILS, metric_name, utils_embedder=self.mock_embedder)
+            else: metric = validate_and_create_metric(Task.UTILS, metric_name)
+            self.assertIsInstance(metric, UtilsMetric)
+            self.assertEqual(metric._name, metric_name)
+
+    def test_validate_and_create_utils_metric_cosine_without_embedder(self):
+        with self.assertRaises(ValueError):
+            validate_and_create_metric(Task.UTILS, "cosine")
+
+    def test_get_default_metric_for_utils(self):
+        self.assertEqual(get_default_metric(Task.UTILS), "cosine")
+
+    def test_utils_metric_perplexity_empty_outputs(self):
+        metric = UtilsMetric("perplexity", model_name="gpt2")
+
+        outputs = []
+        targets = []
+
+        with self.assertRaises(Exception):
+            metric.compute(outputs, targets)
