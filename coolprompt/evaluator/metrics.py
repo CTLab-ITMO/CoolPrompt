@@ -4,18 +4,6 @@ from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 
-CLASSIFICATION_METRICS = {
-    "accuracy",
-    "f1",
-}
-
-GENERATION_METRICS = {
-    "bleu",
-    "rouge",
-    "meteor",
-    "bertscore",
-}
-
 
 class BaseMetric(ABC):
     """Abstract base class for implementing evaluation metrics.
@@ -38,9 +26,9 @@ class BaseMetric(ABC):
             name (str): Name of metric to load from evaluate library
         """
 
-        self._name = name
+        self._return_parameter = name
         self._metric = load(name)
-        self._compute_kwargs = {}
+        self._compute_kwargs_func = lambda outputs, targets: {}
 
     def _compute_raw(
         self, outputs: list[str | int], targets: list[str | int]
@@ -56,8 +44,9 @@ class BaseMetric(ABC):
         """
 
         return self._metric.compute(
-            predictions=outputs, references=targets, **self._compute_kwargs
-        )[self._name]
+            predictions=outputs, references=targets,
+            **self._compute_kwargs_func(outputs, targets)
+        )[self._return_parameter]
 
     @abstractmethod
     def _encode_labels(
@@ -104,12 +93,12 @@ class BaseMetric(ABC):
         return self._compute_raw(encoded_output_labels, encoded_targets)
 
     def __str__(self) -> str:
-        return self._name
+        return self._return_parameter
 
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
             return False
-        return self._name == other._name
+        return self._get_name() == other._get_name()
 
 
 class ClassificationMetric(BaseMetric):
@@ -130,8 +119,6 @@ class ClassificationMetric(BaseMetric):
         """
         super().__init__(name)
         self.label_to_id = None
-        if name == "f1":
-            self._compute_kwargs = {"average": "macro"}
 
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
@@ -187,8 +174,6 @@ class GenerationMetric(BaseMetric):
         """
 
         super().__init__(name)
-        if name == "rouge":
-            self._name = "rougeL"
 
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
@@ -205,7 +190,98 @@ class GenerationMetric(BaseMetric):
         return output_labels, targets
 
 
-def validate_and_create_metric(task: Task, metric: str | None) -> str:
+class AccuracyMetric(ClassificationMetric):
+    """Accuracy metric for classification tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "accuracy"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+
+class F1Metric(ClassificationMetric):
+    """F1 metric for classification tasks with macro averaging."""
+
+    @staticmethod
+    def _get_name():
+        return "f1"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+        self._compute_kwargs_func = lambda outputs, targets: {
+            "average": "macro"}
+
+
+class BleuMetric(GenerationMetric):
+    """BLEU metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "bleu"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+
+class RougeMetric(GenerationMetric):
+    """ROUGE metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "rouge"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+        self._return_parameter = "rougeL"
+
+
+class MeteorMetric(GenerationMetric):
+    """METEOR metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "meteor"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+
+class BertScoreMetric(GenerationMetric):
+    """BertScore metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "bertscore"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+        self._compute_kwargs_func = lambda outputs, targets: {
+            "lang": define_lang(outputs, targets)}
+        self._return_parameter = "f1"
+
+    def _compute_raw(self, outputs, targets):
+        f1_list = super()._compute_raw(outputs, targets)
+        return sum(f1_list) / len(f1_list)
+
+
+def define_lang(outputs, targets):
+    return "en"
+
+
+CLASSIFICATION_METRIC_NAME_MAPPING = {
+    metric._get_name(): metric for metric in [
+        AccuracyMetric, F1Metric]
+}
+
+GENERATION_METRIC_NAME_MAPPING = {
+    metric._get_name(): metric for metric in [
+        BleuMetric, RougeMetric, MeteorMetric, BertScoreMetric]
+}
+
+
+def validate_and_create_metric(task: Task, metric: str | None) -> BaseMetric:
     """
     Validates given metric in order to correspond the given task.
     Returns the given metric name back if the validation succeeded.
@@ -225,24 +301,31 @@ def validate_and_create_metric(task: Task, metric: str | None) -> str:
         metric = get_default_metric(task)
     match task:
         case Task.CLASSIFICATION:
-            if metric in CLASSIFICATION_METRICS:
-                return ClassificationMetric(metric)
+            if metric in CLASSIFICATION_METRIC_NAME_MAPPING.keys():
+                return CLASSIFICATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(CLASSIFICATION_METRICS)}."
+                f"Available metrics: {', '.join(
+                    CLASSIFICATION_METRIC_NAME_MAPPING.keys())}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
         case Task.GENERATION:
-            if metric in GENERATION_METRICS:
-                return GenerationMetric(metric)
+            if metric in GENERATION_METRIC_NAME_MAPPING.keys():
+                return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(GENERATION_METRICS)}."
+                f"Available metrics: {', '.join(
+                    GENERATION_METRIC_NAME_MAPPING.keys())}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
-    return metric
+    error_msg = (
+        f"Invalid task: {task}"
+        f"Available tasks: classification, generation"
+    )
+    logger.error(error_msg)
+    raise ValueError(error_msg)
 
 
 def get_default_metric(task: Task) -> str:
