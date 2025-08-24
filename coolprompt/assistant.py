@@ -258,10 +258,16 @@ class PromptTuner:
         template = self.TEMPLATE_MAP[(task, method)]
         logger.info(f"Evaluating on given dataset for {task} task...")
         self.init_metric = evaluator.evaluate(
-            start_prompt, dataset, target, template
+            prompt=start_prompt,
+            dataset=dataset_split[1],
+            targets=dataset_split[3],
+            template=template,
         )
         self.final_metric = evaluator.evaluate(
-            final_prompt, dataset, target, template
+            prompt=final_prompt,
+            dataset=dataset_split[1],
+            targets=dataset_split[3],
+            template=template
         )
         logger.info(
             f"Initial {metric} score: {self.init_metric}, "

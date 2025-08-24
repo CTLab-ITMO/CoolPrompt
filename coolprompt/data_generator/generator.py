@@ -3,14 +3,17 @@ from typing import Optional, List, Tuple, Dict, Any
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.language_models.chat_models import BaseChatModel
+from pydantic import BaseModel
 
+from coolprompt.data_generator.pydantic_formatters import (
+    ProblemDescriptionStructuredOutputSchema,
+    ClassificationTaskStructuredOutputSchema,
+    GenerationTaskStructuredOutputSchema
+)
 from coolprompt.utils.prompt_templates.data_generator_templates import (
-    PROBLEM_DESCRIPTION_JSON_OUTPUT_TEMPLATE,
-    PROBLEM_DESCRIPTION_STRUCTURED_OUTPUT_TEMPLATE,
-    CLASSIFICATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE,
-    CLASSIFICATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE,
-    GENERATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE,
-    GENERATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
+    PROBLEM_DESCRIPTION_TEMPLATE,
+    CLASSIFICATION_DATA_GENERATING_TEMPLATE,
+    GENERATION_DATA_GENERATING_TEMPLATE
 )
 from coolprompt.utils.enums import Task
 
@@ -32,8 +35,9 @@ class SyntheticDataGenerator:
 
     def _generate(
         self,
-        request_struct: str,
-        request_json: str
+        request: str,
+        schema: BaseModel,
+        field_name: Optional[str] = None
     ) -> Dict[Any, Any]:
         """Generates model output
         either using structured output from langchain
@@ -49,9 +53,15 @@ class SyntheticDataGenerator:
             Dict[Any, Any]: generated data (parsed from json)
         """
         if not isinstance(self.model, BaseChatModel):
-            output = self.model.invoke(request_json)
-            return json.loads(output)
-        return self.model.invoke(request_struct)
+            output = self.model.invoke(request)
+            return json.loads(output)[field_name]
+
+        structured_model = self.model.with_structured_output(
+            schema=ProblemDescriptionStructuredOutputSchema,
+            method="json_schema"
+        )
+        output = structured_model.invoke(request)
+        return getattr(output, field_name)
 
     def _generate_problem_description(self, prompt: str) -> str:
         """Generates problem description based on given user prompt
@@ -62,16 +72,15 @@ class SyntheticDataGenerator:
         Returns:
             str: generated problem description
         """
-        request_struct = PROBLEM_DESCRIPTION_STRUCTURED_OUTPUT_TEMPLATE
-        request_struct = request_struct.format(prompt=prompt)
-
-        request_json = PROBLEM_DESCRIPTION_JSON_OUTPUT_TEMPLATE
-        request_json = request_json.format(prompt=prompt)
+        request = PROBLEM_DESCRIPTION_TEMPLATE.format(
+            prompt=prompt
+        )
 
         return self._generate(
-            request_struct,
-            request_json
-        )['problem_description']
+            request,
+            ProblemDescriptionStructuredOutputSchema,
+            "problem_description"
+        )
 
     def generate(
         self,
@@ -107,26 +116,18 @@ class SyntheticDataGenerator:
             problem_description = self._generate_problem_description(prompt)
 
         if task == Task.CLASSIFICATION:
-            request_struct = (
-                CLASSIFICATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
-            )
-            request_json = CLASSIFICATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE
+            request = CLASSIFICATION_DATA_GENERATING_TEMPLATE
+            schema = ClassificationTaskStructuredOutputSchema
         else:
-            request_struct = (
-                GENERATION_DATA_GENERATING_STRUCTURED_OUTPUT_TEMPLATE
-            )
-            request_json = GENERATION_DATA_GENERATING_JSON_OUTPUT_TEMPLATE
+            request = GENERATION_DATA_GENERATING_TEMPLATE
+            schema = GenerationTaskStructuredOutputSchema
 
-        request_struct = request_struct.format(
-            problem_description=problem_description,
-            num_samples=num_samples
-        )
-        request_json = request_json.format(
+        request = request.format(
             problem_description=problem_description,
             num_samples=num_samples
         )
 
-        examples = self._generate(request_struct, request_json)['examples']
+        examples = self._generate(request, schema, "examples")
         dataset = [example['input'] for example in examples]
         targets = [example['output'] for example in examples]
 
