@@ -4,6 +4,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
+from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
@@ -204,6 +205,21 @@ class PromptTuner:
         evaluator = Evaluator(self._model, task, metric)
         final_prompt = ""
 
+        if dataset is None:
+            generator = SyntheticDataGenerator(self._model)
+            dataset, target, problem_description = generator.generate(
+                prompt=start_prompt,
+                task=task,
+                problem_description=problem_description,
+            )
+
+        dataset_split = self._get_dataset_split(
+            dataset=dataset,
+            target=target,
+            validation_size=validation_size,
+            train_as_test=train_as_test
+        )
+
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method}, Task: {task}")
         logger.info(f"Metric: {metric}, Validation size: {validation_size}")
@@ -221,12 +237,6 @@ class PromptTuner:
         if method is Method.HYPE:
             final_prompt = hype_optimizer(self._model, start_prompt)
         elif method is Method.REFLECTIVE:
-            dataset_split = self._get_dataset_split(
-                dataset=dataset,
-                target=target,
-                validation_size=validation_size,
-                train_as_test=train_as_test
-            )
             final_prompt = reflectiveprompt(
                 model=self._model,
                 dataset_split=dataset_split,
@@ -236,12 +246,6 @@ class PromptTuner:
                 **kwargs,
             )
         elif method is Method.DISTILL:
-            dataset_split = self._get_dataset_split(
-                dataset=dataset,
-                target=target,
-                validation_size=validation_size,
-                train_as_test=train_as_test
-            )
             final_prompt = distillprompt(
                 model=self._model,
                 dataset_split=dataset_split,
@@ -251,19 +255,24 @@ class PromptTuner:
             )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
-        if dataset is not None:
-            template = self.TEMPLATE_MAP[(task, method)]
-            logger.info(f"Evaluating on given dataset for {task} task...")
-            self.init_metric = evaluator.evaluate(
-                start_prompt, dataset, target, template
-            )
-            self.final_metric = evaluator.evaluate(
-                final_prompt, dataset, target, template
-            )
-            logger.info(
-                f"Initial {metric} score: {self.init_metric}, "
-                f"final {metric} score: {self.final_metric}"
-            )
+        template = self.TEMPLATE_MAP[(task, method)]
+        logger.info(f"Evaluating on given dataset for {task} task...")
+        self.init_metric = evaluator.evaluate(
+            prompt=start_prompt,
+            dataset=dataset_split[1],
+            targets=dataset_split[3],
+            template=template,
+        )
+        self.final_metric = evaluator.evaluate(
+            prompt=final_prompt,
+            dataset=dataset_split[1],
+            targets=dataset_split[3],
+            template=template
+        )
+        logger.info(
+            f"Initial {metric} score: {self.init_metric}, "
+            f"final {metric} score: {self.final_metric}"
+        )
 
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt
