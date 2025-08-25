@@ -117,7 +117,7 @@ class SyntheticDataGenerator:
                 targets.append(example.output)
             else:
                 dataset.append(example['input'])
-                dataset.append(example['output'])
+                targets.append(example['output'])
         return dataset, targets
 
     def generate(
