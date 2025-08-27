@@ -239,12 +239,6 @@ class PromptTuner:
         if method is Method.HYPE:
             final_prompt = hype_optimizer(self._model, start_prompt)
         elif method is Method.REFLECTIVE:
-            dataset_split = self._get_dataset_split(
-                dataset=dataset,
-                target=target,
-                validation_size=validation_size,
-                train_as_test=train_as_test,
-            )
             final_prompt = reflectiveprompt(
                 model=self._model,
                 dataset_split=dataset_split,
@@ -254,12 +248,6 @@ class PromptTuner:
                 **kwargs,
             )
         elif method is Method.DISTILL:
-            dataset_split = self._get_dataset_split(
-                dataset=dataset,
-                target=target,
-                validation_size=validation_size,
-                train_as_test=train_as_test,
-            )
             final_prompt = distillprompt(
                 model=self._model,
                 dataset_split=dataset_split,
