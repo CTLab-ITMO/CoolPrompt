@@ -28,6 +28,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 )
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
+from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
 
 
 class PromptTuner:
@@ -292,4 +293,13 @@ class PromptTuner:
         self.final_prompt = final_prompt
 
         logger.info("=== Prompt Optimization Completed ===")
+
+        prompt_assistant = PromptAssistant(self._model)
+        assistant_feedback = prompt_assistant.get_feedback(
+            start_prompt, final_prompt
+        )
+
+        logger.info("=== Assistant's feedback ===")
+        logger.info(assistant_feedback)
+
         return final_prompt
