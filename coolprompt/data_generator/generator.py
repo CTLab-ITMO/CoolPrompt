@@ -11,12 +11,12 @@ from coolprompt.data_generator.pydantic_formatters import (
     ClassificationTaskStructuredOutputSchema,
     ClassificationTaskExample,
     GenerationTaskExample,
-    GenerationTaskStructuredOutputSchema
+    GenerationTaskStructuredOutputSchema,
 )
 from coolprompt.utils.prompt_templates.data_generator_templates import (
     PROBLEM_DESCRIPTION_TEMPLATE,
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
-    GENERATION_DATA_GENERATING_TEMPLATE
+    GENERATION_DATA_GENERATING_TEMPLATE,
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
@@ -31,17 +31,11 @@ class SyntheticDataGenerator:
         model: langchain.BaseLanguageModel class of model to use.
     """
 
-    def __init__(
-        self,
-        model: BaseLanguageModel
-    ) -> None:
+    def __init__(self, model: BaseLanguageModel) -> None:
         self.model = model
 
     def _generate(
-        self,
-        request: str,
-        schema: BaseModel,
-        field_name: str
+        self, request: str, schema: BaseModel, field_name: str
     ) -> Any:
         """Generates model output
         either using structured output from langchain
@@ -61,8 +55,7 @@ class SyntheticDataGenerator:
             return json.loads(output)[field_name]
 
         structured_model = self.model.with_structured_output(
-            schema=schema,
-            method="json_schema"
+            schema=schema, method="json_schema"
         )
         output = structured_model.invoke(request)
         if isinstance(output, AIMessage):
@@ -78,19 +71,19 @@ class SyntheticDataGenerator:
         Returns:
             str: generated problem description
         """
-        request = PROBLEM_DESCRIPTION_TEMPLATE.format(
-            prompt=prompt
-        )
+        request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
 
         return self._generate(
             request,
             ProblemDescriptionStructuredOutputSchema,
-            "problem_description"
+            "problem_description",
         )
 
     def _convert_dataset(
         self,
-        examples: List[dict | ClassificationTaskExample | GenerationTaskExample]
+        examples: List[
+            dict | ClassificationTaskExample | GenerationTaskExample
+        ],
     ) -> Tuple[List[str], List[str]]:
         """Converts outputs to the dataset format
 
@@ -111,13 +104,14 @@ class SyntheticDataGenerator:
         targets = []
 
         for example in examples:
-            if (isinstance(example, GenerationTaskExample) or
-                    isinstance(example, ClassificationTaskExample)):
+            if isinstance(example, GenerationTaskExample) or isinstance(
+                example, ClassificationTaskExample
+            ):
                 dataset.append(example.input)
                 targets.append(example.output)
             else:
-                dataset.append(example['input'])
-                targets.append(example['output'])
+                dataset.append(example["input"])
+                targets.append(example["output"])
         return dataset, targets
 
     def generate(
@@ -125,7 +119,7 @@ class SyntheticDataGenerator:
         prompt: str,
         task: Task,
         problem_description: Optional[str] = None,
-        num_samples: int = 20
+        num_samples: int = 20,
     ) -> Tuple[List[str], List[str], str]:
         """Generates synthetic dataset
         based on given user prompt, optimization task
@@ -152,11 +146,13 @@ class SyntheticDataGenerator:
         """
         if problem_description is None:
             logger.info(
-                "Problem description was not provided, " +
-                "so it will be generated automatically"
+                "Problem description was not provided, "
+                + "so it will be generated automatically"
             )
             problem_description = self._generate_problem_description(prompt)
-            logger.info(f"Generated problem description: {problem_description}")
+            logger.info(
+                f"Generated problem description: {problem_description}"
+            )
 
         if task == Task.CLASSIFICATION:
             request = CLASSIFICATION_DATA_GENERATING_TEMPLATE
@@ -166,8 +162,7 @@ class SyntheticDataGenerator:
             schema = GenerationTaskStructuredOutputSchema
 
         request = request.format(
-            problem_description=problem_description,
-            num_samples=num_samples
+            problem_description=problem_description, num_samples=num_samples
         )
 
         examples = self._generate(request, schema, "examples")
