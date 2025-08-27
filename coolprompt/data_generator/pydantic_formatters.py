@@ -15,8 +15,8 @@ class ClassificationTaskExample(BaseModel):
 
 class ClassificationTaskStructuredOutputSchema(BaseModel):
     examples: List[ClassificationTaskExample] = Field(
-        description='List of examples like ' +
-        '{"input": "...", "output": "ground-truth label"}'
+        description="List of examples like "
+        + '{"input": "...", "output": "ground-truth label"}'
     )
 
 
