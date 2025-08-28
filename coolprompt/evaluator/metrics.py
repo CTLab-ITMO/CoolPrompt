@@ -234,7 +234,7 @@ class RougeMetric(GenerationMetric):
 
     def __init__(self):
         super().__init__(self._get_name())
-        self._return_parameter = "rouge"
+        self._return_parameter = "rougeL"
 
 
 class MeteorMetric(GenerationMetric):
