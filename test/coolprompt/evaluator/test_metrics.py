@@ -24,7 +24,8 @@ class TestClassificationMetric(unittest.TestCase):
             'coolprompt.evaluator.metrics.define_lang').start()
         self.mock_define_lang.return_value = 'en'
 
-        self.name = np.random.choice(list(CLASSIFICATION_METRIC_NAME_MAPPING.keys()))
+        self.name = np.random.choice(list(
+            CLASSIFICATION_METRIC_NAME_MAPPING.keys()))
         self.metric = CLASSIFICATION_METRIC_NAME_MAPPING[self.name]()
 
     def tearDown(self):
@@ -47,7 +48,8 @@ class TestClassificationMetric(unittest.TestCase):
                 {'lang': 'en'}
             )
         else:
-            self.assertDictEqual(self.metric._compute_kwargs_func(None, None), {})
+            self.assertDictEqual(
+                self.metric._compute_kwargs_func(None, None), {})
         self.assertIsNone(self.metric.label_to_id)
 
     def test_encode_labels(self):
@@ -125,7 +127,8 @@ class TestGenerationMetric(unittest.TestCase):
         self.mock_create_metric = self.patcher.start()
         self.mock_create_metric.return_value = self.mock_metric
 
-        self.name = np.random.choice(list(GENERATION_METRIC_NAME_MAPPING.keys()))
+        self.name = np.random.choice(list(
+            GENERATION_METRIC_NAME_MAPPING.keys()))
         self.name = 'rouge'
         self.metric = GENERATION_METRIC_NAME_MAPPING[self.name]()
 
@@ -181,7 +184,8 @@ class TestUtilityFunctions(unittest.TestCase):
         self.assertIsInstance(
             validate_and_create_metric(
                 Task.CLASSIFICATION,
-                np.random.choice(list(CLASSIFICATION_METRIC_NAME_MAPPING.keys()))),
+                np.random.choice(list(
+                    CLASSIFICATION_METRIC_NAME_MAPPING.keys()))),
             ClassificationMetric
         )
 
