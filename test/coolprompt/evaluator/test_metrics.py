@@ -5,8 +5,8 @@ from unittest.mock import MagicMock, patch
 from coolprompt.evaluator.metrics import (
     ClassificationMetric,
     GenerationMetric,
-    CLASSIFICATION_METRICS,
-    GENERATION_METRICS,
+    CLASSIFICATION_METRIC_NAME_MAPPING,
+    GENERATION_METRIC_NAME_MAPPING,
     validate_and_create_metric,
     get_default_metric
 )
@@ -20,9 +20,12 @@ class TestClassificationMetric(unittest.TestCase):
         self.patcher = patch('coolprompt.evaluator.metrics.load')
         self.mock_validate_and_create_metric = self.patcher.start()
         self.mock_validate_and_create_metric.return_value = self.mock_metric
+        self.mock_define_lang = patch(
+            'coolprompt.evaluator.metrics.define_lang').start()
+        self.mock_define_lang.return_value = 'en'
 
-        self.name = np.random.choice(list(CLASSIFICATION_METRICS))
-        self.metric = ClassificationMetric(name=self.name)
+        self.name = np.random.choice(list(CLASSIFICATION_METRIC_NAME_MAPPING.keys()))
+        self.metric = CLASSIFICATION_METRIC_NAME_MAPPING[self.name]()
 
     def tearDown(self):
         self.patcher.stop()
@@ -30,16 +33,21 @@ class TestClassificationMetric(unittest.TestCase):
     def test_initialization(self):
         """Testing the initialization of classification metric"""
 
-        self.assertEqual(self.name, self.metric._name)
+        self.assertEqual(self.name, self.metric._get_name())
         self.mock_validate_and_create_metric.assert_called_once_with(self.name)
         self.assertEqual(self.metric._metric, self.mock_metric)
         if self.name == 'f1':
             self.assertDictEqual(
-                self.metric._compute_kwargs,
+                self.metric._compute_kwargs_func(None, None),
                 {"average": "macro"}
             )
+        elif self.name == 'bertscore':
+            self.assertDictEqual(
+                self.metric._compute_kwargs_func(None, None),
+                {'lang': 'en'}
+            )
         else:
-            self.assertDictEqual(self.metric._compute_kwargs, {})
+            self.assertDictEqual(self.metric._compute_kwargs_func(None, None), {})
         self.assertIsNone(self.metric.label_to_id)
 
     def test_encode_labels(self):
@@ -117,31 +125,25 @@ class TestGenerationMetric(unittest.TestCase):
         self.mock_create_metric = self.patcher.start()
         self.mock_create_metric.return_value = self.mock_metric
 
-        self.name = np.random.choice(list(GENERATION_METRICS))
+        self.name = np.random.choice(list(GENERATION_METRIC_NAME_MAPPING.keys()))
         self.name = 'rouge'
-        self.metric = GenerationMetric(name=self.name)
+        self.metric = GENERATION_METRIC_NAME_MAPPING[self.name]()
 
     def tearDown(self):
         self.patcher.stop()
-
-    def _fix_name(self):
-        if self.name == 'rouge':
-            self.name = 'rougeL'
 
     def test_initialization(self):
         """Testing the initialization of generation metric"""
 
         self.mock_create_metric.assert_called_once_with(self.name)
         self.assertEqual(self.metric._metric, self.mock_metric)
-        self._fix_name()
-        self.assertEqual(self.name, self.metric._name)
+        self.assertEqual(self.name, self.metric._get_name())
 
     def test_compute(self):
         """Testing the work of compute method"""
 
         outputs = ['some', 'outputs']
         slightly_mismatched_targets = ['some', 'targets']
-        self._fix_name()
         self.mock_metric.compute.return_value = {self.name: 1.0}
         self.assertTrue(
             0 <= self.metric.compute(outputs, slightly_mismatched_targets) <= 1
@@ -179,7 +181,7 @@ class TestUtilityFunctions(unittest.TestCase):
         self.assertIsInstance(
             validate_and_create_metric(
                 Task.CLASSIFICATION,
-                np.random.choice(list(CLASSIFICATION_METRICS))),
+                np.random.choice(list(CLASSIFICATION_METRIC_NAME_MAPPING.keys()))),
             ClassificationMetric
         )
 
@@ -191,7 +193,7 @@ class TestUtilityFunctions(unittest.TestCase):
         self.assertIsInstance(
             validate_and_create_metric(
                 Task.GENERATION,
-                np.random.choice(list(GENERATION_METRICS))),
+                np.random.choice(list(GENERATION_METRIC_NAME_MAPPING.keys()))),
             GenerationMetric
         )
 

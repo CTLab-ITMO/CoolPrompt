@@ -93,7 +93,7 @@ class BaseMetric(ABC):
         return self._compute_raw(encoded_output_labels, encoded_targets)
 
     def __str__(self) -> str:
-        return self._return_parameter
+        return self._get_name()
 
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
@@ -234,7 +234,7 @@ class RougeMetric(GenerationMetric):
 
     def __init__(self):
         super().__init__(self._get_name())
-        self._return_parameter = "rougeL"
+        self._return_parameter = "rouge"
 
 
 class MeteorMetric(GenerationMetric):
