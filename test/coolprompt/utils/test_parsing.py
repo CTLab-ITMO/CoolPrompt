@@ -72,20 +72,29 @@ class TestExtractJson(unittest.TestCase):
     CORRECT_JSON = {"test": "value"}
 
     def test_extract_json_correct(self):
+        """Testing the work of `extract_json` function"""
+
         result = extract_json('{{"test": "value"}}')
         self.assertIsInstance(result, dict)
         self.assertEqual(result, self.CORRECT_JSON)
 
     def test_extract_json_different_quotes(self):
+        """Testing the `extract_json` when provided JSON string contains
+        different quotes"""
+
         for value in [
             "{{'test': 'value'}}",
             "{{'test': \"value\"}}",
             "{{\"test\": 'value'}}",
+            '{{test: "value"}}',
         ]:
             with self.subTest(value=value):
                 self.assertEqual(extract_json(value), self.CORRECT_JSON)
 
     def test_extract_json_whitespaces(self):
+        """Testing the `extract_json` when provided JSON string contains some
+        whitespaces inside"""
+
         for value in [
             '{{"test":"value"}}',
             '{{"test"   :   "value"}}',
@@ -96,6 +105,9 @@ class TestExtractJson(unittest.TestCase):
                 self.assertEqual(extract_json(value), self.CORRECT_JSON)
 
     def test_extract_json_dirty(self):
+        """Testing the `extract_json` when provided JSON string is between
+        some text"""
+
         for value in [
             '{{"test": "value"}} sample text',
             'sample text {{"test": "value"}}',
@@ -105,6 +117,9 @@ class TestExtractJson(unittest.TestCase):
                 self.assertEqual(extract_json(value), self.CORRECT_JSON)
 
     def test_extract_json_other_curvy_brackets(self):
+        """Testing the `extract_json` when provided JSON string contains other
+        curvy brackets"""
+
         for value in [
             '{{"test": "value"}} {{"other_test": "value}}',
             '{{{{"test": "value}}' '{{"test": "value"}}}}',
@@ -113,6 +128,9 @@ class TestExtractJson(unittest.TestCase):
                 self.assertEqual(extract_json(value), self.CORRECT_JSON)
 
     def test_extract_json_invalid(self):
+        """Testing the `extract_json` when provided JSON string is invalid
+        (bad brackets balance or invalid quotes)"""
+
         for value in [
             "{{test: value}}",
             '{{"test": value}}',
@@ -123,3 +141,16 @@ class TestExtractJson(unittest.TestCase):
         ]:
             with self.subTest(value=value):
                 self.assertEqual(extract_json(value), None)
+
+    def test_extract_json_newlines(self):
+        """Testing `extract_json` when provided JSON string contains newlines
+        inside"""
+
+        self.assertEqual(
+            extract_json(
+                """{{
+                    'test': "value"
+                }}"""
+            ),
+            self.CORRECT_JSON,
+        )
