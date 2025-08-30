@@ -1,17 +1,17 @@
+from langchain_core.language_models.base import BaseLanguageModel
+
 from coolprompt.utils.parsing import (
     extract_json,
     get_model_answer_extracted,
     safe_template,
 )
-from langchain_core.language_models.base import BaseLanguageModel
-
 from coolprompt.utils.prompt_templates.assistant_templates import (
     FEEDBACK_COLLECTING_TEMPLATE,
 )
 
 
 class PromptAssistant:
-    """Prompt Asstant class. Provides a feedback based on
+    """Prompt Assistant class. Provides a feedback based on
     start prompt and final prompt which tells the user how
     the original prompt was improved.
 
