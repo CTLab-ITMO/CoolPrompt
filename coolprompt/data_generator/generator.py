@@ -1,6 +1,7 @@
 import json
 from typing import Optional, List, Tuple, Any
 
+import dirtyjson
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages.ai import AIMessage
@@ -20,6 +21,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
+from coolprompt.utils.parsing import extract_json
 
 
 class SyntheticDataGenerator:
@@ -52,7 +54,7 @@ class SyntheticDataGenerator:
         """
         if not isinstance(self.model, BaseChatModel):
             output = self.model.invoke(request)
-            return json.loads(output)[field_name]
+            return extract_json(output)[field_name]
 
         structured_model = self.model.with_structured_output(
             schema=schema, method="json_schema"
