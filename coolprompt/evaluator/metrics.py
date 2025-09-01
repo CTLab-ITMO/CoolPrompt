@@ -25,7 +25,7 @@ RED_METRICS = {
     "toxicity"
 }
 
-UTILS_METRIC = {
+CUSTOM_METRICS = {
     "perplexity",
     "cosine"
 }
@@ -216,7 +216,7 @@ class GenerationMetric(BaseMetric):
 
         return output_labels, targets 
         
-class UtilsMetric(BaseMetric):
+class CustomMetric(BaseMetric): 
     FORMAT_MISMATCH_LABEL = ""
     def __init__(self, name: str, embedder: SentenceTransformer = None, model_name: str = "gpt2"):
         self._name = name
@@ -284,15 +284,15 @@ def validate_and_create_metric(task: Task, metric: str | None, utils_embedder: S
             logger.error(error_msg)
             raise ValueError(error_msg)
         case Task.UTILS:
-            if metric in UTILS_METRIC:
+            if metric in CUSTOM_METRICS:
                 if utils_embedder is None and metric == "cosine":
                     error_msg = "Ucosine need in a SentenceTransformer embedder."
                     logger.error(error_msg)
                     raise ValueError(error_msg)
-                return UtilsMetric(metric, embedder=utils_embedder, model_name=utils_model_name)
+                return CustomMetric(metric, embedder=utils_embedder, model_name=utils_model_name)
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(UTILS_METRIC)}."
+                f"Available metrics: {', '.join(CUSTOM_METRICS)}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
