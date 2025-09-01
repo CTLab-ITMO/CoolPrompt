@@ -5,19 +5,7 @@ from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 
 
-class BaseMetric(ABC):
-    """Abstract base class for implementing evaluation metrics.
-
-    Provides common infrastructure for loading metrics
-    from HuggingFace's evaluate library and defining
-    metric computation interfaces.
-
-    Attributes:
-        ANS_TAGS: tuple - Start and end tags for answer extraction
-        FORMAT_MISMATCH_LABEL: int - Special value indicating parsing failure
-    """
-
-    ANS_TAGS = ("<ans>", "</ans>")
+class HFEvaluateMetric(ABC):
 
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
@@ -29,6 +17,7 @@ class BaseMetric(ABC):
         self._return_parameter = name
         self._metric = load(name)
         self._compute_kwargs_func = lambda outputs, targets: {}
+        super().__init__()
 
     def _compute_raw(
         self, outputs: list[str | int], targets: list[str | int]
@@ -47,6 +36,41 @@ class BaseMetric(ABC):
             predictions=outputs, references=targets,
             **self._compute_kwargs_func(outputs, targets)
         )[self._return_parameter]
+
+
+class BaseMetric(ABC):
+    """Abstract base class for implementing evaluation metrics.
+
+    Provides common infrastructure for loading metrics
+    from HuggingFace's evaluate library and defining
+    metric computation interfaces.
+
+    Attributes:
+        ANS_TAGS: tuple - Start and end tags for answer extraction
+        FORMAT_MISMATCH_LABEL: int - Special value indicating parsing failure
+    """
+
+    ANS_TAGS = ("<ans>", "</ans>")
+
+    def __init__(self) -> None:
+        """Initialize metric"""
+
+        super().__init__()
+
+    @abstractmethod
+    def _compute_raw(
+        self, outputs: list[str | int], targets: list[str | int]
+    ) -> float:
+        """Compute metric value from preprocessed model answers.
+
+        Args:
+            outputs (list[str|int]): Model predictions (text for generation,
+            labels for classification)
+            targets (list[str|int]): Ground truth labels
+        Returns:
+            float: Computed metric value
+        """
+        pass
 
     @abstractmethod
     def _encode_labels(
@@ -111,13 +135,10 @@ class ClassificationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = -1
 
-    def __init__(self, name: str):
-        """Initialize metric with specified evaluate library metric name.
+    def __init__(self):
+        """Initialize metric"""
 
-        Args:
-            name (str): Name of metric to load from evaluate library
-        """
-        super().__init__(name)
+        super().__init__()
         self.label_to_id = None
 
     def _encode_labels(
@@ -166,14 +187,10 @@ class GenerationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = ""
 
-    def __init__(self, name: str):
-        """Initialize metric with specified evaluate library metric name.
+    def __init__(self):
+        """Initialize metric"""
 
-        Args:
-            name (str): Name of metric to load from evaluate library
-        """
-
-        super().__init__(name)
+        super().__init__()
 
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
@@ -190,7 +207,7 @@ class GenerationMetric(BaseMetric):
         return output_labels, targets
 
 
-class AccuracyMetric(ClassificationMetric):
+class AccuracyMetric(HFEvaluateMetric, ClassificationMetric):
     """Accuracy metric for classification tasks."""
 
     @staticmethod
@@ -201,7 +218,7 @@ class AccuracyMetric(ClassificationMetric):
         super().__init__(self._get_name())
 
 
-class F1Metric(ClassificationMetric):
+class F1Metric(HFEvaluateMetric, ClassificationMetric):
     """F1 metric for classification tasks with macro averaging."""
 
     @staticmethod
@@ -214,7 +231,7 @@ class F1Metric(ClassificationMetric):
             "average": "macro"}
 
 
-class BleuMetric(GenerationMetric):
+class BleuMetric(HFEvaluateMetric, GenerationMetric):
     """BLEU metric for generation tasks."""
 
     @staticmethod
@@ -225,7 +242,7 @@ class BleuMetric(GenerationMetric):
         super().__init__(self._get_name())
 
 
-class RougeMetric(GenerationMetric):
+class RougeMetric(HFEvaluateMetric, GenerationMetric):
     """ROUGE metric for generation tasks."""
 
     @staticmethod
@@ -237,7 +254,7 @@ class RougeMetric(GenerationMetric):
         self._return_parameter = "rougeL"
 
 
-class MeteorMetric(GenerationMetric):
+class MeteorMetric(HFEvaluateMetric, GenerationMetric):
     """METEOR metric for generation tasks."""
 
     @staticmethod
@@ -248,7 +265,7 @@ class MeteorMetric(GenerationMetric):
         super().__init__(self._get_name())
 
 
-class BertScoreMetric(GenerationMetric):
+class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
     """BertScore metric for generation tasks."""
 
     @staticmethod
@@ -266,18 +283,31 @@ class BertScoreMetric(GenerationMetric):
         return sum(f1_list) / len(f1_list)
 
 
+class GEvalMetric(HFEvaluateMetric, GenerationMetric):
+    """GEval metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "geval"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+    def _compute_raw(self, outputs, targets):
+        return 1.0
+
+
 def define_lang(outputs, targets):
     return "en"
 
 
 CLASSIFICATION_METRIC_NAME_MAPPING = {
-    metric._get_name(): metric for metric in [
-        AccuracyMetric, F1Metric]
+    metric._get_name(): metric
+    for metric in ClassificationMetric.__subclasses__()
 }
 
 GENERATION_METRIC_NAME_MAPPING = {
-    metric._get_name(): metric for metric in [
-        BleuMetric, RougeMetric, MeteorMetric, BertScoreMetric]
+    metric._get_name(): metric for metric in GenerationMetric.__subclasses__()
 }
 
 
