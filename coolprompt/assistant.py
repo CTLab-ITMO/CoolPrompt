@@ -206,13 +206,18 @@ class PromptTuner:
         metric = validate_and_create_metric(task, metric)
         evaluator = Evaluator(self._model, task, metric)
         final_prompt = ""
+        generator = SyntheticDataGenerator(self._model)
 
         if dataset is None:
-            generator = SyntheticDataGenerator(self._model)
             dataset, target, problem_description = generator.generate(
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
+            )
+
+        if problem_description is None:
+            problem_description = generator._generate_problem_description(
+                prompt=start_prompt
             )
 
         dataset_split = self._get_dataset_split(

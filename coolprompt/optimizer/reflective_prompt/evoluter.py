@@ -185,6 +185,10 @@ class ReflectiveEvoluter:
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
+        initial_population[-1] = Prompt(
+            self.initial_prompt,
+            origin=PromptOrigin.MANUAL
+        )
         self._evaluation(initial_population)
         initial_population = self._reranking(initial_population)
         return initial_population
@@ -549,8 +553,7 @@ class ReflectiveEvoluter:
 
             self._update_iter(population)
 
-        logger.info(f"BEST SCORE: {self.best_score_overall}")
-        logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
+        logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 
         population = self._reranking(population)
         population = population[:3]
@@ -560,4 +563,7 @@ class ReflectiveEvoluter:
             population, self._make_output_path("best_prompts_infer.yaml")
         )
         self._update_elitist(population)
+        logger.info(f"BEST VALIDATION SCORE: {self.best_score_overall}")
+        logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
+
         return self.elitist.text
