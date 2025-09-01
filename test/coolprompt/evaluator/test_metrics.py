@@ -147,7 +147,8 @@ class TestGenerationMetric(unittest.TestCase):
 
         outputs = ['some', 'outputs']
         slightly_mismatched_targets = ['some', 'targets']
-        self.mock_metric.compute.return_value = {self.name: 1.0}
+        self.mock_metric.compute.return_value = {
+            self.metric._return_parameter: 1.0}
         self.assertTrue(
             0 <= self.metric.compute(outputs, slightly_mismatched_targets) <= 1
         )
