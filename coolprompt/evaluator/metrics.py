@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from evaluate import load
+from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
@@ -290,8 +291,9 @@ class GEvalMetric(HFEvaluateMetric, GenerationMetric):
     def _get_name():
         return "geval"
 
-    def __init__(self):
+    def __init__(self, model: BaseLanguageModel):
         super().__init__(self._get_name())
+        self.model = model
 
     def _compute_raw(self, outputs, targets):
         return 1.0
@@ -311,7 +313,11 @@ GENERATION_METRIC_NAME_MAPPING = {
 }
 
 
-def validate_and_create_metric(task: Task, metric: str | None) -> BaseMetric:
+def validate_and_create_metric(
+    task: Task,
+    metric: str | None,
+    model: BaseLanguageModel | None = None
+) -> BaseMetric:
     """
     Validates given metric in order to correspond the given task.
     Returns the given metric name back if the validation succeeded.
@@ -319,6 +325,7 @@ def validate_and_create_metric(task: Task, metric: str | None) -> BaseMetric:
     Args:
         task (Task): The type of task, either "classification" or "generation".
         metric (str): Name of the metric to validate.
+        model (BaseLanguageModel): model to use for evaluation (for GEval)
     Returns:
         str: the name of the metric.
     Raises:
@@ -341,6 +348,12 @@ def validate_and_create_metric(task: Task, metric: str | None) -> BaseMetric:
             logger.error(error_msg)
             raise ValueError(error_msg)
         case Task.GENERATION:
+            if metric == "geval":
+                if model is None:
+                    error_msg = "Model for GEval metric must not be None"
+                    logger.error(error_msg)
+                    raise ValueError(error_msg)
+                return GENERATION_METRIC_NAME_MAPPING[metric](model)
             if metric in GENERATION_METRIC_NAME_MAPPING.keys():
                 return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
