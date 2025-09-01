@@ -68,7 +68,7 @@ class TargetModel(BaseModel):
         super().__init__(name, path2model, mode, temperature=temperature, max_tokens=max_tokens, history_limit=history_limit, api_key=api_key, api_token=api_token, provider=provider, model_type="target")
 
     def get_response(self, prompt: str, system_prompt: Optional[str] = None) -> str:
-        return self._execute(build_prompt=lambda: prompt, system_prompt=system_prompt,)
+        return self._execute(build_prompt=lambda: prompt, system_prompt=system_prompt)
 
     def process_request(self, *args, **kwargs) -> str:
         return self.get_response(*args, **kwargs)

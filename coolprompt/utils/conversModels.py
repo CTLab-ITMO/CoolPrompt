@@ -61,7 +61,7 @@ class ModelPipeline(ConversationBase):
 
 def ConversationFactory(mode: str, **kwargs) -> ConversationBase:
     if mode == "openai": return ModelOpenAi(**kwargs)
-    if mode in ("hf", "huggingface", "novita"): return ModelHFEndpoint(**kwargs)
+    if mode in ("hf", "huggingface"): return ModelHFEndpoint(**kwargs)
     if mode == "llama": return ModelLlamaCpp(**kwargs)
     if mode == "pipeline": return ModelPipeline(**kwargs)
     raise ValueError(f"Unknown mode: {mode}")
