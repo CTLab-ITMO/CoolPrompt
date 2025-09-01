@@ -140,12 +140,6 @@ class TestValidateDataset(unittest.TestCase):
         method = Method.HYPE
         validate_dataset(dataset, target, method)
 
-    def test_valid_dataset_not_provied(self):
-        """Testing the work of validate_dataset function when
-        dataset is not provided"""
-
-        validate_dataset(None, [1, 2, 3], Method.HYPE)
-
     def test_invalid_dataset_provided_type(self):
         """Testing that validate_dataset function raises TypeError when
         provided dataset is not Iterable"""
@@ -164,13 +158,6 @@ class TestValidateDataset(unittest.TestCase):
             validate_dataset(
                 ["sample 1", "sample 2", "sample 3"], None, Method.HYPE
             )
-
-    def test_invalid_dataset_not_provided_method_requires(self):
-        """Testing that validate_dataset function raises ValueError when
-        dataset is not provided but the ReflectivePrompt method requires it"""
-
-        with self.assertRaises(ValueError):
-            validate_dataset(None, None, Method.REFLECTIVE)
 
 
 class TestValidateTarget(unittest.TestCase):
@@ -227,14 +214,6 @@ class TestValidateProblemDescription(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             validate_problem_description(1, Method.HYPE)
-
-    def test_invalid_problem_description_not_provided_method_requires(self):
-        """Testing that validate_problem_description function raises
-        TypeError when the problem description is not provided but using
-        the ReflectivePrompt method"""
-
-        with self.assertRaises(ValueError):
-            validate_problem_description(None, Method.REFLECTIVE)
 
 
 class TestValidateValidationSize(unittest.TestCase):

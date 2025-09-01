@@ -1,10 +1,16 @@
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.messages.ai import AIMessage
 
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.hype_templates import (
     HYPE_PROMPT_TEMPLATE,
 )
+from coolprompt.utils.parsing import (
+    extract_answer,
+    get_model_answer_extracted,
+    safe_template,
+)
+
+INSTRUCTIVE_PROMPT_TAGS = ("[PROMPT_START]", "[PROMPT_END]")
 
 
 def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
@@ -15,19 +21,16 @@ def hype_optimizer(model: BaseLanguageModel, prompt: str) -> str:
         model (BaseLanguageModel): Any LangChain BaseLanguageModel instance.
         prompt (str): Input prompt to optimize.
     Returns:
-        LLM-generated rewritten prompt.
+        str: LLM-generated rewritten prompt.
     """
-    logger.info('Running HyPE optimization...')
-    logger.debug(f'Start prompt:\n{prompt}')
-    template = HYPE_PROMPT_TEMPLATE
-    start_tag, end_tag = "[PROMPT_START]", "[PROMPT_END]"
-    answer = model.invoke(template.replace("<QUERY>", prompt))
 
-    if isinstance(answer, AIMessage):
-        answer = answer.content
-    answer = answer.strip()
+    logger.info("Running HyPE optimization...")
+    logger.debug(f"Start prompt:\n{prompt}")
 
-    logger.info('HyPE optimization completed')
-    return answer[
-        answer.rfind(start_tag) + len(start_tag):answer.rfind(end_tag)
-    ]
+    query = safe_template(HYPE_PROMPT_TEMPLATE, QUERY=prompt)
+
+    answer = get_model_answer_extracted(model, query)
+
+    logger.info("HyPE optimization completed")
+
+    return extract_answer(answer, INSTRUCTIVE_PROMPT_TAGS)

@@ -137,14 +137,6 @@ def validate_dataset(
                 )
             logger.error(error_msg)
             raise ValueError(error_msg)
-    else:
-        if method.is_data_driven():
-            error_msg = (
-                "Train dataset must be provided for data-driven "
-                f"optimization method '{method}'."
-            )
-            logger.error(error_msg)
-            raise ValueError(error_msg)
 
 
 def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
@@ -236,14 +228,6 @@ def validate_problem_description(
             )
             logger.error(error_msg)
             raise TypeError(error_msg)
-    else:
-        if method is Method.REFLECTIVE:
-            error_msg = (
-                "Problem description must be provided for "
-                "ReflectivePrompt optimization."
-            )
-            logger.error(error_msg)
-            raise ValueError(error_msg)
 
 
 def validate_validation_size(validation_size: float | Any) -> None:
