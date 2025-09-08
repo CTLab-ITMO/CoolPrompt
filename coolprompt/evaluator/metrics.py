@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 from evaluate import load
+from langchain_core.messages.ai import AIMessage
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
+from coolprompt.utils.language_detection import detect_language
 
 
 class HFEvaluateMetric(ABC):
@@ -21,7 +24,10 @@ class HFEvaluateMetric(ABC):
         super().__init__()
 
     def _compute_raw(
-        self, outputs: list[str | int], targets: list[str | int]
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None
     ) -> float:
         """Compute metric value from preprocessed model answers.
 
@@ -60,7 +66,10 @@ class BaseMetric(ABC):
 
     @abstractmethod
     def _compute_raw(
-        self, outputs: list[str | int], targets: list[str | int]
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None
     ) -> float:
         """Compute metric value from preprocessed model answers.
 
@@ -91,7 +100,10 @@ class BaseMetric(ABC):
         pass
 
     def compute(
-        self, outputs: list[str | int], targets: list[str | int]
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None
     ) -> float:
         """Compute metric value from text model outputs
 
@@ -115,7 +127,9 @@ class BaseMetric(ABC):
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels, targets
         )
-        return self._compute_raw(encoded_output_labels, encoded_targets)
+        return self._compute_raw(
+            encoded_output_labels, encoded_targets, dataset
+        )
 
     def __str__(self) -> str:
         return self._get_name()
@@ -291,16 +305,48 @@ class GEvalMetric(HFEvaluateMetric, GenerationMetric):
     def _get_name():
         return "geval"
 
-    def __init__(self, model: BaseLanguageModel):
+    def __init__(
+            self,
+            model: BaseLanguageModel,
+            prompt_template: str,
+            metric_ceil: int = 10):
         super().__init__(self._get_name())
         self.model = model
+        self.prompt_template = prompt_template
+        self.metric_ceil = metric_ceil
 
-    def _compute_raw(self, outputs, targets):
-        return 1.0
+    def _compute_raw(self, outputs, targets, dataset):
+        requests = [
+            self.prompt_template.format(
+                metric_ceil=self.metric_ceil,
+                request=request,
+                responce=responce
+            ) for request, responce in zip(dataset, outputs)
+        ]
+
+        answers = self.model.batch(requests)
+
+        answers = [(int(a.content) if a.content.isdigit() else 0)
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
+
+        answers = [clip(ans, 0, self.metric_ceil) / self.metric_ceil
+                   for ans in answers]
+
+        return sum(answers) / len(answers)
+
+
+def clip(x, left, right):
+    if x < left:
+        return left
+    if x > right:
+        return right
+    return x
 
 
 def define_lang(outputs, targets):
-    return "en"
+    langs = [detect_language(target) for target in targets]
+    return max(set(langs), key=langs.count)
 
 
 CLASSIFICATION_METRIC_NAME_MAPPING = {
