@@ -21,7 +21,7 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE,
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
-from coolprompt.utils.parsing import extract_answer
+from coolprompt.utils.parsing import extract_answer, extract_json
 
 
 class ReflectiveEvoluter:
@@ -181,7 +181,7 @@ class ReflectiveEvoluter:
             PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
         )
         answer = self._llm_query([request])[0]
-        prompts = json.loads(answer)["prompts"]
+        prompts = extract_json(answer)["prompts"]
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
@@ -559,11 +559,14 @@ class ReflectiveEvoluter:
         population = population[:3]
         population = np.append(population, self.elitist)
         self._evaluation(population, split="validation")
+        population = self._reranking(population)
         self._cache_population(
             population, self._make_output_path("best_prompts_infer.yaml")
         )
-        self._update_elitist(population)
+        self.elitist = population[0]
+        self.best_prompt_overall = self.elitist.text
+        self.best_score_overall = self.elitist.score
         logger.info(f"BEST VALIDATION SCORE: {self.best_score_overall}")
         logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
 
-        return self.elitist.text
+        return self.best_prompt_overall
