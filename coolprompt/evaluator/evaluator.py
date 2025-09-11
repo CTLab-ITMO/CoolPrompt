@@ -1,3 +1,4 @@
+import random
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 
@@ -19,10 +20,9 @@ class Evaluator:
     the corresponding metric score against provided targets.
     """
 
-    def __init__(self,
-                 model: BaseLanguageModel,
-                 task: Task,
-                 metric: BaseMetric) -> None:
+    def __init__(
+        self, model: BaseLanguageModel, task: Task, metric: BaseMetric
+    ) -> None:
         self.model = model
         self.task = task
         self.metric = metric
@@ -34,6 +34,7 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
+        sample_answers_size: int = None,
     ) -> float:
         """
         Evaluate the model on a dataset
@@ -74,13 +75,31 @@ class Evaluator:
                 for sample in dataset
             ]
         )
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
-        return self.metric.compute(answers, targets)
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
+
+        metrics = self.metric.compute(answers, targets)
+
+        if sample_answers_size is not None:
+            rng = random.Random(42)
+
+            total_size = len(dataset)
+            n = min(sample_answers_size, total_size)
+
+            indices = rng.sample(range(total_size), n)
+
+            input_sample = [dataset[i] for i in indices]
+            answers_sample = [answers[i] for i in indices]
+
+            return metrics, (input_sample, answers_sample)
+        return metrics
 
     def _get_full_prompt(
-        self, prompt: str, sample: str, template: Optional[str] = None,
+        self,
+        prompt: str,
+        sample: str,
+        template: Optional[str] = None,
     ) -> str:
         """Inserts parts of the prompt into the task template.
 
@@ -105,7 +124,8 @@ class Evaluator:
             case Task.CLASSIFICATION:
                 labels = ", ".join(map(str, self.metric.label_to_id.keys()))
                 return template.format(
-                    PROMPT=prompt, LABELS=labels, INPUT=sample)
+                    PROMPT=prompt, LABELS=labels, INPUT=sample
+                )
             case Task.GENERATION:
                 return template.format(PROMPT=prompt, INPUT=sample)
 

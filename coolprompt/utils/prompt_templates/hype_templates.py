@@ -1,3 +1,10 @@
+HYPE_PROMPT_TEMPLATE_0 = (
+    "Please write a hypothetical instructive prompt for the following query "
+    "to make a large language model answer the question.\n"
+    "Query: <QUERY>\n"
+    "Prompt: "
+)
+
 HYPE_PROMPT_TEMPLATE = """You are an expert prompt engineer. Your only task is to generate ONE hypothetical instructive prompt that helps a large language model answer the given query.
 
 ### HARD CONSTRAINTS - VIOLATION WILL CAUSE FAILURE ###
