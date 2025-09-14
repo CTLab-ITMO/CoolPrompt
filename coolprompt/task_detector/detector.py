@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from coolprompt.task_detector.pydantic_formatters import (
     TaskDetectionStructuredOutputSchema
 )
-from coolprompt.utils.prompt_templates.data_generator_templates import (
+from coolprompt.utils.prompt_templates.task_detector_templates import (
     TASK_DETECTOR_TEMPLATE
 )
 from coolprompt.utils.logging_config import logger
