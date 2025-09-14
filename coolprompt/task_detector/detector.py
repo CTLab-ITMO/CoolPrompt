@@ -72,15 +72,15 @@ class TaskDetector:
         request = request.format(
             query=prompt
         )
-        
+
         logger.info(
             "Detecting the task by query"
         )
 
         task = self._generate(request, schema, "task")
-        
+
         logger.info(
-            "Task defined as", task
+            f"Task defined as {task}"
         )
 
         return task
