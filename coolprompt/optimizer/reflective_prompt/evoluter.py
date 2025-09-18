@@ -519,9 +519,6 @@ class ReflectiveEvoluter:
         )
 
         while self.iteration < self.num_epochs:
-            if self.elitist is not None and self.elitist not in population:
-                logger.debug("Elitist should always live")
-                population = np.append(population, np.array([self.elitist]))
             parent_population = self._selection(population)
 
             short_term_reflection_tuple = self._short_term_reflection(
@@ -550,6 +547,10 @@ class ReflectiveEvoluter:
             population = np.append(population, np.array(mutated_population))
             self._update_elitist(population)
             population = self._survive(population, temperature=1e-1)
+
+            if self.elitist is not None and self.elitist not in population:
+                logger.debug("Elitist should always live")
+                population = np.append(population, np.array([self.elitist]))
 
             self._update_iter(population)
 
