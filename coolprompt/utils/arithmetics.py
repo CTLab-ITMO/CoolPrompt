@@ -1,3 +1,6 @@
+import re
+
+
 def clip(x, left, right):
     if x < left:
         return left
@@ -8,3 +11,7 @@ def clip(x, left, right):
 
 def mean(lst):
     return sum(lst) / len(lst)
+
+
+def extract_number_from_text(text):
+    return re.findall(r'-?\d+(?:\.\d+)?', text)[-1]

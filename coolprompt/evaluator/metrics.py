@@ -1,5 +1,3 @@
-import re
-
 from abc import ABC, abstractmethod
 from typing import Optional
 from evaluate import load
@@ -9,7 +7,7 @@ from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 from coolprompt.utils.language_detection import detect_language
-from coolprompt.utils.arithmetics import clip, mean
+from coolprompt.utils.arithmetics import clip, mean, extract_number_from_text
 
 
 class HFEvaluateMetric(ABC):
@@ -350,8 +348,8 @@ class ExactMatchMetric(GenerationMetric):
         super().__init__(self._get_name())
 
     def _compute_raw(self, outputs, targets):
-        targets = [re.sub('[^0-9]', '', item) for item in targets]  # ^\d+\.?\d*$
-        outputs = [re.sub('[^0-9]', '', item) for item in outputs]
+        targets = [extract_number_from_text(item) for item in targets]
+        outputs = [extract_number_from_text(item) for item in outputs]
         return float(mean([o == t for o, t in zip(outputs, targets)]))
 
 
