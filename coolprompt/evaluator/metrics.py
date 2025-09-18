@@ -1,3 +1,5 @@
+import re
+
 from abc import ABC, abstractmethod
 from typing import Optional
 from evaluate import load
@@ -7,6 +9,7 @@ from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 from coolprompt.utils.language_detection import detect_language
+from coolprompt.utils.arithmetics import clip, mean
 
 
 class HFEvaluateMetric(ABC):
@@ -298,7 +301,7 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
         return sum(f1_list) / len(f1_list)
 
 
-class GEvalMetric(HFEvaluateMetric, GenerationMetric):
+class GEvalMetric(GenerationMetric):
     """GEval metric for generation tasks."""
 
     @staticmethod
@@ -336,12 +339,20 @@ class GEvalMetric(HFEvaluateMetric, GenerationMetric):
         return sum(answers) / len(answers)
 
 
-def clip(x, left, right):
-    if x < left:
-        return left
-    if x > right:
-        return right
-    return x
+class ExactMatchMetric(GenerationMetric):
+    """EM Metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "em"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+    def _compute_raw(self, outputs, targets):
+        targets = [re.sub('[^0-9]', '', item) for item in targets]  # ^\d+\.?\d*$
+        outputs = [re.sub('[^0-9]', '', item) for item in outputs]
+        return float(mean([o == t for o, t in zip(outputs, targets)]))
 
 
 def define_lang(outputs, targets):
