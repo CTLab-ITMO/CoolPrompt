@@ -4,6 +4,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
+from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
@@ -134,7 +135,7 @@ class PromptTuner:
     def run(
         self,
         start_prompt: str,
-        task: str = "generation",
+        task: str = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
         method: str = "hype",
@@ -201,6 +202,10 @@ class PromptTuner:
         if verbose is not None:
             validate_verbose(verbose)
             set_verbose(verbose)
+
+        task_detector = TaskDetector(self._system_model)
+        if task is None:
+            task = task_detector.generate(start_prompt)
 
         logger.info("Validating args for PromptTuner running")
         task, method = validate_run(
