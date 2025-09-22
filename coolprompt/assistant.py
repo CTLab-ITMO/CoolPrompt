@@ -227,6 +227,7 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
+                num_samples=40
             )
 
         if problem_description is None:
