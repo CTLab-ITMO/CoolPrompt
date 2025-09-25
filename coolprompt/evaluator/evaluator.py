@@ -1,3 +1,4 @@
+import random
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 
@@ -19,10 +20,9 @@ class Evaluator:
     the corresponding metric score against provided targets.
     """
 
-    def __init__(self,
-                 model: BaseLanguageModel,
-                 task: Task,
-                 metric: BaseMetric) -> None:
+    def __init__(
+        self, model: BaseLanguageModel, task: Task, metric: BaseMetric
+    ) -> None:
         self.model = model
         self.task = task
         self.metric = metric
@@ -74,13 +74,17 @@ class Evaluator:
                 for sample in dataset
             ]
         )
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
+
         return self.metric.compute(answers, targets)
 
     def _get_full_prompt(
-        self, prompt: str, sample: str, template: Optional[str] = None,
+        self,
+        prompt: str,
+        sample: str,
+        template: Optional[str] = None,
     ) -> str:
         """Inserts parts of the prompt into the task template.
 
@@ -105,7 +109,8 @@ class Evaluator:
             case Task.CLASSIFICATION:
                 labels = ", ".join(map(str, self.metric.label_to_id.keys()))
                 return template.format(
-                    PROMPT=prompt, LABELS=labels, INPUT=sample)
+                    PROMPT=prompt, LABELS=labels, INPUT=sample
+                )
             case Task.GENERATION:
                 return template.format(PROMPT=prompt, INPUT=sample)
 
