@@ -79,21 +79,7 @@ class Evaluator:
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]
 
-        metrics = self.metric.compute(answers, targets)
-
-        if sample_answers_size is not None:
-            rng = random.Random(42)
-
-            total_size = len(dataset)
-            n = min(sample_answers_size, total_size)
-
-            indices = rng.sample(range(total_size), n)
-
-            input_sample = [dataset[i] for i in indices]
-            answers_sample = [answers[i] for i in indices]
-
-            return metrics, (input_sample, answers_sample)
-        return metrics
+        return self.metric.compute(answers, targets)
 
     def _get_full_prompt(
         self,
