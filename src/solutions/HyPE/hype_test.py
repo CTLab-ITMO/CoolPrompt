@@ -15,9 +15,6 @@ from src.utils.load_dataset_coolprompt import ag_labels
 from coolprompt.assistant import PromptTuner
 from coolprompt.language_model.llm import DefaultLLM
 
-# llm = DefaultLLM.init(
-#     vllm_engine_config={"gpu_memory_utilization": 0.95, "max_model_len": 16256}
-# )
 llm = DefaultLLM.init()
 pt = PromptTuner(llm)
 
