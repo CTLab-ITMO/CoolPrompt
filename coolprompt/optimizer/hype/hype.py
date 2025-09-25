@@ -3,7 +3,6 @@ from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.prompt_templates.hype_templates import (
     HYPE_PROMPT_TEMPLATE,
-    HYPE_PROMPT_TEMPLATE_0,
 )
 from coolprompt.utils.parsing import (
     extract_answer,
