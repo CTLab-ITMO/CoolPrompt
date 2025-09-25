@@ -36,7 +36,10 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
     TEMPLATE_MAP = {
-        (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
+        (
+            Task.CLASSIFICATION,
+            Method.HYPE,
+        ): CLASSIFICATION_TASK_TEMPLATE_HYPE,
         (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
@@ -145,7 +148,6 @@ class PromptTuner:
         validation_size: float = 0.25,
         train_as_test: bool = False,
         verbose: int = 1,
-        sample_answers: bool = False,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -259,7 +261,11 @@ class PromptTuner:
             logger.debug(f"Additional kwargs: {kwargs}")
 
         if method is Method.HYPE:
-            final_prompt = hype_optimizer(self._target_model, start_prompt)
+            final_prompt = hype_optimizer(
+                model=self._target_model,
+                prompt=start_prompt,
+                problem_description=problem_description,
+            )
         elif method is Method.REFLECTIVE:
             final_prompt = reflectiveprompt(
                 model=self._target_model,
@@ -299,7 +305,6 @@ class PromptTuner:
             dataset=dataset_split[1],
             targets=dataset_split[3],
             template=template,
-            sample_answers_size=3
         )
         logger.info(
             f"Initial {metric} score: {self.init_metric}, "

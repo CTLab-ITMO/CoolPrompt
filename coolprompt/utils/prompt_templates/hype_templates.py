@@ -1,91 +1,53 @@
-HYPE_PROMPT_TEMPLATE_0 = (
-    "Please write a hypothetical instructive prompt for the following query "
-    "to make a large language model answer the question.\n"
-    "Query: <QUERY>\n"
-    "Prompt: "
+HYPE_PROMPT_TEMPLATE = (
+    "You are an expert prompt engineer. Your only task is to "
+    "generate a hypothetical instructive prompt that would help "
+    "a large language model effectively answer the following query. "
+    "The prompt must solve the same underlying task as the original query while being more effective.\n"
+    "### HARD CONSTRAINTS ###\n"
+    "1. LANGUAGE:\n"
+    "   - Output MUST be in the EXACT SAME LANGUAGE as the query.\n"
+    "2. CONTENT:\n"
+    "   - Output ONLY the hypothetical instructive prompt - do NOT answer the original query directly.\n"
+    "   - The hypothetical prompt must solve the same task as the original query.\n"
+    "   - If the original query contains any code snippets, you must include it in final prompt.\n"
+    "3. TECHNICAL PRESERVATION:\n"
+    "   - Code blocks must be preserved with original syntax and formatting.\n"
+    "   - Variables, placeholders ({{var}}), and technical terms kept unchanged.\n"
+    "   - Markdown and special formatting replicated precisely.\n"
+    "### CRITICAL GUIDANCE ###\n"
+    "The hypothetical instructive prompt you generate should be the actual instruction that would be given to an LLM to perform the task, not meta-instructions about prompt creation (unless the original query is explicitly about creating prompts).\n"
+    "### YOUR OUTPUT FORMAT ###\n"
+    "[PROMPT_START]<your hypothetical instructive prompt here>[PROMPT_END]\n"
+    "### INPUT ###\n"
+    "User's query: {QUERY}\n"
+    "Problem description: {PROBLEM_DESCRIPTION}\n"
+    "### OUTPUT ###\n"
+    "Hypothetical Instructive Prompt: "
 )
-
-HYPE_PROMPT_TEMPLATE = """You are an expert prompt engineer. Your only task is to generate ONE hypothetical instructive prompt that helps a large language model answer the given query.
-
-### HARD CONSTRAINTS - VIOLATION WILL CAUSE FAILURE ###
-1. LANGUAGE:
-   - Output MUST be in the EXACT SAME LANGUAGE as the query.
-   - NEVER translate or switch languages.
-2. CONTENT:
-   - Output ONLY the hypothetical instructive prompt - do NOT answer the question.
-   - NEVER include explanations or meta-commentary.
-   - NEVER answer the original query directly.
-   - If the original query contains any code snippets, you must include it in final prompt.
-   - The hypothetical prompt must solve the same task as the original query.
-   - DO NOT answer the query, only generate the hypothetical instruction prompt.
-3. TECHNICAL PRESERVATION:
-   - Code blocks must be preserved with original syntax and formatting.
-   - Variables, placeholders ({{var}}), and technical terms kept unchanged.
-   - Markdown and special formatting replicated precisely.
-
-### YOUR OUTPUT FORMAT (strictly one prompt wrapped in tags!) ###
-[PROMPT_START]<your hypothetical instructive prompt here>[PROMPT_END]
-
-### INPUT ###
-Query: {QUERY}
-
-### OUTPUT ###
-
-"""
 
 CLASSIFICATION_TASK_TEMPLATE_HYPE = """{PROMPT}
 
-### HARD CONSTRAINTS ###
-This is an automated evaluation. Your output will be parsed by a script. Any deviation from the required format will result in failure.
-
-1. OUTPUT FORMAT:
-   - Output ONLY the final answer in the format: `<ans>LABEL</ans>`
-   - LABEL MUST be EXACTLY one item from the list: [{LABELS}]
-    - DO NOT include any explanation, reasoning, or extra text.
-    - DO NOT include any meta-level commentary (e.g., "Sure", "Here is your answer", "Let's tackle this", "To answer this question", etc).
-    - DO NOT modify the tag or the label format.
-    - DO NOT repeat the answer or output multiple <ans> tags.
-
-2. STOP CONDITION:
-    - IMMEDIATELY stop generating after `</ans>`.
-    - DO NOT output anything after `</ans>`.
-
-3. FAILURE CONDITION:
-    - If you break any of the above constraints, the output will be considered INVALID and REJECTED.
-
-4. FORMAT EXAMPLE:
-    1. Labels are [(A), (B), (C)] and you chose first answer  
+Answer using exactly one label from [{LABELS}].
+Generate the final answer bracketed with <ans> and </ans>.
+Examples:
+1. Labels are [(A), (B), (C)] and you chose the first option
        Output will be: <ans>(A)</ans>
-    2. Labels are [A, B, C] and you chose the first answer  
+2. Labels are [A, B, C] and you chose the first option
        Output will be: <ans>A</ans>
 
-### INPUT ###
+Input:
 {INPUT}
 
-### RESPONSE ###
+Response:
 """
+
 GENERATION_TASK_TEMPLATE_HYPE = """{PROMPT}
-### HARD CONSTRAINTS ###
-This is an automated evaluation. Your output will be parsed by a script. Any deviation from the required format will result in failure.
 
-1. OUTPUT FORMAT:
-    - Output ONLY the answer to the question or task specified in the prompt.
-    - Output ONLY the generated content inside `<ans>` tags: `<ans>GENERATED_TEXT</ans>`
-    - NO redundant explanations or meta-commentary.
-    - DO NOT include any meta-level commentary (e.g., "Sure", "Here is your answer", "Let's tackle this", "To answer this question", etc).
-    - DO NOT explain your reasoning, unless explicitly required by the prompt itself.
-    - DO NOT add extra introductory or concluding sentences unless they are part of the intended output.
+Provide a direct answer without additional explanations or commentary.
+Generate the final answer bracketed with <ans> and </ans>.
 
-2. STOP CONDITION:
-    - Stop IMMEDIATELY after `</ans>`.
-    - DO NOT generate any additional output or comments after the completion.
-    - DO NOT write any examples of the original task after answering it.
-
-3. FAILURE CONDITION:
-    - If any of the above constraints are violated, the output will be considered INVALID and REJECTED.
-
-### INPUT ###
+INPUT:
 {INPUT}
 
-### RESPONSE ###
+RESPONSE:
 """
