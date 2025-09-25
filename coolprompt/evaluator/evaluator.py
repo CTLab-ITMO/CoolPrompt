@@ -34,7 +34,6 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
-        sample_answers_size: int = None,
     ) -> float:
         """
         Evaluate the model on a dataset
