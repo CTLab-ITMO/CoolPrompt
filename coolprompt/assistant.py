@@ -4,6 +4,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
+from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
@@ -28,6 +29,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 )
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
+from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
 
 
 class PromptTuner:
@@ -44,31 +46,39 @@ class PromptTuner:
 
     def __init__(
         self,
-        model: BaseLanguageModel = None,
+        target_model: BaseLanguageModel = None,
+        system_model: BaseLanguageModel = None,
         logs_dir: str | Path = None,
     ) -> None:
         """Initializes the tuner with a LangChain-compatible language model.
 
         Args:
-            model (BaseLanguageModel): Any LangChain BaseLanguageModel instance
-                which supports invoke(str) -> str.
-                Will use DefaultLLM if not provided.
+            target_model (BaseLanguageModel): Any LangChain BaseLanguageModel
+                instance which supports invoke(str) -> str. Used for
+                optimization processes. Will use DefaultLLM if not provided.
+            system_model (BaseLanguageModel): Any LangChain BaseLanguageModel
+                instance which supports invoke(str) -> str. Used for
+                synthetic data generation, feedback generation, etc.
+                Will use the `target_model` if not provided.
             logs_dir (str | Path, optional): logs saving directory.
                 Defaults to None.
         """
         setup_logging(logs_dir)
-        self._model = model or DefaultLLM.init()
+        self._target_model = target_model or DefaultLLM.init()
+        self._system_model = system_model or self._target_model
         self.init_metric = None
         self.init_prompt = None
         self.final_metric = None
         self.final_prompt = None
 
-        logger.info(f"Validating the model: {self._model.__class__.__name__}")
-        validate_model(self._model)
-        logger.info(
-            "PromptTuner successfully initialized with "
-            f"model: {self._model.__class__.__name__}"
-        )
+        logger.info("Validating the target model")
+        validate_model(self._target_model)
+
+        if self._system_model is not self._target_model:
+            logger.info("Validating the system model")
+            validate_model(self._system_model)
+
+        logger.info("PromptTuner successfully initialized")
 
     def get_task_prompt_template(self, task: str, method: str) -> str:
         """Returns the prompt template for the given task.
@@ -125,7 +135,7 @@ class PromptTuner:
     def run(
         self,
         start_prompt: str,
-        task: str = "generation",
+        task: str = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
         method: str = "hype",
@@ -193,6 +203,10 @@ class PromptTuner:
             validate_verbose(verbose)
             set_verbose(verbose)
 
+        task_detector = TaskDetector(self._system_model)
+        if task is None:
+            task = task_detector.generate(start_prompt)
+
         logger.info("Validating args for PromptTuner running")
         task, method = validate_run(
             start_prompt,
@@ -204,15 +218,21 @@ class PromptTuner:
             validation_size,
         )
         metric = validate_and_create_metric(task, metric)
-        evaluator = Evaluator(self._model, task, metric)
+        evaluator = Evaluator(self._target_model, task, metric)
         final_prompt = ""
+        generator = SyntheticDataGenerator(self._system_model)
 
         if dataset is None:
-            generator = SyntheticDataGenerator(self._model)
             dataset, target, problem_description = generator.generate(
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
+                num_samples=40
+            )
+
+        if problem_description is None:
+            problem_description = generator._generate_problem_description(
+                prompt=start_prompt
             )
 
         dataset_split = self._get_dataset_split(
@@ -237,10 +257,10 @@ class PromptTuner:
             logger.debug(f"Additional kwargs: {kwargs}")
 
         if method is Method.HYPE:
-            final_prompt = hype_optimizer(self._model, start_prompt)
+            final_prompt = hype_optimizer(self._target_model, start_prompt)
         elif method is Method.REFLECTIVE:
             final_prompt = reflectiveprompt(
-                model=self._model,
+                model=self._target_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 problem_description=problem_description,
@@ -249,7 +269,7 @@ class PromptTuner:
             )
         elif method is Method.DISTILL:
             final_prompt = distillprompt(
-                model=self._model,
+                model=self._target_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
@@ -259,7 +279,7 @@ class PromptTuner:
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
             prompt=final_prompt,
-            rule=LanguageRule(self._model),
+            rule=LanguageRule(self._system_model),
             start_prompt=start_prompt,
         )
 
@@ -287,4 +307,13 @@ class PromptTuner:
         self.final_prompt = final_prompt
 
         logger.info("=== Prompt Optimization Completed ===")
+
+        prompt_assistant = PromptAssistant(self._target_model)
+        assistant_feedback = prompt_assistant.get_feedback(
+            start_prompt, final_prompt
+        )
+
+        logger.info("=== Assistant's feedback ===")
+        logger.info(assistant_feedback)
+
         return final_prompt

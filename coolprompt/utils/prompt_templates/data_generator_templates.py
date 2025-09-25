@@ -23,12 +23,14 @@ Output format is the JSON structure below:
    "examples": [
        {{
           "input": "Textual input",
-          "output": "Ground-truth label"
+          "output": "Ground-truth label",
+          "id": 1
        }},
        ...
        {{
           "input": "Textual input",
-          "output": "Ground-truth label"
+          "output": "Ground-truth label",
+          "id": {num_samples}
        }}
    ]
 }}
@@ -48,12 +50,14 @@ Output format is the JSON structure below:
    "examples": [
        {{
           "input": "Textual input",
-          "output": "Correct model output"
+          "output": "Correct model output",
+          "id": 1
        }},
        ...
        {{
           "input": "Textual input",
-          "output": "Correct model output"
+          "output": "Correct model output",
+          "id": {num_samples}
        }}
    ]
 }}
