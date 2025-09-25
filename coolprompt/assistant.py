@@ -73,7 +73,6 @@ class PromptTuner:
         self.init_prompt = None
         self.final_metric = None
         self.final_prompt = None
-        self.answer_samples = None
 
         logger.info("Validating the target model")
         validate_model(self._target_model)
@@ -148,7 +147,6 @@ class PromptTuner:
         validation_size: float = 0.25,
         train_as_test: bool = False,
         verbose: int = 1,
-        sample_answers: bool = False,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -301,12 +299,11 @@ class PromptTuner:
             targets=dataset_split[3],
             template=template,
         )
-        self.final_metric, self.answer_samples = evaluator.evaluate(
+        self.final_metric = evaluator.evaluate(
             prompt=final_prompt,
             dataset=dataset_split[1],
             targets=dataset_split[3],
             template=template,
-            sample_answers_size=3
         )
         logger.info(
             f"Initial {metric} score: {self.init_metric}, "
