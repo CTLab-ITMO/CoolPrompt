@@ -316,10 +316,12 @@ class PromptTuner:
         logger.info("=== Prompt Optimization Completed ===")
 
         prompt_assistant = PromptAssistant(self._target_model)
-        assistant_feedback = prompt_assistant.get_feedback(
-            start_prompt, final_prompt
+        assistant_feedback = correct(
+            prompt=prompt_assistant.get_feedback(start_prompt, final_prompt),
+            rule=LanguageRule(self._system_model),
+            start_prompt=start_prompt,
         )
-
+        
         logger.info("=== Assistant's feedback ===")
         logger.info(assistant_feedback)
 
