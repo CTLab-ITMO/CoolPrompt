@@ -38,12 +38,7 @@ class DefaultLLM:
             BaseLanguageModel:
                 Initialized LangChain-compatible language model instance.
         """
-        logger.info("Initializing default model")
-        logger.debug(
-            "Updating default model params with "
-            f"langchain config: {langchain_config} "
-            f"and vllm_engine_config: {vllm_engine_config}"
-        )
+        logger.info(f"Initializing default model: {DEFAULT_MODEL_NAME}")
         generation_and_model_config = DEFAULT_MODEL_PARAMETERS.copy()
         if langchain_config is not None:
             generation_and_model_config.update(langchain_config)

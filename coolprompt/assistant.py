@@ -36,10 +36,7 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
     TEMPLATE_MAP = {
-        (
-            Task.CLASSIFICATION,
-            Method.HYPE,
-        ): CLASSIFICATION_TASK_TEMPLATE_HYPE,
+        (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
         (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
@@ -69,10 +66,15 @@ class PromptTuner:
         setup_logging(logs_dir)
         self._target_model = target_model or DefaultLLM.init()
         self._system_model = system_model or self._target_model
+
         self.init_metric = None
         self.init_prompt = None
         self.final_metric = None
         self.final_prompt = None
+        self.assistant_feedback = None
+
+        self.synthetic_dataset = None
+        self.synthetic_target = None
 
         logger.info("Validating the target model")
         validate_model(self._target_model)
@@ -146,6 +148,8 @@ class PromptTuner:
         problem_description: Optional[str] = None,
         validation_size: float = 0.25,
         train_as_test: bool = False,
+        generate_num_samples: int = 10,
+        feedback: bool = True,
         verbose: int = 1,
         **kwargs,
     ) -> str:
@@ -176,6 +180,11 @@ class PromptTuner:
                 the train and the test dataset at the same time or not.
                 If sets to True, the validation_size parameter will be ignored.
                 Defaults to False.
+            generate_num_samples (int):
+                A number of dataset and target samples to generate with PromptAssistant
+            feedback (bool):
+                PromptAssistant interpretation of optimization results
+                Defaults to True.
             verbose (int): Parameter for logging configuration:
                 0 - no logging
                 1 - steps logging
@@ -230,8 +239,10 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
-                num_samples=40
+                num_samples=generate_num_samples
             )
+            self.synthetic_dataset = dataset
+            self.synthetic_target = target
 
         if problem_description is None:
             problem_description = generator._generate_problem_description(
@@ -315,12 +326,13 @@ class PromptTuner:
 
         logger.info("=== Prompt Optimization Completed ===")
 
-        prompt_assistant = PromptAssistant(self._target_model)
-        assistant_feedback = prompt_assistant.get_feedback(
-            start_prompt, final_prompt
-        )
+        if feedback:
+            prompt_assistant = PromptAssistant(self._target_model)
+            self.assistant_feedback = correct(
+                prompt=prompt_assistant.get_feedback(start_prompt, final_prompt),
+                rule=LanguageRule(self._system_model),
+                start_prompt=start_prompt,
+            )
 
-        logger.info("=== Assistant's feedback ===")
-        logger.info(assistant_feedback)
-
-        return final_prompt
+            logger.info("=== Assistant's feedback ===")
+            logger.info(self.assistant_feedback)
