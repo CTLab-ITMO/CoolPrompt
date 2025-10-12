@@ -1,4 +1,5 @@
 accelerate>=1.10.0
+bert-score>=0.3.13
 evaluate>=0.4.3
 tqdm>=4.67.1
 vllm>=0.7.3

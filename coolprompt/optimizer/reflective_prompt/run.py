@@ -36,7 +36,7 @@ def reflectiveprompt(
     )
     args = {
         "population_size": 10,
-        "num_epochs": 10,
+        "num_epochs": 5,
         "output_path": "./reflectiveprompt_outputs",
         "use_cache": True,
     }
