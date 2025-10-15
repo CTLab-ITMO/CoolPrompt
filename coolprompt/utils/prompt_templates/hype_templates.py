@@ -26,12 +26,15 @@ HYPE_PROMPT_TEMPLATE = (
 CLASSIFICATION_TASK_TEMPLATE_HYPE = """{PROMPT}
 
 Answer using exactly one label from [{LABELS}].
+You must use the label exactly as it appears in the list, do not modify or reformat the label and do not use labels not present in the list.
 Generate the final answer bracketed with <ans> and </ans>.
 Examples:
 1. Labels are [(A), (B), (C)] and you chose the first option
        Output will be: <ans>(A)</ans>
 2. Labels are [A, B, C] and you chose the first option
        Output will be: <ans>A</ans>
+3. Labels are [1, 2, 3] and you chose the first option
+       Output will be: <ans>1</ans>
 
 Input:
 {INPUT}
