@@ -2,7 +2,6 @@ accelerate>=1.10.0
 bert-score>=0.3.13
 evaluate>=0.4.3
 tqdm>=4.67.1
-vllm>=0.7.3
 urllib3>=2.3.0
 nltk>=3.9.1
 dirtyjson>=1.0.8
