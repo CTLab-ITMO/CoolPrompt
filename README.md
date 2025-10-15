@@ -35,7 +35,7 @@ CoolPrompt is a framework for automative prompting creation and optimization.
 <p align="center">
     <picture>
     <source srcset="docs/images/coolprompt_scheme.png">
-    <img alt="CoolPrompt Scheme" width="40%" height="40%">
+    <img alt="CoolPrompt Scheme" width="100%" height="100%">
     </picture>
 </p>
 
