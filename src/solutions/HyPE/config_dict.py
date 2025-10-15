@@ -9,10 +9,21 @@ from src.utils.load_dataset_coolprompt import (
     ag_news_preproc,
     xsum,
     xsum_preproc,
+    sst2,
+    sst2_preproc,
 )
 
 
 config_dict = {
+    "sst2": {
+        "start_prompt": "Please perform a sentiment classification task",
+        "task": "classification",
+        "metric": "f1",
+        "preproc": sst2_preproc,
+        "data": sst2,
+        "test_name": "test",
+        "problem_description": "sentiment classification",
+    },
     "squad_v2": {
         "start_prompt": "Given a context answer on the question.",
         "task": "generation",
