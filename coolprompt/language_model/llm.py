@@ -6,7 +6,7 @@ Example:
     >>> response = llm.invoke("Hello!")
 """
 
-from langchain_community.llms import VLLM
+from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.default import (
@@ -16,14 +16,14 @@ from coolprompt.utils.default import (
 
 
 class DefaultLLM:
-    """Default LangChain-compatible LLM using vLLM engine."""
+    """Default LangChain-compatible LLM using transformers."""
 
     @staticmethod
     def init(
         langchain_config: dict[str, any] | None = None,
         vllm_engine_config: dict[str, any] | None = None,
     ) -> BaseLanguageModel:
-        """Initialize the vLLM-powered LangChain LLM.
+        """Initialize the transformers-powered LangChain LLM.
 
         Args:
             langchain_config (dict[str, Any], optional):
@@ -38,20 +38,14 @@ class DefaultLLM:
             BaseLanguageModel:
                 Initialized LangChain-compatible language model instance.
         """
-        logger.info("Initializing default model")
-        logger.debug(
-            "Updating default model params with "
-            f"langchain config: {langchain_config} "
-            f"and vllm_engine_config: {vllm_engine_config}"
-        )
+        logger.info(f"Initializing default model: {DEFAULT_MODEL_NAME}")
         generation_and_model_config = DEFAULT_MODEL_PARAMETERS.copy()
         if langchain_config is not None:
             generation_and_model_config.update(langchain_config)
 
-        return VLLM(
-            model=DEFAULT_MODEL_NAME,
-            trust_remote_code=True,
-            dtype="float16",
-            vllm_kwargs=vllm_engine_config,
-            **generation_and_model_config,
+        llm = HuggingFacePipeline.from_model_id(
+            model_id=DEFAULT_MODEL_NAME,
+            task="text-generation",
+            pipeline_kwargs=generation_and_model_config
         )
+        return ChatHuggingFace(llm=llm)

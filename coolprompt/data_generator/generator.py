@@ -62,7 +62,12 @@ class SyntheticDataGenerator:
         output = structured_model.invoke(request)
         if isinstance(output, AIMessage):
             output = output.content
-        return getattr(output, field_name)
+
+        try:
+            output = getattr(output, field_name)
+        except Exception:
+            output = output[field_name]
+        return output
 
     def _generate_problem_description(self, prompt: str) -> str:
         """Generates problem description based on given user prompt
@@ -121,7 +126,7 @@ class SyntheticDataGenerator:
         prompt: str,
         task: Task,
         problem_description: Optional[str] = None,
-        num_samples: int = 20,
+        num_samples: int = 8,
     ) -> Tuple[List[str], List[str], str]:
         """Generates synthetic dataset
         based on given user prompt, optimization task
@@ -140,7 +145,7 @@ class SyntheticDataGenerator:
                 Defaults to None
             num_samples (int):
                 number of samples in dataset to generate
-                Defaults to 20
+                Defaults to 8
 
         Returns:
             Tuple[List[str], List[str], str]:

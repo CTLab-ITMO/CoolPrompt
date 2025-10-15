@@ -52,7 +52,12 @@ class TaskDetector:
         output = structured_model.invoke(request)
         if isinstance(output, AIMessage):
             output = output.content
-        return getattr(output, field_name)
+
+        try:
+            output = getattr(output, field_name)
+        except Exception:
+            output = output[field_name]
+        return output
 
     def generate(
         self,

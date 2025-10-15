@@ -28,7 +28,7 @@ class HFEvaluateMetric(ABC):
         self,
         outputs: list[str | int],
         targets: list[str | int],
-        dataset: Optional[list[str]] = None
+        dataset: Optional[list[str]] = None,
     ) -> float:
         """Compute metric value from preprocessed model answers.
 
@@ -291,10 +291,10 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
     def __init__(self):
         super().__init__(self._get_name())
         self._compute_kwargs_func = lambda outputs, targets: {
-            "lang": define_lang(outputs, targets)}
+            "model_type": 'bert-base-multilingual-cased'}
         self._return_parameter = "f1"
 
-    def _compute_raw(self, outputs, targets):
+    def _compute_raw(self, outputs, targets, dataset):
         f1_list = super()._compute_raw(outputs, targets)
         return sum(f1_list) / len(f1_list)
 
