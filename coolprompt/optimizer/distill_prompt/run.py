@@ -14,7 +14,7 @@ def distillprompt(
     evaluator: Evaluator,
     initial_prompt: str,
     *,
-    num_epochs: int = 10,
+    num_epochs: int = 5,
     output_path: str = './distillprompt_outputs',
     use_cache: bool = True,
 ) -> str:
