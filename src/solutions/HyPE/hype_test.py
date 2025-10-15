@@ -59,7 +59,10 @@ def run_hype_dataset() -> dict[str, Any]:
     result = {}
 
     for task, cfg in config_dict.items():
-        data_train, data_val = cfg["data"]["train"], cfg["data"]["validation"]
+        data_train, data_val = (
+            cfg["data"]["train"],
+            cfg["data"][cfg["test_name"]],
+        )
         preproc_data = cfg["preproc"](data_val)
         data_sample = sample(preproc_data, sample_size=100)
         dataset, target = list(data_sample["input_data"]), list(
@@ -86,7 +89,9 @@ def run_hype_dataset() -> dict[str, Any]:
                 "final_metric": pt.final_metric,
             },
             "prompt": final_prompt,
-            "samples": pt.answer_samples,
+            "samples": (
+                pt.answer_samples if hasattr(pt, "answer_samples") else None
+            ),
         }
 
     return result
