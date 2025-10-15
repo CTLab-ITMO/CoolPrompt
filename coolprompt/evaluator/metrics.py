@@ -1,19 +1,49 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 from evaluate import load
+from langchain_core.messages.ai import AIMessage
+from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
+from coolprompt.utils.language_detection import detect_language
+from coolprompt.utils.arithmetics import clip, mean, extract_number_from_text
 
-CLASSIFICATION_METRICS = {
-    "accuracy",
-    "f1",
-}
 
-GENERATION_METRICS = {
-    "bleu",
-    "rouge",
-    "meteor",
-}
+class HFEvaluateMetric(ABC):
+
+    def __init__(self, name: str) -> None:
+        """Initialize metric with specified evaluate library metric name.
+
+        Args:
+            name (str): Name of metric to load from evaluate library
+        """
+
+        self._return_parameter = name
+        self._metric = load(name)
+        self._compute_kwargs_func = lambda outputs, targets: {}
+        super().__init__()
+
+    def _compute_raw(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> float:
+        """Compute metric value from preprocessed model answers.
+
+        Args:
+            outputs (list[str|int]): Model predictions (text for generation,
+            labels for classification)
+            targets (list[str|int]): Ground truth labels
+        Returns:
+            float: Computed metric value
+        """
+
+        return self._metric.compute(
+            predictions=outputs, references=targets,
+            **self._compute_kwargs_func(outputs, targets)
+        )[self._return_parameter]
 
 
 class BaseMetric(ABC):
@@ -30,19 +60,17 @@ class BaseMetric(ABC):
 
     ANS_TAGS = ("<ans>", "</ans>")
 
-    def __init__(self, name: str) -> None:
-        """Initialize metric with specified evaluate library metric name.
+    def __init__(self) -> None:
+        """Initialize metric"""
 
-        Args:
-            name (str): Name of metric to load from evaluate library
-        """
+        super().__init__()
 
-        self._name = name
-        self._metric = load(name)
-        self._compute_kwargs = {}
-
+    @abstractmethod
     def _compute_raw(
-        self, outputs: list[str | int], targets: list[str | int]
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None
     ) -> float:
         """Compute metric value from preprocessed model answers.
 
@@ -53,10 +81,7 @@ class BaseMetric(ABC):
         Returns:
             float: Computed metric value
         """
-
-        return self._metric.compute(
-            predictions=outputs, references=targets, **self._compute_kwargs
-        )[self._name]
+        pass
 
     @abstractmethod
     def _encode_labels(
@@ -76,7 +101,10 @@ class BaseMetric(ABC):
         pass
 
     def compute(
-        self, outputs: list[str | int], targets: list[str | int]
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None
     ) -> float:
         """Compute metric value from text model outputs
 
@@ -100,15 +128,17 @@ class BaseMetric(ABC):
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels, targets
         )
-        return self._compute_raw(encoded_output_labels, encoded_targets)
+        return self._compute_raw(
+            encoded_output_labels, encoded_targets, dataset
+        )
 
     def __str__(self) -> str:
-        return self._name
+        return self._get_name()
 
     def __eq__(self, other: object) -> bool:
         if type(self) is not type(other):
             return False
-        return self._name == other._name
+        return self._get_name() == other._get_name()
 
 
 class ClassificationMetric(BaseMetric):
@@ -121,16 +151,11 @@ class ClassificationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = -1
 
-    def __init__(self, name: str):
-        """Initialize metric with specified evaluate library metric name.
+    def __init__(self):
+        """Initialize metric"""
 
-        Args:
-            name (str): Name of metric to load from evaluate library
-        """
-        super().__init__(name)
+        super().__init__()
         self.label_to_id = None
-        if name == "f1":
-            self._compute_kwargs = {"average": "macro"}
 
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
@@ -178,16 +203,10 @@ class GenerationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = ""
 
-    def __init__(self, name: str):
-        """Initialize metric with specified evaluate library metric name.
+    def __init__(self):
+        """Initialize metric"""
 
-        Args:
-            name (str): Name of metric to load from evaluate library
-        """
-
-        super().__init__(name)
-        if name == "rouge":
-            self._name = "rougeL"
+        super().__init__()
 
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
@@ -204,7 +223,156 @@ class GenerationMetric(BaseMetric):
         return output_labels, targets
 
 
-def validate_and_create_metric(task: Task, metric: str | None) -> str:
+class AccuracyMetric(HFEvaluateMetric, ClassificationMetric):
+    """Accuracy metric for classification tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "accuracy"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+
+class F1Metric(HFEvaluateMetric, ClassificationMetric):
+    """F1 metric for classification tasks with macro averaging."""
+
+    @staticmethod
+    def _get_name():
+        return "f1"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+        self._compute_kwargs_func = lambda outputs, targets: {
+            "average": "macro"}
+
+
+class BleuMetric(HFEvaluateMetric, GenerationMetric):
+    """BLEU metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "bleu"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+
+class RougeMetric(HFEvaluateMetric, GenerationMetric):
+    """ROUGE metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "rouge"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+        self._return_parameter = "rougeL"
+
+
+class MeteorMetric(HFEvaluateMetric, GenerationMetric):
+    """METEOR metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "meteor"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+
+class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
+    """BertScore metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "bertscore"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+        self._compute_kwargs_func = lambda outputs, targets: {
+            "model_type": 'bert-base-multilingual-cased'}
+        self._return_parameter = "f1"
+
+    def _compute_raw(self, outputs, targets, dataset):
+        f1_list = super()._compute_raw(outputs, targets)
+        return sum(f1_list) / len(f1_list)
+
+
+class GEvalMetric(GenerationMetric):
+    """GEval metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "geval"
+
+    def __init__(
+            self,
+            model: BaseLanguageModel,
+            prompt_template: str,
+            metric_ceil: int = 10):
+        super().__init__(self._get_name())
+        self.model = model
+        self.prompt_template = prompt_template
+        self.metric_ceil = metric_ceil
+
+    def _compute_raw(self, outputs, targets, dataset):
+        requests = [
+            self.prompt_template.format(
+                metric_ceil=self.metric_ceil,
+                request=request,
+                responce=responce
+            ) for request, responce in zip(dataset, outputs)
+        ]
+
+        answers = self.model.batch(requests)
+
+        answers = [(int(a.content) if a.content.isdigit() else 0)
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
+
+        answers = [clip(ans, 0, self.metric_ceil) / self.metric_ceil
+                   for ans in answers]
+
+        return sum(answers) / len(answers)
+
+
+class ExactMatchMetric(GenerationMetric):
+    """EM Metric for generation tasks."""
+
+    @staticmethod
+    def _get_name():
+        return "em"
+
+    def __init__(self):
+        super().__init__(self._get_name())
+
+    def _compute_raw(self, outputs, targets):
+        targets = [extract_number_from_text(item) for item in targets]
+        outputs = [extract_number_from_text(item) for item in outputs]
+        return float(mean([o == t for o, t in zip(outputs, targets)]))
+
+
+def define_lang(outputs, targets):
+    langs = [detect_language(target) for target in targets]
+    return max(set(langs), key=langs.count)
+
+
+CLASSIFICATION_METRIC_NAME_MAPPING = {
+    metric._get_name(): metric
+    for metric in ClassificationMetric.__subclasses__()
+}
+
+GENERATION_METRIC_NAME_MAPPING = {
+    metric._get_name(): metric for metric in GenerationMetric.__subclasses__()
+}
+
+
+def validate_and_create_metric(
+    task: Task,
+    metric: str | None,
+    model: BaseLanguageModel | None = None
+) -> BaseMetric:
     """
     Validates given metric in order to correspond the given task.
     Returns the given metric name back if the validation succeeded.
@@ -212,6 +380,7 @@ def validate_and_create_metric(task: Task, metric: str | None) -> str:
     Args:
         task (Task): The type of task, either "classification" or "generation".
         metric (str): Name of the metric to validate.
+        model (BaseLanguageModel): model to use for evaluation (for GEval)
     Returns:
         str: the name of the metric.
     Raises:
@@ -224,24 +393,37 @@ def validate_and_create_metric(task: Task, metric: str | None) -> str:
         metric = get_default_metric(task)
     match task:
         case Task.CLASSIFICATION:
-            if metric in CLASSIFICATION_METRICS:
-                return ClassificationMetric(metric)
+            if metric in CLASSIFICATION_METRIC_NAME_MAPPING.keys():
+                return CLASSIFICATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(CLASSIFICATION_METRICS)}."
+                f"Available metrics: {', '.join(
+                    CLASSIFICATION_METRIC_NAME_MAPPING.keys())}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
         case Task.GENERATION:
-            if metric in GENERATION_METRICS:
-                return GenerationMetric(metric)
+            if metric == "geval":
+                if model is None:
+                    error_msg = "Model for GEval metric must not be None"
+                    logger.error(error_msg)
+                    raise ValueError(error_msg)
+                return GENERATION_METRIC_NAME_MAPPING[metric](model)
+            if metric in GENERATION_METRIC_NAME_MAPPING.keys():
+                return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(GENERATION_METRICS)}."
+                f"Available metrics: {', '.join(
+                    GENERATION_METRIC_NAME_MAPPING.keys())}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
-    return metric
+    error_msg = (
+        f"Invalid task: {task}"
+        f"Available tasks: classification, generation"
+    )
+    logger.error(error_msg)
+    raise ValueError(error_msg)
 
 
 def get_default_metric(task: Task) -> str:

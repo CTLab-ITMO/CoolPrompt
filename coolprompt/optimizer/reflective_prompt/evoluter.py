@@ -21,7 +21,7 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE,
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
-from coolprompt.utils.parsing import extract_answer
+from coolprompt.utils.parsing import extract_answer, extract_json
 
 
 class ReflectiveEvoluter:
@@ -181,10 +181,14 @@ class ReflectiveEvoluter:
             PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
         )
         answer = self._llm_query([request])[0]
-        prompts = json.loads(answer)["prompts"]
+        prompts = extract_json(answer)["prompts"]
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
+        initial_population[-1] = Prompt(
+            self.initial_prompt,
+            origin=PromptOrigin.MANUAL
+        )
         self._evaluation(initial_population)
         initial_population = self._reranking(initial_population)
         return initial_population
@@ -515,9 +519,6 @@ class ReflectiveEvoluter:
         )
 
         while self.iteration < self.num_epochs:
-            if self.elitist is not None and self.elitist not in population:
-                logger.debug("Elitist should always live")
-                population = np.append(population, np.array([self.elitist]))
             parent_population = self._selection(population)
 
             short_term_reflection_tuple = self._short_term_reflection(
@@ -547,17 +548,26 @@ class ReflectiveEvoluter:
             self._update_elitist(population)
             population = self._survive(population, temperature=1e-1)
 
+            if self.elitist is not None and self.elitist not in population:
+                logger.debug("Elitist should always live")
+                population = np.append(population, np.array([self.elitist]))
+
             self._update_iter(population)
 
-        logger.info(f"BEST SCORE: {self.best_score_overall}")
-        logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
+        logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 
         population = self._reranking(population)
         population = population[:3]
         population = np.append(population, self.elitist)
         self._evaluation(population, split="validation")
+        population = self._reranking(population)
         self._cache_population(
             population, self._make_output_path("best_prompts_infer.yaml")
         )
-        self._update_elitist(population)
-        return self.elitist.text
+        self.elitist = population[0]
+        self.best_prompt_overall = self.elitist.text
+        self.best_score_overall = self.elitist.score
+        logger.info(f"BEST VALIDATION SCORE: {self.best_score_overall}")
+        logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
+
+        return self.best_prompt_overall
