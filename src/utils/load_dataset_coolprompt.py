@@ -6,6 +6,7 @@ gsm8k = load_dataset("openai/gsm8k", "main")
 common_gen = load_dataset("allenai/common_gen")
 ag_news = load_dataset("fancyzhx/ag_news")
 xsum = load_dataset("yairfeldman/xsum")
+sst2 = load_dataset("stanfordnlp/sst2")
 
 ag_labels = {
     "World": 0,
@@ -13,6 +14,18 @@ ag_labels = {
     "Business": 2,
     "Sci/Tech": 3,
 }
+
+
+def sst2_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    data = data.rename(columns={"sentence": "input_data", "label": "target"})
+    if size:
+        data = data.head(size)
+
+    print(data["target"].unique())
+
+    return data
 
 
 def squad_v2_preproc(sample, size: int = None):
@@ -74,7 +87,7 @@ def xsum_preproc(sample, size: int = None):
     return data
 
 
-def load_dataset(name: str, size: int = None):
+def load_dataset_coolprompt(name: str, size: int = None):
     def get_data():
         match name:
             case "squad_v2":
@@ -87,6 +100,8 @@ def load_dataset(name: str, size: int = None):
                 return ag_news_preproc(ag_news, size)
             case "xsum":
                 return xsum_preproc(xsum, size)
+            case "sst2":
+                return sst2_preproc(sst2, size)
 
     data = get_data()
     return list(data["input_data"]), list(data["target"])
