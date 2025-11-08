@@ -8,6 +8,12 @@ from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 from coolprompt.utils.language_detection import detect_language
 from coolprompt.utils.arithmetics import clip, mean, extract_number_from_text
+from coolprompt.utils.prompt_templates.geval_templates import (
+    ACCURACY_QA_TEMPLATE, COHERENCE_TEMPLATE, 
+    FLUENCY_TEMPLATE, RELEVANCE_TEMPLATE
+)
+import re
+    
 
 
 class HFEvaluateMetric(ABC):
@@ -309,32 +315,60 @@ class GEvalMetric(GenerationMetric):
     def __init__(
             self,
             model: BaseLanguageModel,
-            prompt_template: str,
+            geval_criteria: str | list[str] = "relevance",
+            prompt_template: Optional[str] = None,
+            custom_templates: Optional[dict[str, str]] = None,
             metric_ceil: int = 10):
-        super().__init__(self._get_name())
+        super().__init__()
         self.model = model
         self.prompt_template = prompt_template
         self.metric_ceil = metric_ceil
 
+        self.prompt_templates = {
+            "accuracy": ACCURACY_QA_TEMPLATE,
+            "coherence": COHERENCE_TEMPLATE,
+            "fluency": FLUENCY_TEMPLATE,
+            "relevance": RELEVANCE_TEMPLATE,
+        }
+
+        if custom_templates:
+            self.prompt_templates.update(custom_templates)
+
+        if isinstance(geval_criteria, str):
+            geval_criteria = [geval_criteria]
+        self.criteria = geval_criteria
+        
+        self.templates = {
+            crit: self.prompt_templates[crit]
+            for crit in self.criteria
+        }
+
     def _compute_raw(self, outputs, targets, dataset):
-        requests = [
-            self.prompt_template.format(
-                metric_ceil=self.metric_ceil,
-                request=request,
-                responce=responce
-            ) for request, responce in zip(dataset, outputs)
-        ]
+        scores = []
+        for _, template in self.templates.items():
+            requests = [
+                template.format(
+                    metric_ceil=self.metric_ceil,
+                    request=request,
+                    response=response
+                ) for request, response in zip(dataset, outputs)
+            ]
+            answers = self.model.batch(requests)
 
-        answers = self.model.batch(requests)
+            parsed = []
+            for a in answers:
+                if isinstance(a, AIMessage):
+                    content = a.content if isinstance(a.content, str) else str(a.content)
+                    match = re.search(r'\d+', content)
+                    parsed.append(int(match.group()) if match else 0)
+                else:
+                    parsed.append(0)
 
-        answers = [(int(a.content) if a.content.isdigit() else 0)
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+            normalized = [clip(ans, 0, self.metric_ceil) / self.metric_ceil
+                         for ans in parsed]
+            scores.append(mean(normalized))
 
-        answers = [clip(ans, 0, self.metric_ceil) / self.metric_ceil
-                   for ans in answers]
-
-        return sum(answers) / len(answers)
+        return mean(scores)
 
 
 class ExactMatchMetric(GenerationMetric):
@@ -371,7 +405,8 @@ GENERATION_METRIC_NAME_MAPPING = {
 def validate_and_create_metric(
     task: Task,
     metric: str | None,
-    model: BaseLanguageModel | None = None
+    model: BaseLanguageModel | None = None,
+    **kwargs
 ) -> BaseMetric:
     """
     Validates given metric in order to correspond the given task.
@@ -408,7 +443,12 @@ def validate_and_create_metric(
                     error_msg = "Model for GEval metric must not be None"
                     logger.error(error_msg)
                     raise ValueError(error_msg)
-                return GENERATION_METRIC_NAME_MAPPING[metric](model)
+                return GENERATION_METRIC_NAME_MAPPING[metric](
+                    model=model,
+                    geval_criteria=kwargs.get("geval_criteria", "relevance"),
+                    custom_templates=kwargs.get("geval_custom_templates"),
+                    metric_ceil=kwargs.get("geval_metric_ceil", 10)
+                )
             if metric in GENERATION_METRIC_NAME_MAPPING.keys():
                 return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (

@@ -151,6 +151,9 @@ class PromptTuner:
         generate_num_samples: int = 10,
         feedback: bool = True,
         verbose: int = 1,
+        geval_criteria: str | list[str] = "relevance",
+        geval_custom_templates: Optional[dict[str, str]] = None, 
+        geval_metric_ceil: int = 10,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -189,6 +192,18 @@ class PromptTuner:
                 0 - no logging
                 1 - steps logging
                 2 - steps and prompts logging
+            geval_criteria (str | list[str]): Criteria for G‑Eval judge when
+                metric == 'geval'. Accepts a single criterion (e.g., "relevance")
+                or a list of criteria (e.g., ["relevance", "fluency"]). Built‑in
+                keys: "accuracy", "coherence", "fluency", "relevance". Custom
+                names are supported when paired with `geval_custom_templates`.
+            geval_custom_templates (dict[str, str] | None): Optional mapping
+                from criterion name to a custom judge prompt template. Each
+                template must include placeholders: `{metric_ceil}`, `{request}`
+                and `{response}`; the judge must return ONLY a single number.
+            geval_metric_ceil (int): Maximum integer score expected from the
+                judge (1..ceil). Judge outputs are clipped to [0, ceil] and
+                normalized to [0, 1] for averaging.
             **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
@@ -229,7 +244,16 @@ class PromptTuner:
             problem_description,
             validation_size,
         )
-        metric = validate_and_create_metric(task, metric)
+
+        metric = validate_and_create_metric(
+            task, 
+            metric, 
+            model=self._system_model if metric == "geval" else None,
+            geval_criteria=geval_criteria,
+            geval_custom_templates=geval_custom_templates,
+            geval_metric_ceil=geval_metric_ceil
+        )
+        
         evaluator = Evaluator(self._target_model, task, metric)
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)

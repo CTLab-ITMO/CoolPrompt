@@ -1,7 +1,7 @@
 import os
 import json
 import yaml
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Optional
 
 import numpy as np
 import statistics
@@ -67,7 +67,7 @@ class ReflectiveEvoluter:
         validation_dataset: List[str],
         validation_targets: List[str],
         problem_description: str,
-        initial_prompt: str = None,
+    initial_prompt: Optional[str] = None,
         population_size: int = 10,
         num_epochs: int = 10,
         output_path: str = "./reflectiveprompt_outputs",
