@@ -158,8 +158,9 @@ class PromptTuner:
         geval_evaluation_steps: Optional[list[str]] = None,
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
+        return_final_prompt: bool = True,
         **kwargs,
-    ) -> str:
+    ) -> str | None:
         """Optimizes prompts using provided model.
 
         Args:
@@ -388,3 +389,5 @@ class PromptTuner:
 
             logger.info("=== Assistant's feedback ===")
             logger.info(self.assistant_feedback)
+
+        return final_prompt if return_final_prompt else None
