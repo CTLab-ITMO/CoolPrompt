@@ -151,9 +151,13 @@ class PromptTuner:
         generate_num_samples: int = 10,
         feedback: bool = True,
         verbose: int = 1,
-        geval_criteria: str | list[str] = "relevance",
-        geval_custom_templates: Optional[dict[str, str]] = None, 
-        geval_metric_ceil: int = 10,
+        llm_as_judge_criteria: str | list[str] = "relevance",
+        llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
+        llm_as_judge_metric_ceil: int = 10,
+        geval_criteria: Optional[str] = None,
+        geval_evaluation_steps: Optional[list[str]] = None,
+        geval_evaluation_params: Optional[list] = None,
+        geval_strict_mode: bool = False,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -192,18 +196,32 @@ class PromptTuner:
                 0 - no logging
                 1 - steps logging
                 2 - steps and prompts logging
-            geval_criteria (str | list[str]): Criteria for G‑Eval judge when
-                metric == 'geval'. Accepts a single criterion (e.g., "relevance")
+            llm_as_judge_criteria (str | list[str]): Criteria for LLM-as-judge metric when
+                metric == 'llm_as_judge'. Accepts a single criterion (e.g., "relevance")
                 or a list of criteria (e.g., ["relevance", "fluency"]). Built‑in
                 keys: "accuracy", "coherence", "fluency", "relevance". Custom
-                names are supported when paired with `geval_custom_templates`.
-            geval_custom_templates (dict[str, str] | None): Optional mapping
+                names are supported when paired with `llm_as_judge_custom_templates`.
+            llm_as_judge_custom_templates (dict[str, str] | None): Optional mapping
                 from criterion name to a custom judge prompt template. Each
                 template must include placeholders: `{metric_ceil}`, `{request}`
                 and `{response}`; the judge must return ONLY a single number.
-            geval_metric_ceil (int): Maximum integer score expected from the
+            llm_as_judge_metric_ceil (int): Maximum integer score expected from the
                 judge (1..ceil). Judge outputs are clipped to [0, ceil] and
                 normalized to [0, 1] for averaging.
+            geval_criteria (str | None): High-level natural language description
+                of what GEval should evaluate. Mutually exclusive with
+                `geval_evaluation_steps`. If both are provided, GEvalMetric
+                will raise a ValueError.
+            geval_evaluation_steps (list[str] | None): Explicit step-by-step
+                instructions for GEval. If provided, `geval_criteria` must be
+                None.
+            geval_evaluation_params (list | None): Optional list of
+                LLMTestCaseParams controlling which fields of each
+                LLMTestCase are visible to GEval. Defaults to
+                [INPUT, ACTUAL_OUTPUT, EXPECTED_OUTPUT] inside GEvalMetric
+                when left as None.
+            geval_strict_mode (bool): When True, GEval behaves in strict mode
+                (binary pass/fail with threshold forced to 1).
             **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
@@ -246,14 +264,22 @@ class PromptTuner:
         )
 
         metric = validate_and_create_metric(
-            task, 
-            metric, 
-            model=self._system_model if metric == "geval" else None,
+            task,
+            metric,
+            model=(
+                self._system_model
+                if metric in ("llm_as_judge", "geval")
+                else None
+            ),
+            llm_as_judge_criteria=llm_as_judge_criteria,
+            llm_as_judge_custom_templates=llm_as_judge_custom_templates,
+            llm_as_judge_metric_ceil=llm_as_judge_metric_ceil,
             geval_criteria=geval_criteria,
-            geval_custom_templates=geval_custom_templates,
-            geval_metric_ceil=geval_metric_ceil
+            geval_evaluation_steps=geval_evaluation_steps,
+            geval_evaluation_params=geval_evaluation_params,
+            geval_strict_mode=geval_strict_mode,
         )
-        
+
         evaluator = Evaluator(self._target_model, task, metric)
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)
@@ -263,7 +289,7 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
-                num_samples=generate_num_samples
+                num_samples=generate_num_samples,
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target
@@ -353,7 +379,9 @@ class PromptTuner:
         if feedback:
             prompt_assistant = PromptAssistant(self._target_model)
             self.assistant_feedback = correct(
-                prompt=prompt_assistant.get_feedback(start_prompt, final_prompt),
+                prompt=prompt_assistant.get_feedback(
+                    start_prompt, final_prompt
+                ),
                 rule=LanguageRule(self._system_model),
                 start_prompt=start_prompt,
             )

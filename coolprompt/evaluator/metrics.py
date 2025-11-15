@@ -1,23 +1,32 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
+from deepeval.metrics import GEval
+from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 from evaluate import load
-from langchain_core.messages.ai import AIMessage
 from langchain_core.language_models.base import BaseLanguageModel
-from coolprompt.utils.parsing import extract_answer
-from coolprompt.utils.logging_config import logger
+from langchain_core.messages.ai import AIMessage
+
+from coolprompt.language_model.deepeval_model import DeepEvalLangChainModel
+from coolprompt.utils.arithmetics import (
+    clip,
+    extract_number_from_text,
+    mean,
+)
 from coolprompt.utils.enums import Task
 from coolprompt.utils.language_detection import detect_language
-from coolprompt.utils.arithmetics import clip, mean, extract_number_from_text
-from coolprompt.utils.prompt_templates.geval_templates import (
-    ACCURACY_QA_TEMPLATE, COHERENCE_TEMPLATE, 
-    FLUENCY_TEMPLATE, RELEVANCE_TEMPLATE
+from coolprompt.utils.logging_config import logger
+from coolprompt.utils.parsing import extract_answer
+from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
+    ACCURACY_QA_TEMPLATE,
+    COHERENCE_TEMPLATE,
+    FLUENCY_TEMPLATE,
+    RELEVANCE_TEMPLATE,
 )
 import re
-    
 
 
 class HFEvaluateMetric(ABC):
-
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
 
@@ -47,8 +56,9 @@ class HFEvaluateMetric(ABC):
         """
 
         return self._metric.compute(
-            predictions=outputs, references=targets,
-            **self._compute_kwargs_func(outputs, targets)
+            predictions=outputs,
+            references=targets,
+            **self._compute_kwargs_func(outputs, targets),
         )[self._return_parameter]
 
 
@@ -250,7 +260,8 @@ class F1Metric(HFEvaluateMetric, ClassificationMetric):
     def __init__(self):
         super().__init__(self._get_name())
         self._compute_kwargs_func = lambda outputs, targets: {
-            "average": "macro"}
+            "average": "macro"
+        }
 
 
 class BleuMetric(HFEvaluateMetric, GenerationMetric):
@@ -297,7 +308,8 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
     def __init__(self):
         super().__init__(self._get_name())
         self._compute_kwargs_func = lambda outputs, targets: {
-            "model_type": 'bert-base-multilingual-cased'}
+            "model_type": "bert-base-multilingual-cased"
+        }
         self._return_parameter = "f1"
 
     def _compute_raw(self, outputs, targets, dataset):
@@ -305,20 +317,21 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
         return sum(f1_list) / len(f1_list)
 
 
-class GEvalMetric(GenerationMetric):
-    """GEval metric for generation tasks."""
+class LLMAsJudge(GenerationMetric):
+    """LLM-as-a-judge metric for generation tasks."""
 
     @staticmethod
     def _get_name():
-        return "geval"
+        return "llm_as_judge"
 
     def __init__(
-            self,
-            model: BaseLanguageModel,
-            geval_criteria: str | list[str] = "relevance",
-            prompt_template: Optional[str] = None,
-            custom_templates: Optional[dict[str, str]] = None,
-            metric_ceil: int = 10):
+        self,
+        model: BaseLanguageModel,
+        criteria: str | list[str] = "relevance",
+        prompt_template: Optional[str] = None,
+        custom_templates: Optional[dict[str, str]] = None,
+        metric_ceil: int = 10,
+    ):
         super().__init__()
         self.model = model
         self.prompt_template = prompt_template
@@ -334,13 +347,12 @@ class GEvalMetric(GenerationMetric):
         if custom_templates:
             self.prompt_templates.update(custom_templates)
 
-        if isinstance(geval_criteria, str):
-            geval_criteria = [geval_criteria]
-        self.criteria = geval_criteria
-        
+        if isinstance(criteria, str):
+            criteria = [criteria]
+        self.criteria = criteria
+
         self.templates = {
-            crit: self.prompt_templates[crit]
-            for crit in self.criteria
+            crit: self.prompt_templates[crit] for crit in self.criteria
         }
 
     def _compute_raw(self, outputs, targets, dataset):
@@ -350,25 +362,89 @@ class GEvalMetric(GenerationMetric):
                 template.format(
                     metric_ceil=self.metric_ceil,
                     request=request,
-                    response=response
-                ) for request, response in zip(dataset, outputs)
+                    response=response,
+                )
+                for request, response in zip(dataset, outputs)
             ]
             answers = self.model.batch(requests)
 
             parsed = []
             for a in answers:
                 if isinstance(a, AIMessage):
-                    content = a.content if isinstance(a.content, str) else str(a.content)
-                    match = re.search(r'\d+', content)
+                    content = (
+                        a.content
+                        if isinstance(a.content, str)
+                        else str(a.content)
+                    )
+                    match = re.search(r"\d+", content)
                     parsed.append(int(match.group()) if match else 0)
                 else:
                     parsed.append(0)
 
-            normalized = [clip(ans, 0, self.metric_ceil) / self.metric_ceil
-                         for ans in parsed]
+            normalized = [
+                clip(ans, 0, self.metric_ceil) / self.metric_ceil
+                for ans in parsed
+            ]
             scores.append(mean(normalized))
 
         return mean(scores)
+
+
+class GEvalMetric(GenerationMetric):
+    @staticmethod
+    def _get_name() -> str:
+        return "geval"
+
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        criteria: str | None = None,
+        evaluation_steps: Optional[list[str]] = None,
+        evaluation_params: Optional[list[LLMTestCaseParams]] = None,
+        strict_mode: bool = False,
+    ) -> None:
+        super().__init__()
+        wrapped_model = DeepEvalLangChainModel(model)
+
+        if criteria is not None and evaluation_steps is not None:
+            raise ValueError(
+                "GEvalMetric: provide either `criteria` or "
+                "`evaluation_steps`, but not both."
+            )
+
+        if evaluation_params is None:
+            evaluation_params = [
+                LLMTestCaseParams.INPUT,
+                LLMTestCaseParams.ACTUAL_OUTPUT,
+                LLMTestCaseParams.EXPECTED_OUTPUT,
+            ]
+
+        self._metric = GEval(
+            name=self._get_name(),
+            criteria=criteria,
+            evaluation_steps=evaluation_steps,
+            evaluation_params=evaluation_params,
+            model=wrapped_model,
+            strict_mode=strict_mode,
+        )
+
+    def _compute_raw(self, outputs, targets, dataset):
+        scores = []
+
+        if dataset is None:
+            dataset = [""] * len(outputs)
+
+        for output, target, request in zip(outputs, targets, dataset):
+            test_case = LLMTestCase(
+                input=request,
+                actual_output=str(output),
+                expected_output=str(target),
+            )
+
+            score = self._metric.measure(test_case)
+            scores.append(score)
+
+        return float(mean(scores)) if scores else 0.0
 
 
 class ExactMatchMetric(GenerationMetric):
@@ -379,7 +455,7 @@ class ExactMatchMetric(GenerationMetric):
         return "em"
 
     def __init__(self):
-        super().__init__(self._get_name())
+        super().__init__()
 
     def _compute_raw(self, outputs, targets):
         targets = [extract_number_from_text(item) for item in targets]
@@ -415,7 +491,8 @@ def validate_and_create_metric(
     Args:
         task (Task): The type of task, either "classification" or "generation".
         metric (str): Name of the metric to validate.
-        model (BaseLanguageModel): model to use for evaluation (for GEval)
+        model (BaseLanguageModel): model to use for evaluation
+            (for LLM-as-judge and GEval)
     Returns:
         str: the name of the metric.
     Raises:
@@ -438,16 +515,30 @@ def validate_and_create_metric(
             logger.error(error_msg)
             raise ValueError(error_msg)
         case Task.GENERATION:
-            if metric == "geval":
+            if metric == "llm_as_judge":
                 if model is None:
-                    error_msg = "Model for GEval metric must not be None"
+                    error_msg = "Model for llm_as_judge metric must not be None"
                     logger.error(error_msg)
                     raise ValueError(error_msg)
-                return GENERATION_METRIC_NAME_MAPPING[metric](
+                return LLMAsJudge(
                     model=model,
-                    geval_criteria=kwargs.get("geval_criteria", "relevance"),
-                    custom_templates=kwargs.get("geval_custom_templates"),
-                    metric_ceil=kwargs.get("geval_metric_ceil", 10)
+                    criteria=kwargs.get("llm_as_judge_criteria", "relevance"),
+                    custom_templates=kwargs.get(
+                        "llm_as_judge_custom_templates"
+                    ),
+                    metric_ceil=kwargs.get("llm_as_judge_metric_ceil", 10),
+                )
+            if metric == "geval":
+                if model is None:
+                    error_msg = "Model for geval metric must not be None"
+                    logger.error(error_msg)
+                    raise ValueError(error_msg)
+                return GEvalMetric(
+                    model=model,
+                    criteria=kwargs.get("geval_criteria"),
+                    evaluation_steps=kwargs.get("geval_evaluation_steps"),
+                    evaluation_params=kwargs.get("geval_evaluation_params"),
+                    strict_mode=kwargs.get("geval_strict_mode", False),
                 )
             if metric in GENERATION_METRIC_NAME_MAPPING.keys():
                 return GENERATION_METRIC_NAME_MAPPING[metric]()
@@ -459,8 +550,7 @@ def validate_and_create_metric(
             logger.error(error_msg)
             raise ValueError(error_msg)
     error_msg = (
-        f"Invalid task: {task}"
-        f"Available tasks: classification, generation"
+        f"Invalid task: {task}" f"Available tasks: classification, generation"
     )
     logger.error(error_msg)
     raise ValueError(error_msg)
