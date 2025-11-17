@@ -83,7 +83,12 @@ See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/m
 For technical details and full experimental results, please check our papers.
 
 **CoolPrompt**
-```Publishing```
+```
+@article{kulincoolprompt,
+  title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models},
+  author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey}
+}
+```
 
 **ReflectivePrompt**
 ```
@@ -110,4 +115,5 @@ For technical details and full experimental results, please check our papers.
       url={https://arxiv.org/abs/2508.18992}, 
 }
 ```
+
 
