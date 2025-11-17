@@ -1,4 +1,3 @@
-import random
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 
@@ -34,6 +33,7 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
+        sample_size=None,
     ) -> float:
         """
         Evaluate the model on a dataset

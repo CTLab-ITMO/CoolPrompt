@@ -23,6 +23,8 @@ HYPE_PROMPT_TEMPLATE = (
     "Hypothetical Instructive Prompt: "
 )
 
+HYPE_PROMPT_TEMPLATE_1 = "Please write a hypothetical instructive prompt for the following query to make a large language model answer the question.\nQuery: {QUERY}\nPrompt: "
+
 CLASSIFICATION_TASK_TEMPLATE_HYPE = """{PROMPT}
 
 Answer using exactly one label from [{LABELS}].

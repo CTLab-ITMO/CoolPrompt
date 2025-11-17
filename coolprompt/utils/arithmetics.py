@@ -14,4 +14,7 @@ def mean(lst):
 
 
 def extract_number_from_text(text):
-    return re.findall(r'-?\d+(?:\.\d+)?', text)[-1]
+    try:
+        return re.findall(r"-?\d+(?:\.\d+)?", text)[-1]
+    except:
+        return ""
