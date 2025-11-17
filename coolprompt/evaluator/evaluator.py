@@ -34,6 +34,7 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
+        sample_size=None,
     ) -> float:
         """
         Evaluate the model on a dataset
@@ -78,7 +79,12 @@ class Evaluator:
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]
 
-        return self.metric.compute(answers, targets)
+        metric = self.metric.compute(answers, targets)
+        if sample_size is not None:
+            ind = random.choices(range(len(answers)), k=sample_size)
+            samples = [(dataset[i], answers[i]) for i in ind]
+            return metric, samples
+        return metric
 
     def _get_full_prompt(
         self,

@@ -76,12 +76,15 @@ class PromptTuner:
         self.synthetic_dataset = None
         self.synthetic_target = None
 
+        self.answer_samples_size = 3
+        self.answer_samples = None
+
         logger.info("Validating the target model")
-        validate_model(self._target_model)
+        #validate_model(self._target_model)
 
         if self._system_model is not self._target_model:
             logger.info("Validating the system model")
-            validate_model(self._system_model)
+            #validate_model(self._system_model)
 
         logger.info("PromptTuner successfully initialized")
 
@@ -239,7 +242,7 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
-                num_samples=generate_num_samples
+                num_samples=generate_num_samples,
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target
@@ -270,6 +273,8 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
+        logger.info("Resetting models stats")
+        self._target_model.reset_stats()
         if method is Method.HYPE:
             final_prompt = hype_optimizer(
                 model=self._target_model,
@@ -293,6 +298,9 @@ class PromptTuner:
                 initial_prompt=start_prompt,
                 **kwargs,
             )
+        logger.info(
+            f"Models stats after optimization:\n{self._target_model.get_stats()}"
+        )
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
@@ -310,11 +318,12 @@ class PromptTuner:
             targets=dataset_split[3],
             template=template,
         )
-        self.final_metric = evaluator.evaluate(
+        self.final_metric, self.answer_samples = evaluator.evaluate(
             prompt=final_prompt,
             dataset=dataset_split[1],
             targets=dataset_split[3],
             template=template,
+            sample_size=self.answer_samples_size,
         )
         logger.info(
             f"Initial {metric} score: {self.init_metric}, "
@@ -329,10 +338,14 @@ class PromptTuner:
         if feedback:
             prompt_assistant = PromptAssistant(self._target_model)
             self.assistant_feedback = correct(
-                prompt=prompt_assistant.get_feedback(start_prompt, final_prompt),
+                prompt=prompt_assistant.get_feedback(
+                    start_prompt, final_prompt
+                ),
                 rule=LanguageRule(self._system_model),
                 start_prompt=start_prompt,
             )
 
             logger.info("=== Assistant's feedback ===")
             logger.info(self.assistant_feedback)
+
+        return final_prompt

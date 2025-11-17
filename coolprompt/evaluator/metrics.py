@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import random
 from typing import Optional
 from evaluate import load
 from langchain_core.messages.ai import AIMessage
@@ -128,6 +129,10 @@ class BaseMetric(ABC):
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels, targets
         )
+        num_samples = 3
+        ind = random.choices(range(len(outputs)), k=num_samples)
+        for i in ind:
+            logger.debug(f'OUTPUT {i}:\n{outputs[i]}')
         return self._compute_raw(
             encoded_output_labels, encoded_targets, dataset
         )
@@ -203,7 +208,7 @@ class GenerationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = ""
 
-    def __init__(self):
+    def __init__(self, name=None):
         """Initialize metric"""
 
         super().__init__()
@@ -347,7 +352,7 @@ class ExactMatchMetric(GenerationMetric):
     def __init__(self):
         super().__init__(self._get_name())
 
-    def _compute_raw(self, outputs, targets):
+    def _compute_raw(self, outputs, targets, dataset=None):
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
         return float(mean([o == t for o, t in zip(outputs, targets)]))
