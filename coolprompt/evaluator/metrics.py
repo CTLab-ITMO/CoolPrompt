@@ -440,8 +440,8 @@ class GEvalMetric(GenerationMetric):
                 actual_output=str(output),
                 expected_output=str(target),
             )
+            score = self._metric.measure(test_case, _show_indicator=False)
 
-            score = self._metric.measure(test_case)
             scores.append(score)
 
         return float(mean(scores)) if scores else 0.0
