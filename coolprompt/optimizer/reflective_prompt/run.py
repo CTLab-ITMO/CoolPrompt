@@ -1,5 +1,5 @@
-from typing import List, Tuple
-from langchain.llms.base import BaseLanguageModel
+from typing import List, Tuple, Optional
+from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
 from coolprompt.utils.logging_config import logger
@@ -10,7 +10,7 @@ def reflectiveprompt(
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],
     evaluator: Evaluator,
     problem_description: str,
-    initial_prompt: str = None,
+    initial_prompt: Optional[str] = None,
     **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
