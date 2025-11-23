@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from langchain.llms.base import BaseLanguageModel
+from langchain_core.language_models import BaseLanguageModel
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
 from coolprompt.utils.logging_config import logger
