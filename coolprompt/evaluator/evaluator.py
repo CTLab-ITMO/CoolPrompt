@@ -78,7 +78,7 @@ class Evaluator:
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]
 
-        return self.metric.compute(answers, targets)
+        return self.metric.compute(answers, targets, dataset)
 
     def _get_full_prompt(
         self,
