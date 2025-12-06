@@ -2,10 +2,72 @@ from typing import List, Tuple, Optional
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.optimizer.reflective_prompt.textual_gradient_evoluter import (
+    ReflectiveEvoluterWithTextualGradient
+)
 from coolprompt.utils.logging_config import logger
 
 
 def reflectiveprompt(
+    model: BaseLanguageModel,
+    dataset_split: Tuple[List[str], List[str], List[str], List[str]],
+    evaluator: Evaluator,
+    problem_description: str,
+    initial_prompt: Optional[str] = None,
+    **kwargs,
+) -> str:
+    """Runs ReflectivePrompt evolution.
+
+    Args:
+        model (BaseLanguageModel): a LLM to use.
+        dataset_split (Tuple[List[str], List[str], List[str], List[str]]):
+            train/valid split of dataset and corresponding targets.
+        evaluator (Evaluator): evaluator to compute metrics.
+        task (Task): type of task to optimize for.
+        problem_description (str): a string that contains
+            short description of problem to optimize.
+        initial_prompt (str, optional): initial prompt to start evolution from.
+            Defaults to None.
+        **kwargs (dict[str, Any]): other parameters
+            (such as population_size, num_epochs, output_path, use_cache).
+
+    Returns:
+        str: best evoluted prompt.
+    """
+    return reflectiveprompt_textualgrad_update(model, dataset_split, evaluator, problem_description, initial_prompt, **kwargs)
+    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+        dataset_split
+    )
+    args = {
+        "population_size": 10,
+        "num_epochs": 5,
+        "output_path": "./reflectiveprompt_outputs",
+        "use_cache": True,
+    }
+    args.update(kwargs)
+    evoluter = ReflectiveEvoluter(
+        model=model,
+        evaluator=evaluator,
+        train_dataset=train_dataset,
+        train_targets=train_targets,
+        validation_dataset=validation_dataset,
+        validation_targets=validation_targets,
+        problem_description=problem_description,
+        initial_prompt=initial_prompt,
+        population_size=args["population_size"],
+        num_epochs=args["num_epochs"],
+        output_path=args["output_path"],
+        use_cache=args["use_cache"],
+    )
+    logger.info("Starting ReflectivePrompt optimization...")
+    logger.debug(f"Start prompt:\n{initial_prompt}")
+    logger.debug(f"Problem description:\n{problem_description}")
+    final_prompt = evoluter.evolution()
+    logger.info("ReflectivePrompt optimization completed")
+    return final_prompt
+
+
+def reflectiveprompt_textualgrad_update(
     model: BaseLanguageModel,
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],
     evaluator: Evaluator,
@@ -39,9 +101,10 @@ def reflectiveprompt(
         "num_epochs": 5,
         "output_path": "./reflectiveprompt_outputs",
         "use_cache": True,
+        "bad_examples_number": 5
     }
     args.update(kwargs)
-    evoluter = ReflectiveEvoluter(
+    evoluter = ReflectiveEvoluterWithTextualGradient(
         model=model,
         evaluator=evaluator,
         train_dataset=train_dataset,
@@ -54,6 +117,7 @@ def reflectiveprompt(
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],
         use_cache=args["use_cache"],
+        bad_examples_number=args["bad_examples_number"]
     )
     logger.info("Starting ReflectivePrompt optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")

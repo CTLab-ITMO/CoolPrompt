@@ -1,5 +1,4 @@
 import os
-import json
 import yaml
 from typing import List, Tuple, Any, Optional
 
@@ -67,7 +66,7 @@ class ReflectiveEvoluter:
         validation_dataset: List[str],
         validation_targets: List[str],
         problem_description: str,
-    initial_prompt: Optional[str] = None,
+        initial_prompt: Optional[str] = None,
         population_size: int = 10,
         num_epochs: int = 10,
         output_path: str = "./reflectiveprompt_outputs",
@@ -91,19 +90,6 @@ class ReflectiveEvoluter:
         self.best_score_overall = None
         self.best_prompt_overall = None
         self.iteration = 0
-
-        self._paraphrasing_template = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE
-        self._crossover_template = REFLECTIVEPROMPT_CROSSOVER_TEMPLATE
-        self._mutation_template = REFLECTIVEPROMPT_MUTATION_TEMPLATE
-        self._short_term_template = (
-            REFLECTIVEPROMPT_SHORT_TERM_REFLECTION_TEMPLATE
-        )
-        self._long_term_template = (
-            REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE
-        )
-        self._initial_prompt_template = (
-            REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE
-        )
 
     def _reranking(self, population: List[Prompt]) -> List[Prompt]:
         """
@@ -159,7 +145,7 @@ class ReflectiveEvoluter:
         Returns:
             str: initial prompt
         """
-        request = self._initial_prompt_template.format(
+        request = REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description
         )
         answer = self._llm_query([request])[0]
@@ -177,7 +163,7 @@ class ReflectiveEvoluter:
         logger.info("Initializing population...")
         if self.initial_prompt is None:
             self.initial_prompt = self._create_initial_prompt()
-        request = self._paraphrasing_template.format(
+        request = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE.format(
             PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
         )
         answer = self._llm_query([request])[0]
@@ -302,7 +288,7 @@ class ReflectiveEvoluter:
         else:
             better_ind, worse_ind = ind2, ind1
 
-        request = self._short_term_template.format(
+        request = REFLECTIVEPROMPT_SHORT_TERM_REFLECTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description,
             WORSE_PROMPT=worse_ind.text,
             BETTER_PROMPT=better_ind.text,
@@ -380,7 +366,7 @@ class ReflectiveEvoluter:
         for reflection, worse_prompt, better_prompt in zip(
             reflection_contents, worse_prompts, better_prompts
         ):
-            request = self._crossover_template.format(
+            request = REFLECTIVEPROMPT_CROSSOVER_TEMPLATE.format(
                 PROBLEM_DESCRIPTION=self.problem_description,
                 WORSE_PROMPT=worse_prompt,
                 BETTER_PROMPT=better_prompt,
@@ -444,7 +430,7 @@ class ReflectiveEvoluter:
         Args:
             short_term_reflections (List[str]): short-term reflections.
         """
-        request = self._long_term_template.format(
+        request = REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description,
             PRIOR_LONG_TERM_REFLECTION=self._long_term_reflection_str,
             NEW_SHORT_TERM_REFLECTIONS="\n".join(short_term_reflections),
@@ -480,7 +466,7 @@ class ReflectiveEvoluter:
         Returns:
             List[Prompt]: generated population.
         """
-        request = self._mutation_template.format(
+        request = REFLECTIVEPROMPT_MUTATION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description,
             LONG_TERM_REFLECTION=self._long_term_reflection_str,
             ELITIST_PROMPT=self.elitist.text,

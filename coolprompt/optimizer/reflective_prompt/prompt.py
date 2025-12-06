@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Type
+from typing import Type, List, Dict
 
 
 class PromptOrigin(Enum):
@@ -26,6 +26,13 @@ class PromptOrigin(Enum):
         return cls(string.lower())
 
 
+class BadExample:
+    def __init__(self, input: str, output: str, correct: str):
+        self.input = input
+        self.output = output
+        self.correct = correct
+
+
 class Prompt:
     def __init__(
         self,
@@ -45,6 +52,7 @@ class Prompt:
         self.text = text
         self.origin = origin
         self.score = score
+        self.bad_examples = []
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
@@ -53,6 +61,16 @@ class Prompt:
             new_score (float): new prompt score to set.
         """
         self.score = float(new_score)
+
+    def set_bad_examples(self, bad_examples: List[Dict[str, str]]) -> None:
+        self.bad_examples = [
+            BadExample(
+                input=example['input'],
+                output=example['output'],
+                correct=example['correct']
+            )
+            for example in bad_examples
+        ]
 
     def to_dict(self) -> dict:
         """Creates dictionary representation of prompt.

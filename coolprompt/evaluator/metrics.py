@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from random import shuffle
+from typing import Optional, Dict, List, Tuple
 
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
@@ -39,12 +40,23 @@ class HFEvaluateMetric(ABC):
         self._compute_kwargs_func = lambda outputs, targets: {}
         super().__init__()
 
+    @abstractmethod
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        pass
+
     def _compute_raw(
         self,
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-    ) -> float:
+        failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, str]]]:
         """Compute metric value from preprocessed model answers.
 
         Args:
@@ -54,12 +66,20 @@ class HFEvaluateMetric(ABC):
         Returns:
             float: Computed metric value
         """
-
-        return self._metric.compute(
+        result = self._metric.compute(
             predictions=outputs,
             references=targets,
             **self._compute_kwargs_func(outputs, targets),
         )[self._return_parameter]
+
+        if failed_examples:
+            return result, self._extract_bad_examples(
+                outputs,
+                targets,
+                failed_examples,
+                dataset
+            )
+        return result
 
 
 class BaseMetric(ABC):
@@ -82,12 +102,23 @@ class BaseMetric(ABC):
         super().__init__()
 
     @abstractmethod
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        pass
+
+    @abstractmethod
     def _compute_raw(
         self,
         outputs: list[str | int],
         targets: list[str | int],
-        dataset: Optional[list[str]] = None
-    ) -> float:
+        dataset: Optional[list[str]] = None,
+        failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, str]]]:
         """Compute metric value from preprocessed model answers.
 
         Args:
@@ -120,8 +151,9 @@ class BaseMetric(ABC):
         self,
         outputs: list[str | int],
         targets: list[str | int],
-        dataset: Optional[list[str]] = None
-    ) -> float:
+        dataset: Optional[list[str]] = None,
+        failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]]:
         """Compute metric value from text model outputs
 
         Must be implemented by subclasses to handle input formatting.
@@ -145,7 +177,7 @@ class BaseMetric(ABC):
             output_labels, targets
         )
         return self._compute_raw(
-            encoded_output_labels, encoded_targets, dataset
+            encoded_output_labels, encoded_targets, dataset, failed_examples
         )
 
     def __str__(self) -> str:
@@ -209,6 +241,23 @@ class ClassificationMetric(BaseMetric):
             if label not in self.label_to_id:
                 self.label_to_id[label] = len(self.label_to_id)
 
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        return [
+            {
+                'input': inp,
+                'output': out,
+                'correct': tgt
+            }
+            for inp, out, tgt in zip(dataset, outputs, targets)
+            if out != tgt
+        ][:failed_examples]
+
 
 class GenerationMetric(BaseMetric):
     """Base class for generation metrics.
@@ -237,6 +286,24 @@ class GenerationMetric(BaseMetric):
         """
 
         return output_labels, targets
+
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        result = [
+            {
+                'input': inp,
+                'output': out,
+                'correct': tgt
+            }
+            for inp, out, tgt in zip(dataset, outputs, targets)
+        ]
+        shuffle(result)
+        return result[:failed_examples]
 
 
 class AccuracyMetric(HFEvaluateMetric, ClassificationMetric):
@@ -312,8 +379,24 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
         }
         self._return_parameter = "f1"
 
-    def _compute_raw(self, outputs, targets, dataset):
-        f1_list = super()._compute_raw(outputs, targets)
+    def _compute_raw(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+        failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, str]]]:
+        if failed_examples:
+            f1_list, bad_examples = super()._compute_raw(
+                outputs,
+                targets,
+                failed_examples=failed_examples
+            )
+            return sum(f1_list) / len(f1_list), bad_examples
+        super()._compute_raw(
+            outputs,
+            targets,
+        )
         return sum(f1_list) / len(f1_list)
 
 
@@ -456,11 +539,26 @@ class ExactMatchMetric(GenerationMetric):
 
     def __init__(self):
         super().__init__()
-
-    def _compute_raw(self, outputs, targets):
+    
+    def _compute_raw(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+        failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, str]]]:
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
-        return float(mean([o == t for o, t in zip(outputs, targets)]))
+        result = float(mean([o == t for o, t in zip(outputs, targets)]))
+        if failed_examples:
+            bad_examples = self._extract_bad_examples(
+                outputs,
+                targets,
+                failed_examples,
+                dataset
+            )
+            return result, bad_examples
+        return result
 
 
 def define_lang(outputs, targets):

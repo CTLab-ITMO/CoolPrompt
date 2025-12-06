@@ -1,11 +1,11 @@
 from datasets import load_dataset
 import pandas as pd
 
-squad_v2 = load_dataset("rajpurkar/squad_v2")
-gsm8k = load_dataset("openai/gsm8k", "main")
-common_gen = load_dataset("allenai/common_gen")
-ag_news = load_dataset("fancyzhx/ag_news")
-xsum = load_dataset("yairfeldman/xsum")
+squad_v2 = load_dataset("rajpurkar/squad_v2", split="validation")
+gsm8k = load_dataset("openai/gsm8k", "main", split="test")
+common_gen = load_dataset("allenai/common_gen", split="validation")
+ag_news = load_dataset("fancyzhx/ag_news", split="test")
+xsum = load_dataset("yairfeldman/xsum", split="validation")
 
 ag_labels = {
     "World": 0,
@@ -65,6 +65,7 @@ def ag_news_preproc(sample, size: int = None):
 
 
 def xsum_preproc(sample, size: int = None):
+    print(sample)
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"document": "input_data", "summary": "target"})
@@ -83,7 +84,7 @@ def load_dataset(name: str, size: int = None):
                 return gsm8k_preproc(gsm8k, size)
             case "common_gen":
                 return common_gen_preproc(common_gen, size)
-            case "ag_new":
+            case "ag_news":
                 return ag_news_preproc(ag_news, size)
             case "xsum":
                 return xsum_preproc(xsum, size)
