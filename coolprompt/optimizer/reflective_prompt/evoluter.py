@@ -22,6 +22,7 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
 from coolprompt.utils.parsing import extract_answer, extract_json
+from coolprompt.utils.prompt_freezer import split_prompt, merge_prompt
 
 
 class ReflectiveEvoluter:
@@ -91,6 +92,16 @@ class ReflectiveEvoluter:
         self.best_score_overall = None
         self.best_prompt_overall = None
         self.iteration = 0
+        
+
+        if self.initial_prompt:
+            optimizable, frozen = split_prompt(self.initial_prompt)
+            self._frozen_part = frozen
+            self.initial_prompt = optimizable if optimizable else self.initial_prompt
+            if frozen:
+                logger.info("Found frozen parts in initial prompt. These will be preserved during optimization.")
+        else:
+            self._frozen_part = ""
 
         self._paraphrasing_template = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE
         self._crossover_template = REFLECTIVEPROMPT_CROSSOVER_TEMPLATE
@@ -103,6 +114,22 @@ class ReflectiveEvoluter:
         )
         self._initial_prompt_template = (
             REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE
+        )
+
+    def _get_frozen_context(self) -> str:
+        if not self._frozen_part:
+            return ""
+        
+        return (
+            "### CONTEXT INFO ###\n"
+            "The user has hard-coded a constraint that will be appended AFTER your optimized prompt.\n"
+            f"Frozen Suffix: \"{self._frozen_part}\"\n\n"
+            "### IMPORTANT INSTRUCTIONS ###\n"
+            "1. Ensure your new prompt flows logically into the Frozen Suffix.\n"
+            "2. CRITICAL: The Frozen Suffix is ALREADY attached. If you repeat its content, the final prompt will have duplicates. THIS IS FORBIDDEN.\n"
+            "3. Your job is to write the PREFIX that leads up to the suffix, NOT to rewrite the suffix itself.\n"
+            "4. DO NOT include the Frozen Suffix in your output.\n"
+            "5. Output ONLY the optimized version of the prompt.\n\n"
         )
 
     def _reranking(self, population: List[Prompt]) -> List[Prompt]:
@@ -131,8 +158,11 @@ class ReflectiveEvoluter:
             dataset, targets = self.train_dataset, self.train_targets
         else:
             dataset, targets = self.validation_dataset, self.validation_targets
+        
+        full_prompt = merge_prompt(prompt.text, self._frozen_part)
+        
         score = self.evaluator.evaluate(
-            prompt=prompt.text,
+            prompt=full_prompt,
             dataset=dataset,
             targets=targets,
         )
@@ -160,7 +190,8 @@ class ReflectiveEvoluter:
             str: initial prompt
         """
         request = self._initial_prompt_template.format(
-            PROBLEM_DESCRIPTION=self.problem_description
+            PROBLEM_DESCRIPTION=self.problem_description,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         answer = self._llm_query([request])[0]
         return extract_answer(
@@ -178,7 +209,9 @@ class ReflectiveEvoluter:
         if self.initial_prompt is None:
             self.initial_prompt = self._create_initial_prompt()
         request = self._paraphrasing_template.format(
-            PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
+            PROMPT=self.initial_prompt, 
+            NUM_PROMPTS=self.population_size,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         answer = self._llm_query([request])[0]
         prompts = extract_json(answer)["prompts"]
@@ -306,6 +339,7 @@ class ReflectiveEvoluter:
             PROBLEM_DESCRIPTION=self.problem_description,
             WORSE_PROMPT=worse_ind.text,
             BETTER_PROMPT=better_ind.text,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
 
         return request, worse_ind.text, better_ind.text
@@ -385,6 +419,7 @@ class ReflectiveEvoluter:
                 WORSE_PROMPT=worse_prompt,
                 BETTER_PROMPT=better_prompt,
                 SHORT_TERM_REFLECTION=reflection,
+                FROZEN_CONTEXT=self._get_frozen_context(),
             )
             requests.append(request)
 
@@ -448,6 +483,7 @@ class ReflectiveEvoluter:
             PROBLEM_DESCRIPTION=self.problem_description,
             PRIOR_LONG_TERM_REFLECTION=self._long_term_reflection_str,
             NEW_SHORT_TERM_REFLECTIONS="\n".join(short_term_reflections),
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
 
         response = self._llm_query([request])[0]
@@ -484,6 +520,7 @@ class ReflectiveEvoluter:
             PROBLEM_DESCRIPTION=self.problem_description,
             LONG_TERM_REFLECTION=self._long_term_reflection_str,
             ELITIST_PROMPT=self.elitist.text,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         responses = self._llm_query([request] * self.population_size)
         responses = [
@@ -570,4 +607,9 @@ class ReflectiveEvoluter:
         logger.info(f"BEST VALIDATION SCORE: {self.best_score_overall}")
         logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
 
-        return self.best_prompt_overall
+        # Merge best prompt with frozen part before returning
+        final_prompt = merge_prompt(self.best_prompt_overall, self._frozen_part)
+        if self._frozen_part:
+            logger.debug(f"Final prompt with frozen parts:\n{final_prompt}")
+        
+        return final_prompt

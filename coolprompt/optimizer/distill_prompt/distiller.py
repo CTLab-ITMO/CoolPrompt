@@ -13,6 +13,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
 from coolprompt.utils.logging_config import logger
+from coolprompt.utils.prompt_freezer import split_prompt, merge_prompt
 from coolprompt.optimizer.distill_prompt.candidate import (
     Candidate,
     CandidateHistory,
@@ -81,11 +82,16 @@ class Distiller:
         self.validation_dataset = validation_dataset
         self.validation_targets = validation_targets
         self.use_cache = use_cache
-        self.base_prompt = base_prompt
         self.num_epochs = num_epochs
         self.output_path = output_path
         self.iteration = 0
         self.logger = logger
+
+        optimizable, frozen = split_prompt(base_prompt)
+        self._frozen_part = frozen
+        self.base_prompt = optimizable if optimizable else base_prompt
+        if frozen:
+            logger.info("Frozen part will not be changed")
 
         seed_everything()
 
@@ -106,8 +112,10 @@ class Distiller:
             dataset = self.validation_dataset
             targets = self.validation_targets
 
+        full_prompt = merge_prompt(prompt, self._frozen_part)
+
         score = self.evaluator.evaluate(
-            prompt=prompt,
+            prompt=full_prompt,
             dataset=dataset,
             targets=targets,
         )
@@ -154,7 +162,9 @@ class Distiller:
         self.logger.debug(f"Start prompt:\n{self.base_prompt}")
 
         sampler = TextSampler(self.train_dataset, self.train_targets)
-        transformer = PromptTransformer(self.model, sampler)
+        transformer = PromptTransformer(
+            self.model, sampler, frozen_part=self._frozen_part
+        )
         history = CandidateHistory()
 
         base_prompt = self.base_prompt
@@ -171,8 +181,7 @@ class Distiller:
             # Generation
             gen_prompts = transformer.generate_prompts(best_candidate)
             gen_candidates = [
-                Candidate(prompt, self._evaluate(prompt))
-                for prompt in gen_prompts
+                Candidate(prompt, self._evaluate(prompt)) for prompt in gen_prompts
             ]
             history.extend(gen_candidates)
 
@@ -185,9 +194,7 @@ class Distiller:
             history.extend(distilled_candidates)
 
             # Compression
-            compressed_prompts = transformer.compress_prompts(
-                distilled_candidates
-            )
+            compressed_prompts = transformer.compress_prompts(distilled_candidates)
             compressed_candidates = [
                 Candidate(prompt, self._evaluate(prompt))
                 for prompt in compressed_prompts
@@ -195,9 +202,7 @@ class Distiller:
             history.extend(compressed_candidates)
 
             # Aggregation
-            aggregated_prompt = transformer.aggregate_prompts(
-                compressed_candidates
-            )
+            aggregated_prompt = transformer.aggregate_prompts(compressed_candidates)
             aggregated_candidate = Candidate(
                 aggregated_prompt, self._evaluate(aggregated_prompt)
             )
@@ -217,9 +222,7 @@ class Distiller:
                 f"Best candidate score in round {round_num}: "
                 f"{best_candidate.train_score}"
             )
-            self.logger.debug(
-                f"Best candidate prompt: {best_candidate.prompt}"
-            )
+            self.logger.debug(f"Best candidate prompt: {best_candidate.prompt}")
 
             # Cache results
             self._cache_data(
@@ -232,9 +235,7 @@ class Distiller:
 
         final_prompt = best_candidate.prompt
         final_score = self._evaluate(final_prompt, split="validation")
-        self.logger.info(
-            f"Final best prompt score on validation: {final_score}"
-        )
+        self.logger.info(f"Final best prompt score on validation: {final_score}")
         self.logger.debug(f"Final best prompt: {final_prompt}")
 
         self._cache_data(
@@ -244,4 +245,10 @@ class Distiller:
 
         self.logger.info("DistillPrompt optimization completed")
 
-        return final_prompt
+        final_prompt_with_frozen = merge_prompt(final_prompt, self._frozen_part)
+        if self._frozen_part:
+            self.logger.debug(
+                f"Final prompt with frozen parts:\n{final_prompt_with_frozen}"
+            )
+
+        return final_prompt_with_frozen

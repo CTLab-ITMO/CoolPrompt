@@ -18,15 +18,34 @@ from coolprompt.optimizer.distill_prompt.utils import TextSampler
 class PromptTransformer:
     """Implements various transformations for prompt engineering."""
 
-    def __init__(self, model: BaseLanguageModel, sampler: TextSampler) -> None:
+    def __init__(self, model: BaseLanguageModel, sampler: TextSampler, frozen_part: str = "") -> None:
         """Initializes the PromptTransformer.
 
         Args:
             model (BaseLanguageModel): The language model for transformations.
             sampler (TextSampler): The sampler for training data.
+            frozen_part (str, optional): The frozen part of the prompt.
+                Defaults to "".
         """
         self.model = model
         self.sampler = sampler
+        self._frozen_part = frozen_part
+
+    def _get_frozen_context(self) -> str:
+        if not self._frozen_part:
+            return ""
+        
+        return (
+            "### CONTEXT INFO ###\n"
+            "The user has hard-coded a constraint that will be appended AFTER your optimized prompt.\n"
+            f"Frozen Suffix: \"{self._frozen_part}\"\n\n"
+            "### IMPORTANT INSTRUCTIONS ###\n"
+            "1. Ensure your new prompt flows logically into the Frozen Suffix.\n"
+            "2. CRITICAL: The Frozen Suffix is ALREADY attached. If you repeat its content, the final prompt will have duplicates. THIS IS FORBIDDEN.\n"
+            "3. Your job is to write the PREFIX that leads up to the suffix, NOT to rewrite the suffix itself.\n"
+            "4. DO NOT include the Frozen Suffix in your output.\n"
+            "5. Output ONLY the optimized version of the prompt.\n\n"
+        )
 
     def aggregate_prompts(
         self, candidates: List[Candidate], temperature: float = 0.4
@@ -44,7 +63,8 @@ class PromptTransformer:
         """
         formatted_prompts = self._format_prompts_for_aggregation(candidates)
         aggregation_prompt = distillprompt_templates.AGGREGATION_PROMPT.format(
-            formatted_prompts=formatted_prompts
+            formatted_prompts=formatted_prompts,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         answer = self.model.invoke(aggregation_prompt, temperature=temperature)
         if isinstance(answer, AIMessage):
@@ -70,7 +90,8 @@ class PromptTransformer:
         for candidate in candidates:
             compression_prompt = distillprompt_templates.COMPRESSION_PROMPT
             compression_prompt = compression_prompt.format(
-                candidate_prompt=candidate.prompt
+                candidate_prompt=candidate.prompt,
+                FROZEN_CONTEXT=self._get_frozen_context(),
             )
             request_prompts.append(compression_prompt)
 
@@ -107,7 +128,8 @@ class PromptTransformer:
             sample_string = self._format_samples(train_samples)
             prompt = distillprompt_templates.DISTILLATION_PROMPT
             distillation_prompt = prompt.format(
-                candidate_prompt=candidate.prompt, sample_string=sample_string
+                candidate_prompt=candidate.prompt, sample_string=sample_string,
+                FROZEN_CONTEXT=self._get_frozen_context(),
             )
             request_prompts.append(distillation_prompt)
 
@@ -138,7 +160,8 @@ class PromptTransformer:
         """
         generation_prompt = distillprompt_templates.GENERATION_PROMPT.format(
             candidate_prompt=candidate.prompt,
-            train_score=candidate.train_score
+            train_score=candidate.train_score,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         requests = [generation_prompt] * n
         answers = self.model.batch(requests, temperature=temperature)
@@ -166,7 +189,8 @@ class PromptTransformer:
             List[str]: List of synonym prompts.
         """
         rewriter_prompt = distillprompt_templates.REWRITER_PROMPT.format(
-            candidate_prompt=candidate.prompt
+            candidate_prompt=candidate.prompt,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         requests = [rewriter_prompt] * n
         responses = self.model.batch(requests, temperature=temperature)
