@@ -33,13 +33,15 @@ def hype_optimizer(
     logger.debug(f"Start prompt:\n{prompt}")
 
     optimizable_part, frozen_part = split_prompt(prompt)
-    
+
     if frozen_part:
-        logger.info("Found frozen parts in prompt. Optimizing only optimizable part.")
+        logger.info(
+            "Found frozen parts in prompt. Optimizing only optimizable part."
+        )
         frozen_context = (
             "### CONTEXT INFO ###\n"
             "The user has hard-coded a constraint that will be appended AFTER your optimized prompt.\n"
-            f"Frozen Suffix: \"{frozen_part}\"\n\n"
+            f'Frozen Suffix: "{frozen_part}"\n\n'
             "### IMPORTANT INSTRUCTIONS ###\n"
             "1. Ensure your new prompt flows logically into the Frozen Suffix.\n"
             "2. CRITICAL: The Frozen Suffix is ALREADY attached. If you repeat its content, the final prompt will have duplicates. THIS IS FORBIDDEN.\n"

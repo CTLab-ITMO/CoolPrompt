@@ -5,6 +5,7 @@ refining and generating prompts using a Large Language Model (LLM).
 This includes methods for compression, distillation,
 aggregation, and synonym generation.
 """
+
 from typing import List
 
 from langchain_core.messages.ai import AIMessage
@@ -18,7 +19,12 @@ from coolprompt.optimizer.distill_prompt.utils import TextSampler
 class PromptTransformer:
     """Implements various transformations for prompt engineering."""
 
-    def __init__(self, model: BaseLanguageModel, sampler: TextSampler, frozen_part: str = "") -> None:
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        sampler: TextSampler,
+        frozen_part: str = "",
+    ) -> None:
         """Initializes the PromptTransformer.
 
         Args:
@@ -34,11 +40,11 @@ class PromptTransformer:
     def _get_frozen_context(self) -> str:
         if not self._frozen_part:
             return ""
-        
+
         return (
             "### CONTEXT INFO ###\n"
             "The user has hard-coded a constraint that will be appended AFTER your optimized prompt.\n"
-            f"Frozen Suffix: \"{self._frozen_part}\"\n\n"
+            f'Frozen Suffix: "{self._frozen_part}"\n\n'
             "### IMPORTANT INSTRUCTIONS ###\n"
             "1. Ensure your new prompt flows logically into the Frozen Suffix.\n"
             "2. CRITICAL: The Frozen Suffix is ALREADY attached. If you repeat its content, the final prompt will have duplicates. THIS IS FORBIDDEN.\n"
@@ -96,9 +102,9 @@ class PromptTransformer:
             request_prompts.append(compression_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
 
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
@@ -106,8 +112,10 @@ class PromptTransformer:
         ]
 
     def distill_samples(
-        self, candidates: List[Candidate], sample_count: int = 5,
-        temperature: float = 0.5
+        self,
+        candidates: List[Candidate],
+        sample_count: int = 5,
+        temperature: float = 0.5,
     ) -> List[str]:
         """Distills insights from training samples to improve prompts.
 
@@ -128,15 +136,16 @@ class PromptTransformer:
             sample_string = self._format_samples(train_samples)
             prompt = distillprompt_templates.DISTILLATION_PROMPT
             distillation_prompt = prompt.format(
-                candidate_prompt=candidate.prompt, sample_string=sample_string,
+                candidate_prompt=candidate.prompt,
+                sample_string=sample_string,
                 FROZEN_CONTEXT=self._get_frozen_context(),
             )
             request_prompts.append(distillation_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -165,9 +174,9 @@ class PromptTransformer:
         )
         requests = [generation_prompt] * n
         answers = self.model.batch(requests, temperature=temperature)
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -194,9 +203,9 @@ class PromptTransformer:
         )
         requests = [rewriter_prompt] * n
         responses = self.model.batch(requests, temperature=temperature)
-        responses = [a.content
-                     if isinstance(a, AIMessage)
-                     else a for a in responses]
+        responses = [
+            a.content if isinstance(a, AIMessage) else a for a in responses
+        ]
         return [response for response in responses if response]
 
     def convert_to_fewshot(
@@ -244,9 +253,9 @@ class PromptTransformer:
         formatted_strings = []
         for i, (text_input, output) in enumerate(samples):
             formatted_strings.append(
-                f'Example {i + 1}:\n'
+                f"Example {i + 1}:\n"
                 f'Text: "{text_input.strip()}"\n'
-                f'Label: {output}'
+                f"Label: {output}"
             )
         return "\n\n".join(formatted_strings)
 
@@ -270,4 +279,4 @@ class PromptTransformer:
         if end_index == -1:
             return text
 
-        return text[start_index + len(start_tag):end_index].strip()
+        return text[start_index + len(start_tag) : end_index].strip()
