@@ -1,6 +1,31 @@
+HYPE_PROMPT_TEMPLATE_3 = (
+    "You are an expert prompt engineer. Your only task is to "
+    "generate a hypothetical prompt that would help "
+    "a large language model effectively answer the following query. "
+    "The prompt must solve the same underlying task as the original query while being more effective.\n"
+    "### HARD CONSTRAINTS ###\n"
+    "1. LANGUAGE:\n"
+    "   - Output MUST be in the EXACT SAME LANGUAGE as the query.\n"
+    "2. CONTENT:\n"
+    "   - Output ONLY the hypothetical prompt - do NOT answer the original query directly.\n"
+    "   - The hypothetical prompt must solve the same task as the original query provided by user.\n"
+    "   - If the original query contains any code snippets, you must include it in final prompt.\n"
+    "3. TECHNICAL PRESERVATION:\n"
+    "   - Code blocks must be preserved with original syntax and formatting.\n"
+    "   - Variables, placeholders ({{var}}), and technical terms kept unchanged.\n"
+    "   - Markdown and special formatting replicated precisely.\n"
+    "### YOUR OUTPUT FORMAT ###\n"
+    "[PROMPT_START]<your hypothetical prompt here>[PROMPT_END]\n"
+    "### INPUT ###\n"
+    "User's query: {QUERY}\n"
+    "Problem description: {PROBLEM_DESCRIPTION}\n"
+    "### OUTPUT ###\n"
+    "Hypothetical Prompt: "
+)
+
 HYPE_PROMPT_TEMPLATE = (
     "You are an expert prompt engineer. Your only task is to "
-    "generate a hypothetical instructive prompt that would help "
+    "generate a hypothetical instructional prompt that would help "
     "a large language model effectively answer the following query. "
     "The prompt must solve the same underlying task as the original query while being more effective.\n"
     "### HARD CONSTRAINTS ###\n"
@@ -10,6 +35,7 @@ HYPE_PROMPT_TEMPLATE = (
     "   - Output ONLY the hypothetical instructive prompt - do NOT answer the original query directly.\n"
     "   - The hypothetical prompt must solve the same task as the original query provided by user.\n"
     "   - If the original query contains any code snippets, you must include it in final prompt.\n"
+    "   - Do NOT invent questions, examples, or answers if they are NOT EXPLICITLY PRESENT in the query.\n"
     "3. TECHNICAL PRESERVATION:\n"
     "   - Code blocks must be preserved with original syntax and formatting.\n"
     "   - Variables, placeholders ({{var}}), and technical terms kept unchanged.\n"
@@ -23,6 +49,31 @@ HYPE_PROMPT_TEMPLATE = (
     "Hypothetical Instructive Prompt: "
 )
 
+HYPE_PROMPT_TEMPLATE_2 = (
+    "You are an expert prompt engineer. Your only task is to "
+    "generate a instructive prompt that would help "
+    "a large language model effectively answer the following query. "
+    "The prompt must solve the same underlying task as the original query while being more effective.\n"
+    "### HARD CONSTRAINTS ###\n"
+    "1. LANGUAGE:\n"
+    "   - Output MUST be in the EXACT SAME LANGUAGE as the query.\n"
+    "2. CONTENT:\n"
+    "   - Output ONLY the instructive prompt - do NOT answer the original query directly.\n"
+    "   - The prompt must solve the same task as the original query provided by user.\n"
+    "   - If the original query contains any code snippets, you must include it in final prompt.\n"
+    "3. TECHNICAL PRESERVATION:\n"
+    "   - Code blocks must be preserved with original syntax and formatting.\n"
+    "   - Variables, placeholders ({{var}}), and technical terms kept unchanged.\n"
+    "   - Markdown and special formatting replicated precisely.\n"
+    "### YOUR OUTPUT FORMAT ###\n"
+    "[PROMPT_START]<your instructive prompt here>[PROMPT_END]\n"
+    "### INPUT ###\n"
+    "User's query: {QUERY}\n"
+    "Problem description: {PROBLEM_DESCRIPTION}\n"
+    "### OUTPUT ###\n"
+    "Instructive Prompt: "
+)
+
 HYPE_PROMPT_TEMPLATE_1 = "Please write a hypothetical instructive prompt for the following query to make a large language model answer the question.\nQuery: {QUERY}\nPrompt: "
 
 CLASSIFICATION_TASK_TEMPLATE_HYPE = """{PROMPT}
@@ -34,6 +85,8 @@ Examples:
        Output will be: <ans>(A)</ans>
 2. Labels are [A, B, C] and you chose the first option
        Output will be: <ans>A</ans>
+3. Labels are [1, 2, 3] and you chose the first option
+       Output will be: <ans>1</ans>
 
 Input:
 {INPUT}

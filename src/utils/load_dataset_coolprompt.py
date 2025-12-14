@@ -4,15 +4,10 @@ import pandas as pd
 squad_v2 = load_dataset("rajpurkar/squad_v2")
 gsm8k = load_dataset("openai/gsm8k", "main")
 common_gen = load_dataset("allenai/common_gen")
-ag_news = load_dataset("fancyzhx/ag_news")
+tweeteval = load_dataset("cardiffnlp/tweet_eval", "emotion")
 xsum = load_dataset("yairfeldman/xsum")
 
-ag_labels = {
-    "World": 0,
-    "Sports": 1,
-    "Business": 2,
-    "Sci/Tech": 3,
-}
+tweeteval_emotions = {0: "anger", 1: "joy", 2: "optimism", 3: "sadness"}
 
 
 def squad_v2_preproc(sample, size: int = None):
@@ -54,10 +49,12 @@ def common_gen_preproc(sample, size: int = None):
     return data
 
 
-def ag_news_preproc(sample, size: int = None):
+def tweeteval_preproc(sample, size: int = None):
     data = pd.DataFrame(sample)
 
-    data = data.rename(columns={"text": "input_data", "label": "target"})
+    data["input_data"] = data["text"]
+    data["target"] = data["label"].apply(lambda x: tweeteval_emotions[x])
+
     if size:
         data = data.head(size)
 
@@ -83,8 +80,8 @@ def load_dataset(name: str, size: int = None):
                 return gsm8k_preproc(gsm8k, size)
             case "common_gen":
                 return common_gen_preproc(common_gen, size)
-            case "ag_new":
-                return ag_news_preproc(ag_news, size)
+            case "tweeteval":
+                return tweeteval_preproc(tweeteval, size)
             case "xsum":
                 return xsum_preproc(xsum, size)
 

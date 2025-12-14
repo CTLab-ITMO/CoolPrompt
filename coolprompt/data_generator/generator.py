@@ -1,7 +1,5 @@
-import json
 from typing import Optional, List, Tuple, Any
 
-import dirtyjson
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages.ai import AIMessage
@@ -52,11 +50,11 @@ class SyntheticDataGenerator:
         Returns:
             Any: generated data
         """
-        if hasattr(self.model, 'model'):
+        if hasattr(self.model, "model"):
             wrapped_model = self.model.model
         else:
             wrapped_model = self.model
-        
+
         if not isinstance(wrapped_model, BaseChatModel):
             output = self.model.invoke(request)
             if isinstance(output, AIMessage):
