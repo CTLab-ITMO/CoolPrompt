@@ -79,12 +79,14 @@ class PromptTuner:
         self.answer_samples_size = 3
         self.answer_samples = None
 
+        self.model_stats = None
+
         logger.info("Validating the target model")
-        #validate_model(self._target_model)
+        # validate_model(self._target_model)
 
         if self._system_model is not self._target_model:
             logger.info("Validating the system model")
-            #validate_model(self._system_model)
+            # validate_model(self._system_model)
 
         logger.info("PromptTuner successfully initialized")
 
@@ -154,6 +156,8 @@ class PromptTuner:
         generate_num_samples: int = 10,
         feedback: bool = True,
         verbose: int = 1,
+        evaluate: bool = True,
+        optimized_prompt: str = None,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -273,34 +277,39 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
-        logger.info("Resetting models stats")
-        self._target_model.reset_stats()
-        if method is Method.HYPE:
-            final_prompt = hype_optimizer(
-                model=self._target_model,
-                prompt=start_prompt,
-                problem_description=problem_description,
+        if optimized_prompt is None:
+            logger.info("Resetting models stats")
+            self._target_model.reset_stats()
+            if method is Method.HYPE:
+                final_prompt = hype_optimizer(
+                    model=self._target_model,
+                    prompt=start_prompt,
+                    problem_description=problem_description,
+                )
+            elif method is Method.REFLECTIVE:
+                final_prompt = reflectiveprompt(
+                    model=self._target_model,
+                    dataset_split=dataset_split,
+                    evaluator=evaluator,
+                    problem_description=problem_description,
+                    initial_prompt=start_prompt,
+                    **kwargs,
+                )
+            elif method is Method.DISTILL:
+                final_prompt = distillprompt(
+                    model=self._target_model,
+                    dataset_split=dataset_split,
+                    evaluator=evaluator,
+                    initial_prompt=start_prompt,
+                    **kwargs,
+                )
+            self.model_stats = self._target_model.get_stats()
+            logger.info(
+                f"Models stats after optimization:\n{self.model_stats}"
             )
-        elif method is Method.REFLECTIVE:
-            final_prompt = reflectiveprompt(
-                model=self._target_model,
-                dataset_split=dataset_split,
-                evaluator=evaluator,
-                problem_description=problem_description,
-                initial_prompt=start_prompt,
-                **kwargs,
-            )
-        elif method is Method.DISTILL:
-            final_prompt = distillprompt(
-                model=self._target_model,
-                dataset_split=dataset_split,
-                evaluator=evaluator,
-                initial_prompt=start_prompt,
-                **kwargs,
-            )
-        logger.info(
-            f"Models stats after optimization:\n{self._target_model.get_stats()}"
-        )
+        else:
+            final_prompt = optimized_prompt
+        logger.info(f"Raw final prompt:\n{final_prompt}")
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
@@ -310,25 +319,26 @@ class PromptTuner:
         )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
-        template = self.TEMPLATE_MAP[(task, method)]
-        logger.info(f"Evaluating on given dataset for {task} task...")
-        self.init_metric = evaluator.evaluate(
-            prompt=start_prompt,
-            dataset=dataset_split[1],
-            targets=dataset_split[3],
-            template=template,
-        )
-        self.final_metric, self.answer_samples = evaluator.evaluate(
-            prompt=final_prompt,
-            dataset=dataset_split[1],
-            targets=dataset_split[3],
-            template=template,
-            sample_size=self.answer_samples_size,
-        )
-        logger.info(
-            f"Initial {metric} score: {self.init_metric}, "
-            f"final {metric} score: {self.final_metric}"
-        )
+        if evaluate:
+            template = self.TEMPLATE_MAP[(task, method)]
+            logger.info(f"Evaluating on given dataset for {task} task...")
+            self.init_metric = evaluator.evaluate(
+                prompt=start_prompt,
+                dataset=dataset_split[1],
+                targets=dataset_split[3],
+                template=template,
+            )
+            self.final_metric, self.answer_samples = evaluator.evaluate(
+                prompt=final_prompt,
+                dataset=dataset_split[1],
+                targets=dataset_split[3],
+                template=template,
+                sample_size=self.answer_samples_size,
+            )
+            logger.info(
+                f"Initial {metric} score: {self.init_metric}, "
+                f"final {metric} score: {self.final_metric}"
+            )
 
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt

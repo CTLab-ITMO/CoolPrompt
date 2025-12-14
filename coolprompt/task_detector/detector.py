@@ -12,7 +12,7 @@ from coolprompt.utils.prompt_templates.task_detector_templates import (
     TASK_DETECTOR_TEMPLATE
 )
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.parsing import extract_json
+from coolprompt.utils.parsing import extract_json, get_model_answer_extracted
 
 
 class TaskDetector:
@@ -43,7 +43,7 @@ class TaskDetector:
             Any: generated data
         """
         if not isinstance(self.model, BaseChatModel):
-            output = self.model.invoke(request)
+            output = get_model_answer_extracted(self.model, request)
             return extract_json(output)[field_name]
 
         structured_model = self.model.with_structured_output(

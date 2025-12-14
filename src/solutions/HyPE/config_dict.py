@@ -5,32 +5,32 @@ from src.utils.load_dataset_coolprompt import (
     gsm8k_preproc,
     common_gen,
     common_gen_preproc,
-    ag_news,
-    ag_news_preproc,
+    tweeteval,
+    tweeteval_preproc,
     xsum,
     xsum_preproc,
 )
 
 
 config_dict = {
-    # "gsm8k": {
-    #     "start_prompt": "Given a context answer on the question.",
-    #     "task": "generation",
-    #     "metric": "em",
-    #     "preproc": gsm8k_preproc,
-    #     "data": gsm8k,
-    #     "test_name": "test",
-    #     "problem_description": "math solving",
-    # },
-    "squad_v2": {
+    "gsm8k": {
         "start_prompt": "Given a context answer on the question.",
         "task": "generation",
-        "metric": "bertscore",
-        "preproc": squad_v2_preproc,
-        "data": squad_v2,
-        "test_name": "validation",
-        "problem_description": "question answering",
+        "metric": "em",
+        "preproc": gsm8k_preproc,
+        "data": gsm8k,
+        "test_name": "test",
+        "problem_description": "math solving",
     },
+    # "squad_v2": {
+    #     "start_prompt": "Given a context answer on the question.",
+    #     "task": "generation",
+    #     "metric": "bertscore",
+    #     "preproc": squad_v2_preproc,
+    #     "data": squad_v2,
+    #     "test_name": "validation",
+    #     "problem_description": "question answering",
+    # },
     # "common_gen": {
     #     "start_prompt": "Create a short sentence using words in list.",
     #     "task": "generation",
@@ -40,12 +40,12 @@ config_dict = {
     #     "test_name": "validation",
     #     "problem_description": "create a sentence",
     # },
-    # "ag_news": {
-    #     "start_prompt": "Classify news and provide number of topic from dict {{World: 0, Sports: 1, Business: 2, Sci/Tech: 3}}",
+    # "tweeteval": {
+    #     "start_prompt": "Provide sentiment classification.",
     #     "task": "classification",
     #     "metric": "f1",
-    #     "preproc": ag_news_preproc,
-    #     "data": ag_news,
+    #     "preproc": tweeteval_preproc,
+    #     "data": tweeteval,
     #     "test_name": "test",
     #     "problem_description": "classification",
     # },

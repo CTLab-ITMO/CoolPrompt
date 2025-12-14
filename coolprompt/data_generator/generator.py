@@ -21,7 +21,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.parsing import extract_json
+from coolprompt.utils.parsing import extract_json, get_model_answer_extracted
 
 
 class SyntheticDataGenerator:
@@ -53,7 +53,7 @@ class SyntheticDataGenerator:
             Any: generated data
         """
         if not isinstance(self.model, BaseChatModel):
-            output = self.model.invoke(request)
+            output = get_model_answer_extracted(self.model, request)
             return extract_json(output)[field_name]
 
         structured_model = self.model.with_structured_output(
