@@ -82,7 +82,7 @@ See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/m
 ## Reference
 For technical details and full experimental results, please check our papers.
 
-**CoolPrompt**
+<a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf">**CoolPrompt**</a>
 ```
 @INPROCEEDINGS{11239071,
   author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey},
@@ -97,7 +97,7 @@ For technical details and full experimental results, please check our papers.
 }
 ```
 
-**ReflectivePrompt**
+<a href="https://ntv.ifmo.ru/file/article/23927.pdf">**ReflectivePrompt**</a>
 ```
 @misc{zhuravlev2025reflectivepromptreflectiveevolutionautoprompting,
       title={ReflectivePrompt: Reflective evolution in autoprompting algorithms}, 
@@ -110,7 +110,7 @@ For technical details and full experimental results, please check our papers.
 }
 ```
 
-**DistillPrompt**
+<a href="https://arxiv.org/pdf/2508.18992">**DistillPrompt**</a>
 ```
 @misc{dyagin2025automaticpromptoptimizationprompt,
       title={Automatic Prompt Optimization with Prompt Distillation}, 
@@ -122,6 +122,7 @@ For technical details and full experimental results, please check our papers.
       url={https://arxiv.org/abs/2508.18992}, 
 }
 ```
+
 
 
 
