@@ -160,7 +160,7 @@ class PromptTuner:
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
         **kwargs,
-    ) -> str | None:
+    ) -> str:
         """Optimizes prompts using provided model.
 
         Args:
@@ -263,7 +263,6 @@ class PromptTuner:
             problem_description,
             validation_size,
         )
-
         metric = validate_and_create_metric(
             task,
             metric,
@@ -280,7 +279,6 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
-
         evaluator = Evaluator(self._target_model, task, metric)
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)
@@ -290,7 +288,7 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
-                num_samples=generate_num_samples,
+                num_samples=generate_num_samples
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target

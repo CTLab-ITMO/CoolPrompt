@@ -457,7 +457,7 @@ class ExactMatchMetric(GenerationMetric):
     def __init__(self):
         super().__init__()
 
-    def _compute_raw(self, outputs, targets):
+    def _compute_raw(self, outputs, targets, dataset):
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
         return float(mean([o == t for o, t in zip(outputs, targets)]))
