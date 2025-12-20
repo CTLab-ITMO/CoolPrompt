@@ -1,5 +1,5 @@
 REFLECTIVEPROMPT_SHORT_TERM_REFLECTION_TEMPLATE = """You are an expert in the domain of optimization prompts. Your task is to give hints to design better prompts.
-
+{FROZEN_CONTEXT}
 Below are two prompts for {PROBLEM_DESCRIPTION}.
 You are provided with two prompt versions below, where the second version performs better than the first one.
 [Worse prompt]
@@ -12,7 +12,7 @@ Bracket the final hint with <hint> </hint>.
 """
 
 REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE = """You are an expert in the domain of optimization prompts. Your task is to give hints to design better prompts.
-
+{FROZEN_CONTEXT}
 Below is your prior long−term reflection on designing prompts for {PROBLEM_DESCRIPTION}.
 {PRIOR_LONG_TERM_REFLECTION}
 
@@ -26,7 +26,7 @@ Bracket the final hint with <hint> </hint>.
 
 REFLECTIVEPROMPT_CROSSOVER_TEMPLATE = """You are an expert in the domain of optimization prompts. Your task is to design prompts that can effectively solve optimization problems.
 Your response outputs prompt text and nothing else.
-
+{FROZEN_CONTEXT}
 Write a prompt for the task: {PROBLEM_DESCRIPTION}.
 
 [Worse prompt]
@@ -42,7 +42,7 @@ Bracket the final prompt with <prompt> </prompt>.
 
 REFLECTIVEPROMPT_MUTATION_TEMPLATE = """You are an expert in the domain of optimization prompts. Your task is to design prompts that can effectively solve optimization problems.
 Your response outputs prompt text and nothing else.
-
+{FROZEN_CONTEXT}
 Write a prompt for {PROBLEM_DESCRIPTION}.
 [Prior reflection]
 {LONG_TERM_REFLECTION}
@@ -56,6 +56,7 @@ Bracket the final prompt with <prompt> </prompt>.
 
 REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE = """Paraphrase the given prompt text keeping its initial meaning.
 Prompt: {PROMPT}
+{FROZEN_CONTEXT}
 Create the new variations of this prompt and output them in JSON structure below:
 {{
    "prompts": [
@@ -70,6 +71,7 @@ Output JSON data only.
 """
 
 REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE = """You are an expert in the domain of optimization prompts. Your task is to design prompts that can effectively solve optimization problems.
+{FROZEN_CONTEXT}
 Write a prompt that will effectively solve the task: {PROBLEM_DESCRIPTION}.
 Output prompt only.
 Bracket the final prompt with <prompt> </prompt>.

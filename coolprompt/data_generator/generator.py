@@ -22,6 +22,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.parsing import extract_json
+from coolprompt.utils.prompt_freezer import remove_freeze_tags
 
 
 class SyntheticDataGenerator:
@@ -36,9 +37,7 @@ class SyntheticDataGenerator:
     def __init__(self, model: BaseLanguageModel) -> None:
         self.model = model
 
-    def _generate(
-        self, request: str, schema: BaseModel, field_name: str
-    ) -> Any:
+    def _generate(self, request: str, schema: BaseModel, field_name: str) -> Any:
         """Generates model output
         either using structured output from langchain
         or just strict json output format for LLM
@@ -67,6 +66,7 @@ class SyntheticDataGenerator:
             output = getattr(output, field_name)
         except Exception:
             output = output[field_name]
+
         return output
 
     def _generate_problem_description(self, prompt: str) -> str:
@@ -78,7 +78,9 @@ class SyntheticDataGenerator:
         Returns:
             str: generated problem description
         """
-        request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
+        cleaned_prompt = remove_freeze_tags(prompt)
+
+        request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=cleaned_prompt)
 
         return self._generate(
             request,
@@ -88,9 +90,7 @@ class SyntheticDataGenerator:
 
     def _convert_dataset(
         self,
-        examples: List[
-            dict | ClassificationTaskExample | GenerationTaskExample
-        ],
+        examples: List[dict | ClassificationTaskExample | GenerationTaskExample],
     ) -> Tuple[List[str], List[str]]:
         """Converts outputs to the dataset format
 
@@ -157,9 +157,7 @@ class SyntheticDataGenerator:
                 + "so it will be generated automatically"
             )
             problem_description = self._generate_problem_description(prompt)
-            logger.info(
-                f"Generated problem description: {problem_description}"
-            )
+            logger.info(f"Generated problem description: {problem_description}")
 
         if task == Task.CLASSIFICATION:
             request = CLASSIFICATION_DATA_GENERATING_TEMPLATE

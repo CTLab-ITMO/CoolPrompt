@@ -5,6 +5,7 @@ refining and generating prompts using a Large Language Model (LLM).
 This includes methods for compression, distillation,
 aggregation, and synonym generation.
 """
+
 from typing import List
 
 from langchain_core.messages.ai import AIMessage
@@ -18,15 +19,45 @@ from coolprompt.optimizer.distill_prompt.utils import TextSampler
 class PromptTransformer:
     """Implements various transformations for prompt engineering."""
 
-    def __init__(self, model: BaseLanguageModel, sampler: TextSampler) -> None:
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        sampler: TextSampler,
+        frozen_part: str = "",
+    ) -> None:
         """Initializes the PromptTransformer.
 
         Args:
             model (BaseLanguageModel): The language model for transformations.
             sampler (TextSampler): The sampler for training data.
+            frozen_part (str, optional): The frozen part of the prompt.
+                Defaults to "".
         """
         self.model = model
         self.sampler = sampler
+        self._frozen_part = frozen_part
+
+    def _get_frozen_context(self) -> str:
+        if not self._frozen_part:
+            return ""
+
+        frozen_parts = getattr(self, '_frozen_parts', [self._frozen_part] if self._frozen_part else [])
+        frozen_list = "\n".join([f"- \"{part}\"" for part in frozen_parts])
+        
+        return (
+            "### CONTEXT INFO ###\n"
+            "The user has marked parts of the original prompt with <freeze>...</freeze> tags.\n"
+            "The text between these tags represents hard constraints that MUST be preserved verbatim.\n"
+            f"Frozen fragments:\n{frozen_list}\n\n"
+            "### IMPORTANT INSTRUCTIONS ###\n"
+            "1. Optimize the prompt while preserving ALL content between <freeze>...</freeze> tags EXACTLY as written.\n"
+            "2. Remove the <freeze> and </freeze> tags from your output, but keep ALL frozen text fragments themselves.\n"
+            "3. Maintain the brevity and structure of the original prompt - do NOT make it unnecessarily verbose.\n"
+            "4. Include ALL frozen fragments - do NOT skip any of them.\n"
+            "5. Do NOT duplicate any frozen fragment - include each one only once.\n"
+            "6. Do NOT rewrite or paraphrase the frozen text - use it verbatim.\n"
+            "7. Keep your output concise and focused - avoid adding excessive elaboration or redundant phrases.\n\n"
+        )
 
     def aggregate_prompts(
         self, candidates: List[Candidate], temperature: float = 0.4
@@ -44,7 +75,8 @@ class PromptTransformer:
         """
         formatted_prompts = self._format_prompts_for_aggregation(candidates)
         aggregation_prompt = distillprompt_templates.AGGREGATION_PROMPT.format(
-            formatted_prompts=formatted_prompts
+            formatted_prompts=formatted_prompts,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         answer = self.model.invoke(aggregation_prompt, temperature=temperature)
         if isinstance(answer, AIMessage):
@@ -70,14 +102,15 @@ class PromptTransformer:
         for candidate in candidates:
             compression_prompt = distillprompt_templates.COMPRESSION_PROMPT
             compression_prompt = compression_prompt.format(
-                candidate_prompt=candidate.prompt
+                candidate_prompt=candidate.prompt,
+                FROZEN_CONTEXT=self._get_frozen_context(),
             )
             request_prompts.append(compression_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
 
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
@@ -85,8 +118,10 @@ class PromptTransformer:
         ]
 
     def distill_samples(
-        self, candidates: List[Candidate], sample_count: int = 5,
-        temperature: float = 0.5
+        self,
+        candidates: List[Candidate],
+        sample_count: int = 5,
+        temperature: float = 0.5,
     ) -> List[str]:
         """Distills insights from training samples to improve prompts.
 
@@ -107,14 +142,16 @@ class PromptTransformer:
             sample_string = self._format_samples(train_samples)
             prompt = distillprompt_templates.DISTILLATION_PROMPT
             distillation_prompt = prompt.format(
-                candidate_prompt=candidate.prompt, sample_string=sample_string
+                candidate_prompt=candidate.prompt,
+                sample_string=sample_string,
+                FROZEN_CONTEXT=self._get_frozen_context(),
             )
             request_prompts.append(distillation_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -138,13 +175,14 @@ class PromptTransformer:
         """
         generation_prompt = distillprompt_templates.GENERATION_PROMPT.format(
             candidate_prompt=candidate.prompt,
-            train_score=candidate.train_score
+            train_score=candidate.train_score,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         requests = [generation_prompt] * n
         answers = self.model.batch(requests, temperature=temperature)
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
         return [
             self._parse_tagged_text(answer, "<START>", "<END>")
             for answer in answers
@@ -166,13 +204,14 @@ class PromptTransformer:
             List[str]: List of synonym prompts.
         """
         rewriter_prompt = distillprompt_templates.REWRITER_PROMPT.format(
-            candidate_prompt=candidate.prompt
+            candidate_prompt=candidate.prompt,
+            FROZEN_CONTEXT=self._get_frozen_context(),
         )
         requests = [rewriter_prompt] * n
         responses = self.model.batch(requests, temperature=temperature)
-        responses = [a.content
-                     if isinstance(a, AIMessage)
-                     else a for a in responses]
+        responses = [
+            a.content if isinstance(a, AIMessage) else a for a in responses
+        ]
         return [response for response in responses if response]
 
     def convert_to_fewshot(
@@ -220,9 +259,9 @@ class PromptTransformer:
         formatted_strings = []
         for i, (text_input, output) in enumerate(samples):
             formatted_strings.append(
-                f'Example {i + 1}:\n'
+                f"Example {i + 1}:\n"
                 f'Text: "{text_input.strip()}"\n'
-                f'Label: {output}'
+                f"Label: {output}"
             )
         return "\n\n".join(formatted_strings)
 
@@ -246,4 +285,4 @@ class PromptTransformer:
         if end_index == -1:
             return text
 
-        return text[start_index + len(start_tag):end_index].strip()
+        return text[start_index + len(start_tag) : end_index].strip()

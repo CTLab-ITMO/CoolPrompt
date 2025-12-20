@@ -3,6 +3,7 @@ HYPE_PROMPT_TEMPLATE = (
     "generate a hypothetical instructive prompt that would help "
     "a large language model effectively answer the following query. "
     "The prompt must solve the same underlying task as the original query while being more effective.\n"
+    "{FROZEN_CONTEXT}"
     "### HARD CONSTRAINTS ###\n"
     "1. LANGUAGE:\n"
     "   - Output MUST be in the EXACT SAME LANGUAGE as the query.\n"

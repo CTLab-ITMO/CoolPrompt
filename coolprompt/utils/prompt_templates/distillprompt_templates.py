@@ -12,6 +12,8 @@ AGGREGATION_PROMPT = textwrap.dedent("""
 
     {formatted_prompts}
 
+    {FROZEN_CONTEXT}
+
     Your task is to generate one clear and concise prompt that captures
     the general idea, overall objective, and key instructions conveyed
     by all of the above prompts. Focus on the shared purpose and main
@@ -27,6 +29,8 @@ COMPRESSION_PROMPT = textwrap.dedent("""
 
     Current prompt: {candidate_prompt}
 
+    {FROZEN_CONTEXT}
+
     Steps:
     1. Identify the main task or objective.
     2. Extract the most important ideas illustrated by the examples.
@@ -39,6 +43,8 @@ DISTILLATION_PROMPT = textwrap.dedent("""
     You are an expert prompt engineer.
 
     Current instruction prompt: {candidate_prompt}
+
+    {FROZEN_CONTEXT}
 
     Training examples:
     {sample_string}
@@ -60,6 +66,8 @@ GENERATION_PROMPT = textwrap.dedent("""
     Below is my current instruction prompt:
     {candidate_prompt}
 
+    {FROZEN_CONTEXT}
+
     On the train dataset, this prompt scored {train_score:.3f}
     (with 1.0 being the maximum).
 
@@ -74,5 +82,6 @@ GENERATION_PROMPT = textwrap.dedent("""
 REWRITER_PROMPT = (
     "Generate a variation of the following prompt while keeping the semantic meaning.\n\n"
     "Input: {candidate_prompt}\n\n"
+    "{FROZEN_CONTEXT}\n"
     "Output:"
 )

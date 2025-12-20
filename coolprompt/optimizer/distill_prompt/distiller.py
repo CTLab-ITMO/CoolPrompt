@@ -13,6 +13,9 @@ from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
 from coolprompt.utils.logging_config import logger
+from coolprompt.utils.prompt_freezer import (
+    split_prompt, merge_prompt, has_freeze_tags, remove_freeze_tags, extract_frozen_parts
+)
 from coolprompt.optimizer.distill_prompt.candidate import (
     Candidate,
     CandidateHistory,
@@ -81,11 +84,20 @@ class Distiller:
         self.validation_dataset = validation_dataset
         self.validation_targets = validation_targets
         self.use_cache = use_cache
-        self.base_prompt = base_prompt
         self.num_epochs = num_epochs
         self.output_path = output_path
         self.iteration = 0
         self.logger = logger
+
+        if has_freeze_tags(base_prompt):
+            self._frozen_parts = extract_frozen_parts(base_prompt)
+            self._frozen_part = " ".join(self._frozen_parts).strip()
+            self.base_prompt = base_prompt
+            logger.info("Found frozen parts in prompt. LLM will preserve them in natural position.")
+        else:
+            self._frozen_parts = []
+            self._frozen_part = ""
+            self.base_prompt = base_prompt
 
         seed_everything()
 
@@ -106,8 +118,10 @@ class Distiller:
             dataset = self.validation_dataset
             targets = self.validation_targets
 
+        full_prompt = remove_freeze_tags(prompt)
+
         score = self.evaluator.evaluate(
-            prompt=prompt,
+            prompt=full_prompt,
             dataset=dataset,
             targets=targets,
         )
@@ -154,7 +168,10 @@ class Distiller:
         self.logger.debug(f"Start prompt:\n{self.base_prompt}")
 
         sampler = TextSampler(self.train_dataset, self.train_targets)
-        transformer = PromptTransformer(self.model, sampler)
+        transformer = PromptTransformer(
+            self.model, sampler, frozen_part=self._frozen_part
+        )
+        transformer._frozen_parts = getattr(self, '_frozen_parts', [self._frozen_part] if self._frozen_part else [])
         history = CandidateHistory()
 
         base_prompt = self.base_prompt
@@ -168,7 +185,6 @@ class Distiller:
             history.clear()
             history.add(best_candidate)
 
-            # Generation
             gen_prompts = transformer.generate_prompts(best_candidate)
             gen_candidates = [
                 Candidate(prompt, self._evaluate(prompt))
@@ -176,7 +192,6 @@ class Distiller:
             ]
             history.extend(gen_candidates)
 
-            # Distillation
             distilled_prompts = transformer.distill_samples(gen_candidates)
             distilled_candidates = [
                 Candidate(prompt, self._evaluate(prompt))
@@ -184,7 +199,6 @@ class Distiller:
             ]
             history.extend(distilled_candidates)
 
-            # Compression
             compressed_prompts = transformer.compress_prompts(
                 distilled_candidates
             )
@@ -194,7 +208,6 @@ class Distiller:
             ]
             history.extend(compressed_candidates)
 
-            # Aggregation
             aggregated_prompt = transformer.aggregate_prompts(
                 compressed_candidates
             )
@@ -217,11 +230,8 @@ class Distiller:
                 f"Best candidate score in round {round_num}: "
                 f"{best_candidate.train_score}"
             )
-            self.logger.debug(
-                f"Best candidate prompt: {best_candidate.prompt}"
-            )
+            self.logger.debug(f"Best candidate prompt: {best_candidate.prompt}")
 
-            # Cache results
             self._cache_data(
                 {
                     "prompts": [c.prompt for c in final_candidates],
@@ -244,4 +254,10 @@ class Distiller:
 
         self.logger.info("DistillPrompt optimization completed")
 
-        return final_prompt
+        final_prompt_with_frozen = remove_freeze_tags(final_prompt)
+        if self._frozen_part:
+            self.logger.debug(
+                f"Final prompt with frozen parts integrated:\n{final_prompt_with_frozen}"
+            )
+
+        return final_prompt_with_frozen

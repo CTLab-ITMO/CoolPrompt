@@ -30,6 +30,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
+from coolprompt.utils.prompt_freezer import split_prompt, merge_prompt
 
 
 class PromptTuner:
@@ -353,8 +354,12 @@ class PromptTuner:
         logger.debug(f"Final prompt:\n{final_prompt}")
         template = self.TEMPLATE_MAP[(task, method)]
         logger.info(f"Evaluating on given dataset for {task} task...")
+        
+        optimizable_init, frozen_init = split_prompt(start_prompt)
+        init_prompt_for_eval = merge_prompt(optimizable_init, frozen_init)
+        
         self.init_metric = evaluator.evaluate(
-            prompt=start_prompt,
+            prompt=init_prompt_for_eval,
             dataset=dataset_split[1],
             targets=dataset_split[3],
             template=template,
@@ -370,7 +375,7 @@ class PromptTuner:
             f"final {metric} score: {self.final_metric}"
         )
 
-        self.init_prompt = start_prompt
+        self.init_prompt = init_prompt_for_eval
         self.final_prompt = final_prompt
 
         logger.info("=== Prompt Optimization Completed ===")
