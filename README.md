@@ -84,9 +84,16 @@ For technical details and full experimental results, please check our papers.
 
 **CoolPrompt**
 ```
-@article{kulincoolprompt,
-  title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models},
-  author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey}
+@INPROCEEDINGS{11239071,
+  author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey},
+  booktitle={2025 38th Conference of Open Innovations Association (FRUCT)}, 
+  title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={158-166},
+  keywords={Technological innovation;Systematics;Large language models;Pipelines;Manuals;Prediction algorithms;Libraries;Prompt engineering;Optimization;Synthetic data},
+  doi={10.23919/FRUCT67853.2025.11239071}
 }
 ```
 
@@ -115,5 +122,6 @@ For technical details and full experimental results, please check our papers.
       url={https://arxiv.org/abs/2508.18992}, 
 }
 ```
+
 
 
