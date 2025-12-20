@@ -73,7 +73,19 @@ def remove_freeze_tags(prompt: str) -> str:
     if not prompt:
         return prompt
 
-    validate_freeze_tags(prompt)
+    start_count = prompt.count(FREEZE_START_TAG)
+    end_count = prompt.count(FREEZE_END_TAG)
+
+    if start_count == 0 and end_count == 0:
+        return prompt.strip()
+
+    if start_count != end_count:
+        logger.warning(
+            f"Found {start_count} opening tags <freeze> but {end_count} closing tags </freeze>. "
+            f"Removing all freeze tags without content."
+        )
+        result = prompt.replace(FREEZE_START_TAG, "").replace(FREEZE_END_TAG, "")
+        return result.strip()
 
     result = FREEZE_PATTERN.sub(r"\1", prompt)
     return result.strip()

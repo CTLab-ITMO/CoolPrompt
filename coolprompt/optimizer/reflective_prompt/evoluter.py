@@ -22,7 +22,9 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
 from coolprompt.utils.parsing import extract_answer, extract_json
-from coolprompt.utils.prompt_freezer import split_prompt, merge_prompt
+from coolprompt.utils.prompt_freezer import (
+    split_prompt, merge_prompt, has_freeze_tags, remove_freeze_tags, extract_frozen_parts
+)
 
 
 class ReflectiveEvoluter:
@@ -95,12 +97,15 @@ class ReflectiveEvoluter:
         
 
         if self.initial_prompt:
-            optimizable, frozen = split_prompt(self.initial_prompt)
-            self._frozen_part = frozen
-            self.initial_prompt = optimizable if optimizable else self.initial_prompt
-            if frozen:
-                logger.info("Found frozen parts in initial prompt. These will be preserved during optimization.")
+            if has_freeze_tags(self.initial_prompt):
+                self._frozen_parts = extract_frozen_parts(self.initial_prompt)
+                self._frozen_part = " ".join(self._frozen_parts).strip()
+                logger.info("Found frozen parts in initial prompt. LLM will preserve them in natural position.")
+            else:
+                self._frozen_parts = []
+                self._frozen_part = ""
         else:
+            self._frozen_parts = []
             self._frozen_part = ""
 
         self._paraphrasing_template = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE
@@ -120,16 +125,20 @@ class ReflectiveEvoluter:
         if not self._frozen_part:
             return ""
         
+        frozen_list = "\n".join([f"- \"{part}\"" for part in self._frozen_parts])
         return (
             "### CONTEXT INFO ###\n"
-            "The user has hard-coded a constraint that will be appended AFTER your optimized prompt.\n"
-            f"Frozen Suffix: \"{self._frozen_part}\"\n\n"
+            "The user has marked parts of the original prompt with <freeze>...</freeze> tags.\n"
+            "The text between these tags represents hard constraints that MUST be preserved verbatim.\n"
+            f"Frozen fragments:\n{frozen_list}\n\n"
             "### IMPORTANT INSTRUCTIONS ###\n"
-            "1. Ensure your new prompt flows logically into the Frozen Suffix.\n"
-            "2. CRITICAL: The Frozen Suffix is ALREADY attached. If you repeat its content, the final prompt will have duplicates. THIS IS FORBIDDEN.\n"
-            "3. Your job is to write the PREFIX that leads up to the suffix, NOT to rewrite the suffix itself.\n"
-            "4. DO NOT include the Frozen Suffix in your output.\n"
-            "5. Output ONLY the optimized version of the prompt.\n\n"
+            "1. Optimize the prompt while preserving ALL content between <freeze>...</freeze> tags EXACTLY as written.\n"
+            "2. Remove the <freeze> and </freeze> tags from your output, but keep ALL frozen text fragments themselves.\n"
+            "3. Maintain the brevity and structure of the original prompt - do NOT make it unnecessarily verbose.\n"
+            "4. Include ALL frozen fragments - do NOT skip any of them.\n"
+            "5. Do NOT duplicate any frozen fragment - include each one only once.\n"
+            "6. Do NOT rewrite or paraphrase the frozen text - use it verbatim.\n"
+            "7. Keep your output concise and focused - avoid adding excessive elaboration or redundant phrases.\n\n"
         )
 
     def _reranking(self, population: List[Prompt]) -> List[Prompt]:
@@ -159,7 +168,7 @@ class ReflectiveEvoluter:
         else:
             dataset, targets = self.validation_dataset, self.validation_targets
         
-        full_prompt = merge_prompt(prompt.text, self._frozen_part)
+        full_prompt = remove_freeze_tags(prompt.text)
         
         score = self.evaluator.evaluate(
             prompt=full_prompt,
@@ -607,9 +616,8 @@ class ReflectiveEvoluter:
         logger.info(f"BEST VALIDATION SCORE: {self.best_score_overall}")
         logger.debug(f"BEST PROMPT:\n{self.best_prompt_overall}")
 
-        # Merge best prompt with frozen part before returning
-        final_prompt = merge_prompt(self.best_prompt_overall, self._frozen_part)
+        final_prompt = remove_freeze_tags(self.best_prompt_overall)
         if self._frozen_part:
-            logger.debug(f"Final prompt with frozen parts:\n{final_prompt}")
+            logger.debug(f"Final prompt with frozen parts integrated:\n{final_prompt}")
         
         return final_prompt

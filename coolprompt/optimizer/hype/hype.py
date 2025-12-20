@@ -9,7 +9,9 @@ from coolprompt.utils.parsing import (
     get_model_answer_extracted,
     safe_template,
 )
-from coolprompt.utils.prompt_freezer import split_prompt, merge_prompt
+from coolprompt.utils.prompt_freezer import (
+    split_prompt, merge_prompt, has_freeze_tags, remove_freeze_tags, extract_frozen_parts
+)
 
 INSTRUCTIVE_PROMPT_TAGS = ("[PROMPT_START]", "[PROMPT_END]")
 
@@ -32,22 +34,27 @@ def hype_optimizer(
     logger.info("Running HyPE optimization...")
     logger.debug(f"Start prompt:\n{prompt}")
 
-    optimizable_part, frozen_part = split_prompt(prompt)
-
-    if frozen_part:
+    has_frozen = has_freeze_tags(prompt)
+    
+    if has_frozen:
+        frozen_parts = extract_frozen_parts(prompt)
         logger.info(
-            "Found frozen parts in prompt. Optimizing only optimizable part."
+            f"Found {len(frozen_parts)} frozen part(s) in prompt"
         )
+        frozen_list = "\n".join([f"- \"{part}\"" for part in frozen_parts])
         frozen_context = (
             "### CONTEXT INFO ###\n"
-            "The user has hard-coded a constraint that will be appended AFTER your optimized prompt.\n"
-            f'Frozen Suffix: "{frozen_part}"\n\n'
+            "The user has marked parts of the original query with <freeze>...</freeze> tags.\n"
+            "The text between these tags represents hard constraints that MUST be preserved verbatim.\n"
+            f"Frozen fragments:\n{frozen_list}\n\n"
             "### IMPORTANT INSTRUCTIONS ###\n"
-            "1. Ensure your new prompt flows logically into the Frozen Suffix.\n"
-            "2. CRITICAL: The Frozen Suffix is ALREADY attached. If you repeat its content, the final prompt will have duplicates. THIS IS FORBIDDEN.\n"
-            "3. Your job is to write the PREFIX that leads up to the suffix, NOT to rewrite the suffix itself.\n"
-            "4. DO NOT include the Frozen Suffix in your output.\n"
-            "5. Output ONLY the optimized version of the TASK_PROMPT.\n\n"
+            "1. Optimize the prompt while preserving ALL content between <freeze>...</freeze> tags EXACTLY as written.\n"
+            "2. Remove the <freeze> and </freeze> tags from your output, but keep ALL frozen text fragments themselves.\n"
+            "3. Maintain the brevity and structure of the original prompt - do NOT make it unnecessarily verbose.\n"
+            "4. Include ALL frozen fragments - do NOT skip any of them.\n"
+            "5. Do NOT duplicate any frozen fragment - include each one only once.\n"
+            "6. Do NOT rewrite or paraphrase the frozen text - use it verbatim.\n"
+            "7. Keep your output concise and focused - avoid adding excessive elaboration or redundant phrases.\n\n"
         )
     else:
         frozen_context = ""
@@ -55,20 +62,20 @@ def hype_optimizer(
     query = safe_template(
         HYPE_PROMPT_TEMPLATE,
         PROBLEM_DESCRIPTION=problem_description,
-        QUERY=optimizable_part if optimizable_part else prompt,
+        QUERY=prompt,
         FROZEN_CONTEXT=frozen_context,
     )
 
     answer = get_model_answer_extracted(model, query)
-    optimized_part = extract_answer(
+    final_prompt = extract_answer(
         answer, INSTRUCTIVE_PROMPT_TAGS, format_mismatch_label=answer
     )
-
-    final_prompt = merge_prompt(optimized_part, frozen_part)
+    
+    final_prompt = remove_freeze_tags(final_prompt)
 
     logger.info("HyPE optimization completed")
     logger.debug(f"Raw HyPE output:\n{answer}")
-    if frozen_part:
-        logger.debug(f"Final prompt with frozen parts:\n{final_prompt}")
+    if has_frozen:
+        logger.debug(f"Final prompt with frozen parts integrated:\n{final_prompt}")
 
     return final_prompt
