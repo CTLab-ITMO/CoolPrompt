@@ -85,6 +85,15 @@ class PromptTuner:
 
         logger.info("PromptTuner successfully initialized")
 
+    def get_stats(self):
+        if hasattr(self._target_model, "get_stats"):
+            return self._target_model.get_stats()
+        return None
+
+    def reset_stats(self):
+        if hasattr(self._target_model, "reset_stats"):
+            self._target_model.reset_stats()
+
     def get_task_prompt_template(self, task: str, method: str) -> str:
         """Returns the prompt template for the given task.
 
