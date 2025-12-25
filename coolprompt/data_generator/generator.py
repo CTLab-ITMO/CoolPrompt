@@ -54,9 +54,11 @@ class SyntheticDataGenerator:
             wrapped_model = self.model.model
         else:
             wrapped_model = self.model
-
+        
         if not isinstance(wrapped_model, BaseChatModel):
             output = self.model.invoke(request)
+            if isinstance(output, AIMessage):
+                output = output.content
             if isinstance(output, AIMessage):
                 output = output.content
             return extract_json(output)[field_name]
