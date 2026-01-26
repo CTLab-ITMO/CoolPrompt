@@ -10,6 +10,45 @@ Output format:
 }}
 """
 
+PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE = """You are an expert in LLM task domain.
+You are given a user's prompt and a few examples from problem dataset.
+User created this prompt to solve the task represented by given dataset.
+Write the detailed problem description for which that prompt was created. Feel free to use provided examples from the dataset to highlight the key features of the task. You can pay attention to answer format, problem's subject and scope and other aspects that may be crucial for better understanding.
+Remember, you should provide a very detailed problem description in order to make it understandable and clear as much as possible, but it is very important to make your problem description general and non-specific. Do not highlight the meaning of specific examples, you need to define the meaning of the task as a whole.
+Use only textual description. Do not add another data.
+
+User's prompt: {prompt}
+
+Examples from dataset:
+{examples}
+
+Provide your answer in JSON format with object with key 'problem_description'.
+Output format:
+{{
+    'problem_description': "Determined problem description"
+}}
+"""
+
+
+PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE_OLD = """You are an expert in LLM task domain.
+You are given a user's prompt and a few examples from problem dataset.
+User created this prompt to solve the task represented by given dataset.
+Write the detailed problem description for which that prompt was created. Feel free to use provided examples from the dataset to highlight the key features of the task. You can pay attention to answer format, problem's subject and scope and other aspects that may be crucial for better understanding.
+Remember, you should provide a very detailed problem description in order to make it understandable and clear as much as possible. 
+Use only textual description. Do not add another data.
+
+User's prompt: {prompt}
+
+Examples from dataset:
+{examples}
+
+Provide your answer in JSON format with object with key 'problem_description'.
+Output format:
+{{
+    'problem_description': "Determined problem description"
+}}
+"""
+
 CLASSIFICATION_DATA_GENERATING_TEMPLATE = """You are an expert in synthetic data generation. You are very experienced in creating task examples.
 You should create a validation dataset of {num_samples} examples.
 Create a set of ground-truth labels.

@@ -296,8 +296,17 @@ class PromptTuner:
             self.synthetic_target = target
 
         if problem_description is None:
+            logger.info(
+                "Problem description was not provided, "
+                + "so it will be generated automatically"
+            )
+            examples = list(zip(dataset[:5], target[:5]))
             problem_description = generator._generate_problem_description(
-                prompt=start_prompt
+                prompt=start_prompt,
+                examples=examples
+            )
+            logger.info(
+                f"Generated problem description: {problem_description}"
             )
 
         dataset_split = self._get_dataset_split(

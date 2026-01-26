@@ -6,11 +6,9 @@ import re
 import statistics
 from typing import List, Any
 import yaml
-from transformers import PreTrainedTokenizer
-from vllm import LLM
+from langchain_core.language_models.base import BaseLanguageModel
 from src.solutions.evo.base.prompt import Prompt, PromptOrigin
-from src.evaluation.evaluator import BaseNLPEvaluator
-from src.utils.load_dataset import load_dataset
+from coolprompt.evaluator import Evaluator
 
 
 class Evoluter(ABC):
@@ -31,24 +29,22 @@ class Evoluter(ABC):
 
     def __init__(
         self,
-        model: LLM,
-        tokenizer: PreTrainedTokenizer,
-        dataset: str,
-        evaluator: BaseNLPEvaluator,
-        metric: str,
-        task: str,
+        model: BaseLanguageModel,
+        train_dataset: List[str],
+        train_target: List[str],
+        validation_dataset: List[str],
+        validation_target: List[str],
+        evaluator: Evaluator,
         use_cache: bool = True,
-        batch_size: int = 64,
     ) -> None:
-        self._prompts_directory_path = f'./data/{task}/{dataset}'
+        self._prompts_directory_path = './data/'
         self.model = model
-        self.tokenizer = tokenizer
-        self.dataset = dataset
+        self.train_dataset = train_dataset
+        self.train_target = train_target
+        self.validation_dataset = validation_dataset
+        self.validation_target = validation_target
         self.evaluator = evaluator
-        self.metric = metric
         self.use_cache = use_cache
-        self.batch_size = batch_size
-        self.task = task
 
         self.logger = logging.getLogger('Evoluter')
         self.logger.setLevel(logging.DEBUG)
@@ -101,7 +97,7 @@ class Evoluter(ABC):
             population, key=lambda prompt: prompt.score, reverse=True
         ))
 
-    def _evaluate(self, prompt: Prompt, split='train') -> None:
+    def _evaluate(self, prompt: Prompt, split="train") -> None:
         """Evaluates given prompt on self.dataset and records the score.
 
         Args:
@@ -109,20 +105,16 @@ class Evoluter(ABC):
             split (str, optional): Which split of dataset to use.
                 Defaults to 'train'.
         """
-        ds = load_dataset(
-            self.dataset,
-            self.tokenizer,
+        if split == "train":
+            dataset, targets = self.train_dataset, self.train_target
+        else:
+            dataset, targets = self.validation_dataset, self.validation_target
+        score = self.evaluator.evaluate(
             prompt=prompt.text,
-            split=split,
-            sample=100
+            dataset=dataset,
+            targets=targets,
         )
-        metrics = self.evaluator.evaluate_vllm(
-            model=self.model,
-            tokenizer=self.tokenizer,
-            eval_ds=ds,
-            batch_size=self.batch_size
-        )
-        prompt.set_score(metrics[self.metric])
+        prompt.set_score(score)
 
     def _evaluation(
         self,
@@ -196,15 +188,9 @@ class Evoluter(ABC):
                 Prompt.from_dict(prompt_data) for prompt_data in cached_data
             ]
 
-        manual_prompts = self._read_prompts(
+        initial_population = self._read_prompts(
             'prompts.yaml',
-            origin=PromptOrigin.MANUAL
         )
-        ape_prompts = self._read_prompts(
-            'prompts_auto.yaml',
-            origin=PromptOrigin.APE
-        )
-        initial_population = manual_prompts + ape_prompts
         self._evaluation(initial_population)
         initial_population = self._reranking(initial_population)
         return initial_population

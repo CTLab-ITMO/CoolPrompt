@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from random import shuffle
 from typing import Optional, Dict, List, Tuple
 
 from deepeval.metrics import GEval
@@ -25,6 +24,7 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
     RELEVANCE_TEMPLATE,
 )
 import re
+import json
 
 
 class HFEvaluateMetric(ABC):
@@ -55,7 +55,6 @@ class HFEvaluateMetric(ABC):
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-        failed_examples: Optional[int] = None
     ) -> float | Tuple[float, List[Dict[str, str]]]:
         """Compute metric value from preprocessed model answers.
 
@@ -66,20 +65,11 @@ class HFEvaluateMetric(ABC):
         Returns:
             float: Computed metric value
         """
-        result = self._metric.compute(
+        return self._metric.compute(
             predictions=outputs,
             references=targets,
             **self._compute_kwargs_func(outputs, targets),
         )[self._return_parameter]
-
-        if failed_examples:
-            return result, self._extract_bad_examples(
-                outputs,
-                targets,
-                failed_examples,
-                dataset
-            )
-        return result
 
 
 class BaseMetric(ABC):
@@ -117,7 +107,7 @@ class BaseMetric(ABC):
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-        failed_examples: Optional[int] = None
+        failed_examples: Optional[int] = None,
     ) -> float | Tuple[float, List[Dict[str, str]]]:
         """Compute metric value from preprocessed model answers.
 
@@ -176,9 +166,19 @@ class BaseMetric(ABC):
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels, targets
         )
-        return self._compute_raw(
-            encoded_output_labels, encoded_targets, dataset, failed_examples
+
+        result = self._compute_raw(
+            encoded_output_labels, encoded_targets, dataset
         )
+
+        if failed_examples:
+            return result, self._extract_bad_examples(
+                output_labels,
+                targets,
+                failed_examples,
+                dataset
+            )
+        return result
 
     def __str__(self) -> str:
         return self._get_name()
@@ -294,16 +294,27 @@ class GenerationMetric(BaseMetric):
         failed_examples: int,
         dataset: Optional[list[str]] = None
     ) -> List[Dict[str, str]]:
+        new_outputs = [[el] for el in outputs]
+        new_targets = [[tgt] for tgt in targets]
+        results = self._metric.compute(
+            predictions=new_outputs,
+            references=new_targets
+        )
+
+        worst_indices = sorted(
+            range(len(results)),
+            key=lambda i: results[i][self._return_parameter]
+        )[:failed_examples]
+
         result = [
             {
-                'input': inp,
-                'output': out,
-                'correct': tgt
+                'input': dataset[ind],
+                'output': outputs[ind],
+                'correct': targets[ind]
             }
-            for inp, out, tgt in zip(dataset, outputs, targets)
+            for ind in worst_indices
         ]
-        shuffle(result)
-        return result[:failed_examples]
+        return result
 
 
 class AccuracyMetric(HFEvaluateMetric, ClassificationMetric):
@@ -315,6 +326,23 @@ class AccuracyMetric(HFEvaluateMetric, ClassificationMetric):
 
     def __init__(self):
         super().__init__(self._get_name())
+
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        return [
+            {
+                'input': inp,
+                'output': out,
+                'correct': tgt
+            }
+            for inp, out, tgt in zip(dataset, outputs, targets)
+            if out != tgt
+        ][:failed_examples]
 
 
 class F1Metric(HFEvaluateMetric, ClassificationMetric):
@@ -329,6 +357,23 @@ class F1Metric(HFEvaluateMetric, ClassificationMetric):
         self._compute_kwargs_func = lambda outputs, targets: {
             "average": "macro"
         }
+
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        return [
+            {
+                'input': inp,
+                'output': out,
+                'correct': tgt
+            }
+            for inp, out, tgt in zip(dataset, outputs, targets)
+            if out != tgt
+        ][:failed_examples]
 
 
 class BleuMetric(HFEvaluateMetric, GenerationMetric):
@@ -379,21 +424,38 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
         }
         self._return_parameter = "f1"
 
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        results = super()._compute_raw(
+            outputs,
+            targets,
+        )
+        worst_indices = sorted(
+            range(len(results)), key=lambda i: results[i]
+        )[:failed_examples]
+
+        result = [
+            {
+                'input': dataset[ind],
+                'output': outputs[ind],
+                'correct': targets[ind]
+            }
+            for ind in worst_indices
+        ]
+        return result
+
     def _compute_raw(
         self,
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-        failed_examples: Optional[int] = None
     ) -> float | Tuple[float, List[Dict[str, str]]]:
-        if failed_examples:
-            f1_list, bad_examples = super()._compute_raw(
-                outputs,
-                targets,
-                failed_examples=failed_examples
-            )
-            return sum(f1_list) / len(f1_list), bad_examples
-        super()._compute_raw(
+        f1_list = super()._compute_raw(
             outputs,
             targets,
         )
@@ -539,26 +601,36 @@ class ExactMatchMetric(GenerationMetric):
 
     def __init__(self):
         super().__init__()
-    
+
     def _compute_raw(
         self,
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-        failed_examples: Optional[int] = None
     ) -> float | Tuple[float, List[Dict[str, str]]]:
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
-        result = float(mean([o == t for o, t in zip(outputs, targets)]))
-        if failed_examples:
-            bad_examples = self._extract_bad_examples(
-                outputs,
-                targets,
-                failed_examples,
-                dataset
-            )
-            return result, bad_examples
-        return result
+        return float(mean([o == t for o, t in zip(outputs, targets)]))
+
+    def _extract_bad_examples(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        failed_examples: int,
+        dataset: Optional[list[str]] = None
+    ) -> List[Dict[str, str]]:
+        post_targets = [extract_number_from_text(item) for item in targets]
+        post_outputs = [extract_number_from_text(item) for item in outputs]
+
+        return [
+            {
+                'input': dataset[i],
+                'output': outputs[i],
+                'correct': targets[i]
+            }
+            for i in range(len(dataset))
+            if post_outputs[i] != post_targets[i]
+        ][:failed_examples]
 
 
 def define_lang(outputs, targets):

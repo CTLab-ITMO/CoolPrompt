@@ -2,12 +2,12 @@ import os
 from typing import List
 import numpy as np
 from scipy.special import softmax
-import torch
-from transformers import AutoTokenizer
-from vllm import LLM, SamplingParams
-from src.evaluation.evaluator import BaseNLPEvaluator
+from langchain_core.messages.ai import AIMessage
+from langchain_core.language_models.base import BaseLanguageModel
+from coolprompt.evaluator import Evaluator
 from src.solutions.evo.base import Evoluter, Prompt
 from src.solutions.evo.self_evo.utils import parse_output, append_to_yaml
+from src.solutions.SPELL.prompts import CROSSMUTATION_PROMPT
 
 
 class SPELLEvoluter(Evoluter):
@@ -39,64 +39,37 @@ class SPELLEvoluter(Evoluter):
 
     def __init__(
         self,
-        model_name: str,
-        dataset: str,
-        evaluator: BaseNLPEvaluator,
-        metric: str,
-        task: str,
+        model: BaseLanguageModel,
+        train_dataset: List[str],
+        train_target: List[str],
+        validation_dataset: List[str],
+        validation_target: List[str],
+        evaluator: Evaluator,
+        problem_description: str,
         population_size: int = 10,
         num_epochs: int = 10,
-        output_path: str = './outputs',
-        use_cache: bool = True,
-        batch_size: int = 64,
+        output_path: str = './spell_outputs',
+        use_cache: bool = False,
     ) -> None:
-        model = LLM(
-            model=model_name,
-            dtype=torch.float16,
-            trust_remote_code=True
-        )
-        tokenizer = AutoTokenizer.from_pretrained(
-            model_name,
-            padding_side='left'
-        )
-
         super().__init__(
             model=model,
-            tokenizer=tokenizer,
-            dataset=dataset,
+            train_dataset=train_dataset,
+            train_target=train_target,
+            validation_dataset=validation_dataset,
+            validation_target=validation_target,
             evaluator=evaluator,
-            metric=metric,
-            task=task,
             use_cache=use_cache,
-            batch_size=batch_size
         )
 
         self.population_size = population_size
         self.num_epochs = num_epochs
-        self.problem_description_filename = 'problems.yaml'
-        self.config_filename = 'config.yaml'
+        self.problem_description = problem_description
         self.output_path = output_path
         self.iteration = 0
-        self._config_path = './data'
 
         self.elitist = None
         self.best_score_overall = None
         self.best_prompt_overall = None
-
-        self.problem_description = self._read_yaml_data(
-            os.path.join(
-                self._config_path,
-                self.problem_description_filename
-            ),
-            key=self.dataset
-        )
-        self._crossmutation_template = self._read_yaml_data(
-            os.path.join(
-                self._config_path,
-                self.config_filename
-            ),
-            key='crossmutation'
-        )
 
     def _selection(
         self,
@@ -179,41 +152,6 @@ class SPELLEvoluter(Evoluter):
 
         self.iteration += 1
 
-    def _llm_query(
-        self,
-        requests: List[str],
-        verbose: bool = False,
-        **config
-    ) -> List[str]:
-        """Provides api to query requests to the model.
-
-        Args:
-            requests (List[str]): string requests.
-            verbose (bool, optional): Whether to use logging or not.
-                Defaults to False.
-            config: additional sampling params.
-
-        Returns:
-            List[str]: model answers.
-        """
-        sampling_params = {
-            "max_tokens": 150,
-            "top_p": 0.95,
-            "frequency_penalty": 0,
-            "presence_penalty": 0,
-        }
-        sampling_params.update(**config)
-        sampling_params = SamplingParams(**sampling_params)
-
-        answers = self.model.generate(
-            prompts=requests,
-            sampling_params=sampling_params,
-            use_tqdm=verbose
-        )
-
-        results = [answer.outputs[0].text for answer in answers]
-        return results
-
     def _create_parent_examples(self, parents: List[Prompt]) -> str:
         """Creates string of examples of parenting prompts.
         Each example is concatenation of text and score.
@@ -226,6 +164,24 @@ class SPELLEvoluter(Evoluter):
         """
         parents = [str(p).replace("\t", " ") for p in parents]
         return "\n".join(parents)
+
+    def _llm_query(self, requests: List[str]) -> List[str]:
+        """Provides api to query requests to the model.
+
+        Args:
+            requests (List[str]): string requests.
+
+        Returns:
+            List[str]: model answers.
+        """
+
+        answers = self.model.batch(requests)
+
+        answers = [a.content
+                   if isinstance(a, AIMessage)
+                   else a for a in answers]
+
+        return answers
 
     def _mutate(
         self,
@@ -247,7 +203,7 @@ class SPELLEvoluter(Evoluter):
         """
         requests = []
         for i in range(0, len(population), num_of_parents):
-            request = self._crossmutation_template.replace(
+            request = CROSSMUTATION_PROMPT.replace(
                 '<PROBLEM_DESCRIPTION>',
                 self.problem_description
             ).replace(
@@ -258,11 +214,7 @@ class SPELLEvoluter(Evoluter):
             )
             requests.append(request)
 
-        responses = self._llm_query(
-            requests,
-            verbose=verbose,
-            temperature=0.3
-        )
+        responses = self._llm_query(requests)
         responses = [parse_output(response) for response in responses]
         population = [Prompt(response) for response in responses]
         return population
@@ -293,6 +245,7 @@ class SPELLEvoluter(Evoluter):
         the best prompt will be written to the best_prompts.yaml.
         """
         population = np.array(self._init_pop(use_cache=self.use_cache))
+        self._evaluation(population)
 
         while self.iteration < self.num_epochs:
             if self.elitist is not None and self.elitist not in population:
@@ -345,7 +298,7 @@ class SPELLEvoluter(Evoluter):
         self._update_elitist(population)
         append_to_yaml(
             new_data={
-                self.dataset: self.elitist.to_dict(),
+                "tweeteval": self.elitist.to_dict(),
             },
-            filepath="./best_prompts.yaml"
+            filepath="./best_prompts_4o_mini.yaml"
         )

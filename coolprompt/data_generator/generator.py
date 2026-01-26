@@ -18,6 +18,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
     PROBLEM_DESCRIPTION_TEMPLATE,
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
     GENERATION_DATA_GENERATING_TEMPLATE,
+    PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
@@ -69,7 +70,16 @@ class SyntheticDataGenerator:
             output = output[field_name]
         return output
 
-    def _generate_problem_description(self, prompt: str) -> str:
+    def _examples_to_str(self, examples: List[Tuple[str, str]]) -> str:
+        return "\n\n".join(
+            [f"Input: {inp}\nOutput: {out}" for (inp, out) in examples]
+        )
+
+    def _generate_problem_description(
+        self,
+        prompt: str,
+        examples: Optional[List[Tuple[str, str]]] = None
+    ) -> str:
         """Generates problem description based on given user prompt
 
         Args:
@@ -78,7 +88,13 @@ class SyntheticDataGenerator:
         Returns:
             str: generated problem description
         """
-        request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
+        if examples:
+            request = PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
+                prompt=prompt,
+                examples=self._examples_to_str(examples)
+            )
+        else:
+            request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
 
         return self._generate(
             request,

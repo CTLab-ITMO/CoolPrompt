@@ -2,31 +2,17 @@
 
 #--model_name AnatoliiPotapov/T-lite-instruct-0.1 \
 # deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
-for dataset in boolean_expressions causal_judgement date_understanding disambiguation_qa formal_fallacies geometric_shapes hyperbaton logical_deduction_five_objects logical_deduction_seven_objects logical_deduction_three_objects medqa mnli movie_recommendation mr navigate openbookqa penguins_in_a_table qnli reasoning_about_colored_objects ruin_names salient_translation_error_detection snarks sports_understanding sst-2 task021 task050 task069 temporal_sequences tracking_shuffled_objects_five_objects tracking_shuffled_objects_seven_objects tracking_shuffled_objects_three_objects trec web_of_lies yahoo
-do
 python3 run.py \
-    --model_name AnatoliiPotapov/T-lite-instruct-0.1 \
-    --dataset $dataset \
-    --task cls \
+    --dataset_name tweeteval \
+    --task classification \
     --metric f1 \
-    --population_size 10 \
-    --batch_size 128 \
-    --num_epochs 10 \
-    --use_cache True \
-    --output_path ./outputs/cls/$dataset
-done
+    --problem_description "The task at hand involves classifying the sentiment expressed in a given piece of text. The objective is to analyze the emotional tone conveyed by the words and phrases within the text and categorize it into predefined sentiment labels. These labels typically include emotions such as joy, sadness, anger, optimism, and other relevant sentiments that reflect human feelings. 
 
+  The input text may range from quotes, personal statements, social media posts, or any other written content where emotions are likely to be expressed. The classification process requires an understanding of context, nuances of language, and the ability to interpret implied meanings. For instance, a text may use sarcasm, irony, or cultural references that could alter the sentiment conveyed, thus making it essential to grasp the overall context in which the words are used. 
 
-for dataset in dyck_languages gsm8k math multistep_arithmetic_two object_counting samsum word_sorting
-do
-python3 run.py \
-    --model_name AnatoliiPotapov/T-lite-instruct-0.1 \
-    --dataset $dataset \
-    --task gen \
-    --metric meteor \
+  In the provided examples, we see various expressions of sentiment: a motivational quote expressing positivity is categorized as 'optimism', while a humorous comment about spelling mistakes in the context of modern technology is classified as 'anger'. Other examples include expressions of joy, sadness, and anger based on the context of the statements made. This highlights that the sentiment classification task is not merely about identifying positive or negative words but involves a deeper analysis of the emotional context surrounding them. 
+
+  Overall, the sentiment classification task plays a crucial role in sentiment analysis applications, including social media monitoring, customer feedback analysis, and emotional content understanding, allowing for the extraction of valuable insights from textual data." \
     --population_size 10 \
-    --batch_size 128 \
-    --num_epochs 10 \
-    --use_cache True \
-    --output_path ./outputs/gen/$dataset
-done
+    --num_epochs 5 \
+    --output_path ./4o_mini_spell_outputs/tweeteval
