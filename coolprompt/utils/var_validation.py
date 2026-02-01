@@ -1,7 +1,7 @@
 from typing import Any, Iterable, Tuple
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.enums import Method, Task
+from coolprompt.utils.enums import Method, Task, PD_Method
 
 
 def validate_verbose(verbose: int) -> None:
@@ -206,18 +206,30 @@ def validate_method(method: str) -> Method:
 
 
 def validate_problem_description(
-    problem_description: str | None, method: Method
-) -> None:
+    problem_description: str | None,
+    pd_method: str,
+    method: Method,
+) -> PD_Method:
     """Checks that the problem description is provided as a string
     when using the ReflectivePrompt optimization.
 
+    Checks that a valid problem description generation method name is provided.
+
+
     Args:
         problem_description (str | None): Provided problem description.
+        pd_method (str): Provided problem description generation method.
+            Must be one of: ["base", "dataset-based"].
         method (Method): Provided method.
+
+    Returns:
+        PD_Method: The validated problem description generation method.
+
     Raises:
         TypeError: If `problem_description` is not a string.
         ValueError: If `problem_description` is not provided when
             using the ReflectivePrompt method.
+        ValueError: If `pd_method` is not one of ['base', 'dataset-based']
     """
 
     if problem_description is not None:
@@ -228,6 +240,16 @@ def validate_problem_description(
             )
             logger.error(error_msg)
             raise TypeError(error_msg)
+
+    if pd_method not in PD_Method._value2member_map_:
+        error_msg = (
+            f"Unsupported problem description generation method: {pd_method}. "
+            f"Available methods: {', '.join(list(
+                PD_Method._value2member_map_.keys()))}."
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+    return PD_Method(pd_method)
 
 
 def validate_validation_size(validation_size: float | Any) -> None:
@@ -256,8 +278,9 @@ def validate_run(
     target: Iterable | None,
     method: str,
     problem_description: str | None,
+    problem_description_generation_method: str,
     validation_size: float,
-) -> Tuple[Task, Method]:
+) -> Tuple[Task, Method, PD_Method]:
     """Checks if args for PromptTuner.run() are valid.
 
     Args:
@@ -272,10 +295,14 @@ def validate_run(
             ["hype", "reflective", "distill"].
         problem_description (str | None): Provided problem description.
             Must be a string, required when using the ReflectivePrompt method.
+        problem_description_generation_method (str): Provided
+            problem description generation method. Must be one of:
+                ["base", "dataset-based"].
         validation_size (float): Provided validation size.
             Must be a float in [0.0, 1.0].
     Returns:
-        Tuple[Task, Method]: The validated task and method.
+        Tuple[Task, Method, PD_Method]: The validated
+            task, method and problem description generation method.
     Raises:
         TypeError: If any argument has incorrect type:
             -`start_prompt` is not a string
@@ -294,6 +321,7 @@ def validate_run(
             -`dataset` is `None` while `target` is not
             -`problem_description` is not provided when using the
                 ReflectivePrompt method
+            -`problem_description_generation_method` not in supported methods.
     """
 
     validate_start_prompt(start_prompt)
@@ -301,6 +329,10 @@ def validate_run(
     method = validate_method(method)
     validate_dataset(dataset, target, method)
     validate_target(target, dataset)
-    validate_problem_description(problem_description, method)
+    pd_method = validate_problem_description(
+        problem_description,
+        problem_description_generation_method,
+        method
+    )
     validate_validation_size(validation_size)
-    return task, method
+    return task, method, pd_method

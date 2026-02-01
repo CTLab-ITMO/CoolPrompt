@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Type
+from typing import Type, List, Dict
 
 
 class PromptOrigin(Enum):
@@ -26,6 +26,21 @@ class PromptOrigin(Enum):
         return cls(string.lower())
 
 
+class BadExample:
+    """Bad Example class
+
+    Attributes:
+        input (str): input of the example.
+        output (str): model output for the example.
+        correct (str): correct output of the example.
+    """
+
+    def __init__(self, input: str, output: str, correct: str):
+        self.input = input
+        self.output = output
+        self.correct = correct
+
+
 class Prompt:
     def __init__(
         self,
@@ -33,7 +48,6 @@ class Prompt:
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
         score: float = None
     ) -> None:
-
         """Prompt class.
 
         Attributes:
@@ -41,10 +55,14 @@ class Prompt:
             origin (PromptOrigin, optional): prompt origin.
                 Defaults to PromptOrigin.EVOLUTED.
             score (float, optional): prompt evaluation score. Defaults to None.
+            bad_examples (List[BadExample]): a list of
+                bad examples for the prompt.
         """
+
         self.text = text
         self.origin = origin
         self.score = score
+        self.bad_examples = []
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
@@ -52,7 +70,21 @@ class Prompt:
         Args:
             new_score (float): new prompt score to set.
         """
+
         self.score = float(new_score)
+
+    def set_bad_examples(self, bad_examples: List[Dict[str, str]]) -> None:
+        """Stores provided bad examples.
+        """
+
+        self.bad_examples = [
+            BadExample(
+                input=example['input'],
+                output=example['output'],
+                correct=example['correct']
+            )
+            for example in bad_examples
+        ]
 
     def to_dict(self) -> dict:
         """Creates dictionary representation of prompt.
@@ -60,6 +92,7 @@ class Prompt:
         Returns:
             dict: created dictionary.
         """
+
         result = {
             'text': self.text,
             'origin': self.origin.name
@@ -85,6 +118,7 @@ class Prompt:
         Returns:
             Prompt: created prompt variable.
         """
+
         if origin:
             data.update(origin=origin.name)
         return cls(
@@ -100,4 +134,5 @@ class Prompt:
         Returns:
             str: string representation of prompt.
         """
+
         return f"{self.text}\t{self.score}"

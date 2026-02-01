@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Iterable, Optional
 from langchain_core.language_models.base import BaseLanguageModel
+from random import sample
+from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
@@ -8,6 +10,7 @@ from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
+from coolprompt.optimizer.regps import regps
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
@@ -17,7 +20,7 @@ from coolprompt.utils.var_validation import (
     validate_run,
     validate_verbose,
 )
-from coolprompt.utils.enums import Method, Task
+from coolprompt.utils.enums import Method, Task, PD_Method
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
@@ -43,6 +46,8 @@ class PromptTuner:
         (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
     }
+
+    NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD = 5
 
     def __init__(
         self,
@@ -115,6 +120,7 @@ class PromptTuner:
         method: str = "hype",
         metric: Optional[str] = None,
         problem_description: Optional[str] = None,
+        problem_description_generation_method: str = "base",
         validation_size: float = 0.25,
         train_as_test: bool = False,
         generate_num_samples: int = 10,
@@ -142,11 +148,15 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: ['hype', 'reflective', 'distill']
+                Available methods are: ['hype', 'reflective', 'distill', 'regps]
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
+            problem_description_generation_method (str): Type of problem
+                description generation to use.
+                Available methods are: ['base', 'dataset-based'].
+                Defaults to base.
             validation_size (float):
                 A float that must be between 0.0 and 1.0 and
                 represent the proportion of the dataset
@@ -223,13 +233,14 @@ class PromptTuner:
             task = task_detector.generate(start_prompt)
 
         logger.info("Validating args for PromptTuner running")
-        task, method = validate_run(
+        task, method, pd_method = validate_run(
             start_prompt,
             task,
             dataset,
             target,
             method,
             problem_description,
+            problem_description_generation_method,
             validation_size,
         )
         metric = validate_and_create_metric(
@@ -262,17 +273,31 @@ class PromptTuner:
             self.synthetic_dataset = dataset
             self.synthetic_target = target
 
-        if problem_description is None:
-            problem_description = generator._generate_problem_description(
-                prompt=start_prompt
-            )
-
-        dataset_split = get_dataset_split(
+        dataset_split = self._get_dataset_split(
             dataset=dataset,
             target=target,
             validation_size=validation_size,
             train_as_test=train_as_test,
         )
+
+        if problem_description is None:
+            if pd_method is PD_Method.BASE:
+                problem_description = generator._generate_problem_description(
+                    prompt=start_prompt
+                )
+            elif pd_method is PD_Method.DATASET_BASED:
+                indices = sample(
+                    range(0, len(dataset_split[0])),
+                    self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD
+                )
+                examples = [
+                    (dataset_split[0][ind], dataset_split[2][ind])
+                    for ind in indices
+                ]
+                problem_description = generator._generate_problem_description(
+                    prompt=start_prompt,
+                    examples=examples
+                )
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method}, Task: {task}")
@@ -302,6 +327,15 @@ class PromptTuner:
                 problem_description=problem_description,
                 initial_prompt=start_prompt,
                 **kwargs,
+            )
+        elif method is Method.REGPS:
+            final_prompt = regps(
+                model=self._target_model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                problem_description=problem_description,
+                initial_prompt=start_prompt,
+                **kwargs
             )
         elif method is Method.DISTILL:
             final_prompt = distillprompt(
