@@ -1,6 +1,5 @@
-import random
 from langchain_core.language_models.base import BaseLanguageModel
-from typing import Optional
+from typing import Optional, Tuple, List, Dict
 
 from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
@@ -34,7 +33,8 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
-    ) -> float:
+        failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, str]]]:
         """
         Evaluate the model on a dataset
         by generating answers and computing the metric.
@@ -53,9 +53,12 @@ class Evaluator:
             template (Optional[str]):
                 Prompt template for defined task type.
                 If None, uses default template.
+            failed_examples (Optional[int]):
+                Number of bad examples to return after evaluating
 
         Returns:
-            float: The computed evaluation metric score.
+            float | Tuple[float, List[Dict[str, str]]]:
+                The computed evaluation metric score with/wo bad examples
         """
 
         if template is None:
@@ -78,7 +81,7 @@ class Evaluator:
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]
 
-        return self.metric.compute(answers, targets, dataset)
+        return self.metric.compute(answers, targets, dataset, failed_examples)
 
     def _get_full_prompt(
         self,
