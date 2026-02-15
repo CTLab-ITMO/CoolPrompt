@@ -232,7 +232,7 @@ class ReflectiveEvoluter:
         selected_population = []
 
         scores = np.array([prompt.score for prompt in population])
-        probas = scores / np.sum(scores)
+        probas = (scores + 1e-5) / np.sum(scores + 1e-5)
 
         trial = 0
         anyways = False
