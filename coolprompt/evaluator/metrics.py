@@ -59,9 +59,9 @@ class HFEvaluateMetric(ABC):
 
         return [
             self._metric.compute(
-                predictions=output,
-                references=target,
-                **self._compute_kwargs_func(output, target),
+                predictions=[output],
+                references=[target],
+                **self._compute_kwargs_func([output], [target]),
             )[self._return_parameter]
             for output, target in zip(outputs, targets)
         ]
