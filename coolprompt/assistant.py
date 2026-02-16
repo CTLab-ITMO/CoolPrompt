@@ -1,8 +1,6 @@
 from pathlib import Path
-from typing import Iterable, Optional, Tuple
-from random import sample
+from typing import Iterable, Optional
 from langchain_core.language_models.base import BaseLanguageModel
-from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
@@ -293,7 +291,12 @@ class PromptTuner:
             self.synthetic_dataset = dataset
             self.synthetic_target = target
 
-        dataset_split = self._get_dataset_split(
+        if problem_description is None:
+            problem_description = generator._generate_problem_description(
+                prompt=start_prompt
+            )
+
+        dataset_split = get_dataset_split(
             dataset=dataset,
             target=target,
             validation_size=validation_size,

@@ -10,7 +10,7 @@ class ReflectivePromptMethod(AutoPromptingMethod):
     def _run(self, start_prompt: str) -> str:
         problem_description = self.config.get('problem_description')
         if problem_description is None:
-            generator = SyntheticDataGenerator(self.model)
+            generator = SyntheticDataGenerator(self._system_model)
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt
             )
@@ -27,7 +27,7 @@ class ReflectivePromptMethod(AutoPromptingMethod):
                 'output_path',
                 "./reflectiveprompt_outputs"
             ),
-            use_cache=self.config['method'].get('use_cache', False),
+            use_cache=self.config['method'].get('use_cache', 5),
         )
 
         return final_prompt
