@@ -52,7 +52,6 @@ def squad_v2_preproc(sample, size: int = None):
 
 
 def gsm8k_preproc(sample, size: int = None):
-    sample = sample['train']
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["question"]
