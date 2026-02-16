@@ -1,7 +1,6 @@
 from pathlib import Path
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, Optional
 from langchain_core.language_models.base import BaseLanguageModel
-from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
@@ -30,6 +29,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
+from coolprompt.utils.utils import get_dataset_split
 
 
 class PromptTuner:
@@ -105,37 +105,6 @@ class PromptTuner:
         task = validate_task(task)
         method = validate_method(method)
         return self.TEMPLATE_MAP[(task, method)]
-
-    def _get_dataset_split(
-        self,
-        dataset: Iterable[str],
-        target: Iterable[str],
-        validation_size: float,
-        train_as_test: bool,
-    ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-        """Provides a train/val dataset split.
-
-        Args:
-            dataset (Iterable[str]):
-                Provided dataset.
-            target (Iterable[str]):
-                Provided targets for the dataset.
-            validation_size (float):
-                Provided size of validation subset.
-            train_as_test (bool):
-                Either to use all data for train and validation or split it.
-
-        Returns:
-            Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-                a tuple of train dataset, validation dataset,
-                train targets and validation targets.
-        """
-        if train_as_test:
-            return (dataset, dataset, target, target)
-        train_data, val_data, train_targets, val_targets = train_test_split(
-            dataset, target, test_size=validation_size
-        )
-        return (train_data, val_data, train_targets, val_targets)
 
     def run(
         self,
@@ -298,7 +267,7 @@ class PromptTuner:
                 prompt=start_prompt
             )
 
-        dataset_split = self._get_dataset_split(
+        dataset_split = get_dataset_split(
             dataset=dataset,
             target=target,
             validation_size=validation_size,

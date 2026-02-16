@@ -1,6 +1,6 @@
-import random
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
+import yaml
 
 from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
@@ -34,6 +34,8 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
+        save_model_answers: bool = False,
+        model_answers_output_path: Optional[str] = None
     ) -> float:
         """
         Evaluate the model on a dataset
@@ -77,6 +79,25 @@ class Evaluator:
         answers = [
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]
+
+        if save_model_answers:
+            if model_answers_output_path is None:
+                raise ValueError(
+                    'model_answer_output_path cannot b' +
+                    ' None when save_model_answers is True'
+                )
+
+            with open(model_answers_output_path, 'w') as file:
+                yaml.safe_dump(
+                    [
+                        {
+                            'input': inp,
+                            'answer': ans
+                        }
+                        for (inp, ans) in zip(dataset, answers)
+                    ],
+                    file
+                )
 
         return self.metric.compute(answers, targets, dataset)
 
