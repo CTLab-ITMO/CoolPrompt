@@ -15,7 +15,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
     PROBLEM_DESCRIPTION_TEMPLATE,
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
     GENERATION_DATA_GENERATING_TEMPLATE,
-    PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE
+    PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE,
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
@@ -50,8 +50,15 @@ class SyntheticDataGenerator:
         Returns:
             Any: generated data
         """
-        if not isinstance(self.model, BaseChatModel):
+        if hasattr(self.model, 'model'):
+            wrapped_model = self.model.model
+        else:
+            wrapped_model = self.model
+
+        if not isinstance(wrapped_model, BaseChatModel):
             output = self.model.invoke(request)
+            if isinstance(output, AIMessage):
+                output = output.content
             return extract_json(output)[field_name]
 
         structured_model = self.model.with_structured_output(

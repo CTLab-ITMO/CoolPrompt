@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Iterable, Optional, Tuple
-from langchain_core.language_models.base import BaseLanguageModel
 from random import sample
+from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
@@ -40,8 +40,8 @@ class PromptTuner:
     TEMPLATE_MAP = {
         (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
         (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
         (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.REGPS): GENERATION_TASK_TEMPLATE,
@@ -90,6 +90,15 @@ class PromptTuner:
             validate_model(self._system_model)
 
         logger.info("PromptTuner successfully initialized")
+
+    def get_stats(self):
+        if hasattr(self._target_model, "get_stats"):
+            return self._target_model.get_stats()
+        return None
+
+    def reset_stats(self):
+        if hasattr(self._target_model, "reset_stats"):
+            self._target_model.reset_stats()
 
     def get_task_prompt_template(self, task: str, method: str) -> str:
         """Returns the prompt template for the given task.
@@ -180,7 +189,7 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: ['hype', 'reflective', 'distill', 'regps]
+                Available methods are: ['hype', 'reflective', 'distill', 'regps']
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
