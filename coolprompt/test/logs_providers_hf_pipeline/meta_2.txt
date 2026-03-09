@@ -1,0 +1,6 @@
+2025-07-21 16:47:15,938 - PyTorch version 2.6.0 available.
+2025-07-21 16:47:45,450 - Import time: 38.9008s
+2025-07-21 16:47:49,483 - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-07-21 16:47:53,740 - Model init time: 8.2877s
+2025-07-21 16:47:53,740 - PromptTuner init time: 0.0003s
+2025-07-21 16:47:58,409 - Prompt 'hello! why is so silent there?' run time: 4.6690s

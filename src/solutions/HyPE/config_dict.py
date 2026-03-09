@@ -13,15 +13,15 @@ from src.utils.load_dataset_coolprompt import (
 
 
 config_dict = {
-    "gsm8k": {
-        "start_prompt": "Given a context answer on the question.",
-        "task": "generation",
-        "metric": "em",
-        "preproc": gsm8k_preproc,
-        "data": gsm8k,
-        "test_name": "test",
-        "problem_description": "math solving",
-    },
+    # "gsm8k": {
+    #     "start_prompt": "Given a context answer on the question.",
+    #     "task": "generation",
+    #     "metric": "em",
+    #     "preproc": gsm8k_preproc,
+    #     "data": gsm8k,
+    #     "test_name": "test",
+    #     "problem_description": "math solving",
+    # },
     # "squad_v2": {
     #     "start_prompt": "Given a context answer on the question.",
     #     "task": "generation",

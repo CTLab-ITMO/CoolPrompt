@@ -1,5 +1,4 @@
 import os
-import random
 import sys
 from typing import Any
 from pathlib import Path
@@ -10,7 +9,6 @@ import numpy as np
 from langchain_openai import ChatOpenAI
 from langchain_core.rate_limiters import InMemoryRateLimiter
 import pandas as pd
-from sklearn.model_selection import train_test_split
 
 project_path = str(Path(__file__).resolve().parent.parent.parent.parent)
 print(project_path)
@@ -29,17 +27,18 @@ def create_chat_model(**kwargs):
 
 
 # llm = DefaultLLM.init(vllm_engine_config={"gpu_memory_utilization": 0.95})
-# rate_limiter = InMemoryRateLimiter(
-#     requests_per_second=1, check_every_n_seconds=0.1, max_bucket_size=10
-# )
-model = "gpt-3.5-turbo"
+rate_limiter = InMemoryRateLimiter(
+    requests_per_second=1, check_every_n_seconds=0.1, max_bucket_size=10
+)
+model = "gpt-4o-mini"
 llm = create_chat_model(
     model=model,
     temperature=0.7,
     max_tokens=4000,
-    # rate_limiter=rate_limiter,
+    max_retries=5,
+    rate_limiter=rate_limiter,
     api_key="",
-    #base_url="https://openrouter.ai/api/v1",
+    # base_url="https://openrouter.ai/api/v1",
 )
 pt = PromptTuner(llm)
 
@@ -68,6 +67,26 @@ def sample(
 
 def run_hype_dataset() -> dict[str, Any]:
     result = {"model": model}
+    start_prompt = """Привет. Я дам тебе мою фотографию, там я стою в коридоре хогварста в волшебной шляпе, но у меня в одной руке телефон, а другая у кармана. Я хочу чтобы ты сделал так, чтобы в руке держащей телефон оказалась раскрытая книга, а в другой руке - волшебная палочка, как во вселенной гарри поттера. большая просьба сохранить те детали что есть, не менять черты лица/тон кожи, изменить только то что в руках на то, что я просил. можно сделать чтобы взгляд был опущен в книгу. взгляд должен быть опущен натурально, либо же книгу можно чуть поднять под взгляд но не сильно"""
+
+    final_prompt = pt.run(
+        # cfg["start_prompt"],
+        # cfg["task"],
+        start_prompt,
+        # "generation",
+        # dataset,
+        # target,
+        # "hype",
+        # cfg["metric"],
+        # cfg["problem_description"],
+        verbose=2,
+        # train_as_test=True,
+        sample_answers=True,
+        # validation_size=0.5,
+        # evaluate=True,
+        feedback=True,
+    )
+    result["result"] = final_prompt
 
     for task, cfg in config_dict.items():
         data_train, data_val = (
@@ -104,8 +123,8 @@ def run_hype_dataset() -> dict[str, Any]:
                     "final_metric": pt.final_metric,
                 },
                 "prompt": final_prompt,
-                # "samples": pt.answer_samples,
-                # "cost": llm.model_stats,
+                "samples": pt.answer_samples,
+                "cost": pt.model_stats,
             }
         except Exception as e:
             print(f"!!!!EXCEPTION: {str(e)}!!!!")
@@ -123,7 +142,7 @@ def test(path: str | Path) -> None:
 
 
 def main():
-    test("./logs/hype_exps/exp_10_hype_gsm8k.json")
+    test("./logs/result.json")
 
 
 if __name__ == "__main__":

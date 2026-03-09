@@ -1,0 +1,46 @@
+2025-07-10 17:08:35,094 - PyTorch version 2.6.0 available.
+2025-07-10 17:08:42,437 - Import time: 10.0227s
+2025-07-10 17:08:42,788 - Model init time: 0.3514s
+2025-07-10 17:08:42,789 - PromptTuner init time: 0.0001s
+2025-07-10 17:12:17,059 - PyTorch version 2.6.0 available.
+2025-07-10 17:12:24,792 - Import time: 10.2747s
+2025-07-10 17:12:24,891 - Model init time: 0.0987s
+2025-07-10 17:12:24,891 - PromptTuner init time: 0.0001s
+2025-07-10 17:13:00,535 - PyTorch version 2.6.0 available.
+2025-07-10 17:13:04,927 - Import time: 5.5657s
+2025-07-10 17:13:05,026 - Model init time: 0.0987s
+2025-07-10 17:13:05,027 - PromptTuner init time: 0.0001s
+2025-07-10 17:13:37,785 - PyTorch version 2.6.0 available.
+2025-07-10 17:13:43,535 - Import time: 7.4921s
+2025-07-10 17:13:43,633 - Model init time: 0.0984s
+2025-07-10 17:13:43,633 - PromptTuner init time: 0.0001s
+2025-07-10 17:15:11,734 - PyTorch version 2.6.0 available.
+2025-07-10 17:15:19,219 - Import time: 10.0112s
+2025-07-10 17:15:19,220 - WARNING! best_of is not default parameter.
+                    best_of was transferred to model_kwargs.
+                    Please make sure that best_of is what you intended.
+2025-07-10 17:15:19,220 - WARNING! n is not default parameter.
+                    n was transferred to model_kwargs.
+                    Please make sure that n is what you intended.
+2025-07-10 17:15:19,316 - Model init time: 0.0965s
+2025-07-10 17:15:19,316 - PromptTuner init time: 0.0001s
+2025-07-10 17:16:21,191 - PyTorch version 2.6.0 available.
+2025-07-10 17:16:28,221 - Import time: 8.7488s
+2025-07-10 17:16:28,326 - Model init time: 0.1049s
+2025-07-10 17:16:28,327 - PromptTuner init time: 0.0001s
+2025-07-10 17:17:01,887 - PyTorch version 2.6.0 available.
+2025-07-10 17:17:06,289 - Import time: 5.6534s
+2025-07-10 17:17:06,421 - Model init time: 0.1325s
+2025-07-10 17:17:06,422 - PromptTuner init time: 0.0001s
+2025-07-10 17:18:06,894 - PyTorch version 2.6.0 available.
+2025-07-10 17:18:13,136 - Import time: 7.9885s
+2025-07-10 17:18:13,239 - Model init time: 0.1029s
+2025-07-10 17:18:13,239 - PromptTuner init time: 0.0001s
+2025-07-10 17:18:33,222 - PyTorch version 2.6.0 available.
+2025-07-10 17:18:37,585 - Import time: 5.6401s
+2025-07-10 17:18:37,685 - Model init time: 0.0998s
+2025-07-10 17:18:37,685 - PromptTuner init time: 0.0001s
+2025-07-10 17:21:22,569 - PyTorch version 2.6.0 available.
+2025-07-10 17:21:30,138 - Import time: 10.0877s
+2025-07-10 17:21:30,240 - Model init time: 0.1020s
+2025-07-10 17:21:30,240 - PromptTuner init time: 0.0001s

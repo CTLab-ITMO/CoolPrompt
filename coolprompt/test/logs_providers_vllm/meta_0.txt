@@ -1,0 +1,7 @@
+2025-07-10 16:47:26,024 - PyTorch version 2.6.0 available.
+2025-07-10 16:48:10,882 - Init time: 64.7625
+2025-07-10 17:06:13,102 - PyTorch version 2.6.0 available.
+2025-07-10 17:06:20,790 - Import time: 10.4190s
+2025-07-10 17:07:11,529 - Model init time: 50.7388s
+2025-07-10 17:07:11,531 - PromptTuner init time: 0.0004s
+2025-07-10 17:07:17,953 - Prompt 'hello! why is so silent there?' run time: 6.4219s

@@ -1,0 +1,12 @@
+2025-07-10 17:35:09,691 - PyTorch version 2.6.0 available.
+2025-07-10 17:35:17,112 - Import time: 10.0764s
+2025-07-10 17:35:17,113 - Model init time: 0.0015s
+2025-07-10 17:35:17,113 - PromptTuner init time: 0.0001s
+2025-07-14 02:17:20,273 - PyTorch version 2.6.0 available.
+2025-07-14 02:17:28,581 - Import time: 11.4581s
+2025-07-14 02:17:28,582 - Model init time: 0.0017s
+2025-07-14 02:17:28,583 - PromptTuner init time: 0.0001s
+2025-07-14 02:24:27,569 - PyTorch version 2.6.0 available.
+2025-07-14 02:24:35,765 - Import time: 10.8532s
+2025-07-14 02:24:35,766 - Model init time: 0.0016s
+2025-07-14 02:24:35,767 - PromptTuner init time: 0.0001s

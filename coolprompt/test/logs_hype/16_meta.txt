@@ -1,0 +1,53 @@
+2025-06-30 01:15:59,280 - prompts:
+['я хочу пойти на улицу но никогда не могу одеться по погоде. что мне сделать чтобы не вспотеть и не замерзнуть?']
+
+2025-06-30 01:16:01,345 - PyTorch version 2.6.0 available.
+2025-06-30 01:16:08,041 - Import time: 8.7611 seconds
+2025-06-30 01:16:08,042 - Validating the model
+2025-06-30 01:16:08,042 - Provided model must be an instance of LangChain BaseLanguageModel
+2025-06-30 01:17:26,605 - prompts:
+['я хочу пойти на улицу но никогда не могу одеться по погоде. что мне сделать чтобы не вспотеть и не замерзнуть?']
+
+2025-06-30 01:17:29,185 - PyTorch version 2.6.0 available.
+2025-06-30 01:17:36,495 - Import time: 9.8902 seconds
+2025-06-30 01:17:36,496 - Validating the model: str
+2025-06-30 01:17:36,496 - Provided model must be an instance of LangChain BaseLanguageModel
+2025-06-30 01:18:05,661 - prompts:
+['я хочу пойти на улицу но никогда не могу одеться по погоде. что мне сделать чтобы не вспотеть и не замерзнуть?']
+
+2025-06-30 01:18:06,826 - PyTorch version 2.6.0 available.
+2025-06-30 01:18:11,020 - Import time: 5.3593 seconds
+2025-06-30 01:18:11,050 - Initializing default model
+2025-06-30 01:18:11,050 - Updating default model params with langchain config: None and vllm_engine_config: None
+2025-06-30 01:21:42,401 - Validating the model: VLLM
+2025-06-30 01:21:42,404 - PromptTuner successfully initialized with model: VLLM
+2025-06-30 01:21:42,404 - Initialization time: 211.3835 seconds
+2025-06-30 01:21:42,404 - 
+
+Prompt #1:
+2025-06-30 01:21:42,404 - Original prompt:
+
+я хочу пойти на улицу но никогда не могу одеться по погоде. что мне сделать чтобы не вспотеть и не замерзнуть?
+
+
+2025-06-30 01:21:42,405 - Validating args for PromptTuner running
+2025-06-30 01:21:48,207 - Evaluator sucessfully initialized with meteor metric
+2025-06-30 01:21:48,207 - === Starting Prompt Optimization ===
+2025-06-30 01:21:48,207 - Method: hype, Task: generation
+2025-06-30 01:21:48,207 - Metric: meteor, Validation size: 0.25
+2025-06-30 01:21:48,207 - No dataset provided
+2025-06-30 01:21:48,208 - No target provided
+2025-06-30 01:21:48,208 - Running HyPE optimization...
+2025-06-30 01:21:49,995 - HyPE optimization completed
+2025-06-30 01:21:49,996 - === Prompt Optimization Completed ===
+2025-06-30 01:21:49,996 - Final prompt:
+
+Provide a detailed dress code and weather forecast for the day, including temperature, humidity, and wind speed. Suggest appropriate clothing and accessories to keep you comfortable and prevent overheating or freezing. Explain how to layer clothing to adapt to changing weather conditions. 
+
+
+2025-06-30 01:21:49,996 - Execution time: 7.5917 seconds
+
+
+2025-06-30 01:21:49,996 - ################################################################################
+2025-06-30 01:21:50,050 - 
+Results saved to 16_results.json

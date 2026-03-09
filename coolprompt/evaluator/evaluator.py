@@ -68,12 +68,27 @@ class Evaluator:
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
 
-        answers = self.model.batch(
-            [
-                self._get_full_prompt(prompt, sample, template)
-                for sample in dataset
+        batch_size = 16
+
+        def safe_batch(model, prompts, sleep_sec=10):
+            while True:
+                try:
+                    return model.batch(prompts)
+                except Exception as e:
+                    if "rate_limit" in str(e).lower():
+                        print("RPD hit, sleeping...")
+                        time.sleep(sleep_sec)
+                    else:
+                        raise
+
+        answers = []
+        for i in tqdm(range(0, len(dataset), batch_size), desc="Batches"):
+            batch = dataset[i : min(len(dataset), i + batch_size)]
+            prompts = [
+                self._get_full_prompt(prompt, s, template) for s in batch
             ]
-        )
+            results = self.model.batch(prompts)
+            answers.extend(results)
         answers = [
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]

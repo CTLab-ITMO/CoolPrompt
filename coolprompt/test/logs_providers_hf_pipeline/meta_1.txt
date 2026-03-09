@@ -1,0 +1,16 @@
+2025-07-19 01:16:34,883 - Import time: 3.0856s
+2025-07-19 01:16:43,351 - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-07-19 01:16:47,475 - Model init time: 12.5923s
+2025-07-19 01:19:35,046 - Prompt 'hello! why is so silent there?' run time: 167.5709s
+2025-07-19 01:21:37,490 - Import time: 3.8594s
+2025-07-19 01:21:45,567 - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-07-19 01:21:49,398 - Model init time: 11.9079s
+2025-07-19 01:22:28,610 - Import time: 3.1461s
+2025-07-19 01:22:35,390 - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-07-19 01:24:52,152 - Model init time: 143.5424s
+2025-07-19 01:27:06,308 - PyTorch version 2.6.0 available.
+2025-07-19 01:27:14,526 - Import time: 11.1026s
+2025-07-19 01:27:15,717 - We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+2025-07-19 01:29:28,448 - Model init time: 133.9214s
+2025-07-19 01:29:28,452 - PromptTuner init time: 0.0021s
+2025-07-19 01:29:32,275 - Prompt 'hello! why is so silent there?' run time: 3.8238s
