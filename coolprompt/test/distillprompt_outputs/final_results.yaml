@@ -1,4 +1,0 @@
-final_prompt: Perform Sentiment Analysis on the provided train dataset. Assign labels
-  1 for positive sentiment and 0 for negative sentiment. Ensure accuracy by considering
-  context and tone.
-final_score: 0.7619047619047619

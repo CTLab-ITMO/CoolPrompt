@@ -1,4 +1,0 @@
-2025-07-14 13:11:14,719 - PyTorch version 2.6.0 available.
-2025-07-14 13:11:23,335 - Import time: 11.3935s
-2025-07-14 13:12:34,149 - PyTorch version 2.6.0 available.
-2025-07-14 13:12:41,466 - Import time: 10.0107s
