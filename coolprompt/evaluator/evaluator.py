@@ -1,6 +1,7 @@
-from langchain_core.language_models.base import BaseLanguageModel
-from typing import Optional
+from dataclasses import dataclass
+from typing import List, Optional
 
+from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
@@ -9,6 +10,22 @@ from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
+
+
+@dataclass
+class FailedExampleDetailed:
+    instance: str
+    assistant_answer: str
+    model_answer_parsed: Optional[str] = None
+    metric_value: float | int = 0.0
+    ground_truth: str | int = ""
+
+
+@dataclass
+class EvalResultDetailed:
+    aggregate_score: float
+    score_per_task: List[float | int] = None
+    failed_examples: List[FailedExampleDetailed] = None
 
 
 class Evaluator:
@@ -33,31 +50,18 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
-        sample_size=None,
     ) -> float:
-        """
-        Evaluate the model on a dataset
-        by generating answers and computing the metric.
-
-        For each sample in the dataset,
-        the prompt is concatenated with the sample,
-        passed to the model to generate an output,
-        and then all outputs are evaluated
-        against the targets using the metric.
+        """Evaluate the model on a dataset.
 
         Args:
             prompt (str): The prompt string to prepend to each dataset sample.
             dataset (list[str]): List of input samples to evaluate.
-            targets (list[str|int]):
-                Corresponding ground truth labels or references.
-            template (Optional[str]):
-                Prompt template for defined task type.
-                If None, uses default template.
+            targets (list[str|int]): Corresponding ground truth labels.
+            template (Optional[str]): Prompt template for defined task type.
 
         Returns:
             float: The computed evaluation metric score.
         """
-
         if template is None:
             template = self._get_default_template()
 
@@ -68,32 +72,68 @@ class Evaluator:
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
 
-        batch_size = 16
-
-        def safe_batch(model, prompts, sleep_sec=10):
-            while True:
-                try:
-                    return model.batch(prompts)
-                except Exception as e:
-                    if "rate_limit" in str(e).lower():
-                        print("RPD hit, sleeping...")
-                        time.sleep(sleep_sec)
-                    else:
-                        raise
-
-        answers = []
-        for i in tqdm(range(0, len(dataset), batch_size), desc="Batches"):
-            batch = dataset[i : min(len(dataset), i + batch_size)]
-            prompts = [
-                self._get_full_prompt(prompt, s, template) for s in batch
+        answers = self.model.batch(
+            [
+                self._get_full_prompt(prompt, sample, template)
+                for sample in dataset
             ]
-            results = self.model.batch(prompts)
-            answers.extend(results)
+        )
         answers = [
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]
 
         return self.metric.compute(answers, targets, dataset)
+
+    def evaluate_detailed(
+        self,
+        prompt: str,
+        dataset: list[str],
+        targets: list[str | int],
+        template: Optional[str] = None,
+    ) -> EvalResultDetailed:
+        """Evaluate the model and return detailed results per sample."""
+        if template is None:
+            template = self._get_default_template()
+
+        logger.info(
+            f"Evaluating (detailed) prompt for {self.task} task on {len(dataset)} samples"
+        )
+        if self.task == Task.CLASSIFICATION:
+            self.metric.extract_labels(targets)
+
+        answers = self.model.batch(
+            [
+                self._get_full_prompt(prompt, sample, template)
+                for sample in dataset
+            ]
+        )
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
+
+        parsed_answers = [self.metric.parse_output(a) for a in answers]
+        aggregate_score, score_per_task = self.metric.compute_detailed(
+            answers, targets
+        )
+
+        failed_examples = []
+        for i, score in enumerate(score_per_task):
+            if score == 0:
+                failed_examples.append(
+                    FailedExampleDetailed(
+                        instance=dataset[i],
+                        assistant_answer=answers[i],
+                        model_answer_parsed=parsed_answers[i],
+                        metric_value=score,
+                        ground_truth=targets[i],
+                    )
+                )
+
+        return EvalResultDetailed(
+            aggregate_score=aggregate_score,
+            score_per_task=score_per_task,
+            failed_examples=failed_examples,
+        )
 
     def _get_full_prompt(
         self,
@@ -101,22 +141,7 @@ class Evaluator:
         sample: str,
         template: Optional[str] = None,
     ) -> str:
-        """Inserts parts of the prompt into the task template.
-
-        Args:
-            prompt (str): the main instruction for the task
-            sample (str): the input sample
-            template (Optional[str]):
-                Prompt template for defined task type.
-                If None, uses default template.
-
-        Raises:
-            ValueError: if type of task is not supported
-
-        Returns:
-            str: the full prompt to be passed to the model
-        """
-
+        """Inserts parts of the prompt into the task template."""
         if template is None:
             template = self._get_default_template()
 
@@ -131,7 +156,6 @@ class Evaluator:
 
     def _get_default_template(self) -> str:
         """Returns the default template for the task type."""
-
         match self.task:
             case Task.CLASSIFICATION:
                 return CLASSIFICATION_TASK_TEMPLATE

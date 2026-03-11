@@ -3,6 +3,7 @@ from enum import Enum
 
 class Method(Enum):
     HYPE = "hype"
+    HYPER = "hyper"
     REFLECTIVE = "reflective"
     DISTILL = "distill"
 

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-import random
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
@@ -87,7 +86,7 @@ class BaseMetric(ABC):
         self,
         outputs: list[str | int],
         targets: list[str | int],
-        dataset: Optional[list[str]] = None
+        dataset: Optional[list[str]] = None,
     ) -> float:
         """Compute metric value from preprocessed model answers.
 
@@ -121,7 +120,7 @@ class BaseMetric(ABC):
         self,
         outputs: list[str | int],
         targets: list[str | int],
-        dataset: Optional[list[str]] = None
+        dataset: Optional[list[str]] = None,
     ) -> float:
         """Compute metric value from text model outputs
 
@@ -135,9 +134,7 @@ class BaseMetric(ABC):
         """
         output_labels = list(
             map(
-                lambda x: extract_answer(
-                    x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL
-                ),
+                lambda x: extract_answer(x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL),
                 outputs,
             )
         )
@@ -145,13 +142,38 @@ class BaseMetric(ABC):
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels, targets
         )
-        num_samples = 3
-        ind = random.choices(range(len(outputs)), k=num_samples)
-        for i in ind:
-            logger.debug(f'OUTPUT {i}:\n{outputs[i]}')
-        return self._compute_raw(
-            encoded_output_labels, encoded_targets, dataset
-        )
+        return self._compute_raw(encoded_output_labels, encoded_targets, dataset)
+
+    def parse_output(self, output: str) -> str:
+        """Extract parsed answer from model output.
+
+        Args:
+            output: Raw model output string.
+
+        Returns:
+            Extracted answer from <ans> tags, or original output if not found.
+        """
+        return extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
+
+    def compute_detailed(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> Tuple[float, List[float | int]]:
+        """Compute metric value per sample and aggregate.
+
+        Returns:
+            Tuple of (aggregate_score, score_per_task).
+            score_per_task[i] - score for i-th sample.
+            aggregate_score - same as compute().
+        """
+        score_per_task = []
+        for o, t in zip(outputs, targets):
+            s = self._compute_raw([o], [t], dataset)
+            score_per_task.append(s)
+        aggregate = self.compute(outputs, targets, dataset)
+        return aggregate, score_per_task
 
     def __str__(self) -> str:
         return self._get_name()
@@ -321,6 +343,15 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
         f1_list = super()._compute_raw(outputs, targets)
         return sum(f1_list) / len(f1_list)
 
+    def compute_detailed(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> Tuple[float, List[float]]:
+        f1_list = super()._compute_raw(outputs, targets, dataset)
+        return sum(f1_list) / len(f1_list), f1_list
+
 
 class LLMAsJudge(GenerationMetric):
     """LLM-as-a-judge metric for generation tasks."""
@@ -467,6 +498,21 @@ class ExactMatchMetric(GenerationMetric):
         outputs = [extract_number_from_text(item) for item in outputs]
         return float(mean([o == t for o, t in zip(outputs, targets)]))
 
+    def compute_detailed(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> Tuple[float, List[int]]:
+        targets = [extract_number_from_text(item) for item in targets]
+        outputs = [extract_number_from_text(item) for item in outputs]
+        score_per_task = [1 if o == t else 0 for o, t in zip(outputs, targets)]
+        return mean(score_per_task), score_per_task
+
+    def parse_output(self, output: str) -> str:
+        extracted = extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
+        return extract_number_from_text(extracted)
+
 
 def define_lang(outputs, targets):
     langs = [detect_language(target) for target in targets]
@@ -474,8 +520,7 @@ def define_lang(outputs, targets):
 
 
 CLASSIFICATION_METRIC_NAME_MAPPING = {
-    metric._get_name(): metric
-    for metric in ClassificationMetric.__subclasses__()
+    metric._get_name(): metric for metric in ClassificationMetric.__subclasses__()
 }
 
 GENERATION_METRIC_NAME_MAPPING = {
@@ -514,8 +559,9 @@ def validate_and_create_metric(
                 return CLASSIFICATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(
-                    CLASSIFICATION_METRIC_NAME_MAPPING.keys())}."
+                f"Available metrics: {
+                    ', '.join(CLASSIFICATION_METRIC_NAME_MAPPING.keys())
+                }."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -549,8 +595,9 @@ def validate_and_create_metric(
                 return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(
-                    GENERATION_METRIC_NAME_MAPPING.keys())}."
+                f"Available metrics: {
+                    ', '.join(GENERATION_METRIC_NAME_MAPPING.keys())
+                }."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)

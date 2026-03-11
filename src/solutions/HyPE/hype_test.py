@@ -16,29 +16,23 @@ sys.path.append(project_path)
 from config_dict import config_dict
 from src.utils.load_dataset_coolprompt import tweeteval_emotions
 from coolprompt.assistant import PromptTuner
-from llm import OpenAITracker
-
-model_tracker = OpenAITracker()
-
-
-def create_chat_model(**kwargs):
-    model = ChatOpenAI(**kwargs)
-    return model_tracker.wrap_model(model)
-
 
 # llm = DefaultLLM.init(vllm_engine_config={"gpu_memory_utilization": 0.95})
 rate_limiter = InMemoryRateLimiter(
     requests_per_second=1, check_every_n_seconds=0.1, max_bucket_size=10
 )
 model = "gpt-4o-mini"
-llm = create_chat_model(
+llm = ChatOpenAI(
     model=model,
     temperature=0.7,
-    max_tokens=4000,
+    max_completion_tokens=4000,
     max_retries=5,
     rate_limiter=rate_limiter,
     api_key="",
-    # base_url="https://openrouter.ai/api/v1",
+    extra_body={
+        "allowed_providers": ["google-vertex", "azure"],
+    },
+    base_url="https://openrouter.ai/api/v1",
 )
 pt = PromptTuner(llm)
 
@@ -57,8 +51,7 @@ def sample(
         per_class = min(sample_size // len(tweeteval_emotions), min_class_size)
 
         balanced_parts = [
-            df.sample(per_class, random_state=seed)
-            for _, df in data.groupby("target")
+            df.sample(per_class, random_state=seed) for _, df in data.groupby("target")
         ]
         return pd.concat(balanced_parts).reset_index(drop=True)
     else:
@@ -67,26 +60,6 @@ def sample(
 
 def run_hype_dataset() -> dict[str, Any]:
     result = {"model": model}
-    start_prompt = """Привет. Я дам тебе мою фотографию, там я стою в коридоре хогварста в волшебной шляпе, но у меня в одной руке телефон, а другая у кармана. Я хочу чтобы ты сделал так, чтобы в руке держащей телефон оказалась раскрытая книга, а в другой руке - волшебная палочка, как во вселенной гарри поттера. большая просьба сохранить те детали что есть, не менять черты лица/тон кожи, изменить только то что в руках на то, что я просил. можно сделать чтобы взгляд был опущен в книгу. взгляд должен быть опущен натурально, либо же книгу можно чуть поднять под взгляд но не сильно"""
-
-    final_prompt = pt.run(
-        # cfg["start_prompt"],
-        # cfg["task"],
-        start_prompt,
-        # "generation",
-        # dataset,
-        # target,
-        # "hype",
-        # cfg["metric"],
-        # cfg["problem_description"],
-        verbose=2,
-        # train_as_test=True,
-        sample_answers=True,
-        # validation_size=0.5,
-        # evaluate=True,
-        feedback=True,
-    )
-    result["result"] = final_prompt
 
     for task, cfg in config_dict.items():
         data_train, data_val = (
@@ -94,10 +67,8 @@ def run_hype_dataset() -> dict[str, Any]:
             cfg["data"][cfg["test_name"]],
         )
         preproc_data = cfg["preproc"](data_val)
-        data_sample = sample(preproc_data, sample_size=None)
-        dataset, target = list(data_sample["input_data"]), list(
-            data_sample["target"]
-        )
+        data_sample = sample(preproc_data, sample_size=10)
+        dataset, target = list(data_sample["input_data"]), list(data_sample["target"])
 
         try:
             final_prompt = pt.run(
@@ -105,14 +76,11 @@ def run_hype_dataset() -> dict[str, Any]:
                 cfg["task"],
                 dataset,
                 target,
-                "hype",
+                "hyper",
                 cfg["metric"],
                 cfg["problem_description"],
                 verbose=2,
                 train_as_test=True,
-                # sample_answers=True,
-                # validation_size=0.5,
-                evaluate=True,
                 feedback=False,
             )
 
@@ -123,8 +91,6 @@ def run_hype_dataset() -> dict[str, Any]:
                     "final_metric": pt.final_metric,
                 },
                 "prompt": final_prompt,
-                "samples": pt.answer_samples,
-                "cost": pt.model_stats,
             }
         except Exception as e:
             print(f"!!!!EXCEPTION: {str(e)}!!!!")

@@ -7,7 +7,7 @@ from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
-from coolprompt.optimizer.hype import hype_optimizer
+from coolprompt.optimizer.hype import HyPEOptimizer, HyPEROptimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
@@ -23,10 +23,6 @@ from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
-from coolprompt.utils.prompt_templates.hype_templates import (
-    CLASSIFICATION_TASK_TEMPLATE_HYPE,
-    GENERATION_TASK_TEMPLATE_HYPE,
-)
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
@@ -36,12 +32,8 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
 
     TEMPLATE_MAP = {
-        (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
-        (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
-        (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
-        (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
+        Task.CLASSIFICATION: CLASSIFICATION_TASK_TEMPLATE,
+        Task.GENERATION: GENERATION_TASK_TEMPLATE,
     }
 
     def __init__(
@@ -102,7 +94,7 @@ class PromptTuner:
                 The type of task, either "classification" or "generation".
             method (str):
                 Optimization method to use.
-                Available methods are: ['hype', 'reflective', 'distill']
+                Available methods are: ['hype', 'reflective', 'distill', 'hyper']
 
         Returns:
             str: The prompt template for the given task.
@@ -113,7 +105,7 @@ class PromptTuner:
         )
         task = validate_task(task)
         method = validate_method(method)
-        return self.TEMPLATE_MAP[(task, method)]
+        return self.TEMPLATE_MAP[task]
 
     def _get_dataset_split(
         self,
@@ -182,7 +174,7 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: ['hype', 'reflective', 'distill']
+                Available methods are: ['hype', 'reflective', 'distill', 'hyper']
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
@@ -297,7 +289,7 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task,
                 problem_description=problem_description,
-                num_samples=generate_num_samples
+                num_samples=generate_num_samples,
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target
@@ -329,10 +321,21 @@ class PromptTuner:
             logger.debug(f"Additional kwargs: {kwargs}")
 
         if method is Method.HYPE:
-            final_prompt = hype_optimizer(
-                model=self._target_model,
+            hype_opt = HyPEOptimizer(model=self._target_model)
+            final_prompt = hype_opt.optimize(
                 prompt=start_prompt,
-                problem_description=problem_description,
+                meta_info={"task_description": problem_description},
+            )
+        elif method is Method.HYPER:
+            hyper_opt = HyPEROptimizer(
+                model=self._target_model,
+                evaluator=evaluator,
+                **kwargs,
+            )
+            final_prompt = hyper_opt.optimize(
+                prompt=start_prompt,
+                dataset_split=dataset_split,
+                meta_info={"task_description": problem_description},
             )
         elif method is Method.REFLECTIVE:
             final_prompt = reflectiveprompt(
@@ -360,7 +363,7 @@ class PromptTuner:
         )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
-        template = self.TEMPLATE_MAP[(task, method)]
+        template = self.TEMPLATE_MAP[task]
         logger.info(f"Evaluating on given dataset for {task} task...")
         self.init_metric = evaluator.evaluate(
             prompt=start_prompt,

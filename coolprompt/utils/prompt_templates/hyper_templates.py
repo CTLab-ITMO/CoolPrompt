@@ -5,14 +5,9 @@ from typing import List, Optional
 TARGET_PROMPT_FORMS = ["hypothetical ", "instructional "]
 
 
-SIMPLE_HYPOTHETICAL_PROMPT = (
-    "Write a {target_prompt_form}prompt that will "
-    "solve the user query effectively."
-)
+SIMPLE_HYPOTHETICAL_PROMPT = "Write a {target_prompt_form}prompt that will solve the user query effectively."
 
-USER_INPUT = "User query: {query}\n{meta_info_section}"
-
-META_INFO_SECTION = "Task-related meta-information:\n{meta_info_content}"
+META_INFO_SECTION = "Task-related meta-information:\n<meta_info>\n{meta_info_content}\n</meta_info>\n"
 
 META_PROMPT_SECTIONS = (
     "role",
@@ -32,7 +27,7 @@ class PromptSectionSpec:
 @dataclass
 class HypeMetaPromptConfig:
     target_prompt_form: str = "hypothetical instructional "
-    require_markdown_prompt: bool = False
+    require_markdown_prompt: bool = True
     include_role: bool = True
     section_names: List[str] = field(
         default_factory=lambda: [
@@ -87,6 +82,7 @@ class HypeMetaPromptConfig:
     )
     recommendations: List[str] = field(default_factory=list)
     output_format_section: Optional[str] = None
+    _cached_sections: dict = field(default_factory=dict, repr=False)
 
 
 class HypeMetaPromptBuilder:
@@ -105,7 +101,7 @@ class HypeMetaPromptBuilder:
     )
 
     CONSTRAINTS_SECTION_TEMPLATE = (
-        "### HARD CONSTRAINTS\n" "{constraints_list}\n\n"
+        "### HARD CONSTRAINTS\n{constraints_list}\n\n"
     )
 
     RECOMMENDATIONS_SECTION_TEMPLATE = (
@@ -131,7 +127,7 @@ class HypeMetaPromptBuilder:
         "- Use bulleted lists (e.g., `-` or `*`) for enumerations and checklists.\n"
         "- Preserve any code or pseudo-code using fenced code blocks (``` ... ```).\n"
         "- Do not introduce any additional formatting beyond what is necessary to make "
-        "the prompt clear and well-structured.\n\n"
+        "the prompt clear and well-structured."
     )
 
     HYPE_META_PROMPT_TEMPLATE = (
@@ -144,6 +140,17 @@ class HypeMetaPromptBuilder:
 
     def __init__(self, config: HypeMetaPromptConfig | None = None) -> None:
         self.config = config or HypeMetaPromptConfig()
+        self._cache_all_sections()
+
+    def _cache_all_sections(self) -> None:
+        self.config._cached_sections = {
+            "role": self.build_role_section(),
+            "prompt_structure": self.build_prompt_structure_section(),
+            "output_format": self.build_output_format_section(),
+        }
+
+    def get_cached_section(self, name: str) -> Optional[str]:
+        return self.config._cached_sections.get(name)
 
     # ----- секция роли -----
     def build_role_section(self, include_role: bool | None = None) -> str:
@@ -200,7 +207,8 @@ class HypeMetaPromptBuilder:
     def build_output_format_section(self) -> str:
         # если в конфиге уже передан кастомный текст — используем его как базу
         section = (
-            self.config.output_format_section or self.BASE_OUTPUT_FORMAT_SECTION
+            self.config.output_format_section
+            or self.BASE_OUTPUT_FORMAT_SECTION
         )
         if self.config.require_markdown_prompt:
             section = section + self.MARKDOWN_OUTPUT_REQUIREMENTS
@@ -246,3 +254,6 @@ class HypeMetaPromptBuilder:
             constraints_section=constraints_section,
             output_format_section=output_format_section,
         )
+
+    def rebuild_all_sections(self) -> None:
+        self._cache_all_sections()

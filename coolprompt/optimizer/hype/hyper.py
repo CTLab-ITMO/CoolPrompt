@@ -1,107 +1,220 @@
-from abc import ABC, abstractmethod
-from typing import Any, List, Optional, Union
+"""HyPEROptimizer: HyPE with iterative refinement via recommendations."""
 
-from coolprompt.utils.parsing import extract_answer, get_model_answer_extracted
-from coolprompt.utils.prompt_templates.hyper_templates import (
-    HypeMetaPromptBuilder,
-    HypeMetaPromptConfig,
-    META_INFO_SECTION,
-    META_PROMPT_SECTIONS,
+import random
+from typing import Any, List, Optional, Sequence, Tuple
+
+from tqdm import tqdm
+
+from coolprompt.optimizer.hype.hype import HyPEOptimizer, Optimizer
+from coolprompt.optimizer.hype.feedback_module import FeedbackModule
+from coolprompt.utils.parsing import get_model_answer_extracted
+from coolprompt.evaluator.evaluator import (
+    Evaluator,
+    EvalResultDetailed,
 )
 
 
-def _build_full_meta_prompt_template(builder: HypeMetaPromptBuilder) -> str:
-    body = builder.build_meta_prompt()
+def sample_mini_batch(
+    dataset: Sequence[str],
+    targets: Sequence[str | int],
+    size: int,
+    seed: Optional[int] = None,
+) -> Tuple[List[str], List[str | int]]:
+    """Sample a mini-batch from the dataset.
+
+    Returns:
+        (samples, targets) - lists of length size (or less if dataset is smaller).
+    """
+    import random
+
+    rng = random.Random(seed)
+    n = min(size, len(dataset))
+    indices = rng.sample(range(len(dataset)), n)
     return (
-        body
-        + "\n\nUser query: {QUERY}\n"
-        + META_INFO_SECTION.format(meta_info_content="{META_INFO}")
+        [dataset[i] for i in indices],
+        [targets[i] for i in indices],
     )
 
 
-class Optimizer(ABC):
-    def __init__(self, model):
-        self.model = model
+def compute_pareto_front(
+    candidates: List[str],
+    results: List[EvalResultDetailed],
+) -> List[Tuple[str, EvalResultDetailed]]:
+    """Compute Pareto front from candidates based on score_per_task.
 
-    @abstractmethod
-    def optimize(self):
-        pass
+    A candidate dominates another if its score_per_task >= other.score_per_task
+    for all tasks and > for at least one.
+
+    Returns:
+        List of (candidate, result) that belong to the Pareto front.
+    """
+    n = len(candidates)
+    is_pareto = [True] * n
+
+    for i in range(n):
+        if not is_pareto[i]:
+            continue
+        for j in range(n):
+            if i == j or not is_pareto[j]:
+                continue
+            # Check if i dominates j
+            i_scores = results[i].score_per_task
+            j_scores = results[j].score_per_task
+            if not i_scores or not j_scores:
+                continue
+            if len(i_scores) != len(j_scores):
+                continue
+            i_dominates_j = all(
+                i_s >= j_s for i_s, j_s in zip(i_scores, j_scores)
+            ) and any(i_s > j_s for i_s, j_s in zip(i_scores, j_scores))
+            if i_dominates_j:
+                is_pareto[j] = False
+
+    return [(candidates[i], results[i]) for i in range(n) if is_pareto[i]]
 
 
-class HyPEOptimizer(Optimizer):
+class HyPEROptimizer(Optimizer):
+    """HyPE with iterative refinement via evaluation-based recommendations."""
+
     def __init__(
-        self, model, config: Optional[HypeMetaPromptConfig] = None
+        self,
+        model: Any,
+        evaluator: Evaluator,
+        *,
+        n_iterations: int = 5,
+        patience: int = None,
+        n_candidates: int = 3,
+        top_n_candidates: int = 3,
+        k_samples: int = 3,
+        mini_batch_size: int = 16,
     ) -> None:
         super().__init__(model)
-        self.builder = HypeMetaPromptBuilder(config)
-        self.meta_prompt = _build_full_meta_prompt_template(self.builder)
+        self.hype_module = HyPEOptimizer(model)
+        self.evaluator = evaluator
+        self.feedback_module = FeedbackModule(model)
+        self.n_iterations = n_iterations
+        self.patience = patience
+        self.n_candidates = n_candidates
+        self.top_n_candidates = top_n_candidates
+        self.k_samples = k_samples
+        self.mini_batch_size = mini_batch_size
 
-    def get_section(self, name: str) -> Any:
-        """Возвращает текущее значение секции (для recommendations — List[str])."""
-        if name not in META_PROMPT_SECTIONS:
-            raise ValueError(f"Unknown section: {name}. Expected: {META_PROMPT_SECTIONS}")
-        if name == "recommendations":
-            return list(self.builder.config.recommendations)
-        if name == "constraints":
-            return list(self.builder.config.constraints)
-        if name == "role":
-            return self.builder.build_role_section()
-        if name == "prompt_structure":
-            return self.builder.build_prompt_structure_section()
-        if name == "output_format":
-            return self.builder.build_output_format_section()
-        return None
+    def _get_variants_from_best(
+        self, best_prompt: str, n_candidates: int
+    ) -> List[str]:
+        paraphrase_prompt = f"""Generate an alternative version of the following prompt. The new version must:
+- Use different words, sentence structure, and tone (e.g., more formal, casual, or creative).
+- Preserve the original meaning, key details, and language.
+- Vary in length: slightly shorter or longer (up to 10%).
+- Feel natural and coherent.
+- Output only the text of the alternative prompt, without any additional commentary or formatting.
 
-    def update_section(
-        self,
-        name: str,
-        value: Union[str, List[str]],
-    ) -> None:
-        """Обновляет секцию и пересобирает мета-промпт."""
-        if name not in META_PROMPT_SECTIONS:
-            raise ValueError(f"Unknown section: {name}. Expected: {META_PROMPT_SECTIONS}")
-        if name == "recommendations":
-            self.builder.config.recommendations = list(value)
-        elif name == "constraints":
-            self.builder.config.constraints = list(value)
-        elif name == "output_format" and isinstance(value, str):
-            self.builder.config.output_format_section = value
-        else:
-            raise ValueError(f"update_section for {name}: unsupported value type")
-        self._rebuild_meta_prompt()
+Original prompt:
+{best_prompt}
 
-    def _rebuild_meta_prompt(self) -> None:
-        self.meta_prompt = _build_full_meta_prompt_template(self.builder)
-
-    def set_meta_prompt(self, meta_prompt: str) -> None:
-        self.meta_prompt = meta_prompt
-
-    def optimize(
-        self, prompt: str, meta_info: Optional[dict[str, Any]] = None
-    ) -> str:
-        query = self._format_meta_prompt(prompt, **(meta_info or {}))
-        raw_result = get_model_answer_extracted(self.model, query)
-        result = self._process_model_output(raw_result)
-        return result
-
-    def _format_meta_prompt(self, prompt: str, **kwargs) -> str:
-        meta_info_content = (
-            "\n".join([f"{k}: {v}" for k, v in kwargs.items()])
-            if kwargs
-            else ""
+Alternative prompt:"""
+        raw_result = get_model_answer_extracted(
+            self.model, paraphrase_prompt, n=n_candidates, temperature=0.9
         )
-        result = self.meta_prompt.format(
-            QUERY=prompt, META_INFO=meta_info_content
-        )
-        return result
-
-    RESULT_PROMPT_TAGS = ("<result_prompt>", "</result_prompt>")
+        return [best_prompt] + [
+            self._process_model_output(r) for r in raw_result
+        ]
 
     def _process_model_output(self, output: Any) -> str:
-        result = extract_answer(
-            output,
-            self.RESULT_PROMPT_TAGS,
-            format_mismatch_label=output,
-        )
-        return result if isinstance(result, str) else str(result)
+        return output if isinstance(output, str) else str(output)
 
+    def optimize(
+        self,
+        prompt: str,
+        dataset_split: Tuple[
+            Sequence[str], Sequence[str], Sequence[str], Sequence[str]
+        ],
+        meta_info: Optional[dict[str, Any]] = None,
+    ) -> str:
+        """Generate candidates, evaluate, update recommendations, repeat."""
+        train_samples, val_samples, train_targets, val_targets = dataset_split
+        best_prompt = prompt
+        best_score = self.evaluator.evaluate(
+            prompt, list(val_samples), list(val_targets)
+        )
+        patience_counter = 0
+
+        for iteration in tqdm(
+            range(self.n_iterations), desc="HyPER iterations"
+        ):
+            # 1. Generate candidates from best_prompt
+            candidates = self._get_variants_from_best(
+                best_prompt, n_candidates=self.n_candidates
+            )
+
+            if not candidates:
+                return best_prompt
+
+            # 2. Mini-batch from train
+            samples, sample_targets = sample_mini_batch(
+                train_samples, train_targets, self.mini_batch_size
+            )
+            if not samples:
+                continue
+
+            # 3. Evaluate candidates on mini-batch via evaluate_detailed
+            results: List[EvalResultDetailed] = [
+                self.evaluator.evaluate_detailed(cand, samples, sample_targets)
+                for cand in candidates
+            ]
+
+            # 4. Pareto front
+            pareto_front = compute_pareto_front(candidates, results)
+
+            # Fallback: if all candidates are in front, sort by aggregate_score
+            if len(pareto_front) == len(
+                candidates
+            ) and self.top_n_candidates < len(candidates):
+                scored = sorted(
+                    zip(candidates, results),
+                    key=lambda x: x[1].aggregate_score,
+                    reverse=True,
+                )
+                pareto_front = scored[: self.top_n_candidates]
+
+            if not pareto_front:
+                continue
+
+            # 5. Collect recommendations for all candidates from Pareto front
+            all_recs: List[str] = []
+            for cand_prompt, res in pareto_front:
+                failed_sample = random.sample(
+                    res.failed_examples,
+                    min(self.k_samples, len(res.failed_examples)),
+                )
+                recs = self.feedback_module.generate_recommendations(
+                    cand_prompt, failed_sample
+                )
+                all_recs.extend(recs)
+
+            # Filter and update recommendations
+            all_recs = self.feedback_module.filter_recommendations(all_recs)
+
+            self.hype_module.update_section("recommendations", all_recs)
+
+            # 6. For each candidate from Pareto front
+            for cand_prompt, res in pareto_front:
+                optimized_prompt = self.hype_module.optimize(
+                    cand_prompt, meta_info=meta_info
+                )
+
+                val_score = self.evaluator.evaluate(
+                    optimized_prompt, list(val_samples), list(val_targets)
+                )
+
+                if val_score > best_score:
+                    best_score = val_score
+                    best_prompt = optimized_prompt
+                    patience_counter = 0
+                else:
+                    patience_counter += 1
+
+            if self.patience and patience_counter >= self.patience:
+                break
+
+        return best_prompt
