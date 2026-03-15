@@ -72,7 +72,8 @@ class Evaluator:
             [
                 self._get_full_prompt(prompt, sample, template)
                 for sample in dataset
-            ]
+            ],
+            config={"max_concurrency": 50},
         )
         answers = [
             a.content if isinstance(a, AIMessage) else a for a in answers

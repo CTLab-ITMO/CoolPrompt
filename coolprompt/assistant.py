@@ -10,6 +10,7 @@ from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
 from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
+from coolprompt.optimizer.pe2 import pe2_optimizer
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
     validate_model,
@@ -42,6 +43,8 @@ class PromptTuner:
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
         (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.PE2): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.PE2): GENERATION_TASK_TEMPLATE,
     }
 
     def __init__(
@@ -345,6 +348,14 @@ class PromptTuner:
             )
         elif method is Method.DISTILL:
             final_prompt = distillprompt(
+                model=self._target_model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                initial_prompt=start_prompt,
+                **kwargs,
+            )
+        elif method is Method.PE2:
+            final_prompt = pe2_optimizer(
                 model=self._target_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,

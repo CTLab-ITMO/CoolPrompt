@@ -1,0 +1,283 @@
+"""PE2 trainer: beam-search loop for prompt optimization."""
+
+import random
+from typing import List, Optional
+
+from langchain_core.language_models.base import BaseLanguageModel
+from langchain_core.messages.ai import AIMessage
+
+from coolprompt.evaluator import Evaluator
+from coolprompt.optimizer.pe2.node import Node
+from coolprompt.optimizer.pe2.proposer import Proposer
+from coolprompt.utils.logging_config import logger
+
+
+class PE2Trainer:
+    """Core beam-search trainer for PE2 prompt optimization.
+
+    Args:
+        model (BaseLanguageModel): LLM used for inference.
+        evaluator (Evaluator): Evaluator for scoring prompts.
+        proposer (Proposer): Proposer for generating refined prompts.
+        train_dataset (List[str]): Training input samples.
+        train_targets (List[str]): Training ground-truth targets.
+        val_dataset (List[str]): Validation input samples.
+        val_targets (List[str]): Validation ground-truth targets.
+        template (str): Prompt template for the task.
+        train_steps (int): Number of beam-search iterations.
+        n_beam (int): Beam width (top-k nodes kept per step).
+        n_expand (int): Number of children per selected node.
+        batch_size (int): Number of failure examples shown to proposer.
+        backtrack (bool): If True, select best across all timesteps.
+    """
+
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        evaluator: Evaluator,
+        proposer: Proposer,
+        train_dataset: List[str],
+        train_targets: List[str],
+        val_dataset: List[str],
+        val_targets: List[str],
+        template: str,
+        train_steps: int = 3,
+        n_beam: int = 3,
+        n_expand: int = 4,
+        batch_size: int = 4,
+        backtrack: bool = True,
+    ) -> None:
+        self.model = model
+        self.evaluator = evaluator
+        self.proposer = proposer
+        self.train_dataset = train_dataset
+        self.train_targets = train_targets
+        self.val_dataset = val_dataset
+        self.val_targets = val_targets
+        self.template = template
+        self.train_steps = train_steps
+        self.n_beam = n_beam
+        self.n_expand = n_expand
+        self.batch_size = batch_size
+        self.backtrack = backtrack
+        self._node_counter = 0
+
+    def _next_id(self) -> int:
+        """Returns the next unique node ID."""
+        nid = self._node_counter
+        self._node_counter += 1
+        return nid
+
+    def train(self, initial_prompt: str) -> str:
+        """Runs the PE2 beam-search optimization.
+
+        Args:
+            initial_prompt (str): The starting prompt to optimize.
+
+        Returns:
+            str: The best prompt found during optimization.
+        """
+        initial_node = Node(
+            timestamp=0,
+            id=self._next_id(),
+            prompt=initial_prompt,
+        )
+        states: List[List[Node]] = [[initial_node]]
+
+        for t in range(self.train_steps):
+            logger.info(f"PE2 step {t + 1}/{self.train_steps}")
+
+            # Evaluate nodes in the latest state on validation set
+            for node in states[-1]:
+                if "val" not in node.scores:
+                    score = self.evaluator.evaluate(
+                        prompt=node.prompt,
+                        dataset=self.val_dataset,
+                        targets=self.val_targets,
+                        template=self.template,
+                    )
+                    node.register_score(score, "val")
+                    logger.info(
+                        f"  Node {node.id} val score: {score:.4f}"
+                    )
+
+            # Select top n_beam nodes
+            candidates = self._select_candidates(states)
+            best_score = max(n.scores["val"] for n in candidates)
+            logger.info(
+                f"  Best val score at step {t + 1}: {best_score:.4f}"
+            )
+
+            # If last step, just return the best
+            if t == self.train_steps - 1:
+                break
+
+            new_nodes: List[Node] = []
+            for node in candidates:
+                # Get per-example results on training set
+                results = self._get_per_example_results(node.prompt)
+                failures = [r for r in results if not r["correct"]]
+
+                if not failures:
+                    logger.info(
+                        f"  Node {node.id}: no failures on train set, "
+                        "skipping expansion"
+                    )
+                    continue
+
+                for _ in range(self.n_expand):
+                    sampled = self._sample_failures(
+                        failures, self.batch_size
+                    )
+                    examples_str = self._pack_examples(sampled)
+
+                    new_prompt, _ = self.proposer.propose(
+                        node=node,
+                        examples_str=examples_str,
+                        full_template=self.template,
+                        batch_size=len(sampled),
+                    )
+
+                    child = Node(
+                        timestamp=t + 1,
+                        id=self._next_id(),
+                        prompt=new_prompt,
+                        parent=node.id,
+                    )
+                    node.n_child += 1
+                    new_nodes.append(child)
+
+            # Deduplicate against all existing nodes
+            all_existing = [n for state in states for n in state]
+            new_nodes = self._deduplicate(new_nodes, all_existing)
+
+            if not new_nodes:
+                logger.info("  No new unique nodes generated, stopping")
+                break
+
+            states.append(new_nodes)
+            logger.info(f"  Generated {len(new_nodes)} new nodes")
+
+        # Return the best prompt by val score
+        all_nodes = [n for state in states for n in state]
+        scored = [n for n in all_nodes if "val" in n.scores]
+        best = max(scored, key=lambda n: n.scores["val"])
+        logger.info(
+            f"PE2 best prompt (node {best.id}, "
+            f"val={best.scores['val']:.4f})"
+        )
+        return best.prompt
+
+    def _select_candidates(
+        self, states: List[List[Node]]
+    ) -> List[Node]:
+        """Selects top n_beam nodes by validation score.
+
+        Args:
+            states (List[List[Node]]): All beam states so far.
+
+        Returns:
+            List[Node]: Top-k nodes by val score.
+        """
+        if self.backtrack:
+            pool = [n for state in states for n in state]
+        else:
+            pool = list(states[-1])
+
+        scored = [n for n in pool if "val" in n.scores]
+        scored.sort(key=lambda n: n.scores["val"], reverse=True)
+        return scored[: self.n_beam]
+
+    def _get_per_example_results(
+        self, prompt: str
+    ) -> List[dict]:
+        """Runs the model on training data and checks correctness.
+
+        Args:
+            prompt (str): The prompt to evaluate.
+
+        Returns:
+            List[dict]: Per-example results with keys: input, target,
+                answer, correct.
+        """
+        full_prompts = [
+            self.evaluator._get_full_prompt(prompt, sample, self.template)
+            for sample in self.train_dataset
+        ]
+        answers = self.model.batch(full_prompts)
+        answers = [
+            a.content if isinstance(a, AIMessage) else a
+            for a in answers
+        ]
+
+        results = []
+        for inp, target, answer in zip(
+            self.train_dataset, self.train_targets, answers
+        ):
+            correct = (
+                str(answer).strip().lower()
+                == str(target).strip().lower()
+            )
+            results.append({
+                "input": inp,
+                "target": str(target),
+                "answer": str(answer).strip(),
+                "correct": correct,
+            })
+        return results
+
+    def _pack_examples(self, examples: List[dict]) -> str:
+        """Formats failure examples as a numbered string.
+
+        Args:
+            examples (List[dict]): List of failure example dicts.
+
+        Returns:
+            str: Formatted string of numbered examples.
+        """
+        parts = []
+        for i, ex in enumerate(examples, 1):
+            parts.append(
+                f"Example {i}:\n"
+                f"  Input: {ex['input']}\n"
+                f"  Expected output: {ex['target']}\n"
+                f"  Model output: {ex['answer']}"
+            )
+        return "\n\n".join(parts)
+
+    def _deduplicate(
+        self,
+        new_nodes: List[Node],
+        all_nodes: List[Node],
+    ) -> List[Node]:
+        """Removes nodes whose prompts already exist.
+
+        Args:
+            new_nodes (List[Node]): Candidate new nodes.
+            all_nodes (List[Node]): All existing nodes.
+
+        Returns:
+            List[Node]: Deduplicated new nodes.
+        """
+        existing = {n.prompt.strip().lower() for n in all_nodes}
+        unique = []
+        for node in new_nodes:
+            key = node.prompt.strip().lower()
+            if key not in existing:
+                existing.add(key)
+                unique.append(node)
+        return unique
+
+    def _sample_failures(
+        self, results: List[dict], k: int
+    ) -> List[dict]:
+        """Randomly samples k failure examples.
+
+        Args:
+            results (List[dict]): List of failure example dicts.
+            k (int): Number of examples to sample.
+
+        Returns:
+            List[dict]: Sampled failure examples.
+        """
+        return random.sample(results, min(k, len(results)))
