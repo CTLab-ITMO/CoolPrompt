@@ -6,6 +6,7 @@ class Method(Enum):
     REFLECTIVE = "reflective"
     DISTILL = "distill"
     PE2 = "pe2"
+    PE2_SGR = "pe2_sgr"
 
     def is_data_driven(self) -> bool:
         if self is Method.HYPE:
