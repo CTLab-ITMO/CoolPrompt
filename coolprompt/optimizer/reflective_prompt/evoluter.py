@@ -1,6 +1,7 @@
 import os
 import yaml
 from typing import List, Tuple, Any, Optional
+from copy import deepcopy
 
 import numpy as np
 import statistics
@@ -70,6 +71,7 @@ class ReflectiveEvoluter:
         population_size: int = 10,
         num_epochs: int = 10,
         output_path: str = "./reflectiveprompt_outputs",
+        checkpoint_path: Optional[str] = None,
         use_cache: bool = True,
     ) -> None:
         self.model = model
@@ -84,6 +86,7 @@ class ReflectiveEvoluter:
         self.problem_description = problem_description
         self.output_path = output_path
         self.initial_prompt = initial_prompt
+        self.checkpoint_path = checkpoint_path
 
         self.elitist = None
         self._long_term_reflection_str = ""
@@ -161,6 +164,17 @@ class ReflectiveEvoluter:
         """
 
         logger.info("Initializing population...")
+        if self.checkpoint_path is not None:
+            with open(self.checkpoint_path, 'r') as f:
+                data = yaml.safe_load(f)
+            print(data)
+            initial_population = [
+                Prompt.from_dict(prompt_data)
+                for prompt_data in data['prompts']
+            ]
+            initial_population = self._reranking(initial_population)
+            return initial_population
+
         if self.initial_prompt is None:
             self.initial_prompt = self._create_initial_prompt()
         request = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE.format(
@@ -452,6 +466,7 @@ class ReflectiveEvoluter:
             List[str]: model answers.
         """
 
+        requests = [request.replace('\"', '\'') for request in requests]
         answers = self.model.batch(requests)
 
         answers = [a.content
@@ -537,6 +552,17 @@ class ReflectiveEvoluter:
             if self.elitist is not None and self.elitist not in population:
                 logger.debug("Elitist should always live")
                 population = np.append(population, np.array([self.elitist]))
+            population = self._reranking(population)
+
+            population_for_validation = deepcopy(population[:3])
+            self._evaluation(population_for_validation, split="validation")
+            population_for_validation = self._reranking(
+                population_for_validation
+            )
+            self._cache_data(
+                population_for_validation[0].to_dict(),
+                self._make_output_path("elitist"),
+            )
 
             self._update_iter(population)
 

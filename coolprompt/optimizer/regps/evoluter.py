@@ -64,7 +64,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         num_epochs: int = 5,
         output_path: str = "./regps_outputs",
         use_cache: bool = True,
-        bad_examples_number: int = 5
+        bad_examples_number: int = 5,
+        checkpoint_path: Optional[str] = None
     ) -> None:
         super().__init__(
             model,
@@ -78,6 +79,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             population_size,
             num_epochs,
             output_path,
+            checkpoint_path,
             use_cache
         )
 
