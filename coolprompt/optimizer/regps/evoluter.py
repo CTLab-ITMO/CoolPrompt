@@ -47,7 +47,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         PROMPT_TAGS: start and end tags for prompt extraction.
         HINT_TAGS: start and end tags for hint extraction.
     """
-    
+
     FEEDBACK_TAGS = ("<feedback>", "</feedback>")
 
     def __init__(

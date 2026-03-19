@@ -1,7 +1,6 @@
 import os
 import yaml
 from typing import List, Tuple, Any, Optional
-from copy import deepcopy
 
 import numpy as np
 import statistics
@@ -516,7 +515,7 @@ class ReflectiveEvoluter:
 
         population = np.array(self._init_pop())
         self._cache_population(
-            population, self._make_output_path("initial_population.yaml")
+            population, self._make_output_path("initial_population")
         )
 
         while self.iteration < self.num_epochs:
@@ -546,6 +545,7 @@ class ReflectiveEvoluter:
 
             population = np.append(population, np.array(crossed_population))
             population = np.append(population, np.array(mutated_population))
+            population = self._reranking(population)
             self._update_elitist(population)
             population = self._survive(population, temperature=1e-1)
 
@@ -554,24 +554,7 @@ class ReflectiveEvoluter:
                 population = np.append(population, np.array([self.elitist]))
             population = self._reranking(population)
 
-            population_for_validation = deepcopy(population[:3])
-            self._evaluation(population_for_validation, split="validation")
-            population_for_validation = self._reranking(
-                population_for_validation
-            )
-            self._cache_data(
-                population_for_validation[0].to_dict(),
-                self._make_output_path("elitist"),
-            )
-
             self._update_iter(population)
-
-            self._evaluate(self.elitist, split="validation")
-            self._cache_data(
-                self.elitist,
-                self._make_output_path("elitist"),
-            )
-            self.elitist.set_score(self.best_score_overall)
 
         logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 
@@ -581,7 +564,7 @@ class ReflectiveEvoluter:
         self._evaluation(population, split="validation")
         population = self._reranking(population)
         self._cache_population(
-            population, self._make_output_path("best_prompts_infer.yaml")
+            population, self._make_output_path("best_prompts_infer")
         )
         self.elitist = population[0]
         self.best_prompt_overall = self.elitist.text
