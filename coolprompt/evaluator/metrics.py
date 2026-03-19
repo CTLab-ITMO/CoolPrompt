@@ -5,6 +5,7 @@ from typing import Optional, Dict, List, Tuple
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 from evaluate import load
+from code_bert_score import BERTScorer
 import numpy as np
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
@@ -512,6 +513,22 @@ class ExactMatchMetric(GenerationMetric):
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
         return [float(o == t) for o, t in zip(outputs, targets)]
+
+
+class CodeBertScore(GenerationMetric):
+
+    @staticmethod
+    def _get_name():
+        return "codebertscore"
+    
+    def __init__(self):
+        super().__init__()
+        self.scorer = BERTScorer(lang="java")
+
+    def _compute_raw(self, outputs, targets, dataset = None):
+        _, _, F1 = self.scorer.score(cands=outputs, refs=targets)
+        f1_list = list(F1.numpy())
+        return f1_list
 
 
 def define_lang(outputs, targets):

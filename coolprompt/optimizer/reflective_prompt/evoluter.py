@@ -89,7 +89,7 @@ class ReflectiveEvoluter:
         self.checkpoint_path = checkpoint_path
 
         self.elitist = None
-        self._long_term_reflection_str = ""
+        self._long_term_reflection_str = """Use precise action verbs like "implement," "create," or "debug," and clearly specify the programming language and problem to enhance clarity and focus in your prompt."""
         self.best_score_overall = None
         self.best_prompt_overall = None
         self.iteration = 0
@@ -565,6 +565,13 @@ class ReflectiveEvoluter:
             )
 
             self._update_iter(population)
+
+            self._evaluate(self.elitist, split="validation")
+            self._cache_data(
+                self.elitist,
+                self._make_output_path("elitist"),
+            )
+            self.elitist.set_score(self.best_score_overall)
 
         logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 

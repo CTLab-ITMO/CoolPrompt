@@ -6,6 +6,41 @@ gsm8k = load_dataset("openai/gsm8k", "main")
 common_gen = load_dataset("allenai/common_gen")
 ag_news = load_dataset("fancyzhx/ag_news")
 xsum = load_dataset("yairfeldman/xsum")
+load_dataset("cardiffnlp/tweet_eval", 'emotion')
+
+tweeteval_emotions = {
+    0: 'anger',
+    1: 'joy',
+    2: 'optimism',
+    3: 'sadness'
+}
+
+
+def medalpaca_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    data['input_data'] = data["instruction"] + "\n" + data['input']
+    data['target'] = data['output']
+
+    if size:
+        data = data.head(size)
+
+    return data
+
+
+def tweeteval_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    data['input_data'] = data['text']
+    data['target'] = data['label'].apply(
+        lambda x: tweeteval_emotions[x]
+    )
+
+    if size:
+        data = data.head(size)
+
+    return data
+
 
 ag_labels = {
     "World": 0,
@@ -32,6 +67,7 @@ def squad_v2_preproc(sample, size: int = None):
 
 
 def gsm8k_preproc(sample, size: int = None):
+    sample = sample['train']
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["question"]

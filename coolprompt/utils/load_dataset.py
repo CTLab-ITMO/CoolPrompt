@@ -9,6 +9,36 @@ tweeteval_emotions = {
 }
 
 
+def code_to_text_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    def replace_docstring_text_with_empty(code: str, docstring: str) -> str:
+        return code.replace(docstring, "")
+
+    data["input_data"] = data.apply(
+        lambda r: replace_docstring_text_with_empty(r["code"], r["docstring"]),
+        axis=1
+    )
+
+    data['target'] = data['docstring']
+
+    if size:
+        data = data.head(size)
+
+    return data
+
+def concode_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    data['input_data'] = data['nl']
+    data['target'] = data['code']
+
+    if size:
+        data = data.head(size)
+
+    return data
+
+
 def medalpaca_preproc(sample, size: int = None):
     data = pd.DataFrame(sample)
 
@@ -95,7 +125,7 @@ def xsum_preproc(sample, size: int = None):
     return data
 
 
-def load_dataset(name: str, split: str, size: int = None):
+def load_dataset(name: str, split: str, subset: str = None, size: int = None):
     match name:
         case "squad_v2":
             data = load_dataset_hf("rajpurkar/squad_v2")
@@ -126,5 +156,13 @@ def load_dataset(name: str, split: str, size: int = None):
                 case "train": data = data[:-660]
                 case "test": data = data[-660:]
             data = medalpaca_preproc(data, size)
+        case "code_to_text":
+            data = load_dataset_hf("google/code_x_glue_ct_code_to_text", subset)
+            data = data[split]
+            data = code_to_text_preproc(data, size)
+        case "concode":
+            data = load_dataset_hf('AhmedSSoliman/CodeXGLUE-CONCODE')
+            data = data[split]
+            data = concode_preproc(data, size)
 
     return list(data["input_data"]), list(data["target"])
