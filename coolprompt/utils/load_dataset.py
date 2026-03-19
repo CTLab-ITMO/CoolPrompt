@@ -1,3 +1,4 @@
+from typing import Optional, Tuple, List
 from datasets import load_dataset as load_dataset_hf
 import pandas as pd
 
@@ -10,6 +11,7 @@ tweeteval_emotions = {
 
 
 def code_to_text_preproc(sample, size: int = None):
+    """Preprocessing of CodeToText dataset"""
     data = pd.DataFrame(sample)
 
     def replace_docstring_text_with_empty(code: str, docstring: str) -> str:
@@ -27,7 +29,9 @@ def code_to_text_preproc(sample, size: int = None):
 
     return data
 
+
 def concode_preproc(sample, size: int = None):
+    """Preprocessing of CONCODE dataset"""
     data = pd.DataFrame(sample)
 
     data['input_data'] = data['nl']
@@ -40,6 +44,7 @@ def concode_preproc(sample, size: int = None):
 
 
 def medalpaca_preproc(sample, size: int = None):
+    """Preprocessing of MediQA dataset"""
     data = pd.DataFrame(sample)
 
     data['input_data'] = data["instruction"] + "\n" + data['input']
@@ -52,6 +57,7 @@ def medalpaca_preproc(sample, size: int = None):
 
 
 def tweeteval_preproc(sample, size: int = None):
+    """Preprocessing of TweetEval (emotions) dataset"""
     data = pd.DataFrame(sample)
 
     data['input_data'] = data['text']
@@ -66,6 +72,7 @@ def tweeteval_preproc(sample, size: int = None):
 
 
 def squad_v2_preproc(sample, size: int = None):
+    """Preprocessing of SQUAD v2 dataset"""
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["context"] + " " + data["question"]
@@ -82,6 +89,7 @@ def squad_v2_preproc(sample, size: int = None):
 
 
 def gsm8k_preproc(sample, size: int = None):
+    """Preprocessing of GSM8k dataset"""
     sample = sample['train']
     data = pd.DataFrame(sample)
 
@@ -95,6 +103,7 @@ def gsm8k_preproc(sample, size: int = None):
 
 
 def common_gen_preproc(sample, size: int = None):
+    """Preprocessing of CommonGen dataset"""
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["concepts"].apply(lambda x: str(x))
@@ -106,6 +115,7 @@ def common_gen_preproc(sample, size: int = None):
 
 
 def ag_news_preproc(sample, size: int = None):
+    """Preprocessing of AgNews dataset"""
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"text": "input_data", "label": "target"})
@@ -116,6 +126,7 @@ def ag_news_preproc(sample, size: int = None):
 
 
 def xsum_preproc(sample, size: int = None):
+    """Preprocessing of XSUM dataset"""
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"document": "input_data", "summary": "target"})
@@ -125,7 +136,29 @@ def xsum_preproc(sample, size: int = None):
     return data
 
 
-def load_dataset(name: str, split: str, subset: str = None, size: int = None):
+def load_dataset(
+    name: str,
+    split: str,
+    subset: Optional[str] = None,
+    size: Optional[int] = None
+) -> Tuple[List[str], List[str]]:
+    """Loading preprocessed dataset
+
+    Args:
+        name (str): Name of the dataset. Supported datasets:
+            ["squad_v2", "gsm8k", "common_gen", "xsum",
+                "tweeteval", "mediqa", "code_to_text", "concode"]
+        split (str): Split of the dataset (train or test)
+        subset (Optional[str]):
+            Which subset from HuggingFace to download
+                (if it is needed to specify)
+            Defaults to None
+        size (Optional[int]): Specified size of the dataset.
+            Defaults to None (full dataset size).
+
+    Returns:
+        Tuple[List[str], List[str]]: loaded dataset and targets
+    """
     match name:
         case "squad_v2":
             data = load_dataset_hf("rajpurkar/squad_v2")
@@ -149,7 +182,7 @@ def load_dataset(name: str, split: str, subset: str = None, size: int = None):
             data = load_dataset_hf("cardiffnlp/tweet_eval", 'emotion')
             data = data[split]
             data = tweeteval_preproc(data, size)
-        case "medalpaca":
+        case "mediqa":
             data = load_dataset_hf("medalpaca/medical_meadow_mediqa")
             data = data['train']
             match split:

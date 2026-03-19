@@ -175,4 +175,5 @@ src/solutions/SPELL/outputs/*
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
 
+# Let's fix some directory for run logs
 run_logs/*

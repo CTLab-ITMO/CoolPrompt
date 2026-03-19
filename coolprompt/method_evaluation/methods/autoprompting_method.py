@@ -88,5 +88,8 @@ class AutoPromptingMethod:
             dataset=self.test_dataset,
             targets=self.test_target,
             save_model_answers=saving_model_answers,
-            model_answers_output_path=self.config['model_answers_output_path']
+            model_answers_output_path=self.config.get(
+                'model_answers_output_path',
+                './model_answers.yaml'
+            )
         )
