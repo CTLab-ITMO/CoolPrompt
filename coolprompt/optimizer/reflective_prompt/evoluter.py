@@ -89,7 +89,7 @@ class ReflectiveEvoluter:
         self.checkpoint_path = checkpoint_path
 
         self.elitist = None
-        self._long_term_reflection_str = """Use precise action verbs like "implement," "create," or "debug," and clearly specify the programming language and problem to enhance clarity and focus in your prompt."""
+        self._long_term_reflection_str = ""
         self.best_score_overall = None
         self.best_prompt_overall = None
         self.iteration = 0

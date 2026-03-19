@@ -101,15 +101,6 @@ class PromptTuner:
         if hasattr(self._target_model, "reset_stats"):
             self._target_model.reset_stats()
 
-    def get_stats(self):
-        if hasattr(self._target_model, "get_stats"):
-            return self._target_model.get_stats()
-        return None
-
-    def reset_stats(self):
-        if hasattr(self._target_model, "reset_stats"):
-            self._target_model.reset_stats()
-
     def get_task_prompt_template(self, task: str, method: str) -> str:
         """Returns the prompt template for the given task.
 
@@ -199,7 +190,8 @@ class PromptTuner:
             target (Iterable):
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
-                Available methods are: ['hype', 'reflective', 'distill', 'regps']
+                Available methods are:
+                    ['hype', 'reflective', 'distill', 'regps']
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
@@ -219,7 +211,8 @@ class PromptTuner:
                 If sets to True, the validation_size parameter will be ignored.
                 Defaults to False.
             generate_num_samples (int):
-                A number of dataset and target samples to generate with PromptAssistant
+                A number of dataset and target samples
+                    to generate with PromptAssistant
             feedback (bool):
                 PromptAssistant interpretation of optimization results
                 Defaults to True.
@@ -227,18 +220,24 @@ class PromptTuner:
                 0 - no logging
                 1 - steps logging
                 2 - steps and prompts logging
-            llm_as_judge_criteria (str | list[str]): Criteria for LLM-as-judge metric when
-                metric == 'llm_as_judge'. Accepts a single criterion (e.g., "relevance")
-                or a list of criteria (e.g., ["relevance", "fluency"]). Built‑in
-                keys: "accuracy", "coherence", "fluency", "relevance". Custom
-                names are supported when paired with `llm_as_judge_custom_templates`.
-            llm_as_judge_custom_templates (dict[str, str] | None): Optional mapping
-                from criterion name to a custom judge prompt template. Each
-                template must include placeholders: `{metric_ceil}`, `{request}`
-                and `{response}`; the judge must return ONLY a single number.
-            llm_as_judge_metric_ceil (int): Maximum integer score expected from the
-                judge (1..ceil). Judge outputs are clipped to [0, ceil] and
-                normalized to [0, 1] for averaging.
+            llm_as_judge_criteria (str | list[str]): Criteria
+                for LLM-as-judge metric when
+                    metric == 'llm_as_judge'.
+                Accepts a single criterion (e.g., "relevance")
+                    or a list of criteria (e.g., ["relevance", "fluency"]).
+                Built‑in keys: "accuracy", "coherence", "fluency", "relevance".
+                Custom names are supported
+                    when paired with `llm_as_judge_custom_templates`.
+            llm_as_judge_custom_templates (dict[str, str] | None):
+                Optional mapping from criterion name
+                    to a custom judge prompt template.
+                Each template must include placeholders:
+                    `{metric_ceil}`, `{request}` and `{response}`;
+                    the judge must return ONLY a single number.
+            llm_as_judge_metric_ceil (int): Maximum integer score
+                expected from the judge (1..ceil).
+                Judge outputs are clipped to [0, ceil] and
+                    normalized to [0, 1] for averaging.
             geval_criteria (str | None): High-level natural language description
                 of what GEval should evaluate. Mutually exclusive with
                 `geval_evaluation_steps`. If both are provided, GEvalMetric

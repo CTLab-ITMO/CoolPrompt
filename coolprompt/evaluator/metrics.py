@@ -520,12 +520,12 @@ class CodeBertScore(GenerationMetric):
     @staticmethod
     def _get_name():
         return "codebertscore"
-    
+
     def __init__(self):
         super().__init__()
         self.scorer = BERTScorer(lang="java")
 
-    def _compute_raw(self, outputs, targets, dataset = None):
+    def _compute_raw(self, outputs, targets, dataset=None):
         _, _, F1 = self.scorer.score(cands=outputs, refs=targets)
         f1_list = list(F1.numpy())
         return f1_list
@@ -638,4 +638,4 @@ def get_default_metric(task: Task) -> str:
         case Task.CLASSIFICATION:
             return "f1"
         case Task.GENERATION:
-            return "meteor"
+            return "bertscore"
