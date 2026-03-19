@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Iterable, Optional, Tuple
-from langchain_core.language_models.base import BaseLanguageModel
 from random import sample
+from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
@@ -40,7 +40,6 @@ class PromptTuner:
     TEMPLATE_MAP = {
         (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
         (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
