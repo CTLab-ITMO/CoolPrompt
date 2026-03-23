@@ -1,8 +1,10 @@
 """OPRO proposer: trajectory-based prompt optimization."""
 
+import random
+from typing import List, Optional
+
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.optimizer.pe2.node import Node
 from coolprompt.utils.parsing import (
     extract_answer,
     get_model_answer_extracted,
@@ -17,25 +19,38 @@ class OPROProposer:
 
     Maintains a sorted history of (prompt, score) pairs and
     asks the LLM to propose a prompt that scores higher than
-    all previous attempts.
+    all previous attempts. Includes task demonstrations from
+    training data in the meta-prompt, matching the original
+    OPRO paper.
 
     Args:
         model (BaseLanguageModel): LLM for meta-optimization.
+        train_dataset (List[str]): Training input samples.
+        train_targets (List[str]): Training ground-truth
+            targets.
         prompt_max_tokens (int): Max token budget hint
             for the new prompt.
         max_trajectory (int): Maximum number of past attempts
             to keep in the trajectory.
+        n_demonstrations (int): Number of task demonstrations
+            to include in the meta-prompt.
     """
 
     def __init__(
         self,
         model: BaseLanguageModel,
+        train_dataset: List[str],
+        train_targets: List[str],
         prompt_max_tokens: int = 300,
         max_trajectory: int = 20,
+        n_demonstrations: int = 5,
     ) -> None:
         self.model = model
+        self.train_dataset = train_dataset
+        self.train_targets = train_targets
         self.prompt_max_tokens = prompt_max_tokens
         self.max_trajectory = max_trajectory
+        self.n_demonstrations = n_demonstrations
         self.trajectory: list[tuple[str, float]] = []
 
     def update_trajectory(
@@ -72,36 +87,53 @@ class OPROProposer:
             )
         return "\n\n".join(parts)
 
-    def propose(
-        self,
-        node: Node,
-        examples_str: str,
-        full_template: str,
-        batch_size: int,
-    ) -> tuple[str, str]:
-        """Proposes a prompt based on the trajectory.
+    def _format_task_demonstrations(self) -> str:
+        """Samples and formats task input-output pairs.
 
-        Args:
-            node (Node): Current beam node (used as fallback).
-            examples_str (str): Ignored by OPRO.
-            full_template (str): Ignored by OPRO.
-            batch_size (int): Ignored by OPRO.
+        Returns:
+            str: Formatted task demonstrations string.
+        """
+        n = min(
+            self.n_demonstrations, len(self.train_dataset)
+        )
+        indices = random.sample(
+            range(len(self.train_dataset)), n
+        )
+        parts = []
+        for i, idx in enumerate(indices, 1):
+            parts.append(
+                f"{i}. Input: {self.train_dataset[idx]}\n"
+                f"   Output: {self.train_targets[idx]}"
+            )
+        return "\n\n".join(parts)
+
+    def propose(self) -> tuple[str, str]:
+        """Proposes a prompt based on the trajectory.
 
         Returns:
             tuple[str, str]: (new_prompt, "trajectory").
         """
         trajectory_str = self._format_trajectory()
+        demos_str = self._format_task_demonstrations()
 
         prompt = OPRO_META_TEMPLATE.format(
+            task_demonstrations=demos_str,
             trajectory=trajectory_str,
             max_tokens=self.prompt_max_tokens,
         )
-        answer = get_model_answer_extracted(self.model, prompt)
+        answer = get_model_answer_extracted(
+            self.model, prompt
+        )
 
+        fallback = (
+            self.trajectory[-1][0]
+            if self.trajectory
+            else ""
+        )
         new_prompt = extract_answer(
             answer,
             ("<prompt>", "</prompt>"),
-            format_mismatch_label=node.prompt,
+            format_mismatch_label=fallback,
         )
 
         return new_prompt.strip(), "trajectory"

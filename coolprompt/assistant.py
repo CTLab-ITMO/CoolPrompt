@@ -133,24 +133,43 @@ class PromptTuner:
         target: Iterable[str],
         validation_size: float,
         train_as_test: bool,
+        train_dataset: Optional[Iterable[str]] = None,
+        train_targets: Optional[
+            Iterable[str] | Iterable[int]
+        ] = None,
     ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
         """Provides a train/val dataset split.
 
         Args:
             dataset (Iterable[str]):
-                Provided dataset.
+                Provided dataset (used as val when
+                train_dataset is given).
             target (Iterable[str]):
                 Provided targets for the dataset.
             validation_size (float):
                 Provided size of validation subset.
             train_as_test (bool):
-                Either to use all data for train and validation or split it.
+                Either to use all data for train and
+                validation or split it.
+            train_dataset (Optional[Iterable[str]]):
+                Pre-split training data. When provided,
+                ``dataset``/``target`` are used as
+                validation and ``train_as_test`` and
+                ``validation_size`` are ignored.
+            train_targets (Optional[Iterable]):
+                Pre-split training targets.
 
         Returns:
-            Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
+            Tuple[Iterable[str], Iterable[str],
+                  Iterable[str], Iterable[str]]:
                 a tuple of train dataset, validation dataset,
                 train targets and validation targets.
         """
+        if train_dataset is not None and train_targets is not None:
+            return (
+                train_dataset, dataset,
+                train_targets, target,
+            )
         if train_as_test:
             return (dataset, dataset, target, target)
         train_data, val_data, train_targets, val_targets = train_test_split(
@@ -169,6 +188,8 @@ class PromptTuner:
         problem_description: Optional[str] = None,
         validation_size: float = 0.25,
         train_as_test: bool = False,
+        train_dataset: Optional[Iterable[str]] = None,
+        train_targets: Optional[Iterable[str] | Iterable[int]] = None,
         generate_num_samples: int = 10,
         feedback: bool = True,
         verbose: int = 1,
@@ -209,6 +230,14 @@ class PromptTuner:
                 the train and the test dataset at the same time or not.
                 If sets to True, the validation_size parameter will be ignored.
                 Defaults to False.
+            train_dataset (Optional[Iterable[str]]):
+                Pre-split training inputs. When provided
+                together with ``train_targets``,
+                ``dataset``/``target`` are used as
+                validation data and ``train_as_test`` /
+                ``validation_size`` are ignored.
+            train_targets (Optional[Iterable]):
+                Pre-split training targets.
             generate_num_samples (int):
                 A number of dataset and target samples to generate with PromptAssistant
             feedback (bool):
@@ -324,6 +353,8 @@ class PromptTuner:
             target=target,
             validation_size=validation_size,
             train_as_test=train_as_test,
+            train_dataset=train_dataset,
+            train_targets=train_targets,
         )
 
         logger.info("=== Starting Prompt Optimization ===")

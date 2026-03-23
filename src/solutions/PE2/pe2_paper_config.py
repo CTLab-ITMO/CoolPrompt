@@ -159,7 +159,10 @@ def build_pe2_paper_config(ii_cf_split: int = 0):
             "metric": _metric_for(subtask),
             "problem_description": "math problem solving",
             "loader": lambda s=subtask: load_pe2_csv(
-                "math", s
+                "math", s, split="dev",
+            ),
+            "train_loader": lambda s=subtask: load_pe2_csv(
+                "math", s, split="train",
             ),
         }
 
@@ -177,7 +180,10 @@ def build_pe2_paper_config(ii_cf_split: int = 0):
             "metric": _metric_for(subtask),
             "problem_description": f"BIG-Bench Hard: {desc}",
             "loader": lambda s=subtask: load_pe2_csv(
-                "bbh", s
+                "bbh", s, split="dev",
+            ),
+            "train_loader": lambda s=subtask: load_pe2_csv(
+                "bbh", s, split="train",
             ),
         }
 
@@ -201,7 +207,15 @@ def build_pe2_paper_config(ii_cf_split: int = 0):
             "loader": lambda s=subtask, sp=ii_cf_split: (
                 load_pe2_csv(
                     "instruction_induction", s,
-                    ii_cf_split=sp,
+                    split="dev", ii_cf_split=sp,
+                )
+            ),
+            "train_loader": (
+                lambda s=subtask, sp=ii_cf_split: (
+                    load_pe2_csv(
+                        "instruction_induction", s,
+                        split="train", ii_cf_split=sp,
+                    )
                 )
             ),
         }
@@ -226,7 +240,15 @@ def build_pe2_paper_config(ii_cf_split: int = 0):
             "loader": lambda s=subtask, sp=ii_cf_split: (
                 load_pe2_csv(
                     "counterfactual-evaluation", s,
-                    ii_cf_split=sp,
+                    split="dev", ii_cf_split=sp,
+                )
+            ),
+            "train_loader": (
+                lambda s=subtask, sp=ii_cf_split: (
+                    load_pe2_csv(
+                        "counterfactual-evaluation", s,
+                        split="train", ii_cf_split=sp,
+                    )
                 )
             ),
         }

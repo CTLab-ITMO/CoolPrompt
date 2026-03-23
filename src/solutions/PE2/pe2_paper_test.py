@@ -113,7 +113,6 @@ def run_pe2_paper(
     base_kwargs: dict = {
         "method": method,
         "verbose": 2,
-        "train_as_test": True,
         "train_steps": train_steps,
     }
     if method == "pe2_sgr" and sgr_log_path:
@@ -128,6 +127,7 @@ def run_pe2_paper(
             metric=cfg["metric"],
             problem_description=cfg["problem_description"],
             loader=cfg["loader"],
+            train_loader=cfg.get("train_loader"),
             run_kwargs=dict(base_kwargs),
         )
         for key, cfg in tasks_cfg.items()

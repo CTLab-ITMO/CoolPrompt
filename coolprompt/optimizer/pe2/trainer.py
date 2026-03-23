@@ -8,9 +8,12 @@ from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
 
 from coolprompt.evaluator import Evaluator
+from coolprompt.evaluator.metrics import ClassificationMetric
 from coolprompt.optimizer.pe2.node import Node
 from coolprompt.optimizer.pe2.proposer import Proposer
+from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
+from coolprompt.utils.parsing import extract_answer
 
 
 class PE2Trainer:
@@ -31,6 +34,8 @@ class PE2Trainer:
         batch_size (int): Number of failure examples shown to proposer.
         backtrack (bool): If True, select best across all timesteps.
     """
+
+    ANS_TAGS = ("<ans>", "</ans>")
 
     def __init__(
         self,
@@ -132,6 +137,10 @@ class PE2Trainer:
                     )
                     continue
 
+                full_template = self._instantiate_template(
+                    node.prompt
+                )
+
                 for _ in range(self.n_expand):
                     sampled = self._sample_failures(
                         failures, self.batch_size
@@ -140,16 +149,23 @@ class PE2Trainer:
                         sampled
                     )
                     proposal_jobs.append(
-                        (node, examples_str, len(sampled))
+                        (node, examples_str,
+                         full_template, len(sampled))
                     )
+
+            if not proposal_jobs:
+                logger.info(
+                    "  No proposal jobs, stopping"
+                )
+                break
 
             # Run proposals in parallel
             def _do_propose(job):
-                n, ex_str, bs = job
+                n, ex_str, ft, bs = job
                 prompt, _ = self.proposer.propose(
                     node=n,
                     examples_str=ex_str,
-                    full_template=self.template,
+                    full_template=ft,
                     batch_size=bs,
                 )
                 return n, prompt
@@ -213,46 +229,119 @@ class PE2Trainer:
         scored.sort(key=lambda n: n.scores["val"], reverse=True)
         return scored[: self.n_beam]
 
+    def _instantiate_template(self, prompt: str) -> str:
+        """Instantiates the task template with the prompt.
+
+        Replaces the prompt placeholder with the actual prompt
+        and the input placeholder with a literal ``<input>``,
+        matching the official PE2 behavior where the proposer
+        sees the concrete full prompt structure.
+
+        Args:
+            prompt (str): The instruction prompt.
+
+        Returns:
+            str: The instantiated full template string.
+        """
+        # Escape braces in prompt to avoid format errors
+        safe_prompt = prompt.replace("{", "{{").replace(
+            "}", "}}"
+        )
+        if self.evaluator.task == Task.CLASSIFICATION:
+            if isinstance(
+                self.evaluator.metric, ClassificationMetric
+            ) and self.evaluator.metric.label_to_id:
+                labels = ", ".join(
+                    map(
+                        str,
+                        self.evaluator.metric.label_to_id
+                        .keys(),
+                    )
+                )
+            else:
+                labels = "<labels>"
+            return self.template.format(
+                PROMPT=safe_prompt,
+                LABELS=labels,
+                INPUT="<input>",
+            )
+        else:
+            return self.template.format(
+                PROMPT=safe_prompt,
+                INPUT="<input>",
+            )
+
     def _get_per_example_results(
         self, prompt: str
     ) -> List[dict]:
-        """Runs the model on training data and checks correctness.
+        """Runs the model on training data and checks
+        correctness via exact match.
+
+        Uses exact string comparison on extracted answers
+        for failure detection, matching official PE2 behavior
+        (``score == 0.0`` where score is EM). The actual
+        evaluation metric is only used for overall prompt
+        scoring on the validation set.
 
         Args:
             prompt (str): The prompt to evaluate.
 
         Returns:
-            List[dict]: Per-example results with keys: input, target,
-                answer, correct.
+            List[dict]: Per-example results with keys: input,
+                target, answer, raw_output, correct.
         """
+        if self.evaluator.task == Task.CLASSIFICATION:
+            if isinstance(
+                self.evaluator.metric, ClassificationMetric
+            ):
+                self.evaluator.metric.extract_labels(
+                    self.train_targets
+                )
+
         full_prompts = [
-            self.evaluator._get_full_prompt(prompt, sample, self.template)
+            self.evaluator._get_full_prompt(
+                prompt, sample, self.template
+            )
             for sample in self.train_dataset
         ]
-        answers = self.model.batch(full_prompts)
-        answers = [
+        raw_answers = self.model.batch(full_prompts)
+        raw_answers = [
             a.content if isinstance(a, AIMessage) else a
-            for a in answers
+            for a in raw_answers
         ]
 
         results = []
-        for inp, target, answer in zip(
-            self.train_dataset, self.train_targets, answers
+        for inp, target, raw in zip(
+            self.train_dataset,
+            self.train_targets,
+            raw_answers,
         ):
+            raw_str = str(raw).strip()
+            extracted = extract_answer(
+                raw_str, self.ANS_TAGS, raw_str
+            )
+            extracted_str = str(extracted).strip()
+            target_str = str(target).strip()
+
             correct = (
-                str(answer).strip().lower()
-                == str(target).strip().lower()
+                extracted_str.lower() == target_str.lower()
             )
             results.append({
                 "input": inp,
-                "target": str(target),
-                "answer": str(answer).strip(),
+                "target": target_str,
+                "answer": extracted_str,
+                "raw_output": raw_str,
                 "correct": correct,
             })
         return results
 
     def _pack_examples(self, examples: List[dict]) -> str:
-        """Formats failure examples as a numbered string.
+        """Formats failure examples matching official PE2 format.
+
+        Includes a Reasoning field when the raw model output
+        contains more than the extracted answer (e.g. chain-of-
+        thought), matching official PE2's inclusion of reasoning
+        traces for math/BBH tasks.
 
         Args:
             examples (List[dict]): List of failure example dicts.
@@ -262,12 +351,18 @@ class PE2Trainer:
         """
         parts = []
         for i, ex in enumerate(examples, 1):
-            parts.append(
-                f"Example {i}:\n"
-                f"  Input: {ex['input']}\n"
-                f"  Expected output: {ex['target']}\n"
-                f"  Model output: {ex['answer']}"
-            )
+            lines = [
+                f"### Example {i}",
+                f"Input: {ex['input']}",
+            ]
+            # Include reasoning when raw output differs from
+            # the extracted answer (indicates CoT / reasoning)
+            raw = ex.get("raw_output", "")
+            if raw and raw != ex["answer"]:
+                lines.append(f"Reasoning: {raw}")
+            lines.append(f"Output: {ex['answer']}")
+            lines.append(f"Label: {ex['target']}")
+            parts.append("\n".join(lines))
         return "\n\n".join(parts)
 
     def _deduplicate(

@@ -28,6 +28,7 @@ class BenchmarkTask:
     metric: str
     problem_description: str
     loader: Callable[[], pd.DataFrame]
+    train_loader: Callable[[], pd.DataFrame] | None = None
     run_kwargs: dict[str, Any] = field(
         default_factory=dict,
     )
@@ -153,6 +154,18 @@ class ParallelBenchmarkRunner:
                 df = self._sample_fn(df)
             dataset = list(df["input_data"])
             target = list(df["target"])
+
+            # Load separate training split if available
+            train_dataset = None
+            train_targets = None
+            if task.train_loader is not None:
+                train_df = task.train_loader()
+                if self._sample_fn is not None:
+                    train_df = self._sample_fn(train_df)
+                train_dataset = list(
+                    train_df["input_data"]
+                )
+                train_targets = list(train_df["target"])
         except Exception as e:
             print(f"ERROR loading {task.key}: {e}")
             self._record(task.key, {"error": str(e)})
@@ -160,6 +173,17 @@ class ParallelBenchmarkRunner:
 
         # Fresh PromptTuner per task (mutable state)
         pt = PromptTuner(self._llm)
+
+        # Build extra kwargs, removing 'method' from
+        # run_kwargs and adding train data if available
+        extra_kwargs = {
+            k: v
+            for k, v in task.run_kwargs.items()
+            if k != "method"
+        }
+        if train_dataset is not None:
+            extra_kwargs["train_dataset"] = train_dataset
+            extra_kwargs["train_targets"] = train_targets
 
         try:
             final_prompt = pt.run(
@@ -170,11 +194,7 @@ class ParallelBenchmarkRunner:
                 task.run_kwargs.get("method", "pe2"),
                 task.metric,
                 task.problem_description,
-                **{
-                    k: v
-                    for k, v in task.run_kwargs.items()
-                    if k != "method"
-                },
+                **extra_kwargs,
             )
         except Exception as e:
             print(f"ERROR on {task.key}: {e}")

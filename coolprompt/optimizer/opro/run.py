@@ -22,8 +22,8 @@ def opro_optimizer(
     """Runs OPRO trajectory-based prompt optimization.
 
     Uses a meta-prompt showing past (prompt, score) pairs
-    sorted worst-to-best, asking the LLM to propose a
-    higher-scoring prompt.
+    sorted worst-to-best plus task demonstrations, asking
+    the LLM to propose a higher-scoring prompt.
 
     Args:
         model (BaseLanguageModel): The language model to use.
@@ -31,9 +31,9 @@ def opro_optimizer(
             val_dataset, train_targets, val_targets).
         evaluator (Evaluator): Evaluator for scoring prompts.
         initial_prompt (str): The starting prompt to optimize.
-        **kwargs: Optional overrides for train_steps, n_beam,
-            n_expand, batch_size, backtrack, prompt_max_tokens,
-            max_trajectory.
+        **kwargs: Optional overrides for train_steps,
+            n_candidates, prompt_max_tokens,
+            max_trajectory, n_demonstrations.
 
     Returns:
         str: The best prompt found after optimization.
@@ -47,19 +47,20 @@ def opro_optimizer(
 
     args = {
         "train_steps": 3,
-        "n_beam": 3,
-        "n_expand": 4,
-        "batch_size": 4,
-        "backtrack": True,
+        "n_candidates": 8,
         "prompt_max_tokens": 300,
         "max_trajectory": 20,
+        "n_demonstrations": 5,
     }
     args.update(kwargs)
 
     proposer = OPROProposer(
         model=model,
+        train_dataset=train_dataset,
+        train_targets=train_targets,
         prompt_max_tokens=args["prompt_max_tokens"],
         max_trajectory=args["max_trajectory"],
+        n_demonstrations=args["n_demonstrations"],
     )
 
     template = evaluator._get_default_template()
@@ -74,10 +75,7 @@ def opro_optimizer(
         val_targets=val_targets,
         template=template,
         train_steps=args["train_steps"],
-        n_beam=args["n_beam"],
-        n_expand=args["n_expand"],
-        batch_size=args["batch_size"],
-        backtrack=args["backtrack"],
+        n_candidates=args["n_candidates"],
     )
 
     logger.info("Starting OPRO optimization...")

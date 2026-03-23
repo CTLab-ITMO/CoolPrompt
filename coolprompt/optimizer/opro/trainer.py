@@ -1,25 +1,96 @@
-"""OPRO trainer: beam-search with trajectory updates."""
+"""OPRO trainer: flat iterative loop for prompt optimization."""
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List
 
-from coolprompt.optimizer.pe2.node import Node
-from coolprompt.optimizer.pe2.trainer import PE2Trainer
+from langchain_core.language_models.base import BaseLanguageModel
+
+from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.opro.proposer import OPROProposer
 from coolprompt.utils.logging_config import logger
 
 
-class OPROTrainer(PE2Trainer):
-    """Extends PE2Trainer to feed trajectory to OPROProposer.
+class OPROTrainer:
+    """Standalone OPRO trainer using a flat iterative loop.
 
-    After evaluating each node, updates the proposer's
-    trajectory. Also expands nodes even when there are no
-    training failures, since OPRO does not use failure
-    examples.
+    Matches the original OPRO paper: maintains a trajectory
+    of (prompt, score) pairs, proposes new candidates each
+    step, evaluates on training data, and returns the best.
+
+    Args:
+        model (BaseLanguageModel): LLM used for inference.
+        evaluator (Evaluator): Evaluator for scoring prompts.
+        proposer (OPROProposer): Proposer for generating
+            new prompts from the trajectory.
+        train_dataset (List[str]): Training input samples.
+        train_targets (List[str]): Training ground-truth
+            targets.
+        val_dataset (List[str]): Validation input samples.
+        val_targets (List[str]): Validation ground-truth
+            targets.
+        template (str): Prompt template for the task.
+        train_steps (int): Number of optimization iterations.
+        n_candidates (int): Candidates generated per step.
     """
 
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        evaluator: Evaluator,
+        proposer: OPROProposer,
+        train_dataset: List[str],
+        train_targets: List[str],
+        val_dataset: List[str],
+        val_targets: List[str],
+        template: str,
+        train_steps: int = 3,
+        n_candidates: int = 8,
+    ) -> None:
+        self.model = model
+        self.evaluator = evaluator
+        self.proposer = proposer
+        self.train_dataset = train_dataset
+        self.train_targets = train_targets
+        self.val_dataset = val_dataset
+        self.val_targets = val_targets
+        self.template = template
+        self.train_steps = train_steps
+        self.n_candidates = n_candidates
+
+    def _evaluate_on_train(self, prompt: str) -> float:
+        """Evaluates a prompt on training data.
+
+        Args:
+            prompt (str): The prompt to evaluate.
+
+        Returns:
+            float: The evaluation score.
+        """
+        return self.evaluator.evaluate(
+            prompt=prompt,
+            dataset=self.train_dataset,
+            targets=self.train_targets,
+            template=self.template,
+        )
+
+    def _evaluate_on_val(self, prompt: str) -> float:
+        """Evaluates a prompt on validation data.
+
+        Args:
+            prompt (str): The prompt to evaluate.
+
+        Returns:
+            float: The evaluation score.
+        """
+        return self.evaluator.evaluate(
+            prompt=prompt,
+            dataset=self.val_dataset,
+            targets=self.val_targets,
+            template=self.template,
+        )
+
     def train(self, initial_prompt: str) -> str:
-        """Runs OPRO beam-search optimization.
+        """Runs the OPRO iterative optimization.
 
         Args:
             initial_prompt (str): The starting prompt.
@@ -27,106 +98,78 @@ class OPROTrainer(PE2Trainer):
         Returns:
             str: The best prompt found during optimization.
         """
-        initial_node = Node(
-            timestamp=0,
-            id=self._next_id(),
-            prompt=initial_prompt,
+        # Evaluate initial prompt on training data
+        score = self._evaluate_on_train(initial_prompt)
+        self.proposer.update_trajectory(initial_prompt, score)
+        logger.info(
+            f"OPRO initial train score: {score:.4f}"
         )
-        states: List[List[Node]] = [[initial_node]]
+
+        seen_prompts = {initial_prompt.strip().lower()}
+        best_prompt = initial_prompt
+        best_val_score = -1.0
 
         for t in range(self.train_steps):
-            logger.info(f"OPRO step {t + 1}/{self.train_steps}")
-
-            for node in states[-1]:
-                if "val" not in node.scores:
-                    score = self.evaluator.evaluate(
-                        prompt=node.prompt,
-                        dataset=self.val_dataset,
-                        targets=self.val_targets,
-                        template=self.template,
-                    )
-                    node.register_score(score, "val")
-                    logger.info(
-                        f"  Node {node.id} val score: "
-                        f"{score:.4f}"
-                    )
-                    # Update OPRO trajectory
-                    assert isinstance(
-                        self.proposer, OPROProposer
-                    )
-                    self.proposer.update_trajectory(
-                        node.prompt, score
-                    )
-
-            candidates = self._select_candidates(states)
-            best_score = max(
-                n.scores["val"] for n in candidates
-            )
             logger.info(
-                f"  Best val score at step {t + 1}: "
-                f"{best_score:.4f}"
+                f"OPRO step {t + 1}/{self.train_steps}"
             )
 
-            if t == self.train_steps - 1:
-                break
+            # Generate n_candidates prompts in parallel
+            def _do_propose(_):
+                prompt, _ = self.proposer.propose()
+                return prompt
 
-            new_nodes: List[Node] = []
-            proposal_jobs = [
-                node
-                for node in candidates
-                for _ in range(self.n_expand)
-            ]
-
-            def _do_propose(n):
-                prompt, _ = self.proposer.propose(
-                    node=n,
-                    examples_str="",
-                    full_template=self.template,
-                    batch_size=0,
-                )
-                return n, prompt
-
+            new_prompts = []
             with ThreadPoolExecutor(
-                max_workers=min(len(proposal_jobs), 12)
+                max_workers=min(self.n_candidates, 12)
             ) as pool:
                 futures = [
-                    pool.submit(_do_propose, j)
-                    for j in proposal_jobs
+                    pool.submit(_do_propose, i)
+                    for i in range(self.n_candidates)
                 ]
                 for fut in as_completed(futures):
-                    node, new_prompt = fut.result()
-                    child = Node(
-                        timestamp=t + 1,
-                        id=self._next_id(),
-                        prompt=new_prompt,
-                        parent=node.id,
-                    )
-                    node.n_child += 1
-                    new_nodes.append(child)
+                    new_prompts.append(fut.result())
 
-            all_existing = [
-                n for state in states for n in state
-            ]
-            new_nodes = self._deduplicate(
-                new_nodes, all_existing
-            )
+            # Deduplicate
+            unique_prompts = []
+            for p in new_prompts:
+                key = p.strip().lower()
+                if key not in seen_prompts:
+                    seen_prompts.add(key)
+                    unique_prompts.append(p)
 
-            if not new_nodes:
+            if not unique_prompts:
                 logger.info(
-                    "  No new unique nodes generated, stopping"
+                    "  No new unique prompts, stopping"
                 )
                 break
 
-            states.append(new_nodes)
+            # Evaluate each on training data and update
+            # trajectory
+            for p in unique_prompts:
+                s = self._evaluate_on_train(p)
+                self.proposer.update_trajectory(p, s)
+                logger.info(
+                    f"  Candidate train score: {s:.4f}"
+                )
+
             logger.info(
-                f"  Generated {len(new_nodes)} new nodes"
+                f"  Added {len(unique_prompts)} new "
+                f"prompts to trajectory"
             )
 
-        all_nodes = [n for state in states for n in state]
-        scored = [n for n in all_nodes if "val" in n.scores]
-        best = max(scored, key=lambda n: n.scores["val"])
+        # Select best prompt by validation score
+        all_prompts = [
+            p for p, _ in self.proposer.trajectory
+        ]
+        for p in all_prompts:
+            val_score = self._evaluate_on_val(p)
+            if val_score > best_val_score:
+                best_val_score = val_score
+                best_prompt = p
+
         logger.info(
-            f"OPRO best prompt (node {best.id}, "
-            f"val={best.scores['val']:.4f})"
+            f"OPRO best prompt "
+            f"(val={best_val_score:.4f})"
         )
-        return best.prompt
+        return best_prompt

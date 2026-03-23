@@ -5,8 +5,8 @@ from typing import List, Tuple
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
-from coolprompt.optimizer.pe2.trainer import PE2Trainer
 from coolprompt.optimizer.ape.proposer import APEProposer
+from coolprompt.optimizer.ape.trainer import APETrainer
 from coolprompt.utils.logging_config import logger
 
 
@@ -19,10 +19,11 @@ def ape_optimizer(
     initial_prompt: str,
     **kwargs,
 ) -> str:
-    """Runs APE beam-search prompt optimization.
+    """Runs APE evaluate-select-paraphrase optimization.
 
     Uses paraphrase-only proposals (no failure analysis).
-    Reuses the PE2 beam-search trainer.
+    Evaluates on validation data, selects top-k, paraphrases,
+    and repeats.
 
     Args:
         model (BaseLanguageModel): The language model to use.
@@ -31,7 +32,7 @@ def ape_optimizer(
         evaluator (Evaluator): Evaluator for scoring prompts.
         initial_prompt (str): The starting prompt to optimize.
         **kwargs: Optional overrides for train_steps, n_beam,
-            n_expand, batch_size, backtrack, prompt_max_tokens.
+            n_expand, backtrack, prompt_max_tokens.
 
     Returns:
         str: The best prompt found after optimization.
@@ -47,8 +48,6 @@ def ape_optimizer(
         "train_steps": 3,
         "n_beam": 3,
         "n_expand": 4,
-        "batch_size": 4,
-        "backtrack": True,
         "prompt_max_tokens": 300,
     }
     args.update(kwargs)
@@ -60,20 +59,16 @@ def ape_optimizer(
 
     template = evaluator._get_default_template()
 
-    trainer = PE2Trainer(
+    trainer = APETrainer(
         model=model,
         evaluator=evaluator,
         proposer=proposer,
-        train_dataset=train_dataset,
-        train_targets=train_targets,
         val_dataset=val_dataset,
         val_targets=val_targets,
         template=template,
         train_steps=args["train_steps"],
         n_beam=args["n_beam"],
         n_expand=args["n_expand"],
-        batch_size=args["batch_size"],
-        backtrack=args["backtrack"],
     )
 
     logger.info("Starting APE optimization...")
