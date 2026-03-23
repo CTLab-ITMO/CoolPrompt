@@ -12,6 +12,8 @@ from coolprompt.optimizer.reflective_prompt import reflectiveprompt
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.optimizer.pe2 import pe2_optimizer
 from coolprompt.optimizer.pe2_sgr import pe2_sgr_optimizer
+from coolprompt.optimizer.ape import ape_optimizer
+from coolprompt.optimizer.opro import opro_optimizer
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
     validate_model,
@@ -48,6 +50,10 @@ class PromptTuner:
         (Task.GENERATION, Method.PE2): GENERATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.PE2_SGR): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.PE2_SGR): GENERATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.APE): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.APE): GENERATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.OPRO): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.OPRO): GENERATION_TASK_TEMPLATE,
     }
 
     def __init__(
@@ -367,6 +373,22 @@ class PromptTuner:
             )
         elif method is Method.PE2_SGR:
             final_prompt = pe2_sgr_optimizer(
+                model=self._target_model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                initial_prompt=start_prompt,
+                **kwargs,
+            )
+        elif method is Method.APE:
+            final_prompt = ape_optimizer(
+                model=self._target_model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                initial_prompt=start_prompt,
+                **kwargs,
+            )
+        elif method is Method.OPRO:
+            final_prompt = opro_optimizer(
                 model=self._target_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
