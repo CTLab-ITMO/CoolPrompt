@@ -1,6 +1,7 @@
 """PE2 trainer: beam-search loop for prompt optimization."""
 
 import random
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Optional
 
 from langchain_core.language_models.base import BaseLanguageModel
@@ -113,15 +114,21 @@ class PE2Trainer:
                 break
 
             new_nodes: List[Node] = []
+            # Collect all proposal jobs
+            proposal_jobs = []
             for node in candidates:
                 # Get per-example results on training set
-                results = self._get_per_example_results(node.prompt)
-                failures = [r for r in results if not r["correct"]]
+                results = self._get_per_example_results(
+                    node.prompt
+                )
+                failures = [
+                    r for r in results if not r["correct"]
+                ]
 
                 if not failures:
                     logger.info(
-                        f"  Node {node.id}: no failures on train set, "
-                        "skipping expansion"
+                        f"  Node {node.id}: no failures "
+                        "on train set, skipping expansion"
                     )
                     continue
 
@@ -129,15 +136,33 @@ class PE2Trainer:
                     sampled = self._sample_failures(
                         failures, self.batch_size
                     )
-                    examples_str = self._pack_examples(sampled)
-
-                    new_prompt, _ = self.proposer.propose(
-                        node=node,
-                        examples_str=examples_str,
-                        full_template=self.template,
-                        batch_size=len(sampled),
+                    examples_str = self._pack_examples(
+                        sampled
+                    )
+                    proposal_jobs.append(
+                        (node, examples_str, len(sampled))
                     )
 
+            # Run proposals in parallel
+            def _do_propose(job):
+                n, ex_str, bs = job
+                prompt, _ = self.proposer.propose(
+                    node=n,
+                    examples_str=ex_str,
+                    full_template=self.template,
+                    batch_size=bs,
+                )
+                return n, prompt
+
+            with ThreadPoolExecutor(
+                max_workers=min(len(proposal_jobs), 12)
+            ) as pool:
+                futures = [
+                    pool.submit(_do_propose, j)
+                    for j in proposal_jobs
+                ]
+                for fut in as_completed(futures):
+                    node, new_prompt = fut.result()
                     child = Node(
                         timestamp=t + 1,
                         id=self._next_id(),

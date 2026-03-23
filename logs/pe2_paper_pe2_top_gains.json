@@ -1,0 +1,88 @@
+{
+  "ii/diff": {
+    "error": "list index out of range"
+  },
+  "ii/letters_list": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.5987086272239686,
+      "final_metric": 1.000000017285347
+    },
+    "prompt": "Please take the provided input word and output each letter with a space in between. \n\nFor instance, if the input is \"wife,\" your response should be \"w i f e.\" Make sure to maintain this format for all words.\n\nEnclose your final answer within <ans> and </ans> tags. \n\nHere\u2019s the structure to follow:\n\nINPUT:\n{INPUT}\n\nRESPONSE:"
+  },
+  "ii/num_to_verbal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6049683916568757,
+      "final_metric": 0.998839066028595
+    },
+    "prompt": "Convert the following number into its word representation. Please ensure to write it out fully in words, adhering to a formal format. Use \"and\" appropriately in the context of British English (e.g., \u201cone thousand and thirty-three\u201d). Avoid informal representations such as \"nineteen hundred\" and provide the full numerical breakdown with commas separating each group. For example, if the input is '6182', the correct output is 'six thousand, one hundred and eighty-two'. \n\nHere is the number to convert:\n{INPUT}\n\nProvide the final answer bracketed with <ans> and </ans>. Ensure that your output follows the specified guidelines for clarity and consistency."
+  },
+  "ii/sentiment": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6397250270843506,
+      "final_metric": 0.9946781653165817
+    },
+    "prompt": "Classify the sentiment of the following statement as either positive or negative. Please carefully analyze the provided text and provide your sentiment classification directly. Do not repeat the input text; instead, generate an output that reflects the sentiment of the statement. Enclose your response within <ans> and </ans> tags. For example, if the statement is \"It's a wonderful experience!\", your response should be <ans>positive</ans>. On the other hand, if the statement is \"I didn't enjoy this at all.\", your response should be <ans>negative</ans>. Additionally, to help enhance understanding, consider incorporating context clues from the statement that support your classification. Now, analyze the following text:"
+  },
+  "ii/second_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7006574553251267,
+      "final_metric": 0.9981667745113373
+    },
+    "prompt": "Extract the second letter from the input word provided below. Please respond with only the letter and bracket your answer with <ans> and </ans> tags.\n\nINPUT:\n{INPUT}\n\nRESPONSE:"
+  },
+  "ii/first_word_letter": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/temporal_sequences": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7330880725383758,
+      "final_metric": 0.9977122211456299
+    },
+    "prompt": "To determine the available time slot for an activity based on the provided schedule, please follow the steps outlined below:\n\n1. List all scheduled activities along with their respective start and end times in chronological order.\n2. Identify any overlapping time frames between activities and highlight them clearly. Consider both direct overlaps and adjacent schedules.\n3. Note any gaps or free time slots between activities that could accommodate the new activity.\n4. Clearly state the earliest starting time and the latest ending time while considering all scheduled activities.\n5. If there are overlapping activities, analyze if there\u2019s flexibility in rearranging schedules to create potential openings.\n6. Summarize your findings in a clear and concise manner before providing the final answer, making sure to include all relevant time slots.\n\nFinally, format your response as follows: <ans>(Letter)</ans>, where (Letter) corresponds to the identified available time slot(s) for the activity."
+  },
+  "bbh/reasoning_about_colored_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7304500293731689,
+      "final_metric": 1.000000025033951
+    },
+    "prompt": "When answering the question, please carefully analyze the provided information step by step. Ensure your response corresponds to one of the designated options (A, B, C, etc.). Format your answer by selecting the corresponding letter rather than expressing it in plain text. For example, if the correct answer is \"red\" and corresponds to option (A), your response should be (A). Maintain clarity and conciseness in your answer. Think critically and logically to determine the correct letter option based on the details given. Aim to provide a straightforward conclusion derived from your analysis."
+  },
+  "bbh/ruin_names": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7514392268657685,
+      "final_metric": 0.983563631772995
+    },
+    "prompt": "Please analyze the following edits for humor, focusing specifically on wordplay and clever twists. For each edit, identify the option you believe is the most humorous. Your final answer should be formatted as follows: <ans>(X)</ans>, where (X) represents the selected option letter (A, B, C, or D). \n\nWhen evaluating each option, consider the following:\n1. What makes the edit humorous? Look for puns, wordplay, or unexpected twists in language.\n2. Clearly articulate why your choice is the most humorous among the options, emphasizing the cleverness or playfulness involved.\n\nEnsure that your final answer adheres strictly to the specified format without any additional text or clarification. Remember, humor can be subjective, so your focus should be on identifying the most responsible use of wordplay or humor in each option. Let's highlight creativity and clear presentation in your analysis."
+  },
+  "bbh/disambiguation_qa": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7816537213325501,
+      "final_metric": 0.8185347390174865
+    },
+    "prompt": "Identify the antecedent of the specified pronoun and provide your answer immediately in the format <ans>Answer</ans> (e.g., <ans>A</ans>). If the antecedent is ambiguous, indicate this as needed. Consider contextual clues and typical roles of the subjects involved when making your determination. Limit your explanation to a maximum of 30 words to clarify your reasoning, but focus on justifying your choice based on roles and context rather than grammar alone. Prioritize a clear answer first, followed by any concise analysis if applicable."
+  },
+  "bbh/hyperbaton": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8356388640403748,
+      "final_metric": 0.9957515048980713
+    },
+    "prompt": "Identify the correct answer based on the adjective order. Please provide your response in the format specified: place the correct option in parentheses. Do not include any explanations or analysis with your answer. For example, if the correct answer is A, respond with (A). Ensure your response is concise and directly reflects the answer without additional commentary. Now, please proceed to provide your answer."
+  },
+  "bbh/sports_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7761413407325745,
+      "final_metric": 0.9636148452758789
+    },
+    "prompt": "Analyze the following statement and determine whether it describes a plausible sports scenario. Consider the specific sport, relevant terminology, and common roles or actions associated with it. Pay attention to idiomatic expressions unique to each sport. Respond with \"yes\" if the action is plausible, or \"no\" if it is not. Ensure your reasoning reflects an understanding of the sport's context. Here\u2019s the statement:"
+  }
+}

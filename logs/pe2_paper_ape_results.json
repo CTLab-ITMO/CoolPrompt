@@ -1,0 +1,476 @@
+{
+  "math/multiarith": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.97,
+      "final_metric": 0.96
+    },
+    "prompt": "Let's think step by step."
+  },
+  "math/gsm8k": {
+    "error": "list index out of range"
+  },
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9958906495571136,
+      "final_metric": 0.999999669790268
+    },
+    "prompt": "Let's approach this systematically, tackling it one step at a time."
+  },
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9488781471362059,
+      "final_metric": 0.9469848549228975
+    },
+    "prompt": "Let\u2019s break this down into smaller parts and analyze each one systematically."
+  },
+  "bbh/data_understanding_generative": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/date_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6733325898647309,
+      "final_metric": 0.6802237343788147
+    },
+    "prompt": "Let's analyze it step by step."
+  },
+  "bbh/disambiguation_qa": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7876208388805389,
+      "final_metric": 0.8323518180847168
+    },
+    "prompt": "Let's break this down into manageable steps."
+  },
+  "bbh/dyck_languages": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6886662602424621,
+      "final_metric": 0.6956112730503082
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/formal_fallacies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9237928462028503,
+      "final_metric": 0.9428446865081788
+    },
+    "prompt": "Let\u2019s tackle this methodically, addressing each phase one by one."
+  },
+  "bbh/geometric_shapes": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/hyperbaton": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.816282970905304,
+      "final_metric": 0.8720676982402802
+    },
+    "prompt": "Let's analyze this methodically."
+  },
+  "bbh/logical_deduction_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8361039054393768,
+      "final_metric": 0.8504736268520355
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/logical_deduction_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.810973995923996,
+      "final_metric": 0.8348140680789947
+    },
+    "prompt": "Let's break it down step by step."
+  },
+  "bbh/logical_deduction_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8529904925823212,
+      "final_metric": 0.8433971321582794
+    },
+    "prompt": "Let\u2019s break it down systematically."
+  },
+  "bbh/movie_recommendation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7819542443752289,
+      "final_metric": 0.8058829355239868
+    },
+    "prompt": "Let's divide this into smaller, more manageable sections."
+  },
+  "bbh/movie_recommendation_generative": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/multistep_arithmetic_two": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.92,
+      "final_metric": 0.94
+    },
+    "prompt": "It is important that we adopt a systematic strategy and thoughtfully evaluate each phase."
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9901163709163666,
+      "final_metric": 0.9967053961753846
+    },
+    "prompt": "Let\u2019s break this down sequentially."
+  },
+  "bbh/object_counting": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.86,
+      "final_metric": 0.9
+    },
+    "prompt": "Let's approach this systematically, analyzing each stage one at a time."
+  },
+  "bbh/penguins_in_a_table": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7823005357514257,
+      "final_metric": 0.7896365976851919
+    },
+    "prompt": "Let's break it down into manageable steps."
+  },
+  "bbh/reasoning_about_colored_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7465735745429992,
+      "final_metric": 0.7444854903221131
+    },
+    "prompt": "We will analyze this gradually, taking one step at a time."
+  },
+  "bbh/ruin_names": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7519525361061096,
+      "final_metric": 0.7841574180126191
+    },
+    "prompt": "We will analyze this systematically, addressing each component individually."
+  },
+  "bbh/salient_translation_error_detection": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/snarks": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9690267963287158,
+      "final_metric": 0.9643794328738482
+    },
+    "prompt": "Let\u2019s take a systematic approach by examining each component individually."
+  },
+  "bbh/sports_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7720448315143585,
+      "final_metric": 0.7867958128452301
+    },
+    "prompt": "Let\u2019s navigate each phase in a systematic manner."
+  },
+  "bbh/temporal_sequences": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7458350634574891,
+      "final_metric": 0.7198162722587585
+    },
+    "prompt": "Let's approach this systematically, tackling each step sequentially."
+  },
+  "bbh/tracking_shuffled_objects_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8272811877727508,
+      "final_metric": 0.847607136964798
+    },
+    "prompt": "Let\u2019s break it down systematically."
+  },
+  "bbh/tracking_shuffled_objects_seven_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/tracking_shuffled_objects_three_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/web_of_lies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9204711151123047,
+      "final_metric": 0.913006660938263
+    },
+    "prompt": "Let\u2019s break this down into manageable steps."
+  },
+  "bbh/word_sorting": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8432705295085907,
+      "final_metric": 0.9628981554508209
+    },
+    "prompt": "Let's divide this into smaller, more manageable segments."
+  },
+  "ii/active_to_passive": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.917829716205597,
+      "final_metric": 0.9293719470500946
+    },
+    "prompt": "Kindly reword the given instruction to retain its original meaning, utilizing different phrasing and arrangement. Make sure that the new version stays within the limit of 300 tokens."
+  },
+  "ii/antonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8166497999429703,
+      "final_metric": 0.8223914289474488
+    },
+    "prompt": "and"
+  },
+  "ii/cause_and_effect": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7837519264221191,
+      "final_metric": 0.7860244488716126
+    },
+    "prompt": "and"
+  },
+  "ii/common_concept": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6456853412091732,
+      "final_metric": 0.6531692147254944
+    },
+    "prompt": "Create a rephrased version of the given instruction that maintains its essential meaning while altering the wording, structure, and phrasing. The revised instruction should not exceed 300 tokens."
+  },
+  "ii/diff": {
+    "error": "list index out of range"
+  },
+  "ii/first_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.701087332367897,
+      "final_metric": 0.709417604804039
+    },
+    "prompt": "and"
+  },
+  "ii/informal_to_formal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8203130245208741,
+      "final_metric": 0.8697648564974467
+    },
+    "prompt": "Reword the given instruction to keep its core meaning intact, but alter the phrasing, organization, or wording significantly. The reformulated instruction should be concise and limited to a maximum of 300 tokens."
+  },
+  "ii/larger_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8473158264160157,
+      "final_metric": 0.8508848023414611
+    },
+    "prompt": ""
+  },
+  "ii/letters_list": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.5982204437255859,
+      "final_metric": 0.5980318775773048
+    },
+    "prompt": ""
+  },
+  "ii/negation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8634959447383881,
+      "final_metric": 0.8858372473716736
+    },
+    "prompt": "and"
+  },
+  "ii/num_to_verbal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6049684083461762,
+      "final_metric": 0.6049684083461762
+    },
+    "prompt": ""
+  },
+  "ii/orthography_starts_with": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6787578666210174,
+      "final_metric": 0.6798237407207489
+    },
+    "prompt": ""
+  },
+  "ii/rhymes": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7897447848320007,
+      "final_metric": 0.7877452522516251
+    },
+    "prompt": ""
+  },
+  "ii/second_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6983769154548645,
+      "final_metric": 0.7657325154542923
+    },
+    "prompt": "Please provide a rephrased version of the following instruction while maintaining its original meaning, utilizing alternative wording, structure, or phrasing. The new instruction should not exceed 300 tokens in length."
+  },
+  "ii/sentence_similarity": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6361802107095719,
+      "final_metric": 0.6282008469104767
+    },
+    "prompt": "and"
+  },
+  "ii/sentiment": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6394097405672073,
+      "final_metric": 0.6421224904060364
+    },
+    "prompt": "Provide a rephrased version of the given instruction, ensuring that the original meaning is maintained while altering the wording, arrangement, or expression. This revised instruction should consist of no more than 300 tokens."
+  },
+  "ii/singular_to_plural": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.900292734503746,
+      "final_metric": 0.904316132068634
+    },
+    "prompt": "and"
+  },
+  "ii/sum": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/synonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8084221452474594,
+      "final_metric": 0.8105593705177307
+    },
+    "prompt": "and"
+  },
+  "ii/taxonomy_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8911966437101364,
+      "final_metric": 0.8946513015031815
+    },
+    "prompt": ""
+  },
+  "ii/translation_en-de": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7888312542438507,
+      "final_metric": 0.7881919997930527
+    },
+    "prompt": "and"
+  },
+  "ii/translation_en-es": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8401496350765228,
+      "final_metric": 0.8385781854391098
+    },
+    "prompt": ""
+  },
+  "ii/translation_en-fr": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/word_in_context": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7444063276052475,
+      "final_metric": 0.7363165503740311
+    },
+    "prompt": "and"
+  },
+  "cf/arithmetic_base8": {
+    "error": "list index out of range"
+  },
+  "cf/arithmetic_base9": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "cf/arithmetic_base10": {
+    "error": "list index out of range"
+  },
+  "cf/arithmetic_base11": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9983379483222962,
+      "final_metric": 0.9965800094604492
+    },
+    "prompt": "Act in the role of a mathematician. Considering that all digits are expressed in hexadecimal (using the symbols 0123456789ABCDEF), compute the total of the two numerical values listed below."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9487171649932862,
+      "final_metric": 0.9629017698764801
+    },
+    "prompt": "You are engaged in a chess variant in which the starting locations of the bishops and knights have been switched. In this arrangement, the knights take the places normally filled by the bishops, and conversely, the bishops occupy the squares designated for the knights. Evaluate the given opening moves to determine whether they are valid according to the rules of chess. There is no requirement for the moves to be strategically brilliant. If every move adheres to the established rules, reply with \"legal\"; if any move violates the rules, reply with \"illegal.\""
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9530816519260407,
+      "final_metric": 0.951990534067154
+    },
+    "prompt": "You are tasked with evaluating a chess opening. Assess the legality of the moves made in the opening sequence. It's important to note that the quality of the opening isn't a factor in this evaluation. Respond with \"legal\" if every move complies with the rules of chess. If any rule is breached, respond with \"illegal.\""
+  },
+  "cf/syntax_osv": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7922456020116806,
+      "final_metric": 0.8134662818908691
+    },
+    "prompt": "You possess extensive knowledge in linguistics. Envision a language that mirrors English but differs by employing an object-subject-verb sentence structure rather than the typical subject-verb-object arrangement. Your assignment is to pinpoint the primary verb and its corresponding subject in a sentence composed in this hypothetical language. Provide the primary verb (as one word) along with its subject (also as one word)."
+  },
+  "cf/syntax_ovs": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7953088277578354,
+      "final_metric": 0.8023424082994461
+    },
+    "prompt": "Imagine a language that is similar to English but utilizes an object-verb-subject (OVS) word order instead of the conventional subject-verb-object (SVO) format. As an expert in linguistics, your task is to identify the main verb and its associated subject in a sentence created in this imaginary language. Please provide the main verb as one word along with its corresponding subject, also presented as a single word."
+  },
+  "cf/syntax_sov": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8362188076972962,
+      "final_metric": 0.859119267463684
+    },
+    "prompt": "Imagine you are an expert in linguistics tasked with creating a language that resembles English while using a subject-object-verb arrangement rather than the typical subject-verb-object format. Identify the main subject and the primary verb in a sentence from this conceptual language. Provide the main verb as a single word, paired with its subject, also expressed as a single word."
+  },
+  "cf/syntax_svo": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8355935841798783,
+      "final_metric": 0.8592264157533646
+    },
+    "prompt": "You possess expertise in the field of linguistics. Your role is to pinpoint the primary verb and the primary subject within a given sentence. Present the main verb (as a single word) alongside its subject (also as a single word)."
+  },
+  "cf/syntax_vos": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7925366747379303,
+      "final_metric": 0.8109034997224808
+    },
+    "prompt": "Consider yourself a linguistics specialist. Envision a language that closely mirrors English, differing solely in its sentence structure, where the order is verb-object-subject rather than the conventional subject-verb-object format. Your objective is to pinpoint the primary verb and the main subject in a sentence constructed in this theoretical language. Present both the principal verb (as a single term) and its corresponding subject (also as a single term)."
+  },
+  "cf/syntax_vso": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.828241600394249,
+      "final_metric": 0.831038143336773
+    },
+    "prompt": "You specialize in linguistics. Consider a hypothetical language that mirrors English, except it employs a verb-subject-object structure instead of the standard subject-verb-object format. Your objective is to pinpoint the primary verb and its corresponding subject within a sentence of this fictional language. Present both the principal verb (one word) and its associated subject (also one word)."
+  }
+}

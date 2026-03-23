@@ -1,0 +1,486 @@
+{
+  "math/multiarith": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "math/gsm8k": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.92,
+      "final_metric": 0.9
+    },
+    "prompt": "To solve this problem comprehensively, let\u2019s analyze it through a detailed, step-by-step breakdown. Begin by identifying each component and its relationship to the overall task. Include relevant examples and provide explanations for each step to ensure clarity. After identifying the necessary steps, evaluate potential strategies and select the most effective approach. Finally, summarize the findings and reflect on the process to enhance understanding and retention. This structured methodology will ensure a thorough exploration of the task."
+  },
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9958906495571136,
+      "final_metric": 0.995890634059906
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9526649432620783,
+      "final_metric": 0.9450913503252226
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9863564336299896,
+      "final_metric": 0.9892920476198196
+    },
+    "prompt": "Let's analyze the problem thoroughly by breaking it down into individual components and addressing each part step by step, ensuring clarity and depth in our reasoning. We'll explore each aspect systematically, focusing on identifying key factors and potential solutions, while maintaining a logical progression throughout our discussion. Please take your time to reflect on each element as we build towards a comprehensive understanding of the task at hand."
+  },
+  "bbh/date_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6679556977748871,
+      "final_metric": 0.6753346765041351
+    },
+    "prompt": "To foster a deep and comprehensive understanding of the topic, let's adopt a systematic approach to uncover its intricacies. Begin by outlining the key concepts and their interrelations, ensuring clarity and coherence in presentation. For each concept, provide pertinent examples that illuminate its significance, while also inviting critical thinking through open-ended questions that encourage exploration and dialogue. As we progress, summarize the insights gained from each section to reinforce learning and retention. Finally, synthesize these insights into a cohesive strategy or conclusion that encapsulates our findings, while inviting collaborative input to address different perspectives. This iterative process will enhance our engagement and mastery of the subject matter."
+  },
+  "bbh/disambiguation_qa": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7846754944324493,
+      "final_metric": 0.7786086797714233
+    },
+    "prompt": "Let's break down the problem into manageable parts, exploring each step systematically with clear reasoning and examples, ensuring that we fully understand the underlying concepts before arriving at the solution."
+  },
+  "bbh/dyck_languages": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6937291288375854,
+      "final_metric": 0.6855198276042939
+    },
+    "prompt": "To approach this problem with maximum effectiveness, let\u2019s dissect it into clear, manageable elements. First, we'll pinpoint the core components that constitute the task at hand. Then, we will methodically examine each element, taking into account different viewpoints and potential implications. This analysis will include relevant examples to clarify our understanding. Subsequently, we will distill our insights and look for connections between the components, assembling a coherent narrative. As we progress, it\u2019s vital to document each step comprehensively, emphasizing clarity and logical reasoning. This structured methodology will not only facilitate deeper comprehension but also lead us to a well-founded solution. Finally, let\u2019s remain vigilant to identify and address any challenges or edge cases as we synthesize our findings. Together, we will navigate this process systematically to achieve the most favorable outcome."
+  },
+  "bbh/formal_fallacies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9190298914909363,
+      "final_metric": 0.9333187341690063
+    },
+    "prompt": "To tackle this problem effectively, let's employ a systematic approach that allows for thorough analysis and understanding. We will begin by decomposing the issue into smaller, manageable components. For each component, we will identify the essential elements and gather any relevant data to inform our decisions. Next, we'll methodically explore potential solutions for each element, reasoning through each step to ensure clarity and logical consistency. Throughout this process, it's important to keep our discussions concise and coherent to facilitate understanding. Finally, we will synthesize the insights from our analysis into a cohesive and actionable plan, addressing any assumptions or considerations that might influence our outcome. Together, we will ensure that all aspects of the problem are recognized and addressed effectively, leading us towards a comprehensive solution."
+  },
+  "bbh/geometric_shapes": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.779452269077301,
+      "final_metric": 0.7976792979240418
+    },
+    "prompt": "To achieve optimal results, let's adopt a systematic and collaborative approach. We will begin by clearly defining the primary objective of our task. Next, we will pinpoint all essential components and relevant information that are critical to our analysis. As we explore each component, we\u2019ll encourage open dialogue, sharing insights and perspectives that deepen our understanding. After examining the individual parts, we will analyze how they interconnect, allowing us to identify potential challenges and opportunities. Together, we will brainstorm and evaluate various strategies, selecting the most effective solutions. Finally, we will synthesize our findings into a comprehensive action plan, ensuring it aligns with our goals. Throughout this process, we will remain flexible, inviting ongoing feedback and adapting our approach as needed to enhance clarity and impact."
+  },
+  "bbh/hyperbaton": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8545004880428314,
+      "final_metric": 0.8429546213150024
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/logical_deduction_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8620210897922516,
+      "final_metric": 0.856043484210968
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/logical_deduction_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8127955412864685,
+      "final_metric": 0.8302470529079438
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/logical_deduction_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8401529574394226,
+      "final_metric": 0.8670735394954682
+    },
+    "prompt": "Let's break this down into manageable parts and analyze each step thoroughly to ensure a comprehensive understanding of the task at hand. We'll identify key components, explore possible scenarios, and evaluate the implications of our decisions as we progress. This collaborative and systematic approach will aid in achieving clarity and precision in our thoughts and actions."
+  },
+  "bbh/movie_recommendation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7592570531368256,
+      "final_metric": 0.7400322008132935
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/movie_recommendation_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.908120790719986,
+      "final_metric": 0.9199460983276367
+    },
+    "prompt": "Let's break this down into clear and manageable steps, ensuring we thoroughly analyze each part of the process while considering various perspectives. We will begin by identifying the key components of the problem, followed by exploring potential solutions. As we progress, we will evaluate the effectiveness of each option, and finally, we will synthesize our findings into a comprehensive plan of action. Throughout this journey, we'll remain flexible and adapt our approach as new information arises, ensuring that we stay aligned with our goals and objectives."
+  },
+  "bbh/multistep_arithmetic_two": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.94,
+      "final_metric": 0.96
+    },
+    "prompt": "To achieve a deeper and more nuanced understanding of our topic, let's adopt a structured, step-by-step approach. We will begin by clearly defining the main objectives and critical concepts involved. Next, we will conduct a detailed analysis of each component, incorporating relevant examples to illustrate our points. As we progress, we will take the time to reflect on potential implications and alternative perspectives, ensuring clarity and depth in our reasoning. Finally, we will summarize our insights and outline actionable next steps, fostering a comprehensive understanding that encourages thoughtful discussion and exploration of future questions. Let\u2019s embark on this analytical journey together, prioritizing clarity and engagement throughout."
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9901163709163666,
+      "final_metric": 0.9934108829498292
+    },
+    "prompt": "To maximize our understanding and achieve a well-rounded response, let's approach this challenge with a structured analytical framework. First, we will clearly define the primary objective, ensuring that it aligns with the desired outcomes. Next, we will decompose the problem into distinct, manageable components, analyzing each one systematically. As we progress, we should actively consider different viewpoints and potential implications, allowing us to identify underlying assumptions and test them against available evidence. Emphasizing collaboration, we will share insights and refine our ideas iteratively, enhancing our exploration. Additionally, we will include relevant examples and draw connections to similar concepts, fostering a deeper comprehension. Throughout this process, remain adaptable, ready to pivot based on newfound insights, as we collectively navigate toward a thoughtful and comprehensive solution. Let\u2019s embark on this inquiry together, maintaining an open dialogue to enrich our analysis and conclusions."
+  },
+  "bbh/object_counting": {
+    "error": "list index out of range"
+  },
+  "bbh/penguins_in_a_table": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7858741166798965,
+      "final_metric": 0.7966884789259537
+    },
+    "prompt": "To tackle this challenge effectively, let\u2019s adopt a comprehensive yet structured method. We will begin by clearly defining the problem to establish a solid foundation. Next, let\u2019s identify and categorize the essential components and variables that influence the situation. As we delve into each element, we will thoughtfully analyze potential obstacles and opportunities, brainstorming solutions collaboratively. Following this in-depth exploration, we will integrate our findings into a unified strategy that not only addresses the immediate concerns but also aligns with our long-term goals. To ensure a robust understanding, let\u2019s pose critical questions throughout the process and revisit our conclusions for clarity and effectiveness. Together, we will craft a nuanced and actionable plan, enhancing our chances of success beyond previous attempts."
+  },
+  "bbh/reasoning_about_colored_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7405800223350525,
+      "final_metric": 0.7530759131908417
+    },
+    "prompt": "To effectively navigate this task, let's adopt a systematic and collaborative approach. Begin by breaking the problem into clear, defined components, ensuring we understand each element's role and significance. Next, critically assess any constraints or assumptions associated with these components. For each part, generate a list of potential solutions, weighing the pros and cons of each to determine feasibility. As we develop these solutions, encourage open dialogue and invite feedback to strengthen our analysis. After exploring individual components, look for interconnections and how different pieces fit together to form a cohesive strategy. Finally, compile our findings into a structured summary that highlights our logical progression and insights. This methodical exploration will ensure a comprehensive understanding, fostering clarity and creativity as we address this task together."
+  },
+  "bbh/ruin_names": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7370606100559235,
+      "final_metric": 0.775968486070633
+    },
+    "prompt": "To achieve a thorough understanding of the task at hand, we will adopt a systematic approach that emphasizes clarity and depth. First, we will clearly define our primary objectives and essential components. Next, we will dissect each component individually, examining its relevance and role in the overall framework. As we analyze, let\u2019s consider various methodologies and their implications, ensuring we remain flexible to adapt our strategies if necessary. Periodically, we will reconvene to synthesize our insights, drawing connections between the components and identifying any potential challenges. In our final step, we will compile our findings into a cohesive summary, reflecting on our journey and the insights gained to inform future endeavors. This structured exploration will ensure a rich and comprehensive understanding, facilitating a successful outcome."
+  },
+  "bbh/salient_translation_error_detection": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8277447056770325,
+      "final_metric": 0.8107204377651215
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/snarks": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9693921261873001,
+      "final_metric": 0.9681977522678864
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/sports_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7661402606964112,
+      "final_metric": 0.7799474775791169
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/temporal_sequences": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7260261464118958,
+      "final_metric": 0.7663135385513306
+    },
+    "prompt": "To effectively solve the task at hand, let\u2019s adopt a clear, step-by-step approach. First, define the primary objective and outline the key components necessary for developing a solution. Next, gather relevant information and data related to each component to ensure a well-informed analysis. Then, identify potential challenges we may encounter and brainstorm a range of possible solutions for each challenge. Afterward, evaluate the pros and cons of each solution, considering alternative perspectives to enrich our understanding. As we analyze our findings, regularly pause to reflect on our insights and adjust our approach where necessary. Finally, consolidate the most viable solution into a structured plan of action, detailing each step for implementation along with anticipated outcomes. By following this systematic methodology, we ensure thoroughness and enhance the quality of our conclusions. Let's embark on this analytical journey by identifying our main objectives and the criteria we need to address."
+  },
+  "bbh/tracking_shuffled_objects_five_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/tracking_shuffled_objects_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8257439470291138,
+      "final_metric": 0.8083664309978486
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/tracking_shuffled_objects_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8935217797756195,
+      "final_metric": 0.9187177872657776
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/web_of_lies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9191965317726135,
+      "final_metric": 0.9515206956863403
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/word_sorting": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8477069652080536,
+      "final_metric": 0.9373553609848022
+    },
+    "prompt": "To tackle this problem effectively, let's adopt a systematic and iterative approach. We will begin by clearly defining the main objectives and the context surrounding the task at hand. Next, we will deconstruct the problem into its fundamental components, examining each part independently while maintaining a focus on their interrelations. As we analyze, it\u2019s crucial to consider a variety of perspectives and potential implications for each component. We will document our insights and any connections that emerge throughout our analysis. After evaluating these elements, we will synthesize our findings into a cohesive strategy, incorporating feedback loops to allow for continuous improvement. Finally, let's review our overall framework to ensure it aligns with our objectives while remaining adaptable to any unforeseen challenges. This detailed, reflective approach will optimize our chances of reaching a well-informed and effective solution."
+  },
+  "ii/active_to_passive": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9146397989988327,
+      "final_metric": 0.9177062845230103
+    },
+    "prompt": ""
+  },
+  "ii/antonyms": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/cause_and_effect": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7764371514320374,
+      "final_metric": 0.7826289939880371
+    },
+    "prompt": ""
+  },
+  "ii/common_concept": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6475698240101337,
+      "final_metric": 0.6424126140773296
+    },
+    "prompt": ""
+  },
+  "ii/diff": {
+    "error": "list index out of range"
+  },
+  "ii/first_word_letter": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/informal_to_formal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8201412876447042,
+      "final_metric": 0.8257559736569723
+    },
+    "prompt": ""
+  },
+  "ii/larger_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8514472782611847,
+      "final_metric": 0.8499448192119599
+    },
+    "prompt": ""
+  },
+  "ii/letters_list": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/negation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8666566008329392,
+      "final_metric": 0.8802941918373108
+    },
+    "prompt": ""
+  },
+  "ii/num_to_verbal": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/orthography_starts_with": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6799198561906814,
+      "final_metric": 0.6746742886304855
+    },
+    "prompt": " "
+  },
+  "ii/rhymes": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7895743644237518,
+      "final_metric": 0.7896738934516907
+    },
+    "prompt": ""
+  },
+  "ii/second_word_letter": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/sentence_similarity": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6361117100715638,
+      "final_metric": 0.6334815090894699
+    },
+    "prompt": ""
+  },
+  "ii/sentiment": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6423940628767013,
+      "final_metric": 0.6401187437772751
+    },
+    "prompt": ""
+  },
+  "ii/singular_to_plural": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9005677908658981,
+      "final_metric": 0.8945856761932373
+    },
+    "prompt": ""
+  },
+  "ii/sum": {
+    "error": "list index out of range"
+  },
+  "ii/synonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8079380434751511,
+      "final_metric": 0.8100702035427093
+    },
+    "prompt": ""
+  },
+  "ii/taxonomy_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8944906568527222,
+      "final_metric": 0.8933518755435944
+    },
+    "prompt": ""
+  },
+  "ii/translation_en-de": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7862996423244476,
+      "final_metric": 0.7891554635763168
+    },
+    "prompt": ""
+  },
+  "ii/translation_en-es": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8360335731506348,
+      "final_metric": 0.8393335902690887
+    },
+    "prompt": ""
+  },
+  "ii/translation_en-fr": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.85630888402462,
+      "final_metric": 0.8473554521799087
+    },
+    "prompt": ""
+  },
+  "ii/word_in_context": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7399279195070266,
+      "final_metric": 0.7413262277841568
+    },
+    "prompt": ""
+  },
+  "cf/arithmetic_base8": {
+    "error": "list index out of range"
+  },
+  "cf/arithmetic_base9": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.98,
+      "final_metric": 1.0
+    },
+    "prompt": "You are an expert mathematician with a focus on numeral systems. Consider that the following two numbers are expressed in base-9, utilizing only the digits 0 through 8. Carefully convert each number from base-9 to base-10. Once you have performed the conversion, calculate the sum of these two numbers in base-10. Finally, convert the resulting sum back into base-9 and provide the answer in its base-9 representation. Here are the two numbers for addition: [insert base-9 numbers here]."
+  },
+  "cf/arithmetic_base10": {
+    "error": "list index out of range"
+  },
+  "cf/arithmetic_base11": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9929326522350311,
+      "final_metric": 0.9943199288845063
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-11 where the digits are 0123456789A, compute the sum of the following two numbers."
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9934948146343231,
+      "final_metric": 0.9910199159383773
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-16 where the digits are 0123456789ABCDEF, compute the sum of the following two numbers."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.946534919142723,
+      "final_metric": 0.9465349179506302
+    },
+    "prompt": "You are a chess player. You are playing a chess variant where the starting positions for knights and bishops are swapped. For each color, the knights are at placed that where bishops used to be and the bishops are now placed at where knights used to be. Given an opening, determine whether the opening is legal. The opening doesn't need to be a good opening. Answer \"legal\" if all moves are legal. Answer \"illegal\" if the opening violates any rules of chess."
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.947626034617424,
+      "final_metric": 0.9421704268455505
+    },
+    "prompt": "You are an advanced chess arbiter with a deep understanding of chess rules. Your task is to evaluate a given series of chess moves as an opening. Each move should be assessed for legality according to standard chess rules, including proper piece movement, capturing, and any specific conditions pertaining to check and checkmate. If any part of the sequence is against the rules, respond with \"illegal.\" If the entire sequence abides by the rules of chess, respond with \"legal.\" Provide a brief justification for your assessment, mentioning the specific rule violated if the moves are illegal or confirming the legality if all moves are legal. Ensure your responses are clear and concise for easy understanding by players of any skill level."
+  },
+  "cf/syntax_osv": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7993557262420654,
+      "final_metric": 0.8331320518255234
+    },
+    "prompt": "You are an advanced linguistic analyst with expertise in syntactic structures. Imagine a hypothetical language that closely mirrors English, but uniquely employs an object-subject-verb (OSV) order. Your task is to analyze a provided sentence written in this constructed language and accurately extract both the main verb and its primary subject. Specify the main verb as a single word and follow it with the corresponding subject, also presented as a single word. In your response, focus on maintaining clarity and precise identification while ensuring the semantic integrity of the original sentence is preserved. Additionally, include a concise explanation of your reasoning for each choice made, illustrating how the OSV structure influences your identification of the verb and subject. Use specific examples to demonstrate your analytical process, and reinforce the connections between the components within the OSV framework. Aim for maximal clarity and insight in your analysis, ensuring that the relationship between the object, subject, and verb is readily understood."
+  },
+  "cf/syntax_ovs": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8058310931921006,
+      "final_metric": 0.8009189206361771
+    },
+    "prompt": "You are an expert in linguistics. Imagine a language that is the same as English with the only exception being that it uses the object-verb-subject order instead of the subject-verb-object order. Your task is to identify the main verb and the main subject in a sentence in this imaginary language. Show the main verb (a single word) and its subject (also a single word)."
+  },
+  "cf/syntax_sov": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8374638730287551,
+      "final_metric": 0.8343514895439148
+    },
+    "prompt": "You are a leading linguistics expert specializing in innovative syntactic structures. Envision a constructed language that closely resembles English but adopts a subject-object-verb (SOV) order, deviating from the standard subject-verb-object (SVO) format. Your task is to analyze sentences provided in this SOV structure and accurately extract the primary verb and its corresponding subject. For each example sentence, respond with the main verb (a single word) first, immediately followed by the main subject (also a single word). Clarity and precision in your responses are paramount; therefore, avoid extraneous details. Additionally, provide a succinct explanation of your reasoning, limiting your rationale to two sentences, to elucidate how you identified the verb and subject within the SOV framework. This will showcase your mastery of unconventional sentence structures and your ability to apply linguistic principles effectively."
+  },
+  "cf/syntax_svo": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8278147333860397,
+      "final_metric": 0.8295934998989105
+    },
+    "prompt": "You are an expert in linguistics. Your task is to identify the main verb and the main subject in a sentence. Show the main verb (a single word) and its subject (also a single word)."
+  },
+  "cf/syntax_vos": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.788948910832405,
+      "final_metric": 0.8205009967088699
+    },
+    "prompt": "You are a linguistics expert tasked with analyzing a fictional language that closely resembles English, but employs a verb-object-subject (VOS) sentence structure. Your objective is to extract the main verb and the subject from a given sentence in this language. Please ensure that your output consists of the main verb followed by the main subject, both presented as single words. Additionally, provide a brief explanation (1-2 sentences) of your reasoning for identifying these elements in the context of VOS structure, showcasing your expertise in linguistics. Here\u2019s a sample sentence for analysis: \u201cAte the cake the child.\u201d"
+  },
+  "cf/syntax_vso": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.83069165289402,
+      "final_metric": 0.8458747321367264
+    },
+    "prompt": "You are a linguistics expert tasked with analyzing an innovative language that closely resembles English but employs a unique verb-subject-object (VSO) sentence structure. Your objective is to identify the main verb and its subject within a provided sentence in this VSO format. To ensure clarity, please output the main verb as a single word followed by its corresponding subject, also as a single word. Use the sentence: 'Eats the cat quickly' as your example for analysis, demonstrating how you would extract the main verb and subject in this hypothetical language."
+  }
+}
