@@ -1,0 +1,58 @@
+{
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9938362902402877,
+      "final_metric": 0.9938362872600556
+    },
+    "prompt": "Evaluate the following boolean expression step by step. Clearly explain each operation performed and the intermediate results. At the end, provide the final value formatted as <ans>...</ans>. Ensure that your final answer correctly reflects the truth value derived from the evaluation of the expression."
+  },
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.940698676109314,
+      "final_metric": 0.940698676109314
+    },
+    "prompt": "Analyze the provided scenario step by step and evaluate the collective causal relationships between multiple actions and the resulting outcomes. Determine how each action, whether intentional or not, contributes to the overall result, taking into account the interplay of different individuals\u2019 actions and their combined impact on the situation. Your reasoning should clearly justify whether the specified actions directly caused the outcomes, considering the complexity of intentions and collaboration among various agents involved."
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9929460352659225,
+      "final_metric": 0.9924382328987121
+    },
+    "prompt": "Given the input, calculate the specified date based on the context provided, and output the result in MM/DD/YYYY format. Ensure your calculations accurately reflect the adjustments mentioned in the input and follow any specific date references described. Examples of calculations include adding or subtracting days from specific dates provided. Clarify your reasoning steps to ensure the output matches the expected label."
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.983527410030365,
+      "final_metric": 1.0
+    },
+    "prompt": "Analyze the following instructions step-by-step to determine whether you return to the original starting point (0,0) after executing all the steps. Track your movements based on the specific commands provided. \n\nInstructions should clearly state movements, including:\n- The number of steps in a given direction (e.g., \"Take 5 steps up\" or \"Take 10 steps right\"),\n- Changes in direction (e.g., \"Turn 90 degrees to the right\" followed by a move),\n- Any final movements should be clearly stated (e.g., \"Take 1 step back\").\n\nAt the end of your analysis, compare your final position to the original starting point and conclude with a clear 'Yes' or 'No' answer based on whether your final position matches the starting point. Ensure your output aligns with your reasoning throughout this analysis."
+  },
+  "cf/arithmetic_base10": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": " "
+  },
+  "cf/arithmetic_base9": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-9 where the digits are 012345678, compute the sum of the following two numbers. Remember to first convert both numbers from base-9 to base-10 for the addition, and then convert the final result back to base-9. Provide the final answer bracketed with <ans> and </ans>."
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 1.0000001460313797,
+      "final_metric": 1.0000001460313797
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-16 where the digits are 0123456789ABCDEF, compute the sum of the following two numbers."
+  }
+}

@@ -1,0 +1,491 @@
+{
+  "math/gsm8k": {
+    "error": "list index out of range"
+  },
+  "math/multiarith": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.97,
+      "final_metric": 0.96
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/causal_judgement": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/boolean_expressions": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9922685700654984,
+      "final_metric": 0.9912483680248261
+    },
+    "prompt": "Let's think step by step. Ensure that all date calculations are verified for accuracy against the input provided. Confirm the date or time frame being referenced to ensure an understanding of calculations involving days, months, and years, particularly in terms of leap years and variances in month lengths. Generate the final answer bracketed with <ans> and </ans>. \n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "bbh/disambiguation_qa": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7839744299650192,
+      "final_metric": 0.8097661864757538
+    },
+    "prompt": "For each sentence provided, determine the antecedent of the pronoun by considering context carefully. Generate the final answer bracketed with <ans> and </ans>, and include a brief explanation for your choice."
+  },
+  "bbh/date_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6750332802534104,
+      "final_metric": 0.6707203716039658
+    },
+    "prompt": "Analyze the date provided carefully, perform the necessary calculations step by step, and select the correct answer from the given options. Be sure to express the date in MM/DD/YYYY format for your outputs and closely verify that it matches one of the answer options.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "bbh/dyck_languages": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6984369236230851,
+      "final_metric": 0.6962351465225219
+    },
+    "prompt": "Let's think step by step. Make sure to enclose your final answer with <ans> and </ans> tags. <input>"
+  },
+  "bbh/formal_fallacies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9357002276182175,
+      "final_metric": 0.9428446060419082
+    },
+    "prompt": "For each argument presented, analyze whether it is deductively valid or invalid based on the premises provided. Carefully assess the implications of each premise and ensure that the conclusion logically follows from them. Determine turning points for overlap and implications. Clearly indicate your final answer at the end, within brackets <ans> and </ans>."
+  },
+  "bbh/hyperbaton": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8520228832960128,
+      "final_metric": 0.892132049202919
+    },
+    "prompt": "When comparing adjective orders in the following options, analyze each adjective specifically following the important sequence of: opinion first, then size, age, shape, color, origin, material, and purpose. Then choose the option that correctly follows this sequence. Please ensure the answer is bracketed with <ans> and </ans> as the final response. \n\nINPUT:\n<input> \n\nRESPONSE:"
+  },
+  "bbh/geometric_shapes": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/logical_deduction_five_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/logical_deduction_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8229933977127075,
+      "final_metric": 0.9789576816558838
+    },
+    "prompt": "Analyze the following details sequentially to determine the order and produce the correct answer. Lay out reasoning in clear, numbered steps to avoid confusion in the deduction process. Present the final answer clearly by stating the selected option's label in parentheses after the output. INPUT: <input> RESPONSE:"
+  },
+  "bbh/logical_deduction_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8443493586778641,
+      "final_metric": 0.9318228644132615
+    },
+    "prompt": "Analyze the information step by step, then verify each option against the deductions made. Generate the final answer bracketed with <ans> and </ans>, and include the chosen option label. INPUT: <input> RESPONSE:"
+  },
+  "bbh/movie_recommendation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7219593065977097,
+      "final_metric": 0.8442141956090927
+    },
+    "prompt": "Analyze the following films based on their major thematic elements, including emotional depth and narrative complexity, and how they connect across different genres: Find a movie that shares thematic and genre similarities with these films: <input>. Options: (A) Option A; (B) Option B; (C) Option C; (D) Option D. Make sure to consider which themes or attributes should weigh heavier in your evaluation. Finally, ensure that your response includes a brief explanation of why the other options were not chosen. Generate the final answer bracketed with <ans> and </ans>."
+  },
+  "bbh/movie_recommendation_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.889093388915062,
+      "final_metric": 0.8918181753158569
+    },
+    "prompt": "Analyze the thematic and genre connections between the specified films. For each film choice, explain how it relates to the themes and styles of the films listed in the input. Generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE:"
+  },
+  "bbh/multistep_arithmetic_two": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.95,
+      "final_metric": 0.94
+    },
+    "prompt": "For the given mathematical expression, carefully solve it step by step, ensuring to follow the order of operations (parentheses, exponents, multiplication and division from left to right, addition and subtraction from left to right). Please verify your calculations before providing the final answer bracketed with <ans> and </ans>. Ensure all intermediary steps are clearly shown. INPUT: <input> RESPONSE:"
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9818801510334015,
+      "final_metric": 0.9950582230091095
+    },
+    "prompt": "Let's analyze the instructions step-by-step by keeping track of movements in clear cardinal directions (e.g., North/South/East/West). After your calculations, compare your final coordinate with the starting coordinate to determine if you have returned. When calculating movements, make sure to clearly define the final position at each step until you arrive at the final coordinate. This will aid in verifying whether you've returned or not. INPUT: <input> RESPONSE: Generate the final answer bracketed with <ans> and </ans>."
+  },
+  "bbh/object_counting": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.92,
+      "final_metric": 0.91
+    },
+    "prompt": "Let's think carefully about how to count each object. Include all items and be clear about duplicates. For each item category, list how many you have. If you have multiple of the same item, count all instances. Once you have the total count, generate the final answer bracketed with <ans> and </ans>.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "bbh/penguins_in_a_table": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7757613170146942,
+      "final_metric": 0.8551806902885437
+    },
+    "prompt": "Please analyze the input step by step.\n\nPlease ensure that the final answer is bracketed with <ans> and </ans> even when indicating the label.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "bbh/reasoning_about_colored_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7612716281414031,
+      "final_metric": 0.8107833659648895
+    },
+    "prompt": "Analyze the following situation and select an answer from the options provided:\n\nOn the table, I see a yellow envelope, a gold stress ball, a magenta booklet, a blue bracelet, a mauve necklace, and a teal mug. What color is the envelope?\nOptions:\n(A) red\n(B) orange\n(C) yellow\n(D) green\n(E) blue\n(F) brown\n(G) magenta\n(H) fuchsia\n(I) mauve\n(J) teal\n(K) turquoise\n(L) burgundy\n(M) silver\n(N) gold\n(O) black\n(P) grey\n(Q) purple\n(R) pink\n\nEnsure your final answer is in the format <ans>your_choice</ans> where 'your_choice' is the correct option."
+  },
+  "bbh/ruin_names": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/snarks": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.986677588224411,
+      "final_metric": 0.9697284567356109
+    },
+    "prompt": "To identify the sarcastic statement, analyze the tone and implications of each option carefully. Consider the context and what the speaker might actually mean compared to the literal statements presented. Indicate the sarcastic statement based on tone and implication, not just literal meaning. Be sure to format your response correctly by selecting the option from the provided choices, and generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE: <ans></ans>"
+  },
+  "bbh/salient_translation_error_detection": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8068081855773925,
+      "final_metric": 0.8295203757286072
+    },
+    "prompt": "Analyze the following translations step by step and identify the type of error present in each translation. Each translation error may correspond to specific categories: Named Entities, Numerical Values, Modifiers or Adjectives, Negation or Antonyms, Facts, or Dropped Content. Respond with the letter denoting the error type, and provide a brief justification."
+  },
+  "bbh/sports_understanding": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/tracking_shuffled_objects_five_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/temporal_sequences": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7194484025239944,
+      "final_metric": 0.7446490544080734
+    },
+    "prompt": "Let's think step by step. Please analyze the provided timeline of activities and evaluate each option systematically. Identify all viable time slots from the given input based on the complete schedule provided, and provide a detailed explanation for your reasoning before the final answer, bracketed with <ans> and </ans>. \n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "bbh/tracking_shuffled_objects_three_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/tracking_shuffled_objects_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8166615933179855,
+      "final_metric": 0.8103691875934601
+    },
+    "prompt": "Please closely track and summarize each outcome step by step as trades occur, maintaining a cumulative list after each trade. At each step of the trade process, ensure that you note the current status of each participant's possessions. Conclude by summarizing the final positions for clarity. Generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE:"
+  },
+  "bbh/word_sorting": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8528368419408798,
+      "final_metric": 0.9814763176441192
+    },
+    "prompt": "Let's think step by step. Ensure that the final answer is presented within the tags <ans> and </ans>, without any extraneous text or labels. Please ensure to format the response accordingly: no extra labels or text should be included outside the <ans> tags. INPUT: <input> RESPONSE:"
+  },
+  "bbh/web_of_lies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9281195724010467,
+      "final_metric": 0.993410964012146
+    },
+    "prompt": "Let's think step by step.\n\nGenerate the final answer bracketed with <ans> and </ans>.\n\nINPUT:\n<input>\n\nRESPONSE:\nAnalyze each statement's truthfulness step-by-step and verify if the final conclusion drawn aligns with the deductions provided.  If contradictions arise in your deductions, explicitly state how they affect the character's truthfulness.\n\nLabel: Determine if the final answer is consistent with the logical deductions made; label as 'Yes' or 'No' accordingly."
+  },
+  "ii/active_to_passive": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9020277708768845,
+      "final_metric": 0.9999999314546585
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>. Please rewrite the sentence in passive voice format.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/antonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8139313399791718,
+      "final_metric": 0.9715033948421479
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>, ensuring that it is an antonym of the input.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/cause_and_effect": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.772089843566601,
+      "final_metric": 0.7605653084241427
+    },
+    "prompt": ""
+  },
+  "ii/diff": {
+    "error": "list index out of range"
+  },
+  "ii/first_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6928762406110763,
+      "final_metric": 0.6895535260438919
+    },
+    "prompt": ""
+  },
+  "ii/common_concept": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6252273387379117,
+      "final_metric": 0.6962462332513597
+    },
+    "prompt": "Provide a concise output label that summarizes the relationship of the input items in just a few words. Enclose your final answer within <ans> and </ans>. INPUT: <input> The label should be a single phrase indicating the relationship, enclosed within <ans> and </ans>."
+  },
+  "ii/informal_to_formal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8309061676263809,
+      "final_metric": 0.8577783107757568
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>.\n\nINPUT:\n<input>\n\nRESPONSE:\nPlease provide a close paraphrase of the input, ensuring the meaning remains consistent while using different words."
+  },
+  "ii/larger_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8404764175415039,
+      "final_metric": 0.9076588809490204
+    },
+    "prompt": "Generate a response that extracts and returns the specific label from the input, bracketed with <ans> and </ans>. The label is the second item following the input format of 'input1, input2'. \n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/letters_list": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.5931337907910347,
+      "final_metric": 0.5935134455561638
+    },
+    "prompt": "Generate the final answer enclosed in <ans> and </ans> tags. The output must be bracketed with <ans> and </ans>, for example: <ans>your_output_here</ans>.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/negation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8800363004207611,
+      "final_metric": 0.995232492685318
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>. Respond with the opposite of the claim made in the input, enclosed in <ans> tags.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/num_to_verbal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6081063956022262,
+      "final_metric": 0.993676820397377
+    },
+    "prompt": "Please convert the input number to its equivalent word form.\n\nGenerate the final answer bracketed with <ans> and </ans>.\n\nINPUT:\n<input>\n\nOUTPUT (in words): <ans>three thousand, six hundred and forty-one</ans>"
+  },
+  "ii/orthography_starts_with": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6528656184673309,
+      "final_metric": 0.7801952064037323
+    },
+    "prompt": "Extract the specific element or word indicated by the label from the input and encapsulate that within <ans> and </ans>. INPUT: <input> RESPONSE: Return only the word or phrase corresponding to the label encapsulated within <ans> and </ans>."
+  },
+  "ii/rhymes": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7881868213415146,
+      "final_metric": 0.7881868213415146
+    },
+    "prompt": ""
+  },
+  "ii/second_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.699324083328247,
+      "final_metric": 0.7003979802131652
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>.\n\nINPUT:\n<input>\n\nRESPONSE:\nMake sure to always output the answer bracketed with <ans> and </ans> around it regardless of the input."
+  },
+  "ii/sentence_similarity": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6183329582214355,
+      "final_metric": 0.7057870596647262
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>. Please generate your reasoning and final answer enclosed in <ans> tags immediately following your reasoning. Ensure both the answer and any reasoning are enclosed in the format <ans>...</ans>. Analyze the relationship between the sentences, focusing on whether they convey similarities, differences, or no relationship. Provide a clear reasoning statement before your final answer, specifying the nature of the relationship you observed."
+  },
+  "ii/sentiment": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6515114784240723,
+      "final_metric": 0.999999788403511
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans> that includes a sentiment label (positive, negative, or neutral) based on your analysis of the input. \n\nINPUT:\n<input>\n\nRESPONSE: \n\nPlease provide sentiment labels (positive, negative, or neutral) based on the analysis of the given input."
+  },
+  "ii/sum": {
+    "error": "list index out of range"
+  },
+  "ii/singular_to_plural": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8770283311605453,
+      "final_metric": 0.9999999523162841
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>. INPUT: <input>. Please return the plural form of the input noun inside the brackets."
+  },
+  "ii/synonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8078058898448944,
+      "final_metric": 0.8209623277187348
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>. The final answer should be a relevant synonym or classification label that accurately reflects the input's meaning.\n\nINPUT:\n<input>"
+  },
+  "ii/taxonomy_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8979621142148971,
+      "final_metric": 0.906019514799118
+    },
+    "prompt": "Generate a filtered list of items based on the input. Only include items that are explicitly mentioned in the labels provided. The response must be bracketed with <ans> and </ans>. Make sure to list items that appear specifically among the provided labels.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/translation_en-de": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7307318329811097,
+      "final_metric": 0.7742612510919571
+    },
+    "prompt": "Generate the final answer bracketed with <ans> and </ans>.\n\nINPUT:\n<input>\n\nRESPONSE:\n<ans><input></ans>"
+  },
+  "ii/translation_en-es": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8299235343933106,
+      "final_metric": 0.9581576317548752
+    },
+    "prompt": "Please translate the provided English word into Spanish and bracket the final answer with <ans> and </ans>. The input will always be an English word. Consider the context and multiple meanings for the given word. \n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "ii/translation_en-fr": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8326664328575134,
+      "final_metric": 0.9556947529315949
+    },
+    "prompt": "G\u00e9n\u00e9rez la r\u00e9ponse finale encadr\u00e9e par <ans> et </ans>, et assurez-vous que la r\u00e9ponse doit \u00eatre traduite pour correspondre \u00e0 l'\u00e9tiquette correspondante en fran\u00e7ais.\n\nENTR\u00c9E:\n<input>\n\nR\u00c9PONSE:"
+  },
+  "ii/word_in_context": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7217854738235474,
+      "final_metric": 0.9252733081579209
+    },
+    "prompt": "Evaluate the similarity of the given word within the contexts of both sentences and generate the final answer bracketed with <ans> and </ans>. Use the labels 'same' or 'not the same' to classify if the meanings of the word in both sentences are functionally identical or distinctly different based on their contextual use.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "cf/arithmetic_base8": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-8 where the digits are 01234567, compute the sum of the following two numbers. Provide the final answer in the format: <ans>YourAnswerHere</ans>. INPUT: <input> RESPONSE:"
+  },
+  "cf/arithmetic_base10": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": ""
+  },
+  "cf/arithmetic_base9": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.95,
+      "final_metric": 0.95
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-9 where the digits are 012345678, compute the sum of the following two numbers. Generate the final answer after computing the sum in base-9, and bracket it with <ans> and </ans>. Ensure the output matches the computed result accurately.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9918248146772385,
+      "final_metric": 1.0000001460313797
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-16 where the digits are 0123456789ABCDEF, compute the sum of the following two numbers."
+  },
+  "cf/arithmetic_base11": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9881185442209244,
+      "final_metric": 0.9951533406972886
+    },
+    "prompt": "You are a mathematician. All numbers are in base-11 where the digits are represented as 0123456789A. Compute the sum of the following two numbers and present the result in base-11 format, ensuring the final answer is bracketed with <ans> and </ans>. \n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.939988198876381,
+      "final_metric": 0.9508994668722153
+    },
+    "prompt": "You are a chess player. As a chess player, you must evaluate each move according to the rules of chess. Ensure you consider all standard chess rules such as piece movement, check, and checkmate conditions. Answer \"legal\" if each move follows the rules of chess without violation, and \"illegal\" if there are rule violations within the given moves. Generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE:"
+  },
+  "cf/syntax_osv": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7856857568025589,
+      "final_metric": 0.9150892466306686
+    },
+    "prompt": "You are an expert in linguistics. Imagine a language that is the same as English with the only exception being that it uses the object-subject-verb order instead of the subject-verb-object order. Please note that the main verb is the last word of the verb phrase and the subject is the first noun or pronoun in the object-subject-verb structure, even in complex sentences. Your task is to identify the main verb (the last word of the verb phrase) followed by its subject (the first noun or pronoun in the sentence) in the order of 'subject verb'. Provide the output in the format of '<ans>subject verb</ans>'. INPUT: <input> RESPONSE:"
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9672663092613221,
+      "final_metric": 0.9618106633424759
+    },
+    "prompt": "You are a chess player. You are playing a chess variant where the squares of knights and bishops are swapped. For each color, the knights are placed on the squares previously occupied by bishops and the bishops on the squares previously occupied by knights. Given an opening, determine whether the opening is legal by evaluating each move based on its new position. Answer 'legal' if all moves are legal and 'illegal' if the opening violates any rules of chess. Consider standard chess movement rules while evaluating each move's legality under the new placements of pieces. Generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE:"
+  },
+  "cf/syntax_ovs": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8007773399353028,
+      "final_metric": 0.7916376143693924
+    },
+    "prompt": "You are an expert in linguistics. Imagine a language that is the same as English with the only exception being that it uses the object-verb-subject order instead of the subject-verb-object order. In this imaginary language, your task is to identify the primary subject and primary verb from the first independent clause's object-verb-subject order, considering any additional clauses or phrases that may alter or clarify meaning. The object comes before, while also being cautious of any subordinate clauses that may provide additional context or change the main subject and verb you should identify. Both the main verb and the main subject should be provided as a single word each, in the format 'verb subject'. INPUT: <input> RESPONSE: <ans></ans>"
+  },
+  "cf/syntax_sov": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8135477155447006,
+      "final_metric": 0.8652075439691543
+    },
+    "prompt": "You are an expert in linguistics. Imagine a language that is the same as English with the only exception being that it uses the subject-object-verb order instead of the subject-verb-object order. Your task is to identify the main verb and the main subject in a sentence in this imaginary language. Identify the main verb and subject in a sentence that uses subject-object-verb structure. Your answer should be presented as '[subject] [verb]' in this format. Generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE:"
+  },
+  "cf/syntax_svo": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8563182145357132,
+      "final_metric": 0.9609344512224197
+    },
+    "prompt": "You are an expert in linguistics. Your task is to identify the main verb and the main subject in a sentence. Provide your answer in the format: <ans>main subject main verb</ans>. INPUT: <input> RESPONSE:"
+  },
+  "cf/syntax_vos": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7854050636291504,
+      "final_metric": 0.799046465754509
+    },
+    "prompt": "You are an expert in linguistics. Imagine a language that is the same as English with the only exception being that it uses the verb-object-subject order instead of the subject-verb-object order. Your task is to correctly identify the main verb and its subject in the VOS structure, explicitly noting any complexities that might alter this order. If the sentence comprises multiple clauses or complex structures, focus on identifying the main verb and its direct subject straightforwardly. Show the main verb (a single word) followed by its subject (a single word) in the order of the VOS structure. Generate the final answer bracketed with <ans> and </ans>. For example, for a sentence structured as 'saw the dog John', you would answer <ans>saw John</ans>."
+  },
+  "cf/syntax_vso": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8217271983623504,
+      "final_metric": 0.8544938892126084
+    },
+    "prompt": "You are an expert in linguistics. Imagine a language identical to English but with a verb-subject-object (VSO) order. Your task is to identify the main verb and its main subject from a sentence structured in this way. Please ensure sentences are properly structured in VSO (verb-subject-object) order. The verb you identify should be the main action verb, and the subject should exclusively be the noun performing the action, ignoring auxiliary verbs. For instance, a correctly structured VSO sentence would be 'Runs the dog.' Show the main verb (a single word) and its subject (also a single word) in the format: <ans>verb subject</ans>. Generate the final answer bracketed with <ans> and </ans>. INPUT: <input> RESPONSE:"
+  }
+}

@@ -1,0 +1,516 @@
+{
+  "math/multiarith": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.97,
+      "final_metric": 0.96
+    },
+    "prompt": "Let's break it down methodically."
+  },
+  "math/gsm8k": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.9,
+      "final_metric": 0.9
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9917816370725632,
+      "final_metric": 0.9928925395011902
+    },
+    "prompt": "Let\u2019s proceed carefully and consider each step thoroughly."
+  },
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9275206041336059,
+      "final_metric": 0.914342532157898
+    },
+    "prompt": "Approach the scenario systematically by dividing it into smaller, more digestible components."
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9903691148757935,
+      "final_metric": 0.989090228676796
+    },
+    "prompt": "Let\u2019s tackle this methodically, addressing each step individually."
+  },
+  "bbh/date_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6704527401924133,
+      "final_metric": 0.6942462885379791
+    },
+    "prompt": "Let's analyze it in a structured manner."
+  },
+  "bbh/disambiguation_qa": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7742876845598221,
+      "final_metric": 0.8111852121353149
+    },
+    "prompt": "Let's divide this into smaller, more manageable stages."
+  },
+  "bbh/formal_fallacies": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/geometric_shapes": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/hyperbaton": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8321112316846847,
+      "final_metric": 0.8842084419727325
+    },
+    "prompt": "We'll analyze it step by step."
+  },
+  "bbh/dyck_languages": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.692826520204544,
+      "final_metric": 0.6992149007320404
+    },
+    "prompt": "We should take a methodical approach, examining each phase with diligence."
+  },
+  "bbh/logical_deduction_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8203963357210159,
+      "final_metric": 0.8378025043010712
+    },
+    "prompt": "Let's analyze the situation gradually, one step at a time."
+  },
+  "bbh/logical_deduction_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8171236991882325,
+      "final_metric": 0.8139466494321823
+    },
+    "prompt": "Let's analyze it together one step at a time."
+  },
+  "bbh/logical_deduction_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8411186093091965,
+      "final_metric": 0.8632303011417389
+    },
+    "prompt": "Let's break down this procedure systematically, addressing it step by step."
+  },
+  "bbh/movie_recommendation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7220307278633118,
+      "final_metric": 0.7502379614114761
+    },
+    "prompt": "Let\u2019s analyze it gradually, step by step."
+  },
+  "bbh/movie_recommendation_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8895266914367675,
+      "final_metric": 0.8973272240161896
+    },
+    "prompt": "Let\u2019s break it down into smaller parts."
+  },
+  "bbh/multistep_arithmetic_two": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.96,
+      "final_metric": 0.94
+    },
+    "prompt": "We should analyze this systematically, one step at a time."
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.986821928024292,
+      "final_metric": 0.9884691870212555
+    },
+    "prompt": "Let's approach this systematically, one step at a time."
+  },
+  "bbh/object_counting": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.89,
+      "final_metric": 0.91
+    },
+    "prompt": "Let\u2019s take a systematic approach and address each phase individually, one after the other."
+  },
+  "bbh/penguins_in_a_table": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7646359550952911,
+      "final_metric": 0.7795361053943634
+    },
+    "prompt": "We should divide it into smaller, more achievable stages."
+  },
+  "bbh/ruin_names": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7464280158281327,
+      "final_metric": 0.7869242811203003
+    },
+    "prompt": "Let\u2019s analyze it step by step."
+  },
+  "bbh/reasoning_about_colored_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7673760885000229,
+      "final_metric": 0.7755379468202591
+    },
+    "prompt": "Let's analyze it in a structured manner."
+  },
+  "bbh/snarks": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9727805054187775,
+      "final_metric": 0.9721550452709198
+    },
+    "prompt": "Let's tackle this methodically by dividing it into smaller, more manageable tasks."
+  },
+  "bbh/salient_translation_error_detection": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8158088445663452,
+      "final_metric": 0.8380564683675766
+    },
+    "prompt": "Let\u2019s tackle this systematically, addressing it step by step."
+  },
+  "bbh/sports_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7805790269374847,
+      "final_metric": 0.794177638888359
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/temporal_sequences": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7310241466760635,
+      "final_metric": 0.758318578004837
+    },
+    "prompt": "We should analyze this systematically, one step at a time."
+  },
+  "bbh/tracking_shuffled_objects_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8624013251066208,
+      "final_metric": 0.8731550794839859
+    },
+    "prompt": "Let's break this down into smaller steps."
+  },
+  "bbh/tracking_shuffled_objects_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8931830650568009,
+      "final_metric": 0.9352775353193283
+    },
+    "prompt": "We'll analyze this gradually, step by step."
+  },
+  "bbh/tracking_shuffled_objects_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8153589028120041,
+      "final_metric": 0.829537816643715
+    },
+    "prompt": "Let\u2019s analyze it step by step."
+  },
+  "bbh/word_sorting": {
+    "error": "Error code: 403"
+  },
+  "ii/active_to_passive": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8997181683778763,
+      "final_metric": 0.9138587713241577
+    },
+    "prompt": ""
+  },
+  "bbh/web_of_lies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9271903789043426,
+      "final_metric": 0.9004405242204666
+    },
+    "prompt": "Let\u2019s navigate this methodically, addressing each step individually."
+  },
+  "ii/antonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8079213261604309,
+      "final_metric": 0.8143155366182327
+    },
+    "prompt": "and"
+  },
+  "ii/cause_and_effect": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7649529943099389,
+      "final_metric": 0.7711825508337754
+    },
+    "prompt": ""
+  },
+  "ii/diff": {
+    "error": "list index out of range"
+  },
+  "ii/common_concept": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6335808700985379,
+      "final_metric": 0.646588060590956
+    },
+    "prompt": "Kindly create a reworded version of the provided instruction. It is important that the core meaning remains intact while you change the wording, arrangement, or phrasing. The newly formulated instruction should be no longer than 300 tokens."
+  },
+  "ii/first_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6928762406110763,
+      "final_metric": 0.6928762406110763
+    },
+    "prompt": ""
+  },
+  "ii/informal_to_formal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8299016430974007,
+      "final_metric": 0.8499224632978439
+    },
+    "prompt": "Kindly create an alternative formulation of the given instruction that retains its intended meaning while employing varied language, organization, or expression. Make sure that the reformulated instruction remains within a limit of 300 tokens."
+  },
+  "ii/letters_list": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.5974251374602317,
+      "final_metric": 0.5931337907910347
+    },
+    "prompt": "and"
+  },
+  "ii/larger_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8342962443828583,
+      "final_metric": 0.8324962824583053
+    },
+    "prompt": ""
+  },
+  "ii/negation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8861868053674697,
+      "final_metric": 0.8899372935295105
+    },
+    "prompt": "and"
+  },
+  "ii/num_to_verbal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6081063956022262,
+      "final_metric": 0.6081063956022262
+    },
+    "prompt": ""
+  },
+  "ii/orthography_starts_with": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6554929971694946,
+      "final_metric": 0.6469670355319976
+    },
+    "prompt": "and"
+  },
+  "ii/rhymes": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7881868422031403,
+      "final_metric": 0.7782979041337967
+    },
+    "prompt": ""
+  },
+  "ii/second_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7003979802131652,
+      "final_metric": 0.7341585606336594
+    },
+    "prompt": "Kindly rephrase the following instruction while keeping its original meaning intact. Use different wording, structure, or phrasing as needed. Make sure that the revised instruction remains within a limit of 300 tokens."
+  },
+  "ii/sentence_similarity": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6189053922891616,
+      "final_metric": 0.6300029128789901
+    },
+    "prompt": "Please provide a rephrased version of the following instruction while retaining its original meaning. Ensure that the new phrasing is no longer than 300 tokens."
+  },
+  "ii/sentiment": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6518536567687988,
+      "final_metric": 0.6511708557605743
+    },
+    "prompt": "Please rephrase the instruction, maintaining its original meaning, while altering the wording, format, or structure. Ensure that the revised instruction does not exceed 300 tokens in length."
+  },
+  "ii/singular_to_plural": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8970023036003113,
+      "final_metric": 0.8971651524305344
+    },
+    "prompt": ""
+  },
+  "ii/sum": {
+    "error": "list index out of range"
+  },
+  "ii/synonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8074858337640762,
+      "final_metric": 0.8078058898448944
+    },
+    "prompt": "Additionally"
+  },
+  "ii/taxonomy_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9048197150230408,
+      "final_metric": 0.9025136977434158
+    },
+    "prompt": "and"
+  },
+  "ii/translation_en-de": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6928973883390427,
+      "final_metric": 0.7742612510919571
+    },
+    "prompt": "\u0438"
+  },
+  "ii/translation_en-es": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8228672444820404,
+      "final_metric": 0.8358748137950898
+    },
+    "prompt": ""
+  },
+  "ii/translation_en-fr": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8629808157682419,
+      "final_metric": 0.8760963261127472
+    },
+    "prompt": "and"
+  },
+  "ii/word_in_context": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7309130609035492,
+      "final_metric": 0.7287688732147217
+    },
+    "prompt": ""
+  },
+  "cf/arithmetic_base8": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.95,
+      "final_metric": 1.0
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-8 where the digits are 01234567, compute the sum of the following two numbers."
+  },
+  "cf/arithmetic_base10": {
+    "error": "list index out of range"
+  },
+  "cf/arithmetic_base9": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "You are tasked with a mathematical challenge. Consider that all numbers are represented in base-9, where the digits range from 0 to 8. Calculate the total of the two given numbers."
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 1.0000001460313797,
+      "final_metric": 1.0000001460313797
+    },
+    "prompt": "You are tasked with the role of a mathematician. Given that all numeric values are represented in base-16, utilizing the digits 0123456789ABCDEF, calculate the total of the two specified numbers."
+  },
+  "cf/arithmetic_base11": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9921425163745881,
+      "final_metric": 1.0000000566244125
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-11 where the digits are 0123456789A, compute the sum of the following two numbers."
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9399881660938263,
+      "final_metric": 0.9508993953466416
+    },
+    "prompt": "You are engaged in a game of chess. Evaluate the legality of the provided series of moves. It's important to remember that moves are not required to be tactically wise. If each move follows the chess rules correctly, respond with \"legal.\" If any of the moves violate the regulations, please reply with \"illegal.\""
+  },
+  "cf/syntax_osv": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8000409841537476,
+      "final_metric": 0.7892807096242904
+    },
+    "prompt": "As a specialist in linguistics, envision a language that mirrors English but adopts an object-subject-verb structure instead of the conventional subject-verb-object arrangement. Your assignment is to determine the primary verb and the principal subject within a sentence from this hypothetical language. Please present the main verb (as one word) along with its corresponding subject (also as one word)."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.950899413228035,
+      "final_metric": 0.9618106424808502
+    },
+    "prompt": "Envision yourself as a chess player participating in a modified variant of the game where the placements of the knights and bishops are swapped. In this configuration, the knights take over the squares typically occupied by the bishops, while the bishops are relocated to where the knights originally were. Evaluate a specific sequence of opening moves and determine if it is permissible under chess rules. The opening does not need to exhibit strategic soundness. If every move complies with the official rules of chess, respond with \"legal.\" Conversely, if any part of the opening violates chess regulations, answer with \"illegal.\""
+  },
+  "cf/syntax_ovs": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7808012813329697,
+      "final_metric": 0.7665678828954696
+    },
+    "prompt": "Assume the role of a linguistics specialist and envision a language that closely resembles English, differing solely in its syntax by employing an object-verb-subject (OVS) arrangement rather than the traditional subject-verb-object (SVO) structure. Your assignment is to pinpoint the primary verb and its corresponding subject within a given sentence in this hypothetical language. Present both the key verb (one word) and its associated subject (one word) separately."
+  },
+  "cf/syntax_sov": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8348795920610428,
+      "final_metric": 0.8702766478061676
+    },
+    "prompt": "Take on the role of a linguistics expert. Imagine a language that is similar to English, but it utilizes a subject-object-verb (SOV) sentence structure rather than the conventional subject-verb-object (SVO) arrangement. Your task is to identify the key subject and the main verb in a sentence written in this invented language. Provide the primary verb (given as a single word) along with its associated subject (also expressed as a single word)."
+  },
+  "cf/syntax_svo": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8525850057601929,
+      "final_metric": 0.8678706645965576
+    },
+    "prompt": "As a specialist in linguistics, your role is to determine the primary verb and the principal subject within a given sentence. Please present the primary verb (as a single word) along with its corresponding subject (also as a single word)."
+  },
+  "cf/syntax_vos": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.784912058711052,
+      "final_metric": 0.7917776674032211
+    },
+    "prompt": "As an expert in linguistics, imagine a fictional language that mirrors English but utilizes a verb-object-subject (VOS) structure instead of the conventional subject-verb-object (SVO) arrangement. Your task is to identify the key verb and the principal subject in a sentence formed in this creative language. Please state the main verb (as one word) along with its associated subject (also as one word)."
+  },
+  "cf/syntax_vso": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8131787598133087,
+      "final_metric": 0.8454761356115341
+    },
+    "prompt": "Imagine a language that is similar to English but alters its word order to follow a verb-subject-object pattern instead of the usual subject-verb-object sequence. Given this fictional language, identify the main verb and its subject from a sentence written in this format. You should provide both the main verb and its subject as individual words."
+  }
+}

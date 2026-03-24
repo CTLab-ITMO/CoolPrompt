@@ -1,0 +1,486 @@
+{
+  "math/multiarith": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "math/gsm8k": {
+    "error": "list index out of range"
+  },
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9341096401214599,
+      "final_metric": 0.947287712097168
+    },
+    "prompt": "Analyze each provided scenario meticulously to uncover the causal relationships between actions and outcomes. Focus on the intentions and decisions of the individuals involved, considering how their actions directly lead to specific results. For each situation, determine whether the identified action was a direct cause of the outcome in question, answering with a clear 'Yes' or 'No'. Justify your response with concise explanations that reflect common-sense reasoning about causation, ensuring that your analysis captures both immediate consequences and potential broader implications. Aim for clarity, coherence, and precision in your evaluation, mirroring the thought process of an average person interpreting these causal connections."
+  },
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9909089535474778,
+      "final_metric": 0.9979451751708984
+    },
+    "prompt": "To accurately evaluate the provided logical expression for its truth value, follow these comprehensive steps: 1. Begin by dissecting the expression into its individual components, clearly identifying logical operators (AND, OR, NOT) and any parentheses that may dictate the order of operations. 2. Prioritize the evaluation by first handling any operations within parentheses, ensuring that innermost expressions are resolved first. 3. Next, evaluate NOT operations as they have the highest precedence, carefully determining how they influence the adjacent operands. 4. After evaluating NOT, systematically address all AND operations, which take precedence over OR operations. 5. Finally, process the OR operations, combining the results obtained from previous evaluations to reach the overall truth value. 6. Throughout this reasoning process, document each step clearly to maintain transparency and logical coherence. 7. Conclude with a definitive statement that reflects whether the expression evaluates to True or False, supporting your reasoning with the sequential evaluations performed."
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9870169770717621,
+      "final_metric": 0.9924801474809647
+    },
+    "prompt": "Analyze the provided information regarding dates carefully. Determine the current date mentioned in the input and apply your understanding of calendar rules to compute the requested date accurately. Ensure you verify any potential ambiguities or special cases mentioned in the scenario. Provide the final date in MM/DD/YYYY format and explain any assumptions or calculations made to arrive at that date."
+  },
+  "bbh/disambiguation_qa": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7738004565238953,
+      "final_metric": 0.8526115691661835
+    },
+    "prompt": "Thoroughly analyze each of the provided sentences to determine the specific antecedent of the pronoun used. Your task is to identify which noun or noun phrase the pronoun refers to based on the context and relationships between the characters mentioned. If the antecedent is clear, select the corresponding option: (A) for the first noun mentioned, (B) for the second noun mentioned. If the pronoun can be interpreted as referring to multiple nouns or if its reference is uncertain, indicate that it is ambiguous by selecting (C). Please ensure your rationale is clear, concise, and reflects a deep understanding of the contextual clues and the nuanced relationships in the sentences. Here are the sentences to analyze:"
+  },
+  "bbh/date_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6751496082544327,
+      "final_metric": 0.6702197396755218
+    },
+    "prompt": "To solve the date calculation problem accurately, begin by carefully identifying the reference date mentioned in the input along with any relevant timeframes, such as \"one week ago\" or \"ten days from today.\" Take note of the month, day, and year details thoroughly. Methodically perform the necessary calculations: subtract or add the specified number of days while considering factors such as the different lengths of months and the occurrence of leap years. Once you have derived the new date, ensure it is correctly formatted in MM/DD/YYYY. Next, evaluate the options provided, systematically eliminating any that do not correspond to your calculated date. Finally, select the correct option that matches your result and clearly articulate your reasoning step by step. This structured approach will enhance both clarity and accuracy, guiding you to the correct answer."
+  },
+  "bbh/dyck_languages": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6990083473920822,
+      "final_metric": 0.805599907040596
+    },
+    "prompt": "Analyze the provided sequence of parentheses, brackets, and braces to identify all unmatched opening symbols. Your goal is to determine the exact corresponding closing symbols required for each unmatched character, ensuring they are in the correct order and maintain proper nesting. Pay close attention to the types of symbols (such as (), {}, [], and <>) and ensure each opening symbol has an appropriately matched closing symbol. Provide only the additional closing characters needed to completely balance the sequence, with no extraneous text or formatting in your output. Aim for clarity and correctness, ensuring the resulting sequence is minimal and precise."
+  },
+  "bbh/formal_fallacies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9380817049741745,
+      "final_metric": 0.9285557365417481
+    },
+    "prompt": "Analyze the given argument systematically by identifying the premises and evaluating their logical connections. Clearly determine whether the conclusion follows logically from the stated premises. Choose 'valid' if the conclusion necessarily follows from the premises, and 'invalid' if it does not. Please provide a brief justification for your choice to clarify your reasoning."
+  },
+  "bbh/hyperbaton": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/geometric_shapes": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/logical_deduction_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8365375965833663,
+      "final_metric": 0.8738832730054855
+    },
+    "prompt": "Please analyze the following descriptive text carefully, identifying the logical relationships and positions of the objects. Based on this analysis, select the correct answer from the provided options that accurately reflects the conclusion drawn from the text. Ensure that your reasoning is clear and concise, focusing on the constraints given in the statements to arrive at the correct answer. Take your time to consider all information before making a choice."
+  },
+  "bbh/logical_deduction_three_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/logical_deduction_seven_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8146086454391479,
+      "final_metric": 0.8366791099309921
+    },
+    "prompt": "Analyze the information provided systematically. Identify the main objects and their relationships based on the clues given. Pay attention to their positions, order of attributes, and any logical implications. After forming a clear understanding, select the option that accurately reflects the derived conclusion while ensuring that it aligns with the clues. Remember to check for consistency in relation to all given statements before making your final choice."
+  },
+  "bbh/movie_recommendation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7350218939781189,
+      "final_metric": 0.7750616759061814
+    },
+    "prompt": "Identify the movie that shares similar themes, genres, or styles with the following films: Raiders of the Lost Ark, The Matrix, L\u00e9on The Professional, and Star Wars Episode V - The Empire Strikes Back. Analyze the given options based on factors such as character development, narrative style, and cinematic techniques to determine which one aligns best with the listed films. Choose the most fitting option from the following: (A) The Meyerowitz Stories, (B) Saw, (C) Star Wars Episode IV - A New Hope, (D) Josie and the Pussycats."
+  },
+  "bbh/multistep_arithmetic_two": {
+    "error": "list index out of range"
+  },
+  "bbh/movie_recommendation_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8961701565980911,
+      "final_metric": 0.9536440277099609
+    },
+    "prompt": "Assess the films listed in the input for prevalent themes, stylistic choices, and narrative frameworks that connect them. Focus on elements such as genre, emotional tone, character arcs, and critical reception to form a comprehensive understanding of their essence. Following this analysis, carefully evaluate the provided options to determine which movie resonates most closely with these identified characteristics. Justify your selection by drawing explicit parallels between the chosen film and the original titles, detailing how certain attributes align and support your decision. Aim for a response that is both concise and thorough, effectively capturing the overarching essence of the films."
+  },
+  "bbh/navigate": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/penguins_in_a_table": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7890455603599549,
+      "final_metric": 0.8352397572994232
+    },
+    "prompt": "Analyze the provided table of penguins and answer the following questions based on their properties. Each question will require careful examination of the details provided, such as name, age, height, and weight. Be specific and precise in your responses by referring directly to the table data. If a new entry or alteration is mentioned after the initial table, take that into account when answering the question. Ensure to provide the correct option from the list given. Start by identifying key data points and use logical reasoning to derive your answers. This approach will help in accurately assessing the details and fulfilling the task requirements effectively."
+  },
+  "bbh/object_counting": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.92,
+      "final_metric": 0.91
+    },
+    "prompt": "To determine the total number of items listed, start by carefully reading through the input and categorizing each item based on its type (such as objects, animals, or musical instruments). For each category mentioned in the question, count all distinct items, ensuring that you recognize duplicates as separate instances if they appear more than once. After tallying the counts for each category, provide a clear total for the requested type. Finally, sum the totals across all categories mentioned to present a comprehensive count. Be precise, methodical, and ensure that your final answer is clearly stated for easy understanding."
+  },
+  "bbh/ruin_names": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7571448945999145,
+      "final_metric": 0.9822921401262283
+    },
+    "prompt": "Identify the option that cleverly transforms the given artist or movie name into a humorous variation. Consider elements of wordplay, phonetic changes, or surprising twists that evoke laughter while retaining some connection to the original title. Your goal is to select the edit that stands out as the funniest or most clever, based on how the changes might create a comical effect. Additionally, briefly explain the reasoning behind your choice, highlighting the comedic elements that make it the most amusing. Provide your answer using the format (X), where X is the letter corresponding to your chosen option."
+  },
+  "bbh/reasoning_about_colored_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7648404228687287,
+      "final_metric": 0.7763954848051071
+    },
+    "prompt": "Carefully review the arrangement and colors of the objects presented in the scenario. Take note of the specific items mentioned, their relative positions, and how they relate to each other. If the query involves counting or identifying specific colors, ensure to focus on the criteria stated in the question and filter out any irrelevant details. To arrive at your answer, clearly outline your reasoning step by step, detailing your observations and deductions based on the information given. Finally, select the answer that best fits the described situation from the provided options, ensuring your response reflects a comprehensive understanding of the problem and its context. Aim for logical clarity and precision in your selection process."
+  },
+  "bbh/salient_translation_error_detection": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7942115515470505,
+      "final_metric": 0.9410795199871064
+    },
+    "prompt": "Analyze the provided German sentences and their English translations to identify the specific type of error present, according to the following categories: Named Entities, Numerical Values, Modifiers or Adjectives, Negation or Antonyms, Facts, and Dropped Content. Carefully compare the source and the translation, taking note of any discrepancies that fall into these categories. Once you have identified the type of error, select the corresponding letter from the provided options: (A), (B), (C), (D), (E), or (F). Ensure your reasoning is clear and justified."
+  },
+  "bbh/snarks": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9750173211097717,
+      "final_metric": 0.9728631246089935
+    },
+    "prompt": "Let's think step by step."
+  },
+  "bbh/sports_understanding": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7878041076660156,
+      "final_metric": 0.9727113711833953
+    },
+    "prompt": "Evaluate the following sentence for plausibility in the context of its respective sport. Determine if the action described aligns logically with the rules and common scenarios of the sport mentioned. If the action is typical for the athlete and the sport, respond with \"yes\". If the action is uncommon or impossible in that context, respond with \"no\". Provide reasoning to support your answer if necessary."
+  },
+  "bbh/temporal_sequences": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7248582780361176,
+      "final_metric": 0.8574751198291779
+    },
+    "prompt": "Evaluate the timeline of activities thoroughly to identify all the time periods when the individual was occupied and unable to visit the specified location. Start by listing out the events with their corresponding start and end times, then explicitly highlight any gaps in their schedule. Ensure that you take into account the closing time of the location in question. Focus on the intervals that are entirely free from commitments, checking that any viable slots fall within the operational hours of the venue. After you\u2019ve identified the possible time frames, select the answer option that best aligns with your findings and clearly justify your choice based on the evidence presented in the input."
+  },
+  "bbh/tracking_shuffled_objects_seven_objects": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/tracking_shuffled_objects_five_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8742918920516968,
+      "final_metric": 0.9080467277765274
+    },
+    "prompt": "To accurately determine the final position or item of the specified individual, start by clearly outlining the initial state of all participants and their assigned positions or items. Methodically track each sequence of swaps, noting the changes that occur after every exchange. For every trade, update the position or item held by each participant to maintain an accurate record. It's crucial to retain a logical structure throughout the process, ensuring that every detail is accounted for to avoid any confusion. Once all swaps have been processed, carefully analyze the final state of the specified participant and select the correct option based on your thorough documentation of the swaps. This systematic approach will enhance clarity and ensure a precise outcome."
+  },
+  "bbh/tracking_shuffled_objects_three_objects": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8978599369525909,
+      "final_metric": 0.9476238709688186
+    },
+    "prompt": "To accurately determine the final item or position held by a specified individual following a series of swaps or trades, adopt a structured and meticulous approach. Begin by clearly identifying and recording the initial items or positions of each individual. As you progress through the sequence of swaps, update your notes methodically after each exchange, carefully documenting who holds which item or position at every stage. Maintain a coherent log to prevent any confusion. Upon completing all the exchanges, summarize the final holdings of each participant, focusing on the specified individual. Finally, present your answer in the designated format (A, B, or C), ensuring it corresponds accurately to the determined outcome. This thorough and organized method will promote precision in resolving the query effectively."
+  },
+  "bbh/word_sorting": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8552489447593689,
+      "final_metric": 0.9866312927007675
+    },
+    "prompt": "Sort the following list of words in alphabetical order. Make sure to pay attention to the correct spelling of each word, and ensure that each word is placed in the correct position according to standard alphabetical rules. The list is as follows: [insert your list of words here]. Output the sorted list as a single line, with each word separated by a space."
+  },
+  "ii/active_to_passive": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.89855737388134,
+      "final_metric": 0.9999999314546585
+    },
+    "prompt": "Transform any active voice sentence into its passive voice equivalent, ensuring that the focus shifts from the subject performing the action to the recipient of the action. Maintain the original meaning and include appropriate forms of the verb \"to be\" as needed, while keeping the sentence grammatical and coherent."
+  },
+  "ii/antonyms": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "bbh/web_of_lies": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9515259563922882,
+      "final_metric": 1.0
+    },
+    "prompt": "Analyze the statements provided thoroughly, starting from the known truth or lie of the first individual. Systematically evaluate each person\u2019s claim in relation to those of others, maintaining a clear record of who tells the truth and who lies. Carefully trace the implications of each statement and how they interconnect, ensuring you identify any contradictions or confirmations in their narratives. Conclude by determining the truth status of the final individual mentioned, clearly articulating whether their claims are consistent with the established truths and lies. Provide a final answer in the form of 'Yes' or 'No' based on your logical deductions."
+  },
+  "ii/common_concept": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6252273321151733,
+      "final_metric": 0.701637241575453
+    },
+    "prompt": "Analyze the provided list of words or phrases to uncover a central theme, category, or functionality that links them together. Your output should clearly articulate this connection in a single, concise phrase that encapsulates the essence of the relationship among the items. Aim for clarity, brevity, and relevance, ensuring that your response reflects a thoughtful understanding of how these terms are interrelated, while also considering creative interpretations or connections that may not be immediately apparent. Provide the output in a straightforward manner to facilitate comprehension, avoiding excessive elaboration."
+  },
+  "ii/cause_and_effect": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7618550062179565,
+      "final_metric": 0.77042189011207
+    },
+    "prompt": ""
+  },
+  "ii/diff": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.25,
+      "final_metric": 1.0
+    },
+    "prompt": "Given two integers, the first representing a total value and the second representing a deduction amount, return the result of subtracting the deduction from the total value. Ensure that the result is non-negative by returning 0 if the deduction exceeds the total value. For example, if the input is '20 3', output '17'; if the input is '5 10', output '0'. The objective is to accurately compute the remaining balance based on these inputs."
+  },
+  "ii/first_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6887393414974212,
+      "final_metric": 0.9999998927116394
+    },
+    "prompt": "Given a single, non-empty word as input, return the first letter of that word in lowercase format. Before processing, remove any leading and trailing spaces. If the first character is not an alphabetic letter, skip it and find the next alphabetic character in the sequence. Ensure that only alphabetic characters are considered, disregarding any numbers, punctuation, or special symbols present in the input. The output must be a singular lowercase letter representing the first valid alphabetic character encountered, without any additional text, explanations, or formatting. For example, if the input is \" 123! Hello \", the output should be \"h\". If there are no alphabetic characters, return an empty string. This method guarantees accurate and clear results across various input cases."
+  },
+  "ii/informal_to_formal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.831787645816803,
+      "final_metric": 0.8536758422851562
+    },
+    "prompt": "Rephrase the following sentences to enhance clarity and sophistication, while maintaining their original meaning."
+  },
+  "ii/larger_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8404764175415039,
+      "final_metric": 0.9969788521528244
+    },
+    "prompt": "Given a pair of animal names, determine which animal is generally considered larger or displays greater strength and dominance in its ecological niche based on size, weight, and general perceptions. If both animals are approximately equal in size, select the one that is recognized as a prominent predator or holds a higher trophic level in the food chain. In instances where characteristics such as cultural significance and public appeal are relevant, favor the animal that is more widely celebrated or admired. Moreover, if the animals belong to the same genus or family, choose the specific variety that is distinguished by greater size, physical presence, or ecological role. Please present your answer succinctly as the name of the selected animal, with no additional information included."
+  },
+  "ii/letters_list": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.5931337907910347,
+      "final_metric": 1.0000000685453414
+    },
+    "prompt": "Take a given word and separate each individual letter with a space between them. Ensure to maintain the original order of the letters in the word, and do not add any additional characters or punctuation. Output the spaced letters in a single line format."
+  },
+  "ii/negation": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8868915915489197,
+      "final_metric": 0.9966131895780563
+    },
+    "prompt": "Generate a negated statement for the input sentence provided. The negated statement should convey the opposite meaning of the original statement while maintaining its structure and context. Ensure that the negation is clear and directly contrasts with the claims made in the input sentence. For example, if the input is a positive assertion, the output should be a corresponding negative assertion. Keep the transformation simple and logical, focusing on fundamental oppositions such as \"is\" to \"is not,\" or \"was\" to \"was not.\" Aim for coherence and clarity in the negation."
+  },
+  "ii/num_to_verbal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6081063956022262,
+      "final_metric": 0.9974326223134995
+    },
+    "prompt": "Convert the given whole number, ranging from 1 to 9999, into its English words representation following these detailed guidelines for accuracy and clarity:  \n1. For numbers between 1 and 9999, articulate each segment of the number clearly, using \"thousand\" for values over 1000, \"hundred\" for values from 100 to 999, and use the specific word forms for numbers below 20 (e.g., \"one\", \"fifteen\").  \n2. Use hyphens for composite numbers between 21 and 99 (e.g., \"twenty-one\", \"ninety-five\").  \n3. Implement the conjunction \"and\" when connecting hundreds with tens and units (e.g., \"one hundred and twenty-three\").  \n4. Ensure to separate each element with commas for readability (e.g., \"two thousand, three hundred and forty-five\").  \n5. Maintain consistency by using lowercase letters throughout and avoiding any numeric digits or unnecessary punctuation.  \n6. Special care should be given to rounding cases, such as saying \"one thousand\" instead of \"one thousand and\" for exact multiples. Your goal is to provide a clear and accurate transformation of the number into a well-structured written representation that enhances understanding and is grammatically correct."
+  },
+  "ii/orthography_starts_with": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.6474127501249314,
+      "final_metric": 0.9208928734064102
+    },
+    "prompt": "Given an input sentence accompanied by a specific letter in brackets, extract and return the first relevant word that starts with the letter indicated. Ensure the selected word is significant to the sentence's overall meaning, ideally a noun, verb, or adjective, and maintain its original case. If no suitable word exists that begins with the specified letter, return 'not found' without any additional text. Focus on precision and clarity in your extraction, providing a single word as the output that best captures the essence of the sentence in relation to the given letter. Additionally, ensure that the extraction process adheres to grammatical rules and reflects the context of the sentence appropriately for optimal accuracy. Be ready to process various sentence structures and lengths effectively."
+  },
+  "ii/rhymes": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7881867945194244,
+      "final_metric": 0.8143012255430222
+    },
+    "prompt": "Given a single English word, create a new word that shares a similar ending sound while having a different meaning. The new word should be a valid English word and should ideally maintain the same number of syllables as the original input. Focus on producing a word that is phonetically engaging and distinct yet retains a connection through sound. For example, if the input word is \"bright,\" a possible output could be \"light.\" Ensure to format the output as a single, lowercase word without punctuation or additional characters. Strive for creativity in your word pairing and encourage linguistic exploration. Aim to provide a novel response that surprises and captivates while meeting the phonetic and semantic criteria outlined."
+  },
+  "ii/second_word_letter": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7003979802131652,
+      "final_metric": 0.9355523675680161
+    },
+    "prompt": "Identify the input word and determine the 2nd letter of the word. If the word has fewer than 2 letters, output an empty string. If the word has exactly 2 letters, output the 2nd letter itself. If the word has more than 2 letters, identify if the 2nd letter is a vowel (a, e, i, o, u) or a consonant. If it's a vowel, return the letter as it is; if it's a consonant, return the letter in uppercase. This output should consistently reflect the specified rules based on the input word length and letter characteristics."
+  },
+  "ii/sentiment": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "ii/singular_to_plural": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8897166013717651,
+      "final_metric": 0.9999999523162841
+    },
+    "prompt": "Transform the given singular noun or verb into its correct plural form or third-person singular present tense variation. Ensure to account for regular and irregular patterns in English pluralization and verb conjugation, following standard grammatical rules. Return the modified word without any additional context or explanation. Provide only the new word as output."
+  },
+  "ii/sum": {
+    "error": "list index out of range"
+  },
+  "ii/sentence_similarity": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.617430591583252,
+      "final_metric": 0.7598415702581406
+    },
+    "prompt": "Evaluate the semantic similarity between the two provided sentences using a scale from 0 to 5. A score of 0 indicates that the sentences are completely unrelated, 1 signifies weak similarity with minimal thematic connections, 2 represents moderate similarity with some overlapping themes, 3 indicates a strong relationship with minor differences, 4 suggests almost identical meaning with negligible variations, and 5 denotes that the sentences are virtually identical in meaning. Be sure to consider key aspects such as word choice, context, and overall implications when determining the similarity score. Provide a concise justification for your score, highlighting specific elements within the sentences that influenced your assessment. Aim for clarity and thoroughness in your evaluation to accurately reflect the nuances of the sentences\u2019 meanings."
+  },
+  "ii/synonyms": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8078058898448944,
+      "final_metric": 0.8437689006328583
+    },
+    "prompt": "Given a single word, please provide a synonym that accurately conveys its primary meaning and is broadly recognized across various contexts. The synonym should ideally be a single word that matches the part of speech of the original term, allowing for seamless integration into sentences without altering their meaning. Emphasize clarity and common usage, focusing on terms that encapsulate the essential nuances and connotations of the original word. Your choice should enhance understanding and relevance, making it relatable to diverse audiences while avoiding jargon or overly complex language. Aim for a concise and precise response that serves as an effective alternative for the input term."
+  },
+  "ii/translation_en-de": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7309550404548645,
+      "final_metric": 0.9096855282783508
+    },
+    "prompt": "Translate the specified English word into its most accurate German equivalent, ensuring that the translation captures the meaning, context, and any relevant nuances or grammatical forms associated with the original term. In cases where the word has multiple possible translations, select the one that is most widely recognized and used in everyday language, reflecting cultural relevance. Present the output as a single German word or term, formatted with the correct capitalization, and avoid any additional commentary or examples to maintain clarity and focus on the translation task."
+  },
+  "ii/taxonomy_animal": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9035226315259933,
+      "final_metric": 0.9593459218740463
+    },
+    "prompt": "Identify and list the names of animals from the provided input, ensuring that the output contains only the unique animal names present in the given list. Prioritize retaining a maximum of four names, while selecting those that are most distinct or recognizable as animals, without regard to order. Exclude any non-animal items from your final output. Additionally, if there are any items that could be considered both as animals and non-animals, prioritize the version that aligns best with the common understanding of animals."
+  },
+  "ii/translation_en-fr": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8079087406396865,
+      "final_metric": 0.9667916476726532
+    },
+    "prompt": "Translate the given English word into its corresponding French translation, ensuring to consider context and usage when selecting the correct term. If there are multiple meanings or variations, choose the most commonly used one based on modern usage. Provide only the translated word as output, without any additional explanation or commentary."
+  },
+  "ii/translation_en-es": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8182866960763931,
+      "final_metric": 0.9435442239046097
+    },
+    "prompt": "Translate the following English words into their Spanish equivalents, ensuring accuracy and contextual relevance. Provide a clear and direct translation for each word. If a word has multiple meanings, choose the most common or applicable translation in the context of everyday usage."
+  },
+  "ii/word_in_context": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7268886685371398,
+      "final_metric": 0.9359485536813736
+    },
+    "prompt": "Given two sentences and a specific word, determine whether the usage of that word in both sentences conveys a similar meaning or context. If the meaning or context of the word in both sentences aligns closely, respond with \"same\". If they express different meanings or contexts, respond with \"not the same\". Be vigilant to consider various meanings of the word in its different usages throughout the sentences. Provide clear, concise, and accurate assessments based on the context of the sentences provided."
+  },
+  "cf/arithmetic_base8": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.9,
+      "final_metric": 0.95
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-8 where the digits are 01234567, compute the sum of the following two numbers."
+  },
+  "cf/arithmetic_base10": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Given two integers separated by a plus sign, perform the addition and output the result as a single integer. Ensure that the output is correct and clearly formatted. For example, if the input is \"75+84\", process the input to calculate 75 plus 84, and return the output as \"159\". Make sure to handle only valid input in the specified format."
+  },
+  "cf/arithmetic_base9": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-9 where the digits are 012345678, compute the sum of the following two numbers."
+  },
+  "cf/arithmetic_base11": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 1.0000001460313797,
+      "final_metric": 1.0000001460313797
+    },
+    "prompt": "As a skilled computational assistant, you are tasked with performing arithmetic in base-16 (hexadecimal) format. For the given two numbers written in hexadecimal, please calculate their sum and present the result in hexadecimal format. Ensure that you interpret any characters from 'A' to 'F' as values 10 to 15 respectively, and provide your answer without any leading zeros. Here are the numbers to sum: {insert your specific numbers here}."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9508994191884994,
+      "final_metric": 0.9563550323247909
+    },
+    "prompt": "You are a chess adjudicator specializing in evaluating chess openings. Your responsibility is to assess a sequence of moves presented in standard algebraic notation and determine their legality according to the universally accepted rules of chess. Focus specifically on whether each move adheres to the guidelines for piece movement, capturing, and game mechanics, including the rules around checks, checkmates, and illegal positions. If every move in the sequence is permissible under these established rules, respond with \"legal.\" If any move violates these rules, answer with \"illegal.\" Ensure that your evaluation is clear and concise, providing only the single-word response without additional commentary or strategic analysis. Aim for clarity in your judgment based on strict adherence to classic chess rules and the initial position of the pieces."
+  },
+  "cf/syntax_osv": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8079267859458923,
+      "final_metric": 0.8795829117298126
+    },
+    "prompt": "As an advanced language processing system, your primary task is to extract the essential components from the provided sentence. Focus on identifying the key action (verb) and its performer (subject). Both elements should clearly represent the main idea of the sentence. Present your output in a straightforward format: \"subject verb,\" where the subject and verb are single words. Ensure that your selection highlights the most meaningful aspects of the sentence and reflects its core intent. Avoid any extraneous information and strive for clarity and brevity in your response to effectively convey the primary action and actor involved."
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.950899401307106,
+      "final_metric": 0.9399881690740586
+    },
+    "prompt": "You are an expert chess arbiter. Analyze the given sequence of chess moves in the opening. Determine and classify the legality of each move in accordance with the rules of chess. If any move violates chess rules such as piece movement, positions, or check status, respond with \"illegal.\" If all moves adhere to the legal standards of chess, respond with \"legal.\" Provide your answer clearly without additional explanations or justifications."
+  },
+  "cf/syntax_ovs": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7947147101163864,
+      "final_metric": 0.7906990885734558
+    },
+    "prompt": "As a language processing expert, your objective is to accurately extract the two core components of a provided sentence: the main subject and the principal verb representing the action. Identify the subject as the primary entity executing the action and the verb as the main action being described. Present your result in a clear and concise format: \"[Subject] [Verb]\". Ensure that both the subject and the verb are single words, prioritizing clarity and precision while omitting any superfluous details or context. This focused extraction should highlight the fundamental meaning of the sentence, accurately representing the subject's role and the action being performed, to enable efficient understanding of the core message conveyed in the original statement."
+  },
+  "cf/syntax_sov": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8346698135137558,
+      "final_metric": 0.8973845899105072
+    },
+    "prompt": "As a proficient linguistic extractor, your task is to analyze the given sentence and succinctly identify its main subject and the primary action (verb) it performs. Focus on isolating these core elements while disregarding any modifiers, additional clauses, or contextual details that do not contribute to the essential meaning. Present your results in a clear and streamlined format: first, provide the subject as a single word, followed by the verb as a single word. If the sentence does not contain a discernible subject or verb, respond with \"No valid action or subject.\" Strive for clarity, accuracy, and brevity in your extraction to effectively capture the fundamental components of the sentence."
+  },
+  "cf/syntax_svo": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8470803409814834,
+      "final_metric": 0.9142549961805344
+    },
+    "prompt": "As a linguistics expert, your task is to identify the most significant subject and its corresponding action in the provided sentence. Extract the primary noun (or noun phrase) that represents the subject performing the action, followed by the main verb that indicates the action taken. Ensure your output consists of exactly two components: \"subject verb,\" without any additional context or elaboration. Prioritize clarity and precision to capture the essence of the sentence's primary idea in a concise manner, enabling easy comprehension. Remember to use a straightforward structure for your response."
+  },
+  "cf/syntax_vos": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.7885028451681138,
+      "final_metric": 0.8441215068101883
+    },
+    "prompt": "As a language processing expert, your task is to analyze the given sentences and generate concise outputs that encapsulate the main action and the subject performing that action. Focus on extracting the key subject and the primary verb phrase that conveys the essence of the statement. Ensure that your output consists of only two elements: the main subject and the main verb, each separately identified and limited to a single relevant word wherever applicable. Your response should reflect a straightforward and clear understanding of the input text, preserving the fundamental meaning in a distilled format. Aim to create output in the format: 'Main Subject + Main Verb'. For example, if the input is \"The cat sat on the mat,\" your output should be \"cat sat\"."
+  },
+  "cf/syntax_vso": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.8200949430465698,
+      "final_metric": 0.8666378885507584
+    },
+    "prompt": "Your task is to precisely extract the main subject and the primary verb from the provided sentence. Identify the subject as a single word that signifies who is performing the action, and the verb as a single word that succinctly describes the action being undertaken by the subject. Present your output in the structured format: \"subject verb\" with a space separating the two components. Ensure that your extraction maintains clarity, grammatical accuracy, and coherence, effectively reflecting the essence of the original sentence. The relationships between the subject and verb should be evident. This guideline should be applied uniformly across different sentence types, including declarative, interrogative, and imperative forms, to achieve optimal precision and understanding in your output."
+  }
+}

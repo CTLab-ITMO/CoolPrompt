@@ -1,0 +1,82 @@
+[
+  {
+    "input_data": "I absolutely loved this restaurant. The pasta was cooked to perfection and the service was outstanding. Will definitely come back!",
+    "target": "Label: Positive\nReason: The reviewer expresses strong enthusiasm through words like \"loved\" and \"outstanding\" while explicitly stating intent to return."
+  },
+  {
+    "input_data": "The hotel room was dirty and the staff were unhelpful when I complained. Worst experience I've had in years.",
+    "target": "Label: Negative\nReason: The reviewer describes specific negative experiences including cleanliness issues and poor service, characterizing it as their worst experience in years."
+  },
+  {
+    "input_data": "The phone works fine for basic tasks but the camera quality is disappointing compared to competitors at the same price point.",
+    "target": "Label: Negative\nReason: While acknowledging adequate basic functionality, the reviewer's overall assessment is negative due to the camera falling short of competitor expectations at the same price."
+  },
+  {
+    "input_data": "Ordered a medium-sized jacket and it fit exactly as expected. Decent quality for the price, nothing special but no complaints.",
+    "target": "Label: Neutral\nReason: The reviewer describes a satisfactory but unremarkable experience with phrases like \"nothing special but no complaints\" indicating neither enthusiasm nor dissatisfaction."
+  },
+  {
+    "input_data": "This book changed my perspective on life. Beautifully written with profound insights that stayed with me long after finishing it.",
+    "target": "Label: Positive\nReason: The reviewer attributes a transformative personal impact to the book and praises both the writing quality and intellectual depth with strongly positive language."
+  },
+  {
+    "input_data": "The delivery took three weeks instead of the promised five days. When the product finally arrived, the packaging was damaged.",
+    "target": "Label: Negative\nReason: The reviewer reports two distinct failures in delivery timing and packaging condition, both falling significantly short of expectations."
+  },
+  {
+    "input_data": "Average coffee shop. The espresso was okay and prices are reasonable. Nothing that would make me go out of my way to visit again.",
+    "target": "Label: Neutral\nReason: The reviewer uses consistently moderate language like \"average\" and \"okay\" and explicitly indicates no strong motivation to revisit, suggesting indifference rather than positive or negative sentiment."
+  },
+  {
+    "input_data": "I've been using this software for two years and it keeps getting better with each update. The developer team clearly listens to user feedback.",
+    "target": "Label: Positive\nReason: The reviewer expresses sustained satisfaction over two years and praises the continuous improvement and developer responsiveness."
+  },
+  {
+    "input_data": "The movie had stunning visual effects but the plot was predictable and the dialogue felt forced. A mixed bag overall.",
+    "target": "Label: Neutral\nReason: The reviewer explicitly acknowledges both strengths in visual effects and weaknesses in plot and dialogue, summarizing the experience as a mixed result."
+  },
+  {
+    "input_data": "Terrible customer support. I was put on hold for 45 minutes only to be transferred to someone who couldn't help either.",
+    "target": "Label: Negative\nReason: The reviewer describes a frustrating customer service interaction characterized by excessive wait time and ultimate failure to resolve the issue."
+  },
+  {
+    "input_data": "This gym has everything I need. Great equipment, clean facilities, and the membership price is very competitive.",
+    "target": "Label: Positive\nReason: The reviewer praises multiple specific aspects including equipment quality, cleanliness, and pricing, indicating comprehensive satisfaction."
+  },
+  {
+    "input_data": "The course covers the basics adequately but doesn't go deep enough for anyone with prior experience in the field.",
+    "target": "Label: Neutral\nReason: The reviewer acknowledges adequate basic coverage while noting limitations for experienced learners, presenting a balanced assessment without strong positive or negative emotion."
+  },
+  {
+    "input_data": "Do not buy this product. It broke within a week of purchase and the company refused to honor the warranty.",
+    "target": "Label: Negative\nReason: The reviewer explicitly warns others against purchasing due to immediate product failure and refusal of warranty service."
+  },
+  {
+    "input_data": "The concert exceeded all expectations. The sound quality was incredible and the band played for over three hours with amazing energy.",
+    "target": "Label: Positive\nReason: The reviewer states that expectations were exceeded and highlights specific positive elements including sound quality, duration, and performer energy."
+  },
+  {
+    "input_data": "It's a standard office chair. Does the job but nothing about the comfort or build quality stands out. You get what you pay for.",
+    "target": "Label: Neutral\nReason: The reviewer describes the product as meeting basic functional requirements without any distinguishing positive or negative characteristics."
+  },
+  {
+    "input_data": "The app crashes constantly on my device and the latest update made it even worse. Uninstalling immediately.",
+    "target": "Label: Negative\nReason: The reviewer reports persistent technical failures that worsened with updates, leading to the decisive action of uninstalling the application."
+  },
+  {
+    "input_data": "Exceptional craftsmanship on this handmade leather bag. Every stitch is perfect and the leather has aged beautifully over six months of daily use.",
+    "target": "Label: Positive\nReason: The reviewer praises the craftsmanship quality with specific details about stitching and material aging, demonstrating sustained satisfaction over extended use."
+  },
+  {
+    "input_data": "The restaurant has a nice atmosphere but the food takes too long to arrive and portions are smaller than expected for the price.",
+    "target": "Label: Negative\nReason: Despite acknowledging a pleasant atmosphere, the reviewer identifies significant dissatisfaction with service speed and value for money."
+  },
+  {
+    "input_data": "Standard shipping experience. Package arrived on the expected date in acceptable condition. No issues to report.",
+    "target": "Label: Neutral\nReason: The reviewer describes a routine transaction that met basic expectations without any notable positive or negative aspects."
+  },
+  {
+    "input_data": "This is hands down the best vacuum cleaner I've ever owned. It picks up pet hair effortlessly and the battery lasts the entire house.",
+    "target": "Label: Positive\nReason: The reviewer uses superlative language and identifies specific functional benefits that address their particular needs, expressing strong enthusiasm."
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.940698676109314,
+      "final_metric": 0.947287712097168
+    },
+    "prompt": "Analyze the scenario carefully and determine the causal relationships present. Focus on the specific actions taken by each individual and the consequences that followed. Provide a clear, concise answer based on logical reasoning about causation, indicating whether the individual being questioned is directly responsible for the outcome or not. Ensure to consider the intent and knowledge of the individuals involved while deducing your answer."
+  },
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9917817729711532,
+      "final_metric": 0.9979453158378601
+    },
+    "prompt": "Analyze the given logical expression thoroughly and determine its truth value by evaluating each component step by step, considering the rules of Boolean logic such as negation, conjunction, and disjunction. Be sure to clarify the significance of each logical operator and how they interact with the values provided. Use parentheses to illustrate the order of operations clearly and provide a final, concise answer based on your evaluation."
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9914178401231766,
+      "final_metric": 0.9937032234668731
+    },
+    "prompt": "To solve the provided date-related problem accurately, please follow these steps: 1. Identify the key dates and time frames mentioned in the input. 2. Determine the current date based on the information provided. 3. Apply any relevant date calculations (days earlier or later) as instructed. 4. Format your final answer in the MM/DD/YYYY format. Make sure to double-check your calculations for accuracy before presenting the final date."
+  },
+  "cf/arithmetic_base9": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.85,
+      "final_metric": 0.95
+    },
+    "prompt": "As a talented mathematician, your task is to compute the sum of the two integers presented below in the base-9 numeral system. Treat the digits as valid only within the range of 0 to 8, and perform the addition in accordance with base-9 rules. Provide the final result as a single integer in base-9 notation. Note that the input will follow the format \"A+B\", where A and B are both numbers that could include digits from 0 to 8. Here's the addition problem to solve: [Insert Input Here]."
+  },
+  "cf/arithmetic_base10": {
+    "error": "list index out of range"
+  }
+}

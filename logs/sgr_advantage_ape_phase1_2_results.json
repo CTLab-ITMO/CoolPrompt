@@ -1,0 +1,107 @@
+{
+  "bbh/causal_judgement": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9275206041336059,
+      "final_metric": 0.9275206041336059
+    },
+    "prompt": "Let\u2019s tackle this systematically, addressing each step individually."
+  },
+  "bbh/boolean_expressions": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9926493811607361,
+      "final_metric": 0.9905948615074158
+    },
+    "prompt": "Let\u2019s analyze it step by step."
+  },
+  "bbh/data_understanding_generative": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.990067725777626,
+      "final_metric": 0.9918613713979721
+    },
+    "prompt": "Let's analyze this methodically, one step at a time."
+  },
+  "cf/arithmetic_base9": {
+    "error": "list index out of range"
+  },
+  "cf/arithmetic_base10": {
+    "error": "list index out of range"
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.983527410030365,
+      "final_metric": 0.986821928024292
+    },
+    "prompt": "Let's analyze this in a gradual, stepwise manner."
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.995174664258957,
+      "final_metric": 1.0000001460313797
+    },
+    "prompt": "You are a mathematician. Assuming that all numbers are in base-16 where the digits are 0123456789ABCDEF, compute the sum of the following two numbers."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9781775534152984,
+      "final_metric": 0.9618106633424759
+    },
+    "prompt": "You are a player participating in a chess game that follows a modified rule where the positions of knights and bishops have been swapped. In this arrangement, knights occupy the squares that are usually designated for bishops, while bishops take the places normally held by knights. Your objective is to evaluate a specified chess opening for its legality. The focus is not on whether the opening is strategically viable. If every move adheres to the rules of chess, indicate your assessment by replying with \"legal\"; if any move violates the established chess regulations, respond with \"illegal.\""
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9290769428014756,
+      "final_metric": 0.9508994668722153
+    },
+    "prompt": "You are tasked with analyzing a chess opening. Assess whether the given sequence of moves is permissible according to the rules of chess. The evaluation does not require the opening to be strategically sound. Provide the response \"legal\" if every move adheres to the rules, and respond with \"illegal\" if any rule is broken in the opening."
+  },
+  "math/multiarith": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "custom/constrained_summarization": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 1.0,
+      "final_metric": 0.96
+    },
+    "prompt": "Summarize the following text."
+  },
+  "custom/structured_extraction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.44000000000000006,
+      "final_metric": 0.48
+    },
+    "prompt": "Find and extract the various entities contained within the following text."
+  },
+  "custom/constrained_creative": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.36,
+      "final_metric": 0.36
+    },
+    "prompt": "Create a brief reply addressing the topic outlined below."
+  },
+  "custom/classification_explanation": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.9,
+      "final_metric": 0.86
+    },
+    "prompt": "Classify the sentiment of the following review."
+  },
+  "custom/multi_step_instruction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.4,
+      "final_metric": 0.4
+    },
+    "prompt": "Provide a response to the question below."
+  }
+}
