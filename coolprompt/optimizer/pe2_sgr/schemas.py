@@ -1,9 +1,10 @@
-"""Pydantic schemas for PE2+SGR v2 structured reasoning.
+"""Pydantic schemas for PE2+SGR v3 structured reasoning.
 
-Phase 1 produces a structured diagnosis (LightDiagnosis or
-FullDiagnosis depending on current performance).  Phase 2
-uses the diagnosis to generate an improved prompt via
-free-form text — no structured output constraints.
+Above the score threshold, Phase 1 produces a structured
+FullDiagnosis with strategy override.  Below the threshold,
+Phase 1 uses free-form reasoning (no structured output).
+Phase 2 always generates the improved prompt via free-form
+text.
 """
 
 from enum import Enum
@@ -140,19 +141,6 @@ class RewriteStrategy(BaseModel):
             "The single most important thing to change"
         )
     )
-
-
-class LightDiagnosis(BaseModel):
-    """Phase 1 schema when best_val_score < threshold.
-
-    Skips per-example analysis, focuses on global
-    patterns.  Used when task is far from solved and
-    needs radical exploration.
-    """
-
-    pattern_synthesis: PatternSynthesis
-    prompt_analysis: PromptAnalysis
-    rewrite_strategy: RewriteStrategy
 
 
 class FullDiagnosis(BaseModel):

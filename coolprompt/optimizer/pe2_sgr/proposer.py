@@ -1,13 +1,16 @@
-"""PE2+SGR v2 proposer: two-phase structured reasoning.
+"""PE2+SGR v3 proposer: dual-path structured reasoning.
 
-Phase 1 — structured diagnosis via constrained decoding.
-Phase 2 — free-form prompt generation informed by the
-diagnosis.
+Below score threshold: free-form reasoning (no structured
+output) with always-reimagine generation.
+
+Above score threshold: structured FullDiagnosis with
+strategy override from severity/homogeneity signals,
+then free-form generation.
 """
 
 import json
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 from langchain_core.language_models.base import (
     BaseLanguageModel,
@@ -15,13 +18,7 @@ from langchain_core.language_models.base import (
 
 from coolprompt.optimizer.pe2.node import Node
 from coolprompt.optimizer.pe2_sgr.schemas import (
-    EditDecision,
-    ErrorAnalysis,
     FullDiagnosis,
-    LightDiagnosis,
-    PatternSynthesis,
-    PromptAnalysis,
-    RewriteStrategy,
 )
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.parsing import (
@@ -29,11 +26,11 @@ from coolprompt.utils.parsing import (
     get_model_answer_extracted,
 )
 from coolprompt.utils.prompt_templates.pe2_sgr_templates import (
+    PE2_SGR_FREEFORM_DIAGNOSIS_TEMPLATE,
     PE2_SGR_FULL_DIAGNOSIS_TEMPLATE,
     PE2_SGR_GEN_INCREMENTAL,
     PE2_SGR_GEN_REIMAGINE,
     PE2_SGR_GEN_STRUCTURAL,
-    PE2_SGR_LIGHT_DIAGNOSIS_TEMPLATE,
 )
 
 _GEN_TEMPLATES = {
@@ -44,8 +41,8 @@ _GEN_TEMPLATES = {
 
 
 class SGRProposer:
-    """Two-phase proposer: structured diagnosis then
-    free-form generation.
+    """Dual-path proposer: free-form exploration below
+    threshold, structured precision above threshold.
 
     Args:
         model (BaseLanguageModel): LLM that supports
@@ -55,9 +52,10 @@ class SGRProposer:
         log_path (str | Path | None): Optional path to a
             JSONL file for persisting diagnoses.
         score_threshold (float): Best validation score
-            below which LightDiagnosis is used (exploration
-            mode).  At or above this threshold,
-            FullDiagnosis is used (precision mode).
+            below which free-form reasoning is used
+            (exploration mode).  At or above this
+            threshold, structured FullDiagnosis with
+            strategy override is used (precision mode).
     """
 
     def __init__(
@@ -65,7 +63,7 @@ class SGRProposer:
         model: BaseLanguageModel,
         prompt_max_tokens: int = 300,
         log_path: Optional[str | Path] = None,
-        score_threshold: float = 0.5,
+        score_threshold: float = 0.8,
     ) -> None:
         self.model = model
         self.prompt_max_tokens = prompt_max_tokens
@@ -86,7 +84,7 @@ class SGRProposer:
         batch_size: int,
         best_val_score: float = 0.0,
     ) -> tuple[str, str]:
-        """Proposes a refined prompt via two-phase reasoning.
+        """Proposes a refined prompt via dual-path reasoning.
 
         Args:
             node (Node): Current beam node being refined.
@@ -94,28 +92,137 @@ class SGRProposer:
             full_template (str): The full prompt template.
             batch_size (int): Number of failure examples.
             best_val_score (float): Best validation score
-                among current beam candidates.  Controls
-                whether light or full diagnosis is used.
+                among current beam candidates.
 
         Returns:
             tuple[str, str]: (new_prompt, reasoning).
         """
-        # Phase 1: structured diagnosis
-        diagnosis = self._diagnose(
-            node=node,
-            examples_str=examples_str,
+        if best_val_score < self.score_threshold:
+            return self._freeform_path(
+                node, examples_str,
+                full_template, batch_size,
+                best_val_score,
+            )
+        else:
+            return self._structured_path(
+                node, examples_str,
+                full_template, batch_size,
+                best_val_score,
+            )
+
+    # ----------------------------------------------------------
+    # Free-form path (exploration, below threshold)
+    # ----------------------------------------------------------
+
+    def _freeform_path(
+        self,
+        node: Node,
+        examples_str: str,
+        full_template: str,
+        batch_size: int,
+        best_val_score: float,
+    ) -> tuple[str, str]:
+        """Free-form reasoning → always reimagine."""
+        logger.debug(
+            "SGR free-form path "
+            f"(best_val={best_val_score:.4f} "
+            f"< {self.score_threshold})"
+        )
+
+        # Phase 1: free-form reasoning
+        reasoning = self._freeform_diagnose(
+            node, examples_str,
+            full_template, batch_size,
+        )
+
+        # Phase 2: always reimagine
+        logger.debug(
+            "SGR Phase 2 strategy: complete_reimagine "
+            "(free-form path)"
+        )
+        gen_prompt = PE2_SGR_GEN_REIMAGINE.format(
+            prompt=node.prompt,
+            formatted_diagnosis=reasoning,
+            max_tokens=self.prompt_max_tokens,
+        )
+        result = get_model_answer_extracted(
+            self.model, gen_prompt
+        )
+        new_prompt = extract_answer(
+            result,
+            ("<prompt>", "</prompt>"),
+            format_mismatch_label=node.prompt,
+        )
+
+        return new_prompt.strip(), reasoning[:200]
+
+    def _freeform_diagnose(
+        self,
+        node: Node,
+        examples_str: str,
+        full_template: str,
+        batch_size: int,
+    ) -> str:
+        """Free-form Phase 1: enhanced PE2-style reasoning."""
+        prompt = PE2_SGR_FREEFORM_DIAGNOSIS_TEMPLATE.format(
+            prompt=node.prompt,
             full_template=full_template,
             batch_size=batch_size,
-            best_val_score=best_val_score,
+            examples=examples_str,
         )
+        return get_model_answer_extracted(
+            self.model, prompt
+        )
+
+    # ----------------------------------------------------------
+    # Structured path (precision, above threshold)
+    # ----------------------------------------------------------
+
+    def _structured_path(
+        self,
+        node: Node,
+        examples_str: str,
+        full_template: str,
+        batch_size: int,
+        best_val_score: float,
+    ) -> tuple[str, str]:
+        """Structured diagnosis → strategy override → gen."""
+        logger.debug(
+            "SGR structured path "
+            f"(best_val={best_val_score:.4f} "
+            f">= {self.score_threshold})"
+        )
+
+        # Phase 1: structured diagnosis
+        diagnosis = self._structured_diagnose(
+            node, examples_str,
+            full_template, batch_size,
+        )
+
+        # Override strategy from signals
+        strategy = self._override_strategy(diagnosis)
+        formatted = self._format_diagnosis(diagnosis)
 
         # Phase 2: free-form generation
-        new_prompt = self._generate(
-            node=node,
-            diagnosis=diagnosis,
+        logger.debug(
+            f"SGR Phase 2 strategy: {strategy}"
+        )
+        gen_template = _GEN_TEMPLATES[strategy]
+        gen_prompt = gen_template.format(
+            prompt=node.prompt,
+            formatted_diagnosis=formatted,
+            max_tokens=self.prompt_max_tokens,
+        )
+        result = get_model_answer_extracted(
+            self.model, gen_prompt
+        )
+        new_prompt = extract_answer(
+            result,
+            ("<prompt>", "</prompt>"),
+            format_mismatch_label=node.prompt,
         )
 
-        self._log_result(diagnosis)
+        self._log_result(diagnosis, strategy)
         self._save_jsonl(diagnosis)
 
         reasoning = (
@@ -123,82 +230,62 @@ class SGRProposer:
         )
         return new_prompt.strip(), reasoning
 
-    # ----------------------------------------------------------
-    # Phase 1 — Structured diagnosis
-    # ----------------------------------------------------------
-
-    def _diagnose(
+    def _structured_diagnose(
         self,
         node: Node,
         examples_str: str,
         full_template: str,
         batch_size: int,
-        best_val_score: float,
-    ) -> Union[LightDiagnosis, FullDiagnosis]:
-        """Runs Phase 1: structured diagnosis."""
-        if best_val_score < self.score_threshold:
-            schema = LightDiagnosis
-            template = PE2_SGR_LIGHT_DIAGNOSIS_TEMPLATE
-            logger.debug(
-                "SGR using LightDiagnosis "
-                f"(best_val={best_val_score:.4f} "
-                f"< {self.score_threshold})"
-            )
-        else:
-            schema = FullDiagnosis
-            template = PE2_SGR_FULL_DIAGNOSIS_TEMPLATE
-            logger.debug(
-                "SGR using FullDiagnosis "
-                f"(best_val={best_val_score:.4f} "
-                f">= {self.score_threshold})"
-            )
-
-        prompt = template.format(
+    ) -> FullDiagnosis:
+        """Structured Phase 1: FullDiagnosis."""
+        prompt = PE2_SGR_FULL_DIAGNOSIS_TEMPLATE.format(
             prompt=node.prompt,
             full_template=full_template,
             batch_size=batch_size,
             examples=examples_str,
         )
-
         structured_model = self.model.with_structured_output(
-            schema,
+            FullDiagnosis,
         )
         return structured_model.invoke(prompt)
 
     # ----------------------------------------------------------
-    # Phase 2 — Free-form generation
+    # Strategy override (Fix 1)
     # ----------------------------------------------------------
 
-    def _generate(
-        self,
-        node: Node,
-        diagnosis: Union[LightDiagnosis, FullDiagnosis],
+    @staticmethod
+    def _override_strategy(
+        diagnosis: FullDiagnosis,
     ) -> str:
-        """Runs Phase 2: free-form prompt generation."""
-        strategy = diagnosis.rewrite_strategy.approach
-        gen_template = _GEN_TEMPLATES[strategy]
-        formatted = self._format_diagnosis(diagnosis)
+        """Overrides model's strategy choice based on its
+        own severity + homogeneity signals.
 
-        logger.debug(
-            f"SGR Phase 2 strategy: {strategy}"
-        )
+        Fixes the conservatism bias where the model
+        correctly diagnoses fundamental problems but
+        conservatively picks incremental strategies.
+        """
+        sev = diagnosis.pattern_synthesis.pattern_severity
+        hom = diagnosis.pattern_synthesis.error_homogeneity
+        original = diagnosis.rewrite_strategy.approach
 
-        gen_prompt = gen_template.format(
-            prompt=node.prompt,
-            formatted_diagnosis=formatted,
-            max_tokens=self.prompt_max_tokens,
-        )
+        if sev == "fundamental" and hom == "high":
+            forced = "complete_reimagine"
+        elif sev == "fundamental" and hom == "medium":
+            forced = "structural_rewrite"
+        elif sev == "structural" and hom == "high":
+            forced = "structural_rewrite"
+        else:
+            forced = original
 
-        result = get_model_answer_extracted(
-            self.model, gen_prompt
-        )
+        if forced != original:
+            logger.debug(
+                f"SGR strategy override: "
+                f"{original} -> {forced} "
+                f"(severity={sev}, "
+                f"homogeneity={hom})"
+            )
 
-        new_prompt = extract_answer(
-            result,
-            ("<prompt>", "</prompt>"),
-            format_mismatch_label=node.prompt,
-        )
-        return new_prompt
+        return forced
 
     # ----------------------------------------------------------
     # Formatting helpers
@@ -206,35 +293,34 @@ class SGRProposer:
 
     @staticmethod
     def _format_diagnosis(
-        diagnosis: Union[LightDiagnosis, FullDiagnosis],
+        diagnosis: FullDiagnosis,
     ) -> str:
-        """Formats a diagnosis object into readable text
+        """Formats a FullDiagnosis into readable text
         for Phase 2 input."""
         parts = []
 
-        # Per-example analyses (FullDiagnosis only)
-        if isinstance(diagnosis, FullDiagnosis):
-            parts.append("### Per-Example Analysis")
-            for i, ea in enumerate(
-                diagnosis.error_analyses, 1
-            ):
-                parts.append(
-                    f"Example {i}: "
-                    f"{ea.root_cause.value} — "
-                    f"{ea.root_cause_explanation}"
-                )
-            parts.append("")
-
-            ed = diagnosis.edit_decision
+        # Per-example analyses
+        parts.append("### Per-Example Analysis")
+        for i, ea in enumerate(
+            diagnosis.error_analyses, 1
+        ):
             parts.append(
-                f"### Edit Decision\n"
-                f"Necessary: {ed.editing_necessary} "
-                f"(confidence: {ed.confidence})\n"
-                f"Justification: {ed.justification}"
+                f"Example {i}: "
+                f"{ea.root_cause.value} — "
+                f"{ea.root_cause_explanation}"
             )
-            parts.append("")
+        parts.append("")
 
-        # Pattern synthesis (always present)
+        ed = diagnosis.edit_decision
+        parts.append(
+            f"### Edit Decision\n"
+            f"Necessary: {ed.editing_necessary} "
+            f"(confidence: {ed.confidence})\n"
+            f"Justification: {ed.justification}"
+        )
+        parts.append("")
+
+        # Pattern synthesis
         ps = diagnosis.pattern_synthesis
         parts.append(
             f"### Cross-Example Pattern\n"
@@ -245,7 +331,7 @@ class SGRProposer:
         )
         parts.append("")
 
-        # Prompt analysis (always present)
+        # Prompt analysis
         pa = diagnosis.prompt_analysis
         parts.append(
             f"### Prompt Analysis\n"
@@ -264,7 +350,7 @@ class SGRProposer:
             )
         parts.append("")
 
-        # Rewrite strategy (always present)
+        # Rewrite strategy
         rs = diagnosis.rewrite_strategy
         parts.append(
             f"### Strategy: {rs.approach}\n"
@@ -280,7 +366,8 @@ class SGRProposer:
 
     def _log_result(
         self,
-        diagnosis: Union[LightDiagnosis, FullDiagnosis],
+        diagnosis: FullDiagnosis,
+        final_strategy: str,
     ) -> None:
         """Logs diagnosis at DEBUG level."""
         ps = diagnosis.pattern_synthesis
@@ -294,24 +381,24 @@ class SGRProposer:
         rs = diagnosis.rewrite_strategy
         logger.debug(
             f"SGR strategy: "
-            f"approach={rs.approach}, "
+            f"model={rs.approach}, "
+            f"final={final_strategy}, "
             f"key_insight={rs.key_insight!r}"
         )
 
-        if isinstance(diagnosis, FullDiagnosis):
-            for i, ea in enumerate(
-                diagnosis.error_analyses
-            ):
-                logger.debug(
-                    f"SGR error[{i}]: "
-                    f"cause={ea.root_cause.value}, "
-                    f"explanation="
-                    f"{ea.root_cause_explanation!r}"
-                )
+        for i, ea in enumerate(
+            diagnosis.error_analyses
+        ):
+            logger.debug(
+                f"SGR error[{i}]: "
+                f"cause={ea.root_cause.value}, "
+                f"explanation="
+                f"{ea.root_cause_explanation!r}"
+            )
 
     def _save_jsonl(
         self,
-        diagnosis: Union[LightDiagnosis, FullDiagnosis],
+        diagnosis: FullDiagnosis,
     ) -> None:
         """Appends diagnosis as JSON line to log_path."""
         if self.log_path is None:

@@ -1,6 +1,7 @@
-"""PE2+SGR v2 prompt templates.
+"""PE2+SGR v3 prompt templates.
 
-Phase 1 — diagnosis templates (light / full).
+Phase 1 — free-form diagnosis (below threshold) or
+           structured diagnosis (above threshold).
 Phase 2 — generation templates (incremental / structural / reimagine).
 """
 
@@ -8,30 +9,79 @@ Phase 2 — generation templates (incremental / structural / reimagine).
 # Phase 1: Diagnosis templates
 # ------------------------------------------------------------------
 
-PE2_SGR_LIGHT_DIAGNOSIS_TEMPLATE = """\
-You are a prompt engineer analyzing why a prompt is failing.
+PE2_SGR_FREEFORM_DIAGNOSIS_TEMPLATE = """\
+A prompt is a text paragraph that outlines the expected actions \
+and instructs the model to generate a specific output. This \
+prompt is concatenated with the input text, and the model then \
+creates the required output.
 
-Current prompt:
+In our collaboration, we'll work together to refine a prompt. \
+The process consists of two main steps:
+
+## Step 1
+I will provide you with the current prompt, how the prompt is \
+concatenated with the input text (i.e., "full template"), along \
+with {batch_size} example(s) that are associated with this \
+prompt. Each example contains the input, the final answer \
+produced by the model, and the ground-truth label to the input. \
+Your task is to analyze the examples, determining whether the \
+existing prompt is describing the task reflected by these \
+examples precisely, and suggest changes to the prompt.
+
+## Step 2
+Next, you will carefully review your reasoning in step 1, \
+integrate the insights to craft a new, optimized prompt.
+
+## Prompt
 {prompt}
 
-Full template used:
+## Full Template
+This describes how the prompt of interest is concatenated with \
+the input text. The prompt may appear before the input text, or \
+after the input text. Optionally the full template may contain \
+other template information.
+```
 {full_template}
+```
 
-Below are {batch_size} failure examples where the prompt \
-produced incorrect outputs:
-
+## Examples
 {examples}
 
-Analyze the failures as a whole. Focus on the big picture:
-1. What common pattern explains these failures?
-2. How severe is the problem — surface-level, structural, \
-or fundamental?
-3. Does the prompt correctly describe the task? Note any \
-missing or misleading elements.
-4. What strategy should be used to fix it — incremental \
-edits, structural rewrite, or complete reimagination?
-5. What is the single most important insight for \
-improvement?"""
+## Instructions
+For some of these examples, the output does not match with the \
+label. This may be due to the prompt being misleading or not \
+describing the task precisely.
+
+Please examine the example(s) carefully. Note that the \
+ground-truth labels are __absolutely correct__, but the prompts \
+(task descriptions) may be incorrect and need modification.
+
+As you analyze, pay special attention to:
+1. What common pattern explains ALL these failures?
+2. Is the problem surface-level (formatting), structural \
+(missing key instructions), or fundamental (entire approach \
+is wrong)?
+3. Are the errors homogeneous (all same root cause) or diverse?
+4. If the entire prompt approach seems wrong, consider what a \
+completely different prompt would look like.
+
+For each example, provide reasoning according to the following \
+template:
+
+### Example <id>
+Input: <input>
+Output: <output>
+Label: <label>
+Is the output correct compared to the label: \
+<yes or no, and your reasoning>
+Is the output correctly following the given prompt: \
+<yes or no, and your reasoning>
+Is the prompt correctly describing the task shown by the \
+input-label pair: <yes or no, and your reasoning>
+To output the correct label, is it necessary to edit the \
+prompt: <yes or no, and your reasoning>
+If yes, provide detailed analysis and actionable suggestions \
+to edit the prompt: <analysis and suggestions>"""
 
 
 PE2_SGR_FULL_DIAGNOSIS_TEMPLATE = """\
