@@ -1,11 +1,10 @@
-"""PE2+SGR v3 proposer: dual-path structured reasoning.
+"""PE2+SGR v4 proposer: adaptive free-form → structured.
 
-Below score threshold: free-form reasoning (no structured
-output) with always-reimagine generation.
-
-Above score threshold: structured FullDiagnosis with
-strategy override from severity/homogeneity signals,
-then free-form generation.
+Always starts with free-form reasoning for radical
+exploration.  Tracks improvement between beam search
+steps.  When improvement slows below ``min_improvement``,
+locks into structured SGR for precision refinement.
+One-way switch per task.
 """
 
 import json
@@ -41,8 +40,8 @@ _GEN_TEMPLATES = {
 
 
 class SGRProposer:
-    """Dual-path proposer: free-form exploration below
-    threshold, structured precision above threshold.
+    """Adaptive proposer: starts free-form, switches to
+    structured SGR when improvement slows.
 
     Args:
         model (BaseLanguageModel): LLM that supports
@@ -51,11 +50,10 @@ class SGRProposer:
             for the new prompt.
         log_path (str | Path | None): Optional path to a
             JSONL file for persisting diagnoses.
-        score_threshold (float): Best validation score
-            below which free-form reasoning is used
-            (exploration mode).  At or above this
-            threshold, structured FullDiagnosis with
-            strategy override is used (precision mode).
+        min_improvement (float): Minimum improvement in
+            best_val_score between beam steps to stay
+            in free-form mode.  Below this threshold
+            the proposer locks into structured SGR.
     """
 
     def __init__(
@@ -63,14 +61,16 @@ class SGRProposer:
         model: BaseLanguageModel,
         prompt_max_tokens: int = 300,
         log_path: Optional[str | Path] = None,
-        score_threshold: float = 0.8,
+        min_improvement: float = 0.02,
     ) -> None:
         self.model = model
         self.prompt_max_tokens = prompt_max_tokens
         self.log_path = (
             Path(log_path) if log_path else None
         )
-        self.score_threshold = score_threshold
+        self.min_improvement = min_improvement
+        self._prev_best: Optional[float] = None
+        self._locked_structured: bool = False
 
     # ----------------------------------------------------------
     # Public API
@@ -97,14 +97,37 @@ class SGRProposer:
         Returns:
             tuple[str, str]: (new_prompt, reasoning).
         """
-        if best_val_score < self.score_threshold:
-            return self._freeform_path(
+        # Detect step transition and check improvement
+        if self._prev_best is not None:
+            if best_val_score != self._prev_best:
+                delta = best_val_score - self._prev_best
+                if (
+                    delta < self.min_improvement
+                    and not self._locked_structured
+                ):
+                    logger.debug(
+                        "SGR switching to structured "
+                        f"(improvement {delta:.4f} "
+                        f"< {self.min_improvement})"
+                    )
+                    self._locked_structured = True
+
+        # Update tracking on step transitions
+        if (
+            self._prev_best is None
+            or best_val_score != self._prev_best
+        ):
+            self._prev_best = best_val_score
+
+        # Route
+        if self._locked_structured:
+            return self._structured_path(
                 node, examples_str,
                 full_template, batch_size,
                 best_val_score,
             )
         else:
-            return self._structured_path(
+            return self._freeform_path(
                 node, examples_str,
                 full_template, batch_size,
                 best_val_score,
@@ -126,7 +149,7 @@ class SGRProposer:
         logger.debug(
             "SGR free-form path "
             f"(best_val={best_val_score:.4f} "
-            f"< {self.score_threshold})"
+            f"< {self.min_improvement})"
         )
 
         # Phase 1: free-form reasoning
@@ -190,7 +213,7 @@ class SGRProposer:
         logger.debug(
             "SGR structured path "
             f"(best_val={best_val_score:.4f} "
-            f">= {self.score_threshold})"
+            f">= {self.min_improvement})"
         )
 
         # Phase 1: structured diagnosis
