@@ -33,5 +33,75 @@
   },
   "cf/arithmetic_base10": {
     "error": "list index out of range"
+  },
+  "cf/arithmetic_base16": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 1.0000001460313797,
+      "final_metric": 1.0000001460313797
+    },
+    "prompt": "As a hexadecimal calculator, your task is to perform addition on two hexadecimal numbers provided in the format 'X+Y'. Each number consists of digits from 0 to 9 and letters from A to F (representing the values 10 to 15). After calculating the sum of these two hexadecimal values, please return the result in uppercase hexadecimal format. Ensure that you correctly handle any possible overflow that may result from the addition. For example, if the input is 'A3+2C', you would be expected to output 'CF'. Now, please calculate the sum for the following input and return the answer:"
+  },
+  "bbh/navigate": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9818801510334015,
+      "final_metric": 0.986821928024292
+    },
+    "prompt": "Let's think step by step."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9672662645578385,
+      "final_metric": 0.9727218866348266
+    },
+    "prompt": "You are a professional chess referee analyzing an unconventional chess variant. In this variant, the starting positions of the knights and bishops have been exchanged, meaning each player's knights are placed on the squares typically occupied by the bishops, and vice versa. Carefully examine the provided sequence of moves presented in standard algebraic notation to determine their legality according to the specific rules of this variant. A move is deemed legal if it adheres to the movement capabilities of each piece as defined in chess, does not place a player's king in check, and does not create an impossible position. Respond with \"legal\" if all moves in the sequence conform to these regulations; otherwise, respond with \"illegal.\" Ensure that your assessment is clear and concise, providing only the legality result without additional commentary or analysis."
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.950899401307106,
+      "final_metric": 0.9345325529575348
+    },
+    "prompt": "You are a highly knowledgeable chess adjudicator. Your task is to precisely evaluate a sequence of chess moves presented in standard algebraic notation. Analyze each move carefully according to the established rules of chess, considering factors such as piece movement capabilities, legal captures, and scenarios that would place a king in check. Respond with \"legal\" if every move in the sequence conforms to the rules and is executed properly; respond with \"illegal\" if any move contradicts chess regulations, including illegal movements or captures. Your response should be direct and unambiguous, simply stating \"legal\" or \"illegal\" without any further elaboration or commentary."
+  },
+  "math/multiarith": {
+    "error": "list index out of range"
+  },
+  "custom/structured_extraction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.5,
+      "final_metric": 0.8400000000000001
+    },
+    "prompt": "Carefully identify and extract the essential details from the following text. Specifically, extract the individual's name, the location where the event occurred, and the date of the event. Format your output clearly and concisely as follows: Name: [Name], Location: [Location], Date: [Date]. Ensure high accuracy in your extraction, paying close attention to all text elements that contribute to the context of the individual, their role, and the event's significance."
+  },
+  "custom/constrained_summarization": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.96,
+      "final_metric": 0.9800000000000001
+    },
+    "prompt": "Generate a clear and concise summary of the provided text, focusing on the most important points, findings, and implications. Your summary should capture key details such as names, dates, and statistics, while ensuring coherence and clarity. Aim to create a well-structured response that reflects the essence of the original content in 2-4 sentences, avoiding unnecessary elaboration or extraneous information."
+  },
+  "custom/constrained_creative": {
+    "error": "Error code: 400 - {'error': {'message': \"We could not parse the JSON body of your request. (HINT: This likely means you aren't using your HTTP library correctly. The OpenAI API expects a JSON payload, but what was sent was not valid JSON. If you have trouble figuring out how to fix this, please contact us through our help center at help.openai.com.)\", 'type': 'invalid_request_error', 'param': None, 'code': None}}"
+  },
+  "custom/classification_explanation": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.9400000000000001,
+      "final_metric": 0.96
+    },
+    "prompt": "Analyze the following review and determine its overall sentiment as Positive, Negative, or Neutral. Provide a brief explanation for your classification that highlights key points in the review which support your sentiment choice."
+  },
+  "custom/multi_step_instruction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.44000000000000006,
+      "final_metric": 0.9800000000000001
+    },
+    "prompt": "Compose a comprehensive and persuasive answer to the following question, presenting a coherent argument supported by four well-researched points that each incorporate relevant data, examples, or expert opinions. Start with a clear thesis statement that directly addresses the question. As you develop each supporting point, ensure it logically flows from the previous one and explicitly considers potential counterarguments to strengthen your position. Conclude with a succinct summary that reinforces your main argument while also highlighting the broader implications of your stance. Aim for clarity, coherence, and an engaging tone throughout, using headings for organization and maintaining an academic style suitable for a scholarly audience."
   }
 }

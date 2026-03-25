@@ -54,5 +54,69 @@
       "final_metric": 1.0000001460313797
     },
     "prompt": "You are a mathematician. Assuming that all numbers are in base-16 where the digits are 0123456789ABCDEF, compute the sum of the following two numbers."
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.950899413228035,
+      "final_metric": 0.9508994191884994
+    },
+    "prompt": "You are a chess player. You are playing a chess variant where the starting positions for knights and bishops are swapped. For each color, the knights are placed in the positions that bishops used to occupy and the bishops are now placed in the positions of the knights. Given an opening, carefully evaluate each move to determine whether the overall opening is legal or illegal, based on the adapted position of the pieces. Remember that moves must comply with standard chess movement rules for the respective pieces, including how knights and bishops move from their new starting positions. Answer 'legal' if all moves made in the opening are legal. Answer 'illegal' if any move violates the rules of chess. Be diligent and thorough in your analysis for accuracy in the legality assessment."
+  },
+  "cf/chess_original": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9399881690740586,
+      "final_metric": 0.9508994042873382
+    },
+    "prompt": "You are a chess player. Given a sequence of opening moves, determine the legality of each move according to chess rules and standard conventions. Answer 'legal' if all moves are legally valid; respond 'illegal' if any move is legally invalid. Additionally, briefly comment on whether the moves conform to common opening strategies; if all moves are legal but unconventional, mention that as well. Assess each move for both legality and adherence to traditional opening principles."
+  },
+  "custom/constrained_summarization": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.9800000000000001,
+      "final_metric": 0.96
+    },
+    "prompt": "Please summarize the following text, capturing the key points and essential information while maintaining clarity and conciseness."
+  },
+  "math/multiarith": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.97,
+      "final_metric": 0.97
+    },
+    "prompt": "Let's think step by step."
+  },
+  "custom/structured_extraction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.48,
+      "final_metric": 0.86
+    },
+    "prompt": "Extract the key entities relevant to the narrative, specifically names, primary locations (excluding specific institutions or qualifiers), and dates, from the provided text. Format the output to match the following label structure: Name: [Name], Location: [Location], Date: [Date]. Ensure the extraction is concise and limited to only these specified entities. Generate the final answer bracketed with &lt;ans&gt; and &lt;/ans&gt;."
+  },
+  "custom/multi_step_instruction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.45999999999999996,
+      "final_metric": 0.74
+    },
+    "prompt": "Formulate a comprehensive analysis in response to the following question. Your response should include a balanced examination of the pros and cons associated with the topic. Additionally, present a clear stance on the issue and support your position with relevant evidence and examples when applicable. Aim for clarity and depth in your analysis to guide the reader through your reasoning."
+  },
+  "custom/classification_explanation": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.96,
+      "final_metric": 1.0
+    },
+    "prompt": "Classify the sentiment of the following review."
+  },
+  "custom/constrained_creative": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.3,
+      "final_metric": 0.36
+    },
+    "prompt": "Provide a detailed, insightful, and engaging response regarding the following topic, incorporating personal reflections, questions, or calls to action where appropriate to enhance emotional engagement and advocacy."
   }
 }

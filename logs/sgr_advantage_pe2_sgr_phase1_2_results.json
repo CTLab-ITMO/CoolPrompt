@@ -57,5 +57,61 @@
       "final_metric": 0.9345325559377671
     },
     "prompt": "You are a chess player. Given a sequence of chess moves, determine whether each move in the opening conforms to the rules of chess. This includes clarifying illegal moves such as moving into check, illegal piece movements, and capturing rules. If any move is not allowed under the rules, answer 'illegal'. If all moves are legal, respond with 'legal'. Please provide your final answer clearly labeled as <ans>legal</ans> or <ans>illegal</ans> as appropriate based on the moves' legality. INPUT: <input> RESPONSE:"
+  },
+  "cf/chess_cf": {
+    "metric": {
+      "name": "bertscore",
+      "start_score": 0.9454437971115113,
+      "final_metric": 0.950899413228035
+    },
+    "prompt": "You are a chess player. You are playing a chess variant where the starting positions for knights and bishops are swapped. For each color, the knights are placed in positions where bishops used to be and the bishops are now placed where the knights used to be. Given an opening, determine whether the opening is legal according to the variant's rules. The opening doesn't need to be a good opening. Answer \"legal\" if all moves conform to the modified rules for this variant. Answer \"illegal\" if any move violates the unique directions of the chess variant with swapped pieces. Provide examples of legal and illegal moves to clarify expectations for analysis in the context of this variant. INPUT: <input> RESPONSE:"
+  },
+  "custom/constrained_summarization": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.9800000000000001,
+      "final_metric": 1.0
+    },
+    "prompt": "Please summarize the following text in a concise manner. Ensure to generate the summary enclosed in <ans> and </ans> tags, maintaining the specified format.\n\nINPUT:\n<input>\n\nRESPONSE:"
+  },
+  "math/multiarith": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.96,
+      "final_metric": 0.97
+    },
+    "prompt": "Let's think step by step."
+  },
+  "custom/structured_extraction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.44000000000000006,
+      "final_metric": 0.8800000000000001
+    },
+    "prompt": "Extract and label entities from the following text. Please categorize the entities as follows: Name, Location, and Date, and list all extracted entities in the format 'Name: <entity>, Location: <entity>, Date: <entity>' within answer brackets <ans> and </ans>.  INPUT: <input> RESPONSE:"
+  },
+  "custom/constrained_creative": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.3,
+      "final_metric": 0.36
+    },
+    "prompt": "Write a short response about the following topic. Your response must be included between <ans> and </ans> tags.\n\nINPUT:\n<input>\n\nRESPONSE:\n<ans>Your answer will be here.</ans>"
+  },
+  "custom/multi_step_instruction": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.44000000000000006,
+      "final_metric": 0.44000000000000006
+    },
+    "prompt": "Answer the following question in complete sentences, ensuring to format the answer correctly: \n\nINPUT: \n<input>\n\nPlease ensure that your final answer is strictly enclosed within <ans> and </ans> tags.\n\nRESPONSE: \nProvide your answer directly within the <ans> and </ans> tags without additional instruction."
+  },
+  "custom/classification_explanation": {
+    "metric": {
+      "name": "llm_as_judge",
+      "start_score": 0.86,
+      "final_metric": 0.8400000000000001
+    },
+    "prompt": "Classify the sentiment of the following review."
   }
 }
