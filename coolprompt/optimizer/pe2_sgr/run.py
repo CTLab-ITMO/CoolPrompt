@@ -59,6 +59,9 @@ def pe2_sgr_optimizer(
         model=model,
         prompt_max_tokens=args["prompt_max_tokens"],
         log_path=args.get("log_path"),
+        score_threshold=args.get(
+            "score_threshold", 0.5
+        ),
     )
 
     template = evaluator._get_default_template()

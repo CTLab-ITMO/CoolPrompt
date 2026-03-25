@@ -1,7 +1,13 @@
-"""Pydantic schemas for PE2+SGR structured reasoning."""
+"""Pydantic schemas for PE2+SGR v2 structured reasoning.
+
+Phase 1 produces a structured diagnosis (LightDiagnosis or
+FullDiagnosis depending on current performance).  Phase 2
+uses the diagnosis to generate an improved prompt via
+free-form text — no structured output constraints.
+"""
 
 from enum import Enum
-from typing import List, Optional, Literal
+from typing import List, Literal
 
 from pydantic import BaseModel, Field
 
@@ -21,104 +27,150 @@ class ErrorAnalysis(BaseModel):
     """Analysis of a single failure example."""
 
     input_summary: str = Field(
-        description="Brief description of the input that caused the error"
+        description=(
+            "Brief description of the input that "
+            "caused the error"
+        )
     )
     expected_vs_actual: str = Field(
-        description="Comparison of expected and actual output"
+        description=(
+            "Comparison of expected and actual output"
+        )
     )
     root_cause: ErrorType = Field(
-        description="Category of the root cause of the error"
+        description=(
+            "Category of the root cause of the error"
+        )
     )
     root_cause_explanation: str = Field(
-        description="Detailed explanation of why the error occurred"
+        description=(
+            "Detailed explanation of why the error occurred"
+        )
     )
 
 
 class PromptAnalysis(BaseModel):
-    """Step 1: Analysis of task description correctness."""
+    """Analysis of task description correctness."""
 
     describes_task_correctly: bool = Field(
-        description="Does the prompt correctly describe the task?"
+        description=(
+            "Does the prompt correctly describe the task?"
+        )
     )
     missing_elements: List[str] = Field(
         default_factory=list,
-        description="List of missing elements in the task description"
+        description=(
+            "List of missing elements in the task "
+            "description"
+        ),
     )
     misleading_elements: List[str] = Field(
         default_factory=list,
-        description="List of potentially misleading instructions"
+        description=(
+            "List of potentially misleading instructions"
+        ),
     )
 
 
 class EditDecision(BaseModel):
-    """Step 2: Decision on whether editing is necessary."""
+    """Decision on whether editing is necessary."""
 
     editing_necessary: bool = Field(
-        description="Is editing of the prompt necessary?"
+        description=(
+            "Is editing of the prompt necessary?"
+        )
     )
     confidence: Literal["low", "medium", "high"] = Field(
-        description="Confidence level in the editing decision"
+        description=(
+            "Confidence level in the editing decision"
+        )
     )
     justification: str = Field(
-        description="Justification for the editing decision"
+        description=(
+            "Justification for the editing decision"
+        )
     )
 
 
-class PromptChange(BaseModel):
-    """A single specific change to the prompt."""
+class PatternSynthesis(BaseModel):
+    """Cross-example failure pattern analysis."""
 
-    change_type: Literal[
-        "add", "remove", "modify", "restructure"
+    common_failure_pattern: str = Field(
+        description="What unifies all failure examples"
+    )
+    pattern_severity: Literal[
+        "surface", "structural", "fundamental"
     ] = Field(
-        description="Type of change"
-    )
-    location: str = Field(
-        description="Where in the prompt to make the change"
-    )
-    original_text: Optional[str] = Field(
-        default=None,
         description=(
-            "Original text to change (if applicable)"
-        ),
+            "surface=cosmetic/format issues, "
+            "structural=missing key instructions, "
+            "fundamental=entire approach is wrong"
+        )
     )
-    new_text: str = Field(
-        description="New text to insert or replace with"
-    )
-    rationale: str = Field(
+    error_homogeneity: Literal[
+        "low", "medium", "high"
+    ] = Field(
         description=(
-            "Why this change addresses the identified issues"
-        ),
+            "How similar are the root causes across "
+            "examples. low=diverse errors, "
+            "high=all same root cause"
+        )
     )
 
 
-class PE2SGROutput(BaseModel):
-    """Full structured output for PE2+SGR."""
+class RewriteStrategy(BaseModel):
+    """Explicit strategy selection for Phase 2."""
+
+    approach: Literal[
+        "incremental_edit",
+        "structural_rewrite",
+        "complete_reimagine",
+    ] = Field(
+        description=(
+            "incremental_edit=fix specific issues, "
+            "structural_rewrite=reorganize significantly, "
+            "complete_reimagine=design from scratch"
+        )
+    )
+    justification: str = Field(
+        description="Why this strategy was chosen"
+    )
+    key_insight: str = Field(
+        description=(
+            "The single most important thing to change"
+        )
+    )
+
+
+class LightDiagnosis(BaseModel):
+    """Phase 1 schema when best_val_score < threshold.
+
+    Skips per-example analysis, focuses on global
+    patterns.  Used when task is far from solved and
+    needs radical exploration.
+    """
+
+    pattern_synthesis: PatternSynthesis
+    prompt_analysis: PromptAnalysis
+    rewrite_strategy: RewriteStrategy
+
+
+class FullDiagnosis(BaseModel):
+    """Phase 1 schema when best_val_score >= threshold.
+
+    Full per-example analysis plus global patterns.
+    Used when task is partially solved and needs
+    surgical precision.
+    """
 
     error_analyses: List[ErrorAnalysis] = Field(
         min_length=1,
         description=(
-            "Analysis of each failure example from the batch"
+            "Analysis of each failure example "
+            "from the batch"
         ),
     )
-
+    pattern_synthesis: PatternSynthesis
     prompt_analysis: PromptAnalysis
-
     edit_decision: EditDecision
-
-    specific_changes: List[PromptChange] = Field(
-        default_factory=list,
-        description="List of specific changes to make"
-    )
-
-    improved_prompt: str = Field(
-        description=(
-            "The full improved prompt after applying "
-            "all changes"
-        ),
-    )
-
-    improvement_summary: str = Field(
-        description=(
-            "One-sentence summary of the main improvement"
-        ),
-    )
+    rewrite_strategy: RewriteStrategy

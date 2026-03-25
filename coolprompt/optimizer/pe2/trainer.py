@@ -150,7 +150,8 @@ class PE2Trainer:
                     )
                     proposal_jobs.append(
                         (node, examples_str,
-                         full_template, len(sampled))
+                         full_template, len(sampled),
+                         best_score)
                     )
 
             if not proposal_jobs:
@@ -161,12 +162,13 @@ class PE2Trainer:
 
             # Run proposals in parallel
             def _do_propose(job):
-                n, ex_str, ft, bs = job
+                n, ex_str, ft, bs, bvs = job
                 prompt, _ = self.proposer.propose(
                     node=n,
                     examples_str=ex_str,
                     full_template=ft,
                     batch_size=bs,
+                    best_val_score=bvs,
                 )
                 return n, prompt
 
