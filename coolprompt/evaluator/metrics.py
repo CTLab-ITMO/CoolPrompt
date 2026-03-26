@@ -187,9 +187,7 @@ class BaseMetric(ABC):
         """
         output_labels = list(
             map(
-                lambda x: extract_answer(
-                    x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL
-                ),
+                lambda x: extract_answer(x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL),
                 outputs,
             )
         )
@@ -202,17 +200,36 @@ class BaseMetric(ABC):
             encoded_output_labels, encoded_targets, dataset
         )
 
-        result = sum(results) / len(results)
+    def parse_output(self, output: str) -> str:
+        """Extract parsed answer from model output.
 
-        if failed_examples:
-            return result, self._extract_bad_examples(
-                results,
-                dataset,
-                output_labels,
-                targets,
-                failed_examples,
-            )
-        return result
+        Args:
+            output: Raw model output string.
+
+        Returns:
+            Extracted answer from <ans> tags, or original output if not found.
+        """
+        return extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
+
+    def compute_detailed(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> Tuple[float, List[float | int]]:
+        """Compute metric value per sample and aggregate.
+
+        Returns:
+            Tuple of (aggregate_score, score_per_task).
+            score_per_task[i] - score for i-th sample.
+            aggregate_score - same as compute().
+        """
+        score_per_task = []
+        for o, t in zip(outputs, targets):
+            s = self._compute_raw([o], [t], dataset)
+            score_per_task.append(s)
+        aggregate = self.compute(outputs, targets, dataset)
+        return aggregate, score_per_task
 
     def __str__(self) -> str:
         return self._get_name()
@@ -285,7 +302,7 @@ class GenerationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = ""
 
-    def __init__(self):
+    def __init__(self, name=None):
         """Initialize metric"""
 
         super().__init__()
@@ -545,6 +562,21 @@ class CodeBertScore(GenerationMetric):
         f1_list = list(F1.numpy())
         return f1_list
 
+    def compute_detailed(
+        self,
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> Tuple[float, List[int]]:
+        targets = [extract_number_from_text(item) for item in targets]
+        outputs = [extract_number_from_text(item) for item in outputs]
+        score_per_task = [1 if o == t else 0 for o, t in zip(outputs, targets)]
+        return mean(score_per_task), score_per_task
+
+    def parse_output(self, output: str) -> str:
+        extracted = extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
+        return extract_number_from_text(extracted)
+
 
 def define_lang(outputs, targets):
     langs = [detect_language(target) for target in targets]
@@ -552,8 +584,7 @@ def define_lang(outputs, targets):
 
 
 CLASSIFICATION_METRIC_NAME_MAPPING = {
-    metric._get_name(): metric
-    for metric in ClassificationMetric.__subclasses__()
+    metric._get_name(): metric for metric in ClassificationMetric.__subclasses__()
 }
 
 GENERATION_METRIC_NAME_MAPPING = {
@@ -592,8 +623,9 @@ def validate_and_create_metric(
                 return CLASSIFICATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(
-                    CLASSIFICATION_METRIC_NAME_MAPPING.keys())}."
+                f"Available metrics: {
+                    ', '.join(CLASSIFICATION_METRIC_NAME_MAPPING.keys())
+                }."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -627,8 +659,9 @@ def validate_and_create_metric(
                 return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(
-                    GENERATION_METRIC_NAME_MAPPING.keys())}."
+                f"Available metrics: {
+                    ', '.join(GENERATION_METRIC_NAME_MAPPING.keys())
+                }."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)

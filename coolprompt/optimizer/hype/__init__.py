@@ -1,5 +1,5 @@
-from coolprompt.optimizer.hype.hype import hype_optimizer
+from ...assistant import PromptTuner
 
 __all__ = [
-    'hype_optimizer'
+	"PromptTuner",
 ]
