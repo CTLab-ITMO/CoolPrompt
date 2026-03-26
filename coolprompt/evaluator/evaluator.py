@@ -3,6 +3,7 @@ from typing import Optional, Tuple, List, Dict
 from tqdm import tqdm
 from time import sleep
 
+from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
@@ -70,7 +71,6 @@ class Evaluator:
         logger.info(
             f"Evaluating prompt for {self.task} task on {len(dataset)} samples"
         )
-        logger.debug(f"Prompt to evaluate:\n{prompt}")
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
         full_prompts = [
@@ -167,7 +167,6 @@ class Evaluator:
 
     def _get_default_template(self) -> str:
         """Returns the default template for the task type."""
-
         match self.task:
             case Task.CLASSIFICATION:
                 return CLASSIFICATION_TASK_TEMPLATE
