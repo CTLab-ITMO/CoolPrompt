@@ -183,6 +183,10 @@ prompt's approach.
 structure or wording — start fresh.
 * Focus on clearly communicating what the task requires \
 based on the patterns identified in the diagnosis.
+* CRITICAL: Do NOT include specific example data, labels, \
+option lists, or content from the failure examples in your \
+prompt. The prompt must be generic enough to work on ANY \
+input for this task, not just the examples you analyzed.
 * The total length of the prompt should be less than \
 {max_tokens} words.
 * Reply with the prompt only. Do not include other text.
