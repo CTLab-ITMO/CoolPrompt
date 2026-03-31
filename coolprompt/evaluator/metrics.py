@@ -5,6 +5,7 @@ from typing import Optional, Dict, List, Tuple
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 from evaluate import load
+from code_bert_score import BERTScorer
 import numpy as np
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
@@ -40,6 +41,19 @@ class HFEvaluateMetric(ABC):
         self._compute_kwargs_func = lambda outputs, targets: {}
         super().__init__()
 
+    def _postprocessing(self, metric: float | List[float]) -> float:
+        """Unwraps the list when HF metric returns [Metric Value]
+            instead of Metric Value.
+
+        Args:
+            metric (float | List[float]): Metric Value from HF metric.
+        Returns:
+            float: Unwrapped value.
+        """
+        if isinstance(metric, list):
+            return metric[0]
+        return metric
+
     def _compute_raw(
         self,
         outputs: list[str | int],
@@ -58,11 +72,13 @@ class HFEvaluateMetric(ABC):
         """
 
         return [
-            self._metric.compute(
-                predictions=[output],
-                references=[target],
-                **self._compute_kwargs_func([output], [target]),
-            )[self._return_parameter]
+            self._postprocessing(
+                self._metric.compute(
+                    predictions=[output],
+                    references=[target],
+                    **self._compute_kwargs_func([output], [target]),
+                )[self._return_parameter]
+            )
             for output, target in zip(outputs, targets)
         ]
 
@@ -92,7 +108,7 @@ class BaseMetric(ABC):
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-    ) -> float | Tuple[float, List[Dict[str, str]]]:
+    ) -> List[float]:
         """Compute metric values from preprocessed model answers.
         Returs a list of float values corresponding for each answer.
 
@@ -490,7 +506,7 @@ class GEvalMetric(GenerationMetric):
 
             scores.append(score)
 
-        return float(mean(scores)) if scores else 0.0
+        return scores
 
 
 class ExactMatchMetric(GenerationMetric):
@@ -512,6 +528,22 @@ class ExactMatchMetric(GenerationMetric):
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
         return [float(o == t) for o, t in zip(outputs, targets)]
+
+
+class CodeBertScore(GenerationMetric):
+
+    @staticmethod
+    def _get_name():
+        return "codebertscore"
+
+    def __init__(self):
+        super().__init__()
+        self.scorer = BERTScorer(lang="java")
+
+    def _compute_raw(self, outputs, targets, dataset=None):
+        _, _, F1 = self.scorer.score(cands=outputs, refs=targets)
+        f1_list = list(F1.numpy())
+        return f1_list
 
 
 def define_lang(outputs, targets):
@@ -621,4 +653,4 @@ def get_default_metric(task: Task) -> str:
         case Task.CLASSIFICATION:
             return "f1"
         case Task.GENERATION:
-            return "meteor"
+            return "bertscore"

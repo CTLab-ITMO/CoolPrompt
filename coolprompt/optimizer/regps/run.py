@@ -55,7 +55,8 @@ def regps(
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],
         use_cache=args["use_cache"],
-        bad_examples_number=args["bad_examples_number"]
+        bad_examples_number=args["bad_examples_number"],
+        checkpoint_path=args.get('checkpoint_path')
     )
     logger.info("Starting Re-GPS optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")

@@ -174,3 +174,6 @@ src/solutions/SPELL/outputs/*
 # initial populations data
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
+
+# Let's fix some directory for run logs
+run_logs/*

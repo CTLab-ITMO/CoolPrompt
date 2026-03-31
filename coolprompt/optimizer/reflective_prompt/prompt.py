@@ -40,13 +40,47 @@ class BadExample:
         self.output = output
         self.correct = correct
 
+    def to_dict(self) -> dict:
+        """Creates dictionary representation of bad example.
+
+        Returns:
+            dict: created dictionary.
+        """
+
+        return {
+            'input': self.input,
+            'output': self.output,
+            'correct': self.correct
+        }
+
+    @classmethod
+    def from_dict(
+        cls: Type['BadExample'],
+        data: dict
+    ) -> 'BadExample':
+        """Creates BadExample variable from dictionary data.
+
+        Args:
+            data (dict): dictionary representation of bad example.
+
+        Returns:
+            BadExample: created bad example variable.
+        """
+
+        return cls(
+            input=data['input'],
+            output=data['output'],
+            correct=data['correct']
+        )
+
 
 class Prompt:
     def __init__(
         self,
         text: str,
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
-        score: float = None
+        score: float = None,
+        bad_examples: List[BadExample] = []
     ) -> None:
         """Prompt class.
 
@@ -62,7 +96,7 @@ class Prompt:
         self.text = text
         self.origin = origin
         self.score = score
-        self.bad_examples = []
+        self.bad_examples = bad_examples
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
@@ -95,10 +129,12 @@ class Prompt:
 
         result = {
             'text': self.text,
-            'origin': self.origin.name
+            'origin': self.origin.name,
         }
         if self.score is not None:
             result['score'] = self.score
+        if len(self.bad_examples) > 0:
+            result['bad_examples'] = [ex.to_dict() for ex in self.bad_examples]
         return result
 
     @classmethod
@@ -125,6 +161,10 @@ class Prompt:
             text=data['text'],
             origin=PromptOrigin.from_string(data['origin']),
             score=data.get('score', None),
+            bad_examples=[
+                BadExample.from_dict(bad_example_data)
+                for bad_example_data in data.get('bad_examples', [])
+            ]
         )
 
     def __str__(self) -> str:

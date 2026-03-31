@@ -70,6 +70,7 @@ class ReflectiveEvoluter:
         population_size: int = 10,
         num_epochs: int = 10,
         output_path: str = "./reflectiveprompt_outputs",
+        checkpoint_path: Optional[str] = None,
         use_cache: bool = True,
     ) -> None:
         self.model = model
@@ -84,6 +85,7 @@ class ReflectiveEvoluter:
         self.problem_description = problem_description
         self.output_path = output_path
         self.initial_prompt = initial_prompt
+        self.checkpoint_path = checkpoint_path
 
         self.elitist = None
         self._long_term_reflection_str = ""
@@ -161,6 +163,22 @@ class ReflectiveEvoluter:
         """
 
         logger.info("Initializing population...")
+        if self.checkpoint_path is not None:
+            with open(f'{self.checkpoint_path}/population.yaml', 'r') as f:
+                data = yaml.safe_load(f)
+            initial_population = [
+                Prompt.from_dict(prompt_data)
+                for prompt_data in data['prompts']
+            ]
+            initial_population = self._reranking(initial_population)
+            with open(
+                f'{self.checkpoint_path}/long_term_reflection.yaml',
+                'r'
+            ) as f:
+                data = yaml.safe_load(f)
+            self._long_term_reflection_str = data
+            return initial_population
+
         if self.initial_prompt is None:
             self.initial_prompt = self._create_initial_prompt()
         request = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE.format(
@@ -452,6 +470,7 @@ class ReflectiveEvoluter:
             List[str]: model answers.
         """
 
+        requests = [request.replace('\"', '\'') for request in requests]
         answers = self.model.batch(requests)
 
         answers = [a.content
@@ -501,7 +520,7 @@ class ReflectiveEvoluter:
 
         population = np.array(self._init_pop())
         self._cache_population(
-            population, self._make_output_path("initial_population.yaml")
+            population, self._make_output_path("initial_population")
         )
 
         while self.iteration < self.num_epochs:
@@ -531,12 +550,14 @@ class ReflectiveEvoluter:
 
             population = np.append(population, np.array(crossed_population))
             population = np.append(population, np.array(mutated_population))
+            population = self._reranking(population)
             self._update_elitist(population)
             population = self._survive(population, temperature=1e-1)
 
             if self.elitist is not None and self.elitist not in population:
                 logger.debug("Elitist should always live")
                 population = np.append(population, np.array([self.elitist]))
+            population = self._reranking(population)
 
             self._update_iter(population)
 
@@ -548,7 +569,7 @@ class ReflectiveEvoluter:
         self._evaluation(population, split="validation")
         population = self._reranking(population)
         self._cache_population(
-            population, self._make_output_path("best_prompts_infer.yaml")
+            population, self._make_output_path("best_prompts_infer")
         )
         self.elitist = population[0]
         self.best_prompt_overall = self.elitist.text
