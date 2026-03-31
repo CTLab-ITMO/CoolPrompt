@@ -1,8 +1,8 @@
 from typing import Optional, Tuple, List
-from datasets import load_dataset as load_dataset_hf
+from datasets import load_dataset as load_dataset_hf, DatasetDict
 import pandas as pd
 
-tweeteval_emotions = {
+TWEETEVAL_EMOTIONS = {
     0: 'anger',
     1: 'joy',
     2: 'optimism',
@@ -10,15 +10,36 @@ tweeteval_emotions = {
 }
 
 
-def code_to_text_preproc(sample, size: int = None):
-    """Preprocessing of CodeToText dataset"""
+def code_to_text_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of CodeToText dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
-    def replace_docstring_text_with_empty(code: str, docstring: str) -> str:
+    def _replace_docstring_text_with_empty(code: str, docstring: str) -> str:
+        """Removing docstring from initial code.
+
+        Args:
+            code (str): code in string format
+            docstring (str): docstring to remove
+
+        Returns:
+            str: code without docstring
+        """
         return code.replace(docstring, "")
 
     data["input_data"] = data.apply(
-        lambda r: replace_docstring_text_with_empty(r["code"], r["docstring"]),
+        lambda r: _replace_docstring_text_with_empty(r["code"], r["docstring"]),
         axis=1
     )
 
@@ -30,8 +51,20 @@ def code_to_text_preproc(sample, size: int = None):
     return data
 
 
-def concode_preproc(sample, size: int = None):
-    """Preprocessing of CONCODE dataset"""
+def concode_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of CONCODE dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data['input_data'] = data['nl']
@@ -43,8 +76,20 @@ def concode_preproc(sample, size: int = None):
     return data
 
 
-def medalpaca_preproc(sample, size: int = None):
-    """Preprocessing of MediQA dataset"""
+def mediqa_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of MediQA dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data['input_data'] = data["instruction"] + "\n" + data['input']
@@ -56,13 +101,25 @@ def medalpaca_preproc(sample, size: int = None):
     return data
 
 
-def tweeteval_preproc(sample, size: int = None):
-    """Preprocessing of TweetEval (emotions) dataset"""
+def tweeteval_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of TweetEval (emotions) dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data['input_data'] = data['text']
     data['target'] = data['label'].apply(
-        lambda x: tweeteval_emotions[x]
+        lambda x: TWEETEVAL_EMOTIONS[x]
     )
 
     if size:
@@ -71,8 +128,20 @@ def tweeteval_preproc(sample, size: int = None):
     return data
 
 
-def squad_v2_preproc(sample, size: int = None):
-    """Preprocessing of SQUAD v2 dataset"""
+def squad_v2_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of SQUAD v2 dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["context"] + " " + data["question"]
@@ -88,8 +157,20 @@ def squad_v2_preproc(sample, size: int = None):
     return data
 
 
-def gsm8k_preproc(sample, size: int = None):
-    """Preprocessing of GSM8k dataset"""
+def gsm8k_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of GSM8k dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["question"]
@@ -101,8 +182,20 @@ def gsm8k_preproc(sample, size: int = None):
     return data
 
 
-def common_gen_preproc(sample, size: int = None):
-    """Preprocessing of CommonGen dataset"""
+def common_gen_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of CommonGen dataset.
+
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
+
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["concepts"].apply(lambda x: str(x))
@@ -113,19 +206,20 @@ def common_gen_preproc(sample, size: int = None):
     return data
 
 
-def ag_news_preproc(sample, size: int = None):
-    """Preprocessing of AgNews dataset"""
-    data = pd.DataFrame(sample)
+def xsum_preproc(
+    sample: DatasetDict,
+    size: Optional[int] = None
+) -> pd.DataFrame:
+    """Preprocessing of XSUM dataset.
 
-    data = data.rename(columns={"text": "input_data", "label": "target"})
-    if size:
-        data = data.head(size)
+    Args:
+        sample (DatasetDict): sample of the dataset to preprocess.
+        size (Optional[int]): what data size to return.
+            Defaults to None (full dataset size).
 
-    return data
-
-
-def xsum_preproc(sample, size: int = None):
-    """Preprocessing of XSUM dataset"""
+    Returns:
+        pd.DataFrame: preprocessed dataset.
+    """
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"document": "input_data", "summary": "target"})
@@ -189,7 +283,7 @@ def load_dataset(
             match split:
                 case "train": data = data[:-660]
                 case "test": data = data[-660:]
-            data = medalpaca_preproc(data, size)
+            data = mediqa_preproc(data, size)
         case "code_to_text":
             data = load_dataset_hf("google/code_x_glue_ct_code_to_text", subset)
             data = data[split]

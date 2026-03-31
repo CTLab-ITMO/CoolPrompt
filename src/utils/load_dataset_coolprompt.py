@@ -6,7 +6,7 @@ gsm8k = load_dataset("openai/gsm8k", "main")
 common_gen = load_dataset("allenai/common_gen")
 ag_news = load_dataset("fancyzhx/ag_news")
 xsum = load_dataset("yairfeldman/xsum")
-load_dataset("cardiffnlp/tweet_eval", 'emotion')
+tweet_eval = load_dataset("cardiffnlp/tweet_eval", 'emotion')
 
 tweeteval_emotions = {
     0: 'anger',
