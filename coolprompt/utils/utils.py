@@ -3,7 +3,6 @@ from typing import Iterable, Tuple
 
 
 def get_dataset_split(
-    self,
     dataset: Iterable[str],
     target: Iterable[str],
     validation_size: float,
