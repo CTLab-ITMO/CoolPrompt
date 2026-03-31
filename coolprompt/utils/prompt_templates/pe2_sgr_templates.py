@@ -174,19 +174,26 @@ PE2_SGR_GEN_REIMAGINE = """\
 The diagnosis found fundamental issues with the current \
 prompt's approach.
 
+## Current Prompt (for task context)
+{prompt}
+
 ## Diagnosis
 {formatted_diagnosis}
 
 ## Instructions
 * Design a completely new prompt for this task from scratch.
-* Do NOT constrain yourself to the current prompt's \
-structure or wording — start fresh.
+* The current prompt above is shown ONLY so you understand \
+what task this is about — do NOT copy its structure, but \
+DO preserve the correct understanding of the task.
 * Focus on clearly communicating what the task requires \
 based on the patterns identified in the diagnosis.
 * CRITICAL: Do NOT include specific example data, labels, \
 option lists, or content from the failure examples in your \
 prompt. The prompt must be generic enough to work on ANY \
 input for this task, not just the examples you analyzed.
+* Write ONLY the task instruction. Do NOT include input \
+placeholders, output templates, or formatting scaffolds \
+like "INPUT: <insert here>" — those are handled separately.
 * The total length of the prompt should be less than \
 {max_tokens} words.
 * Reply with the prompt only. Do not include other text.

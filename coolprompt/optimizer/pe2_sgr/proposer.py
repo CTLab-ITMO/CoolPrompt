@@ -171,10 +171,8 @@ class SGRProposer:
         result = get_model_answer_extracted(
             self.model, gen_prompt
         )
-        new_prompt = extract_answer(
-            result,
-            ("<prompt>", "</prompt>"),
-            format_mismatch_label=node.prompt,
+        new_prompt = self._extract_prompt(
+            result, node.prompt
         )
 
         return new_prompt.strip(), reasoning[:200]
@@ -239,10 +237,8 @@ class SGRProposer:
         result = get_model_answer_extracted(
             self.model, gen_prompt
         )
-        new_prompt = extract_answer(
-            result,
-            ("<prompt>", "</prompt>"),
-            format_mismatch_label=node.prompt,
+        new_prompt = self._extract_prompt(
+            result, node.prompt
         )
 
         self._log_result(diagnosis, strategy)
@@ -271,6 +267,33 @@ class SGRProposer:
             FullDiagnosis,
         )
         return structured_model.invoke(prompt)
+
+    # ----------------------------------------------------------
+    # Prompt extraction
+    # ----------------------------------------------------------
+
+    @staticmethod
+    def _extract_prompt(
+        result: str, fallback: str
+    ) -> str:
+        """Extracts prompt from <prompt> tags with
+        robust fallback for empty original prompts."""
+        extracted = extract_answer(
+            result,
+            ("<prompt>", "</prompt>"),
+            format_mismatch_label=fallback,
+        )
+        extracted_str = str(extracted).strip()
+        # If extraction returned empty (e.g. original
+        # prompt was empty and tags were missing), use
+        # the raw result as the prompt.
+        if not extracted_str and result.strip():
+            logger.debug(
+                "SGR extraction empty, using raw "
+                "result as prompt"
+            )
+            return result.strip()
+        return extracted_str
 
     # ----------------------------------------------------------
     # Strategy override (Fix 1)

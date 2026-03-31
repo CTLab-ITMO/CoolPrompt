@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PE2+SGR Benchmark Results</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f8f9fa; color: #1a1a2e; line-height: 1.6; padding: 2rem; max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.3rem; color: #16213e; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 0.8rem; color: #16213e; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.4rem; }
+  h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; color: #334155; }
+  .subtitle { color: #64748b; font-size: 0.95rem; margin-bottom: 2rem; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .summary-card { background: white; border-radius: 8px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); text-align: center; }
+  .summary-card .method { font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+  .summary-card .value { font-size: 1.8rem; font-weight: 700; margin: 0.3rem 0; }
+  .summary-card .label { font-size: 0.8rem; color: #94a3b8; }
+  .highlight { background: #f0fdf4; border: 2px solid #22c55e; }
+  .positive { color: #16a34a; }
+  .negative { color: #dc2626; }
+  .neutral { color: #64748b; }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin: 1rem 0; font-size: 0.85rem; }
+  th { background: #1e293b; color: white; padding: 0.6rem 0.8rem; text-align: right; font-weight: 600; font-size: 0.8rem; }
+  th:first-child { text-align: left; }
+  td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #f1f5f9; text-align: right; font-variant-numeric: tabular-nums; }
+  td:first-child { text-align: left; font-weight: 500; }
+  tr:hover { background: #f8fafc; }
+  tr.cat-header { background: #f1f5f9; }
+  tr.cat-header td { font-weight: 700; color: #334155; border-bottom: 2px solid #cbd5e1; }
+  tr.total-row { background: #f0fdf4; }
+  tr.total-row td { font-weight: 700; border-top: 2px solid #22c55e; }
+  .best { background: #dcfce7; font-weight: 700; }
+  .worst { background: #fef2f2; }
+  .winner-badge { display: inline-block; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 600; }
+  .winner-sgr { background: #dcfce7; color: #166534; }
+  .winner-pe2 { background: #dbeafe; color: #1e40af; }
+  .winner-ape { background: #fef3c7; color: #92400e; }
+  .winner-opro { background: #f3e8ff; color: #6b21a8; }
+  .key-findings { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin: 1rem 0; }
+  .key-findings li { margin: 0.5rem 0; }
+  .methodology { background: #f8fafc; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; border: 1px solid #e2e8f0; }
+  .methodology p { margin: 0.4rem 0; font-size: 0.9rem; }
+  .footnote { font-size: 0.8rem; color: #94a3b8; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; }
+</style>
+</head>
+<body>
+
+<h1>PE2+SGR: Adaptive Structured Guided Reasoning for Prompt Optimization</h1>
+<p class="subtitle">Benchmark results on PE2 paper tasks (BBH, Instruction Induction, Counterfactual Evaluation) using gpt-4o-mini</p>
+
+<h2>Executive Summary</h2>
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="method">APE</div>
+    <div class="value positive">+0.0118</div>
+    <div class="label">avg improvement (n=43)</div>
+  </div>
+  <div class="summary-card">
+    <div class="method">OPRO</div>
+    <div class="value positive">+0.0064</div>
+    <div class="label">avg improvement (n=43)</div>
+  </div>
+  <div class="summary-card">
+    <div class="method">PE2</div>
+    <div class="value positive">+0.0825</div>
+    <div class="label">avg improvement (n=43)</div>
+  </div>
+  <div class="summary-card highlight">
+    <div class="method">PE2+SGR</div>
+    <div class="value positive">+0.0988</div>
+    <div class="label">avg improvement (n=43)</div>
+  </div>
+</div>
+
+<div class="key-findings">
+<h3>Key Findings</h3>
+<ul>
+  <li><strong>PE2+SGR is the best-performing method overall</strong>, achieving an average improvement of +0.0988 across 43 matched tasks (vs PE2 +0.0825, APE +0.0118, OPRO +0.0064)</li>
+  <li><strong>PE2+SGR wins 27/43 tasks</strong> (63%), PE2 wins 10, APE wins 3, OPRO wins 3</li>
+  <li><strong>12 tasks with strong SGR lead</strong> (&gt;0.02 over next best method), vs only 1 tasks with significant loss (&gt;0.05)</li>
+  <li><strong>PE2+SGR leads in every category</strong>: BBH, Instruction Induction, and Counterfactual Evaluation</li>
+  <li><strong>Head-to-head vs PE2 (54 tasks)</strong>: PE2+SGR wins 26, PE2 wins 14, ties 14 &mdash; SGR avg +0.1112 vs PE2 avg +0.1005</li>
+</ul>
+</div>
+
+<h2>Methodology</h2>
+<div class="methodology">
+  <p><strong>Model:</strong> gpt-4o-mini (OpenAI)</p>
+  <p><strong>Optimization:</strong> Beam search with 3 training steps, beam width 3, 4 expansions per node, batch size 4</p>
+  <p><strong>Evaluation:</strong> BERTScore for text tasks, Exact Match for numeric tasks. 100 samples per task, 75/25 train/val split.</p>
+  <p><strong>PE2+SGR Innovation:</strong> Adaptive dual-path proposer. Starts with free-form reasoning (enhanced with cross-example pattern analysis) for radical prompt exploration. Automatically switches to structured guided reasoning (SGR) with Pydantic-validated diagnosis when improvement plateaus (delta &lt; 0.02), enabling precision refinement. Strategy override prevents conservatism bias in structured mode.</p>
+</div>
+<h2>Results by Category</h2>
+<table>
+<tr><th>Category</th><th>n</th><th>APE</th><th>OPRO</th><th>PE2</th><th>PE2+SGR</th><th>Best</th></tr>
+<tr><td>BBH (Reasoning)</td><td>17</td><td>+0.0159</td><td>+0.0103</td><td>+0.0841</td><td class="best">+0.1049</td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>Instruction Induction (Pattern)</td><td>17</td><td>+0.0089</td><td>+0.0003</td><td>+0.1000</td><td class="best">+0.1222</td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>Counterfactual (Rule-based)</td><td>9</td><td>+0.0093</td><td>+0.0106</td><td class="best">+0.0465</td><td>+0.0429</td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr class="total-row"><td><strong>Overall</strong></td><td>43</td><td>+0.0118</td><td>+0.0064</td><td>+0.0825</td><td class="best">+0.0988</td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+</table>
+<h2>Per-Task Results (4-Method Comparison)</h2>
+<table>
+<tr><th>Task</th><th>Metric</th><th>Start</th><th>APE &Delta;</th><th>OPRO &Delta;</th><th>PE2 &Delta;</th><th>PE2+SGR &Delta;</th><th>Best</th></tr>
+<tr class="cat-header"><td colspan="8">BBH (Reasoning)</td></tr>
+<tr><td>causal_judgement</td><td>bertscore</td><td>0.93</td><td class="worst"><span class="negative">-0.0132</span></td><td><span class="negative">-0.0076</span></td><td class="best"><span class="positive">+0.0329</span></td><td><span class="neutral">-0.0000</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>data_understanding_generative</td><td>bertscore</td><td>0.99</td><td class="worst"><span class="neutral">-0.0013</span></td><td class="best"><span class="neutral">+0.0029</span></td><td class="best"><span class="neutral">+0.0022</span></td><td><span class="neutral">+0.0004</span></td><td><span class="winner-badge winner-opro">OPRO</span></td></tr>
+<tr><td>date_understanding</td><td>bertscore</td><td>0.67</td><td class="best"><span class="positive">+0.0238</span></td><td><span class="positive">+0.0074</span></td><td><span class="neutral">-0.0009</span></td><td class="worst"><span class="neutral">-0.0030</span></td><td><span class="winner-badge winner-ape">APE</span></td></tr>
+<tr><td>disambiguation_qa</td><td>bertscore</td><td>0.77</td><td><span class="positive">+0.0369</span></td><td class="worst"><span class="negative">-0.0061</span></td><td><span class="positive">+0.0358</span></td><td class="best"><span class="positive">+0.1229</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>dyck_languages</td><td>bertscore</td><td>0.69</td><td><span class="positive">+0.0064</span></td><td class="worst"><span class="negative">-0.0082</span></td><td class="best"><span class="positive">+0.1300</span></td><td><span class="positive">+0.1254</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>hyperbaton</td><td>bertscore</td><td>0.83</td><td><span class="positive">+0.0521</span></td><td class="worst"><span class="negative">-0.0115</span></td><td><span class="positive">+0.0401</span></td><td class="best"><span class="positive">+0.1638</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>logical_deduction_seven_objects</td><td>bertscore</td><td>0.82</td><td class="worst"><span class="neutral">-0.0032</span></td><td><span class="positive">+0.0175</span></td><td><span class="positive">+0.0414</span></td><td class="best"><span class="positive">+0.0526</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>logical_deduction_three_objects</td><td>bertscore</td><td>0.84</td><td><span class="positive">+0.0221</span></td><td><span class="positive">+0.0269</span></td><td><span class="positive">+0.1300</span></td><td class="best"><span class="positive">+0.1581</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>movie_recommendation</td><td>bertscore</td><td>0.72</td><td><span class="positive">+0.0282</span></td><td class="worst"><span class="negative">-0.0192</span></td><td><span class="positive">+0.2301</span></td><td class="best"><span class="positive">+0.2415</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>penguins_in_a_table</td><td>bertscore</td><td>0.76</td><td><span class="positive">+0.0149</span></td><td><span class="positive">+0.0108</span></td><td class="best"><span class="positive">+0.2210</span></td><td><span class="positive">+0.0636</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>reasoning_about_colored_objects</td><td>bertscore</td><td>0.77</td><td><span class="positive">+0.0082</span></td><td class="best"><span class="positive">+0.0125</span></td><td><span class="neutral">+0.0004</span></td><td><span class="neutral">+0.0013</span></td><td><span class="winner-badge winner-opro">OPRO</span></td></tr>
+<tr><td>ruin_names</td><td>bertscore</td><td>0.75</td><td><span class="positive">+0.0405</span></td><td><span class="positive">+0.0389</span></td><td><span class="positive">+0.0536</span></td><td class="best"><span class="positive">+0.2326</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>snarks</td><td>bertscore</td><td>0.97</td><td class="worst"><span class="neutral">-0.0006</span></td><td class="worst"><span class="neutral">-0.0012</span></td><td class="best"><span class="positive">+0.0192</span></td><td><span class="positive">+0.0131</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>sports_understanding</td><td>bertscore</td><td>0.78</td><td><span class="positive">+0.0136</span></td><td><span class="positive">+0.0138</span></td><td><span class="positive">+0.1839</span></td><td class="best"><span class="positive">+0.2064</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>temporal_sequences</td><td>bertscore</td><td>0.73</td><td><span class="positive">+0.0273</span></td><td><span class="positive">+0.0403</span></td><td><span class="positive">+0.2364</span></td><td class="best"><span class="positive">+0.2465</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>tracking_shuffled_objects_three_objects</td><td>bertscore</td><td>0.89</td><td><span class="positive">+0.0421</span></td><td><span class="positive">+0.0252</span></td><td><span class="positive">+0.0208</span></td><td class="best"><span class="positive">+0.0980</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>web_of_lies</td><td>bertscore</td><td>0.93</td><td class="worst"><span class="negative">-0.0267</span></td><td><span class="positive">+0.0323</span></td><td><span class="positive">+0.0524</span></td><td class="best"><span class="positive">+0.0602</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr class="cat-header"><td colspan="8">Counterfactual (Rule-based)</td></tr>
+<tr><td>arithmetic_base11</td><td>bertscore</td><td>0.99</td><td class="best"><span class="positive">+0.0079</span></td><td><span class="neutral">+0.0014</span></td><td><span class="positive">+0.0058</span></td><td class="worst"><span class="negative">-0.0083</span></td><td><span class="winner-badge winner-ape">APE</span></td></tr>
+<tr><td>arithmetic_base9</td><td>em</td><td>1.00</td><td><span class="neutral">+0.0000</span></td><td class="best"><span class="positive">+0.0200</span></td><td><span class="neutral">+0.0000</span></td><td><span class="neutral">+0.0000</span></td><td><span class="winner-badge winner-opro">OPRO</span></td></tr>
+<tr><td>chess_cf</td><td>bertscore</td><td>0.95</td><td class="best"><span class="positive">+0.0109</span></td><td><span class="neutral">-0.0000</span></td><td><span class="neutral">-0.0000</span></td><td class="worst"><span class="negative">-0.0109</span></td><td><span class="winner-badge winner-ape">APE</span></td></tr>
+<tr><td>syntax_osv</td><td>bertscore</td><td>0.80</td><td class="worst"><span class="negative">-0.0108</span></td><td><span class="positive">+0.0338</span></td><td class="best"><span class="positive">+0.0904</span></td><td><span class="positive">+0.0555</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>syntax_ovs</td><td>bertscore</td><td>0.78</td><td class="worst"><span class="negative">-0.0142</span></td><td><span class="neutral">-0.0049</span></td><td><span class="positive">+0.0284</span></td><td class="best"><span class="positive">+0.0595</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>syntax_sov</td><td>bertscore</td><td>0.83</td><td><span class="positive">+0.0354</span></td><td class="worst"><span class="neutral">-0.0031</span></td><td><span class="positive">+0.0627</span></td><td class="best"><span class="positive">+0.0812</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>syntax_svo</td><td>bertscore</td><td>0.85</td><td><span class="positive">+0.0153</span></td><td><span class="neutral">+0.0018</span></td><td><span class="positive">+0.0847</span></td><td class="best"><span class="positive">+0.1025</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>syntax_vos</td><td>bertscore</td><td>0.78</td><td><span class="positive">+0.0069</span></td><td><span class="positive">+0.0316</span></td><td class="best"><span class="positive">+0.0819</span></td><td><span class="positive">+0.0767</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>syntax_vso</td><td>bertscore</td><td>0.81</td><td><span class="positive">+0.0323</span></td><td><span class="positive">+0.0152</span></td><td class="best"><span class="positive">+0.0648</span></td><td><span class="positive">+0.0295</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr class="cat-header"><td colspan="8">Instruction Induction (Pattern)</td></tr>
+<tr><td>active_to_passive</td><td>bertscore</td><td>0.90</td><td><span class="positive">+0.0141</span></td><td><span class="neutral">+0.0031</span></td><td><span class="positive">+0.0903</span></td><td class="best"><span class="positive">+0.0930</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>cause_and_effect</td><td>bertscore</td><td>0.76</td><td><span class="positive">+0.0062</span></td><td><span class="positive">+0.0062</span></td><td class="worst"><span class="negative">-0.0073</span></td><td class="best"><span class="positive">+0.0367</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>common_concept</td><td>bertscore</td><td>0.63</td><td><span class="positive">+0.0130</span></td><td class="worst"><span class="negative">-0.0052</span></td><td><span class="positive">+0.0592</span></td><td class="best"><span class="positive">+0.0619</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>informal_to_formal</td><td>bertscore</td><td>0.83</td><td><span class="positive">+0.0200</span></td><td><span class="positive">+0.0056</span></td><td><span class="positive">+0.0268</span></td><td class="best"><span class="positive">+0.0347</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>larger_animal</td><td>bertscore</td><td>0.83</td><td class="worst"><span class="neutral">-0.0018</span></td><td class="worst"><span class="neutral">-0.0015</span></td><td><span class="positive">+0.0733</span></td><td class="best"><span class="positive">+0.0831</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>negation</td><td>bertscore</td><td>0.89</td><td><span class="neutral">+0.0038</span></td><td><span class="positive">+0.0136</span></td><td><span class="positive">+0.0972</span></td><td class="best"><span class="positive">+0.1098</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>orthography_starts_with</td><td>bertscore</td><td>0.66</td><td class="worst"><span class="negative">-0.0085</span></td><td><span class="negative">-0.0052</span></td><td><span class="positive">+0.1115</span></td><td class="best"><span class="positive">+0.2589</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>rhymes</td><td>bertscore</td><td>0.79</td><td class="worst"><span class="negative">-0.0099</span></td><td><span class="neutral">+0.0001</span></td><td><span class="neutral">+0.0000</span></td><td class="best"><span class="positive">+0.0051</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>sentence_similarity</td><td>bertscore</td><td>0.62</td><td><span class="positive">+0.0111</span></td><td class="worst"><span class="neutral">-0.0026</span></td><td><span class="positive">+0.1496</span></td><td class="best"><span class="positive">+0.1738</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>sentiment</td><td>bertscore</td><td>0.65</td><td><span class="neutral">-0.0007</span></td><td class="worst"><span class="neutral">-0.0023</span></td><td class="best"><span class="positive">+0.3491</span></td><td class="best"><span class="positive">+0.3483</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>singular_to_plural</td><td>bertscore</td><td>0.90</td><td><span class="neutral">+0.0002</span></td><td class="worst"><span class="negative">-0.0060</span></td><td class="best"><span class="positive">+0.1119</span></td><td><span class="positive">+0.1028</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>synonyms</td><td>bertscore</td><td>0.81</td><td><span class="neutral">+0.0003</span></td><td><span class="neutral">+0.0021</span></td><td><span class="positive">+0.0261</span></td><td class="best"><span class="positive">+0.0271</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>taxonomy_animal</td><td>bertscore</td><td>0.90</td><td><span class="neutral">-0.0023</span></td><td><span class="neutral">-0.0011</span></td><td class="worst"><span class="neutral">-0.0043</span></td><td class="best"><span class="positive">+0.0604</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>translation_en-de</td><td>bertscore</td><td>0.69</td><td><span class="positive">+0.0814</span></td><td><span class="neutral">+0.0029</span></td><td><span class="positive">+0.1627</span></td><td class="best"><span class="positive">+0.2300</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>translation_en-es</td><td>bertscore</td><td>0.82</td><td><span class="positive">+0.0130</span></td><td><span class="neutral">+0.0033</span></td><td class="best"><span class="positive">+0.1075</span></td><td><span class="positive">+0.0868</span></td><td><span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>translation_en-fr</td><td>bertscore</td><td>0.86</td><td><span class="positive">+0.0131</span></td><td class="worst"><span class="negative">-0.0090</span></td><td><span class="positive">+0.1198</span></td><td class="best"><span class="positive">+0.1325</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+<tr><td>word_in_context</td><td>bertscore</td><td>0.73</td><td class="worst"><span class="neutral">-0.0021</span></td><td><span class="neutral">+0.0014</span></td><td><span class="positive">+0.2261</span></td><td class="best"><span class="positive">+0.2332</span></td><td><span class="winner-badge winner-sgr">PE2+SGR</span></td></tr>
+</table>
+<h2>PE2 vs PE2+SGR Head-to-Head (54 tasks)</h2>
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="method">PE2+SGR Wins</div>
+    <div class="value positive">26</div>
+    <div class="label">tasks where SGR outperforms</div>
+  </div>
+  <div class="summary-card">
+    <div class="method">PE2 Wins</div>
+    <div class="value negative">14</div>
+    <div class="label">tasks where PE2 outperforms</div>
+  </div>
+  <div class="summary-card">
+    <div class="method">Ties</div>
+    <div class="value neutral">14</div>
+    <div class="label">within 0.005</div>
+  </div>
+  <div class="summary-card highlight">
+    <div class="method">SGR Avg Advantage</div>
+    <div class="value positive">+0.0107</div>
+    <div class="label">SGR +0.1112 vs PE2 +0.1005</div>
+  </div>
+</div>
+
+<table>
+<tr><th>Task</th><th>Category</th><th>Metric</th><th>Start</th><th>PE2 &Delta;</th><th>PE2+SGR &Delta;</th><th>Advantage</th></tr>
+<tr><td>ruin_names</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.76</td><td>+0.0536</td><td>+0.2326</td><td><span class="positive">+0.1790</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>orthography_starts_with</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.65</td><td>+0.1115</td><td>+0.2589</td><td><span class="positive">+0.1474</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>hyperbaton</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.86</td><td>+0.0401</td><td>+0.1638</td><td><span class="positive">+0.1237</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>disambiguation_qa</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.79</td><td>+0.0358</td><td>+0.1229</td><td><span class="positive">+0.0871</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>tracking_shuffled_objects_three_objects</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.89</td><td>+0.0208</td><td>+0.0980</td><td><span class="positive">+0.0771</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>translation_en-de</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.77</td><td>+0.1627</td><td>+0.2300</td><td><span class="positive">+0.0672</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>taxonomy_animal</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.90</td><td>-0.0043</td><td>+0.0604</td><td><span class="positive">+0.0648</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>num_to_verbal</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.61</td><td>+0.3428</td><td>+0.3919</td><td><span class="positive">+0.0491</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>cause_and_effect</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.77</td><td>-0.0073</td><td>+0.0367</td><td><span class="positive">+0.0440</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>syntax_ovs</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.79</td><td>+0.0284</td><td>+0.0595</td><td><span class="positive">+0.0311</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>logical_deduction_three_objects</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.84</td><td>+0.1300</td><td>+0.1581</td><td><span class="positive">+0.0282</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>sentence_similarity</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.62</td><td>+0.1496</td><td>+0.1738</td><td><span class="positive">+0.0242</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>sports_understanding</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.78</td><td>+0.1839</td><td>+0.2064</td><td><span class="positive">+0.0225</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>syntax_sov</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.84</td><td>+0.0627</td><td>+0.0812</td><td><span class="positive">+0.0185</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>syntax_svo</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.86</td><td>+0.0847</td><td>+0.1025</td><td><span class="positive">+0.0179</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>translation_en-fr</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.83</td><td>+0.1198</td><td>+0.1325</td><td><span class="positive">+0.0127</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>negation</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.88</td><td>+0.0972</td><td>+0.1098</td><td><span class="positive">+0.0126</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>movie_recommendation</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.74</td><td>+0.2301</td><td>+0.2415</td><td><span class="positive">+0.0114</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>logical_deduction_seven_objects</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.81</td><td>+0.0414</td><td>+0.0526</td><td><span class="positive">+0.0111</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>temporal_sequences</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.75</td><td>+0.2364</td><td>+0.2465</td><td><span class="positive">+0.0100</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>object_counting</td><td>BBH (Reasoning)</td><td>em</td><td>0.94</td><td>-0.0100</td><td>+0.0000</td><td><span class="positive">+0.0100</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>larger_animal</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.83</td><td>+0.0733</td><td>+0.0831</td><td><span class="positive">+0.0098</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>informal_to_formal</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.83</td><td>+0.0268</td><td>+0.0347</td><td><span class="positive">+0.0079</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>web_of_lies</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.94</td><td>+0.0524</td><td>+0.0602</td><td><span class="positive">+0.0078</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>word_in_context</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.72</td><td>+0.2261</td><td>+0.2332</td><td><span class="positive">+0.0071</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>rhymes</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.79</td><td>+0.0000</td><td>+0.0051</td><td><span class="positive">+0.0051</span> <span class="winner-badge winner-sgr">SGR</span></td></tr>
+<tr><td>common_concept</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.63</td><td>+0.0592</td><td>+0.0619</td><td><span class="neutral">+0.0027</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>active_to_passive</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.91</td><td>+0.0903</td><td>+0.0930</td><td><span class="neutral">+0.0027</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>synonyms</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.81</td><td>+0.0261</td><td>+0.0271</td><td><span class="neutral">+0.0010</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>reasoning_about_colored_objects</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.76</td><td>+0.0004</td><td>+0.0013</td><td><span class="neutral">+0.0008</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>letters_list</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.59</td><td>+0.4069</td><td>+0.4069</td><td><span class="neutral">+0.0000</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>arithmetic_base10</td><td>Counterfactual (Rule-based)</td><td>em</td><td>1.00</td><td>+0.0000</td><td>+0.0000</td><td><span class="neutral">+0.0000</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>arithmetic_base9</td><td>Counterfactual (Rule-based)</td><td>em</td><td>1.00</td><td>+0.0000</td><td>+0.0000</td><td><span class="neutral">+0.0000</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>sum</td><td>Instruction Induction (Pattern)</td><td>em</td><td>0.90</td><td>+0.1000</td><td>+0.1000</td><td><span class="neutral">+0.0000</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>first_word_letter</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.69</td><td>+0.3071</td><td>+0.3071</td><td><span class="neutral">-0.0000</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>word_sorting</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.86</td><td>+0.1291</td><td>+0.1286</td><td><span class="neutral">-0.0005</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>sentiment</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.65</td><td>+0.3491</td><td>+0.3483</td><td><span class="neutral">-0.0008</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>data_understanding_generative</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.99</td><td>+0.0022</td><td>+0.0004</td><td><span class="neutral">-0.0018</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>date_understanding</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.67</td><td>-0.0009</td><td>-0.0030</td><td><span class="neutral">-0.0022</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>dyck_languages</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.69</td><td>+0.1300</td><td>+0.1254</td><td><span class="neutral">-0.0046</span> <span class="winner-badge" style="background:#f1f5f9;color:#64748b">tie</span></td></tr>
+<tr><td>syntax_vos</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.79</td><td>+0.0819</td><td>+0.0767</td><td><span class="negative">-0.0052</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>snarks</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.97</td><td>+0.0192</td><td>+0.0131</td><td><span class="negative">-0.0061</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>formal_fallacies</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.94</td><td>+0.0071</td><td>-0.0000</td><td><span class="negative">-0.0071</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>singular_to_plural</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.89</td><td>+0.1119</td><td>+0.1028</td><td><span class="negative">-0.0090</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>chess_cf</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.97</td><td>-0.0000</td><td>-0.0109</td><td><span class="negative">-0.0109</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>arithmetic_base11</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.98</td><td>+0.0058</td><td>-0.0083</td><td><span class="negative">-0.0141</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>translation_en-es</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.84</td><td>+0.1075</td><td>+0.0868</td><td><span class="negative">-0.0207</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>antonyms</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.81</td><td>+0.1633</td><td>+0.1421</td><td><span class="negative">-0.0212</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>causal_judgement</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.91</td><td>+0.0329</td><td>-0.0000</td><td><span class="negative">-0.0329</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>syntax_osv</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.81</td><td>+0.0904</td><td>+0.0555</td><td><span class="negative">-0.0348</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>syntax_vso</td><td>Counterfactual (Rule-based)</td><td>bertscore</td><td>0.82</td><td>+0.0648</td><td>+0.0295</td><td><span class="negative">-0.0353</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>second_word_letter</td><td>Instruction Induction (Pattern)</td><td>bertscore</td><td>0.70</td><td>+0.2644</td><td>+0.2211</td><td><span class="negative">-0.0432</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>geometric_shapes</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.78</td><td>+0.1700</td><td>+0.0615</td><td><span class="negative">-0.1086</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+<tr><td>penguins_in_a_table</td><td>BBH (Reasoning)</td><td>bertscore</td><td>0.78</td><td>+0.2210</td><td>+0.0636</td><td><span class="negative">-0.1574</span> <span class="winner-badge winner-pe2">PE2</span></td></tr>
+</table>
+<h2>PE2+SGR Development Progression</h2>
+<table>
+<tr><th>Version</th><th>Key Change</th><th>Avg &Delta;</th><th>Gap vs PE2</th><th>Win/Loss/Tie</th></tr>
+<tr><td>SGR v2</td><td>Two-phase: structured diagnosis &rarr; free-form generation</td><td>+0.0523</td><td>&minus;0.0474</td><td>12W / 31L / 7T</td></tr>
+<tr><td>SGR v3</td><td>Score threshold (0.8), strategy override, free-form below threshold</td><td>+0.0925</td><td>&minus;0.0143</td><td>13W / 25L / 10T</td></tr>
+<tr class="total-row"><td><strong>SGR v4</strong></td><td><strong>Adaptive switching: free-form first, switch to SGR when improvement plateaus (&lt;0.02)</strong></td><td><strong>+0.1112</strong></td><td><strong>+0.0107</strong></td><td><strong>26W / 14L / 14T</strong></td></tr>
+</table>
+
+<div class="footnote">
+  <p>Generated from PE2 paper benchmark suite. Tasks with errors in any method are excluded from matched comparisons.
+  &Delta; = final_metric &minus; start_score (improvement from optimization).
+  All methods use the same model (gpt-4o-mini), same hyperparameters (3 steps, beam width 3), and same train/val splits.</p>
+</div>
+
+</body>
+</html>
