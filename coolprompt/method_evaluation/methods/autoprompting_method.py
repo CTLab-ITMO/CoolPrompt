@@ -1,7 +1,6 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
-from langchain_core.rate_limiters import InMemoryRateLimiter
-from langchain_openai.chat_models import ChatOpenAI
+from langchain_core.language_models import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.utils.utils import get_dataset_split
@@ -9,38 +8,48 @@ from coolprompt.utils.var_validation import validate_task
 from coolprompt.utils.load_dataset import load_dataset
 
 
+def _parse_dataset_size(size: str) -> Optional[int]:
+    """Returns integer representation of the dataset size.
+    Returns None if "all" provided.
+
+    Args:
+        size (str): dataset size in string representation.
+
+    Returns:
+        Optional[int]: parsed integer value
+    """
+
+    if size == "all":
+        return None
+    return int(size)
+
+
 class AutoPromptingMethod:
 
     def __init__(
         self,
+        model: BaseLanguageModel,
         config: Dict[str, Any]
     ) -> None:
-        self.config = config
-        rate_limiter = InMemoryRateLimiter(
-            requests_per_second=5,
-            check_every_n_seconds=0.5,
-            max_bucket_size=10
-        )
+        """
+        Basic interface for AutoPrompting method.
 
-        self.model = ChatOpenAI(
-            model=self.config['model']['name'],
-            openai_api_key=self.config['openai_api_key'],
-            temperature=self.config['model']['temperature'],
-            max_tokens=self.config['model']['max_tokens'],
-            timeout=60,
-            max_retries=10,
-            rate_limiter=rate_limiter
-        )
+        Attributes:
+            model: langchain.BaseLanguageModel class of model to use.
+            config: (dict) provided configuration.
+            dataset_split: dataset train/val split for optimization process.
+            test_dataset: a dataset to use while testing the final prompt.
+            test_target: string targets for testing dataset.
+            evaluator: evaluator (Evaluator) to compute metrics.
+        """
+        self.model = BaseLanguageModel
+        self.config = config
 
         data_split = self.config['dataset']['configuration']
         data_split = data_split.split('/')
-        train_size = int(data_split[0])
-        val_size = int(data_split[1])
-        test_size = data_split[2]
-        if test_size == "all":
-            test_size = None
-        else:
-            test_size = int(test_size)
+        train_size = _parse_dataset_size(data_split[0])
+        val_size = _parse_dataset_size(data_split[1])
+        test_size = _parse_dataset_size(data_split[2])
 
         train_dataset, train_target = load_dataset(
             self.config['dataset']['name'],
@@ -66,6 +75,7 @@ class AutoPromptingMethod:
         self.evaluator = Evaluator(self.model, task, metric)
 
     def _run(self, start_prompt: str) -> str:
+        """Inner function. Must be implemented for every AutoPrompting method"""
         pass
 
     def run(
@@ -73,6 +83,14 @@ class AutoPromptingMethod:
         start_prompt: str,
         saving_model_answers: bool = False
     ) -> None:
+        """Runs autoprompting optimization process.
+
+        Args:
+            start_prompt (str): initial prompt.
+            saving_model_answers (bool):
+                either to save all model answers for test dataset or not.
+
+        """
         self.final_prompt = self._run(
             start_prompt
         )

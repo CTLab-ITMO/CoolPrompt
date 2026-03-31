@@ -1,3 +1,4 @@
+from langchain_core.language_models import BaseLanguageModel
 import yaml
 
 from coolprompt.method_evaluation.methods import (
@@ -7,6 +8,7 @@ from coolprompt.method_evaluation.methods import (
 
 def evaluate_method(
     method: str,
+    model: BaseLanguageModel,
     config: dict | str,
     start_prompt: str,
     output_file_path: str = "./method_evaluation_output.yaml",

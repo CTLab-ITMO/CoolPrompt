@@ -3,5 +3,6 @@ from coolprompt.method_evaluation.methods.reflectiveprompt import (
 )
 
 __all__ = [
-    "ReflectivePromptMethod"
+    "ReflectivePromptMethod",
+    "ReGPSMethod"
 ]

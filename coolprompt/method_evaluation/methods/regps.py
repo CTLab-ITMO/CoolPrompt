@@ -1,13 +1,15 @@
+from random import sample
+
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.method_evaluation.methods.autoprompting_method import (
     AutoPromptingMethod
 )
-from coolprompt.optimizer.reflective_prompt.run import reflectiveprompt
+from coolprompt.optimizer.regps.run import regps
 
 
-class ReflectivePromptMethod(AutoPromptingMethod):
+class ReGPSMethod(AutoPromptingMethod):
     """
-    Interface for ReflectivePrompt method.
+    Interface for ReGPS method.
 
     Attributes:
         model: langchain.BaseLanguageModel class of model to use.
@@ -19,7 +21,7 @@ class ReflectivePromptMethod(AutoPromptingMethod):
     """
 
     def _run(self, start_prompt: str) -> str:
-        """Runs ReflectivePrompt optimization process.
+        """Runs ReGPS optimization process.
 
         Args:
             start_prompt (str): initial prompt.
@@ -30,11 +32,17 @@ class ReflectivePromptMethod(AutoPromptingMethod):
         problem_description = self.config.get('problem_description')
         if problem_description is None:
             generator = SyntheticDataGenerator(self._system_model)
+            indices = sample(range(0, len(self.dataset_split[0])), 5)
+            examples = [
+                (self.dataset_split[0][ind], self.dataset_split[2][ind])
+                for ind in indices
+            ]
             problem_description = generator._generate_problem_description(
-                prompt=start_prompt
+                prompt=start_prompt,
+                examples=examples
             )
 
-        final_prompt = reflectiveprompt(
+        final_prompt = regps(
             model=self.model,
             dataset_split=self.dataset_split,
             evaluator=self.evaluator,
@@ -44,9 +52,10 @@ class ReflectivePromptMethod(AutoPromptingMethod):
             num_epochs=self.config['method'].get('num_epochs', 5),
             output_path=self.config['method'].get(
                 'output_path',
-                "./reflectiveprompt_outputs"
+                "./regps_outputs"
             ),
             use_cache=self.config['method'].get('use_cache', True),
+            bad_examples_number=self.config.get("bad_examples_number", 5),
             checkpoint_path=self.config.get('checkpoint_path')
         )
 

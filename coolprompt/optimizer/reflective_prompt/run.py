@@ -53,7 +53,7 @@ def reflectiveprompt(
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],
-        checkpoint_path=args['checkpoint_path'],
+        checkpoint_path=args.get('checkpoint_path'),
         use_cache=args["use_cache"],
     )
     logger.info("Starting ReflectivePrompt optimization...")

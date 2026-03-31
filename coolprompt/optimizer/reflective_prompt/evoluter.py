@@ -164,14 +164,19 @@ class ReflectiveEvoluter:
 
         logger.info("Initializing population...")
         if self.checkpoint_path is not None:
-            with open(self.checkpoint_path, 'r') as f:
+            with open(f'{self.checkpoint_path}/population.yaml', 'r') as f:
                 data = yaml.safe_load(f)
-            print(data)
             initial_population = [
                 Prompt.from_dict(prompt_data)
                 for prompt_data in data['prompts']
             ]
             initial_population = self._reranking(initial_population)
+            with open(
+                f'{self.checkpoint_path}/long_term_reflection.yaml',
+                'r'
+            ) as f:
+                data = yaml.safe_load(f)
+            self._long_term_reflection_str = data
             return initial_population
 
         if self.initial_prompt is None:

@@ -1,5 +1,6 @@
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional, Tuple, List, Dict
+from time import sleep
 
 from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
@@ -71,12 +72,20 @@ class Evaluator:
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
 
-        answers = self.model.batch(
-            [
-                self._get_full_prompt(prompt, sample, template)
-                for sample in dataset
-            ]
-        )
+        answers = None
+        for _ in range(5):
+            try:
+                answers = self.model.batch(
+                    [
+                        self._get_full_prompt(prompt, sample, template)
+                        for sample in dataset
+                    ]
+                )
+                break
+            except Exception as e:
+                logger.info(e)
+                sleep(60)
+
         answers = [
             a.content if isinstance(a, AIMessage) else a for a in answers
         ]

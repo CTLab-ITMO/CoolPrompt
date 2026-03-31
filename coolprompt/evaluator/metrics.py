@@ -41,6 +41,19 @@ class HFEvaluateMetric(ABC):
         self._compute_kwargs_func = lambda outputs, targets: {}
         super().__init__()
 
+    def _postprocessing(self, metric: float | List[float]) -> float:
+        """Unwraps the list when HF metric returns [Metric Value]
+            instead of Metric Value.
+
+        Args:
+            metric (float | List[float]): Metric Value from HF metric.
+        Returns:
+            float: Unwrapped value.
+        """
+        if isinstance(metric, list):
+            return metric[0]
+        return metric
+
     def _compute_raw(
         self,
         outputs: list[str | int],
@@ -59,11 +72,13 @@ class HFEvaluateMetric(ABC):
         """
 
         return [
-            self._metric.compute(
-                predictions=[output],
-                references=[target],
-                **self._compute_kwargs_func([output], [target]),
-            )[self._return_parameter]
+            self._postprocessing(
+                self._metric.compute(
+                    predictions=[output],
+                    references=[target],
+                    **self._compute_kwargs_func([output], [target]),
+                )[self._return_parameter]
+            )
             for output, target in zip(outputs, targets)
         ]
 
@@ -93,7 +108,7 @@ class BaseMetric(ABC):
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-    ) -> float | Tuple[float, List[Dict[str, str]]]:
+    ) -> List[float]:
         """Compute metric values from preprocessed model answers.
         Returs a list of float values corresponding for each answer.
 
@@ -491,7 +506,7 @@ class GEvalMetric(GenerationMetric):
 
             scores.append(score)
 
-        return float(mean(scores)) if scores else 0.0
+        return scores
 
 
 class ExactMatchMetric(GenerationMetric):

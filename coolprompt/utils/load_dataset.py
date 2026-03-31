@@ -90,7 +90,6 @@ def squad_v2_preproc(sample, size: int = None):
 
 def gsm8k_preproc(sample, size: int = None):
     """Preprocessing of GSM8k dataset"""
-    sample = sample['train']
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["question"]
@@ -172,7 +171,9 @@ def load_dataset(
             data = gsm8k_preproc(data, size)
         case "common_gen":
             data = load_dataset_hf("allenai/common_gen")
-            data = data[split]
+            match split:
+                case "train": data = data[split]
+                case "test": data = data['validation']
             data = common_gen_preproc(data, size)
         case "xsum":
             data = load_dataset_hf("yairfeldman/xsum")
