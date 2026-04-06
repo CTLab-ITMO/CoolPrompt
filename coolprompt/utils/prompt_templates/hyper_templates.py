@@ -49,8 +49,10 @@ class HypeMetaPromptConfig:
             PromptSectionSpec(
                 name="Task context",
                 description=(
-                    "Summarize the user's query and any provided meta-information, "
-                    "keeping all important constraints and domain details."
+                    "Provide the full context of the user's task: restate the query, "
+                    "include all provided meta-information, domain details, constraints, "
+                    "and any other information necessary to produce a correct solution. "
+                    "Do not evaluate or condense — pass through everything relevant."
                 ),
             ),
             PromptSectionSpec(

@@ -14,8 +14,8 @@ def _build_full_meta_prompt_template(builder: HypeMetaPromptBuilder) -> str:
     body = builder.build_meta_prompt()
     return (
         body
-        + "\n\nUser query:\n<user_query>\n{QUERY}\n</user_query>\n"
-        + "{META_INFO_BLOCK}"
+        + "\n\n{META_INFO_BLOCK}"
+        + "User query:\n<user_query>\n{QUERY}\n</user_query>\n"
     )
 
 
