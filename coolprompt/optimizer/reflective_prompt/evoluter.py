@@ -399,7 +399,10 @@ class ReflectiveEvoluter:
             )
             for response in responses
         ]
-        crossed_population = [Prompt(response) for response in responses]
+        crossed_population = [
+            Prompt(response, origin=PromptOrigin.CROSSOVER)
+            for response in responses
+        ]
 
         assert len(crossed_population) == self.population_size
         return crossed_population
@@ -518,14 +521,10 @@ class ReflectiveEvoluter:
             str: best evoluted prompt
         """
 
-        self.model.set_mode(0)
-
         population = np.array(self._init_pop())
         self._cache_population(
             population, self._make_output_path("initial_population")
         )
-
-        self.model.set_mode(1)
 
         while self.iteration < self.num_epochs:
             parent_population = self._selection(population)
@@ -563,9 +562,27 @@ class ReflectiveEvoluter:
                 population = np.append(population, np.array([self.elitist]))
             population = self._reranking(population)
 
-            self._update_iter(population)
+            survived_crossed = sum(1 for p in population if p.get_origin() == 0)
+            survived_mutated = sum(1 for p in population if p.get_origin() == 1)
 
-        self.model.set_mode(2)
+            survived_crossed = survived_crossed if isinstance(survived_crossed, int) else 0
+            survived_mutated = survived_mutated if isinstance(survived_mutated, int) else 0
+
+            fraction_crossed = survived_crossed / self.population_size
+            fraction_mutated = survived_mutated / self.population_size
+
+            self.model.update_fractions_data(
+                {
+                    'epoch': self.iteration,
+                    'fraction_crossed': fraction_crossed,
+                    'fraction_mutated': fraction_mutated,
+                    'survived_crossed': survived_crossed,
+                    'survived_mutated': survived_mutated,
+                    'total_population_size': len(population)
+                }
+            )
+
+            self._update_iter(population)
 
         logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 

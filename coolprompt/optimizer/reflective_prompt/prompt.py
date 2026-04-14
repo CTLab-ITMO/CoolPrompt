@@ -12,6 +12,7 @@ class PromptOrigin(Enum):
     APE = "ape"
     EVOLUTED = "evoluted"
     MUTATED = "mutated"
+    CROSSOVER = "crossover"
 
     @classmethod
     def from_string(cls: Type['PromptOrigin'], string: str) -> 'PromptOrigin':
@@ -97,6 +98,14 @@ class Prompt:
         self.origin = origin
         self.score = score
         self.bad_examples = bad_examples
+
+    def get_origin(self):
+        if self.origin == PromptOrigin.CROSSOVER:
+            return 0
+        elif self.origin == PromptOrigin.MUTATED:
+            return 1
+        else:
+            return 2
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
