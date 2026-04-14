@@ -3,6 +3,8 @@ from langchain_community.callbacks import get_openai_callback
 from typing import Any
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_openai import ChatOpenAI
+from coolprompt.utils.logging_config import logger
+from time import sleep
 
 
 class OpenAITracker:
@@ -13,6 +15,8 @@ class OpenAITracker:
 
     _instance = None
 
+    mode = 0
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
@@ -21,16 +25,19 @@ class OpenAITracker:
 
     def _reset_stats(self):
         """Resets all tracking stats to zero."""
-        self.stats = {
-            "total_calls": 0,
-            "total_tokens": 0,
-            "prompt_tokens": 0,
-            "completion_tokens": 0,
-            "total_cost": 0.0,
-            "invoke_calls": 0,
-            "batch_calls": 0,
-            "batch_items": 0,
-        }
+        self.stats = [
+            {
+                "total_calls": 0,
+                "total_tokens": 0,
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_cost": 0.0,
+                "invoke_calls": 0,
+                "batch_calls": 0,
+                "batch_items": 0,
+            }
+            for i in range(3)
+        ]
 
     def _update_stats(self, callback, invoke_flag, batch_size, **kwargs):
         """Updates stats from callback data.
@@ -40,17 +47,17 @@ class OpenAITracker:
             invoke_flag (bool): True for invoke calls, False for batch.
             batch_size (int): Number of items in batch call.
         """
-        self.stats["total_calls"] += 1
-        self.stats["total_tokens"] += callback.total_tokens
-        self.stats["prompt_tokens"] += callback.prompt_tokens
-        self.stats["completion_tokens"] += callback.completion_tokens
-        self.stats["total_cost"] += callback.total_cost
+        self.stats[self.mode]["total_calls"] += 1
+        self.stats[self.mode]["total_tokens"] += callback.total_tokens
+        self.stats[self.mode]["prompt_tokens"] += callback.prompt_tokens
+        self.stats[self.mode]["completion_tokens"] += callback.completion_tokens
+        self.stats[self.mode]["total_cost"] += callback.total_cost
 
         if invoke_flag:
-            self.stats["invoke_calls"] += 1
+            self.stats[self.mode]["invoke_calls"] += 1
         else:
-            self.stats["batch_calls"] += 1
-            self.stats["batch_items"] += batch_size
+            self.stats[self.mode]["batch_calls"] += 1
+            self.stats[self.mode]["batch_items"] += batch_size
 
     def wrap_model(self, model):
         """Wraps model with tracking wrapper.
@@ -108,10 +115,19 @@ class TrackedLLMWrapper(BaseLanguageModel):
         Returns:
             Model output.
         """
-        with get_openai_callback() as cb:
-            result = self.model.invoke(input, **kwargs)
-            self.tracker._update_stats(cb, True, 0)
-            return result
+
+        result = None
+        for _ in range(10):
+            try:
+                with get_openai_callback() as cb:
+                    result = self.model.invoke(input, **kwargs)
+                    self.tracker._update_stats(cb, True, 0)
+                break
+            except Exception as e:
+                logger.info(e)
+                sleep(60)
+
+        return result
 
     def batch(self, inputs, **kwargs):
         """Calls model in batch and tracks usage stats.
@@ -123,10 +139,19 @@ class TrackedLLMWrapper(BaseLanguageModel):
         Returns:
             List of model outputs.
         """
-        with get_openai_callback() as cb:
-            results = self.model.batch(inputs, **kwargs)
-            self.tracker._update_stats(cb, False, len(inputs))
-            return results
+
+        results = None
+        for _ in range(10):
+            try:
+                with get_openai_callback() as cb:
+                    results = self.model.batch(inputs, **kwargs)
+                    self.tracker._update_stats(cb, False, len(inputs))
+                break
+            except Exception as e:
+                logger.info(e)
+                sleep(60)
+
+        return results
 
     def with_structured_output(self, schema, **kwargs):
         """Returns model with structured output support.
@@ -158,6 +183,9 @@ class TrackedLLMWrapper(BaseLanguageModel):
             dict: Copy of current stats dictionary.
         """
         return self.tracker.get_stats()
+
+    def set_mode(self, val):
+        self.tracker.mode = val
 
     def __getattr__(self, name):
         return getattr(self.model, name)

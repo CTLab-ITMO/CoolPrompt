@@ -518,10 +518,14 @@ class ReflectiveEvoluter:
             str: best evoluted prompt
         """
 
+        self.model.set_mode(0)
+
         population = np.array(self._init_pop())
         self._cache_population(
             population, self._make_output_path("initial_population")
         )
+
+        self.model.set_mode(1)
 
         while self.iteration < self.num_epochs:
             parent_population = self._selection(population)
@@ -560,6 +564,8 @@ class ReflectiveEvoluter:
             population = self._reranking(population)
 
             self._update_iter(population)
+
+        self.model.set_mode(2)
 
         logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 
