@@ -2,7 +2,9 @@ from langchain_core.language_models import BaseLanguageModel
 import yaml
 
 from coolprompt.method_evaluation.methods import (
-    ReflectivePromptMethod
+    ReflectivePromptMethod,
+    HyPEMethod,
+    HyPERMethod,
 )
 
 
@@ -20,7 +22,7 @@ def evaluate_method(
 
     Args:
         method (str): Name of the method to evaluate.
-            Supported methods: ['reflectiveprompt'].
+            Supported methods: ['reflectiveprompt', 'hype', 'hyper'].
         config (dict | str): Either provided config
             or string path to config yaml file.
         start_prompt (str): start prompt.
@@ -44,6 +46,10 @@ def evaluate_method(
     match method:
         case "reflectiveprompt":
             autoprompting_method = ReflectivePromptMethod(config)
+        case "hype":
+            autoprompting_method = HyPEMethod(config)
+        case "hyper":
+            autoprompting_method = HyPERMethod(config)
         case _:
             raise ValueError(f"Unsupported method name: {method}")
 
