@@ -34,7 +34,6 @@ class HyPERMethod(AutoPromptingMethod):
         if 'task_description' not in meta_info:
             meta_info['task_description'] = self.config.get('problem_description')
 
-        # HyPER-specific parameters from config
         method_config = self.config.get('method', {})
         n_iterations = method_config.get('n_iterations', 5)
         patience = method_config.get('patience', None)
@@ -54,7 +53,7 @@ class HyPERMethod(AutoPromptingMethod):
             mini_batch_size=mini_batch_size,
         )
 
-        final_prompt = hyper_opt.optimize(
+        final_prompt, _ = hyper_opt.optimize(
             prompt=start_prompt,
             dataset_split=self.dataset_split,
             meta_info=meta_info,

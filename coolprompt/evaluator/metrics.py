@@ -200,6 +200,22 @@ class BaseMetric(ABC):
             encoded_output_labels, encoded_targets, dataset
         )
 
+        # Handle None results from _compute_raw
+        if results is None or any(r is None for r in results):
+            return None
+
+        # Store failed_examples parameter for use in evaluator.py
+        self._failed_examples_requested = failed_examples
+
+        # Aggregate results
+        if failed_examples is not None and failed_examples > 0:
+            bad_examples = self._extract_bad_examples(
+                results, dataset, outputs, targets, failed_examples
+            )
+            return float(np.mean(results)), bad_examples
+
+        return float(np.mean(results))
+
     def parse_output(self, output: str) -> str:
         """Extract parsed answer from model output.
 
@@ -216,19 +232,37 @@ class BaseMetric(ABC):
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
+        failed_examples: Optional[int] = None,
     ) -> Tuple[float, List[float | int]]:
         """Compute metric value per sample and aggregate.
+
+        Args:
+            failed_examples: Number of bad examples to return (optional).
 
         Returns:
             Tuple of (aggregate_score, score_per_task).
             score_per_task[i] - score for i-th sample.
             aggregate_score - same as compute().
         """
+        targets = list(map(str, targets))
+        encoded_output_labels, encoded_targets = self._encode_labels(
+            outputs, targets
+        )
+        
         score_per_task = []
-        for o, t in zip(outputs, targets):
+        for o, t in zip(encoded_output_labels, encoded_targets):
             s = self._compute_raw([o], [t], dataset)
             score_per_task.append(s)
-        aggregate = self.compute(outputs, targets, dataset)
+        
+        # compute() returns tuple (float, List[Dict]) when failed_examples > 0, else just float
+        # Use original outputs (not encoded) because compute() extracts answers using extract_answer()
+        # which needs the raw model output with <ans> tags
+        compute_result = self.compute(outputs, targets, dataset=dataset, failed_examples=failed_examples)
+        if isinstance(compute_result, tuple):
+            aggregate = compute_result[0]  # Extract just the float score
+        else:
+            aggregate = compute_result
+        
         return aggregate, score_per_task
 
     def __str__(self) -> str:

@@ -1,5 +1,6 @@
 """HyPEROptimizer: HyPE with iterative refinement via recommendations."""
 
+import logging
 import random
 from typing import Any, List, Optional, Sequence, Tuple
 
@@ -12,6 +13,8 @@ from coolprompt.evaluator.evaluator import (
     Evaluator,
     EvalResultDetailed,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def sample_mini_batch(
@@ -126,43 +129,69 @@ Alternative prompt:"""
             Sequence[str], Sequence[str], Sequence[str], Sequence[str]
         ],
         meta_info: Optional[dict[str, Any]] = None,
-    ) -> str:
+    ) -> Tuple[str, list]:
         """Generate candidates, evaluate, update recommendations, repeat."""
         train_samples, val_samples, train_targets, val_targets = dataset_split
         best_prompt = prompt
+        logger.debug(f"[HyPER] Initial prompt: {prompt:250}...")
+        
         best_score = self.evaluator.evaluate(
             prompt,
             list(val_samples),
             list(val_targets),
-            batch_size=50,
-            show_progress=False,
+            show_progress=True,
         )
+        logger.debug(f"[HyPER] Initial validation score: {best_score}")
+        
         patience_counter = 0
+        iteration_history = []
 
         for iteration in tqdm(range(self.n_iterations), desc="HyPER iterations"):
+            logger.debug(f"\n{'='*60}")
+            logger.debug(f"[HyPER] Iteration {iteration + 1}/{self.n_iterations}")
+            score_str = f"{best_score:.4f}" if best_score is not None else "N/A"
+            logger.debug(f"[HyPER] Current best score: {score_str}")
+            logger.debug(f"[HyPER] Current best prompt: {best_prompt:250}...")
+            logger.debug(f"{'='*60}")
+            
+            score_before_iteration = best_score
+            
             # 1. Generate candidates from best_prompt
+            logger.debug(f"[HyPER] Generating {self.n_candidates} candidates...")
             candidates = self._get_variants_from_best(
                 best_prompt, n_candidates=self.n_candidates
             )
+            logger.debug(f"[HyPER] Generated {len(candidates)} candidates")
 
             if not candidates:
-                return best_prompt
+                logger.warning("[HyPER] No candidates generated, returning best prompt")
+                return best_prompt, iteration_history
 
             # 2. Mini-batch from train
             samples, sample_targets = sample_mini_batch(
                 train_samples, train_targets, self.mini_batch_size
             )
+            logger.debug(f"[HyPER] Sampled {len(samples)} mini-batch samples")
+            
             if not samples:
+                logger.warning("[HyPER] No samples in mini-batch, skipping iteration")
                 continue
 
             # 3. Evaluate candidates on mini-batch via evaluate_detailed
+            logger.debug(f"[HyPER] Evaluating {len(candidates)} candidates on mini-batch, k_samples={self.k_samples}...")
             results: List[EvalResultDetailed] = [
-                self.evaluator.evaluate_detailed(cand, samples, sample_targets)
+                self.evaluator.evaluate_detailed(cand, samples, sample_targets, failed_examples=self.k_samples)
                 for cand in candidates
             ]
+            
+            # Log each candidate's score in debug mode
+            for i, (cand, res) in enumerate(zip(candidates, results)):
+                score_str = f"{res.aggregate_score:.4f}" if res.aggregate_score is not None else "N/A"
+                logger.debug(f"[HyPER] Candidate {i+1}: score={score_str}, failed={len(res.failed_examples)}")
 
             # 4. Pareto front
             pareto_front = compute_pareto_front(candidates, results)
+            logger.debug(f"[HyPER] Pareto front size: {len(pareto_front)}")
 
             # Fallback: if all candidates are in front, sort by aggregate_score
             if len(pareto_front) == len(candidates) and self.top_n_candidates < len(
@@ -174,11 +203,14 @@ Alternative prompt:"""
                     reverse=True,
                 )
                 pareto_front = scored[: self.top_n_candidates]
+                logger.debug(f"[HyPER] Using top {self.top_n_candidates} by score")
 
             if not pareto_front:
+                logger.warning("[HyPER] Empty Pareto front, skipping iteration")
                 continue
 
             # 5. Collect recommendations for all candidates from Pareto front
+            logger.debug(f"[HyPER] Collecting recommendations from {len(pareto_front)} Pareto candidates...")
             all_recs: List[str] = []
             for cand_prompt, res in pareto_front:
                 failed_sample = random.sample(
@@ -192,11 +224,15 @@ Alternative prompt:"""
 
             # Filter and update recommendations
             all_recs = self.feedback_module.filter_recommendations(all_recs)
+            logger.debug(f"[HyPER] Generated {len(all_recs)} recommendations")
 
             self.hype_module.update_section("recommendations", all_recs)
 
             # 6. For each candidate from Pareto front
-            for cand_prompt, res in pareto_front:
+            logger.debug(f"[HyPER] Evaluating {len(pareto_front)} optimized candidates on validation set...")
+            for i, (cand_prompt, res) in enumerate(pareto_front):
+                logger.debug(f"[HyPER] Optimizing Pareto candidate {i+1}/{len(pareto_front)}...")
+                
                 optimized_prompt = self.hype_module.optimize(
                     cand_prompt, meta_info=meta_info
                 )
@@ -205,18 +241,43 @@ Alternative prompt:"""
                     optimized_prompt,
                     list(val_samples),
                     list(val_targets),
-                    batch_size=50,
-                    show_progress=False,
+                    show_progress=True,
                 )
+                
+                val_score_str = f"{val_score:.4f}" if val_score is not None else "N/A"
+                logger.debug(f"[HyPER] Optimized candidate {i+1} validation score: {val_score_str}")
 
-                if val_score > best_score:
+                if val_score is not None and best_score is not None and val_score > best_score:
+                    old_str = f"{best_score:.4f}"
+                    new_str = f"{val_score:.4f}"
+                    logger.debug(f"[HyPER] *** NEW BEST! Score improved: {old_str} -> {new_str}")
                     best_score = val_score
                     best_prompt = optimized_prompt
-                    patience_counter = 0
-                else:
-                    patience_counter += 1
+            
+            if best_score == score_before_iteration:
+                patience_counter += 1
+                logger.debug(f"[HyPER] No improvement in iteration {iteration + 1}, patience: {patience_counter}/{self.patience}")
+            else:
+                patience_counter = 0
+            
+            iteration_history.append({
+                "iteration": iteration + 1,
+                "best_score": best_score,
+                "patience_counter": patience_counter,
+            })
+            score_str = f"{best_score:.4f}" if best_score is not None else "N/A"
+            logger.debug(f"[HyPER] Iteration {iteration + 1} complete. Best score: {score_str}")
 
             if self.patience and patience_counter >= self.patience:
+                logger.debug(f"[HyPER] Early stopping: patience {self.patience} reached")
                 break
 
-        return best_prompt
+        logger.debug(f"\n{'='*60}")
+        logger.debug(f"[HyPER] Optimization complete!")
+        final_score_str = f"{best_score:.4f}" if best_score is not None else "N/A"
+        logger.debug(f"[HyPER] Final best score: {final_score_str}")
+        logger.debug(f"[HyPER] Final best prompt: {best_prompt[:200]}...")
+        logger.debug(f"[HyPER] Iteration history: {iteration_history}")
+        logger.debug(f"{'='*60}")
+        
+        return best_prompt, iteration_history

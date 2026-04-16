@@ -29,6 +29,7 @@ class EvalResultDetailed:
     aggregate_score: float
     score_per_task: List[float | int] = None
     failed_examples: List[FailedExampleDetailed] = None
+    raw_outputs: List[str] = None
 
 
 class Evaluator:
@@ -49,12 +50,12 @@ class Evaluator:
         logger.info(f"Evaluator successfully initialized with {metric} metric")
 
     def evaluate(
-            self,
-            prompt: str,
-            dataset: list[str],
-            targets: list[str | int],
-            template: Optional[str] = None,
-            failed_examples: Optional[int] = None
+        self,
+        prompt: str,
+        dataset: list[str],
+        targets: list[str | int],
+        template: Optional[str] = None,
+        failed_examples: Optional[int] = None,
     ) -> float | Tuple[float, List[Dict[str, str]]]:
         """
         Evaluate the model on a dataset
@@ -99,7 +100,6 @@ class Evaluator:
 
         return self.metric.compute(answers, targets, dataset, failed_examples)
 
-<<<<<<< HEAD
     def _run_batches(self, full_prompts: list[str]) -> list[str]:
         """Run the model on preformatted prompts in batches with progress tracking.
 
@@ -148,58 +148,6 @@ class Evaluator:
                 pbar.update(len(batch))
                 logger.debug(f"Batch {start // self.batch_size + 1}/{total_batches} processed")
         return answers
-=======
-    def evaluate_detailed(
-        self,
-        prompt: str,
-        dataset: list[str],
-        targets: list[str | int],
-        template: Optional[str] = None,
-    ) -> EvalResultDetailed:
-        """Evaluate the model and return detailed results per sample."""
-        if template is None:
-            template = self._get_default_template()
-
-        logger.info(
-            f"Evaluating (detailed) prompt for {self.task} task on {len(dataset)} samples"
-        )
-        if self.task == Task.CLASSIFICATION:
-            self.metric.extract_labels(targets)
-
-        answers = self.model.batch(
-            [
-                self._get_full_prompt(prompt, sample, template)
-                for sample in dataset
-            ]
-        )
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
-        ]
-
-        parsed_answers = [self.metric.parse_output(a) for a in answers]
-        aggregate_score, score_per_task = self.metric.compute_detailed(
-            answers, targets
-        )
-
-        failed_examples = []
-        for i, score in enumerate(score_per_task):
-            if score == 0:
-                failed_examples.append(
-                    FailedExampleDetailed(
-                        instance=dataset[i],
-                        assistant_answer=answers[i],
-                        model_answer_parsed=parsed_answers[i],
-                        metric_value=score,
-                        ground_truth=targets[i],
-                    )
-                )
-
-        return EvalResultDetailed(
-            aggregate_score=aggregate_score,
-            score_per_task=score_per_task,
-            failed_examples=failed_examples,
-        )
->>>>>>> 2241d29 (added evaluate detailed)
 
     def _get_full_prompt(
             self,
