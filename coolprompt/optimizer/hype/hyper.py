@@ -177,10 +177,10 @@ Alternative prompt:"""
                 logger.warning("[HyPER] No samples in mini-batch, skipping iteration")
                 continue
 
-            # 3. Evaluate candidates on mini-batch via evaluate_detailed
+            # 3. Evaluate candidates on mini-batch
             logger.debug(f"[HyPER] Evaluating {len(candidates)} candidates on mini-batch, k_samples={self.k_samples}...")
             results: List[EvalResultDetailed] = [
-                self.evaluator.evaluate_detailed(cand, samples, sample_targets, failed_examples=self.k_samples)
+                self.evaluator.evaluate(cand, samples, sample_targets, failed_examples=self.k_samples, return_detailed=True)
                 for cand in candidates
             ]
             

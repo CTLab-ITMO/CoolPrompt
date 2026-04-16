@@ -1,4 +1,3 @@
-from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional, Tuple, List, Dict
 from tqdm import tqdm
 from time import sleep
@@ -6,6 +5,7 @@ from dataclasses import dataclass
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
+import numpy as np
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
@@ -56,7 +56,9 @@ class Evaluator:
         targets: list[str | int],
         template: Optional[str] = None,
         failed_examples: Optional[int] = None,
-    ) -> float | Tuple[float, List[Dict[str, str]]]:
+        *,
+        return_detailed: bool = False,
+    ) -> float | Tuple[float, List[Dict[str, str]]] | EvalResultDetailed:
         """
         Evaluate the model on a dataset
         by generating answers and computing the metric.
@@ -76,11 +78,14 @@ class Evaluator:
                 Prompt template for defined task type.
                 If None, uses default template.
             failed_examples (Optional[int]):
-                Number of bad examples to return after evaluating.
+                Number of bad examples to return after evaluating
+            return_detailed (bool, default=False): If True, returns EvalResultDetailed with per-task scores
+                and raw outputs.
+
 
         Returns:
             float | Tuple[float, List[Dict[str, str]]]:
-            The computed evaluation metric score with/wo bad examples.
+                The computed evaluation metric score with/wo bad examples, or detailed results.
         """
 
         if template is None:
@@ -98,17 +103,37 @@ class Evaluator:
 
         answers = self._run_batches(full_prompts)
 
-        return self.metric.compute(answers, targets, dataset, failed_examples)
+        if not return_detailed:
+            return self.metric.compute(answers, targets, dataset, failed_examples)
+
+        aggregate, score_per_task, _ = self.metric.compute(
+            answers, targets, dataset, failed_examples, return_per_task=True
+        )
+        parsed_answers = [self.metric.parse_output(a) for a in answers]
+
+        detailed_failures = []
+        if failed_examples and failed_examples > 0:
+            indices = np.argsort(score_per_task)[:failed_examples]
+            for i in indices:
+                detailed_failures.append(
+                    FailedExampleDetailed(
+                        instance=dataset[i],
+                        assistant_answer=answers[i],
+                        model_answer_parsed=parsed_answers[i],
+                        metric_value=score_per_task[i],
+                        ground_truth=targets[i],
+                    )
+                )
+
+        return EvalResultDetailed(
+            aggregate_score=aggregate,
+            score_per_task=score_per_task,
+            failed_examples=detailed_failures,
+            raw_outputs=answers,
+        )
 
     def _run_batches(self, full_prompts: list[str]) -> list[str]:
-        """Run the model on preformatted prompts in batches with progress tracking.
-
-        Args:
-            full_prompts (list[str]): Fully formatted prompts to send to the model.
-
-        Returns:
-            list[str]: Model outputs for all prompts.
-        """
+        """Run the model on preformatted prompts in batches with progress tracking."""
         answers: list[str] = []
         total = len(full_prompts)
         total_batches = (total + self.batch_size - 1) // self.batch_size
