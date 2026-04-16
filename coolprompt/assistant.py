@@ -32,6 +32,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
+from coolprompt.optimizer.prompt_compressor import PromptCompressor
 
 
 class PromptTuner:
@@ -190,7 +191,7 @@ class PromptTuner:
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
                 Available methods are:
-                    ['hype', 'reflective', 'distill', 'regps']
+                    ['hype', 'reflective', 'distill', 'regps', 'compress']
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
@@ -394,6 +395,11 @@ class PromptTuner:
                 initial_prompt=start_prompt,
                 **kwargs,
             )
+        elif method is Method.COMPRESS:
+            compressor = PromptCompressor(
+                model=self._system_model,
+            )
+            final_prompt = compressor.compress(start_prompt, return_metadata=False)
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
