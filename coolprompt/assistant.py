@@ -400,8 +400,12 @@ class PromptTuner:
         elif method is Method.COMPRESS:
             compressor = PromptCompressor(
                 model=self._system_model,
+                **kwargs,
             )
-            final_prompt = compressor.compress(start_prompt, return_metadata=False)
+            final_prompt = compressor.compress(
+                prompt=start_prompt, 
+                return_metadata=False,
+            )
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(

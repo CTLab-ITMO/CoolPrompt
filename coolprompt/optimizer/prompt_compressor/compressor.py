@@ -3,31 +3,7 @@ from typing import List, Optional, Union
 from langchain_core.language_models import BaseLanguageModel
 from pydantic import BaseModel, Field
 from coolprompt.utils.logging_config import logger
-
-
-SYSTEM_PROMPT = """
-## Роль 
-Ты экспертный промпт-инженер, который разбирается в оптимизации промптов.
-
-## Задача
-Тебе дан исходный промпт от пользователя (в котором есть входной контекст задачи и вопрос).
-Твоя задача составить сжатый промпт по схеме:
-1. Сначала идёт входной контекст задачи в одном предложении в сжатом виде.
-2. Далее ставится целевой запрос/вопрос, что требуется в данной задаче (в одном предложении).
-
-Задачу решай по шагам:
-- Проанализируй текст задачи, определи, где находится суть вопроса.
-- Составь ОЧЕНЬ СИЛЬНО сжатую версию (не более 10 слов) входного контекста задачи.
-- Составь ОЧЕНЬ СИЛЬНО сжатую версию (не более 10 слов) целевого вопроса/запроса с добавлением "ответь кратко".
-- Объедини два предложения в один финальный промпт.
-
-## Формат ответа
-- Строго следуй формату JSON
-- Ориентируйся только на текст изначального промпта
-- За несуществующие слова ты будешь оштрафован
-"""
-
-USER_PROMPT = "## Исходный промпт: {prompt}"
+from coolprompt.utils.prompt_templates.compress_templates import SYSTEM_PROMPT, USER_PROMPT
 
 
 class CompressedPromptResponse(BaseModel):
@@ -47,12 +23,13 @@ class PromptCompressor:
         model: BaseLanguageModel,
         system_prompt: Optional[str] = None,
         user_prompt: Optional[str] = None,
+        **kwargs,
     ):
         """
         Args:
             model: LangChain language model.
             system_prompt: System prompt for compression (if None, the default is used).
-            user_prompt_template: User query template with {prompt} placeholder.
+            user_prompt: User query template with {prompt} placeholder.
         """
         self.model = model
         self.system_prompt = system_prompt or SYSTEM_PROMPT
@@ -63,13 +40,14 @@ class PromptCompressor:
         )
 
     def _build_messages(self, prompt: str) -> List[dict]:
-        """Build messages for the LLM."""
+        """Create LLM input in the form of a list of messages."""
         return [
             {"role": "system", "content": self.system_prompt},
             {"role": "user", "content": self.user_prompt.format(prompt=prompt)},
         ]
 
-    def compress(self, prompt: str, return_metadata: bool = False) -> Union[str, CompressedPromptResponse]:
+    def compress(self, prompt: str, 
+                 return_metadata: bool = False) -> Union[str, CompressedPromptResponse]:
         """
         Compress a single prompt synchronously.
 
