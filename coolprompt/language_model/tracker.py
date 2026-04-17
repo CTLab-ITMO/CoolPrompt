@@ -110,10 +110,19 @@ class TrackedLLMWrapper(BaseLanguageModel):
         Returns:
             Model output.
         """
-        with get_openai_callback() as cb:
-            result = self.model.invoke(input, **kwargs)
-            self.tracker._update_stats(cb, True, 0)
-            return result
+
+        result = None
+        for _ in range(100):
+            try:
+                with get_openai_callback() as cb:
+                    result = self.model.invoke(input, **kwargs)
+                    self.tracker._update_stats(cb, True, 0)
+                break
+            except Exception as e:
+                logger.info(e)
+                sleep(60)
+
+        return result
 
     def batch(self, inputs, **kwargs):
         """Calls model in batch and tracks usage stats.
@@ -125,10 +134,19 @@ class TrackedLLMWrapper(BaseLanguageModel):
         Returns:
             List of model outputs.
         """
-        with get_openai_callback() as cb:
-            results = self.model.batch(inputs, **kwargs)
-            self.tracker._update_stats(cb, False, len(inputs))
-            return results
+
+        results = None
+        for _ in range(100):
+            try:
+                with get_openai_callback() as cb:
+                    results = self.model.batch(inputs, **kwargs)
+                    self.tracker._update_stats(cb, False, len(inputs))
+                break
+            except Exception as e:
+                logger.info(e)
+                sleep(60)
+
+        return results
 
     def with_structured_output(self, schema, **kwargs):
         """Returns model with structured output support.
