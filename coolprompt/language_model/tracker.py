@@ -4,6 +4,8 @@ from typing import Any
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_openai import ChatOpenAI
 
+from coolprompt.utils.logging_config import logger
+from time import sleep
 
 class OpenAITracker:
     """Tracks OpenAI API usage stats like tokens and costs.
