@@ -2,6 +2,7 @@ from typing import List, Tuple
 from langchain_core.language_models import BaseLanguageModel
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.utils.deprecation import warn_deprecated
 from coolprompt.utils.logging_config import logger
 
 
@@ -31,6 +32,7 @@ def reflectiveprompt(
     Returns:
         str: best evoluted prompt.
     """
+    warn_deprecated("ReflectivePrompt")
     (train_dataset, validation_dataset, train_targets, validation_targets) = (
         dataset_split
     )

@@ -6,6 +6,7 @@ from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.distill_prompt.distiller import Distiller
+from coolprompt.utils.deprecation import warn_deprecated
 
 
 def distillprompt(
@@ -42,6 +43,7 @@ def distillprompt(
     Returns:
         str: The best prompt found after the optimization process.
     """
+    warn_deprecated("DistillPrompt")
     (
         train_dataset,
         validation_dataset,
