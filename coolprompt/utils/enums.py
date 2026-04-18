@@ -6,9 +6,10 @@ class Method(Enum):
     REFLECTIVE = "reflective"
     DISTILL = "distill"
     REGPS = "regps"
+    COMPRESS = "compress"
 
     def is_data_driven(self) -> bool:
-        if self is Method.HYPE:
+        if self is Method.HYPE or self is Method.COMPRESS:
             return False
         return True
 

@@ -32,6 +32,7 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
+from coolprompt.optimizer.prompt_compressor import PromptCompressor
 
 
 class PromptTuner:
@@ -42,10 +43,12 @@ class PromptTuner:
         (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.COMPRESS): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
         (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.REGPS): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.COMPRESS): GENERATION_TASK_TEMPLATE,
     }
 
     NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD = 5
@@ -190,7 +193,7 @@ class PromptTuner:
                 Target iterable object for autoprompting optimization.
             method (str): Optimization method to use.
                 Available methods are:
-                    ['hype', 'reflective', 'distill', 'regps']
+                    ['hype', 'reflective', 'distill', 'regps', 'compress']
                 Defaults to hype.
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
@@ -393,6 +396,15 @@ class PromptTuner:
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
                 **kwargs,
+            )
+        elif method is Method.COMPRESS:
+            compressor = PromptCompressor(
+                model=self._system_model,
+                **kwargs,
+            )
+            final_prompt = compressor.compress(
+                prompt=start_prompt, 
+                return_metadata=False,
             )
 
         logger.info("Running the prompt format checking...")
