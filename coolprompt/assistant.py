@@ -164,7 +164,7 @@ class PromptTuner:
         validation_size: float = 0.25,
         train_as_test: bool = False,
         generate_num_samples: int = 10,
-        feedback: bool = True,
+        batch_size: int = 5,
         verbose: int = 1,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
@@ -210,8 +210,9 @@ class PromptTuner:
                 Defaults to False.
             generate_num_samples (int):
                 Number of dataset and target samples to generate.
-            feedback (bool):
-                Currently unused. Reserved for future updates.
+            batch_size (int):
+                Number of samples processed in one batch during evaluation.
+                Defaults to 5.
             verbose (int): Parameter for logging configuration:
                 0 - no logging
                 1 - steps logging
@@ -305,7 +306,7 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
-        evaluator = Evaluator(self._target_model, task, metric)
+        evaluator = Evaluator(self._target_model, task, metric, batch_size=batch_size)
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)
 
@@ -421,7 +422,6 @@ class PromptTuner:
 
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt
-        self.assistant_feedback = None
 
         logger.info("=== Prompt Optimization Completed ===")
 
