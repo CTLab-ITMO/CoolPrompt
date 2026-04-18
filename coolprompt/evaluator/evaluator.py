@@ -72,6 +72,7 @@ class Evaluator:
             self._get_full_prompt(prompt, sample, template)
             for sample in dataset
         ]
+
         answers = self._run_batches(full_prompts)
 
         return self.metric.compute(answers, targets, dataset)

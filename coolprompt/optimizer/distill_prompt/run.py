@@ -43,6 +43,7 @@ def distillprompt(
     Returns:
         str: The best prompt found after the optimization process.
     """
+
     warn_deprecated("DistillPrompt")
     (
         train_dataset,
