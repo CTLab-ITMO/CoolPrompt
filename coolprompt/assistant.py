@@ -31,7 +31,6 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 )
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
-from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
 
 
 class PromptTuner:
@@ -210,11 +209,9 @@ class PromptTuner:
                 If sets to True, the validation_size parameter will be ignored.
                 Defaults to False.
             generate_num_samples (int):
-                A number of dataset and target samples
-                    to generate with PromptAssistant
+                Number of dataset and target samples to generate.
             feedback (bool):
-                PromptAssistant interpretation of optimization results
-                Defaults to True.
+                Currently unused. Reserved for future updates.
             verbose (int): Parameter for logging configuration:
                 0 - no logging
                 1 - steps logging
@@ -424,20 +421,8 @@ class PromptTuner:
 
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt
+        self.assistant_feedback = None
 
         logger.info("=== Prompt Optimization Completed ===")
-
-        if feedback:
-            prompt_assistant = PromptAssistant(self._target_model)
-            self.assistant_feedback = correct(
-                prompt=prompt_assistant.get_feedback(
-                    start_prompt, final_prompt
-                ),
-                rule=LanguageRule(self._system_model),
-                start_prompt=start_prompt,
-            )
-
-            logger.info("=== Assistant's feedback ===")
-            logger.info(self.assistant_feedback)
 
         return final_prompt if return_final_prompt else None

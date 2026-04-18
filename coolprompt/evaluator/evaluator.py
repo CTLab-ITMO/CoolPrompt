@@ -1,6 +1,7 @@
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional
 from tqdm import tqdm
+from time import sleep
 
 from langchain_core.messages.ai import AIMessage
 from coolprompt.evaluator.metrics import BaseMetric
@@ -99,7 +100,21 @@ class Evaluator:
             for start in range(0, total, self.batch_size):
                 end = min(start + self.batch_size, total)
                 batch = full_prompts[start:end]
-                batch_answers = self.model.batch(batch)
+
+                batch_answers = None
+                for attempt in range(5):
+                    try:
+                        batch_answers = self.model.batch(batch)
+                        break
+                    except Exception as exception:
+                        logger.warning(
+                            f"Batch {start // self.batch_size + 1}/{total_batches} "
+                            f"failed on attempt {attempt + 1}/5: {exception}"
+                        )
+                        if attempt < 4:
+                            sleep(60)
+                        else:
+                            raise
 
                 normalized_answers = [
                     a.content if isinstance(a, AIMessage) else str(a)
