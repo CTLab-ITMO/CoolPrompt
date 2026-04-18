@@ -81,7 +81,8 @@ class Prompt:
         text: str,
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
         score: float = None,
-        bad_examples: List[BadExample] = []
+        bad_examples: List[BadExample] = [],
+        epoch = 0
     ) -> None:
         """Prompt class.
 
@@ -98,14 +99,18 @@ class Prompt:
         self.origin = origin
         self.score = score
         self.bad_examples = bad_examples
+        self.epoch = epoch
 
-    def get_origin(self):
+    def get_origin_and_epoch(self):
+        def return_(origin):
+            return origin, self.epoch
+
         if self.origin == PromptOrigin.CROSSOVER:
-            return 0
+            return return_(0)
         elif self.origin == PromptOrigin.MUTATED:
-            return 1
+            return return_(1)
         else:
-            return 2
+            return return_(2)
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.

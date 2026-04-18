@@ -366,6 +366,7 @@ class ReflectiveEvoluter:
     def _crossover(
         self,
         short_term_reflection_tuple: Tuple[List[str], List[str], List[str]],
+        epoch
     ) -> List[Prompt]:
         """Provides crossover operation.
 
@@ -400,7 +401,7 @@ class ReflectiveEvoluter:
             for response in responses
         ]
         crossed_population = [
-            Prompt(response, origin=PromptOrigin.CROSSOVER)
+            Prompt(response, origin=PromptOrigin.CROSSOVER, epoch=epoch)
             for response in responses
         ]
 
@@ -482,7 +483,7 @@ class ReflectiveEvoluter:
 
         return answers
 
-    def _mutate(self) -> List[Prompt]:
+    def _mutate(self, epoch) -> List[Prompt]:
         """Elitist-based mutation.
 
         Returns:
@@ -501,7 +502,7 @@ class ReflectiveEvoluter:
             for response in responses
         ]
         population = [
-            Prompt(response, origin=PromptOrigin.MUTATED)
+            Prompt(response, origin=PromptOrigin.MUTATED, epoch=epoch)
             for response in responses
         ]
         return population
@@ -537,7 +538,7 @@ class ReflectiveEvoluter:
                 self._make_output_path("short_term_reflections"),
             )
 
-            crossed_population = self._crossover(short_term_reflection_tuple)
+            crossed_population = self._crossover(short_term_reflection_tuple, self.iteration)
 
             self._evaluation(crossed_population)
             self._update_elitist(crossed_population)
@@ -548,7 +549,7 @@ class ReflectiveEvoluter:
                 self._make_output_path("long_term_reflection"),
             )
 
-            mutated_population = self._mutate()
+            mutated_population = self._mutate(self.iteration)
             self._evaluation(mutated_population)
 
             population = np.append(population, np.array(crossed_population))
@@ -562,16 +563,14 @@ class ReflectiveEvoluter:
                 population = np.append(population, np.array([self.elitist]))
             population = self._reranking(population)
 
-            survived_crossed = sum(1 for p in population if p.get_origin() == 0)
-            survived_mutated = sum(1 for p in population if p.get_origin() == 1)
+            survived_crossed = sum(1 for p in population if p.get_origin_and_epoch() == (0, self.iteration))
+            survived_mutated = sum(1 for p in population if p.get_origin_and_epoch() == (1, self.iteration))
 
             survived_crossed = survived_crossed if isinstance(survived_crossed, int) else 0
             survived_mutated = survived_mutated if isinstance(survived_mutated, int) else 0
 
-            len_ = len(population)
-
-            fraction_crossed = survived_crossed / len_
-            fraction_mutated = survived_mutated / len_
+            fraction_crossed = (survived_crossed / len(crossed_population)) if len(crossed_population) > 0 else 0
+            fraction_mutated = (survived_mutated / len(mutated_population)) if len(mutated_population) > 0 else 0
 
             self.model.update_fractions_data(
                 {
@@ -580,7 +579,7 @@ class ReflectiveEvoluter:
                     'fraction_mutated': fraction_mutated,
                     'survived_crossed': survived_crossed,
                     'survived_mutated': survived_mutated,
-                    'total_population_size': len_
+                    'total_population_size': len(population)
                 }
             )
 
