@@ -178,13 +178,13 @@ def validate_method(method: str) -> Method:
 
     Args:
         method (str): Provided method. Must be one of:
-            ["hype", "reflective", "distill"].
+            ["hype", "reflective", "distill", "compress"].
     Returns:
         Method: The validated method.
     Raises:
         TypeError: If `method` is not a string.
         ValueError: If `method` is not one of
-            ["hype", "reflective", "distill"].
+            ["hype", "reflective", "distill", "compress"].
     """
 
     if not isinstance(method, str):
