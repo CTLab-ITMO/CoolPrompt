@@ -1,0 +1,42 @@
+- Replace vague phrases like "meticulously review" with specific, actionable instructions
+  such as "check for consistency in calculations and relevance of information used"
+  to enhance clarity and guide the model's review process more effectively.
+- ' Replace phrases like "check your work for accuracy" with "actively verify each
+  step for accuracy and clarity," to promote a more proactive approach to ensuring
+  correctness in reasoning and calculations. This encourages users to engage more
+  deeply with their responses, fostering a sense of responsibility for their answers. '
+- To enhance clarity and focus in your prompts, consider replacing phrases like "using
+  a structured and detailed approach" with more direct instructions such as "organizing
+  your response into clear sections." This encourages a systematic layout without
+  overwhelming the reader with vague terminology, thus promoting better comprehension
+  and response quality.
+- To enhance clarity and specificity in the prompt, consider explicitly defining the
+  structure of the response by using clear headings or bullet points for each section,
+  such as "Introduction," "Step-by-Step Reasoning," "Calculations," and "Conclusion."
+  This will guide the user in organizing their thoughts and ensure that all critical
+  components are addressed systematically.
+- ' Use active voice and direct language to enhance clarity and engagement. For example,
+  instead of "Ensure that your logical flow is maintained," use "Maintain a clear
+  logical flow throughout your response." This shift provides a more straightforward
+  directive, making it easier for the model to understand and execute the task effectively. '
+- Replace the phrase "ensure that your steps follow a logical flow" with "organize
+  your steps in a clear, logical sequence," to emphasize clarity and structure in
+  reasoning while promoting an active voice.
+- Use active voice and concise language throughout the prompt to enhance clarity and
+  engagement. For example, instead of saying "Please read the provided context thoroughly,"
+  say "Read the provided context carefully." This shift creates a more direct instruction
+  and encourages prompt action from the model.
+- Use specific action verbs to clarify instructions and encourage precision in responses.
+  For example, replace vague phrases like "answer the question" with "provide a response"
+  or "construct a detailed answer," which can lead to more focused outputs. Additionally,
+  consider incorporating more direct prompts for critical thinking, such as "analyze"
+  or "evaluate," to guide the model in synthesizing information effectively.
+- ' Emphasize the importance of extracting and summarizing key contextual details
+  by adding a directive such as "Before answering, identify and list the three most
+  critical facts from the context that relate to the question." This encourages deeper
+  engagement with the material and ensures that essential information is not overlooked. '
+- Consider using active voice and specific action verbs to create a more engaging
+  and direct prompt. For instance, instead of saying "focus on extracting relevant
+  facts," you could say "extract and highlight relevant facts." This change encourages
+  assertiveness in the task and clarifies the expected action, making the prompt more
+  dynamic and clear.

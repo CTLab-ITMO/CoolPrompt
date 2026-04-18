@@ -1,0 +1,44 @@
+- ' Streamline instructions by using concise and clear language. For example, replace
+  "After reading, answer the following question using a structured approach" with
+  "Answer the question using the structure below." This reduces complexity and enhances
+  focus on the task. '
+- ' Simplify and streamline the instructions by using clear, concise language and
+  breaking down complex steps into essential actions. Replace phrases like "systematically
+  identify the critical information" with "focus on the key details needed to answer
+  the question," to enhance clarity and reduce cognitive load on the reader. '
+- ' Emphasize clarity and comprehension by including a step for users to restate the
+  question in their own words before analyzing the context. This will ensure they
+  fully understand the task at hand and can focus their responses more accurately
+  on the relevant details. '
+- ' Simplify and clarify the language used in the prompt by replacing verbose phrases
+  with concise instructions. For example, instead of saying, "regularly check your
+  work for accuracy and clarity," use "Verify each calculation for accuracy." This
+  will help maintain focus and ensure that the essential steps are easily understood
+  and actionable. '
+- ' Emphasize clarity and specificity in instructions by replacing vague terms with
+  more precise language. For instance, instead of saying "review it carefully," use
+  "conduct a thorough review of each calculation and reasoning step for accuracy and
+  coherence." This encourages users to focus on the details that matter most in their
+  responses. '
+- ' Streamline the prompt by using bullet points or numbered lists to present instructions
+  clearly and concisely, reducing complexity and making it easier for users to follow
+  each step. This can enhance clarity and ensure that critical actions are not overlooked. '
+- 'Streamline the prompt by prioritizing clarity and brevity; minimize complex phrasing
+  and focus on essential steps to maintain user engagement and comprehension. For
+  example, instead of saying, "After reading, answer the following question using
+  a structured approach," you could simplify it to, "Identify key details and answer
+  the question step by step." '
+- ' Simplify the language and instructions to reduce complexity and improve clarity.
+  Use shorter sentences and direct commands. For example, instead of saying "systematically
+  identify the critical information," use "find the key details needed to answer the
+  question." This will help maintain focus on essential tasks without overwhelming
+  the model.'
+- Replace vague terms like "detailed and structured approach" with more specific phrases
+  such as "step-by-step reasoning" and "clear formatting" to enhance clarity and guide
+  the model more effectively in constructing its response.
+- ' Use active voice and directive language to create clear, actionable steps for
+  the user. For example, instead of saying "the model should be reminded to extract
+  and prioritize essential information," say "Identify and prioritize the essential
+  information that directly relates to the question." This approach enhances clarity
+  and encourages the user to take specific actions, improving comprehension and response
+  quality. '

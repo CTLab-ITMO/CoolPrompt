@@ -1,0 +1,44 @@
+'
+
+  The prompt "Formulate a response to the question based on the supplied context"
+  has several weaknesses that can lead to suboptimal responses from the model. Here
+  are the key issues and suggestions for improvement:
+
+
+  1. **Clarity of Task**: The current prompt is somewhat vague. It does not explicitly
+  instruct the model to break down the problem into steps or to show its working,
+  which can be crucial for complex calculations. A revised prompt could be: "Using
+  the supplied context, provide a step-by-step explanation to answer the question,
+  showing all calculations and reasoning."
+
+
+  2. **Encouragement of Thought Process**: The examples demonstrate that the model
+  can generate incorrect answers when it does not properly follow a logical sequence.
+  By explicitly asking the model to outline the thought process or reasoning behind
+  the answer, it may be better equipped to arrive at the correct solution. For example,
+  "Please explain your reasoning and calculations clearly while answering the question
+  based on the context."
+
+
+  3. **Structured Output**: The model should be encouraged to format its response
+  in a structured manner, separating different parts of the calculation. A prompt
+  that asks for a clear breakdown, like "List each step involved in arriving at the
+  final answer," could enhance clarity and accuracy.
+
+
+  4. **Iterative Feedback**: The current prompt does not allow for iterative refinement
+  of the answer. Encouraging the model to reconsider its calculations or to check
+  for errors can be beneficial. For example, "After calculating your answer, please
+  verify each step and ensure that the final response is correct."
+
+
+  5. **Example Guidance**: Including a few examples of what a good answer looks like
+  can help guide the model in generating higher-quality outputs. This could involve
+  providing a template or structure to follow in the response.
+
+
+  By implementing these changes, the model would likely provide more accurate and
+  logical answers that reflect a comprehensive understanding of the context and the
+  calculations involved.
+
+  '

@@ -1,0 +1,48 @@
+- Use active voice and precise language to clarify instructions, ensuring the prompt
+  specifies the need for structured reasoning and intermediate steps. For example,
+  replace "answer on the question" with "provide a detailed answer to the question
+  based on the context, outlining key information, calculations, and reasoning steps."
+  This enhances clarity and directs the model to follow a logical process.
+- Incorporate explicit instructions for step-by-step reasoning by using phrases such
+  as "break down the problem into clear steps" and "include all relevant calculations,"
+  which guide the model towards structured, logical responses rather than vague answers.
+  This will enhance clarity and encourage detailed explanations.
+- Replace vague phrases with more specific instructions to enhance clarity and guide
+  the model's reasoning process. For example, instead of saying "provide your answer,"
+  consider using "synthesize your answer based on the relevant details from the context,
+  outlining your reasoning clearly." This encourages a structured approach and emphasizes
+  the importance of detailed explanations.
+- Enhance specificity by replacing vague phrases with clear instructions. For instance,
+  instead of saying 'answer the question,' use 'provide a detailed answer to the question
+  based on the key information extracted from the context, including step-by-step
+  reasoning and calculations.' This encourages a more structured and thorough response.
+- ' In order to guide the model towards a more structured and logical response, replace
+  vague phrases with more explicit instructions. For instance, instead of saying "utilize
+  the context," use a phrase like "analyze the context to identify key details." This
+  encourages the model to engage in a deeper level of comprehension and reasoning. '
+- Refine the prompt by incorporating specific action verbs that encourage detailed
+  engagement with the context and structured responses, such as "analyze," "extract,"
+  and "explain." For instance, instead of saying "Respond to the question using the
+  given context," you could say "Analyze the provided context, extract relevant information,
+  and explain your reasoning step-by-step to answer the question accurately." This
+  approach emphasizes clarity and guides the model to produce more comprehensive and
+  well-structured answers.
+- 'Incorporate action-oriented language that encourages a deeper engagement with the
+  task. Instead of using passive phrases like "based on" or "formulate a response,"
+  use active phrases like "analyze," "synthesize," and "elaborate on" to prompt the
+  model to actively engage with the context and the question, fostering a more thorough
+  and structured response. For example, revise to: ''Thoroughly analyze the supplied
+  context, synthesize the key information, and elaborate on your reasoning step-by-step
+  before providing your final answer.'' '
+- Replace vague terms like "response" with more specific language that conveys the
+  expected output, such as "detailed answer" or "structured explanation." This clarity
+  will help guide the model towards producing more precise and relevant answers.
+- Replace vague terms with specific action verbs to clarify expectations. For example,
+  instead of saying "answer on the question," use "provide a detailed response to
+  the question." This encourages the model to generate a more comprehensive and structured
+  answer.
+- Enhance clarity by incorporating action-oriented verbs and specific instructions
+  that guide the model through a structured reasoning process. For example, replace
+  "Utilize the context" with "Carefully analyze the context" to emphasize a thorough
+  examination, and add "Identify key information and present your reasoning step-by-step
+  to answer the question" to ensure a clear, logical approach.

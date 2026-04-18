@@ -1,0 +1,463 @@
+average_score: 0.9325
+best_score: 0.94
+prompts:
+- bad_examples:
+  - correct: 'How many situps did Shawna miss on Monday? ** On Monday, Shawna was
+      short of 30 - 12 = <<30-12=18>>18 situps
+
+      How many situps did Shawna miss on Tuesday? ** On Tuesday, Shawna was short
+      of 30 - 19 = <<30-19=11>>11 situps
+
+      How many situps would Shawna have to do on Wednesday to meet her minimum goal
+      and make up for the ones she didna''t do? ** On Wednesday, Shawna would have
+      to do 30 + 18 + 11 = <<30+18+11=59>>59 situps
+
+      #### 59'
+    input: Shawna's workout goal is 30 situps. On Monday, Shawna was only able to
+      do 12 situps, so she decided that she would make up for the rest on Tuesday.
+      However, she was only able to do 19 situps on Tuesday. How many situps would
+      Shawna have to do on Wednesday to meet her minimum goal and make up for the
+      ones she didn't do?
+    output: '0'
+  - correct: 'How many miles does Jesse run in the first three days? ** Jesse runs
+      2 miles in the first three days because 3 x (2/3) = <<3*(2/3)=2>>2
+
+      How many miles does Jesse have left to run? ** Jesse has 18 miles left to run
+      because 30 - 10 - 2 = <<30-10-2=18>>18
+
+      How many miles does Jesse have to run? ** Jesse has to run an average of 6 miles
+      a day because 18 / 3 = <<18/3=6>>6
+
+      How many miles does Mia run in the first four days? ** Mia runs 12 miles over
+      the first four days because 4 x 3 = <<4*3=12>>12
+
+      How many miles does Mia have left to run? ** She has 18 miles left to run because
+      30 - 12 = <<30-12=18>>18
+
+      How many miles does Mia have to run? ** She has to run six miles a day because
+      18 / 3 = <<18/3=6>>6
+
+      How many miles do Mia and Jesse have to run? ** The total they both have to
+      run is <<12=12>>12 miles a day
+
+      How many miles do Mia and Jesse have to run on average? ** The average they
+      have to run per day on average is 6 miles because 12 / 2 = <<12/2=6>>6
+
+      #### 6'
+    input: Jesse and Mia are competing in a week long race. They have one week to
+      run 30 miles. On the first three days Jesse averages (2/3) of a mile. On day
+      four she runs 10 miles. Mia averages 3 miles a day over the first 4 days. What
+      is the average of their average that they have to run over the final three days?
+    output: '2'
+  - correct: 'How much did each DVD cost? ** He sold each DVD for 6*2.5=$<<6*2.5=15>>15
+
+      How much profit does he make? ** So he makes a profit of 15-6=$<<15-6=9>>9
+
+      How much profit does he make in a day? ** So each day he makes a profit of 9*500=$<<9*500=4500>>4500
+
+      How much profit does he make in 5 days? ** So he makes 4500*5=$<<4500*5=22500>>22,500
+
+      How much profit does he make in 20 weeks? ** He makes 22,500*20=$<<22500*20=450000>>450,000
+
+      How much profit does he make after the cost of creating the movie? ** Then after
+      the cost of creating the movie he has a profit of 450,000-2000=$<<450000-2000=448000>>448,000
+
+      #### 448000'
+    input: James creates a media empire.  He creates a movie for $2000.  Each DVD
+      cost $6 to make.  He sells it for 2.5 times that much.  He sells 500 movies
+      a day for 5 days a week.  How much profit does he make in 20 weeks?
+    output: $448,000
+  - correct: 'How much does a pound of cream cheese cost? ** A pound of cream cheese
+      cost $10 / 2 = $<<10/2=5>>5.
+
+      How much does a pack of cold cuts cost? ** A pack of cold cuts cost $10 x 2
+      = $<<10*2=20>>20.
+
+      How much did Jasper spend on the ingredients? ** Jasper spent $10 + $5 + $20
+      = $<<10+5+20=35>>35 on the ingredients.
+
+      #### 35'
+    input: Jasper will serve charcuterie at his dinner party. He buys 2 pounds of
+      cheddar cheese for $10, a pound of cream cheese that cost half the price of
+      the cheddar cheese, and a pack of cold cuts that cost twice the price of the
+      cheddar cheese. How much does he spend on the ingredients?
+    output: $32.50
+  - correct: 'How many goldfish are there? ** There are 60 goldfish because 15 / .25
+      = <<15/.25=60>>60
+
+      How many goldfish are below the surface? ** 75% of the fish are below the surface
+      because 100 - 25 = <<100-25=75>>75
+
+      How many goldfish are below the surface? ** There are 45 goldfish below the
+      surface because 60 x .75 = <<60*.75=45>>45
+
+      #### 45'
+    input: Toby is counting goldfish in the local pond. He knows that only 25% of
+      goldfish are at the surface and the rest are too deep below the surface to be
+      able to see. If he counts 15 goldfish, how many are below the surface?
+    output: '11'
+  origin: CROSSOVER
+  score: 0.94
+  text: Please analyze the context provided, identify the key numerical data and relationships,
+    and calculate the answer step-by-step to address each question. Ensure to include
+    intermediate calculations to justify your final results and demonstrate your reasoning
+    process clearly.
+- bad_examples:
+  - correct: 'How many situps did Shawna miss on Monday? ** On Monday, Shawna was
+      short of 30 - 12 = <<30-12=18>>18 situps
+
+      How many situps did Shawna miss on Tuesday? ** On Tuesday, Shawna was short
+      of 30 - 19 = <<30-19=11>>11 situps
+
+      How many situps would Shawna have to do on Wednesday to meet her minimum goal
+      and make up for the ones she didna''t do? ** On Wednesday, Shawna would have
+      to do 30 + 18 + 11 = <<30+18+11=59>>59 situps
+
+      #### 59'
+    input: Shawna's workout goal is 30 situps. On Monday, Shawna was only able to
+      do 12 situps, so she decided that she would make up for the rest on Tuesday.
+      However, she was only able to do 19 situps on Tuesday. How many situps would
+      Shawna have to do on Wednesday to meet her minimum goal and make up for the
+      ones she didn't do?
+    output: '0'
+  - correct: 'How many miles does Jesse run in the first three days? ** Jesse runs
+      2 miles in the first three days because 3 x (2/3) = <<3*(2/3)=2>>2
+
+      How many miles does Jesse have left to run? ** Jesse has 18 miles left to run
+      because 30 - 10 - 2 = <<30-10-2=18>>18
+
+      How many miles does Jesse have to run? ** Jesse has to run an average of 6 miles
+      a day because 18 / 3 = <<18/3=6>>6
+
+      How many miles does Mia run in the first four days? ** Mia runs 12 miles over
+      the first four days because 4 x 3 = <<4*3=12>>12
+
+      How many miles does Mia have left to run? ** She has 18 miles left to run because
+      30 - 12 = <<30-12=18>>18
+
+      How many miles does Mia have to run? ** She has to run six miles a day because
+      18 / 3 = <<18/3=6>>6
+
+      How many miles do Mia and Jesse have to run? ** The total they both have to
+      run is <<12=12>>12 miles a day
+
+      How many miles do Mia and Jesse have to run on average? ** The average they
+      have to run per day on average is 6 miles because 12 / 2 = <<12/2=6>>6
+
+      #### 6'
+    input: Jesse and Mia are competing in a week long race. They have one week to
+      run 30 miles. On the first three days Jesse averages (2/3) of a mile. On day
+      four she runs 10 miles. Mia averages 3 miles a day over the first 4 days. What
+      is the average of their average that they have to run over the final three days?
+    output: '2'
+  - correct: 'How much did each DVD cost? ** He sold each DVD for 6*2.5=$<<6*2.5=15>>15
+
+      How much profit does he make? ** So he makes a profit of 15-6=$<<15-6=9>>9
+
+      How much profit does he make in a day? ** So each day he makes a profit of 9*500=$<<9*500=4500>>4500
+
+      How much profit does he make in 5 days? ** So he makes 4500*5=$<<4500*5=22500>>22,500
+
+      How much profit does he make in 20 weeks? ** He makes 22,500*20=$<<22500*20=450000>>450,000
+
+      How much profit does he make after the cost of creating the movie? ** Then after
+      the cost of creating the movie he has a profit of 450,000-2000=$<<450000-2000=448000>>448,000
+
+      #### 448000'
+    input: James creates a media empire.  He creates a movie for $2000.  Each DVD
+      cost $6 to make.  He sells it for 2.5 times that much.  He sells 500 movies
+      a day for 5 days a week.  How much profit does he make in 20 weeks?
+    output: $448,000
+  - correct: 'How much does a pound of cream cheese cost? ** A pound of cream cheese
+      cost $10 / 2 = $<<10/2=5>>5.
+
+      How much does a pack of cold cuts cost? ** A pack of cold cuts cost $10 x 2
+      = $<<10*2=20>>20.
+
+      How much did Jasper spend on the ingredients? ** Jasper spent $10 + $5 + $20
+      = $<<10+5+20=35>>35 on the ingredients.
+
+      #### 35'
+    input: Jasper will serve charcuterie at his dinner party. He buys 2 pounds of
+      cheddar cheese for $10, a pound of cream cheese that cost half the price of
+      the cheddar cheese, and a pack of cold cuts that cost twice the price of the
+      cheddar cheese. How much does he spend on the ingredients?
+    output: $32.50
+  - correct: 'How many goldfish are there? ** There are 60 goldfish because 15 / .25
+      = <<15/.25=60>>60
+
+      How many goldfish are below the surface? ** 75% of the fish are below the surface
+      because 100 - 25 = <<100-25=75>>75
+
+      How many goldfish are below the surface? ** There are 45 goldfish below the
+      surface because 60 x .75 = <<60*.75=45>>45
+
+      #### 45'
+    input: Toby is counting goldfish in the local pond. He knows that only 25% of
+      goldfish are at the surface and the rest are too deep below the surface to be
+      able to see. If he counts 15 goldfish, how many are below the surface?
+    output: '11'
+  origin: CROSSOVER
+  score: 0.94
+  text: Please analyze the context provided, identify the key numerical data and relationships,
+    and calculate the answer step-by-step to address each question. Ensure to include
+    intermediate calculations to justify your final results and demonstrate your reasoning
+    process clearly.
+- bad_examples:
+  - correct: 'How many situps did Shawna miss on Monday? ** On Monday, Shawna was
+      short of 30 - 12 = <<30-12=18>>18 situps
+
+      How many situps did Shawna miss on Tuesday? ** On Tuesday, Shawna was short
+      of 30 - 19 = <<30-19=11>>11 situps
+
+      How many situps would Shawna have to do on Wednesday to meet her minimum goal
+      and make up for the ones she didna''t do? ** On Wednesday, Shawna would have
+      to do 30 + 18 + 11 = <<30+18+11=59>>59 situps
+
+      #### 59'
+    input: Shawna's workout goal is 30 situps. On Monday, Shawna was only able to
+      do 12 situps, so she decided that she would make up for the rest on Tuesday.
+      However, she was only able to do 19 situps on Tuesday. How many situps would
+      Shawna have to do on Wednesday to meet her minimum goal and make up for the
+      ones she didn't do?
+    output: '0'
+  - correct: 'How much does the hamburger cost? ** The cost of 5 pieces of hamburger
+      is $3 x 5 = $<<3*5=15>>15.
+
+      How much does the French fries cost? ** The cost of 4 sets of French fries is
+      $1.20 x 4 = $<<1.20*4=4.80>>4.80.
+
+      How much does the soda cost? ** The cost of 5 cups of soda is $0.5 x 5 = $<<0.5*5=2.50>>2.50.
+
+      How much will they pay? ** So their total bill is $15 + $4.80 + $2.50 +$2.7
+      = $<<15+4.8+2.5+2.7=25>>25.
+
+      How much will each of them pay? ** Hence, each of the five friends will contribute
+      $25/5 = $<<25/5=5>>5.
+
+      #### 5'
+    input: 'Five friends eat at a fast-food chain and order the following: 5 pieces
+      of hamburger that cost $3 each; 4 sets of French fries that cost $1.20; 5 cups
+      of soda that cost $0.5 each; and 1 platter of spaghetti that cost $2.7. How
+      much will each of them pay if they will split the bill equally?'
+    output: $5.00
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many sentences did Janice have from yesterday? ** Janice had X sentences
+      from yesterday already typed to start with today.
+
+      How many sentences did Janice type before her break? ** Janice typed 6 * 20
+      = <<6*20=120>>120 sentences before her break.
+
+      How many sentences did Janice type after her break? ** She typed 6 * 15 = <<6*15=90>>90
+      sentences after her break.
+
+      How many sentences did Janice type after her meeting? ** She typed 6 * 18 =
+      <<6*18=108>>108 sentences after her meeting.
+
+      How many sentences did Janice type today? ** Therefore, she typed 120 + 90 +
+      108 = <<120+90+108=318>>318 sentences today in all.
+
+      How many sentences did Janie have left after erasing? ** She had to erase 40
+      sentences, so she had 318 - 40 = <<318-40=278>>278 sentences that she typed
+      today left.
+
+      How many sentences did Janice start with today? ** The paper had X + 278 = 536
+      sentences at the end of today.
+
+      How many sentences did Janice start with today? ** Thus, she had X = 536 - 278
+      = <<536-278=258>>258 sentences typed on the paper to start with today.
+
+      #### 258'
+    input: Janice can type 6 sentences per minute. Today at work, Janice continued
+      working on a paper she started typing yesterday. She typed for 20 minutes, took
+      a break, and typed 15 minutes longer. She then had to erase 40 sentences she
+      had typed incorrectly. After a meeting, she typed for 18 minutes more. In all,
+      the paper had 536 sentences by the end of today. How many sentences did she
+      start with today?
+    output: '138'
+  - correct: 'How many mystery novels are there? ** Half of the books on the bottom
+      section of the cart are mystery books, which means they are the same as the
+      number of Western novels and biographies put together. So there are 5 + 6 =
+      <<5+6=11>>11 mystery novels.
+
+      How many books are there? ** Add them all together, and there are 12 history
+      + 8 romance + 4 poetry + 11 mystery + 5 Western + 6 biographies = <<12+8+4+11+5+6=46>>46
+      books total
+
+      #### 46'
+    input: Nancy, the librarian, is shelving books from the cart. She shelved 12 history
+      books, 8 romance books, and 4 poetry books from the top section of the cart.
+      Half the books on the bottom section of the cart were mystery books, which she
+      quickly put back into place. Then, she shelved the remaining books from the
+      bottom of the cart, including 5 Western novels and 6 biographies. How many books
+      did she have on the book cart when she started?
+    output: '57'
+  origin: CROSSOVER
+  score: 0.93
+  text: 'Please analyze the following context and systematically answer the questions
+    that follow. To ensure clarity and thoroughness in your response, break down the
+    problem into clear steps: 1) Identify key variables from the context, 2) Perform
+    calculations with intermediate results where necessary, and 3) Present your final
+    answer clearly. This structured approach will help you to logically reason through
+    the problem and arrive at the correct conclusion.'
+- bad_examples:
+  - correct: 'How many situps did Shawna miss on Monday? ** On Monday, Shawna was
+      short of 30 - 12 = <<30-12=18>>18 situps
+
+      How many situps did Shawna miss on Tuesday? ** On Tuesday, Shawna was short
+      of 30 - 19 = <<30-19=11>>11 situps
+
+      How many situps would Shawna have to do on Wednesday to meet her minimum goal
+      and make up for the ones she didna''t do? ** On Wednesday, Shawna would have
+      to do 30 + 18 + 11 = <<30+18+11=59>>59 situps
+
+      #### 59'
+    input: Shawna's workout goal is 30 situps. On Monday, Shawna was only able to
+      do 12 situps, so she decided that she would make up for the rest on Tuesday.
+      However, she was only able to do 19 situps on Tuesday. How many situps would
+      Shawna have to do on Wednesday to meet her minimum goal and make up for the
+      ones she didn't do?
+    output: '0'
+  - correct: 'How many nickels are in a quarter? ** A quarter is worth five nickels
+      because .25 / .05 = <<.25/.05=5>>5
+
+      How many nickels does Alice get from the bank? ** She gets 100 nickels from
+      the bank because 20 x 5 = <<20*5=100>>100
+
+      How many of the nickels are iron nickels? ** 20 of the nickels are iron nickels
+      because 100 x .20 = <<100*.20=20>>20
+
+      How many of the nickels are regular? ** 80 of the nickels are regular because
+      100 - 20 = <<100-20=80>>80
+
+      How much are the iron nickels worth? ** The iron nickels are worth $60 because
+      20 x 3 = <<20*3=60>>60
+
+      How much are the regular nickels worth? ** The regular nickels are worth $4
+      because 80 x .05 = <<80*.05=4>>4
+
+      What is the total value of her money now? ** Her money is now worth $64 because
+      60 + 4 = <<60+4=64>>64
+
+      #### 64'
+    input: Alice has 20 quarters. She wants to exchange them for nickels and so she
+      goes to the bank. After getting back from the bank, she discovers that 20% of
+      the nickels are iron nickels worth $3 each. What is the total value of her money
+      now?
+    output: '65'
+  - correct: 'How many miles does Jesse run in the first three days? ** Jesse runs
+      2 miles in the first three days because 3 x (2/3) = <<3*(2/3)=2>>2
+
+      How many miles does Jesse have left to run? ** Jesse has 18 miles left to run
+      because 30 - 10 - 2 = <<30-10-2=18>>18
+
+      How many miles does Jesse have to run? ** Jesse has to run an average of 6 miles
+      a day because 18 / 3 = <<18/3=6>>6
+
+      How many miles does Mia run in the first four days? ** Mia runs 12 miles over
+      the first four days because 4 x 3 = <<4*3=12>>12
+
+      How many miles does Mia have left to run? ** She has 18 miles left to run because
+      30 - 12 = <<30-12=18>>18
+
+      How many miles does Mia have to run? ** She has to run six miles a day because
+      18 / 3 = <<18/3=6>>6
+
+      How many miles do Mia and Jesse have to run? ** The total they both have to
+      run is <<12=12>>12 miles a day
+
+      How many miles do Mia and Jesse have to run on average? ** The average they
+      have to run per day on average is 6 miles because 12 / 2 = <<12/2=6>>6
+
+      #### 6'
+    input: Jesse and Mia are competing in a week long race. They have one week to
+      run 30 miles. On the first three days Jesse averages (2/3) of a mile. On day
+      four she runs 10 miles. Mia averages 3 miles a day over the first 4 days. What
+      is the average of their average that they have to run over the final three days?
+    output: '2'
+  - correct: 'How much does the hamburger cost? ** The cost of 5 pieces of hamburger
+      is $3 x 5 = $<<3*5=15>>15.
+
+      How much does the French fries cost? ** The cost of 4 sets of French fries is
+      $1.20 x 4 = $<<1.20*4=4.80>>4.80.
+
+      How much does the soda cost? ** The cost of 5 cups of soda is $0.5 x 5 = $<<0.5*5=2.50>>2.50.
+
+      How much will they pay? ** So their total bill is $15 + $4.80 + $2.50 +$2.7
+      = $<<15+4.8+2.5+2.7=25>>25.
+
+      How much will each of them pay? ** Hence, each of the five friends will contribute
+      $25/5 = $<<25/5=5>>5.
+
+      #### 5'
+    input: 'Five friends eat at a fast-food chain and order the following: 5 pieces
+      of hamburger that cost $3 each; 4 sets of French fries that cost $1.20; 5 cups
+      of soda that cost $0.5 each; and 1 platter of spaghetti that cost $2.7. How
+      much will each of them pay if they will split the bill equally?'
+    output: $5.00
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  origin: CROSSOVER
+  score: 0.92
+  text: Please analyze the provided context carefully, identify the key numerical
+    quantities and relationships, and perform step-by-step calculations to derive
+    the final answers to the questions posed. Ensure to include any intermediate calculations
+    that support your reasoning process, highlighting the logical steps taken to arrive
+    at your conclusions.

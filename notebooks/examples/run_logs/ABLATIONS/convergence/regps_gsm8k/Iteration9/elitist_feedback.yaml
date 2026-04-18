@@ -1,0 +1,49 @@
+"\n\nThe prompt provided has several strengths but also notable weaknesses that may\
+  \ contribute to the inaccuracies in the model's outputs. Here\u2019s a detailed\
+  \ analysis of the weaknesses, along with suggestions for improvement:\n\n### Weaknesses:\n\
+  \n1. **Ambiguity in \"Detailed, Structured Approach\"**: While the prompt asks for\
+  \ a \"detailed, structured approach,\" it does not clearly define what constitutes\
+  \ a \"detailed\" answer. This can lead to varying interpretations of how in-depth\
+  \ the model should go in its reasoning and calculations.\n\n2. **Lack of Explicit\
+  \ Step Instructions**: The prompt does not explicitly encourage the model to break\
+  \ down the problem into smaller, manageable parts before attempting calculations.\
+  \ Although it mentions outlining reasoning, it does not emphasize the importance\
+  \ of addressing each part of the problem sequentially.\n\n3. **Inadequate Emphasis\
+  \ on Verification**: The prompt suggests verifying each step, but it does not provide\
+  \ a clear method for doing so. This may lead to oversight of key calculations or\
+  \ misinterpretations of the problem.\n\n4. **No Encouragement for Clear Linking\
+  \ of Steps**: The prompt advises outlining reasoning but does not specify that the\
+  \ model should clearly connect each step to the question being answered. This can\
+  \ lead to disjointed answers that lack coherence.\n\n5. **Potential Overemphasis\
+  \ on Calculations**: While calculations are important, the prompt may benefit from\
+  \ more emphasis on understanding the context and relationships between different\
+  \ elements of the problem before jumping into calculations.\n\n### Suggestions for\
+  \ Improvement:\n\n1. **Clarify \"Detailed\"**: Specify what a detailed response\
+  \ should include. For example, explicitly state that the model should provide clear\
+  \ definitions, relationships, and reasoning for each step taken.\n\n2. **Encourage\
+  \ Step-by-Step Breakdown**: Revise the prompt to instruct the model to first summarize\
+  \ the problem and break it down into smaller parts before attempting any calculations.\n\
+  \n3. **Introduce a Verification Checklist**: Provide a checklist of verification\
+  \ steps the model can follow, such as confirming that all parts of the question\
+  \ have been addressed and that calculations are logically consistent.\n\n4. **Connect\
+  \ Steps More Explicitly**: Emphasize the importance of linking each step back to\
+  \ the question being asked. For instance, after each calculation, the model should\
+  \ state how that result contributes to answering the original question.\n\n5. **Balancing\
+  \ Calculations with Contextual Understanding**: Encourage the model to first interpret\
+  \ the context and relationships before delving into numerical calculations. This\
+  \ could be achieved by including a step that asks the model to summarize the problem\
+  \ in its own words before proceeding.\n\n### Revised Prompt Example:\n\n\"Please\
+  \ read the provided context thoroughly. After gaining a clear understanding, answer\
+  \ the following question using a structured, step-by-step approach:\n\n1. **Summarize\
+  \ the Problem**: Briefly restate the problem in your own words to ensure understanding.\n\
+  2. **Identify Key Information**: Extract relevant facts directly related to the\
+  \ question, ensuring you understand their relationships.\n3. **Break Down the Problem**:\
+  \ Divide the problem into smaller, manageable steps and outline your reasoning for\
+  \ each.\n4. **Perform Calculations**: If applicable, show all calculations explicitly,\
+  \ making sure to relate them back to the question.\n5. **Verify Each Step**: Use\
+  \ a checklist to ensure all relevant points are covered and calculations are accurate.\n\
+  6. **Conclude Effectively**: Summarize your findings and ensure your conclusion\
+  \ directly answers the question posed.\n\nBy following this revised structured approach,\
+  \ you will enhance both the clarity and accuracy of your answer.\"\n\nThis revision\
+  \ aims to provide clearer guidance to the model, ensuring a more structured and\
+  \ coherent response that directly addresses the problem at hand.\n\n"

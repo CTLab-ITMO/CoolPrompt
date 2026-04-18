@@ -1,0 +1,44 @@
+- ' Focus on simplifying instructions by consolidating steps and using clear, concise
+  language. This will help prevent overwhelming users while still guiding them through
+  the necessary processes for effective comprehension and response formulation. '
+- ' In the prompt, replace vague terms like "key details" with more specific language
+  such as "critical information," and encourage users to focus on identifying "specific
+  numbers, relationships, and operations that directly impact the question." This
+  will enhance clarity and guide users more effectively toward the relevant information
+  needed for their answers. '
+- ' Streamline the language of the prompt by condensing related steps into fewer,
+  more impactful instructions. This will reduce cognitive load on the user, enhancing
+  clarity and focus. For example, combine ''Identify Key Information'' and ''Break
+  Down Your Reasoning'' into a single step that emphasizes summarizing key points
+  while logically structuring reasoning. '
+- Replace vague terms like "detailed" and "structured" with more specific phrases
+  such as "directly related to the question" and "logical step-by-step reasoning"
+  to enhance clarity and focus in the prompt. This helps ensure that the model's responses
+  remain on topic and are easier to follow.
+- ' Replace broad terms like "key information" and "detailed, structured approach"
+  with more specific phrases such as "essential facts relevant to the question" and
+  "step-by-step reasoning framework." This clarity will guide the model to focus on
+  pertinent details and foster a more organized response. '
+- ' Simplify language by replacing complex terms with straightforward alternatives.
+  For instance, use "important information" instead of "critical facts" and "show
+  your work" instead of "break down your reasoning" to enhance clarity and accessibility
+  for the user. '
+- To enhance clarity and comprehension, consider simplifying complex instructions
+  by breaking them down into shorter sentences and using active voice. For instance,
+  instead of saying "Ensure your reasoning flows logically from understanding the
+  problem to finding the answer," you could say, "Start by understanding the problem,
+  then logically work toward the answer." This makes the guidance more direct and
+  easier to follow.
+- ' Emphasize the importance of understanding the context and the question by incorporating
+  a step that encourages the model to paraphrase both the context and the question
+  in its own words before proceeding. This will reinforce comprehension and ensure
+  that the model is focused on the specific details needed for an accurate response. '
+- Replace vague terms like "key details" and "important information" with more specific
+  phrases such as "numerical values," "relationships between entities," and "operations
+  required" to provide clearer guidance on what to extract from the context. This
+  will help focus the user's attention on the most relevant elements for answering
+  the question accurately.
+- Streamline the instructions by using concise language and breaking them into fewer,
+  clear steps, while ensuring that each step emphasizes the importance of identifying
+  key details, logical flow, and verification of reasoning. This will help users focus
+  on the essential tasks without feeling overwhelmed.

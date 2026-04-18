@@ -1,0 +1,890 @@
+- !!python/tuple
+  - '
+
+    The provided prompt exhibits several weaknesses that contribute to suboptimal
+    model outputs, despite the structured approach it advocates. Here are the key
+    areas for improvement:
+
+
+    1. **Clarity on Key Details**: The prompt asks the model to "identify and prioritize
+    key details," but it does not specify how to determine which details are critical.
+    This can lead to the model missing important contextual information or misinterpreting
+    the relationships between different details. Adding more guidance on identifying
+    key details relevant to the question would be beneficial.
+
+
+    2. **Explicit Calculation Steps**: While the prompt encourages outlining reasoning
+    in a step-by-step manner, it could be improved by emphasizing the importance of
+    clearly stating each step. For example, instead of simply stating "include any
+    necessary calculations," the prompt could instruct the model to explicitly mention
+    intermediate results before proceeding to the final calculations. This would help
+    ensure that the model does not skip steps or make assumptions.
+
+
+    3. **Encouragement of Verification**: The prompt could be enhanced by encouraging
+    the model to verify calculations at each step. For instance, after computing a
+    value, the model could be prompted to check if that value makes sense in the context
+    of the problem before moving forward. This could reduce errors in the final answer.
+
+
+    4. **Focus on Contextual Relationships**: The prompt mentions "relationships"
+    but does not elaborate on how to analyze them. A more detailed instruction on
+    examining how different pieces of information relate to each other would help
+    the model construct a more accurate and comprehensive response.
+
+
+    5. **Example Quality**: The examples given are clear and correct, but the prompt
+    could benefit from including examples of incorrect reasoning or missed steps,
+    along with explanations of why they are incorrect. This would help the model learn
+    from mistakes and improve its reasoning process.
+
+
+    6. **Final Answer Presentation**: The prompt instructs to present both the final
+    answer and a clear explanation. However, it could specify that the final answer
+    should be distinctly separated from the reasoning, making it easier for readers
+    to identify the conclusion without wading through all the calculations.
+
+
+    7. **Encouraging Use of Units**: The prompt does not explicitly mention the importance
+    of including units in calculations (e.g., gallons, dollars). Reinforcing this
+    could enhance clarity and reduce the risk of misinterpretation of results.
+
+
+    By addressing these points, the prompt can better guide the model toward generating
+    accurate and comprehensive answers that reflect a thorough understanding of the
+    problem and context.
+
+    '
+  - "\nThe given prompt has several strengths but also notable weaknesses that contribute\
+    \ to the bad answers observed in the examples. Below are the key properties, weaknesses,\
+    \ and suggested improvements for the prompt:\n\n### Strengths:\n1. **Structured\
+    \ Approach**: The prompt encourages a structured response, which is beneficial\
+    \ for logical reasoning.\n2. **Emphasis on Key Information**: It asks users to\
+    \ focus on relevant facts, which is critical for comprehension tasks.\n\n### Weaknesses:\n\
+    1. **Ambiguity in Instructions**: The prompt uses phrases like \"avoid unnecessary\
+    \ details\" without providing specific guidance on what constitutes 'unnecessary.'\
+    \ This can lead to confusion about how much detail to include, as seen in some\
+    \ model outputs that fail to provide comprehensive answers.\n  \n2. **Overly Complex\
+    \ Verification Step**: The instruction to \"verify each step\" can be confusing.\
+    \ Users may not know how to effectively check their work or what criteria to use\
+    \ for verification, potentially leading to incomplete answers. \n\n3. **Lack of\
+    \ Example Guidance**: The prompt does not include an example of a well-structured\
+    \ answer. Without a clear model, users may struggle to understand how to apply\
+    \ the instructions effectively.\n\n4. **Insufficient Focus on Problem-Specific\
+    \ Strategies**: The prompt is quite general and does not tailor its instructions\
+    \ to specific types of problems (e.g., arithmetic word problems). This can lead\
+    \ to ineffective strategies being employed by the model, as seen in the varied\
+    \ outputs.\n\n### Suggested Improvements:\n1. **Clarify What Constitutes Key Information**:\
+    \ Provide a clearer definition or examples of what is considered relevant versus\
+    \ irrelevant information. This could help guide the model in focusing on the right\
+    \ details.\n\n2. **Simplify Verification Instructions**: Instead of a broad instruction\
+    \ to verify each step, provide more targeted questions. For example, \"Have I\
+    \ addressed all parts of the question?\" or \"Does each calculation logically\
+    \ follow from the previous one?\"\n\n3. **Include an Example of a Good Answer**:\
+    \ Show a model answer that follows the outlined structure. This would serve as\
+    \ a template for users and help them understand the expectations better.\n\n4.\
+    \ **Tailor the Prompt to Problem Types**: Modify the prompt to include specific\
+    \ strategies for common problem types, such as arithmetic word problems. For example,\
+    \ \"Identify each quantity mentioned in the problem and determine how they relate\
+    \ to each other.\"\n\n5. **Encourage Explicit Reasoning**: Rather than just outlining\
+    \ reasoning, encourage the model to articulate the logic behind each step. For\
+    \ instance, \"Explain why each calculation is necessary for finding the final\
+    \ answer.\"\n\nBy implementing these improvements, the prompt could enhance the\
+    \ model's performance in generating accurate and comprehensive answers to reading\
+    \ comprehension problems.\n"
+- !!python/tuple
+  - '
+
+    The provided prompt has several strengths, but it also has a few weaknesses that
+    contribute to the poor performance of the LLM in generating accurate answers.
+    Here are the main observations and suggestions for improvement:
+
+
+    1. **Lack of Specificity in Instructions**: The prompt requests the user to identify
+    and prioritize critical information, yet it does not provide specific guidance
+    on what qualifies as "critical information." This ambiguity can lead to varying
+    interpretations. It would be beneficial to specify what types of details are most
+    relevant (e.g., numerical data, relationships, and operations) to ensure that
+    the model focuses on the right elements.
+
+
+    2. **Structured Reasoning Requirement**: While the prompt encourages a step-by-step
+    reasoning approach, it does not explicitly state that the reasoning should be
+    detailed and traceable. Emphasizing the importance of showing intermediate steps
+    clearly would help guide the model in producing more transparent and verifiable
+    calculations.
+
+
+    3. **Emphasis on Clarifying Questions**: The examples show that the model sometimes
+    provides an answer without breaking down the problem into smaller, manageable
+    questions. The prompt could be improved by explicitly asking the model to generate
+    clarifying questions or to lay out the problem step-by-step before providing the
+    final answer.
+
+
+    4. **Formatting and Clarity**: The instruction to ensure a clear and concise response
+    is somewhat vague. The prompt should suggest a more specific structure for the
+    final answer, perhaps by providing an outline or format that includes headings
+    or bullet points to separate the steps of reasoning from the final answer.
+
+
+    5. **Examples of Desired Outputs**: The prompt could benefit from providing clear
+    examples of how to format the response and what constitutes a well-structured
+    answer. This would set a clearer expectation for the model and aid in aligning
+    its outputs with the desired format.
+
+
+    6. **Encouragement for Verification**: Adding a suggestion to verify the calculations
+    or to recheck the data against the context may encourage the model to double-check
+    its work, thus reducing errors in the final output.
+
+
+    7. **Avoiding Unnecessary Complexity**: The prompt asks for detailed reasoning,
+    but this could lead to overly complex responses. Encouraging a balance between
+    thoroughness and conciseness could help. The prompt should stress that while detail
+    is important, clarity and straightforwardness are paramount.
+
+
+    In summary, the prompt can be improved by refining the specificity of instructions,
+    enhancing the structure for reasoning and final answers, incorporating examples,
+    and encouraging verification of calculations. By addressing these areas, the prompt
+    can guide the model to produce higher-quality responses that accurately reflect
+    the user''s request.
+
+
+    '
+  - "\nThe given prompt has several strengths, but there are key areas that can be\
+    \ improved to enhance the quality of the answers generated by the model. Analyzing\
+    \ the examples provided, we can identify some weaknesses and suggest improvements:\n\
+    \n1. **Clarity and Specificity in Instructions**: \n   - The prompt asks the user\
+    \ to \"read the provided context thoroughly,\" which is a good start, but it can\
+    \ be made more specific. Instead of a vague directive, it could specify what aspects\
+    \ of the context are crucial (e.g., numerical values, relationships, etc.). This\
+    \ could help the model focus on extracting relevant information more effectively.\n\
+    \n2. **Structured Breakdown Guidance**:\n   - While the prompt encourages a structured\
+    \ approach, it could benefit from a more explicit outline of steps to follow.\
+    \ For instance, introducing a clear template or checklist (e.g., identify variables,\
+    \ perform calculations, summarize findings) would provide a more systematic approach\
+    \ to solving the problem.\n\n3. **Encouraging Intermediate Steps**:\n   - The\
+    \ prompt should explicitly encourage the inclusion of intermediate calculations\
+    \ and steps in reasoning. This is crucial, as the examples show that the model\
+    \ sometimes skips these details, leading to incorrect answers. Phrasing like,\
+    \ \u201CClearly state each calculation and reasoning step\u201D could help.\n\n\
+    4. **Emphasis on Logical Flow and Cohesion**:\n   - The prompt mentions a logical\
+    \ flow but could elaborate on what constitutes a cohesive argument or reasoning.\
+    \ Providing examples of logical connectors or phrases that guide the reader through\
+    \ the thought process could improve coherence.\n\n5. **Encouraging Review and\
+    \ Revision**:\n   - The current prompt suggests checking for accuracy and clarity\
+    \ but does not emphasize the importance of reviewing intermediate answers against\
+    \ the final question. Including a reminder to ensure that each calculation directly\
+    \ relates to the question asked, and that the final answer is clearly derived\
+    \ from the preceding steps would reinforce this.\n\n6. **Question Restatement**:\n\
+    \   - Encouraging the model to restate the question at the beginning of the answer\
+    \ could help clarify the focus of the response. This would remind both the model\
+    \ and the reader of the end goal.\n\n7. **Formatting and Presentation**:\n   -\
+    \ Suggesting clear formatting for answers (e.g., bullet points for steps, bolding\
+    \ key results) could enhance readability and help the model organize its response\
+    \ better.\n\nBy addressing these areas, the prompt can guide the model to produce\
+    \ more accurate and structured answers that align closely with the question posed,\
+    \ thereby minimizing errors and improving overall comprehension.\n\nIn summary,\
+    \ refining the prompt to include clearer, more specific instructions, a structured\
+    \ approach, and an emphasis on logical reasoning and intermediate steps will likely\
+    \ yield better quality answers.\n\n"
+- !!python/tuple
+  - "\nThe provided prompt has several strengths but also notable weaknesses that\
+    \ hinder the quality of answers generated by the model. Here are the key areas\
+    \ for improvement:\n\n1. **Clarity in Instructions**: While the prompt instructs\
+    \ the model to \"identify and prioritize critical information,\" it could benefit\
+    \ from clearer definitions of what constitutes \"critical information.\" Including\
+    \ examples of critical details (such as quantities, operations, and relationships)\
+    \ could guide the model more effectively.\n\n2. **Emphasis on Step-by-Step Reasoning**:\
+    \ The prompt does emphasize a step-by-step approach, but it could be more explicit\
+    \ about maintaining a logical flow throughout the reasoning process. Encouraging\
+    \ the model to outline its thought process in a sequence that directly corresponds\
+    \ to the order of operations or events in the context could prevent the model\
+    \ from making assumptions or skipping steps.\n\n3. **Encouragement of Intermediate\
+    \ Calculations**: The prompt instructs the model to include \"all necessary calculations\
+    \ and intermediate steps.\" However, the examples show that the model sometimes\
+    \ provides an answer without sufficiently elaborating on each calculation. The\
+    \ prompt could more strongly encourage breaking down calculations into discrete\
+    \ parts, perhaps by suggesting that the model explicitly label each calculation\
+    \ step.\n\n4. **Clarification of Contextual Relationships**: The prompt could\
+    \ be enhanced by asking the model to explicitly state the relationships between\
+    \ different pieces of information in the context. This would help the model understand\
+    \ how various details (like time worked and pay rates) interact, which is crucial\
+    \ for solving problems accurately.\n\n5. **Avoiding Ambiguity in Final Answers**:\
+    \ The prompt instructs the model to present a \"final answer,\" but it does not\
+    \ clarify the format or specificity required. Including guidance on how to present\
+    \ the answer (e.g., as a complete sentence or a direct response to the question)\
+    \ could help avoid ambiguity and ensure consistency in the output.\n\n6. **Example\
+    \ Integration**: Incorporating a couple of mini-examples within the prompt itself\
+    \ as demonstration could provide a clearer blueprint for the model. This would\
+    \ serve as a practical illustration of the desired reasoning process, aiding in\
+    \ alignment with the task requirements.\n\n7. **Formatting and Conciseness**:\
+    \ While the prompt instructs the model to avoid unnecessary repetition, it could\
+    \ also encourage the model to use concise language and clear formatting for calculations\
+    \ (e.g., using bullet points for steps). This would enhance readability and allow\
+    \ for easier tracking of the reasoning process.\n\nBy addressing these areas,\
+    \ the prompt can be optimized to better guide the model in producing accurate,\
+    \ clear, and logically structured answers that reflect a thorough understanding\
+    \ of the task at hand. \n"
+  - "\nThe provided prompt has several strengths, such as encouraging a structured\
+    \ response, emphasizing clarity, and prompting the model to verify its work. However,\
+    \ there are notable weaknesses that lead to poor outputs in the examples provided.\
+    \ Here\u2019s a detailed analysis of the prompt's shortcomings and suggestions\
+    \ for improvement:\n\n1. **Ambiguity in Instructions**: The phrase \"using a clearly\
+    \ defined, structured method\" is vague and does not specify what constitutes\
+    \ a \"structured method.\" This can lead models to interpret the requirement differently,\
+    \ resulting in varied and sometimes incorrect approaches. Providing a more explicit\
+    \ outline, such as suggesting a specific format (e.g., step-by-step breakdown)\
+    \ for the answer, could lead to more consistent quality.\n\n2. **Emphasis on Relevance**:\
+    \ While the prompt instructs the model to focus on relevant details, it does not\
+    \ provide guidance on how to discern which details are relevant. Including examples\
+    \ of what constitutes relevant versus irrelevant information could help the model\
+    \ make better choices about what to include in its answer.\n\n3. **Example of\
+    \ Incorrect Calculation**: In several examples, the model provided incorrect calculations\
+    \ (e.g., for Janice typing sentences). The prompt should explicitly instruct the\
+    \ model to double-check calculations at each step, rather than just at the end.\
+    \ This approach can help catch errors earlier in the process.\n\n4. **Encouragement\
+    \ of Logical Progression**: The prompt suggests organizing the response in a logical\
+    \ sequence but lacks specific guidance on how to achieve this. Including a structured\
+    \ approach, like \"First, identify what is given, then outline the steps needed\
+    \ to solve the problem, and finally, present the answer,\" could enhance the logical\
+    \ flow of responses.\n\n5. **Reiteration of the Question**: The prompt could benefit\
+    \ from explicitly instructing the model to reiterate or rephrase the question\
+    \ before answering. This practice can help ensure that the model remains focused\
+    \ on the query and provides a more targeted response.\n\n6. **Final Summary Clarity**:\
+    \ The instruction to summarize findings succinctly is valuable, but the prompt\
+    \ should clarify what should be included in the summary. It should specify that\
+    \ the summary should encapsulate the main points and directly answer the question\
+    \ posed, reinforcing the importance of concluding with a clear answer.\n\n7. **Verification\
+    \ Questions**: The verification questions at the end of the prompt are helpful\
+    \ but may not be sufficient. Encouraging the model to ask itself questions throughout\
+    \ the problem-solving process, such as \"What is my current understanding of the\
+    \ problem?\" or \"Have I made any assumptions?\" could lead to more accurate and\
+    \ thoughtful responses.\n\n8. **Use of Examples**: Incorporating a few examples\
+    \ of correct answers following the prompt can provide a clearer understanding\
+    \ of the expectations regarding the format and depth of the response.\n\nBy addressing\
+    \ these weaknesses and incorporating the suggested improvements, the prompt can\
+    \ be enhanced to facilitate better comprehension, reasoning, and accuracy in the\
+    \ model's responses.\n\n"
+- !!python/tuple
+  - "\nThe given prompt has several strengths, such as its structured approach and\
+    \ emphasis on identifying critical information. However, there are some key weaknesses\
+    \ and areas for improvement that can help ensure higher-quality answers:\n\n1.\
+    \ **Clarity and Simplicity**: The prompt could be simplified in its language.\
+    \ Phrases like \"prioritize critical information\" may confuse the model. Instead,\
+    \ something like \"identify important details\" could be clearer.\n\n2. **Guidance\
+    \ on Intermediate Steps**: While the prompt instructs the model to outline reasoning\
+    \ step-by-step, it may benefit from explicitly mentioning that each step should\
+    \ relate directly to answering the final question. This could help prevent irrelevant\
+    \ calculations or information from being included.\n\n3. **Focus on Question Relevance**:\
+    \ The prompt should emphasize that the model needs to remain focused on the question\
+    \ being asked. This could be reinforced by including instructions to confirm that\
+    \ each piece of information gathered is directly relevant to the question.\n\n\
+    4. **Encourage Logical Flow**: Instead of just stating that the model should include\
+    \ intermediate steps, the prompt could encourage a logical flow of reasoning that\
+    \ connects each step to the final conclusion. For example, \"Ensure each step\
+    \ logically builds on the previous one to lead clearly to the final answer.\"\n\
+    \n5. **Highlighting Errors**: The prompt could include a reminder for the model\
+    \ to double-check the final answer against the context to ensure accuracy. This\
+    \ could help reduce inconsistencies, as seen in the examples where the model produced\
+    \ incorrect outputs.\n\n6. **Example Responses**: Including an example of a well-structured\
+    \ answer (in addition to the format) could help guide the model in producing a\
+    \ more concise and relevant response. \n\n7. **Encouragement of Verification**:\
+    \ Lastly, the prompt could encourage the model to verify calculations before presenting\
+    \ the final answer. This would help in reducing mistakes in mathematical outputs.\n\
+    \nBy addressing these points, the prompt can guide the model more effectively\
+    \ towards producing accurate and logically sound answers that are well-aligned\
+    \ with the provided context. \n\nRevised Prompt Example: \"Please read the provided\
+    \ context thoroughly. Identify important details that are directly related to\
+    \ the question. Outline your reasoning in a logical flow, ensuring each step connects\
+    \ to the previous one. Include clear calculations and intermediate steps to support\
+    \ your final answer. Before concluding, double-check your calculations and verify\
+    \ your answer against the context. Format your response to include the final answer\
+    \ and a detailed explanation of your thought process, such as: 'Based on the context,\
+    \ I identified [essential information], leading to [reasoning steps], resulting\
+    \ in [final answer].' Please proceed with this structured approach.\"\n"
+  - "\nThe provided prompt has several strengths, such as encouraging structured reasoning\
+    \ and logical progression, but it also has notable weaknesses that can be improved\
+    \ to enhance the accuracy and quality of the responses. Here are the main issues\
+    \ identified:\n\n1. **Ambiguous Instructions**: The phrase \"using a clear and\
+    \ structured method\" is somewhat vague. While it suggests organization, it doesn't\
+    \ explicitly define what that structure should look like in terms of the content\
+    \ or the depth of analysis. More specific guidance on how to dissect the question\
+    \ and context would be beneficial.\n\n2. **Overemphasis on Process**: The prompt\
+    \ places significant emphasis on the process of reasoning and calculation. While\
+    \ this is important, it may lead the model to focus excessively on calculations\
+    \ while neglecting to ensure all relevant details from the context are correctly\
+    \ interpreted and utilized.\n\n3. **Lack of Clarification for Context Relevance**:\
+    \ The instruction to \"identify and focus on the key details directly relevant\
+    \ to the question\" could be more explicit about what constitutes a 'key detail.'\
+    \ The model might overlook critical information or misinterpret what is relevant\
+    \ based on the question asked.\n\n4. **Examples of Reflective Questions**: While\
+    \ the reflective questions (\"Have I included all relevant steps?\" and \"Does\
+    \ my conclusion clearly answer the question?\") are useful, they may not be effective\
+    \ in the model's reasoning process. The model does not inherently self-reflect\
+    \ as humans do, so these prompts may not lead to better answers.\n\n5. **Guidance\
+    \ on Summarization**: The instruction to \"conclude with a summary that directly\
+    \ addresses the question posed\" could be more robust. Providing a clearer prompt\
+    \ to synthesize information at the end might help in ensuring that the final answer\
+    \ is not only accurate but also succinctly encapsulates the reasoning process.\n\
+    \n6. **Encouragement of Verification**: The prompt mentions checking for accuracy,\
+    \ but it could be more explicit in instructing the model to verify each step of\
+    \ its calculations before finalizing the answer. This could help reduce arithmetic\
+    \ errors, as seen in some model outputs.\n\nTo improve the prompt, consider revising\
+    \ it to include more specific guidelines on identifying key details, a structured\
+    \ approach to answering that clearly defines each step, and a stronger emphasis\
+    \ on summarization and verification of calculations. Here\u2019s a revised version:\n\
+    \n---\n\n**Revised Prompt**: \"Please read the provided context thoroughly. After\
+    \ digesting the material, answer the following question using a structured method.\
+    \ Begin by identifying the key details that are directly relevant to the question.\
+    \ Organize your response into clear sections: a) State the question, b) List the\
+    \ key details from the context, c) Present a logical flow of reasoning, d) Show\
+    \ all necessary calculations step by step, and e) Conclude with a summary that\
+    \ directly answers the question. As you write, verify each calculation and ensure\
+    \ that your conclusion is based on the identified key details. Reflect on whether\
+    \ your answer comprehensively addresses the question using the context provided.\"\
+    \n\n---\n\nThis revision addresses the weaknesses of the original prompt by providing\
+    \ clear instructions, emphasizing verification, and ensuring that the answer is\
+    \ comprehensive and accurate. "
+- !!python/tuple
+  - "\nThe provided prompt exhibits several weaknesses that contribute to the generation\
+    \ of incorrect answers by the model. Below are the key areas for improvement based\
+    \ on the analysis of the examples provided:\n\n1. **Clarity and Specificity**:\
+    \ The prompt could benefit from more explicit instructions regarding the type\
+    \ of information to extract. While it mentions \"critical information\" and \"\
+    essential numbers,\" it should specify that the model needs to focus on both the\
+    \ quantitative (numbers) and qualitative (relationships and operations) aspects\
+    \ of the context presented. Clear definitions of \"critical information\" would\
+    \ guide the model better.\n\n2. **Structured Approach Emphasis**: Although the\
+    \ prompt suggests a structured approach, it lacks a detailed example of how to\
+    \ break down the information step-by-step prior to the final answer. Including\
+    \ an explicit outline or checklist for the model to follow\u2014such as first\
+    \ identifying all the relevant pieces of information, then performing calculations,\
+    \ and finally synthesizing these into a coherent answer\u2014would enhance clarity.\n\
+    \n3. **Intermediate Calculations**: The prompt instructs the model to include\
+    \ calculations and intermediate steps but does not specify the importance of validating\
+    \ each step against the context. The examples show that the model sometimes skips\
+    \ essential intermediate steps or misinterprets the numbers, leading to incorrect\
+    \ answers. Encouraging the model to cross-reference with the context at each step\
+    \ would help mitigate errors.\n\n4. **Contextual Relevance**: The prompt could\
+    \ emphasize the importance of ensuring that all calculations and reasoning are\
+    \ directly tied back to the original context. This could help prevent the model\
+    \ from making assumptions that are not supported by the provided text, as seen\
+    \ in some of the outputs where the reasoning strayed from the context.\n\n5. **Error\
+    \ Checking and Validation**: The prompt should encourage the model to conduct\
+    \ a final review of its answer to check for consistency with both the calculations\
+    \ and the original context. This could include a brief statement summarizing how\
+    \ the information from the context was used to arrive at the answer, thereby reinforcing\
+    \ accuracy.\n\n6. **Example Inclusion**: Including one or two detailed examples\
+    \ in the prompt that illustrate the desired structured approach can serve as a\
+    \ model for the system. This would provide a concrete reference for how to handle\
+    \ similar tasks and reinforce the expectations of the output.\n\nIncorporating\
+    \ these improvements would help the model produce more accurate and comprehensive\
+    \ answers, thereby enhancing its performance in reading comprehension and question\
+    \ answering tasks.\n\n"
+  - "\nThe provided prompt has several strengths, including a clear structure and\
+    \ a methodical approach to answering questions based on context. However, there\
+    \ are significant weaknesses that may hinder the quality of responses generated\
+    \ by the model. Below are the main issues identified, along with suggestions for\
+    \ improvement:\n\n1. **Complexity and Length**: The prompt is quite long and contains\
+    \ multiple instructions, which may overwhelm the user or lead to incomplete adherence\
+    \ to the guidelines. Simplifying the language and breaking it down into more digestible\
+    \ steps could improve comprehension and execution.\n\n   **Suggestion**: Shorten\
+    \ the prompt and use bullet points or numbered lists for each step. This can help\
+    \ ensure that the model follows the instructions more closely and doesn't overlook\
+    \ key steps.\n\n2. **Focus on Key Details**: While the prompt instructs the model\
+    \ to identify key details, it lacks emphasis on the importance of ensuring that\
+    \ all relevant information is included in the final answer. Some model outputs\
+    \ failed to capture all necessary steps or calculations.\n\n   **Suggestion**:\
+    \ Emphasize the need to extract and incorporate all key details from the context.\
+    \ For example, explicitly instruct the model to verify that all aspects of the\
+    \ question are addressed before concluding its answer.\n\n3. **Reflective Questions**:\
+    \ The inclusion of reflective questions is a good idea, but they may not be sufficient\
+    \ to guide the model through the reasoning process. The questions could lead to\
+    \ more introspection but might not translate into better answers without a clear\
+    \ mechanism for the model to integrate these reflections.\n\n   **Suggestion**:\
+    \ Instead of reflective questions, consider incorporating explicit checkpoints\
+    \ after each major calculation or reasoning step, prompting the model to validate\
+    \ its logic against the information provided in the context.\n\n4. **Logical Flow\
+    \ and Reasoning**: The prompt asks for a \"logical flow of reasoning,\" but it\
+    \ doesn't specify that each step should directly relate to the question at hand.\
+    \ This can result in extraneous information being presented or steps that do not\
+    \ lead logically to the answer.\n\n   **Suggestion**: Directly state that every\
+    \ step must be connected to the question being asked, ensuring that the model\
+    \ stays focused on the final goal throughout the response construction.\n\n5.\
+    \ **Calculation Clarity**: The prompt requests that all calculations be shown,\
+    \ yet the model sometimes fails to detail these calculations thoroughly or in\
+    \ a way that aligns neatly with the structured answer.\n\n   **Suggestion**: Instruct\
+    \ the model to include explanations for each calculation step, ensuring that it\
+    \ articulates why each calculation is necessary and how it contributes to the\
+    \ final answer.\n\n6. **Examples and Practice**: The prompt could benefit from\
+    \ providing an example of a well-structured response that follows the outlined\
+    \ method. This would serve as a guide for the model on how to apply the instructions\
+    \ effectively.\n\n   **Suggestion**: Add a sample question and a model answer\
+    \ that illustrates the ideal structure and reasoning process, allowing the model\
+    \ to learn from a concrete example.\n\nBy addressing these weaknesses and incorporating\
+    \ the suggestions above, the prompt can be made more effective, leading to higher-quality\
+    \ answers that accurately reflect the information in the context and address the\
+    \ user's query comprehensively.\n"
+- !!python/tuple
+  - "\nThe provided prompt has several strengths but also notable weaknesses that\
+    \ may lead to suboptimal responses from the model. Below is a detailed analysis\
+    \ of these properties and suggestions for improvement:\n\n1. **Clarity and Structure**:\
+    \ The prompt asks the model to follow a structured approach, which is beneficial\
+    \ for clarity. However, the instruction to \"extract and rank the essential details\"\
+    \ can be ambiguous. The term \"rank\" may mislead the model into prioritizing\
+    \ certain details over others in a way that isn\u2019t beneficial for answering\
+    \ the question. Instead, the prompt could specify that the model should identify\
+    \ all relevant details without ranking them.\n\n2. **Intermediate Steps**: The\
+    \ prompt instructs the model to include \"all necessary calculations and intermediate\
+    \ steps.\" While this is generally good practice, the definition of \"necessary\"\
+    \ can vary. In the examples provided, the model sometimes offers excessive detail\
+    \ or irrelevant information, which detracts from the clarity of the final answer.\
+    \ The prompt could be improved by emphasizing the importance of relevance in calculations\
+    \ and explanations.\n\n3. **Avoiding Repetition**: The phrase \"avoiding unnecessary\
+    \ repetition\" is valuable; however, it may not be adequately enforced by the\
+    \ prompt. The model does not consistently apply this instruction, leading to repeated\
+    \ calculations or steps in the provided answers. It could be helpful to explicitly\
+    \ guide the model to summarize previous calculations rather than restating them\
+    \ in full.\n\n4. **Final Answer Formatting**: The prompt suggests a specific format\
+    \ for the final answer but doesn\u2019t enforce it strictly. In some cases, the\
+    \ model's outputs do not match the specified format. Clearer formatting instructions\
+    \ or examples of well-structured outputs could enhance consistency. For instance,\
+    \ specifying exactly how to present calculations and intermediate conclusions\
+    \ could aid in better compliance.\n\n5. **Contextual Understanding**: The prompt\
+    \ could encourage the model to ensure that its final answer directly addresses\
+    \ the question posed. The current instructions might lead to the identification\
+    \ of details without sufficiently tying them back to the specific question asked.\
+    \ A clearer directive to always link extracted details back to the question could\
+    \ enhance relevance and accuracy.\n\n6. **Use of Examples**: Including examples\
+    \ of both good and bad outputs directly in the prompt could provide a reference\
+    \ point for the model, helping it understand what is expected. This could guide\
+    \ the model in the right direction and mitigate the risk of generating incorrect\
+    \ answers.\n\n7. **Feedback Mechanism**: Encouraging a self-review step where\
+    \ the model checks its answer against the question after arriving at a final answer\
+    \ could also lead to better quality responses. This could help catch mistakes\
+    \ or misinterpretations before finalizing the output.\n\nIn summary, refining\
+    \ the prompt to clarify expectations, enforce relevance, and ensure that all parts\
+    \ of the task are adequately addressed would likely lead to improved performance.\
+    \ The revised prompt could look something like this:\n\n\"Please read the provided\
+    \ context thoroughly. Identify and extract all essential details directly related\
+    \ to the question below. Clearly analyze these elements and outline your reasoning\
+    \ step-by-step, ensuring each step remains relevant to the question. Before providing\
+    \ your final answer, summarize key calculations with only necessary intermediate\
+    \ steps. Format your answer to include both the final answer and a concise explanation\
+    \ of how you arrived at that conclusion, ensuring that it directly addresses the\
+    \ question asked.\"\n\nBy making these adjustments, the prompt can guide the model\
+    \ toward generating more accurate and relevant answers, thereby improving the\
+    \ overall quality of responses.\n"
+  - '
+
+    The provided prompt has several strengths, such as encouraging a structured approach
+    and emphasizing the importance of verifying each step. However, it also has notable
+    weaknesses that may contribute to generating incorrect or suboptimal answers.
+    Based on the examples given, the following improvements can be made:
+
+
+    1. **Clarify the Importance of Understanding the Problem**: Although the prompt
+    instructs the user to read the context thoroughly, it does not explicitly emphasize
+    the need to fully comprehend the problem before attempting to extract information.
+    Adding a step that encourages users to summarize the problem in their own words
+    could facilitate better understanding.
+
+
+    2. **Simplify the Key Information Extraction**: The instruction to "Identify Key
+    Information" is useful, but it may benefit from being more specific about the
+    types of information to look for, such as numerical values, relationships, and
+    operations needed to solve the problem. This could help prevent irrelevant details
+    from being included.
+
+
+    3. **Encourage Intermediate Summaries**: The prompt should encourage users to
+    summarize their findings at various stages rather than just at the end. This could
+    help in maintaining clarity and ensuring that the user is on the right track throughout
+    the problem-solving process.
+
+
+    4. **Explicitly Address Mistakes**: The prompt currently assumes that the user
+    will check their accuracy independently. Instead, it could suggest common pitfalls
+    or mistakes to watch out for, based on the types of problems presented. This could
+    guide users toward avoiding specific errors that have been observed in previous
+    model outputs.
+
+
+    5. **Highlight the Importance of Units**: In cases where calculations involve
+    different units (such as gallons and dollars), the prompt should remind users
+    to keep track of units throughout their calculations to avoid confusion and ensure
+    that the final answer is presented with the correct units.
+
+
+    6. **Incorporate Examples of Incorrect Approaches**: Including examples of common
+    mistakes and how to avoid them could provide users with a clearer understanding
+    of what to do and what not to do. This could be particularly effective in guiding
+    users toward the desired structured approach.
+
+
+    By integrating these suggestions, the prompt can enhance its effectiveness, leading
+    to higher quality answers that are accurate, well-structured, and reflective of
+    a clear understanding of the problem.
+
+
+    '
+- !!python/tuple
+  - "\nThe given prompt has several strengths, including a clear structure and an\
+    \ emphasis on logical reasoning and citation of specific information from the\
+    \ context. However, there are notable weaknesses that have contributed to the\
+    \ generation of incorrect answers in the provided examples. Here are the key areas\
+    \ for improvement:\n\n1. **Overemphasis on Structure**: The prompt encourages\
+    \ a highly structured response, which may lead to excessive rigidity in the model's\
+    \ output. While organization is important, overly strict adherence to a format\
+    \ can hinder natural reasoning and flexibility in problem-solving. Consider allowing\
+    \ for a more fluid response style that still maintains clarity without enforcing\
+    \ a strict format.\n\n2. **Lack of Encouragement for Intermediate Steps**: While\
+    \ the prompt suggests identifying key points and providing logical reasoning,\
+    \ it does not explicitly encourage breaking down calculations or reasoning into\
+    \ smaller, digestible steps. This can lead to errors, as seen in the model outputs.\
+    \ Adding a directive to explicitly outline each intermediate step of the calculations\
+    \ could improve accuracy.\n\n3. **Clarification of Relevant Information**: The\
+    \ prompt asks users to focus on key details but does not specify how to identify\
+    \ these details effectively. Providing examples or guidance on what constitutes\
+    \ \"key details\" in the context could help the model better discern which information\
+    \ is crucial for answering the question.\n\n4. **Reflective Questions**: The inclusion\
+    \ of reflective questions is a good idea, but the prompt could further emphasize\
+    \ their importance. Instead of asking the model to reflect generally, consider\
+    \ integrating specific reflective prompts at various stages of the reasoning process.\
+    \ For instance, after calculating an intermediate value, the model could be prompted\
+    \ to check if this value aligns with the problem context.\n\n5. **Encouraging\
+    \ Validation of Answers**: The prompt does not encourage the model to validate\
+    \ its final answer against the question. Adding a directive to compare the calculated\
+    \ result with the original question can ensure that the answer directly addresses\
+    \ what was asked.\n\n6. **Example Outputs**: Including example outputs that showcase\
+    \ both correct and incorrect reasoning could guide the model in understanding\
+    \ the difference between a well-structured answer and a flawed one. This can serve\
+    \ as a learning tool to improve response quality.\n\n7. **Explicit Instruction\
+    \ on Units**: In cases where measurements are involved (like gallons, cubic feet,\
+    \ etc.), the prompt should remind the model to keep track of units throughout\
+    \ the calculations. This will help avoid confusion and ensure that the final answer\
+    \ is provided with the correct units.\n\nIncorporating these improvements can\
+    \ enhance the model's ability to generate accurate, well-structured responses\
+    \ while maintaining flexibility in reasoning and calculation. By fostering a clearer\
+    \ understanding of the task and providing more robust guidelines, the prompt can\
+    \ lead to higher-quality outputs. \n\nOverall, a balance between structure and\
+    \ flexibility, along with more explicit guidance on key aspects of problem-solving,\
+    \ will yield better results in answering the questions posed.\n\n"
+  - '
+
+
+    The prompt designed for the task of reading comprehension and question answering
+    displays several strengths, such as encouraging the user to summarize context
+    and structure their response. However, it also has notable weaknesses that can
+    hinder the quality of the answers produced. Here are some key areas for improvement:
+
+
+    1. **Clarity and Simplicity**: The prompt is relatively verbose, which could overwhelm
+    the user. Simplifying the language and breaking down instructions into more digestible
+    parts can enhance comprehension and execution.
+
+
+    2. **Emphasis on Key Steps**: While the prompt encourages a structured approach,
+    it does not explicitly highlight critical steps necessary for problem-solving,
+    such as identifying and calculating key variables. Incorporating specific prompts
+    that guide the user to identify these elements could lead to more accurate responses.
+
+
+    3. **Guidelines for Logical Deductions**: The prompt mentions citing key information
+    and detailing calculations, but it lacks explicit instructions on how to logically
+    deduce answers from the context. Providing examples of the types of logical connections
+    to make could help users understand the reasoning process better.
+
+
+    4. **Review and Revision Encouragement**: The prompt advises users to review their
+    answers for accuracy and clarity, but it does not provide specific criteria for
+    what to look for during the review. Adding guidance on common pitfalls or types
+    of errors to check for would be beneficial.
+
+
+    5. **Connection to the Question**: The prompt could place stronger emphasis on
+    directly relating each step of reasoning back to the original question, which
+    appears to be a recurring issue in the provided examples. Encouraging users to
+    explicitly state how each calculation contributes to answering the question can
+    enhance coherence.
+
+
+    6. **Example-Based Clarification**: Including an example of a well-structured
+    response that follows the desired approach would be valuable. This could serve
+    as a model and clarify expectations for users.
+
+
+    7. **Scaffolded Approach**: The prompt could benefit from a more scaffolded approach
+    that gradually builds complexity. Starting with simpler tasks and progressively
+    increasing difficulty can help users develop their problem-solving skills more
+    effectively.
+
+
+    By addressing these areas, the prompt can better support users in extracting relevant
+    information from the context and synthesizing accurate answers to the questions
+    posed.
+
+
+    '
+- !!python/tuple
+  - '
+
+    The prompt provided has several strengths, such as encouraging a structured and
+    logical approach to answering questions based on a given context. However, there
+    are key weaknesses and areas for improvement that can help enhance the quality
+    of responses generated by the language model.
+
+
+    1. **Clarity and Specificity**: The prompt uses phrases like "digesting the material"
+    and "clear and structured method," which may be vague. To improve clarity, it
+    could specify that the user should summarize the context before answering the
+    question. This will help the model understand that a summary of the context is
+    an essential first step.
+
+
+    2. **Overemphasis on Reflection**: While reflective questions can promote thoroughness,
+    the prompt''s emphasis on questions like "Have I included all relevant steps?"
+    might overwhelm the model and detract from straightforward problem-solving. Instead,
+    consider focusing on key problem-solving steps and ensuring that the output is
+    focused on the answer rather than the process of reflection.
+
+
+    3. **Calculation Emphasis**: The prompt should explicitly mention the importance
+    of showing all calculations in the answer when applicable. This is crucial for
+    tasks involving quantitative reasoning, as seen in the examples where the model
+    outputs did not always include detailed calculations.
+
+
+    4. **Logical Flow Guidance**: The prompt could provide explicit guidance on how
+    to structure the logical flow of reasoning. For example, it could suggest breaking
+    down the problem into smaller parts before combining them to arrive at the final
+    answer. This can help in complex problems where multiple steps are involved.
+
+
+    5. **Highlighting Key Details**: The instruction to "identify and focus on the
+    key details" is somewhat abstract. It could be more effective if the prompt provided
+    examples of what constitutes a key detail in the context or suggested types of
+    questions to ask when identifying these details.
+
+
+    6. **Formatting Suggestions**: While the prompt suggests a structured format,
+    it could provide a more explicit example of how this structure should look in
+    practice. For instance, demonstrating a sample response to a simplified version
+    of a problem could clarify expectations.
+
+
+    7. **Example Connection**: In the feedback examples provided, the model outputs
+    often match the correct answers but fail to show the reasoning process adequately.
+    The prompt could encourage the model to provide more interim steps or explanations
+    in the answer, ensuring that the reasoning is transparent and traceable.
+
+
+    By addressing these weaknesses, the prompt can guide the language model to produce
+    more thorough, accurate, and logically structured answers based on the provided
+    context. Enhancing clarity, specificity, and guidance in the prompt will significantly
+    contribute to improving the overall quality of the responses generated.
+
+    '
+  - "\nThe provided prompt has several strengths, including its emphasis on structured\
+    \ reasoning and logical flow. However, there are notable weaknesses that can be\
+    \ improved upon to enhance the quality of the answers generated.\n\n1. **Clarity\
+    \ and Simplicity**: The prompt is somewhat verbose and could benefit from being\
+    \ more concise. An overly detailed prompt may overwhelm the model and detract\
+    \ from its ability to focus on essential tasks. Simplifying the language while\
+    \ retaining important instructions can help.\n\n2. **Explicit Instructions on\
+    \ Calculations**: While the prompt encourages showing calculations, it doesn\u2019\
+    t explicitly state that each step should be broken down clearly. This can lead\
+    \ to confusion, as seen in the given examples where the model occasionally misses\
+    \ clear calculations. Emphasizing that each mathematical operation should be stated\
+    \ explicitly may help guide the model to provide step-by-step calculations more\
+    \ consistently.\n\n3. **Reinforce Contextual Relevance**: The prompt could further\
+    \ emphasize the importance of relating back to the context after each step of\
+    \ reasoning. This would ensure that the model remains anchored to the original\
+    \ problem and prevents it from deviating into irrelevant calculations or assumptions.\n\
+    \n4. **Question Breakdown**: The prompt could instruct the model to break down\
+    \ the question into smaller, manageable parts before answering. This approach\
+    \ can streamline the problem-solving process and prevent it from missing critical\
+    \ components of the question.\n\n5. **Iterative Checking**: Although the prompt\
+    \ encourages checking for accuracy and clarity, it would be beneficial to specify\
+    \ that the model should verify not only the correctness of its calculations but\
+    \ also whether the answer fully addresses the question being asked. This would\
+    \ help ensure that the conclusion is directly responsive to the prompt.\n\n6.\
+    \ **Example Guidance**: Providing a structured example of the desired response\
+    \ format could significantly aid in aligning the model's output with expectations.\
+    \ This can serve as a clear template for the model to follow.\n\n7. **Encouraging\
+    \ Summarization**: The conclusion should not only encapsulate findings but also\
+    \ reflect on the steps taken to reach that conclusion. Encouraging the model to\
+    \ briefly summarize its reasoning could reinforce understanding and clarity.\n\
+    \nIn light of these observations, a revised version of the prompt could be structured\
+    \ as follows:\n\n\"Please read the provided context carefully. Answer the following\
+    \ question in a clear, step-by-step manner. Start by identifying the key details\
+    \ from the context that are relevant to the question. Break down the question\
+    \ into smaller parts and address each part systematically. Show all calculations\
+    \ explicitly and refer back to the context regularly to ensure relevance. After\
+    \ reaching your answer, check that it fully addresses the question and summarize\
+    \ your reasoning concisely. Consider: 'Have I clearly shown my calculations?'\
+    \ and 'Does my answer directly respond to the question?' A well-structured response\
+    \ will demonstrate a clear understanding of the material.\"\n\nThis revised prompt\
+    \ aims to maintain clarity while enhancing focus on essential tasks, ensuring\
+    \ that the model provides accurate, structured, and contextually relevant answers.\n"
+- !!python/tuple
+  - "\nThe provided prompt has a structured approach aimed at extracting and analyzing\
+    \ key details from a given context to answer questions. However, several weaknesses\
+    \ and flaws can be identified based on the examples provided:\n\n1. **Ambiguity\
+    \ in Instructions**: The prompt asks the model to \"extract and rank the essential\
+    \ details,\" which may lead to confusion about whether the model should prioritize\
+    \ certain details over others. This could result in the omission of critical steps\
+    \ in the reasoning process, as seen in the examples where the model simply provided\
+    \ an answer without outlining all necessary calculations.\n\n2. **Lack of Emphasis\
+    \ on Step-by-Step Explanation**: While the prompt instructs the model to include\
+    \ detailed reasoning, several model outputs fail to follow this directive. The\
+    \ answers are presented without clear, step-by-step reasoning that reflects the\
+    \ calculations made. For instance, in the case of Joanne collecting coins, the\
+    \ model output did not detail the intermediate steps leading to the final count\
+    \ of coins.\n\n3. **Inconsistent Terminology**: The prompt uses phrases like \"\
+    extract and rank\" and \"outline your reasoning step-by-step,\" which may not\
+    \ resonate well with the LLM's understanding. It might be more effective to use\
+    \ simpler, more direct language that clearly communicates the expectation of providing\
+    \ detailed, sequential reasoning.\n\n4. **Lack of Clear Formatting Guidance**:\
+    \ Although the prompt suggests formatting the answer to include both the final\
+    \ answer and a detailed explanation, it does not specify how to clearly separate\
+    \ these components. This may lead the model to present the final answer first\
+    \ without proper context or reasoning. \n\n5. **Failure to Address All Relevant\
+    \ Information**: In some cases, the model provided an incorrect or incomplete\
+    \ answer by not addressing all relevant details from the context. For example,\
+    \ the model for Nancy's aquarium calculation failed to address the sequential\
+    \ effect of the cat knocking over the aquarium and how that impacted the final\
+    \ answer.\n\nTo improve the prompt, consider the following adjustments:\n\n- **Clarify\
+    \ the Structure**: Clearly define the sections of the response: (1) Extracted\
+    \ Details, (2) Step-by-step Reasoning, (3) Final Answer. This organization can\
+    \ help the model follow a logical flow.\n\n- **Emphasize Complete Reasoning**:\
+    \ Stress that each step in the reasoning must connect back to the context and\
+    \ that all calculations should be shown explicitly.\n\n- **Use Simple Language**:\
+    \ Replace phrases like \"extract and rank\" with \"list the key details\" to avoid\
+    \ confusion.\n\n- **Include Examples of Expected Responses**: Providing explicit\
+    \ examples or formats of how the answer should be structured may guide the model\
+    \ better.\n\nWith these improvements, the prompt can better guide the model to\
+    \ produce answers that are comprehensive, clear, and aligned with the user's expectations\
+    \ for reading comprehension and problem-solving.\n"
+  - "\nThe prompt provided has several strengths, such as encouraging a structured\
+    \ approach and emphasizing clarity and logical reasoning. However, there are notable\
+    \ weaknesses that can lead to suboptimal responses. Here are the main issues identified,\
+    \ followed by recommendations for improvement:\n\n1. **Ambiguity in \"relevant\
+    \ details\"**: The phrase \"focus specifically on the details that pertain to\
+    \ the question\" may lead to confusion. Users may struggle to determine what constitutes\
+    \ \"relevant details.\" This could result in missing critical information or including\
+    \ irrelevant data in their reasoning.\n\n   **Improvement**: Provide a clearer\
+    \ definition or examples of what constitutes \"relevant details.\" Encourage users\
+    \ to look for specific numbers, relationships, or operations that are necessary\
+    \ to solve the problem.\n\n2. **Lack of Emphasis on Step-by-Step Reasoning**:\
+    \ While the prompt asks for a structured approach, it doesn't explicitly state\
+    \ that each step should be clearly numbered or labeled. This can lead to responses\
+    \ that are less organized and harder to follow.\n\n   **Improvement**: Instruct\
+    \ users to number their steps and clearly label each part of their solution. For\
+    \ example, \"Step 1: Calculate the total rain collected,\" followed by the calculation.\n\
+    \n3. **Checking for Accuracy and Clarity**: The prompt states, \"regularly check\
+    \ your work for accuracy and clarity,\" which is vague. Users may not know how\
+    \ to effectively check their work.\n\n   **Improvement**: Suggest specific methods\
+    \ for checking accuracy, such as reviewing each calculation or ensuring that the\
+    \ answer logically follows from the previous steps.\n\n4. **Encouragement to Elaborate\
+    \ on Reasoning**: The prompt could benefit from encouraging users to elaborate\
+    \ on their reasoning as they progress through each step. The current prompt may\
+    \ not sufficiently motivate users to explain their thought process.\n\n   **Improvement**:\
+    \ Encourage users to include brief explanations for each step, such as why they\
+    \ performed a certain calculation or how they derived a particular relationship.\n\
+    \n5. **Excessive Focus on Summary**: The instruction to conclude with a concise\
+    \ summary could lead to unnecessary repetition if the answer has already been\
+    \ clearly articulated through the steps. This may waste time and space.\n\n  \
+    \ **Improvement**: Instead of a generic summary, suggest that the conclusion should\
+    \ restate the answer in a clear and direct manner without unnecessary repetition\
+    \ of the steps.\n\n6. **Clarification on Answer Format**: The prompt doesn't specify\
+    \ how the final answer should be presented (e.g., as a sentence, a number, etc.),\
+    \ which might lead to inconsistent outputs.\n\n   **Improvement**: Specify that\
+    \ the answer should be provided clearly at the end, stating the result explicitly.\n\
+    \nBy addressing these issues, the prompt can better guide users in producing coherent\
+    \ and accurate answers that demonstrate a thorough understanding of the material\
+    \ and the problem-solving process. \n\nOverall, enhancing clarity, structure,\
+    \ and specificity in the prompt will lead to improved quality in user responses\
+    \ and minimize the occurrence of errors.\n\n"
+- !!python/tuple
+  - "\nThe prompt provided has some strengths, but there are notable weaknesses that\
+    \ can be improved to enhance the quality of the answers generated by the model.\
+    \ Here are the key areas for improvement:\n\n1. **Clarity and Specificity of Instructions**:\
+    \ The prompt instructs the model to \"summarize the key details from the context\"\
+    \ and \"list each step involved in your reasoning and calculations.\" While these\
+    \ directions are generally clear, they could benefit from more specificity. For\
+    \ instance, the model should be explicitly asked to include the calculations for\
+    \ each step rather than just listing them. This was a missing element in many\
+    \ of the model outputs.\n\n2. **Structured Format**: Although the prompt mentions\
+    \ a \"structured response,\" it doesn't enforce a clear format for the answer.\
+    \ Introducing a specific format (e.g., bullet points or numbered steps) could\
+    \ help the model organize its thoughts better and ensure that all necessary components\
+    \ are included, particularly for multi-step problems.\n\n3. **Verification Emphasis**:\
+    \ The prompt instructs the model to \"verify each step to ensure accuracy,\" but\
+    \ this was often overlooked in the model outputs. Emphasizing this verification\
+    \ step can help ensure that the calculations are not only performed but are also\
+    \ correct. The model should be encouraged to check back against the original context\
+    \ to ensure that answers align with the provided information.\n\n4. **Examples\
+    \ of Similar Scenarios**: The prompt asks for examples of similar scenarios but\
+    \ does not specify how detailed these examples should be. While this could enrich\
+    \ the response, it may lead to unnecessary complexity in simpler problems. Guidance\
+    \ on when and how to include such examples would help maintain focus on the main\
+    \ question.\n\n5. **Encouragement for Logical Reasoning**: The model should be\
+    \ encouraged to explicitly state its logical reasoning behind each step. For instance,\
+    \ instead of just calculating, the model could explain why it is performing that\
+    \ calculation or what information led it to that conclusion. This would strengthen\
+    \ the connection between the context and the answer.\n\n6. **Avoiding Ambiguity\
+    \ in Calculations**: Some outputs had issues with clarity regarding calculations.\
+    \ For example, when discussing overtime, the model sometimes repeated the same\
+    \ question multiple times instead of succinctly summarizing how the overtime pay\
+    \ was calculated. Encouraging a more concise approach to explanation could help\
+    \ streamline the responses.\n\n7. **Final Summary Clarity**: The prompt calls\
+    \ for a \"concise summary of your findings,\" but in practice, this was sometimes\
+    \ vague or redundant. Specifying that the summary should directly address the\
+    \ original question would help ensure clarity and relevance.\n\nBy addressing\
+    \ these areas, the prompt can be refined to guide the model more effectively,\
+    \ leading to higher-quality, more accurate answers that clearly demonstrate the\
+    \ reasoning process and align closely with the tasks at hand. \n\nIn summary,\
+    \ enhancing clarity, structure, and explicit instruction regarding calculation\
+    \ and reasoning will significantly improve the model\u2019s output quality.\n\n"
+  - "\nThe prompt provided is well-structured in terms of directing the reader to\
+    \ carefully analyze the context and extract relevant information. However, there\
+    \ are several weaknesses that hinder the effectiveness of the prompt, as evidenced\
+    \ by the examples provided. Here\u2019s a detailed breakdown of the main issues\
+    \ and suggestions for improvement:\n\n1. **Complexity of Instructions**: The prompt\
+    \ contains several steps and asks the user to check their work frequently, which\
+    \ could overwhelm the model. Simplifying the instructions to focus on key actions\
+    \ may help. For example, instead of multiple checks, the prompt could ask for\
+    \ a summary at the end.\n\n2. **Lack of Emphasis on Calculation Steps**: Although\
+    \ the prompt mentions showing calculations, it does not explicitly encourage breaking\
+    \ down each calculation step. In the examples, the correct outputs show a clear\
+    \ logical progression in calculations, which should be more strongly emphasized\
+    \ in the prompt.\n\n3. **Encouraging Iterative Reasoning**: The prompt could better\
+    \ encourage iterative reasoning by explicitly stating that the model should build\
+    \ upon each previous answer to arrive at the final conclusion. This approach could\
+    \ help in complex problems where multiple steps and calculations are required.\n\
+    \n4. **Example Contexts and Structure**: Providing a few examples directly in\
+    \ the prompt (similar to the examples given) could illustrate the desired structure\
+    \ of the answer. This could guide the model in formatting its response more effectively.\n\
+    \n5. **Explicit Guidance on Relevance**: The prompt could benefit from a stronger\
+    \ instruction to prioritize and filter the information from the context based\
+    \ on relevance to the question. For instance, asking the model to highlight the\
+    \ key information that directly impacts the answer would help focus its reasoning.\n\
+    \n6. **Encouraging Clear Citations**: While the prompt mentions citations, it\
+    \ could further clarify how to effectively cite information from the context.\
+    \ For example, suggesting specific phrases like \u201CAccording to the context\u2026\
+    \u201D could help in making citations clear.\n\n7. **Final Summary and Answer**:\
+    \ The conclusion could be more explicitly defined. Instead of a general summary,\
+    \ the prompt could specify that the final answer should be presented in a clear\
+    \ sentence directly responding to the question, reinforcing clarity and directness.\n\
+    \n8. **Integration of Questions**: The prompt could encourage integrating the\
+    \ question itself into the answer for better context and clarity. This practice\
+    \ can help ensure that the model remains focused on the question throughout its\
+    \ response.\n\nIn summary, refining the prompt to simplify instructions, emphasize\
+    \ calculation steps, encourage iterative reasoning, and integrate examples could\
+    \ lead to more accurate and structured responses. By focusing on clarity and relevance,\
+    \ the prompt can guide the model to produce high-quality answers consistently.\n\
+    \n"

@@ -1,0 +1,34 @@
+"\nThe provided prompt has several strengths, but it also exhibits weaknesses that\
+  \ can be addressed to enhance its effectiveness in guiding the model towards producing\
+  \ accurate and comprehensive answers. Below are the identified issues along with\
+  \ suggestions for improvement:\n\n1. **Lack of Specificity in Instructions**: The\
+  \ prompt instructs the user to \"analyze the key details\" but does not specify\
+  \ how to identify or prioritize these details. This vagueness can lead to the model\
+  \ overlooking important information or misinterpreting the context. \n   - **Improvement**:\
+  \ Incorporate specific instructions on what aspects to focus on, such as identifying\
+  \ key numbers, relationships, and operations needed to reach a solution.\n\n2. **Absence\
+  \ of Step-by-Step Guidance**: While the prompt encourages a detailed answer, it\
+  \ does not explicitly state that the response should include intermediate reasoning\
+  \ steps or calculations. This may result in overly simplified answers lacking the\
+  \ necessary breakdown of logic.\n   - **Improvement**: Explicitly request that the\
+  \ model outline each step of the reasoning process, including calculations, before\
+  \ arriving at the final answer. This can help ensure all necessary components are\
+  \ included in the response.\n\n3. **Clarification of Expected Output Format**: The\
+  \ prompt does not clarify how the answers should be formatted, which can lead to\
+  \ inconsistent outputs. Some responses may provide final answers without the necessary\
+  \ context or breakdown of calculations.\n   - **Improvement**: Specify the desired\
+  \ output format, such as stating that answers should include both the final answer\
+  \ and a clear explanation detailing how that answer was derived.\n\n4. **Encouraging\
+  \ Redundancy for Clarity**: The model's outputs sometimes contain redundant phrasing\
+  \ or calculations that could be streamlined. This can make the answer convoluted\
+  \ and harder to follow.\n   - **Improvement**: Encourage the model to avoid unnecessary\
+  \ repetition and focus on clarity and conciseness in its explanations. This can\
+  \ help improve the readability of the responses.\n\n5. **Inclusion of Example Structure**:\
+  \ The prompt could benefit from an example of a well-structured response. Providing\
+  \ a model answer that highlights how to break down the problem into manageable parts\
+  \ can serve as a guide for generating better outputs.\n   - **Improvement**: Add\
+  \ an example response that follows the suggested structure, demonstrating how to\
+  \ dissect the problem and arrive at the correct answer.\n\nBy addressing these weaknesses,\
+  \ the prompt can be refined to better support the model in producing high-quality,\
+  \ accurate answers that reflect a comprehensive understanding of the provided context\
+  \ and the questions asked.\n"

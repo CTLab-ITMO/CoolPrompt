@@ -1,0 +1,33 @@
+average_score: 0.926
+best_score: 0.96
+prompts:
+- origin: APE
+  score: 0.96
+  text: Based on the given context, respond to the question.
+- origin: APE
+  score: 0.94
+  text: Using the provided context, answer the question.
+- origin: APE
+  score: 0.94
+  text: Draw on the supplied context to answer the question.
+- origin: APE
+  score: 0.94
+  text: Refer to the provided context and answer the question.
+- origin: APE
+  score: 0.92
+  text: Answer the question based on the given context.
+- origin: APE
+  score: 0.92
+  text: Provide an answer to the question using the supplied context.
+- origin: APE
+  score: 0.92
+  text: Respond to the question by referring to the provided context.
+- origin: MANUAL
+  score: 0.92
+  text: Given a context answer on the question.
+- origin: APE
+  score: 0.9
+  text: Using the context provided, give an answer to the question.
+- origin: APE
+  score: 0.9
+  text: With the given context, formulate an answer to the question.

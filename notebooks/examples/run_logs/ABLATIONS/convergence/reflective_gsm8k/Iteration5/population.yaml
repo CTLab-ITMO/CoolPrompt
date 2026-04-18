@@ -1,0 +1,67 @@
+average_score: 0.958
+best_score: 0.98
+prompts:
+- origin: MUTATED
+  score: 0.98
+  text: 'Please analyze the following context thoroughly and generate a detailed answer
+    to the question that follows. Base your response solely on the information provided
+    in the context, ensuring it directly addresses the query. Context: [insert context
+    here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.98
+  text: 'Please analyze the following context thoroughly and extract the specific
+    information required to generate a clear and accurate response to the question
+    that follows. Ensure your answer is directly informed by the details in the context
+    and addresses the query precisely. Context: [insert context here]. Question: [insert
+    question here].'
+- origin: CROSSOVER
+  score: 0.96
+  text: 'Please analyze the following context thoroughly and provide a detailed response
+    to the question that follows. Your answer should strictly derive from the information
+    presented in the context and directly respond to the query. Context: [insert context
+    here]. Question: [insert question here].'
+- origin: CROSSOVER
+  score: 0.96
+  text: 'Please analyze the following context meticulously and extract the essential
+    information needed to construct a clear and accurate answer to the question that
+    follows. Your response should be directly informed by the details provided in
+    the context and must address the query with precision. Context: [insert context
+    here]. Question: [insert question here].'
+- origin: CROSSOVER
+  score: 0.96
+  text: 'Please examine the following context closely and extract a precise answer
+    to the question that follows. Ground your response exclusively in the details
+    provided within the context, ensuring it directly responds to the inquiry. Context:
+    [insert context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.96
+  text: 'Please extract and synthesize the relevant information from the context provided
+    below, then analyze the question that follows to formulate a coherent and precise
+    response. Your answer should strictly adhere to the details contained within the
+    context and directly address the question posed. Context: [insert context here].
+    Question: [insert question here].'
+- origin: MUTATED
+  score: 0.96
+  text: 'Please extract and synthesize the relevant information from the following
+    context to answer the question that follows. Your response should be insightful
+    and directly aligned with the details presented in the context. Context: [insert
+    context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.96
+  text: 'Please extract and synthesize relevant information from the following context
+    to formulate a coherent answer to the question presented after it. Your response
+    should be exclusively based on the details provided in the context and must directly
+    address the query. Context: [insert context here]. Question: [insert question
+    here].'
+- origin: CROSSOVER
+  score: 0.94
+  text: 'Please read the following context and identify the specific information necessary
+    to accurately answer the question that follows. Your response should be directly
+    based on the details provided in the context and directly address the query. Context:
+    [insert context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.92
+  text: 'Please extract and synthesize information from the following context to formulate
+    a precise answer to the question posed afterward. Ensure your response is directly
+    derived from the context and accurately addresses the query. Context: [insert
+    context here]. Question: [insert question here].'

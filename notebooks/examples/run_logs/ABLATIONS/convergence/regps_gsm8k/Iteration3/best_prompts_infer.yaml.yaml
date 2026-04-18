@@ -1,0 +1,99 @@
+average_score: 0.9425
+best_score: 0.95
+prompts:
+- origin: MUTATED
+  score: 0.95
+  text: 'Please carefully analyze the provided context to identify and summarize the
+    key data points necessary for addressing the following questions. Begin your response
+    with a brief overview of the relationships and dependencies present in the context
+    to ensure a thorough understanding. Follow these steps for your structured problem-solving
+    approach:
+
+
+    1. **Detail each step**: Clearly break down your calculations using a standard
+    format that logically progresses from one step to the next. Ensure that each arithmetic
+    operation (addition, subtraction, multiplication, division) is explicitly stated
+    and calculated.
+
+
+    2. **Extract and calculate**: Identify the relevant information and perform the
+    necessary calculations. When calculating totals, remember to sum all components
+    and verify that all relevant data points are accounted for.
+
+
+    3. **Intermediate conclusions**: Provide intermediate conclusions or checkpoints
+    throughout your reasoning process. This will clarify your thought process and
+    make it easier to follow your logic.
+
+
+    4. **Double-check your work**: Before concluding with a final answer, double-check
+    all calculations and logical deductions to minimize errors.
+
+
+    5. **Organize your response**: Use headings or bullet points to clearly structure
+    your response, enhancing readability and allowing for easier tracking of your
+    logical flow.
+
+
+    By adhering to this structured approach, you will ensure clarity and transparency
+    in your problem-solving process. Now, proceed to address the questions sequentially,
+    detailing your reasoning and calculations clearly.'
+- origin: MUTATED
+  score: 0.95
+  text: 'Please carefully analyze the provided context to identify and summarize the
+    key data points necessary for addressing the following questions. Begin your response
+    with a brief overview of the relationships and dependencies present in the context
+    to ensure a thorough understanding. Follow these steps for your structured problem-solving
+    approach:
+
+
+    1. **Detail each step**: Clearly break down your calculations using a standard
+    format that logically progresses from one step to the next. Ensure that each arithmetic
+    operation (addition, subtraction, multiplication, division) is explicitly stated
+    and calculated.
+
+
+    2. **Extract and calculate**: Identify the relevant information and perform the
+    necessary calculations. When calculating totals, remember to sum all components
+    and verify that all relevant data points are accounted for.
+
+
+    3. **Intermediate conclusions**: Provide intermediate conclusions or checkpoints
+    throughout your reasoning process. This will clarify your thought process and
+    make it easier to follow your logic.
+
+
+    4. **Double-check your work**: Before concluding with a final answer, double-check
+    all calculations and logical deductions to minimize errors.
+
+
+    5. **Organize your response**: Use headings or bullet points to clearly structure
+    your response, enhancing readability and allowing for easier tracking of your
+    logical flow.
+
+
+    By adhering to this structured approach, you will ensure clarity and transparency
+    in your problem-solving process. Now, proceed to address the questions sequentially,
+    detailing your reasoning and calculations clearly.'
+- origin: MUTATED
+  score: 0.94
+  text: "Please analyze the provided context thoroughly to extract key data points\
+    \ essential for answering the following questions. Begin by summarizing the relevant\
+    \ information and relationships within the context to ensure a comprehensive understanding.\
+    \ \n\n1. **Break Down the Problem**: Identify and list all relevant variables\
+    \ and relationships. Clearly detail your reasoning for each step taken in your\
+    \ calculations. \n\n2. **Perform Calculations**: When calculating totals, follow\
+    \ a standard format for presenting arithmetic operations. Ensure that each calculation\
+    \ logically follows from the previous one, using addition, subtraction, multiplication,\
+    \ or division as appropriate. \n\n3. **Check Your Work**: Before concluding with\
+    \ a final answer, double-check all calculations and logical deductions. Highlight\
+    \ any common calculation patterns or methods that apply to the problem.\n\n4.\
+    \ **Provide Intermediate Outputs**: Offer intermediate conclusions or checkpoints\
+    \ throughout your reasoning process to clarify your thought path. \n\n5. **Organize\
+    \ Your Response**: Use headings or bullet points to structure your response, enhancing\
+    \ readability and allowing easier tracking of the logical flow.\n\nYour structured\
+    \ response will facilitate comprehension and demonstrate your logical reasoning\
+    \ throughout the problem-solving process."
+- origin: APE
+  score: 0.93
+  text: Formulate an answer to the question in light of the given context.

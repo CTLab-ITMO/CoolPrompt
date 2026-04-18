@@ -568,8 +568,10 @@ class ReflectiveEvoluter:
             survived_crossed = survived_crossed if isinstance(survived_crossed, int) else 0
             survived_mutated = survived_mutated if isinstance(survived_mutated, int) else 0
 
-            fraction_crossed = survived_crossed / self.population_size
-            fraction_mutated = survived_mutated / self.population_size
+            len_ = len(population)
+
+            fraction_crossed = survived_crossed / len_
+            fraction_mutated = survived_mutated / len_
 
             self.model.update_fractions_data(
                 {
@@ -578,7 +580,7 @@ class ReflectiveEvoluter:
                     'fraction_mutated': fraction_mutated,
                     'survived_crossed': survived_crossed,
                     'survived_mutated': survived_mutated,
-                    'total_population_size': len(population)
+                    'total_population_size': len_
                 }
             )
 

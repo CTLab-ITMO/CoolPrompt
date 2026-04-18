@@ -87,7 +87,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
     model: Any
     tracker: Any
 
-    fractions_data = []
+    fractions_data: Any = []
 
     def __init__(self, model, tracker):
         super().__init__(model=model, tracker=tracker)

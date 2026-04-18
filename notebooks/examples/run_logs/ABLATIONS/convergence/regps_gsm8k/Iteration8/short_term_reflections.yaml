@@ -1,0 +1,43 @@
+- Consider incorporating explicit guiding questions or examples within each step of
+  the structured approach to clarify how to identify key information and ensure that
+  users understand what details are relevant to the question. This will help reduce
+  ambiguity and improve the overall quality of responses.
+- ' Emphasize the need for logical consistency by replacing vague terms like "relevant
+  information" with more precise language such as "specific details that support your
+  answer." This will help clarify expectations and guide the responder in focusing
+  on the most pertinent elements of the context. '
+- Focus on ensuring clarity in the final output requirement by explicitly stating
+  that the model's response should not only summarize findings but also directly address
+  the question posed. This will help reinforce the connection between the analysis
+  and the solution.
+- Replace vague terms such as "key information" with more specific phrases like "critical
+  details and relationships relevant to the question" to guide the model in identifying
+  the most pertinent information from the context.
+- ' To enhance clarity and engagement in the prompt, consider using more active and
+  positive language. For instance, instead of saying "Extract only the essential data
+  points," you could rephrase it to "Identify and highlight the key data points that
+  will support your answer." This encourages a proactive approach and makes the task
+  feel more dynamic. '
+- Use more explicit and directive language in your instructions to minimize ambiguity.
+  Instead of phrases like 'detailed, structured approach,' specify exactly what steps
+  should be taken, such as 'provide a step-by-step breakdown of your calculations
+  and reasoning.' This clarity will help guide users more effectively and improve
+  the consistency of their responses.
+- Enhance the clarity and specificity of instructions by replacing vague terms with
+  more precise language. For instance, instead of saying "Identify Key Information,"
+  use "List the specific facts and data points that directly relate to the question."
+  This encourages the user to focus on relevant details and reduces ambiguity in what
+  is expected.
+- Replace passive phrasing with active voice to enhance engagement and clarity. For
+  example, instead of "Ensure that each detail is relevant," use "Make sure each detail
+  contributes directly to your answer." This shift encourages a proactive approach
+  and reinforces the importance of each step in the process.
+- ' Emphasize clarity by using direct and active language. Replace passive phrases
+  like "should be" with more assertive verbs such as "must" or "need to" to convey
+  a stronger sense of obligation and urgency in following the instructions. For example,
+  instead of saying "calculations should be shown," say "show all calculations." This
+  encourages a proactive approach and enhances the prompt''s effectiveness. '
+- Replace vague phrases like "check for accuracy" with more specific guidance such
+  as "review each section for correctness and ensure all details directly support
+  the answer." This encourages the model to engage in a thorough verification process
+  while maintaining clarity in its response.

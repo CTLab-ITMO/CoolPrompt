@@ -1,0 +1,104 @@
+average_score: 0.8925000000000001
+best_score: 0.9
+prompts:
+- origin: EVOLUTED
+  score: 0.9
+  text: "\nYou are given a narrative math word problem that describes quantities,\
+    \ rates, times, costs, conversions, and other numeric relationships. Your task\
+    \ is to produce a detailed, fully worked solution that explains how to obtain\
+    \ the answer by reasoning through the problem step by step, but without exposing\
+    \ private chain-of-thought. The output should be a clearly labeled step-by-step\
+    \ derivation as described below, ending with a single numeric final answer.\n\n\
+    Structure:\n- Step 1: Pose a clearly stated sub-question about a specific part\
+    \ of the problem (e.g., determining an initial quantity, computing a cost, finding\
+    \ a rate, deriving an intermediate value).\n- Then: Result: [computed value].\
+    \ Justification: [brief, formula-based calculation showing how the value is obtained,\
+    \ using only information from the problem and previously established results].\n\
+    - Step 2: [Next sub-question that depends on Step 1]; then Result and Justification.\n\
+    - Continue until all necessary intermediate values are obtained and the final\
+    \ question is answered.\n\nGuidelines:\n- Use only information given in the problem;\
+    \ no external assumptions.\n- Use straightforward arithmetic operations (addition,\
+    \ subtraction, multiplication, division), percentages, unit conversions, ratios,\
+    \ and simple algebra as needed.\n- Each step should rely on earlier results; steps\
+    \ must be ordered so that later steps build on earlier ones.\n- Include steps\
+    \ for common themes: money, time and rate, weight/quantity changes, proportional\
+    \ reasoning, and simple algebraic relationships.\n- After the final step, present\
+    \ the final numeric answer as \"Final answer: [number]\".\n- The format should\
+    \ look like:\n  Step 1: [question]\n  Result: [value]\n  Justification: [brief\
+    \ calculation]\n  Step 2: [question]\n  Result: [value]\n  Justification: [brief\
+    \ calculation]\n  ...\n  Final answer: [number]\n\nNote: If a problem does not\
+    \ yield a unique numeric answer with the given data, clearly state what is determined\
+    \ and why, and provide the best numeric estimate if allowed.\n"
+- origin: APE
+  score: 0.9
+  text: Given the context information, provide an answer to the question.
+- origin: APE
+  score: 0.9
+  text: Given the context information, provide an answer to the question.
+- origin: MUTATED
+  score: 0.87
+  text: '
+
+    You are an optimization-prompt designer. Your task is to generate a clearly structured,
+    step-by-step solution for a narrative math word problem that describes quantities,
+    rates, times, costs, conversions, and other numeric relationships. The solution
+    should be fully worked via a fixed sequence of sub-questions and results, suitable
+    for checking optimization reasoning and intermediate results.
+
+
+    Structure and rules:
+
+    - The output must be stepwise, minimally containing Step 1, Step 2, etc.
+
+    - Step k: [a clearly stated sub-question about a specific part of the problem].
+
+    - Then: Result: [computed value].
+
+    - Justification: [brief, formula-based calculation showing how the value is obtained,
+    using only information from the problem and already established results].
+
+    - Each step must rely only on information given and on earlier results; no new
+    assumptions.
+
+    - Steps must be ordered so that later steps reuse earlier results.
+
+    - Thematically, cover money problems, time and rate problems, quantity changes,
+    proportional reasoning, and simple algebraic relationships.
+
+    - After the final step, include a line: Final answer: [numeric value].
+
+    - If the problem does not yield a unique numeric answer with the given data, clearly
+    state what is determined and why, and provide the best numeric estimate if allowed.
+
+    - Output must be strictly the prompt text; nothing else.
+
+    - Do not reveal private chain-of-thought; the Justification should be concise,
+    calculation-based, and avoid extended narrative.
+
+    - If a problem requires multiple interpretations, present the distinct pathways
+    as separate Step sequences only if explicitly requested; otherwise choose the
+    interpretation that aligns with given data.
+
+
+    Format example (must be followed):
+
+    Step 1: [Question about a subpart]
+
+    Result: [value]
+
+    Justification: [brief calculation]
+
+    Step 2: [Next sub-question]
+
+    Result: [value]
+
+    Justification: [brief calculation]
+
+    ...
+
+    Final answer: [number]
+
+
+    End of prompt.
+
+    '

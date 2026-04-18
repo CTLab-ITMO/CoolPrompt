@@ -1,0 +1,1344 @@
+average_score: 0.9345454545454546
+best_score: 1.0
+prompts:
+- bad_examples:
+  - correct: 'How many cubic feet are in the aquarium? ** First calculate the volume
+      of the aquarium by multiplying its length, width and height: 4 ft * 6 ft * 3
+      ft = <<4*6*3=72>>72 cubic ft
+
+      How many cubic feet are full after the cat knocks it over? ** Then figure out
+      what proportion of the aquarium is full after the cat knocks it over: 1/2 *
+      1/2 = 1/4
+
+      How many cubic feet are full after Nancy refills it? ** Then figure out what
+      proportion of the aquarium is full after Nancy refills it: 3 * 1/4 = 3/4
+
+      How many cubic feet of water are in the aquarium? ** Now multiply the proportion
+      of the aquarium that''s full by the aquarium''s volume to find out how much
+      water is in it: 72 cubic ft * 3/4 = <<72*3/4=54>>54 cubic ft
+
+      #### 54'
+    input: Nancy is filling an aquarium for her fish. She fills it halfway and goes
+      to answer the door. While she's gone, her cat knocks the aquarium over and spills
+      half the water in it. Then Nancy comes back and triples the amount of water
+      in the aquarium. If the aquarium is 4 feet long, 6 feet wide, and 3 feet high,
+      how many cubic feet of water are in the aquarium?
+    output: 54 cubic feet
+  - correct: 'How many clips did Natalia sell in May? ** Natalia sold 48/2 = <<48/2=24>>24
+      clips in May.
+
+      How many clips did Natalia sell altogether in April and May? ** Natalia sold
+      48+24 = <<48+24=72>>72 clips altogether in April and May.
+
+      #### 72'
+    input: Natalia sold clips to 48 of her friends in April, and then she sold half
+      as many clips in May. How many clips did Natalia sell altogether in April and
+      May?
+    output: '72'
+  - correct: 'How many goats does Washington have? ** If Washington has 140 goats,
+      Washington has 140+40 = <<140+40=180>>180 goats.
+
+      How many goats do they have in total? ** In total, they have 140+180 = <<140+180=320>>320
+      goats
+
+      #### 320'
+    input: Paddington has 40 more goats than Washington. If Washington has 140 goats,
+      how many goats do they have in total?
+    output: '320'
+  - correct: 'How many photos did the family take on the first day? ** On their first
+      day to the grand canyon, the family took half as many photos as the ones they
+      have in the gallery, meaning they took 1/2*400 = <<400/2=200>>200 photos.
+
+      How many photos are in the family''s gallery? ** The total number of photos
+      if they add the ones they took on the first day to the family''s gallery is
+      400+200 = <<400+200=600>>600
+
+      How many photos did the family take on the second day? ** On the second day,
+      they took 120 more photos than they took on the first day, a total of 200+120
+      = <<200+120=320>>320 photos.
+
+      How many photos will the family have after adding the photos they took on the
+      second day? ** After adding the photos they took on the second day to the galley,
+      the number of photos will be 600+320 = <<600+320=920>>920
+
+      #### 920'
+    input: Lilah's family gallery has 400 photos. On a two-day trip to the Grand Canyon,
+      they took half as many photos they have in the family's gallery on the first
+      day and 120 more photos than they took on the first day on the second day. If
+      they added all these photos to the family gallery, calculate the total number
+      of photos in the gallery.
+    output: '920'
+  - correct: 'How many inches did it rain? ** It rained 3+4=<<3+4=7>>7 inches
+
+      How many gallons did he collect? ** So he collected 7*15=<<7*15=105>>105 gallons
+
+      How much money did he make from selling all the water? ** So he makes 105*1.2=$<<105*1.2=126>>126
+      from selling the water
+
+      #### 126'
+    input: James has a rainwater collection barrel.  For each inch of rain he collects
+      15 gallons.  On Monday it rained 4 inches and on Tuesday it rained 3 inches.  He
+      can sell water for $1.2 per gallon.  How much money did he make from selling
+      all the water?
+    output: $126
+  origin: MUTATED
+  score: 1.0
+  text: "Please read the provided context thoroughly. After gaining a clear understanding,\
+    \ answer the following question using a detailed, structured approach. \n\n1.\
+    \ **Identify Key Information**: Focus on extracting relevant facts directly related\
+    \ to the question. Avoid unnecessary details that do not contribute to the answer.\n\
+    \n2. **Outline Your Reasoning**: Present your findings in a logical sequence that\
+    \ follows the natural progression of understanding the problem, leading to the\
+    \ solution. Clearly articulate how each step connects to the next.\n\n3. **Incorporate\
+    \ Calculations**: If applicable, show all calculations or reasoning explicitly.\
+    \ Ensure that these are clearly documented and easy to follow.\n\n4. **Verify\
+    \ Each Step**: As you formulate your response, regularly check each section for\
+    \ accuracy. Ask yourself questions like, 'Have I included all relevant steps?'\
+    \ and 'Does my conclusion directly answer the question?'\n\n5. **Conclude Effectively**:\
+    \ After completing your response, summarize your findings concisely, ensuring\
+    \ that your conclusion addresses the question posed.\n\nBy following this structured\
+    \ approach, you will enhance the clarity and accuracy of your answer."
+- bad_examples:
+  - correct: 'How many pages does he write each week? ** He writes each friend 3*2=<<3*2=6>>6
+      pages a week
+
+      How many pages does he write every week? ** So he writes 6*2=<<6*2=12>>12 pages
+      every week
+
+      How many pages does he write a year? ** That means he writes 12*52=<<12*52=624>>624
+      pages a year
+
+      #### 624'
+    input: James writes a 3-page letter to 2 different friends twice a week.  How
+      many pages does he write a year?
+    output: '312'
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many goats does Washington have? ** If Washington has 140 goats,
+      Washington has 140+40 = <<140+40=180>>180 goats.
+
+      How many goats do they have in total? ** In total, they have 140+180 = <<140+180=320>>320
+      goats
+
+      #### 320'
+    input: Paddington has 40 more goats than Washington. If Washington has 140 goats,
+      how many goats do they have in total?
+    output: '320'
+  - correct: 'How many cubic feet are in the aquarium? ** First calculate the volume
+      of the aquarium by multiplying its length, width and height: 4 ft * 6 ft * 3
+      ft = <<4*6*3=72>>72 cubic ft
+
+      How many cubic feet are full after the cat knocks it over? ** Then figure out
+      what proportion of the aquarium is full after the cat knocks it over: 1/2 *
+      1/2 = 1/4
+
+      How many cubic feet are full after Nancy refills it? ** Then figure out what
+      proportion of the aquarium is full after Nancy refills it: 3 * 1/4 = 3/4
+
+      How many cubic feet of water are in the aquarium? ** Now multiply the proportion
+      of the aquarium that''s full by the aquarium''s volume to find out how much
+      water is in it: 72 cubic ft * 3/4 = <<72*3/4=54>>54 cubic ft
+
+      #### 54'
+    input: Nancy is filling an aquarium for her fish. She fills it halfway and goes
+      to answer the door. While she's gone, her cat knocks the aquarium over and spills
+      half the water in it. Then Nancy comes back and triples the amount of water
+      in the aquarium. If the aquarium is 4 feet long, 6 feet wide, and 3 feet high,
+      how many cubic feet of water are in the aquarium?
+    output: '54'
+  - correct: 'How many photos did the family take on the first day? ** On their first
+      day to the grand canyon, the family took half as many photos as the ones they
+      have in the gallery, meaning they took 1/2*400 = <<400/2=200>>200 photos.
+
+      How many photos are in the family''s gallery? ** The total number of photos
+      if they add the ones they took on the first day to the family''s gallery is
+      400+200 = <<400+200=600>>600
+
+      How many photos did the family take on the second day? ** On the second day,
+      they took 120 more photos than they took on the first day, a total of 200+120
+      = <<200+120=320>>320 photos.
+
+      How many photos will the family have after adding the photos they took on the
+      second day? ** After adding the photos they took on the second day to the galley,
+      the number of photos will be 600+320 = <<600+320=920>>920
+
+      #### 920'
+    input: Lilah's family gallery has 400 photos. On a two-day trip to the Grand Canyon,
+      they took half as many photos they have in the family's gallery on the first
+      day and 120 more photos than they took on the first day on the second day. If
+      they added all these photos to the family gallery, calculate the total number
+      of photos in the gallery.
+    output: '920'
+  origin: MUTATED
+  score: 0.96
+  text: Please read the provided context carefully. After grasping the material, answer
+    the following question using a detailed and structured approach. Start with a
+    concise introduction that captures the main themes of the context. As you methodically
+    outline your reasoning step-by-step, ensure that each step is logically connected
+    and directly tied to the question. Provide clear explanations for any calculations,
+    detailing the process and how each calculation relates to the question at hand.
+    Use specific examples from the context to support your reasoning, clearly indicating
+    how they bolster your argument. As you conclude, make sure to summarize your findings
+    succinctly and directly address the question posed. During your review process,
+    focus on ensuring mathematical accuracy, the relevance of cited information, and
+    the overall coherence of your response. If the problem involves multiple steps,
+    break it down into simpler parts and provide interim answers before arriving at
+    your final conclusion. This will help clarify your thought process and enhance
+    the clarity of your response.
+- bad_examples:
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many cubic feet are in the aquarium? ** First calculate the volume
+      of the aquarium by multiplying its length, width and height: 4 ft * 6 ft * 3
+      ft = <<4*6*3=72>>72 cubic ft
+
+      How many cubic feet are full after the cat knocks it over? ** Then figure out
+      what proportion of the aquarium is full after the cat knocks it over: 1/2 *
+      1/2 = 1/4
+
+      How many cubic feet are full after Nancy refills it? ** Then figure out what
+      proportion of the aquarium is full after Nancy refills it: 3 * 1/4 = 3/4
+
+      How many cubic feet of water are in the aquarium? ** Now multiply the proportion
+      of the aquarium that''s full by the aquarium''s volume to find out how much
+      water is in it: 72 cubic ft * 3/4 = <<72*3/4=54>>54 cubic ft
+
+      #### 54'
+    input: Nancy is filling an aquarium for her fish. She fills it halfway and goes
+      to answer the door. While she's gone, her cat knocks the aquarium over and spills
+      half the water in it. Then Nancy comes back and triples the amount of water
+      in the aquarium. If the aquarium is 4 feet long, 6 feet wide, and 3 feet high,
+      how many cubic feet of water are in the aquarium?
+    output: 54 cubic feet
+  - correct: 'How many clips did Natalia sell in May? ** Natalia sold 48/2 = <<48/2=24>>24
+      clips in May.
+
+      How many clips did Natalia sell altogether in April and May? ** Natalia sold
+      48+24 = <<48+24=72>>72 clips altogether in April and May.
+
+      #### 72'
+    input: Natalia sold clips to 48 of her friends in April, and then she sold half
+      as many clips in May. How many clips did Natalia sell altogether in April and
+      May?
+    output: '72'
+  - correct: 'How many inches did it rain? ** It rained 3+4=<<3+4=7>>7 inches
+
+      How many gallons did he collect? ** So he collected 7*15=<<7*15=105>>105 gallons
+
+      How much money did he make from selling all the water? ** So he makes 105*1.2=$<<105*1.2=126>>126
+      from selling the water
+
+      #### 126'
+    input: James has a rainwater collection barrel.  For each inch of rain he collects
+      15 gallons.  On Monday it rained 4 inches and on Tuesday it rained 3 inches.  He
+      can sell water for $1.2 per gallon.  How much money did he make from selling
+      all the water?
+    output: $126
+  origin: MUTATED
+  score: 0.96
+  text: "Please read the provided context thoroughly, paying close attention to numerical\
+    \ values, relationships, and operations explicitly mentioned. Answer the following\
+    \ question using a clear, structured approach. \n\n1. **Identify** and summarize\
+    \ the most relevant details from the context that directly relate to the question.\
+    \ Look for key facts that include specific data points or critical relationships\
+    \ that can affect your answer.\n\n2. **Break down** the problem into smaller parts\
+    \ and label each step clearly. Outline your reasoning in a logical flow, ensuring\
+    \ that each part of the problem-solving process is distinct and easy to follow.\n\
+    \n3. **Cite** key information from the context as you outline your reasoning.\
+    \ A valid citation should include direct quotes or paraphrased points that support\
+    \ your argument. Integrate these citations seamlessly into your reasoning.\n\n\
+    4. As you develop your answer, regularly assess your work by asking:\n   - Have\
+    \ I included all relevant steps?\n   - Have I double-checked my calculations?\n\
+    \   - Does my answer make logical sense based on the context?\n   - Is my reasoning\
+    \ clear and easy to understand?\n\n5. Ensure clarity and accuracy by rephrasing\
+    \ complex parts in simpler terms or verifying calculations independently.\n\n\
+    6. Conclude with a concise summary that encapsulates your findings and restates\
+    \ how you derived your answer based on the context. This summary should reinforce\
+    \ the connection between your reasoning and the answer.\n\nA well-structured response\
+    \ will not only directly address the question but also demonstrate a comprehensive\
+    \ understanding of the material."
+- bad_examples:
+  - correct: 'How many pounds of beef did James buy? ** He bought 5*4=<<5*4=20>>20
+      pounds of beef
+
+      How much did James pay? ** So he paid 20*5.5=$<<20*5.5=110>>110
+
+      #### 110'
+    input: James buys 5 packs of beef that are 4 pounds each.  The price of beef is
+      $5.50 per pound.  How much did he pay?
+    output: $110.00
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many goats does Washington have? ** If Washington has 140 goats,
+      Washington has 140+40 = <<140+40=180>>180 goats.
+
+      How many goats do they have in total? ** In total, they have 140+180 = <<140+180=320>>320
+      goats
+
+      #### 320'
+    input: Paddington has 40 more goats than Washington. If Washington has 140 goats,
+      how many goats do they have in total?
+    output: '320'
+  - correct: 'How many cubic feet are in the aquarium? ** First calculate the volume
+      of the aquarium by multiplying its length, width and height: 4 ft * 6 ft * 3
+      ft = <<4*6*3=72>>72 cubic ft
+
+      How many cubic feet are full after the cat knocks it over? ** Then figure out
+      what proportion of the aquarium is full after the cat knocks it over: 1/2 *
+      1/2 = 1/4
+
+      How many cubic feet are full after Nancy refills it? ** Then figure out what
+      proportion of the aquarium is full after Nancy refills it: 3 * 1/4 = 3/4
+
+      How many cubic feet of water are in the aquarium? ** Now multiply the proportion
+      of the aquarium that''s full by the aquarium''s volume to find out how much
+      water is in it: 72 cubic ft * 3/4 = <<72*3/4=54>>54 cubic ft
+
+      #### 54'
+    input: Nancy is filling an aquarium for her fish. She fills it halfway and goes
+      to answer the door. While she's gone, her cat knocks the aquarium over and spills
+      half the water in it. Then Nancy comes back and triples the amount of water
+      in the aquarium. If the aquarium is 4 feet long, 6 feet wide, and 3 feet high,
+      how many cubic feet of water are in the aquarium?
+    output: '54'
+  - correct: 'How many inches did it rain? ** It rained 3+4=<<3+4=7>>7 inches
+
+      How many gallons did he collect? ** So he collected 7*15=<<7*15=105>>105 gallons
+
+      How much money did he make from selling all the water? ** So he makes 105*1.2=$<<105*1.2=126>>126
+      from selling the water
+
+      #### 126'
+    input: James has a rainwater collection barrel.  For each inch of rain he collects
+      15 gallons.  On Monday it rained 4 inches and on Tuesday it rained 3 inches.  He
+      can sell water for $1.2 per gallon.  How much money did he make from selling
+      all the water?
+    output: $126
+  origin: CROSSOVER
+  score: 0.96
+  text: 'Please read the provided context carefully. Identify the key details needed
+    to answer the following question. Start by highlighting important information
+    such as numbers, relationships, and operations that relate to the question. Break
+    the problem into clear steps, labeling each part as you go. Ensure your reasoning
+    flows logically from understanding the problem to finding the answer. Use citations
+    from the context to support your points seamlessly. After each step, check your
+    work by asking: ''Did I include all important details?'' and ''Does my answer
+    make sense based on the context?'' For clarity, consider rephrasing your answer
+    or verifying calculations. Finally, summarize your findings and restate how you
+    reached the answer based on the context. This summary should clearly connect your
+    reasoning to the answer given.'
+- bad_examples:
+  - correct: 'How many pages does he write each week? ** He writes each friend 3*2=<<3*2=6>>6
+      pages a week
+
+      How many pages does he write every week? ** So he writes 6*2=<<6*2=12>>12 pages
+      every week
+
+      How many pages does he write a year? ** That means he writes 12*52=<<12*52=624>>624
+      pages a year
+
+      #### 624'
+    input: James writes a 3-page letter to 2 different friends twice a week.  How
+      many pages does he write a year?
+    output: '312'
+  - correct: 'How many sentences did Janice have from yesterday? ** Janice had X sentences
+      from yesterday already typed to start with today.
+
+      How many sentences did Janice type before her break? ** Janice typed 6 * 20
+      = <<6*20=120>>120 sentences before her break.
+
+      How many sentences did Janice type after her break? ** She typed 6 * 15 = <<6*15=90>>90
+      sentences after her break.
+
+      How many sentences did Janice type after her meeting? ** She typed 6 * 18 =
+      <<6*18=108>>108 sentences after her meeting.
+
+      How many sentences did Janice type today? ** Therefore, she typed 120 + 90 +
+      108 = <<120+90+108=318>>318 sentences today in all.
+
+      How many sentences did Janie have left after erasing? ** She had to erase 40
+      sentences, so she had 318 - 40 = <<318-40=278>>278 sentences that she typed
+      today left.
+
+      How many sentences did Janice start with today? ** The paper had X + 278 = 536
+      sentences at the end of today.
+
+      How many sentences did Janice start with today? ** Thus, she had X = 536 - 278
+      = <<536-278=258>>258 sentences typed on the paper to start with today.
+
+      #### 258'
+    input: Janice can type 6 sentences per minute. Today at work, Janice continued
+      working on a paper she started typing yesterday. She typed for 20 minutes, took
+      a break, and typed 15 minutes longer. She then had to erase 40 sentences she
+      had typed incorrectly. After a meeting, she typed for 18 minutes more. In all,
+      the paper had 536 sentences by the end of today. How many sentences did she
+      start with today?
+    output: '218'
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '35'
+  - correct: 'How many goats does Washington have? ** If Washington has 140 goats,
+      Washington has 140+40 = <<140+40=180>>180 goats.
+
+      How many goats do they have in total? ** In total, they have 140+180 = <<140+180=320>>320
+      goats
+
+      #### 320'
+    input: Paddington has 40 more goats than Washington. If Washington has 140 goats,
+      how many goats do they have in total?
+    output: '320'
+  - correct: 'How many photos did the family take on the first day? ** On their first
+      day to the grand canyon, the family took half as many photos as the ones they
+      have in the gallery, meaning they took 1/2*400 = <<400/2=200>>200 photos.
+
+      How many photos are in the family''s gallery? ** The total number of photos
+      if they add the ones they took on the first day to the family''s gallery is
+      400+200 = <<400+200=600>>600
+
+      How many photos did the family take on the second day? ** On the second day,
+      they took 120 more photos than they took on the first day, a total of 200+120
+      = <<200+120=320>>320 photos.
+
+      How many photos will the family have after adding the photos they took on the
+      second day? ** After adding the photos they took on the second day to the galley,
+      the number of photos will be 600+320 = <<600+320=920>>920
+
+      #### 920'
+    input: Lilah's family gallery has 400 photos. On a two-day trip to the Grand Canyon,
+      they took half as many photos they have in the family's gallery on the first
+      day and 120 more photos than they took on the first day on the second day. If
+      they added all these photos to the family gallery, calculate the total number
+      of photos in the gallery.
+    output: '920'
+  origin: CROSSOVER
+  score: 0.94
+  text: 'Please read the provided context thoroughly, focusing specifically on the
+    details that pertain to the following question. Construct a detailed response
+    that directly answers the question, using a clear and structured approach. Begin
+    by identifying and summarizing the most relevant details from the context that
+    relate to the question. As you analyze the information, outline your reasoning
+    in a logical progression, moving from understanding the problem to deriving the
+    answer. For each step, cite key information from the context to support your points.
+    Explicitly demonstrate any calculations or reasoning involved, treating these
+    as essential components of your response. Throughout the process, evaluate your
+    work for accuracy and clarity. Conclude with a succinct summary that encapsulates
+    your findings and directly responds to the question. To ensure completeness, consider
+    asking yourself: ''Have I addressed all relevant aspects?'' and ''Does my conclusion
+    provide a clear answer to the question?'' A well-structured response will not
+    only answer the question but also showcase a comprehensive understanding of the
+    material.'
+- bad_examples:
+  - correct: 'How many mystery novels are there? ** Half of the books on the bottom
+      section of the cart are mystery books, which means they are the same as the
+      number of Western novels and biographies put together. So there are 5 + 6 =
+      <<5+6=11>>11 mystery novels.
+
+      How many books are there? ** Add them all together, and there are 12 history
+      + 8 romance + 4 poetry + 11 mystery + 5 Western + 6 biographies = <<12+8+4+11+5+6=46>>46
+      books total
+
+      #### 46'
+    input: Nancy, the librarian, is shelving books from the cart. She shelved 12 history
+      books, 8 romance books, and 4 poetry books from the top section of the cart.
+      Half the books on the bottom section of the cart were mystery books, which she
+      quickly put back into place. Then, she shelved the remaining books from the
+      bottom of the cart, including 5 Western novels and 6 biographies. How many books
+      did she have on the book cart when she started?
+    output: 35 + x
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many cubic feet are in the aquarium? ** First calculate the volume
+      of the aquarium by multiplying its length, width and height: 4 ft * 6 ft * 3
+      ft = <<4*6*3=72>>72 cubic ft
+
+      How many cubic feet are full after the cat knocks it over? ** Then figure out
+      what proportion of the aquarium is full after the cat knocks it over: 1/2 *
+      1/2 = 1/4
+
+      How many cubic feet are full after Nancy refills it? ** Then figure out what
+      proportion of the aquarium is full after Nancy refills it: 3 * 1/4 = 3/4
+
+      How many cubic feet of water are in the aquarium? ** Now multiply the proportion
+      of the aquarium that''s full by the aquarium''s volume to find out how much
+      water is in it: 72 cubic ft * 3/4 = <<72*3/4=54>>54 cubic ft
+
+      #### 54'
+    input: Nancy is filling an aquarium for her fish. She fills it halfway and goes
+      to answer the door. While she's gone, her cat knocks the aquarium over and spills
+      half the water in it. Then Nancy comes back and triples the amount of water
+      in the aquarium. If the aquarium is 4 feet long, 6 feet wide, and 3 feet high,
+      how many cubic feet of water are in the aquarium?
+    output: 54 cubic feet
+  - correct: 'How many inches did it rain? ** It rained 3+4=<<3+4=7>>7 inches
+
+      How many gallons did he collect? ** So he collected 7*15=<<7*15=105>>105 gallons
+
+      How much money did he make from selling all the water? ** So he makes 105*1.2=$<<105*1.2=126>>126
+      from selling the water
+
+      #### 126'
+    input: James has a rainwater collection barrel.  For each inch of rain he collects
+      15 gallons.  On Monday it rained 4 inches and on Tuesday it rained 3 inches.  He
+      can sell water for $1.2 per gallon.  How much money did he make from selling
+      all the water?
+    output: $126
+  origin: CROSSOVER
+  score: 0.94
+  text: 'Please read the provided context thoroughly, focusing specifically on the
+    details that pertain to the question that follows. Answer the question using a
+    clear, structured approach. Start by identifying and summarizing the most relevant
+    details from the context that directly relate to the question. As you outline
+    your reasoning, organize your steps in a clear, logical sequence, progressing
+    from understanding the problem to deriving the answer. Each step should include
+    citations of key information from the context to support your points. Explicitly
+    show any calculations or reasoning involved, treating these as essential components
+    of your answer. Throughout the process, regularly check your work for accuracy
+    and clarity. At the end, conclude with a concise summary that encapsulates your
+    findings and directly responds to the question. To assist your response, consider
+    asking yourself: ''Have I included all relevant steps?'' and ''Does my conclusion
+    directly answer the question?'' A well-structured response will not only address
+    the question but also demonstrate a clear understanding of the material.'
+- bad_examples:
+  - correct: 'How many pages does he write each week? ** He writes each friend 3*2=<<3*2=6>>6
+      pages a week
+
+      How many pages does he write every week? ** So he writes 6*2=<<6*2=12>>12 pages
+      every week
+
+      How many pages does he write a year? ** That means he writes 12*52=<<12*52=624>>624
+      pages a year
+
+      #### 624'
+    input: James writes a 3-page letter to 2 different friends twice a week.  How
+      many pages does he write a year?
+    output: '312'
+  - correct: 'How many pounds of beef did James buy? ** He bought 5*4=<<5*4=20>>20
+      pounds of beef
+
+      How much did James pay? ** So he paid 20*5.5=$<<20*5.5=110>>110
+
+      #### 110'
+    input: James buys 5 packs of beef that are 4 pounds each.  The price of beef is
+      $5.50 per pound.  How much did he pay?
+    output: $110.00
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many photos did the family take on the first day? ** On their first
+      day to the grand canyon, the family took half as many photos as the ones they
+      have in the gallery, meaning they took 1/2*400 = <<400/2=200>>200 photos.
+
+      How many photos are in the family''s gallery? ** The total number of photos
+      if they add the ones they took on the first day to the family''s gallery is
+      400+200 = <<400+200=600>>600
+
+      How many photos did the family take on the second day? ** On the second day,
+      they took 120 more photos than they took on the first day, a total of 200+120
+      = <<200+120=320>>320 photos.
+
+      How many photos will the family have after adding the photos they took on the
+      second day? ** After adding the photos they took on the second day to the galley,
+      the number of photos will be 600+320 = <<600+320=920>>920
+
+      #### 920'
+    input: Lilah's family gallery has 400 photos. On a two-day trip to the Grand Canyon,
+      they took half as many photos they have in the family's gallery on the first
+      day and 120 more photos than they took on the first day on the second day. If
+      they added all these photos to the family gallery, calculate the total number
+      of photos in the gallery.
+    output: '920'
+  origin: CROSSOVER
+  score: 0.92
+  text: "Please read the provided context carefully, paying special attention to the\
+    \ details that are relevant to the question that follows. Answer the question\
+    \ using a clear and structured approach. \n\n1. **Identify Key Information**:\
+    \ Start by pinpointing the most relevant details from the context that directly\
+    \ relate to the question.\n\n2. **Summarize Relevant Details**: Summarize these\
+    \ key points concisely, ensuring they are directly tied to the question.\n\n3.\
+    \ **Outline Your Reasoning**: Clearly outline your reasoning in a logical progression,\
+    \ from understanding the problem to deriving the answer. Use bullet points if\
+    \ necessary for clarity.\n\n4. **Show Calculations or Reasoning**: If applicable,\
+    \ include any calculations or reasoning steps, demonstrating how they relate to\
+    \ your final answer.\n\n5. **Review for Accuracy**: Actively verify each step\
+    \ for accuracy and clarity throughout your response.\n\n6. **Conclude Effectively**:\
+    \ End with a succinct summary that encapsulates your findings and directly answers\
+    \ the question.\n\nAs you craft your response, ask yourself: 'Have I included\
+    \ all relevant steps?' and 'Does my conclusion directly answer the question?'\
+    \ A well-structured response should not only address the question but also showcase\
+    \ a complete understanding of the material."
+- bad_examples:
+  - correct: 'How many pages does he write each week? ** He writes each friend 3*2=<<3*2=6>>6
+      pages a week
+
+      How many pages does he write every week? ** So he writes 6*2=<<6*2=12>>12 pages
+      every week
+
+      How many pages does he write a year? ** That means he writes 12*52=<<12*52=624>>624
+      pages a year
+
+      #### 624'
+    input: James writes a 3-page letter to 2 different friends twice a week.  How
+      many pages does he write a year?
+    output: '312'
+  - correct: 'How many pounds of beef did James buy? ** He bought 5*4=<<5*4=20>>20
+      pounds of beef
+
+      How much did James pay? ** So he paid 20*5.5=$<<20*5.5=110>>110
+
+      #### 110'
+    input: James buys 5 packs of beef that are 4 pounds each.  The price of beef is
+      $5.50 per pound.  How much did he pay?
+    output: $110.00
+  - correct: 'How many sentences did Janice have from yesterday? ** Janice had X sentences
+      from yesterday already typed to start with today.
+
+      How many sentences did Janice type before her break? ** Janice typed 6 * 20
+      = <<6*20=120>>120 sentences before her break.
+
+      How many sentences did Janice type after her break? ** She typed 6 * 15 = <<6*15=90>>90
+      sentences after her break.
+
+      How many sentences did Janice type after her meeting? ** She typed 6 * 18 =
+      <<6*18=108>>108 sentences after her meeting.
+
+      How many sentences did Janice type today? ** Therefore, she typed 120 + 90 +
+      108 = <<120+90+108=318>>318 sentences today in all.
+
+      How many sentences did Janie have left after erasing? ** She had to erase 40
+      sentences, so she had 318 - 40 = <<318-40=278>>278 sentences that she typed
+      today left.
+
+      How many sentences did Janice start with today? ** The paper had X + 278 = 536
+      sentences at the end of today.
+
+      How many sentences did Janice start with today? ** Thus, she had X = 536 - 278
+      = <<536-278=258>>258 sentences typed on the paper to start with today.
+
+      #### 258'
+    input: Janice can type 6 sentences per minute. Today at work, Janice continued
+      working on a paper she started typing yesterday. She typed for 20 minutes, took
+      a break, and typed 15 minutes longer. She then had to erase 40 sentences she
+      had typed incorrectly. After a meeting, she typed for 18 minutes more. In all,
+      the paper had 536 sentences by the end of today. How many sentences did she
+      start with today?
+    output: '178'
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  origin: CROSSOVER
+  score: 0.9
+  text: "Please read the provided context attentively. After understanding the material,\
+    \ answer the following question using the structured format outlined below:\n\n\
+    1. **Introduction**: Summarize the essential points of the context in a few sentences.\n\
+    \  \n2. **Step-by-Step Reasoning**: Outline your reasoning clearly, connecting\
+    \ each point explicitly to the question. Use bullet points for clarity if necessary.\n\
+    \n3. **Calculations**: If the question involves calculations, provide clear explanations\
+    \ for each step, demonstrating how they relate to your answer.\n\n4. **Conclusion**:\
+    \ Conclude with a succinct summary that encapsulates your findings and directly\
+    \ addresses the question posed.\n\nAs you develop your response, ensure that your\
+    \ logical flow is coherent and that you cite specific information from the context\
+    \ to support each point you make. If applicable, break down complex scenarios\
+    \ into simpler parts to enhance clarity. After completing your response, review\
+    \ each section for mathematical accuracy, relevance of cited information, and\
+    \ overall coherence."
+- bad_examples:
+  - correct: 'How many pages does he write each week? ** He writes each friend 3*2=<<3*2=6>>6
+      pages a week
+
+      How many pages does he write every week? ** So he writes 6*2=<<6*2=12>>12 pages
+      every week
+
+      How many pages does he write a year? ** That means he writes 12*52=<<12*52=624>>624
+      pages a year
+
+      #### 624'
+    input: James writes a 3-page letter to 2 different friends twice a week.  How
+      many pages does he write a year?
+    output: '312'
+  - correct: 'How many pounds of beef did James buy? ** He bought 5*4=<<5*4=20>>20
+      pounds of beef
+
+      How much did James pay? ** So he paid 20*5.5=$<<20*5.5=110>>110
+
+      #### 110'
+    input: James buys 5 packs of beef that are 4 pounds each.  The price of beef is
+      $5.50 per pound.  How much did he pay?
+    output: $110.00
+  - correct: 'How many sentences did Janice have from yesterday? ** Janice had X sentences
+      from yesterday already typed to start with today.
+
+      How many sentences did Janice type before her break? ** Janice typed 6 * 20
+      = <<6*20=120>>120 sentences before her break.
+
+      How many sentences did Janice type after her break? ** She typed 6 * 15 = <<6*15=90>>90
+      sentences after her break.
+
+      How many sentences did Janice type after her meeting? ** She typed 6 * 18 =
+      <<6*18=108>>108 sentences after her meeting.
+
+      How many sentences did Janice type today? ** Therefore, she typed 120 + 90 +
+      108 = <<120+90+108=318>>318 sentences today in all.
+
+      How many sentences did Janie have left after erasing? ** She had to erase 40
+      sentences, so she had 318 - 40 = <<318-40=278>>278 sentences that she typed
+      today left.
+
+      How many sentences did Janice start with today? ** The paper had X + 278 = 536
+      sentences at the end of today.
+
+      How many sentences did Janice start with today? ** Thus, she had X = 536 - 278
+      = <<536-278=258>>258 sentences typed on the paper to start with today.
+
+      #### 258'
+    input: Janice can type 6 sentences per minute. Today at work, Janice continued
+      working on a paper she started typing yesterday. She typed for 20 minutes, took
+      a break, and typed 15 minutes longer. She then had to erase 40 sentences she
+      had typed incorrectly. After a meeting, she typed for 18 minutes more. In all,
+      the paper had 536 sentences by the end of today. How many sentences did she
+      start with today?
+    output: '576'
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  origin: CROSSOVER
+  score: 0.9
+  text: 'Please read the provided context thoroughly. Before diving into the details,
+    restate the question in your own words to ensure you fully understand what is
+    being asked. After that, answer the following question using a detailed, structured
+    approach.
+
+
+    1. **Identify Key Information**: Extract relevant facts directly related to the
+    question, avoiding unnecessary details that do not contribute to your answer.
+
+
+    2. **Outline Your Reasoning**: Present your findings logically, following a natural
+    progression from understanding the problem to deriving the solution. Clearly articulate
+    how each step connects to the next.
+
+
+    3. **Incorporate Calculations**: If applicable, show all calculations or reasoning
+    explicitly. Ensure these are clearly documented and easy to follow.
+
+
+    4. **Verify Each Step**: Regularly check each section for accuracy. Ask yourself
+    questions like, ''Have I included all relevant steps?'' and ''Does my conclusion
+    directly answer the question?''
+
+
+    5. **Conclude Effectively**: After completing your response, summarize your findings
+    concisely, ensuring that your conclusion directly addresses the question posed.
+
+
+    By following this structured approach and restating the question initially, you
+    will enhance the clarity and accuracy of your answer.'
+- bad_examples:
+  - correct: 'How many sentences did Janice have from yesterday? ** Janice had X sentences
+      from yesterday already typed to start with today.
+
+      How many sentences did Janice type before her break? ** Janice typed 6 * 20
+      = <<6*20=120>>120 sentences before her break.
+
+      How many sentences did Janice type after her break? ** She typed 6 * 15 = <<6*15=90>>90
+      sentences after her break.
+
+      How many sentences did Janice type after her meeting? ** She typed 6 * 18 =
+      <<6*18=108>>108 sentences after her meeting.
+
+      How many sentences did Janice type today? ** Therefore, she typed 120 + 90 +
+      108 = <<120+90+108=318>>318 sentences today in all.
+
+      How many sentences did Janie have left after erasing? ** She had to erase 40
+      sentences, so she had 318 - 40 = <<318-40=278>>278 sentences that she typed
+      today left.
+
+      How many sentences did Janice start with today? ** The paper had X + 278 = 536
+      sentences at the end of today.
+
+      How many sentences did Janice start with today? ** Thus, she had X = 536 - 278
+      = <<536-278=258>>258 sentences typed on the paper to start with today.
+
+      #### 258'
+    input: Janice can type 6 sentences per minute. Today at work, Janice continued
+      working on a paper she started typing yesterday. She typed for 20 minutes, took
+      a break, and typed 15 minutes longer. She then had to erase 40 sentences she
+      had typed incorrectly. After a meeting, she typed for 18 minutes more. In all,
+      the paper had 536 sentences by the end of today. How many sentences did she
+      start with today?
+    output: '318'
+  - correct: 'How many pounds of beef did James buy? ** He bought 5*4=<<5*4=20>>20
+      pounds of beef
+
+      How much did James pay? ** So he paid 20*5.5=$<<20*5.5=110>>110
+
+      #### 110'
+    input: James buys 5 packs of beef that are 4 pounds each.  The price of beef is
+      $5.50 per pound.  How much did he pay?
+    output: $110.00
+  - correct: 'How many mystery novels are there? ** Half of the books on the bottom
+      section of the cart are mystery books, which means they are the same as the
+      number of Western novels and biographies put together. So there are 5 + 6 =
+      <<5+6=11>>11 mystery novels.
+
+      How many books are there? ** Add them all together, and there are 12 history
+      + 8 romance + 4 poetry + 11 mystery + 5 Western + 6 biographies = <<12+8+4+11+5+6=46>>46
+      books total
+
+      #### 46'
+    input: Nancy, the librarian, is shelving books from the cart. She shelved 12 history
+      books, 8 romance books, and 4 poetry books from the top section of the cart.
+      Half the books on the bottom section of the cart were mystery books, which she
+      quickly put back into place. Then, she shelved the remaining books from the
+      bottom of the cart, including 5 Western novels and 6 biographies. How many books
+      did she have on the book cart when she started?
+    output: 35 + x
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  origin: CROSSOVER
+  score: 0.9
+  text: 'Please read the provided context carefully and answer the following question
+    using a structured response. Before answering, identify and list the three most
+    critical facts from the context that relate to the question. Start with a brief
+    introduction that summarizes these key points. Then, break down your answer into
+    clear sections: reasoning steps, where you cite specific information from the
+    context to support your points; calculations, if applicable, where you detail
+    any logical deductions involved in arriving at your final answer; and a conclusion
+    that encapsulates your findings and directly addresses the question posed. After
+    drafting your response, review each section to ensure accuracy and clarity. This
+    approach will enhance your engagement with the material and help organize your
+    thoughts effectively.'
+- bad_examples:
+  - correct: 'How many pages does he write each week? ** He writes each friend 3*2=<<3*2=6>>6
+      pages a week
+
+      How many pages does he write every week? ** So he writes 6*2=<<6*2=12>>12 pages
+      every week
+
+      How many pages does he write a year? ** That means he writes 12*52=<<12*52=624>>624
+      pages a year
+
+      #### 624'
+    input: James writes a 3-page letter to 2 different friends twice a week.  How
+      many pages does he write a year?
+    output: '312'
+  - correct: 'How many pounds of beef did James buy? ** He bought 5*4=<<5*4=20>>20
+      pounds of beef
+
+      How much did James pay? ** So he paid 20*5.5=$<<20*5.5=110>>110
+
+      #### 110'
+    input: James buys 5 packs of beef that are 4 pounds each.  The price of beef is
+      $5.50 per pound.  How much did he pay?
+    output: $110.00
+  - correct: 'How much does each child''s ticket cost? ** The ticket costs 109 - 5
+      = $<<109-5=104>>104 for each child.
+
+      How much does the two children''s tickets cost? ** So the ticket cost of the
+      two children is 104 x 2 = $<<104*2=208>>208.
+
+      How much does the couple need to pay? ** The couple needs to pay the regular
+      price, so it''s 109 x 2 = $<<109*2=218>>218.
+
+      How much does the family need to pay? ** Thus, the family needs to pay a total
+      of 208 + 218 = $<<208+218=426>>426.
+
+      How much change will they receive? ** Therefore, their change is 500 - 426 =
+      $<<500-426=74>>74.
+
+      #### 74'
+    input: A couple with two children, ages 6 and 10 years old, decided to go to an
+      amusement park. The regular ticket costs $109, but children below 12 years old
+      have a $5 discount. If they gave the cashier $500, how much change will they
+      receive?
+    output: $183
+  - correct: 'How much does Tina make in an 8-hour shift? ** She works 8 hours a day
+      for $18 per hour so she makes 8*18 = $<<8*18=144.00>>144.00 per 8-hour shift
+
+      How many hours of overtime does Tina get? ** She works 10 hours a day and anything
+      over 8 hours is eligible for overtime, so she gets 10-8 = <<10-8=2>>2 hours
+      of overtime
+
+      How much does Tina make in overtime? ** Overtime is calculated as time and a
+      half so and she makes $18/hour so her overtime pay is 18*.5 = $<<18*.5=9.00>>9.00
+
+      How much does Tina make in overtime? ** Her overtime pay is 18+9 = $<<18+9=27.00>>27.00
+
+      How much does Tina make in a week? ** Her base pay is $144.00 per 8-hour shift
+      and she works 5 days and makes 5 * $144 = $<<144*5=720.00>>720.00
+
+      How much does Tina make in overtime? ** Her overtime pay is $27.00 per hour
+      and she works 2 hours of overtime per day and makes 27*2 = $<<27*2=54.00>>54.00
+      in overtime pay
+
+      How much does Tina make in overtime? ** 2 hours of overtime pay for 5 days means
+      she makes 54*5 = $270.00
+
+      How much does Tina make in a week? ** In 5 days her base pay is $720.00 and
+      she makes $270.00 in overtime pay so she makes $720 + $270 = $<<720+270=990.00>>990.00
+
+      #### 990'
+    input: Tina makes $18.00 an hour.  If she works more than 8 hours per shift, she
+      is eligible for overtime, which is paid by your hourly wage + 1/2 your hourly
+      wage.  If she works 10 hours every day for 5 days, how much money does she make?
+    output: $990.00
+  - correct: 'How many coins did Joanne collect in the first hour? ** 15 coins collected
+      in hour one
+
+      How many coins did Joanne collect in the second hour? ** 35 coins collected
+      in hour two
+
+      How many coins did Joanne collect in the third hour? ** 35 coins collected in
+      hour three
+
+      How many coins did Joanne collect in the fourth hour? ** 50 coins collected
+      in hour four
+
+      How many coins did Joanne have before giving her coworker some coins? ** Before
+      giving her coworker some coins there were 15+35+35+50=<<15+35+35+50=135>>135
+      coins
+
+      How many coins did Joanne have after giving her coworkers some coins? ** The
+      number of coins after given 15 to her coworker is 135-15=<<135-15=120>>120
+
+      #### 120'
+    input: Every hour Joanne has to collect the coins out of the fountain inside the
+      mall. During the first hour, she collected 15 coins. For the next two hours,
+      she collected 35 coins from the fountain. In the fourth hour, she collected
+      50 coins from the fountain but she gave 15 of them to her coworker so she could
+      buy a soda. How many coins did she have after the fourth hour?
+    output: '85'
+  origin: MUTATED
+  score: 0.9
+  text: 'Please read the provided context carefully. Once you have a clear understanding,
+    answer the following question using a detailed and structured approach.
+
+
+    1. **Identify Key Information**: Extract all relevant facts and relationships
+    from the context that pertain to the question. Focus on understanding how different
+    elements interact.
+
+
+    2. **Outline Your Reasoning**: Present your findings in a logical order. Clearly
+    explain how each point leads to your final answer.
+
+
+    3. **Detail Calculations**: When calculations are necessary, provide a step-by-step
+    breakdown. Clearly delineate each calculation to ensure transparency in your reasoning.
+
+
+    4. **Summarize Findings**: After each step, summarize your findings to ensure
+    that you have captured all relevant information accurately before moving on.
+
+
+    5. **Verify Each Step**: Regularly check your work for accuracy. Ask guiding questions
+    like, ''Have I included all relevant variables?'' and ''Does my conclusion directly
+    address the question?''
+
+
+    6. **Conclude Effectively**: Summarize your response concisely, ensuring that
+    your conclusion directly answers the question posed, reflecting a comprehensive
+    understanding of the context.
+
+
+    By following this structured approach, you will enhance the clarity and accuracy
+    of your response.'

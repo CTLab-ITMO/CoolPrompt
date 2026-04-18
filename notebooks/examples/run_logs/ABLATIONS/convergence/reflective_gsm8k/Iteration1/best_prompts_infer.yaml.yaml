@@ -1,0 +1,15 @@
+average_score: 0.9225000000000001
+best_score: 0.93
+prompts:
+- origin: APE
+  score: 0.93
+  text: Based on the given context, respond to the question.
+- origin: APE
+  score: 0.93
+  text: Based on the given context, respond to the question.
+- origin: EVOLUTED
+  score: 0.92
+  text: ' ... '
+- origin: APE
+  score: 0.91
+  text: Using the provided context, answer the question.

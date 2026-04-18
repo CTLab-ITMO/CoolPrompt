@@ -1,0 +1,70 @@
+average_score: 0.9672727272727273
+best_score: 0.98
+prompts:
+- origin: MUTATED
+  score: 0.98
+  text: 'Please analyze the following context in detail and formulate a comprehensive
+    answer to the question presented after it. Ensure that your response is rooted
+    exclusively in the information given in the context, and directly corresponds
+    to the query. Context: [insert context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.98
+  text: 'Please analyze the following context thoroughly and generate a detailed answer
+    to the question that follows. Base your response solely on the information provided
+    in the context, ensuring it directly addresses the query. Context: [insert context
+    here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.98
+  text: 'Please analyze the following context thoroughly and formulate a detailed
+    response to the question provided. Your answer must be directly based on the information
+    in the context, ensuring it aligns with the query posed. Context: [insert context
+    here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.98
+  text: 'Please analyze the following context in detail and formulate a comprehensive
+    response to the question that follows. Ensure your answer is based exclusively
+    on the information contained within the context, directly addressing the query.
+    Context: [insert context here]. Question: [insert question here].'
+- origin: CROSSOVER
+  score: 0.98
+  text: 'Please read the following context carefully and extract the relevant information
+    needed to answer the question provided. Your response should be clear, concise,
+    and fully supported by details from the context. Ensure that your answer directly
+    addresses the question while maintaining coherence and relevance. Context: [insert
+    context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.96
+  text: 'Please analyze the provided context meticulously and formulate a comprehensive
+    response to the question that follows. Ensure your answer is derived exclusively
+    from the information presented in the context, directly addressing the query with
+    precision. Context: [insert context here]. Question: [insert question here].'
+- origin: CROSSOVER
+  score: 0.96
+  text: 'Please read the following context attentively and construct a detailed answer
+    to the question that follows. Ensure your response is well-organized and directly
+    cites relevant information from the context to support your answer. Context: [insert
+    context here]. Question: [insert question here].'
+- origin: CROSSOVER
+  score: 0.96
+  text: 'Please read and analyze the following context carefully. Based on your understanding,
+    formulate a comprehensive response to the question that follows. Ensure your answer
+    is directly supported by the information found in the context and thoroughly addresses
+    the inquiry. Context: [insert context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.96
+  text: 'Please analyze the following context thoroughly and formulate a detailed
+    answer to the question that follows. Base your response solely on the information
+    provided in the context, ensuring it directly addresses the query. Context: [insert
+    context here]. Question: [insert question here].'
+- origin: CROSSOVER
+  score: 0.96
+  text: 'Please read the following context thoroughly and provide a structured response
+    to the question that follows. Your answer should be clear, directly referencing
+    specific details from the context to ensure accuracy and coherence. Context: [insert
+    context here]. Question: [insert question here].'
+- origin: MUTATED
+  score: 0.94
+  text: 'Please analyze the following context thoroughly and formulate a detailed
+    answer to the question that follows. Base your response exclusively on the information
+    presented in the context, ensuring it directly addresses the query. Context: [insert
+    context here]. Question: [insert question here].'

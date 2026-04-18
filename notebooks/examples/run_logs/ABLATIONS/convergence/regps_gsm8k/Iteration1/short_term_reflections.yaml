@@ -1,0 +1,49 @@
+- 'Use active voice and specific action verbs to clearly instruct the model on what
+  to do, such as "Analyze," "Identify," and "Break down," while ensuring to emphasize
+  the importance of reasoning and context in the response. For instance, replace "formulate
+  a response" with "craft a detailed response by analyzing the context and breaking
+  down your reasoning step-by-step." '
+- 'Incorporate explicit instructions for step-by-step reasoning and emphasize the
+  importance of referencing specific details from the context. For example, instead
+  of simply asking for a response, you might say: ''Using the provided context, summarize
+  the key details, break down the problem into smaller components, and then respond
+  to the question by clearly referencing relevant information.'' This enhances clarity
+  and encourages a structured approach to answering the question.'
+- To enhance clarity and encourage a structured approach, replace vague terms like
+  "analyze" and "identify" with more specific phrases such as "summarize key points"
+  and "outline essential steps." This change provides clearer guidance on the expected
+  actions and fosters a more focused response from the model.
+- Enhance clarity and guidance by replacing vague phrases with specific instructions.
+  For instance, instead of saying "formulate a response," use "analyze the context,
+  extract key details, and clearly outline your reasoning step-by-step to answer the
+  question." This shift encourages a structured approach and reduces ambiguity in
+  the task at hand.
+- To enhance clarity and reduce ambiguity, replace vague terms like "key details"
+  with more specific phrases such as "critical information, including essential numbers,
+  relationships, and operations." This adjustment provides clearer guidance on what
+  to focus on during the analysis.
+- Enhance clarity and specificity by incorporating guiding questions that lead the
+  user to focus on key elements in the context. For example, instead of simply stating
+  "formulate a response," use a directive like "What are the key details in the context?
+  What calculations are necessary to answer the question?" This approach actively
+  engages the user in the analysis process and ensures a more structured and comprehensive
+  response.
+- To enhance clarity and effectiveness, replace vague terms like "identify and prioritize
+  key details" with more specific phrases such as "list essential details including
+  numbers, relationships, and operations relevant to the question." This provides
+  clearer guidance and sets a standardized expectation for what constitutes key details.
+- Incorporate explicit directives that encourage the model to break down the problem
+  into specific sub-questions and articulate each calculation step clearly. This will
+  enhance clarity and guide the model towards a structured approach in its reasoning
+  process.
+- Revise the prompt to explicitly instruct the model to summarize key points from
+  the context before answering the question, using active verbs to encourage engagement.
+  For example, change "analyzing the supplied context" to "summarize the key points
+  from the supplied context and use them to answer the following question." This enhances
+  clarity and ensures the model focuses on critical details before responding.
+- Consider specifying the expected structure and format of the response explicitly,
+  so the model has a clear understanding of how to organize its answer. For example,
+  instead of asking for a 'detailed answer,' you could say, 'Provide a structured
+  response that includes an introduction, a step-by-step breakdown of the analysis,
+  calculations, and a concise final answer.' This will help guide the model towards
+  producing more coherent and organized responses.

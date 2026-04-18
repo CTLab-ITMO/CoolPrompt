@@ -1,0 +1,45 @@
+- Enhance specificity by explicitly requesting the inclusion of relevant details from
+  the context in each step of the reasoning process. Phrasing such as "Cite key information
+  from the context as you outline your reasoning" can help ensure that responses are
+  directly connected to the provided material, improving relevance and accuracy.
+- Enhance clarity and specificity by replacing vague phrases with precise directives.
+  For example, instead of saying "analyze the provided context carefully," use "identify
+  and highlight key variables and relationships relevant to the question." This shift
+  encourages focused attention on essential details and improves the accuracy of the
+  response.
+- Use precise and unambiguous language to define critical terms and steps in the prompt.
+  For instance, instead of saying "identify and prioritize key details," specify "identify
+  key details that directly relate to the question and prioritize them based on their
+  relevance." This will reduce ambiguity and ensure that the model focuses on the
+  most pertinent information.
+- Enhance clarity by replacing vague phrases with specific directives. For instance,
+  instead of saying "identify and prioritize key details," use "focus on quantifiable
+  data, essential relationships, and operations that directly impact the answer."
+  This specificity will guide the model more effectively and reduce ambiguity in understanding
+  the task requirements.
+- Replace vague instructions with specific action verbs to enhance clarity. For instance,
+  instead of saying "analyze the provided context," use "examine and extract key details
+  from the provided context." This encourages a more focused approach and ensures
+  that the model understands the specific actions required for the task.
+- ' Use active voice and precise language to clarify the task requirements. For example,
+  instead of saying "Identify and prioritize key details," you could say "Extract
+  and rank the essential details directly related to the question." This encourages
+  a more direct approach and reinforces the expectation for the model to focus on
+  relevant information. '
+- ' Emphasize active voice and clarity in the prompt by replacing passive phrases
+  with direct instructions. For example, instead of saying "the prompt should encourage
+  the model to identify and summarize all relevant pieces of information," use "summarize
+  all relevant pieces of information from the context before proceeding." This enhances
+  engagement and clarity, making it clear what action the model needs to take. '
+- Replace vague terms like "key details" and "critical information" with more specific
+  phrases such as "relevant facts directly related to the question" to enhance clarity
+  and focus in the prompt. This helps guide the user toward extracting the most pertinent
+  information needed for their response.
+- ' Simplify complex instructions by breaking them into clear, actionable steps. Use
+  direct language, such as "List important details" instead of "Identify and prioritize
+  key details," to enhance clarity and ensure the model understands the task requirements
+  more effectively. '
+- Replace vague terms like "key details" and "structured response" with more precise
+  language. For instance, specify "critical information directly relevant to the question"
+  and "a clearly labeled, step-by-step format." This enhances clarity and guides the
+  model toward delivering more relevant and organized answers.

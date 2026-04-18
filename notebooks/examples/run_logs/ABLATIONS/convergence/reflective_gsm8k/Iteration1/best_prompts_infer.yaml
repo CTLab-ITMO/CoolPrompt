@@ -1,0 +1,15 @@
+average_score: 0.9075
+best_score: 0.91
+prompts:
+- origin: EVOLUTED
+  score: 0.91
+  text: ' and '
+- origin: MANUAL
+  score: 0.91
+  text: Given a context answer on the question.
+- origin: EVOLUTED
+  score: 0.91
+  text: ' and '
+- origin: MUTATED
+  score: 0.9
+  text: ' ... '
