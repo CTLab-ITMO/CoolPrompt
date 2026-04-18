@@ -1,5 +1,5 @@
 from langchain_core.language_models.base import BaseLanguageModel
-from typing import Optional
+from typing import Optional, Tuple, List, Dict
 from tqdm import tqdm
 from time import sleep
 
@@ -22,7 +22,7 @@ class Evaluator:
     """
 
     def __init__(
-            self, model: BaseLanguageModel, task: Task, metric: BaseMetric, batch_size: int = 5
+            self, model: BaseLanguageModel, task: Task, metric: BaseMetric, batch_size: int = 25
     ) -> None:
         self.model = model
         self.task = task
@@ -36,7 +36,8 @@ class Evaluator:
             dataset: list[str],
             targets: list[str | int],
             template: Optional[str] = None,
-    ) -> float:
+            failed_examples: Optional[int] = None
+    ) -> float | Tuple[float, List[Dict[str, str]]]:
         """
         Evaluate the model on a dataset
         by generating answers and computing the metric.
@@ -55,9 +56,12 @@ class Evaluator:
             template (Optional[str]):
                 Prompt template for defined task type.
                 If None, uses default template.
+            failed_examples (Optional[int]):
+                Number of bad examples to return after evaluating.
 
         Returns:
-            float: The computed evaluation metric score.
+            float | Tuple[float, List[Dict[str, str]]]:
+            The computed evaluation metric score with/wo bad examples.
         """
 
         if template is None:
@@ -76,7 +80,7 @@ class Evaluator:
 
         answers = self._run_batches(full_prompts)
 
-        return self.metric.compute(answers, targets, dataset)
+        return self.metric.compute(answers, targets, dataset, failed_examples)
 
     def _run_batches(self, full_prompts: list[str]) -> list[str]:
         """Run the model on preformatted prompts in batches with progress tracking.

@@ -167,7 +167,7 @@ class PromptTuner:
         validation_size: float = 0.25,
         train_as_test: bool = False,
         generate_num_samples: int = 10,
-        batch_size: int = 5,
+        batch_size: int = 25,
         verbose: int = 1,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
@@ -215,7 +215,7 @@ class PromptTuner:
                 Number of dataset and target samples to generate.
             batch_size (int):
                 Number of samples processed in one batch during evaluation.
-                Defaults to 5.
+                Defaults to 25.
             verbose (int): Parameter for logging configuration:
                 0 - no logging
                 1 - steps logging
