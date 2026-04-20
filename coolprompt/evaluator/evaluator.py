@@ -118,7 +118,9 @@ class Evaluator:
                         if attempt < 4:
                             sleep(60)
                         else:
-                            raise
+                            raise RuntimeError(
+                                f"Batch {start // self.batch_size + 1}/{total_batches} failed after 5 attempts"
+                            ) from exception
 
                 normalized_answers = [
                     a.content if isinstance(a, AIMessage) else str(a)

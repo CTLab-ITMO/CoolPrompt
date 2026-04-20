@@ -13,5 +13,5 @@ def warn_deprecated(name: str) -> None:
     warnings.warn(
         f"{name} method is deprecated and not recommended for use.",
         FutureWarning,
-        stacklevel=1,
+        stacklevel=2,
     )
