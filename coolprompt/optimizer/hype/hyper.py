@@ -133,7 +133,7 @@ Alternative prompt:"""
         """Generate candidates, evaluate, update recommendations, repeat."""
         train_samples, val_samples, train_targets, val_targets = dataset_split
         best_prompt = prompt
-        logger.debug(f"[HyPER] Initial prompt: {prompt:250}...")
+        logger.debug(f"[HyPER] Initial prompt: {prompt[:250]}...")
         
         best_score = self.evaluator.evaluate(
             prompt,
@@ -150,7 +150,7 @@ Alternative prompt:"""
             logger.debug(f"[HyPER] Iteration {iteration + 1}/{self.n_iterations}")
             score_str = f"{best_score:.4f}" if best_score is not None else "N/A"
             logger.debug(f"[HyPER] Current best score: {score_str}")
-            logger.debug(f"[HyPER] Current best prompt: {best_prompt:250}...")
+            logger.debug(f"[HyPER] Current best prompt: {best_prompt[:250]}...")
             logger.debug(f"{'='*60}")
             
             score_before_iteration = best_score
