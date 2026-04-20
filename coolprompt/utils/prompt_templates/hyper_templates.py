@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import Any, List, Optional, Union
 
 
 TARGET_PROMPT_FORMS = ["hypothetical ", "instructional "]
@@ -13,12 +13,19 @@ META_INFO_SECTION = (
     "Task-related meta-information which you must mention generating a new prompt:\n<meta_info>\n{meta_info_content}\n</meta_info>\n"
 )
 
+# Section name constants
+SECTION_ROLE = "role"
+SECTION_PROMPT_STRUCTURE = "prompt_structure"
+SECTION_RECOMMENDATIONS = "recommendations"
+SECTION_CONSTRAINTS = "constraints"
+SECTION_OUTPUT_FORMAT = "output_format"
+
 META_PROMPT_SECTIONS = (
-    "role",
-    "prompt_structure",
-    "recommendations",
-    "constraints",
-    "output_format",
+    SECTION_ROLE,
+    SECTION_PROMPT_STRUCTURE,
+    SECTION_RECOMMENDATIONS,
+    SECTION_CONSTRAINTS,
+    SECTION_OUTPUT_FORMAT,
 )
 
 
@@ -92,6 +99,24 @@ class HypeMetaPromptConfig:
 
 
 class HypeMetaPromptBuilder:
+    """
+    Builder for HyPE meta-prompts.
+
+    Constructs meta-prompts from configurable sections. Uses a caching strategy:
+    - Static sections (role, prompt_structure, output_format) are cached on init
+      and rebuilt only when their config changes.
+    - Dynamic sections (recommendations, constraints) are stored as lists in config
+      and built on-demand during build_meta_prompt().
+
+    Typical usage:
+        builder = HypeMetaPromptBuilder()
+        meta_prompt = builder.build_meta_prompt()
+
+        # Update a section
+        builder.set_section(SECTION_RECOMMENDATIONS, ["Be concise", "Use examples"])
+        meta_prompt = builder.build_meta_prompt()
+    """
+
     ROLE_LINE = "You are an expert prompt engineer.\n"
     TASK_SECTION_TEMPLATE = (
         "Your only task is to write a {target_prompt_form}prompt that will "
@@ -147,17 +172,62 @@ class HypeMetaPromptBuilder:
         self._cache_all_sections()
 
     def _cache_all_sections(self) -> None:
+        """Cache static sections."""
         self.config._cached_sections = {
-            "role": self.build_role_section(),
-            "prompt_structure": self.build_prompt_structure_section(),
-            "output_format": self.build_output_format_section(),
+            SECTION_ROLE: self.build_role_section(),
+            SECTION_PROMPT_STRUCTURE: self.build_prompt_structure_section(),
+            SECTION_OUTPUT_FORMAT: self.build_output_format_section(),
         }
 
     def get_cached_section(self, name: str) -> Optional[str]:
+        """Return a cached section by name (role, prompt_structure, output_format)."""
         return self.config._cached_sections.get(name)
 
-    # ----- секция роли -----
+    def get_section(self, name: str) -> Union[str, List[str], None]:
+        """Return section value by name (list for recommendations/constraints, str for others)."""
+        if name not in META_PROMPT_SECTIONS:
+            raise ValueError(
+                f"Unknown section: {name}. Expected: {META_PROMPT_SECTIONS}"
+            )
+        if name == SECTION_RECOMMENDATIONS:
+            return list(self.config.recommendations)
+        if name == SECTION_CONSTRAINTS:
+            return list(self.config.constraints)
+        return self.get_cached_section(name)
+
+    def set_section(self, name: str, value: Union[str, List[str]]) -> None:
+        """Update a section value. Only recommendations, constraints, and output_format are settable."""
+        if name not in META_PROMPT_SECTIONS:
+            raise ValueError(
+                f"Unknown section: {name}. Expected: {META_PROMPT_SECTIONS}"
+            )
+        if name == SECTION_RECOMMENDATIONS:
+            if not isinstance(value, list):
+                raise ValueError("recommendations must be a list of strings")
+            self.config.recommendations = list(value)
+        elif name == SECTION_CONSTRAINTS:
+            if not isinstance(value, list):
+                raise ValueError("constraints must be a list of strings")
+            self.config.constraints = list(value)
+        elif name == SECTION_OUTPUT_FORMAT:
+            if not isinstance(value, str):
+                raise ValueError("output_format must be a string")
+            self.config.output_format_section = value
+            self.config._cached_sections[SECTION_OUTPUT_FORMAT] = self.build_output_format_section()
+        else:
+            raise ValueError(f"Section '{name}' is read-only or not directly settable")
+
     def build_role_section(self, include_role: bool | None = None) -> str:
+        """
+        Build the opening section with role definition and task description.
+
+        Contains two parts:
+        - Role line (optional, controlled by include_role)
+        - Task description: explains what the model should do (always included)
+
+        The task description uses target_prompt_form to specify the type of prompt to generate
+        (e.g., "hypothetical instructional").
+        """
         include_role = (
             include_role if include_role is not None else self.config.include_role
         )
@@ -167,22 +237,22 @@ class HypeMetaPromptBuilder:
             return self.ROLE_LINE + task_part
         return task_part
 
-    # ----- секция формата (список имён секций) -----
     def build_prompt_structure_section(
         self,
         specs: list[PromptSectionSpec] | None = None,
     ) -> str:
+        """Build the prompt structure guidelines section."""
         specs = specs or self.config.section_specs
         lines = [f"- [{spec.name}] {spec.description}" for spec in specs]
         return self.PROMPT_STRUCTURE_SECTION_TEMPLATE.format(
             sections_with_guidelines="\n".join(lines)
         ) if lines else ""
 
-    # ----- секция рекомендаций (на основе анализа предыдущих генераций) -----
     def build_recommendations_section(
         self,
         recommendations: List[str] | None = None,
     ) -> str:
+        """Build the recommendations section (empty string if no recommendations)."""
         recs = (
             recommendations
             if recommendations is not None
@@ -193,11 +263,11 @@ class HypeMetaPromptBuilder:
         lines = "\n".join(f"- {r}" for r in recs)
         return self.RECOMMENDATIONS_SECTION_TEMPLATE.format(recommendations_list=lines)
 
-    # ----- секция жёстких ограничений -----
     def build_constraints_section(
         self,
         constraints: List[str] | None = None,
     ) -> str:
+        """Build the hard constraints section."""
         constraints = constraints or self.config.constraints
         if not constraints:
             return ""
@@ -205,13 +275,12 @@ class HypeMetaPromptBuilder:
         return self.CONSTRAINTS_SECTION_TEMPLATE.format(constraints_list=lines)
 
     def build_output_format_section(self) -> str:
-        # если в конфиге уже передан кастомный текст — используем его как базу
+        """Build the output format section (with optional markdown requirements)."""
         section = self.config.output_format_section or self.BASE_OUTPUT_FORMAT_SECTION
         if self.config.require_markdown_prompt:
             section = section + self.MARKDOWN_OUTPUT_REQUIREMENTS
         return section
 
-    # ----- сборка всего мета‑промпта -----
     def build_meta_prompt(
         self,
         *,
@@ -222,7 +291,12 @@ class HypeMetaPromptBuilder:
         output_format_section: str | None = None,
         include_role: bool | None = None,
     ) -> str:
-        # локальный override конфигов
+        """
+        Build the complete meta-prompt from all sections.
+
+        Args can override config values for this build only.
+        """
+        # Apply overrides to config
         if target_prompt_form is not None:
             self.config.target_prompt_form = target_prompt_form
         if section_specs is not None:
@@ -236,21 +310,10 @@ class HypeMetaPromptBuilder:
         if include_role is not None:
             self.config.include_role = include_role
 
-        role_section = self.build_role_section(include_role=include_role)
-        prompt_structure_section = self.build_prompt_structure_section()
-        recommendations_section = self.build_recommendations_section(
-            recommendations=recommendations
-        )
-        constraints_section = self.build_constraints_section()
-        output_format_section = self.build_output_format_section()
-
         return self.HYPE_META_PROMPT_TEMPLATE.format(
-            role_section=role_section,
-            prompt_structure_section=prompt_structure_section,
-            recommendations_section=recommendations_section,
-            constraints_section=constraints_section,
-            output_format_section=output_format_section,
+            role_section=self.build_role_section(include_role=include_role),
+            prompt_structure_section=self.build_prompt_structure_section(),
+            recommendations_section=self.build_recommendations_section(recommendations=recommendations),
+            constraints_section=self.build_constraints_section(),
+            output_format_section=self.build_output_format_section(),
         )
-
-    def rebuild_all_sections(self) -> None:
-        self._cache_all_sections()

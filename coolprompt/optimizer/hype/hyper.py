@@ -139,7 +139,6 @@ Alternative prompt:"""
             prompt,
             list(val_samples),
             list(val_targets),
-            show_progress=True,
         )
         logger.debug(f"[HyPER] Initial validation score: {best_score}")
         
@@ -241,7 +240,6 @@ Alternative prompt:"""
                     optimized_prompt,
                     list(val_samples),
                     list(val_targets),
-                    show_progress=True,
                 )
                 
                 val_score_str = f"{val_score:.4f}" if val_score is not None else "N/A"
