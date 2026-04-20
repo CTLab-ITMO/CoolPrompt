@@ -180,7 +180,22 @@ class Evaluator:
             sample: str,
             template: Optional[str] = None,
     ) -> str:
-        """Inserts parts of the prompt into the task template."""
+        """Inserts parts of the prompt into the task template.
+
+        Args:
+            prompt (str): the main instruction for the task
+            sample (str): the input sample
+            template (Optional[str]):
+                Prompt template for defined task type.
+                If None, uses default template.
+
+        Raises:
+            ValueError: if type of task is not supported
+
+        Returns:
+            str: the full prompt to be passed to the model
+        """
+
         if template is None:
             template = self._get_default_template()
 
