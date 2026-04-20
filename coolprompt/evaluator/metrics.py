@@ -177,12 +177,12 @@ class BaseMetric(ABC):
     ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]] | Tuple[float, List[float], List[Dict]]:
         """Compute metric value from text model outputs.
 
+        Must be implemented by subclasses to handle input formatting.
         Args:
-            outputs: Model predictions (just text)
-            targets: Ground truth labels
-            dataset: Optional dataset for context
-            failed_examples: Number of bad examples to return
-            return_per_task: If True, returns (aggregate, results_per_task, bad_examples)
+            outputs (list[str|int]): Model predictions (just text)
+            targets (list[str|int]): Ground truth labels
+            failed_examples (int, Optional): Number of bad examples to return
+            return_per_task (bool, False): If True, returns (aggregate, results_per_task, bad_examples)
 
         Returns:
             float | Tuple[float, List[float], List[Dict]]:
@@ -305,7 +305,7 @@ class GenerationMetric(BaseMetric):
 
     FORMAT_MISMATCH_LABEL = ""
 
-    def __init__(self, name=None):
+    def __init__(self):
         """Initialize metric"""
 
         super().__init__()
