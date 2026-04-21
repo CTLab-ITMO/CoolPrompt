@@ -1,5 +1,6 @@
 from langchain_core.language_models.base import BaseLanguageModel
 from typing import Optional, Tuple, List, Dict
+from tqdm import tqdm
 from time import sleep
 
 from langchain_core.messages.ai import AIMessage
@@ -21,20 +22,21 @@ class Evaluator:
     """
 
     def __init__(
-        self, model: BaseLanguageModel, task: Task, metric: BaseMetric
+            self, model: BaseLanguageModel, task: Task, metric: BaseMetric, batch_size: int = 25
     ) -> None:
         self.model = model
         self.task = task
         self.metric = metric
+        self.batch_size = batch_size
         logger.info(f"Evaluator successfully initialized with {metric} metric")
 
     def evaluate(
-        self,
-        prompt: str,
-        dataset: list[str],
-        targets: list[str | int],
-        template: Optional[str] = None,
-        failed_examples: Optional[int] = None
+            self,
+            prompt: str,
+            dataset: list[str],
+            targets: list[str | int],
+            template: Optional[str] = None,
+            failed_examples: Optional[int] = None
     ) -> float | Tuple[float, List[Dict[str, str]]]:
         """
         Evaluate the model on a dataset
@@ -55,11 +57,11 @@ class Evaluator:
                 Prompt template for defined task type.
                 If None, uses default template.
             failed_examples (Optional[int]):
-                Number of bad examples to return after evaluating
+                Number of bad examples to return after evaluating.
 
         Returns:
             float | Tuple[float, List[Dict[str, str]]]:
-                The computed evaluation metric score with/wo bad examples
+            The computed evaluation metric score with/wo bad examples.
         """
 
         if template is None:
@@ -71,32 +73,69 @@ class Evaluator:
         logger.debug(f"Prompt to evaluate:\n{prompt}")
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
-
-        answers = None
-        for _ in range(5):
-            try:
-                answers = self.model.batch(
-                    [
-                        self._get_full_prompt(prompt, sample, template)
-                        for sample in dataset
-                    ]
-                )
-                break
-            except Exception as e:
-                logger.info(e)
-                sleep(60)
-
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
+        full_prompts = [
+            self._get_full_prompt(prompt, sample, template)
+            for sample in dataset
         ]
+
+        answers = self._run_batches(full_prompts)
 
         return self.metric.compute(answers, targets, dataset, failed_examples)
 
+    def _run_batches(self, full_prompts: list[str]) -> list[str]:
+        """Run the model on preformatted prompts in batches with progress tracking.
+
+        Args:
+            full_prompts (list[str]): Fully formatted prompts to send to the model.
+
+        Returns:
+            list[str]: Model outputs for all prompts.
+        """
+        answers: list[str] = []
+        total = len(full_prompts)
+        total_batches = (total + self.batch_size - 1) // self.batch_size
+
+        with tqdm(
+                total=total,
+                desc="Evaluating",
+                unit="sample",
+                dynamic_ncols=True,
+        ) as pbar:
+            for start in range(0, total, self.batch_size):
+                end = min(start + self.batch_size, total)
+                batch = full_prompts[start:end]
+
+                batch_answers = None
+                for attempt in range(5):
+                    try:
+                        batch_answers = self.model.batch(batch)
+                        break
+                    except Exception as exception:
+                        logger.warning(
+                            f"Batch {start // self.batch_size + 1}/{total_batches} "
+                            f"failed on attempt {attempt + 1}/5: {exception}"
+                        )
+                        if attempt < 4:
+                            sleep(60)
+                        else:
+                            raise RuntimeError(
+                                f"Batch {start // self.batch_size + 1}/{total_batches} failed after 5 attempts"
+                            ) from exception
+
+                normalized_answers = [
+                    a.content if isinstance(a, AIMessage) else str(a)
+                    for a in batch_answers
+                ]
+                answers.extend(normalized_answers)
+                pbar.update(len(batch))
+                logger.debug(f"Batch {start // self.batch_size + 1}/{total_batches} processed")
+        return answers
+
     def _get_full_prompt(
-        self,
-        prompt: str,
-        sample: str,
-        template: Optional[str] = None,
+            self,
+            prompt: str,
+            sample: str,
+            template: Optional[str] = None,
     ) -> str:
         """Inserts parts of the prompt into the task template.
 

@@ -31,7 +31,6 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 )
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
-from coolprompt.prompt_assistant.prompt_assistant import PromptAssistant
 from coolprompt.optimizer.prompt_compressor import PromptCompressor
 
 
@@ -168,7 +167,7 @@ class PromptTuner:
         validation_size: float = 0.25,
         train_as_test: bool = False,
         generate_num_samples: int = 10,
-        feedback: bool = True,
+        batch_size: int = 25,
         verbose: int = 1,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
@@ -213,11 +212,10 @@ class PromptTuner:
                 If sets to True, the validation_size parameter will be ignored.
                 Defaults to False.
             generate_num_samples (int):
-                A number of dataset and target samples
-                    to generate with PromptAssistant
-            feedback (bool):
-                PromptAssistant interpretation of optimization results
-                Defaults to True.
+                Number of dataset and target samples to generate.
+            batch_size (int):
+                Number of samples processed in one batch during evaluation.
+                Defaults to 25.
             verbose (int): Parameter for logging configuration:
                 0 - no logging
                 1 - steps logging
@@ -311,7 +309,7 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
-        evaluator = Evaluator(self._target_model, task, metric)
+        evaluator = Evaluator(self._target_model, task, metric, batch_size=batch_size)
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)
 
@@ -403,7 +401,7 @@ class PromptTuner:
                 **kwargs,
             )
             final_prompt = compressor.compress(
-                prompt=start_prompt, 
+                prompt=start_prompt,
                 return_metadata=False,
             )
 
@@ -438,18 +436,5 @@ class PromptTuner:
         self.final_prompt = final_prompt
 
         logger.info("=== Prompt Optimization Completed ===")
-
-        if feedback:
-            prompt_assistant = PromptAssistant(self._target_model)
-            self.assistant_feedback = correct(
-                prompt=prompt_assistant.get_feedback(
-                    start_prompt, final_prompt
-                ),
-                rule=LanguageRule(self._system_model),
-                start_prompt=start_prompt,
-            )
-
-            logger.info("=== Assistant's feedback ===")
-            logger.info(self.assistant_feedback)
 
         return final_prompt if return_final_prompt else None
