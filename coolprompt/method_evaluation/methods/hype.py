@@ -8,7 +8,7 @@ class HyPEMethod(AutoPromptingMethod):
     """
     Interface for HyPE (Hypothetical Prompt Enhancer) method.
 
-    Args:
+    Attributes:
         model: langchain.BaseLanguageModel class of model to use.
         config: (dict) provided configuration.
         dataset_split: dataset train/val split for optimization process.

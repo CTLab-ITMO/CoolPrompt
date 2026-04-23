@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
-from typing import Any, List, Optional, Union
+from typing import List, Optional, Union
 
+
+# -------- HyPE Meta-prompt builder --------
 
 TARGET_PROMPT_FORMS = ["hypothetical ", "instructional "]
 
@@ -9,9 +11,7 @@ SIMPLE_HYPOTHETICAL_PROMPT = (
     "Write a {target_prompt_form}prompt that will solve the user query effectively."
 )
 
-META_INFO_SECTION = (
-    "Task-related meta-information which you must mention generating a new prompt:\n<meta_info>\n{meta_info_content}\n</meta_info>\n"
-)
+META_INFO_SECTION = "Task-related meta-information which you must mention generating a new prompt:\n<meta_info>\n{meta_info_content}\n</meta_info>\n"
 
 # Section name constants
 SECTION_ROLE = "role"
@@ -26,6 +26,56 @@ META_PROMPT_SECTIONS = (
     SECTION_RECOMMENDATIONS,
     SECTION_CONSTRAINTS,
     SECTION_OUTPUT_FORMAT,
+)
+
+ROLE_LINE = "You are an expert prompt engineer.\n"
+TASK_SECTION_TEMPLATE = (
+    "Your only task is to write a {target_prompt_form}prompt that will "
+    "solve the user query as effectively as possible.\n"
+    "Do not answer the user query directly; only produce the new prompt.\n\n"
+)
+
+PROMPT_STRUCTURE_SECTION_TEMPLATE = (
+    "### STRUCTURE OF THE PROMPT YOU MUST PRODUCE\n"
+    "The prompt you write MUST be structured into the following sections, "
+    "in this exact order, and each section must follow its guidelines:\n"
+    "{sections_with_guidelines}\n\n"
+)
+
+CONSTRAINTS_SECTION_TEMPLATE = "### HARD CONSTRAINTS\n{constraints_list}\n\n"
+
+RECOMMENDATIONS_SECTION_TEMPLATE = (
+    "### RECOMMENDATIONS\n"
+    "Use these recommendations for writing the new prompt, "
+    "based on analysis of previous generations:\n"
+    "{recommendations_list}\n\n"
+)
+
+BASE_OUTPUT_FORMAT_SECTION = (
+    "### YOUR RESPONSE FORMAT\n"
+    "Return ONLY the resulting prompt, wrapped in the following XML tags:\n"
+    "<result_prompt>\n"
+    "  ...your resulting prompt here...\n"
+    "</result_prompt>\n"
+    "Do not include any explanations or additional text outside this XML element.\n\n"
+)
+
+MARKDOWN_OUTPUT_REQUIREMENTS = (
+    "#### Markdown formatting for the resulting prompt\n"
+    "- Write the entire prompt inside <result_prompt> using valid Markdown.\n"
+    "- Use headings (e.g., `#`, `##`) for major sections of the prompt.\n"
+    "- Use bulleted lists (e.g., `-` or `*`) for enumerations and checklists.\n"
+    "- Preserve any code or pseudo-code using fenced code blocks (``` ... ```).\n"
+    "- Do not introduce any additional formatting beyond what is necessary to make "
+    "the prompt clear and well-structured."
+)
+
+HYPE_META_PROMPT_TEMPLATE = (
+    "{role_section}"
+    "{prompt_structure_section}"
+    "{recommendations_section}"
+    "{constraints_section}"
+    "{output_format_section}"
 )
 
 
@@ -117,56 +167,6 @@ class HypeMetaPromptBuilder:
         meta_prompt = builder.build_meta_prompt()
     """
 
-    ROLE_LINE = "You are an expert prompt engineer.\n"
-    TASK_SECTION_TEMPLATE = (
-        "Your only task is to write a {target_prompt_form}prompt that will "
-        "solve the user query as effectively as possible.\n"
-        "Do not answer the user query directly; only produce the new prompt.\n\n"
-    )
-
-    PROMPT_STRUCTURE_SECTION_TEMPLATE = (
-        "### STRUCTURE OF THE PROMPT YOU MUST PRODUCE\n"
-        "The prompt you write MUST be structured into the following sections, "
-        "in this exact order, and each section must follow its guidelines:\n"
-        "{sections_with_guidelines}\n\n"
-    )
-
-    CONSTRAINTS_SECTION_TEMPLATE = "### HARD CONSTRAINTS\n{constraints_list}\n\n"
-
-    RECOMMENDATIONS_SECTION_TEMPLATE = (
-        "### RECOMMENDATIONS\n"
-        "Use these recommendations for writing the new prompt, "
-        "based on analysis of previous generations:\n"
-        "{recommendations_list}\n\n"
-    )
-
-    BASE_OUTPUT_FORMAT_SECTION = (
-        "### YOUR RESPONSE FORMAT\n"
-        "Return ONLY the resulting prompt, wrapped in the following XML tags:\n"
-        "<result_prompt>\n"
-        "  ...your resulting prompt here...\n"
-        "</result_prompt>\n"
-        "Do not include any explanations or additional text outside this XML element.\n\n"
-    )
-
-    MARKDOWN_OUTPUT_REQUIREMENTS = (
-        "#### Markdown formatting for the resulting prompt\n"
-        "- Write the entire prompt inside <result_prompt> using valid Markdown.\n"
-        "- Use headings (e.g., `#`, `##`) for major sections of the prompt.\n"
-        "- Use bulleted lists (e.g., `-` or `*`) for enumerations and checklists.\n"
-        "- Preserve any code or pseudo-code using fenced code blocks (``` ... ```).\n"
-        "- Do not introduce any additional formatting beyond what is necessary to make "
-        "the prompt clear and well-structured."
-    )
-
-    HYPE_META_PROMPT_TEMPLATE = (
-        "{role_section}"
-        "{prompt_structure_section}"
-        "{recommendations_section}"
-        "{constraints_section}"
-        "{output_format_section}"
-    )
-
     def __init__(self, config: HypeMetaPromptConfig | None = None) -> None:
         self.config = config or HypeMetaPromptConfig()
         self._cache_all_sections()
@@ -213,7 +213,9 @@ class HypeMetaPromptBuilder:
             if not isinstance(value, str):
                 raise ValueError("output_format must be a string")
             self.config.output_format_section = value
-            self.config._cached_sections[SECTION_OUTPUT_FORMAT] = self.build_output_format_section()
+            self.config._cached_sections[SECTION_OUTPUT_FORMAT] = (
+                self.build_output_format_section()
+            )
         else:
             raise ValueError(f"Section '{name}' is read-only or not directly settable")
 
@@ -232,9 +234,9 @@ class HypeMetaPromptBuilder:
             include_role if include_role is not None else self.config.include_role
         )
         form = self.config.target_prompt_form or ""
-        task_part = self.TASK_SECTION_TEMPLATE.format(target_prompt_form=form)
+        task_part = TASK_SECTION_TEMPLATE.format(target_prompt_form=form)
         if include_role:
-            return self.ROLE_LINE + task_part
+            return ROLE_LINE + task_part
         return task_part
 
     def build_prompt_structure_section(
@@ -244,9 +246,13 @@ class HypeMetaPromptBuilder:
         """Build the prompt structure guidelines section."""
         specs = specs or self.config.section_specs
         lines = [f"- [{spec.name}] {spec.description}" for spec in specs]
-        return self.PROMPT_STRUCTURE_SECTION_TEMPLATE.format(
-            sections_with_guidelines="\n".join(lines)
-        ) if lines else ""
+        return (
+            PROMPT_STRUCTURE_SECTION_TEMPLATE.format(
+                sections_with_guidelines="\n".join(lines)
+            )
+            if lines
+            else ""
+        )
 
     def build_recommendations_section(
         self,
@@ -261,7 +267,7 @@ class HypeMetaPromptBuilder:
         if not recs:
             return ""
         lines = "\n".join(f"- {r}" for r in recs)
-        return self.RECOMMENDATIONS_SECTION_TEMPLATE.format(recommendations_list=lines)
+        return RECOMMENDATIONS_SECTION_TEMPLATE.format(recommendations_list=lines)
 
     def build_constraints_section(
         self,
@@ -272,13 +278,13 @@ class HypeMetaPromptBuilder:
         if not constraints:
             return ""
         lines = "\n".join(f"- {c}" for c in constraints)
-        return self.CONSTRAINTS_SECTION_TEMPLATE.format(constraints_list=lines)
+        return CONSTRAINTS_SECTION_TEMPLATE.format(constraints_list=lines)
 
     def build_output_format_section(self) -> str:
         """Build the output format section (with optional markdown requirements)."""
-        section = self.config.output_format_section or self.BASE_OUTPUT_FORMAT_SECTION
+        section = self.config.output_format_section or BASE_OUTPUT_FORMAT_SECTION
         if self.config.require_markdown_prompt:
-            section = section + self.MARKDOWN_OUTPUT_REQUIREMENTS
+            section = section + MARKDOWN_OUTPUT_REQUIREMENTS
         return section
 
     def build_meta_prompt(
@@ -310,10 +316,103 @@ class HypeMetaPromptBuilder:
         if include_role is not None:
             self.config.include_role = include_role
 
-        return self.HYPE_META_PROMPT_TEMPLATE.format(
+        return HYPE_META_PROMPT_TEMPLATE.format(
             role_section=self.build_role_section(include_role=include_role),
             prompt_structure_section=self.build_prompt_structure_section(),
-            recommendations_section=self.build_recommendations_section(recommendations=recommendations),
+            recommendations_section=self.build_recommendations_section(
+                recommendations=recommendations
+            ),
             constraints_section=self.build_constraints_section(),
             output_format_section=self.build_output_format_section(),
         )
+
+
+# -------- HyPER Feedback module templates --------
+
+FEEDBACK_PROMPT_TEMPLATE = """You are an expert prompt engineer.
+
+The prompt was evaluated on benchmark task and failed on some examples. You will be given with a prompt and an example.
+
+Prompt:
+<prompt>
+{prompt}
+</prompt>
+
+Failed task: 
+<failed_task>
+{instance}
+</failed_task>
+
+Model answer (raw): 
+<model_answer>
+{model_answer}
+</model_answer>
+
+Model answer (parsed):
+<model_answer_parsed>
+{model_answer_parsed}
+</model_answer_parsed>
+
+Metric value: {metric_value}
+
+Сorrect answer:
+<ground_truth>
+{ground_truth}
+</ground_truth>
+
+Identify the core reasoning error pattern.
+
+Give ONE general, universal recommendation to improve the prompt (no task-special details).
+
+Format: Consice, max 20-25 words, starts with action verb. Output nothing but the actual recommendation. Avoid meta‑comments (e.g., "similar to…", "as before…") – the recommendation must stand alone.
+
+Example: "Require step-by-step reasoning before classifying."
+
+Recommendation:
+"""
+
+FILTER_RECOMMENDATIONS_PROMPT = """You have a list of recommendations for prompt improvement:
+
+{recommendations}
+
+TASK:
+1. Group them into conceptual clusters (similar ideas).
+2. For each cluster, **synthesize a single, new recommendation** that captures the essence of all items in that cluster. Do not just copy an existing one.
+3. Rank clusters by size (largest first). If some clusters conflict - drop the less ones.
+4. Output ONLY a JSON array of the synthesized recommendations, in rank order.
+
+GOOD EXAMPLES:
+Input: ["step-by-step", "break down calc", "don't show work", "format clearly"]
+Correct output: ["Require detailed step-by-step reasoning with calculations", "Specify the desired output format explicitly"]
+Why good:
+- Captured main ideas of reasoning cluster into 1 strong rec
+- Didn't loose cluster from "format clearly"
+- Resolved conflict: "don't show work" is less frequent recommendation, so its cluster was dropped
+
+BAD EXAMPLES:
+Input: ["Focus on clarifying the output format requirements",
+        "Add examples of expected responses to the prompt",
+        "Make sure to specify exact sentiment labels",
+        "Include examples to avoid confusion with similar labels",
+        "Focus on tone analysis in the text",
+        "Clarify what constitutes positive vs negative",
+        "Add examples of positive responses",
+        "Similar to previous - add more examples"]
+Wrong output: ["Similar to previous - add more examples", "Add examples of positive responses", "Make sure to specify exact sentiment labels", "Focus on tone analysis in the text"]
+Why bad:
+- "Similar to previous" = meta-trash
+- No synthesis of 6+ example recs into 1 strong rec, uses only existing recommendations
+- Two different recommendations with a similiar intent: adding examples (duplicates)
+"""
+
+PARAPHRASE_PROMPT = """Generate an alternative version of the following prompt. The new version must:
+- Use different words, sentence structure, and tone (e.g., more formal, casual, or creative).
+- Preserve the original meaning, key details, and language.
+- Vary in length: slightly shorter or longer (up to 10%).
+- Feel natural and coherent.
+- Output only the text of the alternative prompt, without any additional commentary or formatting.
+
+Original prompt:
+{prompt}
+
+Alternative prompt:"""

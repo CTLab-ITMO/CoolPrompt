@@ -6,12 +6,6 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     HypeMetaPromptBuilder,
     HypeMetaPromptConfig,
     META_INFO_SECTION,
-    META_PROMPT_SECTIONS,
-    SECTION_CONSTRAINTS,
-    SECTION_OUTPUT_FORMAT,
-    SECTION_PROMPT_STRUCTURE,
-    SECTION_RECOMMENDATIONS,
-    SECTION_ROLE,
 )
 
 
@@ -126,26 +120,3 @@ class HyPEOptimizer(Optimizer):
             format_mismatch_label=output,
         )
         return result if isinstance(result, str) else str(result)
-
-
-def hype_optimizer(
-    model,
-    prompt: str,
-    problem_description: Optional[str] = None,
-) -> str:
-    """
-    Optimize a prompt using the HyPE method.
-
-    Args:
-        model: Language model to use for optimization.
-        prompt: The initial prompt to optimize.
-        problem_description: Optional description of the problem/task.
-
-    Returns:
-        The optimized prompt string.
-    """
-    optimizer = HyPEOptimizer(model)
-    meta_info = {}
-    if problem_description:
-        meta_info["problem_description"] = problem_description
-    return optimizer.optimize(prompt, meta_info=meta_info if meta_info else None)

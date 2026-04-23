@@ -13,6 +13,7 @@ from coolprompt.evaluator.evaluator import (
     Evaluator,
     EvalResultDetailed,
 )
+from coolprompt.utils.prompt_templates.hyper_templates import PARAPHRASE_PROMPT
 
 logger = logging.getLogger(__name__)
 
@@ -103,19 +104,8 @@ class HyPEROptimizer(Optimizer):
         self.mini_batch_size = mini_batch_size
 
     def _get_variants_from_best(self, best_prompt: str, n_candidates: int) -> List[str]:
-        paraphrase_prompt = f"""Generate an alternative version of the following prompt. The new version must:
-- Use different words, sentence structure, and tone (e.g., more formal, casual, or creative).
-- Preserve the original meaning, key details, and language.
-- Vary in length: slightly shorter or longer (up to 10%).
-- Feel natural and coherent.
-- Output only the text of the alternative prompt, without any additional commentary or formatting.
-
-Original prompt:
-{best_prompt}
-
-Alternative prompt:"""
         raw_result = get_model_answer_extracted(
-            self.model, paraphrase_prompt, n=n_candidates, temperature=0.9
+            self.model, PARAPHRASE_PROMPT.format(prompt=best_prompt), n=n_candidates, temperature=0.9
         )
         return [best_prompt] + [self._process_model_output(r) for r in raw_result]
 
@@ -134,14 +124,14 @@ Alternative prompt:"""
         train_samples, val_samples, train_targets, val_targets = dataset_split
         best_prompt = prompt
         logger.debug(f"[HyPER] Initial prompt: {prompt[:250]}...")
-        
+
         best_score = self.evaluator.evaluate(
             prompt,
             list(val_samples),
             list(val_targets),
         )
         logger.debug(f"[HyPER] Initial validation score: {best_score}")
-        
+
         patience_counter = 0
         iteration_history = []
 
@@ -152,9 +142,9 @@ Alternative prompt:"""
             logger.debug(f"[HyPER] Current best score: {score_str}")
             logger.debug(f"[HyPER] Current best prompt: {best_prompt[:250]}...")
             logger.debug(f"{'='*60}")
-            
+
             score_before_iteration = best_score
-            
+
             # 1. Generate candidates from best_prompt
             logger.debug(f"[HyPER] Generating {self.n_candidates} candidates...")
             candidates = self._get_variants_from_best(
@@ -171,7 +161,7 @@ Alternative prompt:"""
                 train_samples, train_targets, self.mini_batch_size
             )
             logger.debug(f"[HyPER] Sampled {len(samples)} mini-batch samples")
-            
+
             if not samples:
                 logger.warning("[HyPER] No samples in mini-batch, skipping iteration")
                 continue
@@ -182,7 +172,7 @@ Alternative prompt:"""
                 self.evaluator.evaluate(cand, samples, sample_targets, failed_examples=self.k_samples, return_detailed=True)
                 for cand in candidates
             ]
-            
+
             # Log each candidate's score in debug mode
             for i, (cand, res) in enumerate(zip(candidates, results)):
                 score_str = f"{res.aggregate_score:.4f}" if res.aggregate_score is not None else "N/A"
@@ -231,7 +221,7 @@ Alternative prompt:"""
             logger.debug(f"[HyPER] Evaluating {len(pareto_front)} optimized candidates on validation set...")
             for i, (cand_prompt, res) in enumerate(pareto_front):
                 logger.debug(f"[HyPER] Optimizing Pareto candidate {i+1}/{len(pareto_front)}...")
-                
+
                 optimized_prompt = self.hype_module.optimize(
                     cand_prompt, meta_info=meta_info
                 )
@@ -241,7 +231,7 @@ Alternative prompt:"""
                     list(val_samples),
                     list(val_targets),
                 )
-                
+
                 val_score_str = f"{val_score:.4f}" if val_score is not None else "N/A"
                 logger.debug(f"[HyPER] Optimized candidate {i+1} validation score: {val_score_str}")
 
@@ -251,13 +241,13 @@ Alternative prompt:"""
                     logger.debug(f"[HyPER] *** NEW BEST! Score improved: {old_str} -> {new_str}")
                     best_score = val_score
                     best_prompt = optimized_prompt
-            
+
             if best_score == score_before_iteration:
                 patience_counter += 1
                 logger.debug(f"[HyPER] No improvement in iteration {iteration + 1}, patience: {patience_counter}/{self.patience}")
             else:
                 patience_counter = 0
-            
+
             iteration_history.append({
                 "iteration": iteration + 1,
                 "best_score": best_score,
@@ -277,5 +267,5 @@ Alternative prompt:"""
         logger.debug(f"[HyPER] Final best prompt: {best_prompt[:200]}...")
         logger.debug(f"[HyPER] Iteration history: {iteration_history}")
         logger.debug(f"{'='*60}")
-        
+
         return best_prompt, iteration_history
