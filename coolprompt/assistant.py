@@ -8,10 +8,6 @@ from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
-from coolprompt.optimizer.hype import hype_optimizer
-from coolprompt.optimizer.reflective_prompt import reflectiveprompt
-from coolprompt.optimizer.regps import regps
-from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
     validate_model,
@@ -32,6 +28,9 @@ from coolprompt.utils.prompt_templates.hype_templates import (
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 from coolprompt.optimizer.prompt_compressor import PromptCompressor
+
+from coolprompt.optimizer.apmethod import AutoPromptingMethod
+from coolprompt.optimizer.registry import METHOD_REGISTRY
 
 
 class PromptTuner:
@@ -160,7 +159,7 @@ class PromptTuner:
         task: str = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
-        method: str = "hype",
+        method: str | AutoPromptingMethod = "hype",
         metric: Optional[str] = None,
         problem_description: Optional[str] = None,
         problem_description_generation_method: str = "base",
@@ -283,16 +282,18 @@ class PromptTuner:
             task = task_detector.generate(start_prompt)
 
         logger.info("Validating args for PromptTuner running")
-        task, method, pd_method = validate_run(
-            start_prompt,
-            task,
-            dataset,
-            target,
-            method,
-            problem_description,
-            problem_description_generation_method,
-            validation_size,
-        )
+
+        raw_method = method
+        # task, method, pd_method = validate_run(
+        #     start_prompt,
+        #     task,
+        #     dataset,
+        #     target,
+        #     method,
+        #     problem_description,
+        #     problem_description_generation_method,
+        #     validation_size,
+        # )
         metric = validate_and_create_metric(
             task,
             metric,
@@ -363,47 +364,22 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
-        if method is Method.HYPE:
-            final_prompt = hype_optimizer(
-                model=self._target_model,
-                prompt=start_prompt,
-                problem_description=problem_description,
-            )
-        elif method is Method.REFLECTIVE:
-            final_prompt = reflectiveprompt(
-                model=self._target_model,
-                dataset_split=dataset_split,
-                evaluator=evaluator,
-                problem_description=problem_description,
-                initial_prompt=start_prompt,
-                **kwargs,
-            )
-        elif method is Method.REGPS:
-            final_prompt = regps(
-                model=self._target_model,
-                dataset_split=dataset_split,
-                evaluator=evaluator,
-                problem_description=problem_description,
-                initial_prompt=start_prompt,
-                **kwargs
-            )
-        elif method is Method.DISTILL:
-            final_prompt = distillprompt(
-                model=self._target_model,
-                dataset_split=dataset_split,
-                evaluator=evaluator,
-                initial_prompt=start_prompt,
-                **kwargs,
-            )
-        elif method is Method.COMPRESS:
-            compressor = PromptCompressor(
-                model=self._system_model,
-                **kwargs,
-            )
-            final_prompt = compressor.compress(
-                prompt=start_prompt,
-                return_metadata=False,
-            )
+        if isinstance(raw_method, str):
+            method_key = validate_method(raw_method)
+            method_impl = METHOD_REGISTRY[method_key.value]
+        elif isinstance(raw_method, AutoPromptingMethod):
+            method_impl = raw_method
+        else:
+            raise ValueError("method must be str or AutoPromptingMethod")
+
+        final_prompt = method_impl.optimize(
+            model=self._target_model,
+            initial_prompt=start_prompt,
+            dataset_split=dataset_split,
+            evaluator=evaluator,
+            problem_description=problem_description,
+            **kwargs,
+        )
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
@@ -413,7 +389,15 @@ class PromptTuner:
         )
 
         logger.debug(f"Final prompt:\n{final_prompt}")
-        template = self.TEMPLATE_MAP[(task, method)]
+
+        if isinstance(raw_method, str):
+            template_method = validate_method(raw_method)
+        elif isinstance(raw_method, AutoPromptingMethod):
+            template_method = Method(method_impl.name)
+        else:
+            raise ValueError
+
+        template = self.TEMPLATE_MAP[(task, template_method)]
         logger.info(f"Evaluating on given dataset for {task} task...")
         self.init_metric = evaluator.evaluate(
             prompt=start_prompt,

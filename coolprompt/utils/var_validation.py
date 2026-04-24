@@ -2,6 +2,7 @@ from typing import Any, Iterable, Tuple
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Method, Task, PD_Method
+from coolprompt.optimizer.apmethod import AutoPromptingMethod
 
 
 def validate_verbose(verbose: int) -> None:
@@ -173,7 +174,7 @@ def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
             raise ValueError(error_msg)
 
 
-def validate_method(method: str) -> Method:
+def validate_method(method: str | AutoPromptingMethod) -> Method:
     """Checks that a valid method name is provided.
 
     Args:
@@ -187,21 +188,13 @@ def validate_method(method: str) -> Method:
             ["hype", "reflective", "distill", "compress"].
     """
 
-    if not isinstance(method, str):
+    if not isinstance(method, str) and not isinstance(method, AutoPromptingMethod):
         error_msg = (
-            "Method name must be a string. "
+            "Method must be a string or AutoPromptingMethod instance. "
             f"Provided: {type(method).__name__}."
         )
         logger.error(error_msg)
         raise TypeError(error_msg)
-    if method not in Method._value2member_map_:
-        error_msg = (
-            f"Unsupported method: {method}. "
-            f"Available methods: {', '.join(list(
-                Method._value2member_map_.keys()))}."
-        )
-        logger.error(error_msg)
-        raise ValueError(error_msg)
     return Method(method)
 
 
@@ -276,7 +269,7 @@ def validate_run(
     task: str,
     dataset: Iterable | None,
     target: Iterable | None,
-    method: str,
+    method: str | AutoPromptingMethod,
     problem_description: str | None,
     problem_description_generation_method: str,
     validation_size: float,

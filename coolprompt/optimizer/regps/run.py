@@ -37,7 +37,7 @@ def regps(
     args = {
         "population_size": 10,
         "num_epochs": 5,
-        "output_path": "./reflectiveprompt_outputs",
+        "output_path": "./regps_outputs",
         "use_cache": True,
         "bad_examples_number": 5
     }
