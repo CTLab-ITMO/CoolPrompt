@@ -1,8 +1,9 @@
 from typing import Any, Iterable, Tuple
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.enums import Method, Task, PD_Method
+from coolprompt.utils.enums import Task, PD_Method
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
+from coolprompt.optimizer.registry import METHOD_REGISTRY
 
 
 def validate_verbose(verbose: int) -> None:
@@ -94,7 +95,7 @@ def validate_task(task: str) -> Task:
 
 
 def validate_dataset(
-    dataset: Iterable | None, target: Iterable | None, method: Method
+    dataset: Iterable | None, target: Iterable | None, method: AutoPromptingMethod
 ) -> None:
     """Checks that the provided dataset is an Iterable instance
     and the target is also provided. Also checks that the dataset is
@@ -109,6 +110,9 @@ def validate_dataset(
         ValueError: If `dataset` is None but `method` requiers a dataset,
             or if `dataset` is provided but `target` is None.
     """
+
+    # if dataset is None and method.is_data_driven():
+    #     raise ValueError("Dataset is required for data-driven methods")
 
     if dataset is not None:
         if target is None:
@@ -126,14 +130,14 @@ def validate_dataset(
             if method.is_data_driven():
                 error_msg = (
                     "Dataset must be non-empty when using data-driven "
-                    f"optimization method '{method}'. You can try using HyPE "
+                    f"optimization method '{method.name}'. You can try using HyPE "
                     "optimization ('hype' as method parameter) which "
                     "does not require any train dataset."
                 )
             else:
                 error_msg = (
                     "Dataset must be non-empty for evaluation when using "
-                    f"'{method}' optimization method. If you do not want to "
+                    f"'{method.name}' optimization method. If you do not want to "
                     "evaluate your prompts, please do not provide any dataset."
                 )
             logger.error(error_msg)
@@ -174,7 +178,7 @@ def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
             raise ValueError(error_msg)
 
 
-def validate_method(method: str | AutoPromptingMethod) -> Method:
+def validate_method(method: str | AutoPromptingMethod) -> AutoPromptingMethod:
     """Checks that a valid method name is provided.
 
     Args:
@@ -187,62 +191,23 @@ def validate_method(method: str | AutoPromptingMethod) -> Method:
         ValueError: If `method` is not one of
             ["hype", "reflective", "distill", "compress"].
     """
-
-    if not isinstance(method, str) and not isinstance(method, AutoPromptingMethod):
-        error_msg = (
-            "Method must be a string or AutoPromptingMethod instance. "
-            f"Provided: {type(method).__name__}."
-        )
-        logger.error(error_msg)
-        raise TypeError(error_msg)
-    return Method(method)
-
-
-def validate_problem_description(
-    problem_description: str | None,
-    pd_method: str,
-    method: Method,
-) -> PD_Method:
-    """Checks that the problem description is provided as a string
-    when using the ReflectivePrompt optimization.
-
-    Checks that a valid problem description generation method name is provided.
-
-
-    Args:
-        problem_description (str | None): Provided problem description.
-        pd_method (str): Provided problem description generation method.
-            Must be one of: ["base", "dataset-based"].
-        method (Method): Provided method.
-
-    Returns:
-        PD_Method: The validated problem description generation method.
-
-    Raises:
-        TypeError: If `problem_description` is not a string.
-        ValueError: If `problem_description` is not provided when
-            using the ReflectivePrompt method.
-        ValueError: If `pd_method` is not one of ['base', 'dataset-based']
-    """
-
-    if problem_description is not None:
-        if not isinstance(problem_description, str):
-            error_msg = (
-                "Problem description must be a string. "
-                f"Provided: {type(problem_description).__name__}."
+    if isinstance(method, str):
+        if method not in METHOD_REGISTRY:
+            error_msg = ( f"Unknown method: {method}. "
+                f"Available methods: {list(METHOD_REGISTRY.keys())}."
             )
             logger.error(error_msg)
-            raise TypeError(error_msg)
-
-    if pd_method not in PD_Method._value2member_map_:
-        error_msg = (
-            f"Unsupported problem description generation method: {pd_method}. "
-            f"Available methods: {', '.join(list(
-                PD_Method._value2member_map_.keys()))}."
-        )
+            raise ValueError(error_msg)
+        method_impl = METHOD_REGISTRY[method]
+    elif isinstance(method, AutoPromptingMethod):
+        method_impl = method
+    else:
+        error_msg = ( "Method must be a string or AutoPromptingMethod instance. "
+                f"Provided: {type(method).__name__}."
+                )
         logger.error(error_msg)
-        raise ValueError(error_msg)
-    return PD_Method(pd_method)
+        raise TypeError(error_msg)
+    return method_impl
 
 
 def validate_validation_size(validation_size: float | Any) -> None:
@@ -264,6 +229,37 @@ def validate_validation_size(validation_size: float | Any) -> None:
         raise ValueError(error_msg)
 
 
+def validate_problem_description(problem_description: str | None, pd_method: str) -> PD_Method:
+    """Checks that a valid problem description generation method name is provided.
+
+    Args:
+        pd_method (str): Provided problem description generation method.
+            Must be one of: ["base", "dataset-based"].
+    Returns:
+        PD_Method: The validated problem description generation method.
+    Raises:
+        ValueError: If `pd_method` is not one of ['base', 'dataset-based']
+    """
+    if problem_description is not None:
+        if not isinstance(problem_description, str):
+            error_msg = (
+                "Problem description must be a string. "
+                f"Provided: {type(problem_description).__name__}."
+            )
+            logger.error(error_msg)
+            raise TypeError(error_msg)
+        
+    if pd_method not in PD_Method._value2member_map_:
+        error_msg = (
+            f"Unknown problem description generation method: {pd_method}. "
+            f"Available methods: {list(PD_Method._value2member_map_.keys())}."
+        )
+        logger.error(error_msg)
+        raise ValueError(error_msg)
+    pd_method_impl = PD_Method(pd_method)
+    return pd_method_impl
+
+
 def validate_run(
     start_prompt: str,
     task: str,
@@ -273,7 +269,7 @@ def validate_run(
     problem_description: str | None,
     problem_description_generation_method: str,
     validation_size: float,
-) -> Tuple[Task, Method, PD_Method]:
+) -> tuple[Task, AutoPromptingMethod, PD_Method]:
     """Checks if args for PromptTuner.run() are valid.
 
     Args:
@@ -316,16 +312,12 @@ def validate_run(
                 ReflectivePrompt method
             -`problem_description_generation_method` not in supported methods.
     """
-
+    method_impl = validate_method(method)
     validate_start_prompt(start_prompt)
-    task = validate_task(task)
-    method = validate_method(method)
-    validate_dataset(dataset, target, method)
+    task_value = validate_task(task)
+    validate_dataset(dataset, target, method_impl)
     validate_target(target, dataset)
-    pd_method = validate_problem_description(
-        problem_description,
-        problem_description_generation_method,
-        method
-    )
     validate_validation_size(validation_size)
-    return task, method, pd_method
+    pd_method = validate_problem_description(problem_description, 
+                                            problem_description_generation_method)
+    return task_value, method_impl, pd_method

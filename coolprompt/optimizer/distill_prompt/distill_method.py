@@ -1,9 +1,10 @@
+from typing import override
+
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
 from coolprompt.optimizer.distill_prompt import distillprompt
 
 
 class DistillMethod(AutoPromptingMethod):
-    name = "distill"
     def optimize(
         self,
         model,
@@ -20,3 +21,11 @@ class DistillMethod(AutoPromptingMethod):
             initial_prompt=initial_prompt,
             **kwargs,
         )
+
+    def is_data_driven(self):
+        return True
+
+    @property
+    @override
+    def name(self):
+        return "distill"

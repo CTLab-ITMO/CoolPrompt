@@ -1,20 +1,20 @@
 from enum import Enum
 
 
-class Method(Enum):
-    HYPE = "hype"
-    REFLECTIVE = "reflective"
-    DISTILL = "distill"
-    REGPS = "regps"
-    COMPRESS = "compress"
+# class Method(Enum):
+#     HYPE = "hype"
+#     REFLECTIVE = "reflective"
+#     DISTILL = "distill"
+#     REGPS = "regps"
+#     COMPRESS = "compress"
 
-    def is_data_driven(self) -> bool:
-        if self is Method.HYPE or self is Method.COMPRESS:
-            return False
-        return True
+#     def is_data_driven(self) -> bool:
+#         if self is Method.HYPE or self is Method.COMPRESS:
+#             return False
+#         return True
 
-    def __str__(self):
-        return self.value
+#     def __str__(self):
+#         return self.value
 
 
 class Task(Enum):

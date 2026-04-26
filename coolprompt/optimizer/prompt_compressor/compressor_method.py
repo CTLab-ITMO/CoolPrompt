@@ -1,9 +1,10 @@
+from typing import override
+
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
 from coolprompt.optimizer.prompt_compressor import PromptCompressor
 
 
 class CompressorMethod(AutoPromptingMethod):
-    name = "compress"
     def __init__(
         self,
         system_prompt: str | None = None,
@@ -39,3 +40,11 @@ class CompressorMethod(AutoPromptingMethod):
             return result.final_prompt
 
         return result
+
+    def is_data_driven(self) -> bool:
+        return False
+
+    @property
+    @override
+    def name(self) -> str:
+        return "compress"

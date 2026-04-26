@@ -1,9 +1,10 @@
+from typing import override
+
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
 from coolprompt.optimizer.regps import regps
 
 
 class ReGPSMethod(AutoPromptingMethod):
-    name = "regps"
     def optimize(
         self,
         model,
@@ -21,3 +22,11 @@ class ReGPSMethod(AutoPromptingMethod):
             initial_prompt=initial_prompt,
             **kwargs,
         )
+
+    def is_data_driven(self):
+        return True
+
+    @property
+    @override
+    def name(self):
+        return "regps"

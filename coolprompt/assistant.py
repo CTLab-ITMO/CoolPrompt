@@ -11,43 +11,19 @@ from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
     validate_model,
-    validate_task,
-    validate_method,
     validate_run,
     validate_verbose,
 )
-from coolprompt.utils.enums import Method, Task, PD_Method
-from coolprompt.utils.prompt_templates.default_templates import (
-    CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE,
-)
-from coolprompt.utils.prompt_templates.hype_templates import (
-    CLASSIFICATION_TASK_TEMPLATE_HYPE,
-    GENERATION_TASK_TEMPLATE_HYPE,
-)
+from coolprompt.utils.enums import PD_Method  
+
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
-from coolprompt.optimizer.prompt_compressor import PromptCompressor
 
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
-from coolprompt.optimizer.registry import METHOD_REGISTRY
 
 
 class PromptTuner:
     """Prompt optimization tool supporting multiple methods."""
-
-    TEMPLATE_MAP = {
-        (Task.CLASSIFICATION, Method.HYPE): CLASSIFICATION_TASK_TEMPLATE_HYPE,
-        (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.CLASSIFICATION, Method.COMPRESS): CLASSIFICATION_TASK_TEMPLATE,
-        (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
-        (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
-        (Task.GENERATION, Method.REGPS): GENERATION_TASK_TEMPLATE,
-        (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
-        (Task.GENERATION, Method.COMPRESS): GENERATION_TASK_TEMPLATE,
-    }
 
     NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD = 5
 
@@ -101,26 +77,6 @@ class PromptTuner:
         if hasattr(self._target_model, "reset_stats"):
             self._target_model.reset_stats()
 
-    def get_task_prompt_template(self, task: str, method: str) -> str:
-        """Returns the prompt template for the given task.
-
-        Args:
-            task (str):
-                The type of task, either "classification" or "generation".
-            method (str):
-                Optimization method to use.
-                Available methods are: ['hype', 'reflective', 'distill']
-
-        Returns:
-            str: The prompt template for the given task.
-        """
-
-        logger.debug(
-            f"Getting prompt template for {task} task and {method} method"
-        )
-        task = validate_task(task)
-        method = validate_method(method)
-        return self.TEMPLATE_MAP[(task, method)]
 
     def _get_dataset_split(
         self,
@@ -156,7 +112,7 @@ class PromptTuner:
     def run(
         self,
         start_prompt: str,
-        task: str = None,
+        task: str | None = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
         method: str | AutoPromptingMethod = "hype",
@@ -177,7 +133,7 @@ class PromptTuner:
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
         **kwargs,
-    ) -> str:
+    ) -> Optional[str]:
         """Optimizes prompts using provided model.
 
         Args:
@@ -189,10 +145,10 @@ class PromptTuner:
                 Dataset iterable object for autoprompting optimization.
             target (Iterable):
                 Target iterable object for autoprompting optimization.
-            method (str): Optimization method to use.
-                Available methods are:
-                    ['hype', 'reflective', 'distill', 'regps', 'compress']
-                Defaults to hype.
+            method (str | AutoPromptingMethod): Optimization method to use.
+                Can be either:
+                - string key (e.g. "hype", "reflective", ...)
+                - AutoPromptingMethod instance
             metric (str): Metric to use for optimization.
             problem_description (str): a string that contains
                 short description of problem to optimize.
@@ -283,19 +239,20 @@ class PromptTuner:
 
         logger.info("Validating args for PromptTuner running")
 
-        raw_method = method
-        # task, method, pd_method = validate_run(
-        #     start_prompt,
-        #     task,
-        #     dataset,
-        #     target,
-        #     method,
-        #     problem_description,
-        #     problem_description_generation_method,
-        #     validation_size,
-        # )
-        metric = validate_and_create_metric(
+
+        task_value, method_impl, pd_method = validate_run(
+            start_prompt,
             task,
+            dataset,
+            target,
+            method,
+            problem_description,
+            problem_description_generation_method,
+            validation_size,
+        )
+
+        base_metric = validate_and_create_metric(
+            task_value,
             metric,
             model=(
                 self._system_model
@@ -310,14 +267,14 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
-        evaluator = Evaluator(self._target_model, task, metric, batch_size=batch_size)
+        evaluator = Evaluator(self._target_model, task_value, base_metric, batch_size=batch_size)
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)
 
         if dataset is None:
             dataset, target, problem_description = generator.generate(
                 prompt=start_prompt,
-                task=task,
+                task=task_value,
                 problem_description=problem_description,
                 num_samples=generate_num_samples
             )
@@ -337,10 +294,8 @@ class PromptTuner:
                     prompt=start_prompt
                 )
             elif pd_method is PD_Method.DATASET_BASED:
-                indices = sample(
-                    range(0, len(dataset_split[0])),
-                    self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD
-                )
+                k = min(self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD, len(dataset_split[0]))
+                indices = sample(range(len(dataset_split[0])), k)
                 examples = [
                     (dataset_split[0][ind], dataset_split[2][ind])
                     for ind in indices
@@ -350,8 +305,9 @@ class PromptTuner:
                     examples=examples
                 )
 
+
         logger.info("=== Starting Prompt Optimization ===")
-        logger.info(f"Method: {method}, Task: {task}")
+        logger.info(f"Method: {method_impl.name}, Task: {task}")
         logger.info(f"Metric: {metric}, Validation size: {validation_size}")
         if dataset:
             logger.info(f"Dataset: {len(dataset)} samples")
@@ -363,14 +319,6 @@ class PromptTuner:
             logger.info("No target provided")
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
-
-        if isinstance(raw_method, str):
-            method_key = validate_method(raw_method)
-            method_impl = METHOD_REGISTRY[method_key.value]
-        elif isinstance(raw_method, AutoPromptingMethod):
-            method_impl = raw_method
-        else:
-            raise ValueError("method must be str or AutoPromptingMethod")
 
         final_prompt = method_impl.optimize(
             model=self._target_model,
@@ -390,14 +338,8 @@ class PromptTuner:
 
         logger.debug(f"Final prompt:\n{final_prompt}")
 
-        if isinstance(raw_method, str):
-            template_method = validate_method(raw_method)
-        elif isinstance(raw_method, AutoPromptingMethod):
-            template_method = Method(method_impl.name)
-        else:
-            raise ValueError
+        template = method_impl.get_template(task_value)
 
-        template = self.TEMPLATE_MAP[(task, template_method)]
         logger.info(f"Evaluating on given dataset for {task} task...")
         self.init_metric = evaluator.evaluate(
             prompt=start_prompt,

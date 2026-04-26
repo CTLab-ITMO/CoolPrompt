@@ -4,13 +4,10 @@ from tqdm import tqdm
 from time import sleep
 
 from langchain_core.messages.ai import AIMessage
+from coolprompt.utils.prompt_templates.default_templates import CLASSIFICATION_TASK_TEMPLATE, GENERATION_TASK_TEMPLATE
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
-from coolprompt.utils.prompt_templates.default_templates import (
-    CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE,
-)
 
 
 class Evaluator:
