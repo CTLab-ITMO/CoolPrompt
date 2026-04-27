@@ -1,0 +1,10 @@
+"""
+TODO: when PR #88 is merged, implement
+RIDERAutoPromptingMethod(AutoPromptingMethod) here.
+
+The wrapper just needs to call:
+    RIDEROptimizer(model).optimize(initial_prompt)
+
+is_data_driven() returns False (LIGHT mode is data-free).
+name returns "rider_light".
+"""
