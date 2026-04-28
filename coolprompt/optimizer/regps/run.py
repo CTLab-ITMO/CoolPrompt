@@ -31,7 +31,7 @@ def regps(
     Returns:
         str: best evoluted prompt.
     """
-    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+    train_dataset, validation_dataset, train_targets, validation_targets = (
         dataset_split
     )
     args = {
@@ -39,7 +39,7 @@ def regps(
         "num_epochs": 5,
         "output_path": "./regps_outputs",
         "use_cache": True,
-        "bad_examples_number": 5
+        "bad_examples_number": 5,
     }
     args.update(kwargs)
     evoluter = ReGPSEvoluter(
@@ -56,7 +56,7 @@ def regps(
         output_path=args["output_path"],
         use_cache=args["use_cache"],
         bad_examples_number=args["bad_examples_number"],
-        checkpoint_path=args.get('checkpoint_path')
+        checkpoint_path=args.get("checkpoint_path"),
     )
     logger.info("Starting Re-GPS optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")

@@ -77,7 +77,7 @@ def extract_json(text: str) -> dict | None:
             break
         try:
             return dict(loader.decode(start_index=start_pos))
-        except:
+        except Exception:
             pos = start_pos + 1
 
     return None

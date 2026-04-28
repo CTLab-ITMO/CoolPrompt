@@ -16,7 +16,7 @@ def distillprompt(
     initial_prompt: str,
     *,
     num_epochs: int = 5,
-    output_path: str = './distillprompt_outputs',
+    output_path: str = "./distillprompt_outputs",
     use_cache: bool = True,
 ) -> str:
     """Runs the full DistillPrompt optimization process.

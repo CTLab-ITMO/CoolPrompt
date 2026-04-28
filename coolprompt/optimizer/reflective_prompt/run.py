@@ -34,7 +34,7 @@ def reflectiveprompt(
     """
 
     warn_deprecated("ReflectivePrompt")
-    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+    train_dataset, validation_dataset, train_targets, validation_targets = (
         dataset_split
     )
     args = {
@@ -56,7 +56,7 @@ def reflectiveprompt(
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],
-        checkpoint_path=args.get('checkpoint_path'),
+        checkpoint_path=args.get("checkpoint_path"),
         use_cache=args["use_cache"],
     )
     logger.info("Starting ReflectivePrompt optimization...")

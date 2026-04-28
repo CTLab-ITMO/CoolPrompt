@@ -144,7 +144,7 @@ class BaseMetric(ABC):
         dataset: List[str],
         outputs: List[str | int],
         targets: List[str | int],
-        failed_examples: int
+        failed_examples: int,
     ) -> List[Dict[str, Tuple[str, str]]]:
         """Taking bad examples via processed metrics.
 
@@ -160,9 +160,9 @@ class BaseMetric(ABC):
 
         return [
             {
-                'input': dataset[ind],
-                'output': outputs[ind],
-                'correct': targets[ind]
+                "input": dataset[ind],
+                "output": outputs[ind],
+                "correct": targets[ind],
             }
             for ind in indices
         ]
@@ -172,7 +172,7 @@ class BaseMetric(ABC):
         outputs: list[str | int],
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
-        failed_examples: Optional[int] = None
+        failed_examples: Optional[int] = None,
     ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]]:
         """Compute metric value from text model outputs
 
@@ -565,7 +565,7 @@ def validate_and_create_metric(
     task: Task,
     metric: str | None,
     model: BaseLanguageModel | None = None,
-    **kwargs
+    **kwargs,
 ) -> BaseMetric:
     """
     Validates given metric in order to correspond the given task.

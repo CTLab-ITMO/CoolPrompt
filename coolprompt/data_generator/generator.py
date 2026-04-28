@@ -50,7 +50,7 @@ class SyntheticDataGenerator:
         Returns:
             Any: generated data
         """
-        if hasattr(self.model, 'model'):
+        if hasattr(self.model, "model"):
             wrapped_model = self.model.model
         else:
             wrapped_model = self.model
@@ -88,9 +88,7 @@ class SyntheticDataGenerator:
         )
 
     def _generate_problem_description(
-        self,
-        prompt: str,
-        examples: Optional[List[Tuple[str, str]]] = None
+        self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
     ) -> str:
         """Generates problem description based on given user prompt
 
@@ -102,8 +100,7 @@ class SyntheticDataGenerator:
         """
         if examples:
             request = PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
-                prompt=prompt,
-                examples=self._examples_to_str(examples)
+                prompt=prompt, examples=self._examples_to_str(examples)
             )
         else:
             request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
@@ -185,9 +182,7 @@ class SyntheticDataGenerator:
                 + "so it will be generated automatically"
             )
             problem_description = self._generate_problem_description(prompt)
-            logger.info(
-                f"Generated problem description: {problem_description}"
-            )
+            logger.info(f"Generated problem description: {problem_description}")
 
         if task == Task.CLASSIFICATION:
             request = CLASSIFICATION_DATA_GENERATING_TEMPLATE

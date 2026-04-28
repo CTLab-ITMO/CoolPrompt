@@ -11,7 +11,6 @@ from src.utils.load_dataset_coolprompt import (
     xsum_preproc,
 )
 
-
 config_dict = {
     "squad_v2": {
         "start_prompt": "Given a context answer on the question.",

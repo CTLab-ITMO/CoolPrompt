@@ -14,7 +14,7 @@ class PromptOrigin(Enum):
     MUTATED = "mutated"
 
     @classmethod
-    def from_string(cls: Type['PromptOrigin'], string: str) -> 'PromptOrigin':
+    def from_string(cls: Type["PromptOrigin"], string: str) -> "PromptOrigin":
         """Creates PromptOrigin variable from string description.
 
         Args:
@@ -48,16 +48,13 @@ class BadExample:
         """
 
         return {
-            'input': self.input,
-            'output': self.output,
-            'correct': self.correct
+            "input": self.input,
+            "output": self.output,
+            "correct": self.correct,
         }
 
     @classmethod
-    def from_dict(
-        cls: Type['BadExample'],
-        data: dict
-    ) -> 'BadExample':
+    def from_dict(cls: Type["BadExample"], data: dict) -> "BadExample":
         """Creates BadExample variable from dictionary data.
 
         Args:
@@ -68,9 +65,7 @@ class BadExample:
         """
 
         return cls(
-            input=data['input'],
-            output=data['output'],
-            correct=data['correct']
+            input=data["input"], output=data["output"], correct=data["correct"]
         )
 
 
@@ -80,7 +75,7 @@ class Prompt:
         text: str,
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
         score: float = None,
-        bad_examples: List[BadExample] = []
+        bad_examples: List[BadExample] = [],
     ) -> None:
         """Prompt class.
 
@@ -108,14 +103,13 @@ class Prompt:
         self.score = float(new_score)
 
     def set_bad_examples(self, bad_examples: List[Dict[str, str]]) -> None:
-        """Stores provided bad examples.
-        """
+        """Stores provided bad examples."""
 
         self.bad_examples = [
             BadExample(
-                input=example['input'],
-                output=example['output'],
-                correct=example['correct']
+                input=example["input"],
+                output=example["output"],
+                correct=example["correct"],
             )
             for example in bad_examples
         ]
@@ -128,21 +122,19 @@ class Prompt:
         """
 
         result = {
-            'text': self.text,
-            'origin': self.origin.name,
+            "text": self.text,
+            "origin": self.origin.name,
         }
         if self.score is not None:
-            result['score'] = self.score
+            result["score"] = self.score
         if len(self.bad_examples) > 0:
-            result['bad_examples'] = [ex.to_dict() for ex in self.bad_examples]
+            result["bad_examples"] = [ex.to_dict() for ex in self.bad_examples]
         return result
 
     @classmethod
     def from_dict(
-        cls: Type['Prompt'],
-        data: dict,
-        origin: PromptOrigin = None
-    ) -> 'Prompt':
+        cls: Type["Prompt"], data: dict, origin: PromptOrigin = None
+    ) -> "Prompt":
         """Creates Prompt variable from dictionary data.
 
         Args:
@@ -158,13 +150,13 @@ class Prompt:
         if origin:
             data.update(origin=origin.name)
         return cls(
-            text=data['text'],
-            origin=PromptOrigin.from_string(data['origin']),
-            score=data.get('score', None),
+            text=data["text"],
+            origin=PromptOrigin.from_string(data["origin"]),
+            score=data.get("score", None),
             bad_examples=[
                 BadExample.from_dict(bad_example_data)
-                for bad_example_data in data.get('bad_examples', [])
-            ]
+                for bad_example_data in data.get("bad_examples", [])
+            ],
         )
 
     def __str__(self) -> str:

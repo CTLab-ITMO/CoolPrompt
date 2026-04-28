@@ -247,7 +247,9 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
-        evaluator = Evaluator(self._target_model, task_value, base_metric, batch_size=batch_size)
+        evaluator = Evaluator(
+            self._target_model, task_value, base_metric, batch_size=batch_size
+        )
         final_prompt = ""
         generator = SyntheticDataGenerator(self._system_model)
 
@@ -256,7 +258,7 @@ class PromptTuner:
                 prompt=start_prompt,
                 task=task_value,
                 problem_description=problem_description,
-                num_samples=generate_num_samples
+                num_samples=generate_num_samples,
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target
@@ -274,15 +276,17 @@ class PromptTuner:
                     prompt=start_prompt
                 )
             elif pd_method is PD_Method.DATASET_BASED:
-                k = min(self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD, len(dataset_split[0]))
+                k = min(
+                    self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD,
+                    len(dataset_split[0]),
+                )
                 indices = sample(range(len(dataset_split[0])), k)
                 examples = [
                     (dataset_split[0][ind], dataset_split[2][ind])
                     for ind in indices
                 ]
                 problem_description = generator._generate_problem_description(
-                    prompt=start_prompt,
-                    examples=examples
+                    prompt=start_prompt, examples=examples
                 )
 
         logger.info("=== Starting Prompt Optimization ===")

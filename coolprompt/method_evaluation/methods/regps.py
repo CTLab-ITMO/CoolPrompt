@@ -2,7 +2,7 @@ from random import sample
 
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.method_evaluation.methods.autoprompting_method import (
-    AutoPromptingMethod
+    AutoPromptingMethod,
 )
 from coolprompt.optimizer.regps.run import regps
 
@@ -29,7 +29,7 @@ class ReGPSMethod(AutoPromptingMethod):
         Returns:
             str: optimized prompt.
         """
-        problem_description = self.config.get('problem_description')
+        problem_description = self.config.get("problem_description")
         if problem_description is None:
             generator = SyntheticDataGenerator(self._system_model)
             indices = sample(range(0, len(self.dataset_split[0])), 5)
@@ -38,8 +38,7 @@ class ReGPSMethod(AutoPromptingMethod):
                 for ind in indices
             ]
             problem_description = generator._generate_problem_description(
-                prompt=start_prompt,
-                examples=examples
+                prompt=start_prompt, examples=examples
             )
 
         final_prompt = regps(
@@ -48,15 +47,14 @@ class ReGPSMethod(AutoPromptingMethod):
             evaluator=self.evaluator,
             problem_description=problem_description,
             initial_prompt=start_prompt,
-            population_size=self.config['method'].get('population_size', 10),
-            num_epochs=self.config['method'].get('num_epochs', 5),
-            output_path=self.config['method'].get(
-                'output_path',
-                "./regps_outputs"
+            population_size=self.config["method"].get("population_size", 10),
+            num_epochs=self.config["method"].get("num_epochs", 5),
+            output_path=self.config["method"].get(
+                "output_path", "./regps_outputs"
             ),
-            use_cache=self.config['method'].get('use_cache', True),
+            use_cache=self.config["method"].get("use_cache", True),
             bad_examples_number=self.config.get("bad_examples_number", 5),
-            checkpoint_path=self.config.get('checkpoint_path')
+            checkpoint_path=self.config.get("checkpoint_path"),
         )
 
         return final_prompt

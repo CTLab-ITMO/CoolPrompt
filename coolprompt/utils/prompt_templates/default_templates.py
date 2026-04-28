@@ -1,4 +1,3 @@
-
 CLASSIFICATION_TASK_TEMPLATE = """{PROMPT}
 
 Answer using the label from [{LABELS}].

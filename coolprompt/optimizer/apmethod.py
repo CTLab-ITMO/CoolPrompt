@@ -85,4 +85,3 @@ class AutoPromptingMethod(ABC):
                 return CLASSIFICATION_TASK_TEMPLATE
             case Task.GENERATION:
                 return GENERATION_TASK_TEMPLATE
-            

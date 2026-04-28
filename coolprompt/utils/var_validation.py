@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Tuple
+from typing import Any, Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task, PD_Method
@@ -84,17 +84,19 @@ def validate_task(task: str) -> Task:
         logger.error(error_msg)
         raise TypeError(error_msg)
     if task not in Task._value2member_map_:
-        error_msg = (
-            f"Invalid task type: {task}. "
-            f"Available tasks: {', '.join(list(Task._value2member_map_.keys()))}."
-        )
+        error_msg = f"Invalid task type: {task}. " f"Available tasks: {
+            ', '.join(
+                list(
+                    Task._value2member_map_.keys()))}."
         logger.error(error_msg)
         raise ValueError(error_msg)
     return Task(task)
 
 
 def validate_dataset(
-    dataset: Iterable | None, target: Iterable | None, method: AutoPromptingMethod
+    dataset: Iterable | None,
+    target: Iterable | None,
+    method: AutoPromptingMethod,
 ) -> None:
     """Validate dataset and target consistency for a given method.
 
@@ -126,7 +128,8 @@ def validate_dataset(
             if method.is_data_driven():
                 error_msg = (
                     "Dataset must be non-empty when using data-driven "
-                    f"optimization method '{method.name}'. You can try using HyPE "
+                    f"optimization method '{
+                        method.name}'. You can try using HyPE "
                     "optimization ('hype' as method parameter) which "
                     "does not require any train dataset."
                 )
@@ -216,7 +219,9 @@ def validate_validation_size(validation_size: float | Any) -> None:
     Raises:
         ValueError: If `validation_size` is not a float in [0.0, 1.0].
     """
-    if not isinstance(validation_size, float) or not (0.0 <= validation_size <= 1.0):
+    if not isinstance(validation_size, float) or not (
+        0.0 <= validation_size <= 1.0
+    ):
         error_msg = (
             "Validation size must be a float between 0.0 and 1.0. "
             f"Provided: {validation_size}."

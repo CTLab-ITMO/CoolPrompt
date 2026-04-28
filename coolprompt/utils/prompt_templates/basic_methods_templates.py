@@ -86,18 +86,14 @@ objectives?""",
 ]
 
 
-SELECT_TEMPLATE = (
-    """
+SELECT_TEMPLATE = """
 In order to solve the given task:
 <Task>
 {Task}
 </Task>
 Select several modules that are crucial for solving the tasks above
 from all the reasoning module description given below:
-"""
-    + ", ".join(REASONING_MODULES)
-    + "\n"
-)
+""" + ", ".join(REASONING_MODULES) + "\n"
 
 ADAPT_TEMPLATE = """
 Rephrase and specify each reasoning module so that it better helps solving the task:

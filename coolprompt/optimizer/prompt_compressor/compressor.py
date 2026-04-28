@@ -3,15 +3,24 @@ from typing import List, Optional, Union
 from langchain_core.language_models import BaseLanguageModel
 from pydantic import BaseModel, Field
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.prompt_templates.compress_templates import SYSTEM_PROMPT, USER_PROMPT
+from coolprompt.utils.prompt_templates.compress_templates import (
+    SYSTEM_PROMPT,
+    USER_PROMPT,
+)
 
 
 class CompressedPromptResponse(BaseModel):
     """Structure for LLM answer."""
-    reasoning: str = Field(description="Анализ задачи и вопроса в исходном промпте")
-    prompt_input_context: str = Field(description="Выделенный входной контекст задачи в одном предложении")
+
+    reasoning: str = Field(
+        description="Анализ задачи и вопроса в исходном промпте"
+    )
+    prompt_input_context: str = Field(
+        description="Выделенный входной контекст задачи в одном предложении"
+    )
     prompt_task: str = Field(description="Выделенное предложение самой задачи")
     final_prompt: str = Field(description="Финальный сжатый промпт")
+
 
 class PromptCompressor:
     """
@@ -46,8 +55,9 @@ class PromptCompressor:
             {"role": "user", "content": self.user_prompt.format(prompt=prompt)},
         ]
 
-    def compress(self, prompt: str, 
-                 return_metadata: bool = False) -> Union[str, CompressedPromptResponse]:
+    def compress(
+        self, prompt: str, return_metadata: bool = False
+    ) -> Union[str, CompressedPromptResponse]:
         """
         Compress a single prompt synchronously.
 
@@ -62,5 +72,7 @@ class PromptCompressor:
         messages = self._build_messages(prompt)
         response = self.structured_model.invoke(messages)
 
-        logger.debug(f"Compressed prompt from '{prompt[:50]}...' -> '{response.final_prompt[:50]}...'")
+        logger.debug(
+            f"Compressed prompt from '{prompt[:50]}...' -> '{response.final_prompt[:50]}...'"
+        )
         return response if return_metadata else response.final_prompt
