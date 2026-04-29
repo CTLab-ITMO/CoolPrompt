@@ -1,0 +1,37 @@
+{
+    "squad_v2": {
+        "every": {
+            "prompt": "Please provide a detailed and contextually relevant answer to the given question based on the information or scenario provided. Ensure that your response directly addresses the question by incorporating any necessary background details, explanations, or examples that clarify the context. Structure your answer clearly and coherently, making it easy to understand how the context informs your response."
+        }
+    },
+    "gsm8k": {
+        "every": {
+            "prompt": "Please provide a detailed and contextually relevant answer to the given question based on the information or scenario provided. Ensure that your response directly addresses the question by incorporating any necessary background details, explanations, or examples that clarify the context. Structure your answer clearly and coherently, making it easy to understand how the context informs your response."
+        }
+    },
+    "common_gen": {
+        "every": {
+            "prompt": "Please create a concise and meaningful sentence by using only the words provided in the given list. The sentence should be grammatically correct and coherent, clearly demonstrating the relationship between the words. Ensure that the output is a single, well-structured sentence without additional explanations or commentary."
+        }
+    },
+    "ag_news": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "xsum": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "medalpaca": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "tweeteval": {
+        "every": {
+            "prompt": "TODO"
+        }
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "squad_v2": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "gsm8k": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "common_gen": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "ag_news": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "xsum": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "medalpaca": {
+        "every": {
+            "prompt": "TODO"
+        }
+    },
+    "tweeteval": {
+        "every": {
+            "prompt": "TODO"
+        }
+    }
+}
