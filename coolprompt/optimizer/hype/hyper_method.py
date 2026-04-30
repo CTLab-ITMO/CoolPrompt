@@ -72,11 +72,12 @@ class HyPERMethod(AutoPromptingMethod):
         if problem_description:
             meta_info = {"problem_description": problem_description}
 
-        return optimizer.optimize(
+        final_prompt, _ = optimizer.optimize(
             prompt=initial_prompt,
             dataset_split=dataset_split,
             meta_info=meta_info,
         )
+        return final_prompt
 
     def is_data_driven(self):
         """HyPER relies on evaluation data, so it is data‑driven.
