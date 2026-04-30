@@ -8,6 +8,11 @@ from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
+from coolprompt.optimizer.hype.hype import HyPEOptimizer
+from coolprompt.optimizer.hype.hyper import HyPEROptimizer
+from coolprompt.optimizer.reflective_prompt import reflectiveprompt
+from coolprompt.optimizer.regps import regps
+from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
     validate_model,
@@ -142,6 +147,7 @@ class PromptTuner:
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
+        hype_meta_info: dict = None,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -159,7 +165,7 @@ class PromptTuner:
             target (Iterable[str] | Iterable[int] | None): Target labels
                 corresponding to the dataset. Required if `dataset` is given.
             method (str | AutoPromptingMethod): Optimization method.
-                Can be a registered name ("hype", "reflective", "distill",
+                Can be a registered name ("hype", "hyper", "reflective", "distill",
                 "compress", "regps") or an `AutoPromptingMethod` instance.
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,

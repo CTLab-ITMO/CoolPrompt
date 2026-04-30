@@ -173,23 +173,24 @@ class BaseMetric(ABC):
         targets: list[str | int],
         dataset: Optional[list[str]] = None,
         failed_examples: Optional[int] = None,
-    ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]]:
-        """Compute metric value from text model outputs
+        return_per_task: bool = False,
+    ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]] | Tuple[float, List[float], List[Dict]]:
+        """Compute metric value from text model outputs.
 
         Must be implemented by subclasses to handle input formatting.
-
         Args:
             outputs (list[str|int]): Model predictions (just text)
             targets (list[str|int]): Ground truth labels
+            failed_examples (int, Optional): Number of bad examples to return
+            return_per_task (bool, False): If True, returns (aggregate, results_per_task, bad_examples)
+
         Returns:
-            float | Tuple[float, List[Dict[str, Tuple[str, str]]]]:
-                Computed metric value with/wo bad examples list
+            float | Tuple[float, List[float], List[Dict]]:
+                aggregate score, optionally per-task scores, optionally bad examples
         """
         output_labels = list(
             map(
-                lambda x: extract_answer(
-                    x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL
-                ),
+                lambda x: extract_answer(x, self.ANS_TAGS, self.FORMAT_MISMATCH_LABEL),
                 outputs,
             )
         )
@@ -202,17 +203,36 @@ class BaseMetric(ABC):
             encoded_output_labels, encoded_targets, dataset
         )
 
-        result = sum(results) / len(results)
+        if results is None or any(r is None for r in results):
+            return None
 
-        if failed_examples:
-            return result, self._extract_bad_examples(
-                results,
-                dataset,
-                output_labels,
-                targets,
-                failed_examples,
+        self._failed_examples_requested = failed_examples
+        aggregate = float(np.mean(results))
+
+        if return_per_task:
+            bad_examples = self._extract_bad_examples(
+                results, dataset, outputs, targets, failed_examples or 0
+            ) if failed_examples else []
+            return aggregate, results, bad_examples
+
+        if failed_examples is not None and failed_examples > 0:
+            bad_examples = self._extract_bad_examples(
+                results, dataset, outputs, targets, failed_examples
             )
-        return result
+            return aggregate, bad_examples
+
+        return aggregate
+
+    def parse_output(self, output: str) -> str:
+        """Extract parsed answer from model output.
+
+        Args:
+            output: Raw model output string.
+
+        Returns:
+            Extracted answer from <ans> tags, or original output if not found.
+        """
+        return extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
 
     def __str__(self) -> str:
         return self._get_name()
@@ -545,6 +565,10 @@ class CodeBertScore(GenerationMetric):
         f1_list = list(F1.numpy())
         return f1_list
 
+    def parse_output(self, output: str) -> str:
+        extracted = extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
+        return extract_number_from_text(extracted)
+
 
 def define_lang(outputs, targets):
     langs = [detect_language(target) for target in targets]
@@ -552,8 +576,7 @@ def define_lang(outputs, targets):
 
 
 CLASSIFICATION_METRIC_NAME_MAPPING = {
-    metric._get_name(): metric
-    for metric in ClassificationMetric.__subclasses__()
+    metric._get_name(): metric for metric in ClassificationMetric.__subclasses__()
 }
 
 GENERATION_METRIC_NAME_MAPPING = {
@@ -592,8 +615,9 @@ def validate_and_create_metric(
                 return CLASSIFICATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(
-                    CLASSIFICATION_METRIC_NAME_MAPPING.keys())}."
+                f"Available metrics: {
+                    ', '.join(CLASSIFICATION_METRIC_NAME_MAPPING.keys())
+                }."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
@@ -627,8 +651,9 @@ def validate_and_create_metric(
                 return GENERATION_METRIC_NAME_MAPPING[metric]()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
-                f"Available metrics: {', '.join(
-                    GENERATION_METRIC_NAME_MAPPING.keys())}."
+                f"Available metrics: {
+                    ', '.join(GENERATION_METRIC_NAME_MAPPING.keys())
+                }."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)

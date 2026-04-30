@@ -1,7 +1,7 @@
 from dirtyjson import DirtyJSONLoader
 from typing import Tuple
+
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.messages.ai import AIMessage
 
 
 def extract_answer(
@@ -55,13 +55,13 @@ def safe_template(template: str, **kwargs) -> str:
     return template.format(**escaped)
 
 
-def extract_json(text: str) -> dict | None:
-    """Extracts the first valid JSON with one text value from the `text`.
+def extract_json(text: str) -> dict | list | None:
+    """Extracts the first valid JSON (object or array) from the text.
 
     Args:
-        text (str): text with JSON-lke substrings.
+        text (str): text with JSON-like substrings.
     Returns:
-        result (dict | None): dict from JSON or None
+        result (dict | list | None): dict or list from JSON or None
             (if no valid JSON substrings found).
     """
 
@@ -72,13 +72,30 @@ def extract_json(text: str) -> dict | None:
 
     pos = 0
     while pos < len(text):
+        # Find both { and [
         start_pos = text.find("{", pos)
-        if start_pos == -1:
+        bracket_pos = text.find("[", pos)
+
+        # Get earliest position
+        if start_pos == -1 and bracket_pos == -1:
             break
+        elif start_pos == -1:
+            search_pos = bracket_pos
+        elif bracket_pos == -1:
+            search_pos = start_pos
+        else:
+            search_pos = min(start_pos, bracket_pos)
+
         try:
-            return dict(loader.decode(start_index=start_pos))
+            result = loader.decode(start_index=search_pos)
+            if isinstance(result, dict):
+                return dict(result)
+            elif isinstance(result, list):
+                return list(result)
         except Exception:
-            pos = start_pos + 1
+            pass
+
+        pos = search_pos + 1
 
     return None
 
@@ -118,21 +135,46 @@ def parse_assistant_response(answer: str) -> str:
         return answer.strip()
 
 
-def get_model_answer_extracted(llm: BaseLanguageModel, prompt: str) -> str:
-    """Gets `llm`'s response for the `prompt` and extracts the answer.
+from typing import Tuple
 
-    Args:
-        llm (BaseLanguageModel): LangChain language model.
-        prompt (str): prompt for the model.
-    Returns:
-        str: extracted answer or empty string if there is no final answer.
-    """
 
-    answer = llm.invoke(prompt)
+def get_model_answer_extracted(
+    llm: BaseLanguageModel,
+    prompt: str,
+    n: int = 1,
+    temperature=None,
+):
+    if temperature is not None:
+        llm = llm.bind(temperature=temperature)
 
-    if isinstance(answer, AIMessage):
-        answer = answer.content
+    if n == 1:
+        resp = llm.invoke(prompt)
+        text = resp.content if hasattr(resp, "content") else str(resp)
+        return parse_assistant_response(text)
 
-    answer = parse_assistant_response(answer)
+    if hasattr(llm, "generate"):
+        try:
+            llm_n = llm.bind(n=n)
+            result = llm_n.generate([prompt])
+            gens = result.generations[0]
 
-    return answer
+            outputs = []
+            for g in gens:
+                text = getattr(g, "text", str(g))
+                outputs.append(parse_assistant_response(text))
+
+            if len(outputs) >= n:
+                return outputs[:n]
+        except Exception:
+            pass
+
+    duplicated = [prompt] * n
+    responses = llm.batch(duplicated)
+
+    outputs = []
+    for r in responses:
+        text = r.content if hasattr(r, "content") else str(r)
+        outputs.append(parse_assistant_response(text))
+    outputs = list(dict.fromkeys(outputs))  # hard deduplication
+
+    return outputs

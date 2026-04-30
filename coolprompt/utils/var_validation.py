@@ -186,21 +186,12 @@ def validate_method(method: str | AutoPromptingMethod) -> AutoPromptingMethod:
         AutoPromptingMethod: The validated method instance.
 
     Raises:
-        ValueError: If method name is not registered.
-        TypeError: If `method` is neither a string nor an AutoPromptingMethod.
+        TypeError: If `method` is not a string.
+        ValueError: If `method` is not one of
+            ["hype", "hyper", "reflective", "distill", "compress"].
     """
-    if isinstance(method, str):
-        if method not in METHOD_REGISTRY:
-            error_msg = (
-                f"Unknown method: {method}. "
-                f"Available methods: {list(METHOD_REGISTRY.keys())}."
-            )
-            logger.error(error_msg)
-            raise ValueError(error_msg)
-        method_impl = METHOD_REGISTRY[method]
-    elif isinstance(method, AutoPromptingMethod):
-        method_impl = method
-    else:
+
+    if not isinstance(method, str):
         error_msg = (
             "Method must be a string or AutoPromptingMethod instance. "
             f"Provided: {type(method).__name__}."
