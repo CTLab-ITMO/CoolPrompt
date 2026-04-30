@@ -1,4 +1,5 @@
 from coolprompt.optimizer.hype.hype_method import HyPEMethod
+from coolprompt.optimizer.hype.hyper_method import HyPERMethod
 from coolprompt.optimizer.reflective_prompt.reflective_method import (
     ReflectiveMethod,
 )
@@ -10,6 +11,7 @@ from coolprompt.optimizer.prompt_compressor.compressor_method import (
 
 METHOD_REGISTRY = {
     "hype": HyPEMethod(),
+    "hyper": HyPERMethod(),
     "reflective": ReflectiveMethod(),
     "distill": DistillMethod(),
     "regps": ReGPSMethod(),
