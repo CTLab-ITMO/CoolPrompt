@@ -1,7 +1,7 @@
 from typing import override
 
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
-from coolprompt.optimizer.hype import hype_optimizer
+from coolprompt.optimizer.hype import HyPEOptimizer
 from coolprompt.utils.prompt_templates.hype_templates import (
     CLASSIFICATION_TASK_TEMPLATE_HYPE,
     GENERATION_TASK_TEMPLATE_HYPE,
@@ -28,24 +28,25 @@ class HyPEMethod(AutoPromptingMethod):
         """Run the HyPE prompt optimization.
 
         Args:
-            model: The language model to be optimized (e.g., a HuggingFace
-                model or similar).
+            model: The language model to be used by the optimizer.
             initial_prompt (str): The starting prompt text.
-            dataset_split (optional): Data split used by data‑driven methods;
-                not used by HyPE. Defaults to None.
-            evaluator (optional): Evaluator object for scoring prompts;
-                not used by HyPE. Defaults to None.
-            problem_description (str, optional): Natural language description
-                of the task to guide the evolution. Defaults to None.
-            **kwargs: Additional arguments passed through to `hype_optimizer`.
+            dataset_split (optional): Not used by HyPE.
+            evaluator (optional): Not used by HyPE.
+            problem_description (str, optional): Task description; passed as
+                meta information to the optimizer.
+            **kwargs: Additional arguments (ignored for backwards compatibility).
 
         Returns:
-            The optimized prompt result from `hype_optimizer`.
+            str: The optimized prompt string.
         """
-        return hype_optimizer(
-            model=model,
+        optimizer = HyPEOptimizer(model=model)
+        meta_info = None
+        if problem_description:
+            meta_info = {"problem_description": problem_description}
+        return optimizer.optimize(
             prompt=initial_prompt,
-            problem_description=problem_description,
+            meta_info=meta_info,
+            n_prompts=1,
         )
 
     def is_data_driven(self):
