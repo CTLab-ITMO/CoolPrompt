@@ -8,11 +8,6 @@ from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
-from coolprompt.optimizer.hype.hype import HyPEOptimizer
-from coolprompt.optimizer.hype.hyper import HyPEROptimizer
-from coolprompt.optimizer.reflective_prompt import reflectiveprompt
-from coolprompt.optimizer.regps import regps
-from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
     validate_model,
