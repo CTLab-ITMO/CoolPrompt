@@ -234,7 +234,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         ]
         return responses, worse_prompts, better_prompts
 
-    def _mutate(self) -> List[Prompt]:
+    def _mutate(self, epoch) -> List[Prompt]:
         """Elitist-based mutation with textual gradient.
 
         Returns:
@@ -259,7 +259,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             for response in responses
         ]
         population = [
-            Prompt(response, origin=PromptOrigin.MUTATED)
+            Prompt(response, origin=PromptOrigin.MUTATED, epoch=epoch)
             for response in responses
         ]
         return population
