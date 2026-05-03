@@ -6,13 +6,18 @@ from typing import Any, List, Optional
 from coolprompt.evaluator.evaluator import FailedExampleDetailed
 from coolprompt.utils.parsing import extract_json, get_model_answer_extracted
 from coolprompt.utils.prompt_templates.hyper_templates import FEEDBACK_PROMPT_TEMPLATE, FILTER_RECOMMENDATIONS_PROMPT
+from coolprompt.optimizer.structured_schemas.hype import (
+    RecommendationResponse,
+    FilteredRecommendationsResponse,
+)
 
 
 class FeedbackModule:
     """Generates recommendations for improving prompts based on failed examples."""
 
-    def __init__(self, model: Any) -> None:
+    def __init__(self, model: Any, use_structured_output: bool = False) -> None:
         self.model = model
+        self.use_structured_output = use_structured_output
 
     def generate_recommendation(
         self,
@@ -44,6 +49,11 @@ class FeedbackModule:
             metric_value=metric_value,
             ground_truth=ground_truth,
         )
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                RecommendationResponse, method="json_schema"
+            )
+            return structured.invoke(formatted_prompt).recommendation
         result = get_model_answer_extracted(self.model, formatted_prompt)
         return self._process_output(result)
 
@@ -91,6 +101,17 @@ class FeedbackModule:
         prompt = FILTER_RECOMMENDATIONS_PROMPT.format(
             recommendations=formatted_recs
         )
+        if self.use_structured_output:
+            try:
+                structured = self.model.with_structured_output(
+                    FilteredRecommendationsResponse, method="json_schema"
+                )
+                return list(structured.invoke(prompt).recommendations)
+            except Exception:
+                return random.sample(
+                    recommendations, min(3, len(recommendations))
+                )
+
         result = get_model_answer_extracted(self.model, prompt)
         try:
             data = extract_json(result)

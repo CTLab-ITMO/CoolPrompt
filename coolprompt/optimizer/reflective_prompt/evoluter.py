@@ -21,6 +21,14 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
 from coolprompt.utils.parsing import extract_answer, extract_json
+from coolprompt.optimizer.structured_schemas.reflective_prompt import (
+    InitialPromptResponse,
+    ParaphrasedPromptsResponse,
+    ShortTermHintResponse,
+    LongTermHintResponse,
+    CrossoverPromptResponse,
+    MutatedPromptResponse,
+)
 
 
 class ReflectiveEvoluter:
@@ -72,6 +80,7 @@ class ReflectiveEvoluter:
         output_path: str = "./reflectiveprompt_outputs",
         checkpoint_path: Optional[str] = None,
         use_cache: bool = True,
+        use_structured_output: bool = False,
     ) -> None:
         self.model = model
         self.evaluator = evaluator
@@ -86,6 +95,7 @@ class ReflectiveEvoluter:
         self.output_path = output_path
         self.initial_prompt = initial_prompt
         self.checkpoint_path = checkpoint_path
+        self.use_structured_output = use_structured_output
 
         self.elitist = None
         self._long_term_reflection_str = ""
@@ -150,6 +160,11 @@ class ReflectiveEvoluter:
         request = REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description
         )
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                InitialPromptResponse, method="json_schema"
+            )
+            return structured.invoke(request).prompt
         answer = self._llm_query([request])[0]
         return extract_answer(
             answer, self.PROMPT_TAGS, format_mismatch_label=""
@@ -184,8 +199,14 @@ class ReflectiveEvoluter:
         request = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE.format(
             PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
         )
-        answer = self._llm_query([request])[0]
-        prompts = extract_json(answer)["prompts"]
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                ParaphrasedPromptsResponse, method="json_schema"
+            )
+            prompts = structured.invoke(request).prompts
+        else:
+            answer = self._llm_query([request])[0]
+            prompts = extract_json(answer)["prompts"]
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
@@ -356,11 +377,19 @@ class ReflectiveEvoluter:
             worse_prompts.append(worse_prompt)
             better_prompts.append(better_prompt)
 
-        responses = self._llm_query(requests)
-        responses = [
-            extract_answer(response, self.HINT_TAGS, format_mismatch_label="")
-            for response in responses
-        ]
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                ShortTermHintResponse, method="json_schema"
+            )
+            responses = [r.hint for r in structured.batch(requests)]
+        else:
+            responses = self._llm_query(requests)
+            responses = [
+                extract_answer(
+                    response, self.HINT_TAGS, format_mismatch_label=""
+                )
+                for response in responses
+            ]
         return responses, worse_prompts, better_prompts
 
     def _crossover(
@@ -392,13 +421,19 @@ class ReflectiveEvoluter:
             )
             requests.append(request)
 
-        responses = self._llm_query(requests)
-        responses = [
-            extract_answer(
-                response, self.PROMPT_TAGS, format_mismatch_label=""
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                CrossoverPromptResponse, method="json_schema"
             )
-            for response in responses
-        ]
+            responses = [r.prompt for r in structured.batch(requests)]
+        else:
+            responses = self._llm_query(requests)
+            responses = [
+                extract_answer(
+                    response, self.PROMPT_TAGS, format_mismatch_label=""
+                )
+                for response in responses
+            ]
         crossed_population = [Prompt(response) for response in responses]
 
         assert len(crossed_population) == self.population_size
@@ -454,11 +489,16 @@ class ReflectiveEvoluter:
             NEW_SHORT_TERM_REFLECTIONS="\n".join(short_term_reflections),
         )
 
-        response = self._llm_query([request])[0]
-
-        self._long_term_reflection_str = extract_answer(
-            response, self.HINT_TAGS, format_mismatch_label=""
-        )
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                LongTermHintResponse, method="json_schema"
+            )
+            self._long_term_reflection_str = structured.invoke(request).hint
+        else:
+            response = self._llm_query([request])[0]
+            self._long_term_reflection_str = extract_answer(
+                response, self.HINT_TAGS, format_mismatch_label=""
+            )
 
     def _llm_query(self, requests: List[str]) -> List[str]:
         """Provides api to query requests to the model.
@@ -490,13 +530,22 @@ class ReflectiveEvoluter:
             LONG_TERM_REFLECTION=self._long_term_reflection_str,
             ELITIST_PROMPT=self.elitist.text,
         )
-        responses = self._llm_query([request] * self.population_size)
-        responses = [
-            extract_answer(
-                response, self.PROMPT_TAGS, format_mismatch_label=""
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                MutatedPromptResponse, method="json_schema"
             )
-            for response in responses
-        ]
+            responses = [
+                r.prompt
+                for r in structured.batch([request] * self.population_size)
+            ]
+        else:
+            responses = self._llm_query([request] * self.population_size)
+            responses = [
+                extract_answer(
+                    response, self.PROMPT_TAGS, format_mismatch_label=""
+                )
+                for response in responses
+            ]
         population = [
             Prompt(response, origin=PromptOrigin.MUTATED)
             for response in responses

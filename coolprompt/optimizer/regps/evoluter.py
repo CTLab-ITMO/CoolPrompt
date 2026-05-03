@@ -15,6 +15,11 @@ from coolprompt.utils.prompt_templates.regps_templates import (
     REGPS_TEXTUAL_GRADIENT_TEMPLATE,
     MUTATION_TEXTGRAD_TEMPLATE
 )
+from coolprompt.optimizer.structured_schemas.regps import (
+    TextualGradientResponse,
+    ShortTermHintResponse,
+    MutatedPromptResponse,
+)
 
 
 class ReGPSEvoluter(ReflectiveEvoluter):
@@ -65,7 +70,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         output_path: str = "./regps_outputs",
         use_cache: bool = True,
         bad_examples_number: int = 5,
-        checkpoint_path: Optional[str] = None
+        checkpoint_path: Optional[str] = None,
+        use_structured_output: bool = False,
     ) -> None:
         super().__init__(
             model,
@@ -80,7 +86,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             num_epochs,
             output_path,
             checkpoint_path,
-            use_cache
+            use_cache,
+            use_structured_output=use_structured_output,
         )
 
         self.bad_examples_num = bad_examples_number
@@ -141,6 +148,11 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             PROMPT=prompt.text,
             EXAMPLES=self._make_bad_examples(prompt.bad_examples)
         )
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                TextualGradientResponse, method="json_schema"
+            )
+            return structured.invoke(request).feedback
         return extract_answer(
             self._llm_query([request])[0],
             self.FEEDBACK_TAGS,
@@ -227,11 +239,19 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             feedbacks,
             self._make_output_path("feedbacks"),
         )
-        responses = self._llm_query(requests)
-        responses = [
-            extract_answer(response, self.HINT_TAGS, format_mismatch_label="")
-            for response in responses
-        ]
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                ShortTermHintResponse, method="json_schema"
+            )
+            responses = [r.hint for r in structured.batch(requests)]
+        else:
+            responses = self._llm_query(requests)
+            responses = [
+                extract_answer(
+                    response, self.HINT_TAGS, format_mismatch_label=""
+                )
+                for response in responses
+            ]
         return responses, worse_prompts, better_prompts
 
     def _mutate(self) -> List[Prompt]:
@@ -251,13 +271,22 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             ELITIST_PROMPT=self.elitist.text,
             FEEDBACK=feedback
         )
-        responses = self._llm_query([request] * self.population_size)
-        responses = [
-            extract_answer(
-                response, self.PROMPT_TAGS, format_mismatch_label=""
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                MutatedPromptResponse, method="json_schema"
             )
-            for response in responses
-        ]
+            responses = [
+                r.prompt
+                for r in structured.batch([request] * self.population_size)
+            ]
+        else:
+            responses = self._llm_query([request] * self.population_size)
+            responses = [
+                extract_answer(
+                    response, self.PROMPT_TAGS, format_mismatch_label=""
+                )
+                for response in responses
+            ]
         population = [
             Prompt(response, origin=PromptOrigin.MUTATED)
             for response in responses

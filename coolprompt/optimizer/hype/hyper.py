@@ -14,6 +14,9 @@ from coolprompt.evaluator.evaluator import (
     EvalResultDetailed,
 )
 from coolprompt.utils.prompt_templates.hyper_templates import PARAPHRASE_PROMPT
+from coolprompt.optimizer.structured_schemas.hype import (
+    ParaphrasedVariantResponse,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -91,11 +94,17 @@ class HyPEROptimizer(Optimizer):
         top_n_candidates: int = 3,
         k_samples: int = 3,
         mini_batch_size: int = 16,
+        use_structured_output: bool = False,
     ) -> None:
         super().__init__(model)
-        self.hype_module = HyPEOptimizer(model)
+        self.use_structured_output = use_structured_output
+        self.hype_module = HyPEOptimizer(
+            model, use_structured_output=use_structured_output
+        )
         self.evaluator = evaluator
-        self.feedback_module = FeedbackModule(model)
+        self.feedback_module = FeedbackModule(
+            model, use_structured_output=use_structured_output
+        )
         self.n_iterations = n_iterations
         self.patience = patience
         self.n_candidates = n_candidates
@@ -104,8 +113,19 @@ class HyPEROptimizer(Optimizer):
         self.mini_batch_size = mini_batch_size
 
     def _get_variants_from_best(self, best_prompt: str, n_candidates: int) -> List[str]:
+        query = PARAPHRASE_PROMPT.format(prompt=best_prompt)
+        if self.use_structured_output:
+            structured = self.model.bind(temperature=0.9).with_structured_output(
+                ParaphrasedVariantResponse, method="json_schema"
+            )
+            raw_outputs = [
+                r.paraphrased_prompt
+                for r in structured.batch([query] * n_candidates)
+            ]
+            raw_outputs = list(dict.fromkeys(raw_outputs))
+            return [best_prompt] + raw_outputs
         raw_result = get_model_answer_extracted(
-            self.model, PARAPHRASE_PROMPT.format(prompt=best_prompt), n=n_candidates, temperature=0.9
+            self.model, query, n=n_candidates, temperature=0.9
         )
         return [best_prompt] + [self._process_model_output(r) for r in raw_result]
 

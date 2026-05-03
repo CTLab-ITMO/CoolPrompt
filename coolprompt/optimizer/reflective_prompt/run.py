@@ -12,6 +12,7 @@ def reflectiveprompt(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: str = None,
+    use_structured_output: bool = False,
     **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
@@ -58,6 +59,7 @@ def reflectiveprompt(
         output_path=args["output_path"],
         checkpoint_path=args.get('checkpoint_path'),
         use_cache=args["use_cache"],
+        use_structured_output=use_structured_output,
     )
     logger.info("Starting ReflectivePrompt optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")

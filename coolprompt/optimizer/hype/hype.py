@@ -7,6 +7,7 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     HypeMetaPromptConfig,
     META_INFO_SECTION,
 )
+from coolprompt.optimizer.structured_schemas.hype import OptimizedPromptResponse
 
 
 def _build_full_meta_prompt_template(builder: HypeMetaPromptBuilder) -> str:
@@ -33,6 +34,7 @@ class HyPEOptimizer(Optimizer):
         model,
         config: Optional[HypeMetaPromptConfig] = None,
         meta_prompt: Optional[str] = None,
+        use_structured_output: bool = False,
     ) -> None:
         super().__init__(model)
         self.builder = HypeMetaPromptBuilder(config)
@@ -40,6 +42,7 @@ class HyPEOptimizer(Optimizer):
             self.meta_prompt = meta_prompt
         else:
             self.meta_prompt = _build_full_meta_prompt_template(self.builder)
+        self.use_structured_output = use_structured_output
 
     def get_section(self, name: str) -> Any:
         """
@@ -94,6 +97,16 @@ class HyPEOptimizer(Optimizer):
             Single optimized prompt string if n_prompts=1, else list of prompts.
         """
         query = self._format_meta_prompt(prompt, **(meta_info or {}))
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                OptimizedPromptResponse, method="json_schema"
+            )
+            if n_prompts == 1:
+                return structured.invoke(query).result_prompt
+            outputs = [
+                r.result_prompt for r in structured.batch([query] * n_prompts)
+            ]
+            return list(dict.fromkeys(outputs))
         raw_result = get_model_answer_extracted(self.model, query, n=n_prompts)
         if n_prompts == 1:
             return self._process_model_output(raw_result)
