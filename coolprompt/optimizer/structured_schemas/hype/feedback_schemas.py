@@ -1,7 +1,4 @@
-"""Structured-output schemas for HyPER FeedbackModule."""
-
 from typing import List
-
 from pydantic import BaseModel, Field
 
 

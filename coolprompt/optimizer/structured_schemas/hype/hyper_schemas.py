@@ -1,5 +1,3 @@
-"""Structured-output schema for HyPER paraphrasing step."""
-
 from pydantic import BaseModel, Field
 
 

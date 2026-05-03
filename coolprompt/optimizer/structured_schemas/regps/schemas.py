@@ -1,5 +1,3 @@
-"""Structured-output schemas for ReGPS-specific LLM calls."""
-
 from pydantic import BaseModel, Field
 
 

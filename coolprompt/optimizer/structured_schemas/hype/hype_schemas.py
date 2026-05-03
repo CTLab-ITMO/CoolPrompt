@@ -1,5 +1,3 @@
-"""Structured-output schema for HyPE optimizer."""
-
 from pydantic import BaseModel, Field
 
 

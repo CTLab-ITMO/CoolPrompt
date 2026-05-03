@@ -1,7 +1,4 @@
-"""Structured-output schemas for ReflectivePrompt LLM calls."""
-
 from typing import List
-
 from pydantic import BaseModel, Field
 
 
