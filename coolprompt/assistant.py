@@ -167,7 +167,6 @@ class PromptTuner:
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
         hype_meta_info: dict = None,
-        use_structured_output: bool = False,
         **kwargs,
     ) -> str:
         """Optimizes prompts using provided model.
@@ -246,14 +245,6 @@ class PromptTuner:
                 when left as None.
             geval_strict_mode (bool): When True, GEval behaves in strict mode
                 (binary pass/fail with threshold forced to 1).
-            use_structured_output (bool): If True, all LLM calls inside the
-                selected autoprompting method (HyPE, HyPER, ReflectivePrompt,
-                Re-GPS) will use LangChain's `with_structured_output(...)` with
-                Pydantic schemas defined in
-                `coolprompt.optimizer.structured_schemas` instead of relying on
-                XML-tag / JSON parsing of free-form text. Has no effect for the
-                `compress` method (already structured) and `distill` (legacy).
-                Defaults to False for backward compatibility.
             **kwargs (dict[str, Any]): other key-word arguments.
 
         Returns:
@@ -369,11 +360,7 @@ class PromptTuner:
             meta_info = hype_meta_info.copy() if hype_meta_info else {}
             if "problem_description" not in meta_info:
                 meta_info["problem_description"] = problem_description
-            hype_opt = HyPEOptimizer(
-                model=self._target_model,
-                use_structured_output=use_structured_output,
-                **kwargs,
-            )
+            hype_opt = HyPEOptimizer(model=self._target_model, **kwargs)
             final_prompt = hype_opt.optimize(
                 prompt=start_prompt,
                 meta_info=meta_info if meta_info else None,
@@ -385,7 +372,6 @@ class PromptTuner:
             hyper_optimizer = HyPEROptimizer(
                 model=self._target_model,
                 evaluator=evaluator,
-                use_structured_output=use_structured_output,
                 **kwargs,
             )
             final_prompt = hyper_optimizer.optimize(
@@ -400,7 +386,6 @@ class PromptTuner:
                 evaluator=evaluator,
                 problem_description=problem_description,
                 initial_prompt=start_prompt,
-                use_structured_output=use_structured_output,
                 **kwargs,
             )
         elif method is Method.REGPS:
@@ -410,7 +395,6 @@ class PromptTuner:
                 evaluator=evaluator,
                 problem_description=problem_description,
                 initial_prompt=start_prompt,
-                use_structured_output=use_structured_output,
                 **kwargs
             )
         elif method is Method.DISTILL:
