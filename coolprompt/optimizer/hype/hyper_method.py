@@ -2,15 +2,10 @@ from typing import override
 
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
 from coolprompt.optimizer.hype.hyper import HyPEROptimizer
-from coolprompt.utils.prompt_templates.hype_templates import (
-    CLASSIFICATION_TASK_TEMPLATE_HYPE,
-    GENERATION_TASK_TEMPLATE_HYPE,
-)
-from coolprompt.utils.enums import Task
 
 
 class HyPERMethod(AutoPromptingMethod):
-    """HyPER (Hypothesis‑Prompt Evolution with Refinement) method.
+    """HyPER (Hypothetical Prompt Enhancer with Refinement) method.
 
     Extends HyPE with iterative refinement: candidates are generated,
     evaluated on mini‑batches, and feedback (recommendations) is used
@@ -57,6 +52,7 @@ class HyPERMethod(AutoPromptingMethod):
         k_samples = kwargs.pop("k_samples", 3)
         mini_batch_size = kwargs.pop("mini_batch_size", 16)
 
+        hype_meta_info = kwargs.pop("hype_meta_info", None)
         optimizer = HyPEROptimizer(
             model=model,
             evaluator=evaluator,
@@ -68,47 +64,21 @@ class HyPERMethod(AutoPromptingMethod):
             mini_batch_size=mini_batch_size,
         )
 
-        meta_info = None
-        if problem_description:
-            meta_info = {"problem_description": problem_description}
+        meta_info = hype_meta_info.copy() if hype_meta_info else {}
+        if "problem_description" not in meta_info:
+            meta_info["problem_description"] = problem_description
 
         final_prompt, _ = optimizer.optimize(
             prompt=initial_prompt,
             dataset_split=dataset_split,
-            meta_info=meta_info,
+            meta_info=meta_info if meta_info else None,
         )
         return final_prompt
 
     def is_data_driven(self):
-        """HyPER relies on evaluation data, so it is data‑driven.
-
-        Returns:
-            bool: True.
-        """
         return True
 
     @property
     @override
     def name(self):
-        """Name identifier of the method.
-
-        Returns:
-            str: "hyper".
-        """
         return "hyper"
-
-    @override
-    def get_template(self, task):
-        """Return the HyPE‑style prompt template (shared with HyPER).
-
-        Args:
-            task (Task): CLASSIFICATION or GENERATION.
-
-        Returns:
-            str: Template string.
-        """
-        match task:
-            case Task.CLASSIFICATION:
-                return CLASSIFICATION_TASK_TEMPLATE_HYPE
-            case Task.GENERATION:
-                return GENERATION_TASK_TEMPLATE_HYPE

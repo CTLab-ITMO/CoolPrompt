@@ -47,19 +47,9 @@ class DistillMethod(AutoPromptingMethod):
         )
 
     def is_data_driven(self):
-        """Indicate whether this method requires data for optimization.
-
-        Returns:
-            bool: True because distillation requires a labeled dataset split.
-        """
         return True
 
     @property
     @override
     def name(self):
-        """Name identifier of the method.
-
-        Returns:
-            str: The string "distill".
-        """
         return "distill"

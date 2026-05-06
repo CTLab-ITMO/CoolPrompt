@@ -2,17 +2,12 @@ from typing import override
 
 from coolprompt.optimizer.apmethod import AutoPromptingMethod
 from coolprompt.optimizer.hype import HyPEOptimizer
-from coolprompt.utils.prompt_templates.hype_templates import (
-    CLASSIFICATION_TASK_TEMPLATE_HYPE,
-    GENERATION_TASK_TEMPLATE_HYPE,
-)
-from coolprompt.utils.enums import Task
 
 
 class HyPEMethod(AutoPromptingMethod):
-    """HyPE (Hypothesis‑Prompt Evolution) method for auto‑prompting.
+    """HyPE (Hypothetical Prompt Enhancer) method for auto‑prompting.
 
-    This method uses the HyPE optimizer to evolve an initial prompt without
+    This method uses the HyPE optimizer to refine an initial prompt without
     requiring a data‑driven training phase.
     """
 
@@ -34,51 +29,26 @@ class HyPEMethod(AutoPromptingMethod):
             evaluator (optional): Not used by HyPE.
             problem_description (str, optional): Task description; passed as
                 meta information to the optimizer.
-            **kwargs: Additional arguments (ignored for backwards compatibility).
+            **kwargs: Additional arguments, including hype_meta_info (dict).
 
         Returns:
             str: The optimized prompt string.
         """
-        optimizer = HyPEOptimizer(model=model)
-        meta_info = None
-        if problem_description:
-            meta_info = {"problem_description": problem_description}
+        hype_meta_info = kwargs.pop("hype_meta_info", None)
+        optimizer = HyPEOptimizer(model=model, **kwargs)
+        meta_info = hype_meta_info.copy() if hype_meta_info else {}
+        if "problem_description" not in meta_info:
+            meta_info["problem_description"] = problem_description
         return optimizer.optimize(
             prompt=initial_prompt,
-            meta_info=meta_info,
+            meta_info=meta_info if meta_info else None,
             n_prompts=1,
         )
 
     def is_data_driven(self):
-        """Indicate whether this method requires data for optimization.
-
-        Returns:
-            bool: False because HyPE is a data‑free method.
-        """
         return False
 
     @property
     @override
     def name(self):
-        """Name identifier of the method.
-
-        Returns:
-            str: The string "hype".
-        """
         return "hype"
-
-    @override
-    def get_template(self, task):
-        """Return the HyPE‑specific prompt template for a given task type.
-
-        Args:
-            task (Task): The task enum value (e.g., CLASSIFICATION, GENERATION).
-
-        Returns:
-            str: The corresponding template string.
-        """
-        match task:
-            case Task.CLASSIFICATION:
-                return CLASSIFICATION_TASK_TEMPLATE_HYPE
-            case Task.GENERATION:
-                return GENERATION_TASK_TEMPLATE_HYPE

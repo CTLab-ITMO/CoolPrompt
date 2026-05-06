@@ -26,7 +26,7 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods.
 
     This class provides a unified interface to run various prompt
-    optimization algorithms (HyPE, Reflective, Distill, Compress, ReGPS, etc.)
+    optimization algorithms (HyPE, HyPER, Reflective, Distill, Compress, ReGPS)
     on a target language model. It handles dataset splitting, metric
     evaluation, logging, and optional synthetic data generation.
     """
@@ -122,7 +122,7 @@ class PromptTuner:
     def run(
         self,
         start_prompt: str,
-        task: str | None = None,
+        task: Optional[str] = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
         method: str | AutoPromptingMethod = "hype",
@@ -160,12 +160,12 @@ class PromptTuner:
             target (Iterable[str] | Iterable[int] | None): Target labels
                 corresponding to the dataset. Required if `dataset` is given.
             method (str | AutoPromptingMethod): Optimization method.
-                Can be a registered name ("hype", "hyper", "reflective", "distill",
-                "compress", "regps") or an `AutoPromptingMethod` instance.
+                Can be a registered name (`hype`, `hyper`, `reflective`, `distill`,
+                `compress`, `regps`) or an `AutoPromptingMethod` instance.
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
-                "meteor" for generation. Special metrics: "llm_as_judge",
-                "geval".
+                "meteor" for generation. Special metrics `llm_as_judge` and
+                `geval` require additional configuration parameters below.
             problem_description (str | None): Natural language description
                 of the task. If None, it will be generated automatically
                 according to `problem_description_generation_method`.

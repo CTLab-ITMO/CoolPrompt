@@ -76,19 +76,9 @@ class CompressorMethod(AutoPromptingMethod):
         return result
 
     def is_data_driven(self) -> bool:
-        """Indicate whether this method requires data for optimization.
-
-        Returns:
-            bool: False because compression does not need a dataset.
-        """
         return False
 
     @property
     @override
     def name(self) -> str:
-        """Name identifier of the method.
-
-        Returns:
-            str: The string "compress".
-        """
         return "compress"

@@ -49,19 +49,9 @@ class ReflectiveMethod(AutoPromptingMethod):
         )
 
     def is_data_driven(self) -> bool:
-        """Indicate whether this method requires data for optimization.
-
-        Returns:
-            bool: True because reflective prompting needs a labeled dataset.
-        """
         return True
 
     @property
     @override
     def name(self) -> str:
-        """Name identifier of the method.
-
-        Returns:
-            str: The string "reflective".
-        """
         return "reflective"
