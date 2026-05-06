@@ -5,7 +5,7 @@ from coolprompt.optimizer.regps import regps
 
 
 class ReGPSMethod(AutoPromptingMethod):
-    """ReGPS (Recursive Guided Prompt Search) method for auto‑prompting.
+    """ReGPS (Reflective Evolutionary Gradient Prompting System) method for auto‑prompting.
 
     This method uses a recursive guided search to iteratively refine
     prompts based on evaluation feedback from a labeled dataset.
