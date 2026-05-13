@@ -1,9 +1,30 @@
+import inspect
 from typing import Any, Iterable
+
 from langchain_core.language_models.base import BaseLanguageModel
+
+from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+from coolprompt.optimizer.distill_prompt.distill_method import DistillMethod
+from coolprompt.optimizer.hype.hype_method import HyPEMethod
+from coolprompt.optimizer.hype.hyper_method import HyPERMethod
+from coolprompt.optimizer.prompt_compressor.compressor_method import (
+    CompressorMethod,
+)
+from coolprompt.optimizer.reflective_prompt.reflective_method import (
+    ReflectiveMethod,
+)
+from coolprompt.optimizer.regps.regps_method import ReGPSMethod
+from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.enums import Task, PD_Method
-from coolprompt.optimizer.apmethod import AutoPromptingMethod
-from coolprompt.optimizer.registry import METHOD_REGISTRY
+
+_METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
+    "hype": HyPEMethod,
+    "hyper": HyPERMethod,
+    "reflective": ReflectiveMethod,
+    "distill": DistillMethod,
+    "regps": ReGPSMethod,
+    "compress": CompressorMethod,
+}
 
 
 def validate_verbose(verbose: int) -> None:
@@ -176,35 +197,47 @@ def validate_target(target: Iterable | None, dataset: Iterable | None) -> None:
             raise ValueError(error_msg)
 
 
-def validate_method(method: str | AutoPromptingMethod) -> AutoPromptingMethod:
-    """Validate and return the AutoPromptingMethod instance.
+def validate_method(
+    method: str | AutoPromptingMethod | type[AutoPromptingMethod],
+) -> AutoPromptingMethod:
+    """Validate and return an ``AutoPromptingMethod`` instance.
 
     Args:
-        method (str | AutoPromptingMethod): Method name (string) or an instance.
+        method: Registered name, an existing instance, or a concrete subclass
+            (instantiated with no arguments).
 
     Returns:
-        AutoPromptingMethod: The validated method instance.
+        AutoPromptingMethod: A ready-to-use method instance.
 
     Raises:
         ValueError: If method name is not registered.
-        TypeError: If `method` is neither a string nor an AutoPromptingMethod.
+        TypeError: If ``method`` has an unsupported type or is abstract.
     """
 
     if isinstance(method, str):
-        if method not in METHOD_REGISTRY:
+        if method not in _METHOD_BY_NAME:
             error_msg = (
                 f"Unknown method: {method}. "
-                f"Available methods: {list(METHOD_REGISTRY.keys())}."
+                f"Available methods: {list(_METHOD_BY_NAME.keys())}."
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
-        method_impl = METHOD_REGISTRY[method]
+        method_impl = _METHOD_BY_NAME[method]()
     elif isinstance(method, AutoPromptingMethod):
         method_impl = method
+    elif isinstance(method, type) and issubclass(method, AutoPromptingMethod):
+        if method is AutoPromptingMethod or inspect.isabstract(method):
+            error_msg = (
+                "Method must be a concrete AutoPromptingMethod subclass, "
+                f"not {method.__name__}."
+            )
+            logger.error(error_msg)
+            raise TypeError(error_msg)
+        method_impl = method()
     else:
         error_msg = (
-            "Method must be a string or AutoPromptingMethod instance. "
-            f"Provided: {type(method).__name__}."
+            "Method must be a string, AutoPromptingMethod instance, or "
+            f"concrete AutoPromptingMethod subclass. Provided: {type(method).__name__}."
         )
         logger.error(error_msg)
         raise TypeError(error_msg)
@@ -273,7 +306,7 @@ def validate_run(
     task: str,
     dataset: Iterable | None,
     target: Iterable | None,
-    method: str | AutoPromptingMethod,
+    method: str | AutoPromptingMethod | type[AutoPromptingMethod],
     problem_description: str | None,
     problem_description_generation_method: str,
     validation_size: float,
@@ -285,7 +318,8 @@ def validate_run(
         task (str): Task type, one of "classification" or "generation".
         dataset (Iterable | None): Input dataset. Required for data‑driven methods.
         target (Iterable | None): Target labels matching the dataset.
-        method (str | AutoPromptingMethod): Optimization method name or instance.
+        method (str | AutoPromptingMethod | type[AutoPromptingMethod]):
+            Registered name, instance, or concrete subclass (called with no args).
         problem_description (str | None): Task description (may be required by some methods).
         problem_description_generation_method (str): Method to generate problem description,
             one of "base" or "dataset-based".

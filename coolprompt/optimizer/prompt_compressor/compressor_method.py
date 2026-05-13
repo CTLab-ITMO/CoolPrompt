@@ -1,6 +1,6 @@
 from typing import override
 
-from coolprompt.optimizer.apmethod import AutoPromptingMethod
+from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.optimizer.prompt_compressor import PromptCompressor
 
 

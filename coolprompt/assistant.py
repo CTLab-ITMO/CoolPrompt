@@ -19,7 +19,7 @@ from coolprompt.utils.enums import PD_Method
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 
-from coolprompt.optimizer.apmethod import AutoPromptingMethod
+from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 
 
 class PromptTuner:
@@ -125,7 +125,7 @@ class PromptTuner:
         task: Optional[str] = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
-        method: str | AutoPromptingMethod = "hype",
+        method: str | AutoPromptingMethod | type[AutoPromptingMethod] = "hype",
         metric: Optional[str] = None,
         problem_description: Optional[str] = None,
         problem_description_generation_method: str = "base",
@@ -159,9 +159,9 @@ class PromptTuner:
                 for training/validation. Required for data‑driven methods.
             target (Iterable[str] | Iterable[int] | None): Target labels
                 corresponding to the dataset. Required if `dataset` is given.
-            method (str | AutoPromptingMethod): Optimization method.
-                Can be a registered name (`hype`, `hyper`, `reflective`, `distill`,
-                `compress`, `regps`) or an `AutoPromptingMethod` instance.
+            method (str | AutoPromptingMethod | type[AutoPromptingMethod]):
+                Registered name (e.g. ``hype``), an instance, or a concrete subclass
+                (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
                 "meteor" for generation. Special metrics `llm_as_judge` and

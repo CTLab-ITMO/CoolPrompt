@@ -1,13 +1,13 @@
 from random import sample
 
 from coolprompt.data_generator.generator import SyntheticDataGenerator
-from coolprompt.method_evaluation.methods.autoprompting_method import (
-    AutoPromptingMethod,
+from coolprompt.optimizer.autoprompting_method import (
+    ConfiguredAutoPromptingMethod,
 )
 from coolprompt.optimizer.regps.run import regps
 
 
-class ReGPSMethod(AutoPromptingMethod):
+class ReGPSMethod(ConfiguredAutoPromptingMethod):
     """
     Interface for ReGPS method.
 

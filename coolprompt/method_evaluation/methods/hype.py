@@ -1,10 +1,10 @@
-from coolprompt.method_evaluation.methods.autoprompting_method import (
-    AutoPromptingMethod
+from coolprompt.optimizer.autoprompting_method import (
+    ConfiguredAutoPromptingMethod,
 )
 from coolprompt.optimizer.hype.hype import HyPEOptimizer
 
 
-class HyPEMethod(AutoPromptingMethod):
+class HyPEMethod(ConfiguredAutoPromptingMethod):
     """
     Interface for HyPE (Hypothetical Prompt Enhancer) method.
 

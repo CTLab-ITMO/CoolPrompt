@@ -3,6 +3,7 @@ from coolprompt.method_evaluation.methods.reflectiveprompt import (
 )
 from coolprompt.method_evaluation.methods.hype import HyPEMethod
 from coolprompt.method_evaluation.methods.hyper import HyPERMethod
+from coolprompt.method_evaluation.methods.regps import ReGPSMethod
 
 __all__ = [
     "ReflectivePromptMethod",

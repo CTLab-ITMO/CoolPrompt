@@ -45,11 +45,11 @@ def evaluate_method(
 
     match method:
         case "reflectiveprompt":
-            autoprompting_method = ReflectivePromptMethod(config)
+            autoprompting_method = ReflectivePromptMethod(model, config)
         case "hype":
-            autoprompting_method = HyPEMethod(config)
+            autoprompting_method = HyPEMethod(model, config)
         case "hyper":
-            autoprompting_method = HyPERMethod(config)
+            autoprompting_method = HyPERMethod(model, config)
         case _:
             raise ValueError(f"Unsupported method name: {method}")
 

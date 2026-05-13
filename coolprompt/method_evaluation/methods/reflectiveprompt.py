@@ -1,11 +1,11 @@
 from coolprompt.data_generator.generator import SyntheticDataGenerator
-from coolprompt.method_evaluation.methods.autoprompting_method import (
-    AutoPromptingMethod,
+from coolprompt.optimizer.autoprompting_method import (
+    ConfiguredAutoPromptingMethod,
 )
 from coolprompt.optimizer.reflective_prompt.run import reflectiveprompt
 
 
-class ReflectivePromptMethod(AutoPromptingMethod):
+class ReflectivePromptMethod(ConfiguredAutoPromptingMethod):
     """
     Interface for ReflectivePrompt method.
 

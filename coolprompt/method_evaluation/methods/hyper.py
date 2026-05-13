@@ -1,10 +1,10 @@
-from coolprompt.method_evaluation.methods.autoprompting_method import (
-    AutoPromptingMethod
+from coolprompt.optimizer.autoprompting_method import (
+    ConfiguredAutoPromptingMethod,
 )
 from coolprompt.optimizer.hype.hyper import HyPEROptimizer
 
 
-class HyPERMethod(AutoPromptingMethod):
+class HyPERMethod(ConfiguredAutoPromptingMethod):
     """
     Interface for HyPER (HyPE with Refinement) method.
 
