@@ -1,11 +1,25 @@
-from langchain_core.language_models import BaseLanguageModel
-import yaml
+from __future__ import annotations
 
-from coolprompt.method_evaluation.methods import (
-    ReflectivePromptMethod,
-    HyPEMethod,
-    HyPERMethod,
-)
+import yaml
+from langchain_core.language_models import BaseLanguageModel
+
+from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+from coolprompt.optimizer.distill_prompt import DistillMethod
+from coolprompt.optimizer.hype.hype import HyPEMethod
+from coolprompt.optimizer.hype.hyper import HyPERMethod
+from coolprompt.optimizer.prompt_compressor import CompressorMethod
+from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
+from coolprompt.optimizer.regps import ReGPSMethod
+
+_BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
+    "hype": HyPEMethod(),
+    "hyper": HyPERMethod(),
+    "reflectiveprompt": ReflectiveMethod(),
+    "reflective": ReflectiveMethod(),
+    "distill": DistillMethod(),
+    "compress": CompressorMethod(),
+    "regps": ReGPSMethod(),
+}
 
 
 def evaluate_method(
@@ -16,44 +30,38 @@ def evaluate_method(
     output_file_path: str = "./method_evaluation_output.yaml",
     saving_model_answers: bool = False,
 ) -> None:
-    """Evaluating autoprompting method.
-    Stores the results into output yaml file.
-        Path to file can be specified.
+    """Run a benchmark for an autoprompting method and write scores to YAML.
 
     Args:
-        method (str): Name of the method to evaluate.
-            Supported methods: ['reflectiveprompt', 'hype', 'hyper'].
-        config (dict | str): Either provided config
-            or string path to config yaml file.
-        start_prompt (str): start prompt.
-        output_file_path (str): Filepath to save the results.
-            Defaults to "./method_evaluation_output.yaml".
-        saving_model_answers (bool):
-            Either to save all model answers on test subset or not.
-            If True - the path to save-file can be provided through config
-                ("model_answers_output_path" parameter)
-                Defaults to "./model_answers.yaml".
-
-    Returns:
-        Tuple[List[str], List[str]]: loaded dataset and targets
+        method: One of
+            ``hype``, ``hyper``, ``reflective`` / ``reflectiveprompt``,
+            ``distill``, ``compress``, ``regps`` (same names as in
+            ``PromptTuner`` / ``validate_method`` where applicable).
+        model: LangChain language model used for optimization and evaluation.
+        config: Benchmark configuration dict or path to a YAML file.
+        start_prompt: Initial prompt string.
+        output_file_path: Where to write summary metrics and the final prompt.
+        saving_model_answers: If True, persist per-example model outputs on the
+            test split (see ``model_answers_output_path`` in config).
     """
 
     if isinstance(config, str):
-        config_file_path = config
-        with open(config_file_path, "r") as file:
+        with open(config, "r") as file:
             config = yaml.safe_load(file)
 
-    match method:
-        case "reflectiveprompt":
-            autoprompting_method = ReflectivePromptMethod(model, config)
-        case "hype":
-            autoprompting_method = HyPEMethod(model, config)
-        case "hyper":
-            autoprompting_method = HyPERMethod(model, config)
-        case _:
-            raise ValueError(f"Unsupported method name: {method}")
+    impl = _BENCHMARK_IMPL.get(method)
+    if impl is None:
+        raise ValueError(
+            f"Unsupported method name: {method}. "
+            f"Supported: {sorted(_BENCHMARK_IMPL.keys())}."
+        )
 
-    autoprompting_method.run(start_prompt)
+    out = impl.run(
+        model,
+        config,
+        start_prompt,
+        saving_model_answers=saving_model_answers,
+    )
 
     with open(output_file_path, "w") as file:
         yaml.safe_dump(
@@ -61,9 +69,9 @@ def evaluate_method(
                 "dataset": config["dataset"]["name"],
                 "configuration": config["dataset"]["configuration"],
                 "start_prompt": start_prompt,
-                "final_prompt": autoprompting_method.final_prompt,
-                "val_score": autoprompting_method.final_val_score,
-                "test_score": autoprompting_method.final_test_score,
+                "final_prompt": out["final_prompt"],
+                "val_score": out["val_score"],
+                "test_score": out["test_score"],
             },
             file,
         )

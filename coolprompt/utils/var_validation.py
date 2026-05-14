@@ -4,16 +4,12 @@ from typing import Any, Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
-from coolprompt.optimizer.distill_prompt.distill_method import DistillMethod
-from coolprompt.optimizer.hype.hype_method import HyPEMethod
-from coolprompt.optimizer.hype.hyper_method import HyPERMethod
-from coolprompt.optimizer.prompt_compressor.compressor_method import (
-    CompressorMethod,
-)
-from coolprompt.optimizer.reflective_prompt.reflective_method import (
-    ReflectiveMethod,
-)
-from coolprompt.optimizer.regps.regps_method import ReGPSMethod
+from coolprompt.optimizer.distill_prompt import DistillMethod
+from coolprompt.optimizer.hype.hype import HyPEMethod
+from coolprompt.optimizer.hype.hyper import HyPERMethod
+from coolprompt.optimizer.prompt_compressor import CompressorMethod
+from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
+from coolprompt.optimizer.regps import ReGPSMethod
 from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.logging_config import logger
 

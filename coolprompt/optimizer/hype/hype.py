@@ -1,6 +1,12 @@
-from abc import ABC, abstractmethod
-from typing import Any, List, Optional, Union
+from __future__ import annotations
 
+from abc import ABC, abstractmethod
+from typing import Any, List, Optional, Union, override
+
+from coolprompt.optimizer.autoprompting_method import (
+    AutoPromptingMethod,
+    BenchmarkContext,
+)
 from coolprompt.utils.parsing import extract_answer, get_model_answer_extracted
 from coolprompt.utils.prompt_templates.hyper_templates import (
     HypeMetaPromptBuilder,
@@ -120,3 +126,48 @@ class HyPEOptimizer(Optimizer):
             format_mismatch_label=output,
         )
         return result if isinstance(result, str) else str(result)
+
+
+class HyPEMethod(AutoPromptingMethod):
+    """HyPE (Hypothetical Prompt Enhancer) for ``PromptTuner`` / benchmarks."""
+
+    def optimize(
+        self,
+        model,
+        initial_prompt,
+        dataset_split=None,
+        evaluator=None,
+        problem_description=None,
+        **kwargs,
+    ):
+        hype_meta_info = kwargs.pop("hype_meta_info", None)
+        optimizer = HyPEOptimizer(model=model, **kwargs)
+        meta_info = hype_meta_info.copy() if hype_meta_info else {}
+        if "problem_description" not in meta_info:
+            meta_info["problem_description"] = problem_description
+        return optimizer.optimize(
+            prompt=initial_prompt,
+            meta_info=meta_info if meta_info else None,
+            n_prompts=1,
+        )
+
+    def run_configured_benchmark(
+        self,
+        ctx: BenchmarkContext,
+        start_prompt: str,
+    ) -> str:
+        meta = dict(ctx.config.get("meta_info", {}))
+        return self.optimize(
+            ctx.model,
+            start_prompt,
+            problem_description=ctx.config.get("problem_description"),
+            hype_meta_info=meta if meta else None,
+        )
+
+    def is_data_driven(self):
+        return False
+
+    @property
+    @override
+    def name(self):
+        return "hype"
