@@ -34,7 +34,7 @@ PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE_OLD = """You are an expert in LLM
 You are given a user's prompt and a few examples from problem dataset.
 User created this prompt to solve the task represented by given dataset.
 Write the detailed problem description for which that prompt was created. Feel free to use provided examples from the dataset to highlight the key features of the task. You can pay attention to answer format, problem's subject and scope and other aspects that may be crucial for better understanding.
-Remember, you should provide a very detailed problem description in order to make it understandable and clear as much as possible. 
+Remember, you should provide a very detailed problem description in order to make it understandable and clear as much as possible.
 Use only textual description. Do not add another data.
 
 User's prompt: {prompt}

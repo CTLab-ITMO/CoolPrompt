@@ -164,16 +164,14 @@ class ReflectiveEvoluter:
 
         logger.info("Initializing population...")
         if self.checkpoint_path is not None:
-            with open(f'{self.checkpoint_path}/population.yaml', 'r') as f:
+            with open(f"{self.checkpoint_path}/population.yaml", "r") as f:
                 data = yaml.safe_load(f)
             initial_population = [
-                Prompt.from_dict(prompt_data)
-                for prompt_data in data['prompts']
+                Prompt.from_dict(prompt_data) for prompt_data in data["prompts"]
             ]
             initial_population = self._reranking(initial_population)
             with open(
-                f'{self.checkpoint_path}/long_term_reflection.yaml',
-                'r'
+                f"{self.checkpoint_path}/long_term_reflection.yaml", "r"
             ) as f:
                 data = yaml.safe_load(f)
             self._long_term_reflection_str = data
@@ -190,8 +188,7 @@ class ReflectiveEvoluter:
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
         initial_population[-1] = Prompt(
-            self.initial_prompt,
-            origin=PromptOrigin.MANUAL
+            self.initial_prompt, origin=PromptOrigin.MANUAL
         )
         self._evaluation(initial_population)
         initial_population = self._reranking(initial_population)
@@ -222,9 +219,7 @@ class ReflectiveEvoluter:
             return
 
         best_score = population[0].score
-        average_score = statistics.mean(
-            [prompt.score for prompt in population]
-        )
+        average_score = statistics.mean([prompt.score for prompt in population])
         data = {
             "best_score": best_score,
             "average_score": average_score,
@@ -349,7 +344,7 @@ class ReflectiveEvoluter:
             parent_1 = population[i]
             parent_2 = population[i + 1]
 
-            (request, worse_prompt, better_prompt) = (
+            request, worse_prompt, better_prompt = (
                 self._gen_short_term_reflection_prompt(parent_1, parent_2)
             )
             requests.append(request)
@@ -377,7 +372,7 @@ class ReflectiveEvoluter:
         Returns:
             List[Prompt]: new crossed prompts population.
         """
-        (reflection_contents, worse_prompts, better_prompts) = (
+        reflection_contents, worse_prompts, better_prompts = (
             short_term_reflection_tuple
         )
         requests = []
@@ -394,9 +389,7 @@ class ReflectiveEvoluter:
 
         responses = self._llm_query(requests)
         responses = [
-            extract_answer(
-                response, self.PROMPT_TAGS, format_mismatch_label=""
-            )
+            extract_answer(response, self.PROMPT_TAGS, format_mismatch_label="")
             for response in responses
         ]
         crossed_population = [Prompt(response) for response in responses]
@@ -420,10 +413,8 @@ class ReflectiveEvoluter:
             self.best_score_overall = best_score
             self.best_prompt_overall = population[best_sample_idx].text
             self.elitist = population[best_sample_idx]
-            logger.info(
-                f"""Iteration {self.iteration}
-                Elitist score: {self.best_score_overall}"""
-            )
+            logger.info(f"""Iteration {self.iteration}
+                Elitist score: {self.best_score_overall}""")
             logger.debug(f"Elitist text:\n{self.elitist.text}")
 
     def _update_iter(self, population: List[Prompt]) -> None:
@@ -436,9 +427,7 @@ class ReflectiveEvoluter:
         logger.info(f"Best score: {self.best_score_overall}")
 
         population = self._reranking(population)
-        self._cache_population(
-            population, self._make_output_path("population")
-        )
+        self._cache_population(population, self._make_output_path("population"))
 
         self.iteration += 1
 
@@ -470,12 +459,12 @@ class ReflectiveEvoluter:
             List[str]: model answers.
         """
 
-        requests = [request.replace('\"', '\'') for request in requests]
+        requests = [request.replace('"', "'") for request in requests]
         answers = self.model.batch(requests)
 
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [
+            a.content if isinstance(a, AIMessage) else a for a in answers
+        ]
 
         return answers
 
@@ -492,9 +481,7 @@ class ReflectiveEvoluter:
         )
         responses = self._llm_query([request] * self.population_size)
         responses = [
-            extract_answer(
-                response, self.PROMPT_TAGS, format_mismatch_label=""
-            )
+            extract_answer(response, self.PROMPT_TAGS, format_mismatch_label="")
             for response in responses
         ]
         population = [

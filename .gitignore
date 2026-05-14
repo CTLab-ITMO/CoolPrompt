@@ -177,3 +177,5 @@ src/solutions/SPELL/data/*
 
 # Let's fix some directory for run logs
 run_logs/*
+
+coolprompt_test/*

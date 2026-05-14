@@ -1,3 +1,8 @@
+from src.prompts_scoring.model_loader import ModelLoader
+from src.utils.load_dataset_iterable import (
+    GENERATION_TASKS,
+    load_dataset_iterable,
+)
 import argparse
 import json
 import logging
@@ -8,10 +13,6 @@ import sys
 project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
 sys.path.append(project_root)
 
-from src.utils.load_dataset_iterable import (
-    GENERATION_TASKS,
-    load_dataset_iterable,
-)
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -47,7 +48,6 @@ with open(args.input_file_path, "r") as f:
 output_path = Path(args.output_file_path)
 output_path.parent.mkdir(parents=True, exist_ok=True)
 
-from src.prompts_scoring.model_loader import ModelLoader
 
 loader = ModelLoader(verbose=2)
 
@@ -83,9 +83,7 @@ for task_name, prompt in prompts_json.items():
         )
     )
 
-    score = loader.get_metrics(
-        candidate=prompt, dataset=dataset, target=target
-    )
+    score = loader.get_metrics(candidate=prompt, dataset=dataset, target=target)
 
     result[task_name] = {
         "metric": {"name": metric, "score": score},
@@ -98,6 +96,4 @@ for task_name, prompt in prompts_json.items():
 with open(output_path, "w") as output_file:
     json.dump(result, output_file, indent=4)
 
-logger.info(
-    f"Evaluation completed. Results written to {args.output_file_path}"
-)
+logger.info(f"Evaluation completed. Results written to {args.output_file_path}")

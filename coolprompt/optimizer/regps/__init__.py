@@ -1,5 +1,3 @@
-from coolprompt.optimizer.regps.run import regps
+from coolprompt.optimizer.regps.run import ReGPSMethod, regps
 
-__all__ = [
-    'regps'
-]
+__all__ = ["regps", "ReGPSMethod"]

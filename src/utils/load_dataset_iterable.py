@@ -80,9 +80,7 @@ def load_bbh(subtest: str, **kwargs) -> Tuple[Iterable, Iterable]:
     """
 
     if subtest is None:
-        raise ValueError(
-            "You must specify a subtest for using the BBH dataset"
-        )
+        raise ValueError("You must specify a subtest for using the BBH dataset")
     bbh = load_dataset("lukaemon/bbh", subtest, split="test")
     dataset = bbh["input"]
     targets = bbh["target"]

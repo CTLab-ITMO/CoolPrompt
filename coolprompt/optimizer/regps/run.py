@@ -1,6 +1,14 @@
-from typing import List, Tuple, Optional
+from random import sample
+from typing import List, Tuple, Optional, override
+
 from langchain_core.language_models import BaseLanguageModel
+
+from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.evaluator import Evaluator
+from coolprompt.optimizer.autoprompting_method import (
+    AutoPromptingMethod,
+    BenchmarkContext,
+)
 from coolprompt.optimizer.regps.evoluter import ReGPSEvoluter
 from coolprompt.utils.logging_config import logger
 
@@ -31,15 +39,15 @@ def regps(
     Returns:
         str: best evoluted prompt.
     """
-    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+    train_dataset, validation_dataset, train_targets, validation_targets = (
         dataset_split
     )
     args = {
         "population_size": 10,
         "num_epochs": 5,
-        "output_path": "./reflectiveprompt_outputs",
+        "output_path": "./regps_outputs",
         "use_cache": True,
-        "bad_examples_number": 5
+        "bad_examples_number": 5,
     }
     args.update(kwargs)
     evoluter = ReGPSEvoluter(
@@ -56,7 +64,7 @@ def regps(
         output_path=args["output_path"],
         use_cache=args["use_cache"],
         bad_examples_number=args["bad_examples_number"],
-        checkpoint_path=args.get('checkpoint_path')
+        checkpoint_path=args.get("checkpoint_path"),
     )
     logger.info("Starting Re-GPS optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")
@@ -64,3 +72,64 @@ def regps(
     final_prompt = evoluter.evolution()
     logger.info("Re-GPS optimization completed")
     return final_prompt
+
+
+class ReGPSMethod(AutoPromptingMethod):
+    """ReGPS method for auto‑prompting."""
+
+    def optimize(
+        self,
+        model,
+        initial_prompt,
+        dataset_split,
+        evaluator,
+        problem_description,
+        **kwargs,
+    ):
+        return regps(
+            model=model,
+            dataset_split=dataset_split,
+            evaluator=evaluator,
+            problem_description=problem_description,
+            initial_prompt=initial_prompt,
+            **kwargs,
+        )
+
+    def run_configured_benchmark(
+        self,
+        ctx: BenchmarkContext,
+        start_prompt: str,
+    ) -> str:
+        problem_description = ctx.config.get("problem_description")
+        if problem_description is None:
+            generator = SyntheticDataGenerator(ctx._system_model)
+            indices = sample(range(0, len(ctx.dataset_split[0])), 5)
+            examples = [
+                (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
+                for ind in indices
+            ]
+            problem_description = generator._generate_problem_description(
+                prompt=start_prompt, examples=examples
+            )
+        mc = ctx.config["method"]
+        return self.optimize(
+            ctx.model,
+            start_prompt,
+            dataset_split=ctx.dataset_split,
+            evaluator=ctx.evaluator,
+            problem_description=problem_description,
+            population_size=mc.get("population_size", 10),
+            num_epochs=mc.get("num_epochs", 5),
+            output_path=mc.get("output_path", "./regps_outputs"),
+            use_cache=mc.get("use_cache", True),
+            bad_examples_number=ctx.config.get("bad_examples_number", 5),
+            checkpoint_path=ctx.config.get("checkpoint_path"),
+        )
+
+    def is_data_driven(self):
+        return True
+
+    @property
+    @override
+    def name(self):
+        return "regps"

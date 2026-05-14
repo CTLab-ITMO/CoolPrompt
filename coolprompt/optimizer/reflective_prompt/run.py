@@ -1,6 +1,13 @@
-from typing import List, Tuple
+from typing import List, Tuple, override
+
 from langchain_core.language_models import BaseLanguageModel
+
+from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.evaluator import Evaluator
+from coolprompt.optimizer.autoprompting_method import (
+    AutoPromptingMethod,
+    BenchmarkContext,
+)
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
 from coolprompt.utils.deprecation import warn_deprecated
 from coolprompt.utils.logging_config import logger
@@ -34,7 +41,7 @@ def reflectiveprompt(
     """
 
     warn_deprecated("ReflectivePrompt")
-    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+    train_dataset, validation_dataset, train_targets, validation_targets = (
         dataset_split
     )
     args = {
@@ -56,7 +63,7 @@ def reflectiveprompt(
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],
-        checkpoint_path=args.get('checkpoint_path'),
+        checkpoint_path=args.get("checkpoint_path"),
         use_cache=args["use_cache"],
     )
     logger.info("Starting ReflectivePrompt optimization...")
@@ -65,3 +72,58 @@ def reflectiveprompt(
     final_prompt = evoluter.evolution()
     logger.info("ReflectivePrompt optimization completed")
     return final_prompt
+
+
+class ReflectiveMethod(AutoPromptingMethod):
+    """Reflective prompting method for auto‑prompting."""
+
+    def optimize(
+        self,
+        model,
+        initial_prompt,
+        dataset_split,
+        evaluator,
+        problem_description,
+        **kwargs,
+    ):
+        return reflectiveprompt(
+            model=model,
+            dataset_split=dataset_split,
+            evaluator=evaluator,
+            problem_description=problem_description,
+            initial_prompt=initial_prompt,
+            **kwargs,
+        )
+
+    def run_configured_benchmark(
+        self,
+        ctx: BenchmarkContext,
+        start_prompt: str,
+    ) -> str:
+        problem_description = ctx.config.get("problem_description")
+        if problem_description is None:
+            generator = SyntheticDataGenerator(ctx._system_model)
+            problem_description = generator._generate_problem_description(
+                prompt=start_prompt
+            )
+        mc = ctx.config["method"]
+        return self.optimize(
+            ctx.model,
+            start_prompt,
+            dataset_split=ctx.dataset_split,
+            evaluator=ctx.evaluator,
+            problem_description=problem_description,
+            population_size=mc.get("population_size", 10),
+            num_epochs=mc.get("num_epochs", 5),
+            output_path=mc.get("output_path", "./reflectiveprompt_outputs"),
+            use_cache=mc.get("use_cache", True),
+            checkpoint_path=ctx.config.get("checkpoint_path"),
+        )
+
+    def is_data_driven(self) -> bool:
+        return True
+
+    @property
+    @override
+    def name(self) -> str:
+        return "reflective"

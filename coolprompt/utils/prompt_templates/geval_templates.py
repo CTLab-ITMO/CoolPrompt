@@ -34,5 +34,5 @@ ACCURACY_QA_TEMPLATE = COMMON_TEMPLATE.format(
 2) Identify any factual errors, misconceptions, or incorrect interpretations in the response.
 3) Check if the response correctly uses terms and data.
 4) Determine if the response provides accurate information that aligns with the theme of the request.
-5) Assign a score based on the level of accuracy."""
+5) Assign a score based on the level of accuracy.""",
 )

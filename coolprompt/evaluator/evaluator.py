@@ -13,6 +13,26 @@ from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
+from coolprompt.evaluator.metrics import BaseMetric
+from coolprompt.utils.logging_config import logger
+from coolprompt.utils.enums import Task
+
+
+@dataclass
+class FailedExampleDetailed:
+    instance: str
+    assistant_answer: str
+    model_answer_parsed: Optional[str] = None
+    metric_value: float | int = 0.0
+    ground_truth: str | int = ""
+
+
+@dataclass
+class EvalResultDetailed:
+    aggregate_score: float
+    score_per_task: List[float | int] = None
+    failed_examples: List[FailedExampleDetailed] = None
+    raw_outputs: List[str] = None
 
 
 @dataclass
@@ -41,7 +61,11 @@ class Evaluator:
     """
 
     def __init__(
-            self, model: BaseLanguageModel, task: Task, metric: BaseMetric, batch_size: int = 25
+        self,
+        model: BaseLanguageModel,
+        task: Task,
+        metric: BaseMetric,
+        batch_size: int = 25,
     ) -> None:
         self.model = model
         self.task = task
@@ -139,10 +163,10 @@ class Evaluator:
         total_batches = (total + self.batch_size - 1) // self.batch_size
 
         with tqdm(
-                total=total,
-                desc="Evaluating",
-                unit="sample",
-                dynamic_ncols=True,
+            total=total,
+            desc="Evaluating",
+            unit="sample",
+            dynamic_ncols=True,
         ) as pbar:
             for start in range(0, total, self.batch_size):
                 end = min(start + self.batch_size, total)
@@ -155,14 +179,16 @@ class Evaluator:
                         break
                     except Exception as exception:
                         logger.warning(
-                            f"Batch {start // self.batch_size + 1}/{total_batches} "
+                            f"Batch {
+                                start // self.batch_size + 1}/{total_batches} "
                             f"failed on attempt {attempt + 1}/5: {exception}"
                         )
                         if attempt < 4:
                             sleep(60)
                         else:
                             raise RuntimeError(
-                                f"Batch {start // self.batch_size + 1}/{total_batches} failed after 5 attempts"
+                                f"Batch {
+                                    start // self.batch_size + 1}/{total_batches} failed after 5 attempts"
                             ) from exception
 
                 normalized_answers = [
@@ -171,14 +197,16 @@ class Evaluator:
                 ]
                 answers.extend(normalized_answers)
                 pbar.update(len(batch))
-                logger.debug(f"Batch {start // self.batch_size + 1}/{total_batches} processed")
+                logger.debug(
+                    f"Batch {start // self.batch_size + 1}/{total_batches} processed"
+                )
         return answers
 
     def _get_full_prompt(
-            self,
-            prompt: str,
-            sample: str,
-            template: Optional[str] = None,
+        self,
+        prompt: str,
+        sample: str,
+        template: Optional[str] = None,
     ) -> str:
         """Inserts parts of the prompt into the task template.
 

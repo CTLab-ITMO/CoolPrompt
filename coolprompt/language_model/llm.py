@@ -14,7 +14,7 @@ class DefaultLLM:
 
     @staticmethod
     def init(
-            langchain_config: dict[str, any] | None = None,
+        langchain_config: dict[str, any] | None = None,
     ) -> BaseLanguageModel:
         """Initialize the transformers-powered LangChain LLM.
 
@@ -36,6 +36,6 @@ class DefaultLLM:
             model_id=DEFAULT_MODEL_NAME,
             task="text-generation",
             pipeline_kwargs=generation_and_model_config,
-            model_kwargs={'dtype': 'float16'}
+            model_kwargs={"dtype": "float16"},
         )
         return ChatHuggingFace(llm=llm)

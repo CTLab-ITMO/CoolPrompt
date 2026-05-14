@@ -2,17 +2,11 @@ from typing import Optional, Tuple, List
 from datasets import load_dataset as load_dataset_hf, DatasetDict
 import pandas as pd
 
-TWEETEVAL_EMOTIONS = {
-    0: 'anger',
-    1: 'joy',
-    2: 'optimism',
-    3: 'sadness'
-}
+TWEETEVAL_EMOTIONS = {0: "anger", 1: "joy", 2: "optimism", 3: "sadness"}
 
 
 def code_to_text_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of CodeToText dataset.
 
@@ -40,10 +34,10 @@ def code_to_text_preproc(
 
     data["input_data"] = data.apply(
         lambda r: _replace_docstring_text_with_empty(r["code"], r["docstring"]),
-        axis=1
+        axis=1,
     )
 
-    data['target'] = data['docstring']
+    data["target"] = data["docstring"]
 
     if size:
         data = data.head(size)
@@ -52,8 +46,7 @@ def code_to_text_preproc(
 
 
 def concode_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of CONCODE dataset.
 
@@ -67,8 +60,8 @@ def concode_preproc(
     """
     data = pd.DataFrame(sample)
 
-    data['input_data'] = data['nl']
-    data['target'] = data['code']
+    data["input_data"] = data["nl"]
+    data["target"] = data["code"]
 
     if size:
         data = data.head(size)
@@ -77,8 +70,7 @@ def concode_preproc(
 
 
 def mediqa_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of MediQA dataset.
 
@@ -92,8 +84,8 @@ def mediqa_preproc(
     """
     data = pd.DataFrame(sample)
 
-    data['input_data'] = data["instruction"] + "\n" + data['input']
-    data['target'] = data['output']
+    data["input_data"] = data["instruction"] + "\n" + data["input"]
+    data["target"] = data["output"]
 
     if size:
         data = data.head(size)
@@ -102,8 +94,7 @@ def mediqa_preproc(
 
 
 def tweeteval_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of TweetEval (emotions) dataset.
 
@@ -117,10 +108,8 @@ def tweeteval_preproc(
     """
     data = pd.DataFrame(sample)
 
-    data['input_data'] = data['text']
-    data['target'] = data['label'].apply(
-        lambda x: TWEETEVAL_EMOTIONS[x]
-    )
+    data["input_data"] = data["text"]
+    data["target"] = data["label"].apply(lambda x: TWEETEVAL_EMOTIONS[x])
 
     if size:
         data = data.head(size)
@@ -129,8 +118,7 @@ def tweeteval_preproc(
 
 
 def squad_v2_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of SQUAD v2 dataset.
 
@@ -158,8 +146,7 @@ def squad_v2_preproc(
 
 
 def gsm8k_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of GSM8k dataset.
 
@@ -183,8 +170,7 @@ def gsm8k_preproc(
 
 
 def common_gen_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of CommonGen dataset.
 
@@ -207,8 +193,7 @@ def common_gen_preproc(
 
 
 def xsum_preproc(
-    sample: DatasetDict,
-    size: Optional[int] = None
+    sample: DatasetDict, size: Optional[int] = None
 ) -> pd.DataFrame:
     """Preprocessing of XSUM dataset.
 
@@ -233,7 +218,7 @@ def load_dataset(
     name: str,
     split: str,
     subset: Optional[str] = None,
-    size: Optional[int] = None
+    size: Optional[int] = None,
 ) -> Tuple[List[str], List[str]]:
     """Loading preprocessed dataset
 
@@ -256,8 +241,10 @@ def load_dataset(
         case "squad_v2":
             data = load_dataset_hf("rajpurkar/squad_v2")
             match split:
-                case "train": data = data[split]
-                case "test": data = data['validation']
+                case "train":
+                    data = data[split]
+                case "test":
+                    data = data["validation"]
             data = squad_v2_preproc(data, size)
         case "gsm8k":
             data = load_dataset_hf("openai/gsm8k", "main")
@@ -266,30 +253,34 @@ def load_dataset(
         case "common_gen":
             data = load_dataset_hf("allenai/common_gen")
             match split:
-                case "train": data = data[split]
-                case "test": data = data['validation']
+                case "train":
+                    data = data[split]
+                case "test":
+                    data = data["validation"]
             data = common_gen_preproc(data, size)
         case "xsum":
             data = load_dataset_hf("yairfeldman/xsum")
             data = data[split]
             data = xsum_preproc(data, size)
         case "tweeteval":
-            data = load_dataset_hf("cardiffnlp/tweet_eval", 'emotion')
+            data = load_dataset_hf("cardiffnlp/tweet_eval", "emotion")
             data = data[split]
             data = tweeteval_preproc(data, size)
         case "mediqa":
             data = load_dataset_hf("medalpaca/medical_meadow_mediqa")
-            data = data['train']
+            data = data["train"]
             match split:
-                case "train": data = data[:-660]
-                case "test": data = data[-660:]
+                case "train":
+                    data = data[:-660]
+                case "test":
+                    data = data[-660:]
             data = mediqa_preproc(data, size)
         case "code_to_text":
             data = load_dataset_hf("google/code_x_glue_ct_code_to_text", subset)
             data = data[split]
             data = code_to_text_preproc(data, size)
         case "concode":
-            data = load_dataset_hf('AhmedSSoliman/CodeXGLUE-CONCODE')
+            data = load_dataset_hf("AhmedSSoliman/CodeXGLUE-CONCODE")
             data = data[split]
             data = concode_preproc(data, size)
 

@@ -1,11 +1,17 @@
 """HyPEROptimizer: HyPE with iterative refinement via recommendations."""
 
+from __future__ import annotations
+
 import logging
 import random
-from typing import Any, List, Optional, Sequence, Tuple
+from typing import Any, List, Optional, Sequence, Tuple, override
 
 from tqdm import tqdm
 
+from coolprompt.optimizer.autoprompting_method import (
+    AutoPromptingMethod,
+    BenchmarkContext,
+)
 from coolprompt.optimizer.hype.hype import HyPEOptimizer, Optimizer
 from coolprompt.optimizer.hype.feedback_module import FeedbackModule
 from coolprompt.utils.parsing import get_model_answer_extracted
@@ -269,3 +275,80 @@ class HyPEROptimizer(Optimizer):
         logger.debug(f"{'='*60}")
 
         return best_prompt, iteration_history
+
+
+class HyPERMethod(AutoPromptingMethod):
+    """HyPER for ``PromptTuner`` / benchmarks (iterative refinement + HyPE)."""
+
+    def optimize(
+        self,
+        model,
+        initial_prompt,
+        dataset_split=None,
+        evaluator=None,
+        problem_description=None,
+        **kwargs,
+    ):
+        n_iterations = kwargs.pop("n_iterations", 5)
+        patience = kwargs.pop("patience", None)
+        n_candidates = kwargs.pop("n_candidates", 3)
+        top_n_candidates = kwargs.pop("top_n_candidates", 3)
+        k_samples = kwargs.pop("k_samples", 3)
+        mini_batch_size = kwargs.pop("mini_batch_size", 16)
+
+        hype_meta_info = kwargs.pop("hype_meta_info", None)
+        optimizer = HyPEROptimizer(
+            model=model,
+            evaluator=evaluator,
+            n_iterations=n_iterations,
+            patience=patience,
+            n_candidates=n_candidates,
+            top_n_candidates=top_n_candidates,
+            k_samples=k_samples,
+            mini_batch_size=mini_batch_size,
+        )
+
+        meta_info = hype_meta_info.copy() if hype_meta_info else {}
+        if "problem_description" not in meta_info:
+            meta_info["problem_description"] = problem_description
+
+        final_prompt, _ = optimizer.optimize(
+            prompt=initial_prompt,
+            dataset_split=dataset_split,
+            meta_info=meta_info if meta_info else None,
+        )
+        return final_prompt
+
+    def run_configured_benchmark(
+        self,
+        ctx: BenchmarkContext,
+        start_prompt: str,
+    ) -> str:
+        meta = dict(ctx.config.get("meta_info", {}))
+        if "task_description" not in meta:
+            td = ctx.config.get("problem_description")
+            if td is not None:
+                meta["task_description"] = td
+        mc = ctx.config.get("method", {})
+        return self.optimize(
+            ctx.model,
+            start_prompt,
+            dataset_split=ctx.dataset_split,
+            evaluator=ctx.evaluator,
+            problem_description=ctx.config.get("problem_description"),
+            hype_meta_info=meta if meta else None,
+            n_iterations=mc.get("n_iterations", 5),
+            patience=mc.get("patience", None),
+            n_candidates=mc.get("n_candidates", 3),
+            top_n_candidates=mc.get("top_n_candidates", 3),
+            k_samples=mc.get("k_samples", 3),
+            mini_batch_size=mc.get("mini_batch_size", 16),
+        )
+
+    def is_data_driven(self):
+        return True
+
+    @property
+    @override
+    def name(self):
+        return "hyper"

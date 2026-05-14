@@ -16,6 +16,7 @@ class Candidate:
         prompt (str): The text of the prompt.
         train_score (float): The training score associated with the prompt.
     """
+
     prompt: str
     train_score: float
 
@@ -73,7 +74,4 @@ class CandidateHistory:
         """
         if not self.candidates:
             raise ValueError("No candidates in history")
-        return max(
-            self.candidates,
-            key=lambda candidate: candidate.train_score
-        )
+        return max(self.candidates, key=lambda candidate: candidate.train_score)
