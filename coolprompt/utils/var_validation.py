@@ -5,8 +5,8 @@ from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
-from coolprompt.optimizer.hype.hype import HyPEMethod
-from coolprompt.optimizer.hype.hyper import HyPERMethod
+from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
+from coolprompt.optimizer.hyper.hyper import HyPERMethod
 from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
@@ -14,7 +14,7 @@ from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.logging_config import logger
 
 _METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
-    "hype": HyPEMethod,
+    "hyper_light": HyPERLightMethod,
     "hyper": HyPERMethod,
     "reflective": ReflectiveMethod,
     "distill": DistillMethod,
@@ -145,9 +145,9 @@ def validate_dataset(
             if method.is_data_driven():
                 error_msg = (
                     "Dataset must be non-empty when using data-driven "
-                    f"optimization method '{
-                        method.name}'. You can try using HyPE "
-                    "optimization ('hype' as method parameter) which "
+                    f"optimization method '{method.name}'. You can try using "
+                    "HyPER Light / meta-prompt single-shot "
+                    "('hyper_light' as method parameter) which "
                     "does not require any train dataset."
                 )
             else:

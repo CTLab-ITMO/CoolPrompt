@@ -5,14 +5,14 @@ from langchain_core.language_models import BaseLanguageModel
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
-from coolprompt.optimizer.hype.hype import HyPEMethod
-from coolprompt.optimizer.hype.hyper import HyPERMethod
+from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
+from coolprompt.optimizer.hyper.hyper import HyPERMethod
 from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
 
 _BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
-    "hype": HyPEMethod(),
+    "hyper_light": HyPERLightMethod(),
     "hyper": HyPERMethod(),
     "reflectiveprompt": ReflectiveMethod(),
     "reflective": ReflectiveMethod(),
@@ -34,7 +34,7 @@ def evaluate_method(
 
     Args:
         method: One of
-            ``hype``, ``hyper``, ``reflective`` / ``reflectiveprompt``,
+            ``hyper_light``, ``hyper``, ``reflective`` / ``reflectiveprompt``,
             ``distill``, ``compress``, ``regps`` (same names as in
             ``PromptTuner`` / ``validate_method`` where applicable).
         model: LangChain language model used for optimization and evaluation.

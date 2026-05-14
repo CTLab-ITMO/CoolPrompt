@@ -71,7 +71,7 @@ def run_hype_dataset() -> dict[str, Any]:
             cfg["task"],
             dataset,
             target,
-            "hype",
+            "hyper_light",
             cfg["metric"],
             cfg["problem_description"],
             verbose=2,

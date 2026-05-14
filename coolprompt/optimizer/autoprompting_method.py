@@ -41,9 +41,7 @@ class BenchmarkContext:
 def build_benchmark_context(
     model: BaseLanguageModel, config: dict[str, Any]
 ) -> BenchmarkContext:
-    """Load datasets from ``config`` and build an evaluator (same rules as old harness)."""
-
-    from coolprompt.utils.var_validation import validate_task
+    """Load datasets from ``config`` and build an evaluator"""
 
     data_split = config["dataset"]["configuration"].split("/")
     train_size = _parse_dataset_size(data_split[0])
@@ -66,6 +64,8 @@ def build_benchmark_context(
     test_dataset, test_target = load_dataset(
         config["dataset"]["name"], size=test_size, split="test"
     )
+
+    from coolprompt.utils.var_validation import validate_task
 
     task = validate_task(config["task"])
     metric = validate_and_create_metric(task, config["metric"])
@@ -111,7 +111,7 @@ class AutoPromptingMethod(ABC):
     @property
     @abstractmethod
     def name(self) -> str:
-        """Short method id (e.g. ``hype``, ``reflective``)."""
+        """Short method id (e.g. ``hyper_light``, ``reflective``)."""
         pass
 
     def get_template(self, task: Task) -> str:

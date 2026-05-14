@@ -26,7 +26,7 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods.
 
     This class provides a unified interface to run various prompt
-    optimization algorithms (HyPE, HyPER, Reflective, Distill, Compress, ReGPS)
+    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress, ReGPS)
     on a target language model. It handles dataset splitting, metric
     evaluation, logging, and optional synthetic data generation.
     """
@@ -125,7 +125,7 @@ class PromptTuner:
         task: Optional[str] = None,
         dataset: Optional[Iterable[str]] = None,
         target: Optional[Iterable[str] | Iterable[int]] = None,
-        method: str | AutoPromptingMethod | type[AutoPromptingMethod] = "hype",
+        method: str | AutoPromptingMethod | type[AutoPromptingMethod] = "hyper_light",
         metric: Optional[str] = None,
         problem_description: Optional[str] = None,
         problem_description_generation_method: str = "base",
@@ -142,7 +142,7 @@ class PromptTuner:
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
-        hype_meta_info: dict = None,
+        meta_prompt_context: dict = None,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -160,7 +160,7 @@ class PromptTuner:
             target (Iterable[str] | Iterable[int] | None): Target labels
                 corresponding to the dataset. Required if `dataset` is given.
             method (str | AutoPromptingMethod | type[AutoPromptingMethod]):
-                Registered name (e.g. ``hype``), an instance, or a concrete subclass
+                Registered name (e.g. ``hyper_light``), an instance, or a concrete subclass
                 (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
@@ -200,6 +200,9 @@ class PromptTuner:
             return_final_prompt (bool): If True, return the final prompt;
                 otherwise return None (the prompt is still stored in
                 `self.final_prompt`).
+            meta_prompt_context (dict | None): Optional extra key-value pairs
+                merged into the meta-info block for ``hyper_light`` (same role as
+                ``config['meta_info']`` in YAML benchmarks).
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -303,6 +306,9 @@ class PromptTuner:
             logger.info("No target provided")
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
+
+        if meta_prompt_context is not None:
+            kwargs = {**kwargs, "meta_prompt_context": meta_prompt_context}
 
         final_prompt = method_impl.optimize(
             model=self._target_model,

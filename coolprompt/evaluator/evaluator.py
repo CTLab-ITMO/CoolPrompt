@@ -13,9 +13,6 @@ from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
-from coolprompt.evaluator.metrics import BaseMetric
-from coolprompt.utils.logging_config import logger
-from coolprompt.utils.enums import Task
 
 
 @dataclass
@@ -25,23 +22,7 @@ class FailedExampleDetailed:
     model_answer_parsed: Optional[str] = None
     metric_value: float | int = 0.0
     ground_truth: str | int = ""
-
-
-@dataclass
-class EvalResultDetailed:
-    aggregate_score: float
-    score_per_task: List[float | int] = None
-    failed_examples: List[FailedExampleDetailed] = None
-    raw_outputs: List[str] = None
-
-
-@dataclass
-class FailedExampleDetailed:
-    instance: str
-    assistant_answer: str
-    model_answer_parsed: Optional[str] = None
-    metric_value: float | int = 0.0
-    ground_truth: str | int = ""
+    batch_index: int = -1
 
 
 @dataclass
@@ -146,6 +127,7 @@ class Evaluator:
                         model_answer_parsed=parsed_answers[i],
                         metric_value=score_per_task[i],
                         ground_truth=targets[i],
+                        batch_index=int(i),
                     )
                 )
 
