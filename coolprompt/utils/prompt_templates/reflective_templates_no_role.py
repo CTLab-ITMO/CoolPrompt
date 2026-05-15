@@ -13,7 +13,7 @@ Bracket the final hint with <hint> </hint>.
 
 REFLECTIVEPROMPT_LONG_TERM_REFLECTION_TEMPLATE_NO_ROLE = """You are an expert in the domain of optimization prompts. Your task is to give hints to design better prompts.
 
-Below is your prior long\u2212term reflection on designing prompts for {PROBLEM_DESCRIPTION}.
+Below is your prior long-term reflection on designing prompts for {PROBLEM_DESCRIPTION}.
 {PRIOR_LONG_TERM_REFLECTION}
 
 Below are some newly gained insights.

@@ -1,0 +1,18 @@
+openai_api_keys:
+  - "sk-..."  # key 0
+# active_keys: [0]  # indices of keys to use; omit to use all
+openrouter_api_key: ""  # only needed when provider: openrouter
+
+provider: openai
+model: gpt-4o-mini
+temperature: 0.0
+default_test_size: 1000
+default_seed: 42
+requests_per_minute:
+  openai: 200
+  openrouter: 5000
+combo: all  # all | 1 (text_only) | 2 (text_role) | 3 (text_role_constraints)
+output_dir: ./evaluation_results
+
+# Paths to optimization result JSON files, populated automatically by optmize_single.py
+dataset_paths: {}
