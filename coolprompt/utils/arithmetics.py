@@ -14,7 +14,21 @@ def mean(lst):
 
 
 def extract_number_from_text(text):
-    extracted = re.findall(r'-?\d+(?:\.\d+)?', text)
-    if len(extracted) == 0:
-        return ""
-    return extracted[-1]
+    numbers = re.findall(r"-?\d+(?:\.\d+)?", text)
+    return float(numbers[-1]) if numbers else None
+
+
+def normalize_text_for_exact_match(text):
+    """Normalize text for exact match comparison.
+
+    Args:
+        text: Input text string
+
+    Returns:
+        Normalized text string (lowercased, stripped, whitespace normalized)
+    """
+    if not isinstance(text, str):
+        text = str(text)
+    text = text.lower().strip()
+    text = re.sub(r"\s+", " ", text)
+    return text

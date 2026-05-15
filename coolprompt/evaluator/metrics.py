@@ -1,11 +1,9 @@
 from abc import ABC, abstractmethod
-import re
-from typing import Optional, Dict, List, Tuple
+from typing import Optional, Tuple, List, Dict, Sequence
 
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 from evaluate import load
-import numpy as np
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
 
@@ -14,6 +12,7 @@ from coolprompt.utils.arithmetics import (
     clip,
     extract_number_from_text,
     mean,
+    normalize_text_for_exact_match,
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.language_detection import detect_language
@@ -25,6 +24,7 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
     FLUENCY_TEMPLATE,
     RELEVANCE_TEMPLATE,
 )
+import re
 
 
 class HFEvaluateMetric(ABC):
@@ -42,29 +42,27 @@ class HFEvaluateMetric(ABC):
 
     def _compute_raw(
         self,
-        outputs: list[str | int],
-        targets: list[str | int],
-        dataset: Optional[list[str]] = None,
-    ) -> List[float]:
-        """Compute metric values from preprocessed model answers.
-        Returs a list of float values corresponding for each answer.
+        outputs: Sequence[str | int],
+        targets: Sequence[str | int],
+        dataset: Optional[Sequence[str]] = None,
+    ) -> float:
+        """Compute metric value from preprocessed model answers.
 
         Args:
             outputs (list[str|int]): Model predictions (text for generation,
             labels for classification)
             targets (list[str|int]): Ground truth labels
         Returns:
-            List[float]: List of float metrics (for each model answer).
+            float: Computed metric value
         """
 
-        return [
-            self._metric.compute(
-                predictions=[output],
-                references=[target],
-                **self._compute_kwargs_func([output], [target]),
-            )[self._return_parameter]
-            for output, target in zip(outputs, targets)
-        ]
+        result = self._metric.compute(
+            predictions=outputs,
+            references=targets,
+            **self._compute_kwargs_func(outputs, targets),
+        )
+        assert result is not None
+        return result[self._return_parameter]
 
 
 class BaseMetric(ABC):
@@ -80,28 +78,34 @@ class BaseMetric(ABC):
     """
 
     ANS_TAGS = ("<ans>", "</ans>")
+    FORMAT_MISMATCH_LABEL: int | str
 
     def __init__(self) -> None:
         """Initialize metric"""
 
         super().__init__()
 
+    @staticmethod
+    @abstractmethod
+    def _get_name() -> str:
+        """Returns the name of the metric."""
+        pass
+
     @abstractmethod
     def _compute_raw(
         self,
-        outputs: list[str | int],
-        targets: list[str | int],
-        dataset: Optional[list[str]] = None,
-    ) -> float | Tuple[float, List[Dict[str, str]]]:
-        """Compute metric values from preprocessed model answers.
-        Returs a list of float values corresponding for each answer.
+        outputs: Sequence[str | int],
+        targets: Sequence[str | int],
+        dataset: Optional[Sequence[str]] = None,
+    ) -> float | List[float]:
+        """Compute metric value from preprocessed model answers.
 
         Args:
             outputs (list[str|int]): Model predictions (text for generation,
             labels for classification)
             targets (list[str|int]): Ground truth labels
         Returns:
-            List[float]: List of float metrics (for each model answer).
+            float | List[float]: Computed metric value, or per-sample scores if available.
         """
         pass
 
@@ -122,42 +126,13 @@ class BaseMetric(ABC):
 
         pass
 
-    def _extract_bad_examples(
-        self,
-        results: List[float],
-        dataset: List[str],
-        outputs: List[str | int],
-        targets: List[str | int],
-        failed_examples: int
-    ) -> List[Dict[str, Tuple[str, str]]]:
-        """Taking bad examples via processed metrics.
-
-        Args:
-            outputs (list[str|int]): Model predictions (text for generation,
-            labels for classification)
-            targets (list[str|int]): Ground truth labels
-        Returns:
-            List[float]: List of float metrics (for each model answer).
-        """
-
-        indices = np.argsort(results)[:failed_examples]
-
-        return [
-            {
-                'input': dataset[ind],
-                'output': outputs[ind],
-                'correct': targets[ind]
-            }
-            for ind in indices
-        ]
-
     def compute(
         self,
-        outputs: list[str | int],
-        targets: list[str | int],
-        dataset: Optional[list[str]] = None,
-        failed_examples: Optional[int] = None
-    ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]]:
+        outputs: Sequence[str | int],
+        targets: Sequence[str | int],
+        dataset: Optional[Sequence[str]] = None,
+        failed_examples: Optional[int] = None,
+    ) -> float | Tuple[float, List[Dict]]:
         """Compute metric value from text model outputs
 
         Must be implemented by subclasses to handle input formatting.
@@ -166,8 +141,7 @@ class BaseMetric(ABC):
             outputs (list[str|int]): Model predictions (just text)
             targets (list[str|int]): Ground truth labels
         Returns:
-            float | Tuple[float, List[Dict[str, Tuple[str, str]]]]:
-                Computed metric value with/wo bad examples list
+            float: Computed metric value
         """
         output_labels = list(
             map(
@@ -181,22 +155,45 @@ class BaseMetric(ABC):
         encoded_output_labels, encoded_targets = self._encode_labels(
             output_labels, targets
         )
-
         results = self._compute_raw(
             encoded_output_labels, encoded_targets, dataset
         )
-
-        result = sum(results) / len(results)
-
-        if failed_examples:
+        if isinstance(results, list):
+            result = sum(results) / len(results)
+            if failed_examples:
+                return result, self._extract_bad_examples(
+                    results, dataset, output_labels, targets, failed_examples
+                )
+            return result
+        result = float(results)
+        if failed_examples and dataset:
+            per_sample = [
+                1.0 if str(o) == str(t) else 0.0
+                for o, t in zip(output_labels, targets)
+            ]
             return result, self._extract_bad_examples(
-                results,
-                dataset,
-                output_labels,
-                targets,
-                failed_examples,
+                per_sample, dataset, output_labels, targets, failed_examples
             )
         return result
+
+    def _extract_bad_examples(
+        self,
+        per_sample_scores: List[float],
+        dataset: Sequence[str],
+        output_labels: List,
+        targets: List,
+        top_k: int,
+    ) -> List[Dict]:
+        indexed = sorted(enumerate(per_sample_scores), key=lambda x: x[1])
+        worst = indexed[:top_k]
+        return [
+            {
+                "input": dataset[i] if dataset else "",
+                "output": str(output_labels[i]),
+                "correct": str(targets[i]),
+            }
+            for i, _ in worst
+        ]
 
     def __str__(self) -> str:
         return self._get_name()
@@ -221,7 +218,7 @@ class ClassificationMetric(BaseMetric):
         """Initialize metric"""
 
         super().__init__()
-        self.label_to_id = None
+        self.label_to_id: Optional[Dict[str, int]] = None
 
     def _encode_labels(
         self, output_labels: list[str | int], targets: list[str | int]
@@ -238,6 +235,7 @@ class ClassificationMetric(BaseMetric):
 
         if self.label_to_id is None:
             self.extract_labels(targets)
+        assert self.label_to_id is not None
 
         encoded_output_labels = [
             self.label_to_id[label] if label in self.label_to_id else -1
@@ -355,12 +353,16 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
     def _get_name():
         return "bertscore"
 
-    def __init__(self):
+    def __init__(self, batch_size: int = 8):
         super().__init__(self._get_name())
         self._compute_kwargs_func = lambda outputs, targets: {
-            "model_type": "bert-base-multilingual-cased"
+            "model_type": "bert-base-multilingual-cased",
+            "batch_size": batch_size,
         }
         self._return_parameter = "f1"
+
+    def _compute_raw(self, outputs, targets, dataset):
+        return super()._compute_raw(outputs, targets)
 
 
 class LLMAsJudge(GenerationMetric):
@@ -433,7 +435,7 @@ class LLMAsJudge(GenerationMetric):
             ]
             scores.append(mean(normalized))
 
-        return scores
+        return mean(scores)
 
 
 class GEvalMetric(GenerationMetric):
@@ -494,7 +496,12 @@ class GEvalMetric(GenerationMetric):
 
 
 class ExactMatchMetric(GenerationMetric):
-    """EM Metric for generation tasks."""
+    """EM Metric for generation tasks.
+
+    Supports both numerical and textual exact match:
+    - For numerical answers: extracts and compares numbers
+    - For textual answers: normalizes and compares text strings
+    """
 
     @staticmethod
     def _get_name():
@@ -503,15 +510,26 @@ class ExactMatchMetric(GenerationMetric):
     def __init__(self):
         super().__init__()
 
-    def _compute_raw(
-        self,
-        outputs: list[str | int],
-        targets: list[str | int],
-        dataset: Optional[list[str]] = None,
-    ) -> List[float]:
-        targets = [extract_number_from_text(item) for item in targets]
-        outputs = [extract_number_from_text(item) for item in outputs]
-        return [float(o == t) for o, t in zip(outputs, targets)]
+    def _compute_raw(self, outputs, targets, dataset):
+        matches = []
+
+        for output, target in zip(outputs, targets):
+            output_str = str(output)
+            target_str = str(target)
+
+            output_num = extract_number_from_text(output_str)
+            target_num = extract_number_from_text(target_str)
+
+            if output_num is not None and target_num is not None:
+                match = output_num == target_num
+            else:
+                output_normalized = normalize_text_for_exact_match(output_str)
+                target_normalized = normalize_text_for_exact_match(target_str)
+                match = output_normalized == target_normalized
+
+            matches.append(1.0 if match else 0.0)
+
+        return float(mean(matches)) if matches else 0.0
 
 
 def define_lang(outputs, targets):
@@ -533,7 +551,7 @@ def validate_and_create_metric(
     task: Task,
     metric: str | None,
     model: BaseLanguageModel | None = None,
-    **kwargs
+    **kwargs,
 ) -> BaseMetric:
     """
     Validates given metric in order to correspond the given task.
@@ -592,7 +610,12 @@ def validate_and_create_metric(
                     strict_mode=kwargs.get("geval_strict_mode", False),
                 )
             if metric in GENERATION_METRIC_NAME_MAPPING.keys():
-                return GENERATION_METRIC_NAME_MAPPING[metric]()
+                metric_cls = GENERATION_METRIC_NAME_MAPPING[metric]
+                if metric == "bertscore":
+                    return metric_cls(
+                        batch_size=kwargs.get("bertscore_batch_size", 4)
+                    )
+                return metric_cls()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
                 f"Available metrics: {', '.join(

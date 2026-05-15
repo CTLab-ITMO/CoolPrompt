@@ -11,6 +11,8 @@ def reflectiveprompt(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: str = None,
+    initial_role: str = None,
+    evolve_role: bool = True,
     **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
@@ -50,6 +52,8 @@ def reflectiveprompt(
         validation_targets=validation_targets,
         problem_description=problem_description,
         initial_prompt=initial_prompt,
+        initial_role=initial_role,
+        evolve_role=evolve_role,
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],

@@ -15,7 +15,7 @@ ag_labels = {
 }
 
 
-def squad_v2_preproc(sample, size: int = None):
+def squad_v2_preproc(sample, size: int = None, seed: int = None):
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["context"] + " " + data["question"]
@@ -26,67 +26,82 @@ def squad_v2_preproc(sample, size: int = None):
     data = data.dropna()
 
     if size:
-        data = data.head(size)
+        if seed is not None:
+            data = data.sample(frac=1, random_state=seed).head(size)
+        else:
+            data = data.head(size)
 
     return data
 
 
-def gsm8k_preproc(sample, size: int = None):
+def gsm8k_preproc(sample, size: int = None, seed: int = None):
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["question"]
     data["target"] = data["answer"].apply(lambda x: x.split("####")[1].strip())
 
     if size:
-        data = data.head(size)
+        if seed is not None:
+            data = data.sample(frac=1, random_state=seed).head(size)
+        else:
+            data = data.head(size)
 
     return data
 
 
-def common_gen_preproc(sample, size: int = None):
+def common_gen_preproc(sample, size: int = None, seed: int = None):
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["concepts"].apply(lambda x: str(x))
 
     if size:
-        data = data.head(size)
+        if seed is not None:
+            data = data.sample(frac=1, random_state=seed).head(size)
+        else:
+            data = data.head(size)
 
     return data
 
 
-def ag_news_preproc(sample, size: int = None):
+def ag_news_preproc(sample, size: int = None, seed: int = None):
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"text": "input_data", "label": "target"})
     if size:
-        data = data.head(size)
+        if seed is not None:
+            data = data.sample(frac=1, random_state=seed).head(size)
+        else:
+            data = data.head(size)
 
     return data
 
 
-def xsum_preproc(sample, size: int = None):
+def xsum_preproc(sample, size: int = None, seed: int = None):
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"document": "input_data", "summary": "target"})
     if size:
-        data = data.head(size)
+        if seed is not None:
+            data = data.sample(frac=1, random_state=seed).head(size)
+        else:
+            data = data.head(size)
 
     return data
 
 
-def load_dataset(name: str, size: int = None):
+def load_dataset(name: str, size: int = None, seed: int = None):
     def get_data():
         match name:
             case "squad_v2":
-                return squad_v2_preproc(squad_v2, size)
+                return squad_v2_preproc(squad_v2, size, seed)
             case "gsm8k":
-                return gsm8k_preproc(gsm8k, size)
+                return gsm8k_preproc(gsm8k, size, seed)
             case "common_gen":
-                return common_gen_preproc(common_gen, size)
+                return common_gen_preproc(common_gen, size, seed)
             case "ag_new":
-                return ag_news_preproc(ag_news, size)
+                return ag_news_preproc(ag_news, size, seed)
             case "xsum":
-                return xsum_preproc(xsum, size)
+                return xsum_preproc(xsum, size, seed)
 
     data = get_data()
     return list(data["input_data"]), list(data["target"])

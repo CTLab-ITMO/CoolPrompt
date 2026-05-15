@@ -174,3 +174,8 @@ src/solutions/SPELL/outputs/*
 # initial populations data
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
+
+# pipeline secrets contain API keys and proxy credentials
+notebooks/experiments/pipeline/config.yaml
+notebooks/experiments/pipeline/evaluation_config.yaml
+notebooks/experiments/pipeline/proxy_config.yaml

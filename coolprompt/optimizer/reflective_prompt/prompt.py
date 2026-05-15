@@ -1,5 +1,6 @@
+from dataclasses import dataclass
 from enum import Enum
-from typing import Type, List, Dict
+from typing import Type, List, Dict, Optional
 
 
 class PromptOrigin(Enum):
@@ -14,7 +15,7 @@ class PromptOrigin(Enum):
     MUTATED = "mutated"
 
     @classmethod
-    def from_string(cls: Type['PromptOrigin'], string: str) -> 'PromptOrigin':
+    def from_string(cls: Type["PromptOrigin"], string: str) -> "PromptOrigin":
         """Creates PromptOrigin variable from string description.
 
         Args:
@@ -26,6 +27,7 @@ class PromptOrigin(Enum):
         return cls(string.lower())
 
 
+@dataclass
 class BadExample:
     """Bad Example class
 
@@ -35,34 +37,38 @@ class BadExample:
         correct (str): correct output of the example.
     """
 
-    def __init__(self, input: str, output: str, correct: str):
-        self.input = input
-        self.output = output
-        self.correct = correct
+    input: str
+    output: str
+    correct: str
 
 
 class Prompt:
     def __init__(
         self,
         text: str,
+        role: str = "",
+        constraints: str = "",
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
-        score: float = None
+        score: Optional[float] = None,
     ) -> None:
         """Prompt class.
 
         Attributes:
             text (str): prompt text.
+            role (str): role assignment for the model. Defaults to "".
+            constraints (str): output format constraints. Defaults to "".
             origin (PromptOrigin, optional): prompt origin.
                 Defaults to PromptOrigin.EVOLUTED.
             score (float, optional): prompt evaluation score. Defaults to None.
             bad_examples (List[BadExample]): a list of
                 bad examples for the prompt.
         """
-
         self.text = text
+        self.role = role
+        self.constraints = constraints
         self.origin = origin
         self.score = score
-        self.bad_examples = []
+        self.bad_examples: List[BadExample] = []
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
@@ -70,21 +76,22 @@ class Prompt:
         Args:
             new_score (float): new prompt score to set.
         """
-
         self.score = float(new_score)
 
     def set_bad_examples(self, bad_examples: List[Dict[str, str]]) -> None:
-        """Stores provided bad examples.
-        """
-
-        self.bad_examples = [
-            BadExample(
-                input=example['input'],
-                output=example['output'],
-                correct=example['correct']
-            )
-            for example in bad_examples
-        ]
+        """Stores provided bad examples."""
+        self.bad_examples = (
+            [
+                BadExample(
+                    input=example["input"],
+                    output=example["output"],
+                    correct=example["correct"],
+                )
+                for example in bad_examples
+            ]
+            if bad_examples
+            else []
+        )
 
     def to_dict(self) -> dict:
         """Creates dictionary representation of prompt.
@@ -92,21 +99,21 @@ class Prompt:
         Returns:
             dict: created dictionary.
         """
-
-        result = {
-            'text': self.text,
-            'origin': self.origin.name
+        result: Dict[str, object] = {
+            "text": self.text,
+            "role": self.role,
+            "origin": self.origin.name,
         }
+        if self.constraints:
+            result["constraints"] = self.constraints
         if self.score is not None:
-            result['score'] = self.score
+            result["score"] = float(self.score)
         return result
 
     @classmethod
     def from_dict(
-        cls: Type['Prompt'],
-        data: dict,
-        origin: PromptOrigin = None
-    ) -> 'Prompt':
+        cls: Type["Prompt"], data: dict, origin: Optional[PromptOrigin] = None
+    ) -> "Prompt":
         """Creates Prompt variable from dictionary data.
 
         Args:
@@ -118,13 +125,14 @@ class Prompt:
         Returns:
             Prompt: created prompt variable.
         """
-
         if origin:
             data.update(origin=origin.name)
         return cls(
-            text=data['text'],
-            origin=PromptOrigin.from_string(data['origin']),
-            score=data.get('score', None),
+            text=data["text"],
+            role=data.get("role", ""),
+            constraints=data.get("constraints", ""),
+            origin=PromptOrigin.from_string(data["origin"]),
+            score=data.get("score", None),
         )
 
     def __str__(self) -> str:
@@ -134,5 +142,4 @@ class Prompt:
         Returns:
             str: string representation of prompt.
         """
-
         return f"{self.text}\t{self.score}"
