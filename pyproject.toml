@@ -60,3 +60,8 @@ Issues = "https://github.com/CTLab-ITMO/CoolPrompt/issues"
 Documentation = "https://github.com/CTLab-ITMO/CoolPrompt"
 Repository = "https://github.com/CTLab-ITMO/CoolPrompt"
 Changelog = "https://github.com/CTLab-ITMO/CoolPrompt/blob/master/CHANGELOG.md"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: needs OPENROUTER_API_KEY or OPENAI_API_KEY and network (OpenRouter by default)",
+]

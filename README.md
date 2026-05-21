@@ -25,7 +25,7 @@ CoolPrompt is a framework for automative prompting creation and optimization.
 
 ## Core features
 
-- **Optimize prompts** with our autoprompting optimizers: HyPE, RE-GPS, ReflectivePrompt *(deprecated)*, DistillPrompt *(deprecated)* 
+- **Optimize prompts** with our autoprompting optimizers: HyPER, RE-GPS, ReflectivePrompt *(deprecated)*, DistillPrompt *(deprecated)* 
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
 - **Generate synthetic evaluation data** when no input dataset is provided 
 - **Evaluate** prompts incorporating multiple metrics for both classification and generation tasks
