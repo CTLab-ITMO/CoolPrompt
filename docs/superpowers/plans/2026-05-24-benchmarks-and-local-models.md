@@ -1095,7 +1095,7 @@ BENCHMARKS = {
     },
     "agnews": {
         "start_prompt": _label_prompt(
-            "world, sports, business, technology"
+            "world, sports, business, sci/tech"
         ),
         "task": "classification",
         "metric": "accuracy",
