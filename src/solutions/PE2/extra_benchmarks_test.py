@@ -78,13 +78,19 @@ def main():
     parser.add_argument("--train-steps", type=int, default=3)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument(
+        "--backend",
+        default=None,
+        choices=["lmstudio", "openrouter"],
+        help="LLM backend (default: CP_BACKEND env or lmstudio)",
+    )
+    parser.add_argument(
         "--out",
         default="logs/extra_benchmarks_results.json",
     )
     args = parser.parse_args()
 
     methods = [args.method] if args.method else METHODS
-    llm = make_llm(args.model)
+    llm = make_llm(args.model, backend=args.backend)
     tasks = build_tasks(
         args.benchmark, methods, args.train_steps
     )

@@ -1,16 +1,22 @@
 """Model factory for benchmark runs.
 
-Local models are served by LM Studio's OpenAI-compatible
-server (default http://localhost:1234/v1). Load the target
-model in LM Studio first (`lms load <id>`), then pass its
-ladder key or API id via make_llm().
+Two backends, both OpenAI-compatible, selected by `backend`
+(or the CP_BACKEND env var; default "lmstudio"):
+
+- "lmstudio": local models served by LM Studio at
+  http://localhost:1234/v1 (override via CP_LMSTUDIO_URL).
+  Load the model first (`lms load <id>`). Free but slow, and
+  the MLX runtime is fragile under heavy structured-output
+  methods (pe2_sgr).
+- "openrouter": cloud models via https://openrouter.ai/api/v1
+  (needs CP_OPENROUTER_KEY). Fast, reliable structured output,
+  and safe to run with several --workers in parallel.
 
 A cross-family Anthropic slot is available when CP_ANTHROPIC_KEY
-is set; it is part of the thesis design but execution is
-local-only for now.
+is set.
 
-Model API ids below were captured from `GET /v1/models` on this
-machine (they match the `lms ls` identifiers).
+LM Studio model ids below were captured from `GET /v1/models`
+on this machine (they match the `lms ls` identifiers).
 """
 
 import os
@@ -20,6 +26,9 @@ from langchain_openai import ChatOpenAI
 
 LMSTUDIO_BASE_URL = os.environ.get(
     "CP_LMSTUDIO_URL", "http://localhost:1234/v1"
+)
+OPENROUTER_BASE_URL = os.environ.get(
+    "CP_OPENROUTER_URL", "https://openrouter.ai/api/v1"
 )
 
 # Capability ladder: logical name -> LM Studio API model id.
@@ -33,7 +42,18 @@ MODEL_LADDER = {
     "judge": "qwen3-30b-a3b-instruct-2507-mlx",
 }
 
-# Cross-family API slot (design only; needs CP_ANTHROPIC_KEY).
+# OpenRouter ladder: logical name -> OpenRouter model slug.
+# Mirrors the Qwen3 scaling study; cross-family + judge use
+# flagships with reliable structured-output support.
+OPENROUTER_LADDER = {
+    "weak": "qwen/qwen3-8b",
+    "mid": "qwen/qwen3-14b",
+    "strong": "qwen/qwen3-30b-a3b-instruct-2507",
+    "cross": "openai/gpt-4o-mini",
+    "judge": "qwen/qwen3-235b-a22b-2507",
+}
+
+# Cross-family API slot (needs CP_ANTHROPIC_KEY).
 ANTHROPIC_MODELS = {
     "claude-haiku": "claude-haiku-4-5-20251001",
 }
@@ -41,6 +61,7 @@ ANTHROPIC_MODELS = {
 
 def make_llm(
     name: str,
+    backend: str | None = None,
     temperature: float = 0.0,
     max_retries: int = 10,
     request_timeout: int = 600,
@@ -48,12 +69,14 @@ def make_llm(
     """Build a LangChain chat model for a benchmark run.
 
     Args:
-        name: A MODEL_LADDER key, an ANTHROPIC_MODELS key, or a
-            raw LM Studio API model id.
+        name: A ladder key ("weak"/"mid"/"strong"/"cross"/
+            "judge"), an ANTHROPIC_MODELS key, or a raw model id
+            for the selected backend.
+        backend: "lmstudio" or "openrouter". Defaults to the
+            CP_BACKEND env var, then "lmstudio".
         temperature: Sampling temperature.
         max_retries: Client-side retry count.
-        request_timeout: Per-request timeout (seconds); local
-            models can be slow, so the default is generous.
+        request_timeout: Per-request timeout (seconds).
 
     Returns:
         A configured BaseLanguageModel.
@@ -75,9 +98,25 @@ def make_llm(
             timeout=request_timeout,
         )
 
-    model_id = MODEL_LADDER.get(name, name)
+    backend = backend or os.environ.get("CP_BACKEND", "lmstudio")
+
+    if backend == "openrouter":
+        api_key = os.environ.get("CP_OPENROUTER_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "CP_OPENROUTER_KEY not set for openrouter backend"
+            )
+        return ChatOpenAI(
+            model=OPENROUTER_LADDER.get(name, name),
+            base_url=OPENROUTER_BASE_URL,
+            api_key=api_key,
+            temperature=temperature,
+            max_retries=max_retries,
+            request_timeout=request_timeout,
+        )
+
     return ChatOpenAI(
-        model=model_id,
+        model=MODEL_LADDER.get(name, name),
         base_url=LMSTUDIO_BASE_URL,
         api_key=os.environ.get("CP_LMSTUDIO_KEY", "lm-studio"),
         temperature=temperature,
