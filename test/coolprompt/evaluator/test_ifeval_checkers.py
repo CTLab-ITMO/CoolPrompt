@@ -1,9 +1,11 @@
+import json as _json
 import unittest
 
 from coolprompt.evaluator.ifeval_checkers import (
     check_instruction,
     SUPPORTED_INSTRUCTIONS,
 )
+from coolprompt.evaluator.metrics import IFEvalMetric
 
 
 class TestIFEvalCheckers(unittest.TestCase):
@@ -199,6 +201,56 @@ class TestIFEvalCheckers(unittest.TestCase):
         self.assertIn(
             "keywords:existence", SUPPORTED_INSTRUCTIONS
         )
+
+
+class TestIFEvalMetric(unittest.TestCase):
+    def _spec(self, ids, kwargs_list):
+        return _json.dumps(
+            {"instruction_id_list": ids, "kwargs": kwargs_list}
+        )
+
+    def test_all_constraints_satisfied_scores_one(self):
+        target = self._spec(
+            ["keywords:existence",
+             "change_case:english_lowercase"],
+            [{"keywords": ["fox"]}, {}],
+        )
+        metric = IFEvalMetric()
+        score = metric.compute(
+            outputs=["the quick brown fox"],
+            targets=[target],
+            dataset=["write about a fox"],
+        )
+        self.assertEqual(score, 1.0)
+
+    def test_one_constraint_failed_scores_zero(self):
+        target = self._spec(
+            ["keywords:existence",
+             "change_case:english_lowercase"],
+            [{"keywords": ["fox"]}, {}],
+        )
+        metric = IFEvalMetric()
+        score = metric.compute(
+            outputs=["The Quick Brown FOX"],
+            targets=[target],
+            dataset=["write about a fox"],
+        )
+        self.assertEqual(score, 0.0)
+
+    def test_mean_over_prompts(self):
+        t1 = self._spec(
+            ["keywords:existence"], [{"keywords": ["a"]}]
+        )
+        t2 = self._spec(
+            ["keywords:existence"], [{"keywords": ["zzz"]}]
+        )
+        metric = IFEvalMetric()
+        score = metric.compute(
+            outputs=["a", "a"],
+            targets=[t1, t2],
+            dataset=["", ""],
+        )
+        self.assertEqual(score, 0.5)
 
 
 if __name__ == "__main__":

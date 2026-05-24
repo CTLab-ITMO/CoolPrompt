@@ -23,7 +23,10 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
     FLUENCY_TEMPLATE,
     RELEVANCE_TEMPLATE,
 )
+import json
 import re
+
+from coolprompt.evaluator.ifeval_checkers import check_instruction
 
 
 class HFEvaluateMetric(ABC):
@@ -461,6 +464,53 @@ class ExactMatchMetric(GenerationMetric):
         targets = [extract_number_from_text(item) for item in targets]
         outputs = [extract_number_from_text(item) for item in outputs]
         return float(mean([o == t for o, t in zip(outputs, targets)]))
+
+
+class IFEvalMetric(GenerationMetric):
+    """IFEval prompt-level strict accuracy.
+
+    `targets` are JSON specs:
+        {"instruction_id_list": [...], "kwargs": [{...}, ...]}
+    A prompt scores 1.0 iff every listed instruction is
+    satisfied by the raw model output; the metric returns the
+    mean over prompts. Unlike other generation metrics, this
+    scores the raw output (no <ans> tag extraction).
+    """
+
+    FORMAT_MISMATCH_LABEL = ""
+
+    @staticmethod
+    def _get_name():
+        return "ifeval"
+
+    def __init__(self):
+        super().__init__()
+
+    def compute(self, outputs, targets, dataset=None):
+        return self._compute_raw(
+            list(map(str, outputs)),
+            list(map(str, targets)),
+            dataset,
+        )
+
+    def _compute_raw(self, outputs, targets, dataset):
+        per_prompt = []
+        for output, spec_json in zip(outputs, targets):
+            try:
+                spec = json.loads(spec_json)
+            except (ValueError, TypeError):
+                per_prompt.append(0.0)
+                continue
+            ids = spec.get("instruction_id_list", [])
+            kw_list = spec.get("kwargs", [{}] * len(ids))
+            satisfied = all(
+                check_instruction(iid, output, kw or {})
+                for iid, kw in zip(ids, kw_list)
+            )
+            per_prompt.append(
+                1.0 if satisfied and ids else 0.0
+            )
+        return float(mean(per_prompt)) if per_prompt else 0.0
 
 
 def define_lang(outputs, targets):
