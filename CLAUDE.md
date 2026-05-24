@@ -67,6 +67,80 @@ uv run python -m py_compile <file>
 - `utils/correction/` — language/grammar correction
 - `utils/var_validation.py` — input validation for `PromptTuner.run()`
 
+## Benchmarks
+
+`src/solutions/PE2/` contains a thesis benchmark suite that runs the four
+optimization methods (pe2, pe2_sgr, ape, opro) across nine datasets. Loaders
+live in `src/utils/` and return DataFrames with columns `input_data` / `target`.
+
+### Datasets
+
+| Name | Task | Metric | HuggingFace source id | Description |
+|------|------|--------|-----------------------|-------------|
+| ifeval | generation | ifeval | `google/IFEval` | Instruction following with verifiable constraints |
+| gsm8k | generation | em | `openai/gsm8k` | Grade-school math word problems |
+| svamp | generation | em | `ChilleD/SVAMP` | Arithmetic word problems |
+| sst2 | classification | accuracy | `stanfordnlp/sst2` | Movie review sentiment |
+| agnews | classification | accuracy | `fancyzhx/ag_news` | News topic classification |
+| trec | classification | accuracy | `OxAISH-AL-LLM/trec6` | Question type classification |
+| subj | classification | accuracy | `SetFit/subj` | Subjectivity classification |
+| rucola | classification | accuracy | `RussianNLP/rucola` | Russian linguistic acceptability |
+
+The `ifeval` metric (prompt-level strict accuracy over verifiable constraints)
+is implemented in `coolprompt/evaluator/metrics.py` (`IFEvalMetric`) and
+`coolprompt/evaluator/ifeval_checkers.py`. The loader filters IFEval to the
+instruction-type subset that coolprompt's checkers can verify.
+
+### Local model ladder
+
+Models are served by LM Studio's OpenAI-compatible server at
+`http://localhost:1234/v1` (override via `CP_LMSTUDIO_URL`).
+`src/solutions/PE2/local_models.py` exposes `make_llm(name)` which accepts
+a ladder key, an Anthropic model key, or a raw LM Studio model id.
+
+| Ladder key | LM Studio model id | Role |
+|------------|--------------------|------|
+| weak | `qwen/qwen3-1.7b` | Small/fast model |
+| mid | `qwen3-4b-instruct-2507-mlx` | Mid-size model (default for benchmarks) |
+| strong | `qwen/qwen3-14b` | Large local model |
+| cross | `openai/gpt-oss-20b` | Cross-family non-Qwen check |
+| judge | `qwen3-30b-a3b-instruct-2507-mlx` | Local judge for llm_as_judge metrics |
+
+An Anthropic cross-family slot (`claude-haiku`) is also wired up; set
+`CP_ANTHROPIC_KEY` to use it.
+
+### LM Studio setup
+
+```bash
+# Add lms to PATH if needed (one-time)
+export PATH="$HOME/.lmstudio/bin:$PATH"
+
+# Start the server and load a model
+lms server start
+lms load <model-id>   # e.g. lms load qwen3-4b-instruct-2507-mlx
+```
+
+### Running benchmarks
+
+```bash
+# Run all four methods on gsm8k, 50 samples, mid model
+uv run python src/solutions/PE2/extra_benchmarks_test.py \
+    --benchmark gsm8k --model mid --sample 50
+
+# Run a single method
+uv run python src/solutions/PE2/extra_benchmarks_test.py \
+    --benchmark sst2 --model mid --method pe2_sgr --sample 50
+```
+
+Key flags:
+- `--benchmark` — one of the dataset names above (required)
+- `--model` — ladder key or raw model id (default: `mid`)
+- `--method` — one of `pe2 pe2_sgr ape opro`; omit to run all four
+- `--sample` — number of rows sampled per run (default: 50, seed 42)
+- `--train-steps` — PE2 training steps (default: 3)
+- `--workers` — parallel task workers (default: 1)
+- `--out` — output JSON path (default: `logs/extra_benchmarks_results.json`)
+
 ## CI/CD
 
 - `.github/workflows/workflow.yml` — publishes to PyPI on version tags
