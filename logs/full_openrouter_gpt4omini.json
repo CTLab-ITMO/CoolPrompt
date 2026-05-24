@@ -1,0 +1,258 @@
+{
+  "svamp/pe2_sgr": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "svamp/pe2": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "svamp/ape": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "sst2/ape": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.9230769230769231,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Classify the input. Respond with exactly one of [positive, negative] inside <ans></ans> tags."
+  },
+  "sst2/pe2": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Classify the input. Respond with exactly one of [positive, negative] inside <ans></ans> tags."
+  },
+  "ifeval/ape": {
+    "metric": {
+      "name": "ifeval",
+      "start_score": 0.46153846153846156,
+      "final_metric": 0.6153846153846154
+    },
+    "prompt": "Please adhere strictly to all the guidelines provided in the request."
+  },
+  "agnews/ape": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.7692307692307693,
+      "final_metric": 0.7692307692307693
+    },
+    "prompt": "Classify the input. Respond with exactly one of [world, sports, business, sci/tech] inside <ans></ans> tags."
+  },
+  "sst2/pe2_sgr": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Classify the input. Respond with exactly one of [positive, negative] inside <ans></ans> tags."
+  },
+  "agnews/pe2": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.7692307692307693,
+      "final_metric": 0.8461538461538461
+    },
+    "prompt": "Classify the input based on its primary focus, considering overlaps between business, technology, gaming, and legal implications, particularly in sports and scientific discussions related to world history. Clearly define \"business\" as focusing on financial transactions and corporate actions, \"sci/tech\" as relating to technological advancements and scientific discussions, \"sports\" as pertaining to athletic events and figures, and \"world\" as encompassing broader historical and societal contexts. Respond with exactly one of [world, sports, business, sci/tech] inside <ans></ans> tags."
+  },
+  "sst2/opro": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.9230769230769231,
+      "final_metric": 1.0
+    },
+    "prompt": "Analyze the sentiment of the provided input text and classify it as either positive or negative. Your response should be concise and clearly indicate the sentiment by using only the words \"positive\" or \"negative.\" Ensure that your classification reflects the overall tone and implications of the input. Respond with your classification inside <ans></ans> tags."
+  },
+  "trec/ape": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.6153846153846154,
+      "final_metric": 0.6153846153846154
+    },
+    "prompt": "Classify the input. Respond with exactly one of [abbreviation, entity, description, human, location, number] inside <ans></ans> tags."
+  },
+  "agnews/pe2_sgr": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.8461538461538461,
+      "final_metric": 0.8461538461538461
+    },
+    "prompt": "Classify the input. Respond with exactly one of [world, sports, business, sci/tech] inside <ans></ans> tags."
+  },
+  "agnews/opro": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.8461538461538461,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Analyze the provided text and categorize it into one of the following categories: world, sports, business, or sci/tech. Ensure that your response is concise and clearly indicates the chosen category without any additional commentary. Use the format: <ans>category</ans>, where \"category\" is the appropriate classification based on the content of the input."
+  },
+  "trec/pe2": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.5384615384615384,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Classify the input question based on the type of answer it seeks. The categories are: [abbreviation, entity, description, human, location, number]. Respond with exactly one of these categories inside <ans></ans> tags. For example, questions seeking specific names or terms should be classified as \"entity,\" while those asking for definitions or explanations should be classified as \"description.\" Numerical queries should be classified as \"number.\" Ensure your classification aligns with the expected answer type for the question."
+  },
+  "gsm8k/pe2": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.9230769230769231,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "trec/pe2_sgr": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.6923076923076923,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Classify the input based on its content. If the input suggests a numerical response, classify it as 'number'. If the input is asking for a specific subject, item, or category, classify it as 'entity'. For inputs that describe characteristics, qualities, or general information, classify them as 'description'. If the input refers to a person, classify it as 'human'. For geographical references, classify them as 'location'. Respond with the appropriate classification inside <ans></ans> tags."
+  },
+  "subj/pe2": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.6923076923076923,
+      "final_metric": 0.8461538461538461
+    },
+    "prompt": "Classify the input as either factual (objective) or opinion-based (subjective). Focus on whether the statement presents a fact or an opinion. Respond with exactly one of [objective, subjective] inside <ans></ans> tags."
+  },
+  "trec/opro": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.6153846153846154,
+      "final_metric": 0.6923076923076923
+    },
+    "prompt": "Analyze the input question and determine its category. Provide a single classification from the following options: [abbreviation, entity, description, human, location, number]. Format your response by enclosing the classification in <ans></ans> tags. Ensure that your classification accurately reflects the primary focus of the question."
+  },
+  "rucola/ape": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.8461538461538461,
+      "final_metric": 0.8461538461538461
+    },
+    "prompt": "Classify the input. Respond with exactly one of [acceptable, unacceptable] inside <ans></ans> tags."
+  },
+  "subj/pe2_sgr": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.7692307692307693,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Classify the input based on whether it conveys a personal opinion or perspective (subjective) or presents a factual statement or observation (objective). Respond with exactly one of [objective, subjective] inside <ans></ans> tags."
+  },
+  "svamp/opro": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "rucola/pe2": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.6923076923076923,
+      "final_metric": 0.8461538461538461
+    },
+    "prompt": "Classify the input based on its content. An input is considered 'acceptable' if it contains neutral or positive information, such as factual statements, constructive opinions, or supportive comments. An input is considered 'unacceptable' if it contains negative, harmful, or derogatory information, such as insults, hate speech, or misinformation. Respond with exactly one of [acceptable, unacceptable] inside <ans></ans> tags."
+  },
+  "rucola/pe2_sgr": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.7692307692307693,
+      "final_metric": 0.7692307692307693
+    },
+    "prompt": "Classify the input based on its factual accuracy, relevance, positivity, or emotional appropriateness. Determine whether the statement is valid and appropriate in context. Respond with exactly one of [acceptable, unacceptable] inside <ans></ans> tags."
+  },
+  "subj/opro": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.7692307692307693,
+      "final_metric": 0.7692307692307693
+    },
+    "prompt": "Classify the input. Respond with exactly one of [objective, subjective] inside <ans></ans> tags."
+  },
+  "ifeval/pe2_sgr": {
+    "metric": {
+      "name": "ifeval",
+      "start_score": 0.6923076923076923,
+      "final_metric": 0.6923076923076923
+    },
+    "prompt": "Follow all instructions in the request exactly."
+  },
+  "rucola/opro": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.5384615384615384,
+      "final_metric": 0.6923076923076923
+    },
+    "prompt": "Analyze the input sentence and determine whether it conveys a coherent thought or idea. Classify the input as either \"acceptable\" if it is meaningful and contextually appropriate, or \"unacceptable\" if it lacks clarity or relevance. Provide your response in a clear and concise manner, using only the words \"acceptable\" or \"unacceptable\" without any additional commentary or formatting."
+  },
+  "ifeval/pe2": {
+    "metric": {
+      "name": "ifeval",
+      "start_score": 0.7692307692307693,
+      "final_metric": 0.7692307692307693
+    },
+    "prompt": "Follow all instructions in the request exactly, ensuring that any specific requirements such as word count, formatting, or keyword usage are strictly adhered to. Be mindful of any forbidden words or phrases that must not be included in the output. Ensure that the output aligns with the style or tone specified in the request, and that it meets any additional criteria provided, such as the number of sections or the use of specific languages or cases. Your response should be clear, engaging, and relevant to the task at hand, while also being mindful of the audience and purpose of the content being created."
+  },
+  "ifeval/opro": {
+    "metric": {
+      "name": "ifeval",
+      "start_score": 0.6923076923076923,
+      "final_metric": 0.6153846153846154
+    },
+    "prompt": "{\"instruction_id_list\": [\"follow_instructions:exact\", \"detectable_format:json_format\"], \"kwargs\": [{\"strict_follow\": true}, {}]}"
+  },
+  "subj/ape": {
+    "metric": {
+      "name": "accuracy",
+      "start_score": 0.6923076923076923,
+      "final_metric": 0.7692307692307693
+    },
+    "prompt": "Analyze the provided input and categorize it as either [objective] or [subjective]. Please enclose your response within <ans></ans> tags, ensuring that you provide only one of the two classifications."
+  },
+  "gsm8k/ape": {
+    "metric": {
+      "name": "em",
+      "start_score": 1.0,
+      "final_metric": 1.0
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "gsm8k/pe2_sgr": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.9230769230769231,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Solve the problem. Put only the final numeric answer inside <ans></ans> tags."
+  },
+  "gsm8k/opro": {
+    "metric": {
+      "name": "em",
+      "start_score": 0.8461538461538461,
+      "final_metric": 0.9230769230769231
+    },
+    "prompt": "Carefully analyze the problem statement to extract all relevant numerical values and relationships. Break down the problem into clear, logical steps, ensuring that each calculation is performed accurately. As you work through the problem, maintain a focus on clarity and coherence in your reasoning. Once you have completed your calculations, present the final numeric answer in a concise format, enclosed within <ans></ans> tags. Additionally, briefly summarize the key steps taken to arrive at the answer, ensuring that your explanation is straightforward and easy to follow. Double-check your work for accuracy before finalizing your response."
+  }
+}
