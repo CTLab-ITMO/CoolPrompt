@@ -1,3 +1,5 @@
+import json
+import re
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -23,9 +25,6 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
     FLUENCY_TEMPLATE,
     RELEVANCE_TEMPLATE,
 )
-import json
-import re
-
 from coolprompt.evaluator.ifeval_checkers import check_instruction
 
 
@@ -476,8 +475,6 @@ class IFEvalMetric(GenerationMetric):
     mean over prompts. Unlike other generation metrics, this
     scores the raw output (no <ans> tag extraction).
     """
-
-    FORMAT_MISMATCH_LABEL = ""
 
     @staticmethod
     def _get_name():
