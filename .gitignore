@@ -175,3 +175,6 @@ src/solutions/SPELL/outputs/*
 # initial populations data
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
+
+# macOS
+.DS_Store
