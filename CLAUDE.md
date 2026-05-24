@@ -70,7 +70,7 @@ uv run python -m py_compile <file>
 ## Benchmarks
 
 `src/solutions/PE2/` contains a thesis benchmark suite that runs the four
-optimization methods (pe2, pe2_sgr, ape, opro) across nine datasets. Loaders
+optimization methods (pe2, pe2_sgr, ape, opro) across eight datasets. Loaders
 live in `src/utils/` and return DataFrames with columns `input_data` / `target`.
 
 ### Datasets
