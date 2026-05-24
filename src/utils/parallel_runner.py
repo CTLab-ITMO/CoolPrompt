@@ -53,8 +53,10 @@ class ParallelBenchmarkRunner:
         sample_fn: Callable[
             [pd.DataFrame], pd.DataFrame
         ] | None = None,
+        system_llm=None,
     ):
         self._llm = llm
+        self._system_llm = system_llm
         self._output_path = output_path
         self._max_workers = max_workers
         self._sample_fn = sample_fn
@@ -171,8 +173,13 @@ class ParallelBenchmarkRunner:
             self._record(task.key, {"error": str(e)})
             return
 
-        # Fresh PromptTuner per task (mutable state)
-        pt = PromptTuner(self._llm)
+        # Fresh PromptTuner per task (mutable state). When a
+        # system_llm is provided it is the optimizer model
+        # (proposers); self._llm is the target/runtime model.
+        pt = PromptTuner(
+            target_model=self._llm,
+            system_model=self._system_llm,
+        )
 
         # Build extra kwargs, removing 'method' from
         # run_kwargs and adding train data if available

@@ -78,7 +78,17 @@ def main():
             f"({', '.join(BENCHMARKS)})"
         ),
     )
-    parser.add_argument("--model", default="mid")
+    parser.add_argument(
+        "--model", default="mid",
+        help="Target/runtime model (the prompt is optimized FOR it)",
+    )
+    parser.add_argument(
+        "--opt-model", default=None,
+        help=(
+            "Optimizer/system model that proposes prompts. If "
+            "omitted, the target model does everything."
+        ),
+    )
     parser.add_argument(
         "--method", default=None, choices=METHODS
     )
@@ -112,10 +122,15 @@ def main():
 
     methods = [args.method] if args.method else METHODS
     llm = make_llm(args.model, backend=args.backend)
+    system_llm = (
+        make_llm(args.opt_model, backend=args.backend)
+        if args.opt_model else None
+    )
     tasks = build_tasks(benchmarks, methods, args.train_steps)
 
     runner = ParallelBenchmarkRunner(
         llm=llm,
+        system_llm=system_llm,
         max_workers=args.workers,
         sample_fn=_sample_fn(args.sample),
         output_path=Path(args.out),

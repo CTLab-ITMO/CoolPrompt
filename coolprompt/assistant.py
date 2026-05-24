@@ -66,12 +66,17 @@ class PromptTuner:
 
         Args:
             target_model (BaseLanguageModel): Any LangChain BaseLanguageModel
-                instance which supports invoke(str) -> str. Used for
-                optimization processes. Will use DefaultLLM if not provided.
+                instance which supports invoke(str) -> str. The runtime
+                model the prompt is optimized FOR: it runs the prompt on the
+                task during evaluation (and start/final scoring). Will use
+                DefaultLLM if not provided.
             system_model (BaseLanguageModel): Any LangChain BaseLanguageModel
-                instance which supports invoke(str) -> str. Used for
-                synthetic data generation, feedback generation, etc.
-                Will use the `target_model` if not provided.
+                instance which supports invoke(str) -> str. The optimizer
+                model: it drives the proposers (candidate generation, SGR
+                structured diagnosis), synthetic data generation, and the
+                language-correction pass. Will use the `target_model` if not
+                provided, in which case one model does everything (the
+                original single-model behaviour).
             logs_dir (str | Path, optional): logs saving directory.
                 Defaults to None.
         """
@@ -373,13 +378,13 @@ class PromptTuner:
 
         if method is Method.HYPE:
             final_prompt = hype_optimizer(
-                model=self._target_model,
+                model=self._system_model,
                 prompt=start_prompt,
                 problem_description=problem_description,
             )
         elif method is Method.REFLECTIVE:
             final_prompt = reflectiveprompt(
-                model=self._target_model,
+                model=self._system_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 problem_description=problem_description,
@@ -388,7 +393,7 @@ class PromptTuner:
             )
         elif method is Method.DISTILL:
             final_prompt = distillprompt(
-                model=self._target_model,
+                model=self._system_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
@@ -396,7 +401,7 @@ class PromptTuner:
             )
         elif method is Method.PE2:
             final_prompt = pe2_optimizer(
-                model=self._target_model,
+                model=self._system_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
@@ -404,7 +409,7 @@ class PromptTuner:
             )
         elif method is Method.PE2_SGR:
             final_prompt = pe2_sgr_optimizer(
-                model=self._target_model,
+                model=self._system_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
@@ -412,7 +417,7 @@ class PromptTuner:
             )
         elif method is Method.APE:
             final_prompt = ape_optimizer(
-                model=self._target_model,
+                model=self._system_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
@@ -420,7 +425,7 @@ class PromptTuner:
             )
         elif method is Method.OPRO:
             final_prompt = opro_optimizer(
-                model=self._target_model,
+                model=self._system_model,
                 dataset_split=dataset_split,
                 evaluator=evaluator,
                 initial_prompt=start_prompt,
