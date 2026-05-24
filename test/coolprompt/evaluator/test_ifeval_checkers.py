@@ -91,6 +91,106 @@ class TestIFEvalCheckers(unittest.TestCase):
         )
         self.assertTrue(ok)
 
+    def test_number_sentences_at_least(self):
+        resp = "One sentence. Two sentence! Three sentence?"
+        ok = check_instruction(
+            "length_constraints:number_sentences",
+            resp,
+            {"num_sentences": 3, "relation": "at least"},
+        )
+        self.assertTrue(ok)
+
+    def test_keyword_frequency_at_least(self):
+        resp = "cat cat cat dog"
+        ok = check_instruction(
+            "keywords:frequency",
+            resp,
+            {"keyword": "cat", "frequency": 3,
+             "relation": "at least"},
+        )
+        self.assertTrue(ok)
+
+    def test_english_capital(self):
+        ok = check_instruction(
+            "change_case:english_capital",
+            "ALL CAPS HERE",
+            {},
+        )
+        self.assertTrue(ok)
+        bad = check_instruction(
+            "change_case:english_capital",
+            "Mixed Case",
+            {},
+        )
+        self.assertFalse(bad)
+
+    def test_json_format_fenced(self):
+        resp = '```json\n{"a": 1}\n```'
+        ok = check_instruction(
+            "detectable_format:json_format",
+            resp,
+            {},
+        )
+        self.assertTrue(ok)
+
+    def test_number_highlighted(self):
+        ok = check_instruction(
+            "detectable_format:number_highlighted_sections",
+            "*one* *two*",
+            {"num_highlights": 2},
+        )
+        self.assertTrue(ok)
+        bad = check_instruction(
+            "detectable_format:number_highlighted_sections",
+            "**bold** text",
+            {"num_highlights": 1},
+        )
+        self.assertFalse(bad)
+
+    def test_title(self):
+        ok = check_instruction(
+            "detectable_format:title",
+            "Here is <<My Title>> for you",
+            {},
+        )
+        self.assertTrue(ok)
+
+    def test_quotation(self):
+        ok = check_instruction(
+            "startend:quotation",
+            '"quoted"',
+            {},
+        )
+        self.assertTrue(ok)
+        bad = check_instruction(
+            "startend:quotation",
+            "not quoted",
+            {},
+        )
+        self.assertFalse(bad)
+
+    def test_postscript(self):
+        ok = check_instruction(
+            "detectable_content:postscript",
+            "Main text.\nP.S. extra note",
+            {"postscript_marker": "P.S."},
+        )
+        self.assertTrue(ok)
+
+    def test_number_placeholders(self):
+        ok = check_instruction(
+            "detectable_content:number_placeholders",
+            "[NAME] [DATE]",
+            {"num_placeholders": 2},
+        )
+        self.assertTrue(ok)
+        bad = check_instruction(
+            "detectable_content:number_placeholders",
+            "[docs](url)",
+            {"num_placeholders": 1},
+        )
+        self.assertFalse(bad)
+
     def test_unknown_instruction_returns_false(self):
         ok = check_instruction("nonexistent:thing", "x", {})
         self.assertFalse(ok)

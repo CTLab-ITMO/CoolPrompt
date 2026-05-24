@@ -31,7 +31,7 @@ def _check_relation(
         return value < threshold
     if relation == "exactly":
         return value == threshold
-    return value >= threshold
+    return False
 
 
 def _number_words(resp, kw):
@@ -51,6 +51,8 @@ def _number_sentences(resp, kw):
 
 
 def _keyword_existence(resp, kw):
+    # Substring (not word-boundary) match is intentional, matching
+    # the IFEval reference impl; differs from _keyword_frequency.
     low = resp.lower()
     return all(k.lower() in low for k in kw.get("keywords", []))
 
@@ -107,7 +109,9 @@ def _json_format(resp, kw):
 
 
 def _number_highlighted(resp, kw):
-    highlights = re.findall(r"\*[^\*\n]+\*", resp)
+    highlights = re.findall(
+        r"(?<!\*)\*(?!\*)[^\*\n]+?(?<!\*)\*(?!\*)", resp
+    )
     return len(highlights) >= int(
         kw.get("num_highlights", 0)
     )
@@ -135,7 +139,7 @@ def _postscript(resp, kw):
 
 
 def _placeholders(resp, kw):
-    found = re.findall(r"\[[^\]\n]+\]", resp)
+    found = re.findall(r"\[[^\]\n]+\](?!\()", resp)
     return len(found) >= int(
         kw.get("num_placeholders", 0)
     )
