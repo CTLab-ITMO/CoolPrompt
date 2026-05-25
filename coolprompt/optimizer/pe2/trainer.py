@@ -52,6 +52,7 @@ class PE2Trainer:
         n_expand: int = 4,
         batch_size: int = 4,
         backtrack: bool = True,
+        feedback_mode: str = "auto",
     ) -> None:
         self.model = model
         self.evaluator = evaluator
@@ -66,6 +67,7 @@ class PE2Trainer:
         self.n_expand = n_expand
         self.batch_size = batch_size
         self.backtrack = backtrack
+        self.feedback_mode = feedback_mode
         self._node_counter = 0
 
     def _next_id(self) -> int:
@@ -138,16 +140,20 @@ class PE2Trainer:
                     continue
 
                 cfb = None
-                metric = getattr(
-                    self.evaluator, "metric", None
-                )
-                if metric is not None and hasattr(
-                    metric, "failure_breakdown"
-                ):
-                    cfb = metric.failure_breakdown(
-                        [f["raw_output"] for f in failures],
-                        [f["target"] for f in failures],
+                if self.feedback_mode != "off":
+                    metric = getattr(
+                        self.evaluator, "metric", None
                     )
+                    if metric is not None and hasattr(
+                        metric, "failure_breakdown"
+                    ):
+                        cfb = metric.failure_breakdown(
+                            [
+                                f["raw_output"]
+                                for f in failures
+                            ],
+                            [f["target"] for f in failures],
+                        )
 
                 full_template = self._instantiate_template(
                     node.prompt

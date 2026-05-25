@@ -80,6 +80,9 @@ def pe2_sgr_optimizer(
         n_expand=args["n_expand"],
         batch_size=args["batch_size"],
         backtrack=args["backtrack"],
+        feedback_mode=args.get(
+            "sgr_constraint_feedback", "auto"
+        ),
     )
 
     logger.info("Starting PE2+SGR optimization...")
