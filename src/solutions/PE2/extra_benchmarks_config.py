@@ -1,7 +1,8 @@
 """Benchmark configs for the new thesis datasets.
 
 Groups: ifeval, math (gsm8k+svamp), classification
-(sst2/agnews/trec/subj), russian (rucola).
+(sst2/agnews/trec/subj), russian (rucola), banking77,
+anli, bbh subset.
 """
 
 from src.utils.load_dataset_ifeval import load_ifeval
@@ -13,6 +14,12 @@ from src.utils.load_dataset_classification import (
     load_subj,
 )
 from src.utils.load_dataset_russian import load_rucola
+from src.utils.load_dataset_banking77 import (
+    load_banking77,
+    banking77_labels,
+)
+from src.utils.load_dataset_anli import load_anli
+from src.utils.load_dataset_pe2_paper import load_pe2_csv
 
 _NUMERIC_PROMPT = (
     "Solve the problem. Put only the final numeric answer "
@@ -95,5 +102,99 @@ BENCHMARKS = {
             "Russian linguistic acceptability"
         ),
         "loader": lambda: load_rucola(),
+    },
+    "banking77": {
+        "start_prompt": _label_prompt(
+            ", ".join(banking77_labels())
+        ),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "banking customer-intent classification (77 classes)"
+        ),
+        "loader": lambda: load_banking77(),
+    },
+    "anli": {
+        "start_prompt": _label_prompt(
+            "entailment, neutral, contradiction"
+        ),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "adversarial natural language inference"
+        ),
+        "loader": lambda: load_anli(),
+    },
+    "bbh_boolean_expressions": {
+        # targets: ['False', 'True']
+        "start_prompt": _label_prompt("False, True"),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "BBH: evaluate boolean expressions"
+        ),
+        "loader": lambda s="boolean_expressions": (
+            load_pe2_csv("bbh", s, split="test")
+        ),
+    },
+    "bbh_causal_judgement": {
+        # targets: ['No', 'Yes']
+        "start_prompt": _label_prompt("No, Yes"),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "BBH: causal judgement reasoning"
+        ),
+        "loader": lambda s="causal_judgement": (
+            load_pe2_csv("bbh", s, split="test")
+        ),
+    },
+    "bbh_navigate": {
+        # targets: ['No', 'Yes']
+        "start_prompt": _label_prompt("No, Yes"),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "BBH: navigation direction following"
+        ),
+        "loader": lambda s="navigate": (
+            load_pe2_csv("bbh", s, split="test")
+        ),
+    },
+    "bbh_web_of_lies": {
+        # targets: ['No', 'Yes']
+        "start_prompt": _label_prompt("No, Yes"),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "BBH: web of lies logical deduction"
+        ),
+        "loader": lambda s="web_of_lies": (
+            load_pe2_csv("bbh", s, split="test")
+        ),
+    },
+    "bbh_formal_fallacies": {
+        # targets: ['invalid', 'valid']
+        "start_prompt": _label_prompt("invalid, valid"),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "BBH: formal fallacies identification"
+        ),
+        "loader": lambda s="formal_fallacies": (
+            load_pe2_csv("bbh", s, split="test")
+        ),
+    },
+    "bbh_sports_understanding": {
+        # targets: ['no', 'yes']
+        "start_prompt": _label_prompt("no, yes"),
+        "task": "classification",
+        "metric": "accuracy",
+        "problem_description": (
+            "BBH: sports understanding plausibility"
+        ),
+        "loader": lambda s="sports_understanding": (
+            load_pe2_csv("bbh", s, split="test")
+        ),
     },
 }
