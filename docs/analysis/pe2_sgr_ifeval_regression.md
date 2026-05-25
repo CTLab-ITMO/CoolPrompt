@@ -2,8 +2,9 @@
 
 **Date:** 2026-05-25
 **Data:** single-seed runs, N=50 (IFEval dev split = 13 examples), train_steps=3.
-Sources: `logs/native_claude_haiku.json`, `logs/full_openrouter_gpt4omini.json`,
-`logs/ladder_qwen{8b,14b,32b}.json`.
+Sources: `logs/native_claude_haiku.json`, `logs/native_gpt4omini.json`,
+`logs/ladder_qwen{8b,14b,32b}.json`. (The earlier OpenRouter gpt-4o-mini
+sweep was retired — see "Gateway divergence" below.)
 
 ## Observation
 
@@ -14,13 +15,14 @@ improve over its start prompt, and in the Claude run it **regressed**:
 | optimizer / run            | target    | SGR ifeval (start→final) |
 |----------------------------|-----------|--------------------------|
 | claude-haiku-4.5 (self)    | claude    | 0.85 → **0.69** ⬇        |
-| gpt-4o-mini (single)       | gpt-4o-mini | 0.69 → 0.69 (flat)     |
+| gpt-4o-mini (single, native) | gpt-4o-mini | 0.69 → **1.00** ⬆     |
 | gpt-4o-mini (optimizer)    | qwen3-8b  | 0.77 → 0.69 ⬇            |
 | gpt-4o-mini (optimizer)    | qwen3-14b | 0.69 → 0.85 ⬆            |
 | gpt-4o-mini (optimizer)    | qwen3-32b | 0.62 → 0.62 (flat)       |
 
-For contrast, PE2 (plain) on claude-haiku improved IFEval 0.77 → **0.92**, the
-best result, by rewriting into a clean compliance-only prompt.
+For contrast, PE2 (plain) on claude-haiku improved IFEval 0.77 → **0.92** (best
+*on claude*) by rewriting into a clean compliance-only prompt — while on native
+gpt-4o-mini it is PE2+SGR that wins IFEval outright (0.69 → **1.00**).
 
 ## Two distinct findings
 
@@ -49,15 +51,36 @@ For a strict all-or-nothing metric like IFEval, this dual/meta framing plausibly
 lowers compliance (any stray meta-text or verbosity fails an example), which is
 consistent with the claude regression — but see caveats on noise.
 
-### Finding 2 — SGR is weak/inconsistent on IFEval *regardless* of the leak
+### Finding 2 — SGR's IFEval result is highly optimizer/context-dependent
 
-Even with **no leak** (gpt-4o-mini optimizer), SGR did not consistently help
-IFEval: flat (gpt-4o-mini single 0.69→0.69; qwen32b 0.62→0.62), down
-(qwen8b 0.77→0.69), up once (qwen14b 0.69→0.85). So SGR's lack of benefit on
-strict constraint-following is **not explained by the leak alone** — SGR's
-structured "diagnose error categories → rewrite" loop simply does not translate
-into better literal-compliance prompts here, whereas plain PE2's
-single-objective rewrite does (claude 0.77→0.92).
+SGR is **not uniformly weak** on IFEval — it is **highly variable**:
+
+- **Excels** with native gpt-4o-mini as optimizer+target: 0.69 → **1.00**
+  (perfect), the best IFEval result of any method/model here, and PE2+SGR is
+  also the overall best method on native gpt-4o-mini (mean final 0.904, mean
+  improvement +0.087).
+- **Regresses** with Claude as optimizer: 0.85 → 0.69 (the meta-leak, Finding 1).
+- **Mixed** when gpt-4o-mini optimizes weak qwen targets: up (14b 0.69→0.85),
+  down (8b 0.77→0.69), flat (32b 0.62→0.62) — no leak in these, so this spread
+  is plausibly transfer difficulty + seed noise on a 13-example dev set.
+
+So the earlier "SGR is weak on IFEval" reading was **wrong** — driven by a
+retired OpenRouter gpt-4o-mini run that scored 0.69 flat. The canonical native
+gpt-4o-mini run scores **1.00**. The honest conclusion is that SGR *can* be the
+best method for strict constraint-following, but its outcome depends strongly
+on the optimizer model (clean rewrite vs meta-leak) and is noisy on weak
+targets.
+
+### Gateway divergence (why the OpenRouter gpt-4o-mini run was retired)
+
+Same model, same start prompt (0.69), same seed — but `ifeval/pe2_sgr` finished
+**1.00 on the native OpenAI API vs 0.69 via OpenRouter**. Start-prompt scoring
+matched across gateways (the earlier equivalence check), but the **multi-step
+optimization trajectory is not gateway-invariant** (generation nondeterminism +
+subtle routing/version differences compound over candidate-generation rounds).
+Lesson: pick one gateway per model and do not mix. We standardized on the
+**native** OpenAI/Anthropic APIs; the OpenRouter gpt-4o-mini sweep was deleted
+so it cannot be used as canonical.
 
 ## Interpretation (hypothesis, for the writeup)
 
