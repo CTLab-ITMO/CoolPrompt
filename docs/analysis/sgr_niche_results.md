@@ -29,3 +29,18 @@ on simple classification and some BBH reasoning. The portfolio operationalizes
 "use SGR where it wins" and the niche map characterizes the boundary.
 Follow-up: held-out-val portfolio for an honest deployment number; higher N
 to tighten the marginal vs-PE2 CIs.
+
+## UPDATE — higher-N (#2) REFUTES the Phase-1 ifeval win
+ifeval at N=300 (vs N=50), 8 seeds, paired improved-SGR vs PE2:
+  SGR mean 0.603 | PE2 mean 0.620 | diff -0.017
+  95% CI [-0.053, +0.020] (includes 0); SGR>PE2 in only 2/8 seeds.
+
+The N=50 "win" (improved-SGR 0.73 vs PE2 0.61, 6/8) was a SMALL-EVAL-SET
+ARTIFACT: ifeval dev was ~13 examples at N=50, ~75 at N=300. At adequate N the
+advantage vanishes.
+
+REVISED CONCLUSION: SGR ~= PE2 even on its best benchmark once N is adequate.
+The method differences (SGR vs PE2) are noise-dominated here; this is consistent
+with the gpt-4.1-optimizer null (optimizer strength didn't help either). The
+durable, defensible finding is METHODOLOGICAL: small-N prompt-optimization evals
+manufacture spurious method wins; report at adequate N with paired CIs.
