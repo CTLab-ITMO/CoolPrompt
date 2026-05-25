@@ -103,8 +103,8 @@ def main():
     parser.add_argument(
         "--backend",
         default=None,
-        choices=["lmstudio", "openrouter", "openai"],
-        help="LLM backend (default: CP_BACKEND env or lmstudio)",
+        choices=["lmstudio", "openrouter", "openai", "anthropic"],
+        help="Force backend; default auto-routes by model id",
     )
     parser.add_argument(
         "--out",

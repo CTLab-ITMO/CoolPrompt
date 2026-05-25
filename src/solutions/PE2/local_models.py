@@ -76,11 +76,15 @@ def make_llm(
 
     Args:
         name: A ladder key ("weak"/"mid"/"strong"/"cross"/
-            "judge"), an ANTHROPIC_MODELS key, or a raw model id
-            for the selected backend.
-        backend: "lmstudio", "openrouter", or "openai" (native
-            OpenAI API, needs CP_OPENAI_KEY). Defaults to the
-            CP_BACKEND env var, then "lmstudio".
+            "judge"), an ANTHROPIC_MODELS/OPENAI_MODELS key, or a
+            raw model id for the resolved backend.
+        backend: Force a backend ("lmstudio", "openrouter",
+            "openai", "anthropic"). If omitted, falls back to the
+            CP_BACKEND env var, then AUTO-ROUTES by model
+            identity: OpenAI models -> native OpenAI, Anthropic
+            models -> native Anthropic, everything else ->
+            OpenRouter. (lmstudio is never auto-selected; request
+            it explicitly for local runs.)
         temperature: Sampling temperature.
         max_retries: Client-side retry count.
         request_timeout: Per-request timeout (seconds).
@@ -88,7 +92,16 @@ def make_llm(
     Returns:
         A configured BaseLanguageModel.
     """
-    if name in ANTHROPIC_MODELS:
+    backend = backend or os.environ.get("CP_BACKEND")
+    if backend is None:
+        if name in ANTHROPIC_MODELS or name.startswith("claude"):
+            backend = "anthropic"
+        elif name in OPENAI_MODELS or name.startswith("gpt-"):
+            backend = "openai"
+        else:
+            backend = "openrouter"
+
+    if backend == "anthropic":
         from langchain_anthropic import ChatAnthropic
 
         api_key = os.environ.get("CP_ANTHROPIC_KEY")
@@ -98,14 +111,12 @@ def make_llm(
                 f"'{name}'"
             )
         return ChatAnthropic(
-            model=ANTHROPIC_MODELS[name],
+            model=ANTHROPIC_MODELS.get(name, name),
             api_key=api_key,
             temperature=temperature,
             max_retries=max_retries,
             timeout=request_timeout,
         )
-
-    backend = backend or os.environ.get("CP_BACKEND", "lmstudio")
 
     if backend == "openai":
         api_key = os.environ.get("CP_OPENAI_KEY")
