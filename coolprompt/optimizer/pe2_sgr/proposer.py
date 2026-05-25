@@ -238,6 +238,14 @@ class SGRProposer:
             constraint_feedback=constraint_feedback,
         )
 
+        # Guard: keep current prompt when no edit needed
+        if self._should_keep(diagnosis.edit_decision):
+            logger.debug(
+                "SGR: edit_decision says no change; "
+                "keeping current prompt"
+            )
+            return node.prompt, "no_edit_needed"
+
         # Override strategy from signals
         strategy = self._override_strategy(diagnosis)
         formatted = self._format_diagnosis(diagnosis)
@@ -314,6 +322,16 @@ class SGRProposer:
             )
             return result.strip()
         return extracted_str
+
+    # ----------------------------------------------------------
+    # Edit-decision guard
+    # ----------------------------------------------------------
+
+    @staticmethod
+    def _should_keep(edit_decision) -> bool:
+        """True when SGR should keep the current prompt
+        unchanged (diagnosis says no edit needed)."""
+        return not edit_decision.editing_necessary
 
     # ----------------------------------------------------------
     # Strategy override (Fix 1)
