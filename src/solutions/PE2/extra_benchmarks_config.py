@@ -20,6 +20,7 @@ from src.utils.load_dataset_banking77 import (
 )
 from src.utils.load_dataset_anli import load_anli
 from src.utils.load_dataset_pe2_paper import load_pe2_csv
+from src.utils.load_dataset_summarization import load_xsum
 
 _NUMERIC_PROMPT = (
     "Solve the problem. Put only the final numeric answer "
@@ -46,6 +47,19 @@ BENCHMARKS = {
             "instruction following with verifiable constraints"
         ),
         "loader": lambda: load_ifeval(),
+    },
+    "xsum": {
+        "start_prompt": (
+            "Summarize the following text in a single concise "
+            "sentence. Put only the summary inside <ans></ans> "
+            "tags."
+        ),
+        "task": "generation",
+        "metric": "rouge",
+        "problem_description": (
+            "abstractive single-sentence news summarization"
+        ),
+        "loader": lambda: load_xsum(),
     },
     "gsm8k": {
         "start_prompt": _NUMERIC_PROMPT,
