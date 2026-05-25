@@ -103,7 +103,7 @@ def main():
     parser.add_argument(
         "--backend",
         default=None,
-        choices=["lmstudio", "openrouter"],
+        choices=["lmstudio", "openrouter", "openai"],
         help="LLM backend (default: CP_BACKEND env or lmstudio)",
     )
     parser.add_argument(

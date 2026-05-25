@@ -53,6 +53,12 @@ OPENROUTER_LADDER = {
     "judge": "qwen/qwen3-235b-a22b-2507",
 }
 
+# Native OpenAI ladder: logical name -> OpenAI model id
+# (backend "openai", needs CP_OPENAI_KEY).
+OPENAI_MODELS = {
+    "cross": "gpt-4o-mini",
+}
+
 # Cross-family API slot (needs CP_ANTHROPIC_KEY).
 ANTHROPIC_MODELS = {
     "claude-haiku": "claude-haiku-4-5-20251001",
@@ -72,7 +78,8 @@ def make_llm(
         name: A ladder key ("weak"/"mid"/"strong"/"cross"/
             "judge"), an ANTHROPIC_MODELS key, or a raw model id
             for the selected backend.
-        backend: "lmstudio" or "openrouter". Defaults to the
+        backend: "lmstudio", "openrouter", or "openai" (native
+            OpenAI API, needs CP_OPENAI_KEY). Defaults to the
             CP_BACKEND env var, then "lmstudio".
         temperature: Sampling temperature.
         max_retries: Client-side retry count.
@@ -99,6 +106,20 @@ def make_llm(
         )
 
     backend = backend or os.environ.get("CP_BACKEND", "lmstudio")
+
+    if backend == "openai":
+        api_key = os.environ.get("CP_OPENAI_KEY")
+        if not api_key:
+            raise RuntimeError(
+                "CP_OPENAI_KEY not set for openai backend"
+            )
+        return ChatOpenAI(
+            model=OPENAI_MODELS.get(name, name),
+            api_key=api_key,
+            temperature=temperature,
+            max_retries=max_retries,
+            request_timeout=request_timeout,
+        )
 
     if backend == "openrouter":
         api_key = os.environ.get("CP_OPENROUTER_KEY")
