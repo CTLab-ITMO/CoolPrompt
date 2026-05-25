@@ -253,5 +253,39 @@ class TestIFEvalMetric(unittest.TestCase):
         self.assertEqual(score, 0.5)
 
 
+class TestIFEvalFailureBreakdown(unittest.TestCase):
+    def _spec(self, ids, kwargs_list):
+        return _json.dumps(
+            {"instruction_id_list": ids, "kwargs": kwargs_list}
+        )
+
+    def test_counts_failures_per_instruction(self):
+        m = IFEvalMetric()
+        t = self._spec(
+            ["keywords:existence",
+             "change_case:english_lowercase"],
+            [{"keywords": ["fox"]}, {}],
+        )
+        # output has the keyword but is NOT lowercase -> only
+        # the lowercase constraint fails
+        s = m.failure_breakdown(["The FOX"], [t])
+        self.assertIn("change_case:english_lowercase", s)
+        self.assertNotIn("keywords:existence", s)
+
+    def test_none_when_all_pass(self):
+        m = IFEvalMetric()
+        t = self._spec(["keywords:existence"],
+                       [{"keywords": ["a"]}])
+        self.assertIsNone(
+            m.failure_breakdown(["a"], [t])
+        )
+
+    def test_none_on_bad_json(self):
+        m = IFEvalMetric()
+        self.assertIsNone(
+            m.failure_breakdown(["x"], ["not json"])
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

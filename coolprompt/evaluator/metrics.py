@@ -509,6 +509,37 @@ class IFEvalMetric(GenerationMetric):
             )
         return float(mean(per_prompt)) if per_prompt else 0.0
 
+    def failure_breakdown(self, outputs, targets):
+        """Per-instruction failure summary for the diagnosis.
+
+        Returns a string like
+        'change_case:english_lowercase failed 3/5; ...' listing
+        only the constraints that failed at least once, or None
+        if every constraint passed / targets are unparseable.
+        """
+        fails = {}
+        totals = {}
+        for output, spec_json in zip(
+            map(str, outputs), map(str, targets)
+        ):
+            try:
+                spec = json.loads(spec_json)
+            except (ValueError, TypeError):
+                continue
+            ids = spec.get("instruction_id_list", [])
+            kw_list = spec.get("kwargs", [{}] * len(ids))
+            for iid, kw in zip(ids, kw_list):
+                totals[iid] = totals.get(iid, 0) + 1
+                if not check_instruction(iid, output, kw or {}):
+                    fails[iid] = fails.get(iid, 0) + 1
+        if not fails:
+            return None
+        parts = [
+            f"{iid} failed {fails[iid]}/{totals[iid]}"
+            for iid in sorted(fails, key=lambda k: -fails[k])
+        ]
+        return "; ".join(parts)
+
 
 def define_lang(outputs, targets):
     langs = [detect_language(target) for target in targets]
