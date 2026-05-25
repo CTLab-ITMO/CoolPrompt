@@ -83,6 +83,7 @@ class SGRProposer:
         full_template: str,
         batch_size: int,
         best_val_score: float = 0.0,
+        constraint_feedback: Optional[str] = None,
     ) -> tuple[str, str]:
         """Proposes a refined prompt via dual-path reasoning.
 
@@ -93,6 +94,9 @@ class SGRProposer:
             batch_size (int): Number of failure examples.
             best_val_score (float): Best validation score
                 among current beam candidates.
+            constraint_feedback (Optional[str]): Per-
+                constraint failure rates from the trainer.
+                When None the diagnosis is unchanged.
 
         Returns:
             tuple[str, str]: (new_prompt, reasoning).
@@ -119,18 +123,26 @@ class SGRProposer:
         ):
             self._prev_best = best_val_score
 
+        cf_block = (
+            f"Per-constraint failure rates:\n"
+            f"{constraint_feedback}"
+            if constraint_feedback else ""
+        )
+
         # Route
         if self._locked_structured:
             return self._structured_path(
                 node, examples_str,
                 full_template, batch_size,
                 best_val_score,
+                constraint_feedback=cf_block,
             )
         else:
             return self._freeform_path(
                 node, examples_str,
                 full_template, batch_size,
                 best_val_score,
+                constraint_feedback=cf_block,
             )
 
     # ----------------------------------------------------------
@@ -144,6 +156,7 @@ class SGRProposer:
         full_template: str,
         batch_size: int,
         best_val_score: float,
+        constraint_feedback: str = "",
     ) -> tuple[str, str]:
         """Free-form reasoning → always reimagine."""
         logger.debug(
@@ -156,6 +169,7 @@ class SGRProposer:
         reasoning = self._freeform_diagnose(
             node, examples_str,
             full_template, batch_size,
+            constraint_feedback=constraint_feedback,
         )
 
         # Phase 2: always reimagine
@@ -183,6 +197,7 @@ class SGRProposer:
         examples_str: str,
         full_template: str,
         batch_size: int,
+        constraint_feedback: str = "",
     ) -> str:
         """Free-form Phase 1: enhanced PE2-style reasoning."""
         prompt = PE2_SGR_FREEFORM_DIAGNOSIS_TEMPLATE.format(
@@ -190,6 +205,7 @@ class SGRProposer:
             full_template=full_template,
             batch_size=batch_size,
             examples=examples_str,
+            constraint_feedback=constraint_feedback,
         )
         return get_model_answer_extracted(
             self.model, prompt
@@ -206,6 +222,7 @@ class SGRProposer:
         full_template: str,
         batch_size: int,
         best_val_score: float,
+        constraint_feedback: str = "",
     ) -> tuple[str, str]:
         """Structured diagnosis → strategy override → gen."""
         logger.debug(
@@ -218,6 +235,7 @@ class SGRProposer:
         diagnosis = self._structured_diagnose(
             node, examples_str,
             full_template, batch_size,
+            constraint_feedback=constraint_feedback,
         )
 
         # Override strategy from signals
@@ -255,6 +273,7 @@ class SGRProposer:
         examples_str: str,
         full_template: str,
         batch_size: int,
+        constraint_feedback: str = "",
     ) -> FullDiagnosis:
         """Structured Phase 1: FullDiagnosis."""
         prompt = PE2_SGR_FULL_DIAGNOSIS_TEMPLATE.format(
@@ -262,6 +281,7 @@ class SGRProposer:
             full_template=full_template,
             batch_size=batch_size,
             examples=examples_str,
+            constraint_feedback=constraint_feedback,
         )
         structured_model = self.model.with_structured_output(
             FullDiagnosis,

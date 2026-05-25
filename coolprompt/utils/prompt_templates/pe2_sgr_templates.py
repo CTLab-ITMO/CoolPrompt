@@ -46,6 +46,7 @@ other template information.
 
 ## Examples
 {examples}
+{constraint_feedback}
 
 ## Instructions
 For some of these examples, the output does not match with the \
@@ -97,6 +98,7 @@ Below are {batch_size} failure examples where the prompt \
 produced incorrect outputs:
 
 {examples}
+{constraint_feedback}
 
 Analyze each failure individually AND as a whole:
 1. For each failure, identify the root cause and categorize \
