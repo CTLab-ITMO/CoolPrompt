@@ -223,17 +223,12 @@ class PE2Trainer:
         # Return the best prompt by val score
         all_nodes = [n for state in states for n in state]
         scored = [n for n in all_nodes if "val" in n.scores]
-        best = max(scored, key=PE2Trainer._rank_key)
+        best = max(scored, key=lambda n: n.scores["val"])
         logger.info(
             f"PE2 best prompt (node {best.id}, "
             f"val={best.scores['val']:.4f})"
         )
         return best.prompt
-
-    @staticmethod
-    def _rank_key(node):
-        """Ranking key: higher val, then shorter prompt."""
-        return (node.scores["val"], -len(node.prompt))
 
     def _select_candidates(
         self, states: List[List[Node]]
@@ -252,7 +247,7 @@ class PE2Trainer:
             pool = list(states[-1])
 
         scored = [n for n in pool if "val" in n.scores]
-        scored.sort(key=PE2Trainer._rank_key, reverse=True)
+        scored.sort(key=lambda n: n.scores["val"], reverse=True)
         return scored[: self.n_beam]
 
     def _instantiate_template(self, prompt: str) -> str:
