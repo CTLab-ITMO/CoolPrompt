@@ -42,7 +42,8 @@ def _sample_fn(sample_size, seed=42):
     return fn
 
 
-def build_tasks(benchmarks, methods, train_steps):
+def build_tasks(benchmarks, methods, train_steps,
+                sgr_feedback="auto"):
     tasks = []
     for benchmark in benchmarks:
         cfg = BENCHMARKS[benchmark]
@@ -62,6 +63,7 @@ def build_tasks(benchmarks, methods, train_steps):
                         "method": method,
                         "verbose": 2,
                         "train_steps": train_steps,
+                        "sgr_constraint_feedback": sgr_feedback,
                     },
                 )
             )
@@ -101,6 +103,11 @@ def main():
     parser.add_argument("--train-steps", type=int, default=3)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument(
+        "--sgr-feedback", default="auto",
+        choices=["auto", "on", "off"],
+        help="SGR per-constraint feedback mode (ablation)",
+    )
+    parser.add_argument(
         "--backend",
         default=None,
         choices=["lmstudio", "openrouter", "openai", "anthropic"],
@@ -138,7 +145,8 @@ def main():
         make_llm(args.opt_model, backend=args.backend)
         if args.opt_model else None
     )
-    tasks = build_tasks(benchmarks, methods, args.train_steps)
+    tasks = build_tasks(benchmarks, methods, args.train_steps,
+                        sgr_feedback=args.sgr_feedback)
 
     runner = ParallelBenchmarkRunner(
         llm=llm,
