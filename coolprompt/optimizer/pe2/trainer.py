@@ -2,7 +2,7 @@
 
 import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Optional
+from typing import List
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
@@ -137,6 +137,18 @@ class PE2Trainer:
                     )
                     continue
 
+                cfb = None
+                metric = getattr(
+                    self.evaluator, "metric", None
+                )
+                if metric is not None and hasattr(
+                    metric, "failure_breakdown"
+                ):
+                    cfb = metric.failure_breakdown(
+                        [f["raw_output"] for f in failures],
+                        [f["target"] for f in failures],
+                    )
+
                 full_template = self._instantiate_template(
                     node.prompt
                 )
@@ -151,7 +163,7 @@ class PE2Trainer:
                     proposal_jobs.append(
                         (node, examples_str,
                          full_template, len(sampled),
-                         best_score)
+                         best_score, cfb)
                     )
 
             if not proposal_jobs:
@@ -162,13 +174,14 @@ class PE2Trainer:
 
             # Run proposals in parallel
             def _do_propose(job):
-                n, ex_str, ft, bs, bvs = job
+                n, ex_str, ft, bs, bvs, cf = job
                 prompt, _ = self.proposer.propose(
                     node=n,
                     examples_str=ex_str,
                     full_template=ft,
                     batch_size=bs,
                     best_val_score=bvs,
+                    constraint_feedback=cf,
                 )
                 return n, prompt
 

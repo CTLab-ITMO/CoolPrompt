@@ -36,6 +36,7 @@ class Proposer:
         full_template: str,
         batch_size: int,
         best_val_score: float = 0.0,
+        constraint_feedback=None,
     ) -> tuple[str, str]:
         """Proposes a refined prompt by analyzing failures.
 
