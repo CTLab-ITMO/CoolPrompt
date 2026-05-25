@@ -178,3 +178,6 @@ src/solutions/SPELL/data/*
 
 # macOS
 .DS_Store
+
+# worktrees
+.worktrees/
