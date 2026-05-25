@@ -39,12 +39,34 @@ Swapping the optimizer gpt-4o-mini → gpt-4.1 (3 seeds, 17 benchmarks): mean Δ
 ≈ 0 (pe2 −0.003, pe2_sgr +0.009, ape −0.024, opro −0.027). Optimizer
 *capability* is not the bottleneck — signal/eval-noise is.
 
-### 5. Strong-optimizer → weak-runtime: feasibility, not quality
+### 5. Strong-optimizer → weak-runtime: feasibility, with an SGR fragility cost
 A strong optimizer (gpt-4o-mini) producing prompts for weak qwen runtimes
-(8b/14b/32b) WORKS where the weak models can't self-optimize (8b/14b can't
-reliably emit the structured output pe2_sgr needs). But it gives no quality
-uplift, and SGR ≈ PE2 ≫ APE on every qwen runtime with no "helps-weak-more"
-trend. So the split design's value is **reliability/enablement**, not accuracy.
+(8b/14b/32b) WORKS, and gives no quality uplift: SGR ≈ PE2 ≫ APE on every
+qwen runtime with no "helps-weak-more" trend.
+
+CORRECTION (2026-05-25): an earlier version of this section claimed weak
+models "can't reliably emit the structured output pe2_sgr needs." The logs
+do not support that and arguably reverse it. qwen-8b ran pe2_sgr fine on all
+5 benchmarks × 3 seeds. The structured-output failures were on qwen-**14b**
+and **32b** ifeval (JSON parse errors, e.g. `Expecting value: line 3023`),
+while plain PE2 ran fine on the same cells. So the real finding is the
+opposite of "enablement": SGR's structured-output requirement introduces an
+**operational fragility** — intermittent malformed-JSON failures on complex
+tasks — that free-form PE2 does not have. This is a cost of SGR, not a
+benefit. (Evidence: `logs/ms_qwen{8,14,32}b_s*.json`.)
+
+### 5b. SGR ≈ PE2 on robustness too (not just mean)
+Cross-seed analysis (`scripts/variance_analysis.py`) over the 8-seed
+gpt-4o-mini grid, 17 benchmarks, asks whether SGR is more *consistent*
+even where its mean ties. It is not:
+- **Dispersion:** SGR has lower cross-seed std in only 5/17 benchmarks
+  (PE2 in 9, tie 3); mean std 0.075 (SGR) vs 0.077 (PE2) — a wash.
+- **Worst-case floor:** SGR's min-over-seeds is higher in 9/17 (mean
+  +0.03) — a weak lean, not significant (9 of 14 decisive, binomial
+  p ≈ 0.4), and driven by the high-variance ifeval/bbh cells.
+- **Regression rate** (runs where final < start): SGR 6.6% vs PE2 5.1%.
+The null is therefore complete: SGR ≈ PE2 in mean, variance, worst-case,
+and regression. See `robustness_variance.md`.
 
 ### 6. Honest portfolio (best-of PE2/SGR, leakage-free) buys little
 Held-out-val selection (N=200, 5 seeds, 8 discriminating benchmarks):
