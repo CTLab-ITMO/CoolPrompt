@@ -1,0 +1,57 @@
+=== gpt-4o-mini multi-seed aggregate (final_metric) ===
+benchmark                            pe2       pe2_sgr           ape          opro
+agnews                     0.92+-0.08(n8) 0.90+-0.03(n8) 0.86+-0.08(n8) 0.90+-0.06(n8)
+anli                       0.62+-0.14(n8) 0.63+-0.15(n8) 0.64+-0.11(n8) 0.55+-0.14(n8)
+banking77                  0.94+-0.05(n8) 0.92+-0.09(n8) 0.87+-0.08(n8) 0.90+-0.09(n8)
+bbh_boolean_expressions    0.97+-0.05(n8) 0.99+-0.03(n8) 0.80+-0.09(n8) 0.99+-0.03(n8)
+bbh_causal_judgement       0.83+-0.07(n8) 0.83+-0.06(n8) 0.62+-0.07(n8) 0.74+-0.09(n8)
+bbh_formal_fallacies       0.74+-0.16(n8) 0.82+-0.07(n8) 0.62+-0.09(n8) 0.72+-0.09(n8)
+bbh_navigate               0.98+-0.03(n8) 0.94+-0.05(n8) 0.65+-0.12(n8) 0.84+-0.18(n8)
+bbh_sports_understanding   0.86+-0.08(n8) 0.87+-0.08(n8) 0.81+-0.09(n8) 0.89+-0.08(n8)
+bbh_web_of_lies            0.98+-0.03(n8) 0.93+-0.06(n8) 0.70+-0.17(n8) 0.89+-0.20(n8)
+gsm8k                      0.93+-0.05(n8) 0.93+-0.05(n8) 0.86+-0.08(n8) 0.89+-0.08(n8)
+ifeval                     0.61+-0.14(n8) 0.69+-0.15(n8) 0.62+-0.09(n8) 0.63+-0.05(n8)
+rucola                     0.80+-0.07(n8) 0.81+-0.09(n8) 0.70+-0.05(n8) 0.82+-0.08(n8)
+sst2                       0.95+-0.05(n8) 0.91+-0.08(n8) 0.94+-0.03(n8) 0.96+-0.04(n8)
+subj                       0.79+-0.13(n8) 0.79+-0.13(n8) 0.74+-0.10(n8) 0.78+-0.09(n8)
+svamp                      0.93+-0.08(n8) 0.97+-0.05(n8) 0.95+-0.07(n8) 0.95+-0.05(n8)
+trec                       0.91+-0.06(n8) 0.91+-0.06(n8) 0.74+-0.11(n8) 0.77+-0.13(n8)
+xsum                       0.18+-0.02(n8) 0.19+-0.02(n8) 0.18+-0.02(n8) 0.18+-0.02(n8)
+
+=== overall mean final (across benchmarks) ===
+  pe2      0.821
+  pe2_sgr  0.826
+  ape      0.723
+  opro     0.790
+
+=== paired pe2_sgr vs pe2 per benchmark (shared seeds) ===
+  agnews                     n=8 sgr-pe2=-0.019 W/T/L=2/2/4 SGR<
+  anli                       n=8 sgr-pe2=+0.010 W/T/L=3/2/3 SGR>
+  banking77                  n=8 sgr-pe2=-0.019 W/T/L=4/0/4 SGR<
+  bbh_boolean_expressions    n=8 sgr-pe2=+0.019 W/T/L=2/5/1 SGR>
+  bbh_causal_judgement       n=8 sgr-pe2=+0.000 W/T/L=3/3/2 tie
+  bbh_formal_fallacies       n=8 sgr-pe2=+0.077 W/T/L=5/1/2 SGR>
+  bbh_navigate               n=8 sgr-pe2=-0.038 W/T/L=0/4/4 SGR<
+  bbh_sports_understanding   n=8 sgr-pe2=+0.010 W/T/L=3/2/3 SGR>
+  bbh_web_of_lies            n=8 sgr-pe2=-0.048 W/T/L=1/3/4 SGR<
+  gsm8k                      n=8 sgr-pe2=+0.000 W/T/L=3/2/3 tie
+  ifeval                     n=8 sgr-pe2=+0.087 W/T/L=4/1/3 SGR>
+  rucola                     n=8 sgr-pe2=+0.010 W/T/L=4/2/2 SGR>
+  sst2                       n=8 sgr-pe2=-0.038 W/T/L=3/1/4 SGR<
+  subj                       n=8 sgr-pe2=+0.000 W/T/L=3/0/5 tie
+  svamp                      n=8 sgr-pe2=+0.038 W/T/L=3/4/1 SGR>
+  trec                       n=8 sgr-pe2=+0.000 W/T/L=3/1/4 tie
+  xsum                       n=8 sgr-pe2=+0.004 W/T/L=5/0/3 SGR>
+
+=== Summary (8 seeds, N=50, gpt-4o-mini single-model) ===
+- Overall mean final: pe2_sgr 0.826 ~= pe2 0.821; opro 0.790; ape 0.723.
+- SGR vs PE2 statistically indistinguishable overall (delta +0.005).
+- 3-seed signals were NOISE: anli +0.103->+0.010 (tie), subj -0.128->0.000 (tie).
+- SGR's only mildly-consistent edges: ifeval (+0.087, 4-3) and
+  bbh_formal_fallacies (+0.077, 5-2) — reasoning/constraint tasks.
+- Robust ordering: SGR ~= PE2 >> APE; OPRO mid.
+- Separate result: stronger optimizer (gpt-4.1) did NOT improve prompts
+  for the gpt-4o-mini runtime (mean delta ~0; see gpt41opt runs).
+- Implication: SGR's added complexity does not beat plain PE2 at this
+  scale -> motivates targeted SGR improvements (meta-leak fix,
+  conservative rewrite on easy tasks, amplify reasoning-task edge).
