@@ -29,13 +29,13 @@ from src.utils.parallel_runner import (  # noqa: E402
 METHODS = ["pe2", "pe2_sgr", "ape", "opro"]
 
 
-def _sample_fn(sample_size):
+def _sample_fn(sample_size, seed=42):
     import random
 
     def fn(df):
         if sample_size is None or len(df) <= sample_size:
             return df
-        rng = random.Random(42)
+        rng = random.Random(seed)
         idx = rng.sample(range(len(df)), sample_size)
         return df.iloc[idx]
 
@@ -90,9 +90,14 @@ def main():
         ),
     )
     parser.add_argument(
-        "--method", default=None, choices=METHODS
+        "--method", default=None,
+        help=(
+            "Method, a comma-separated list, or omit for all "
+            f"({', '.join(METHODS)})"
+        ),
     )
     parser.add_argument("--sample", type=int, default=50)
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--train-steps", type=int, default=3)
     parser.add_argument("--workers", type=int, default=1)
     parser.add_argument(
@@ -120,7 +125,14 @@ def main():
             f"unknown benchmark(s): {', '.join(unknown)}"
         )
 
-    methods = [args.method] if args.method else METHODS
+    if args.method:
+        methods = [m.strip() for m in args.method.split(",") if m.strip()]
+    else:
+        methods = METHODS
+    bad = [m for m in methods if m not in METHODS]
+    if bad:
+        parser.error(f"unknown method(s): {', '.join(bad)}")
+
     llm = make_llm(args.model, backend=args.backend)
     system_llm = (
         make_llm(args.opt_model, backend=args.backend)
@@ -132,7 +144,7 @@ def main():
         llm=llm,
         system_llm=system_llm,
         max_workers=args.workers,
-        sample_fn=_sample_fn(args.sample),
+        sample_fn=_sample_fn(args.sample, args.seed),
         output_path=Path(args.out),
     )
     runner.run_all(tasks)
