@@ -9,7 +9,7 @@ from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.optimizer.hype import hype_optimizer
-from coolprompt.optimizer.reflective_prompt import reflectiveprompt
+from coolprompt.optimizer.reflective_prompt import reflectiveprompt, coevo
 from coolprompt.optimizer.regps import regps
 from coolprompt.optimizer.distill_prompt.run import distillprompt
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
@@ -42,10 +42,12 @@ class PromptTuner:
         (Task.CLASSIFICATION, Method.REFLECTIVE): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.DISTILL): CLASSIFICATION_TASK_TEMPLATE,
         (Task.CLASSIFICATION, Method.REGPS): CLASSIFICATION_TASK_TEMPLATE,
+        (Task.CLASSIFICATION, Method.COEVO): CLASSIFICATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.HYPE): GENERATION_TASK_TEMPLATE_HYPE,
         (Task.GENERATION, Method.REFLECTIVE): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.REGPS): GENERATION_TASK_TEMPLATE,
         (Task.GENERATION, Method.DISTILL): GENERATION_TASK_TEMPLATE,
+        (Task.GENERATION, Method.COEVO): GENERATION_TASK_TEMPLATE,
     }
 
     NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD = 5
@@ -77,6 +79,8 @@ class PromptTuner:
         self.init_prompt = None
         self.final_metric = None
         self.final_prompt = None
+        self.final_role = None
+        self.final_constraints = None
         self.assistant_feedback = None
 
         self.synthetic_dataset = None
@@ -386,6 +390,18 @@ class PromptTuner:
                 initial_prompt=start_prompt,
                 **kwargs,
             )
+        elif method is Method.COEVO:
+            coevo_result = coevo(
+                model=self._target_model,
+                dataset_split=dataset_split,
+                evaluator=evaluator,
+                problem_description=problem_description,
+                initial_prompt=start_prompt,
+                **kwargs,
+            )
+            final_prompt = coevo_result["task_description"]
+            self.final_role = coevo_result["system_behavior"]
+            self.final_constraints = coevo_result["output_constraints"]
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
@@ -408,6 +424,8 @@ class PromptTuner:
             dataset=dataset_split[1],
             targets=dataset_split[3],
             template=template,
+            system_role=self.final_role,
+            constraints=self.final_constraints,
         )
         logger.info(
             f"Initial {metric} score: {self.init_metric}, "

@@ -412,9 +412,9 @@ class ReflectiveEvoluter:
             return "(none)"
         lines = []
         for i, ex in enumerate(self._elitist_bad_examples, 1):
-            inp = ex.get("input", "")[:120]
-            out = ex.get("output", "")
-            correct = ex.get("correct", "")
+            inp = ex.input[:120]
+            out = ex.output
+            correct = ex.correct
             lines.append(
                 f"{i}. Input: {inp}\n   Got: {out}  |  Expected: {correct}"
             )
@@ -464,7 +464,7 @@ class ReflectiveEvoluter:
         counts: Dict[str, Dict] = {}
         for p in top_half:
             for ex in p.bad_examples:
-                key = ex.get("input", "")
+                key = ex.input
                 if key not in counts:
                     counts[key] = {"count": 0, "ex": ex}
                 counts[key]["count"] += 1
