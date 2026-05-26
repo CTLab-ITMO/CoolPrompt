@@ -8,6 +8,9 @@ include = ["*"]  # package names should match these glob patterns (["*"] by defa
 exclude = ["test", "notebooks", "data"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false
 
+[tool.setuptools.package-data]
+"coolprompt.optimizer.rider.vendor.rider.config.templates" = ["*.yaml"]
+
 [project]
 name = "coolprompt"
 version = "1.2.0"

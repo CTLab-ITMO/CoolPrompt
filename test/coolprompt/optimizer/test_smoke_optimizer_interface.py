@@ -4,12 +4,16 @@ import pytest
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
+from coolprompt.optimizer.rider import RIDERGenesisMethod
 from coolprompt.utils.var_validation import _METHOD_BY_NAME, validate_method
 
 
 def test_autoprompting_module_exports():
     assert issubclass(HyPERLightMethod, AutoPromptingMethod)
     assert HyPERLightMethod().name == "hyper_light"
+    assert issubclass(RIDERGenesisMethod, AutoPromptingMethod)
+    assert RIDERGenesisMethod().name == "rider"
+    assert RIDERGenesisMethod().is_data_driven() is False
 
 
 def test_validate_method_string_class_and_instance_equivalent():
@@ -19,6 +23,12 @@ def test_validate_method_string_class_and_instance_equivalent():
     for m in (a, b, c):
         assert isinstance(m, HyPERLightMethod)
         assert m.name == "hyper_light"
+
+
+def test_validate_rider_method():
+    method = validate_method("rider")
+    assert isinstance(method, RIDERGenesisMethod)
+    assert method.name == "rider"
 
 
 def test_validate_method_unknown_name():
@@ -44,6 +54,7 @@ def test_method_by_name_covers_expected_keys():
         "distill",
         "regps",
         "compress",
+        "rider",
     }
 
 
@@ -52,6 +63,7 @@ def test_method_evaluation_entrypoint():
 
     assert callable(me.evaluate_method)
     assert hasattr(HyPERLightMethod(), "run")
+    assert "rider" in me._BENCHMARK_IMPL
 
 
 def test_prompt_tuner_importable():

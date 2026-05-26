@@ -1,0 +1,66 @@
+# RIDER Quick Test Configuration
+# Minimal configuration for fast testing and debugging
+
+# Experiment metadata
+experiment_name: "quick_test"
+description: "Quick test of RIDER on a single dataset with minimal resources"
+seed: 42
+
+# Single dataset for quick testing
+datasets:
+  - name: "GSM8K"  # Change to AG_News, SQuAD_2, CommonGen, or XSum
+    train_size: 20
+    val_size: 20
+    dev_size: 10
+    test_size: 50
+
+# Only RIDER for quick test
+methods:
+  - "RIDER"
+
+# LLM Configuration
+llm:
+  provider: "openai"
+  model: "gpt-3.5-turbo"
+  temperature: 0.7
+  max_tokens: 2048
+  timeout: 30
+  max_retries: 3
+
+# RIDER Configuration (minimal for speed)
+rider:
+  # Small population for quick test
+  population_size: 5
+  num_generations: 3
+  elite_size: 2
+  tournament_size: 2
+
+  # Diversity
+  diversity_threshold: 0.85
+
+  # UCB
+  ucb_c: 1.414
+
+  # Adaptive Hyperparameters
+  temperature_min: 0.3
+  temperature_max: 1.2
+
+  # Memory
+  max_memory_patterns: 10
+  memory_update_interval: 2
+
+  # Selection
+  use_pareto_selection: false
+  ensemble_size: 3
+
+# Evaluation
+evaluation:
+  use_cache: true
+  max_cache_size: 1000
+  show_progress: true
+  save_predictions: true
+
+# Output
+output_dir: "./results/quick_test"
+save_history: true
+save_checkpoints: false
