@@ -1,5 +1,4 @@
 from pathlib import Path
-from threading import Lock
 
 import pytest
 
@@ -39,20 +38,6 @@ class _FakeRiderGenesis:
         return f"optimized via {mode}: {prompt}"
 
 
-class _ScriptedModel:
-    def __init__(self, responses):
-        self.responses = list(responses)
-        self.calls = []
-        self.lock = Lock()
-
-    def invoke(self, prompt, **kwargs):
-        with self.lock:
-            self.calls.append((prompt, dict(kwargs)))
-            if not self.responses:
-                raise RuntimeError("scripted model is out of responses")
-            return self.responses.pop(0)
-
-
 def test_rider_method_uses_ultra_by_default(monkeypatch):
     _FakeRiderGenesis.instances = []
     monkeypatch.setattr(rider_module, "load_rider_genesis", lambda: _FakeRiderGenesis)
@@ -70,21 +55,21 @@ def test_rider_method_uses_ultra_by_default(monkeypatch):
     assert instance.run_calls == [("Improve this prompt", "ultra", {})]
 
 
-def test_rider_optimizer_accepts_mode_override_and_reports_calls(monkeypatch):
+def test_rider_optimizer_runs_ultra_and_reports_calls(monkeypatch):
     _FakeRiderGenesis.instances = []
     monkeypatch.setattr(rider_module, "load_rider_genesis", lambda: _FakeRiderGenesis)
 
-    optimizer = RIDEROptimizer(model=object(), mode="standard", verbose=True)
+    optimizer = RIDEROptimizer(model=object(), mode="ultra", verbose=True)
     result = optimizer.optimize("Start prompt")
 
-    assert result == "optimized via standard: Start prompt"
+    assert result == "optimized via ultra: Start prompt"
     assert optimizer.api_calls == 7
     assert optimizer.last_rider is _FakeRiderGenesis.instances[-1]
 
 
-def test_rider_optimizer_rejects_unknown_mode():
-    with pytest.raises(ValueError, match="Unknown RIDER mode"):
-        RIDEROptimizer(model=object(), mode="experimental")
+def test_rider_optimizer_rejects_non_ultra_mode():
+    with pytest.raises(ValueError, match="only RIDER Ultra"):
+        RIDEROptimizer(model=object(), mode="light")
 
 
 def test_load_vendored_rider_genesis_without_api_key(monkeypatch):
@@ -118,44 +103,10 @@ def test_vendored_rider_runtime_is_byte_identical_to_source():
     assert changed == []
 
 
-def test_rider_light_end_to_end_with_real_vendored_flow():
-    strategy_a = (
-        "You are an expert prompt engineer. Write a four-line cat poem with concrete "
-        "imagery, AABB rhyme, concise wording, and no commentary."
-    )
-    strategy_b = (
-        "Act as a precise poetry coach. Produce exactly four lines about a cat, use "
-        "AABB rhyme, sensory details, and output only the poem."
-    )
-    responses = [
-        (
-            '{"task_archetype":"creative_writing","language":"en","domain":"poetry",'
-            '"audience":"general","output_format_anchor":"four-line poem",'
-            '"must_preserve":[],"failure_modes":["generic wording"],'
-            '"recommended_strategies":["structural","analytical"],"avoid_strategies":[]}'
-        ),
-        strategy_a,
-        strategy_b,
-        "WINNER: 2\nWHY: stronger constraints.",
-        (
-            "DIM1 CLARITY: 4\nDIM2 SPECIFICITY: 4\n"
-            "DIM3 CONSTRAINT_COMPLETENESS: 4\nDIM4 OUTPUT_ANCHORING: 4\n"
-            "DIM5 EDGE_CASE_COVERAGE: 3\nDIM6 BREVITY_VS_BLOAT: 4\n"
-            "TOP_WEAKNESSES:\n"
-            "- EDGE_CASE_COVERAGE: missing cliche guard -> add concrete anti-cliche guard"
-        ),
-        (
-            "You are a precise poetry coach. Produce exactly four lines about a cat, "
-            "use AABB rhyme, sensory details, avoid cliches, and output only the poem."
-        ),
-        "A: 3\nB: 9",
-    ]
-    model = _ScriptedModel(responses)
-
-    optimizer = RIDEROptimizer(model=model, mode="light")
-    output = optimizer.optimize("write a cat poem")
-
-    assert "cat" in output.lower()
-    assert "AABB" in output
-    assert optimizer.api_calls == 7
-    assert len(model.calls) == 7
+def test_rider_method_rejects_light_mode_override():
+    with pytest.raises(ValueError, match="only RIDER Ultra"):
+        RIDERGenesisMethod().optimize(
+            model=object(),
+            initial_prompt="Improve this prompt",
+            rider_mode="light",
+        )

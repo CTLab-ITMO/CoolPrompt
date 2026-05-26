@@ -20,7 +20,7 @@ class RIDEROptimizer:
     """Run the byte-identical vendored RiderGenesis through LangChain models."""
 
     _RIDER_MODEL_ALIAS = "coolprompt/langchain"
-    _VALID_MODES = {"light", "blitz", "standard", "ultra"}
+    _MODE = "ultra"
     _CONSTRUCTION_LOCK = threading.Lock()
 
     def __init__(
@@ -30,7 +30,7 @@ class RIDEROptimizer:
         planner_model: Optional[BaseLanguageModel] = None,
         judge_model: Optional[BaseLanguageModel] = None,
         critic_model: Optional[BaseLanguageModel] = None,
-        mode: str = "ultra",
+        mode: Optional[str] = None,
         verbose: bool = False,
         rider_model_alias: str = _RIDER_MODEL_ALIAS,
     ) -> None:
@@ -44,19 +44,20 @@ class RIDEROptimizer:
         self._last_rider: Any = None
 
     @classmethod
-    def _normalize_mode(cls, mode: str) -> str:
-        normalized = str(mode or "ultra").strip().lower()
-        if normalized not in cls._VALID_MODES:
+    def _normalize_mode(cls, mode: Optional[str]) -> str:
+        normalized = cls._MODE if mode is None else str(mode).strip().lower()
+        if normalized != cls._MODE:
             raise ValueError(
-                f"Unknown RIDER mode: {mode}. Available modes: {sorted(cls._VALID_MODES)}."
+                "CoolPrompt exposes only RIDER Ultra. "
+                "Remove rider_mode/mode from the config or set it to 'ultra'."
             )
-        return normalized
+        return cls._MODE
 
     def _build_model_mapping(self, rider_genesis_cls: type) -> Dict[str, BaseLanguageModel]:
         mapping: Dict[str, BaseLanguageModel] = {self.rider_model_alias: self.model}
         role_models = rider_genesis_cls._MODE_ROLE_MODELS.get(  # noqa: SLF001 - vendored API
-            self.mode,
-            rider_genesis_cls._MODE_ROLE_MODELS["standard"],  # noqa: SLF001
+            self._MODE,
+            rider_genesis_cls._MODE_ROLE_MODELS.get("standard", {}),  # noqa: SLF001
         )
         role_to_model = {
             "worker": self.model,
@@ -85,8 +86,8 @@ class RIDEROptimizer:
                 verbose=self.verbose,
             )
         self._last_rider = rider
-        logger.info("Running RIDER Genesis in %s mode", self.mode)
-        return rider.run(prompt, mode=self.mode)
+        logger.info("Running RIDER Genesis Ultra")
+        return rider.run(prompt, mode=self._MODE)
 
     @property
     def api_calls(self) -> int:
@@ -117,7 +118,7 @@ class RIDERGenesisMethod(AutoPromptingMethod):
             planner_model=kwargs.pop("planner_model", kwargs.pop("planning_model", None)),
             judge_model=kwargs.pop("judge_model", None),
             critic_model=kwargs.pop("critic_model", None),
-            mode=kwargs.pop("rider_mode", kwargs.pop("mode", "ultra")),
+            mode=kwargs.pop("rider_mode", kwargs.pop("mode", None)),
             verbose=kwargs.pop("rider_verbose", kwargs.pop("verbose", False)),
             rider_model_alias=kwargs.pop("rider_model_alias", RIDEROptimizer._RIDER_MODEL_ALIAS),
         )
@@ -132,7 +133,7 @@ class RIDERGenesisMethod(AutoPromptingMethod):
         return self.optimize(
             ctx.model,
             start_prompt,
-            mode=method_config.get("rider_mode", method_config.get("mode", "ultra")),
+            mode=method_config.get("rider_mode", method_config.get("mode")),
             rider_verbose=method_config.get("verbose", False),
         )
 
