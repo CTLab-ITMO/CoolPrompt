@@ -18,6 +18,12 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     Recommendation,
     SECTION_GROUPS_FILTER_PROMPT,
 )
+from coolprompt.optimizer.structured_schemas.hyper import (
+    InstanceLeakAuditResponse,
+    RecommendationGroupsResponse,
+    SectionRecommendationResponse,
+    SynthesizedRecommendationsResponse,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +56,7 @@ class FeedbackModule:
         contrastive_max_answer_chars: int = 500,
         feedback_answer_head_chars: int = 500,
         feedback_answer_tail_chars: int = 500,
+        use_structured_output: bool = False,
         **kwargs: Any,
     ) -> None:
         """Configure the feedback LLM client and truncation budgets.
@@ -92,6 +99,7 @@ class FeedbackModule:
         self.contrastive_max_answer_chars = contrastive_max_answer_chars
         self.feedback_answer_head_chars = feedback_answer_head_chars
         self.feedback_answer_tail_chars = feedback_answer_tail_chars
+        self.use_structured_output = use_structured_output
         self.last_audit_trace: List[Dict[str, Any]] = []
 
     def _build_section_descriptions(self) -> str:
@@ -161,8 +169,37 @@ class FeedbackModule:
             ground_truth=ground_truth,
             section_descriptions=self._build_section_descriptions(),
         )
+        if self.use_structured_output:
+            return self._invoke_structured_recommendation(formatted_prompt)
         result = get_model_answer_extracted(self.model, formatted_prompt)
         return self._parse_recommendation(result)
+
+    def _invoke_structured_recommendation(self, formatted_prompt: str) -> Recommendation:
+        """Run a structured LLM call returning a SectionRecommendationResponse.
+
+        Validates the returned section against ``self._valid_sections`` and
+        maps unknown / blank sections to the ``general`` section, mirroring
+        the behavior of :meth:`_try_parse` for the text-mode path.
+        """
+        structured = self.model.with_structured_output(
+            SectionRecommendationResponse, method="json_schema"
+        )
+        try:
+            response = structured.invoke(formatted_prompt)
+        except Exception as exc:
+            logger.debug(f"[Feedback] structured recommendation call failed: {exc}")
+            return Recommendation(section=GENERAL_SECTION, text="")
+        section = (response.section or "").strip()
+        text = (response.text or "").strip()
+        if not text:
+            return Recommendation(section=GENERAL_SECTION, text="")
+        if section not in self._valid_sections:
+            if section:
+                logger.debug(
+                    f"[Feedback] Unknown section '{section}' from model -> general"
+                )
+            section = GENERAL_SECTION
+        return Recommendation(section=section, text=text)
 
     @staticmethod
     def _pick_best_contrastive(
@@ -266,6 +303,8 @@ class FeedbackModule:
             ground_truth=ground_truth,
             section_descriptions=self._build_section_descriptions(),
         )
+        if self.use_structured_output:
+            return self._invoke_structured_recommendation(formatted_prompt)
         result = get_model_answer_extracted(self.model, formatted_prompt)
         return self._parse_recommendation(result)
 
@@ -403,15 +442,32 @@ class FeedbackModule:
             problem_description=problem_description,
             recommendations_json=json.dumps(payload, ensure_ascii=False, indent=2),
         )
-        raw = get_model_answer_extracted(self.model, prompt)
-        raw_str = raw if isinstance(raw, str) else str(raw)
+
+        raw_str = ""
         try:
-            data = extract_json(raw_str)
-            if not isinstance(data, dict) or "verdicts" not in data:
-                raise ValueError("missing 'verdicts' key")
-            verdicts = data["verdicts"]
-            if not isinstance(verdicts, list) or len(verdicts) != len(recs):
-                raise ValueError("verdicts count mismatch")
+            if self.use_structured_output:
+                structured = self.model.with_structured_output(
+                    InstanceLeakAuditResponse, method="json_schema"
+                )
+                response = structured.invoke(prompt)
+                verdicts: List[Any] = [
+                    {
+                        "verdict": (v.verdict or "").strip(),
+                        "text": (v.text or "").strip(),
+                    }
+                    for v in (response.verdicts or [])
+                ]
+                if len(verdicts) != len(recs):
+                    raise ValueError("verdicts count mismatch")
+            else:
+                raw = get_model_answer_extracted(self.model, prompt)
+                raw_str = raw if isinstance(raw, str) else str(raw)
+                data = extract_json(raw_str)
+                if not isinstance(data, dict) or "verdicts" not in data:
+                    raise ValueError("missing 'verdicts' key")
+                verdicts = data["verdicts"]
+                if not isinstance(verdicts, list) or len(verdicts) != len(recs):
+                    raise ValueError("verdicts count mismatch")
             kept: List[Recommendation] = []
             trace: List[Dict[str, Any]] = []
             for r, v in zip(recs, verdicts):
@@ -504,9 +560,33 @@ class FeedbackModule:
             section_name=section_name,
             groups_json=json.dumps(group_payload, ensure_ascii=False, indent=2),
         )
-        raw = get_model_answer_extracted(self.model, prompt)
 
-        synthesized = self._parse_synthesized_filter_response(raw)
+        synthesized: Optional[List[Tuple[str, int]]] = None
+        if self.use_structured_output:
+            try:
+                structured = self.model.with_structured_output(
+                    SynthesizedRecommendationsResponse, method="json_schema"
+                )
+                response = structured.invoke(prompt)
+                parsed: List[Tuple[str, int]] = []
+                for item in response.synthesized or []:
+                    text = (item.text or "").strip()
+                    try:
+                        weight = max(1, int(item.weight))
+                    except (TypeError, ValueError):
+                        weight = 1
+                    if text:
+                        parsed.append((text, weight))
+                synthesized = parsed or None
+            except Exception as exc:
+                logger.debug(
+                    f"[Feedback] structured section filter failed: {exc}"
+                )
+                synthesized = None
+        else:
+            raw = get_model_answer_extracted(self.model, prompt)
+            synthesized = self._parse_synthesized_filter_response(raw)
+
         if synthesized is None:
             logger.warning(
                 f"[Feedback] Section '{section_name}': group filter parse "
@@ -550,6 +630,34 @@ class FeedbackModule:
         prompt = RECOMMENDATIONS_GROUP_PROMPT.format(
             items_json=json.dumps(payload, ensure_ascii=False, indent=2)
         )
+
+        if self.use_structured_output:
+            try:
+                structured = self.model.with_structured_output(
+                    RecommendationGroupsResponse, method="json_schema"
+                )
+                response = structured.invoke(prompt)
+                raw_groups = response.groups or []
+                groups: List[List[int]] = []
+                for g in raw_groups:
+                    if not isinstance(g, list):
+                        continue
+                    ids = [int(x) for x in g if isinstance(x, (int, float, str))]
+                    ids = [i for i in ids if 0 <= i < len(texts)]
+                    if ids:
+                        groups.append(ids)
+                seen = {i for grp in groups for i in grp}
+                for i in range(len(texts)):
+                    if i not in seen:
+                        groups.append([i])
+                if groups:
+                    return groups
+            except Exception as exc:
+                logger.debug(
+                    f"[Feedback] structured group partition failed: {exc}"
+                )
+            return [[i] for i in range(len(texts))]
+
         raw = get_model_answer_extracted(self.model, prompt)
         try:
             data = extract_json(raw if isinstance(raw, str) else str(raw))
