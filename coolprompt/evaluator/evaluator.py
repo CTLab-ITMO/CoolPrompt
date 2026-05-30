@@ -12,7 +12,13 @@ from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
 from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
+    CLASSIFICATION_TASK_TEMPLATE_STRUCTURED,
     GENERATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE_STRUCTURED,
+)
+from coolprompt.utils.structured_schemas.evaluator import (
+    ClassificationAnswerResponse,
+    GenerationAnswerResponse,
 )
 
 
@@ -52,13 +58,34 @@ class Evaluator:
         task: Task,
         metric: BaseMetric,
         batch_size: int = 25,
+        use_structured_output: bool = False,
     ) -> None:
-        """Initialize the evaluator with a model, task type, metric, and batch size."""
+        """Initialize the evaluator with a model, task type, metric, and batch size.
+
+        Args:
+            model (BaseLanguageModel): LangChain model used to generate
+                answers on dataset samples.
+            task (Task): Task type (classification / generation).
+            metric (BaseMetric): Metric instance used to score answers.
+            batch_size (int): Batch size for the model.
+            use_structured_output (bool): If ``True``, the target model
+                is invoked via ``model.with_structured_output(schema,
+                method="json_schema")`` with a task-specific pydantic
+                schema (see ``coolprompt.utils.structured_schemas.evaluator``).
+                The extracted ``answer`` field is then wrapped back into
+                ``<ans>...</ans>`` so the downstream metric parsing in
+                ``BaseMetric.compute`` is preserved unchanged. Defaults
+                to ``False``.
+        """
         self.model = model
         self.task = task
         self.metric = metric
         self.batch_size = batch_size
-        logger.info(f"Evaluator successfully initialized with {metric} metric")
+        self.use_structured_output = use_structured_output
+        logger.info(
+            f"Evaluator successfully initialized with {metric} metric "
+            f"(use_structured_output={use_structured_output})"
+        )
 
     def evaluate(
         self,
@@ -152,11 +179,40 @@ class Evaluator:
             raw_outputs=answers,
         )
 
+    def _get_response_schema(self):
+        """Returns the pydantic response schema for the current task."""
+        match self.task:
+            case Task.CLASSIFICATION:
+                return ClassificationAnswerResponse
+            case Task.GENERATION:
+                return GenerationAnswerResponse
+        raise ValueError(f"Unsupported task for structured output: {self.task}")
+
+    def _wrap_in_ans_tags(self, answer: str) -> str:
+        """Wraps a raw answer string in <ans>...</ans> tags so that the
+        downstream metric parsing (``extract_answer``) treats it the same
+        way as a free-text answer."""
+        start, end = self.metric.ANS_TAGS
+        return f"{start}{answer}{end}"
+
     def _run_batches(self, full_prompts: list[str]) -> list[str]:
-        """Run the model on preformatted prompts in batches with progress tracking."""
+        """Run the model on preformatted prompts in batches with progress tracking.
+
+        When ``self.use_structured_output`` is ``True`` the target model is
+        invoked through ``with_structured_output`` with the task-specific
+        schema; the resulting ``answer`` field is wrapped in ``<ans>``
+        tags to preserve the standard metric-parsing contract.
+        """
         answers: list[str] = []
         total = len(full_prompts)
         total_batches = (total + self.batch_size - 1) // self.batch_size
+
+        runner = self.model
+        if self.use_structured_output:
+            schema = self._get_response_schema()
+            runner = self.model.with_structured_output(
+                schema, method="json_schema"
+            )
 
         with tqdm(
             total=total,
@@ -171,7 +227,7 @@ class Evaluator:
                 batch_answers = None
                 for attempt in range(5):
                     try:
-                        batch_answers = self.model.batch(batch)
+                        batch_answers = runner.batch(batch)
                         break
                     except Exception as exception:
                         logger.warning(
@@ -187,10 +243,18 @@ class Evaluator:
                                     start // self.batch_size + 1}/{total_batches} failed after 5 attempts"
                             ) from exception
 
-                normalized_answers = [
-                    a.content if isinstance(a, AIMessage) else str(a)
-                    for a in batch_answers
-                ]
+                if self.use_structured_output:
+                    normalized_answers = [
+                        self._wrap_in_ans_tags(
+                            a.answer if hasattr(a, "answer") else str(a)
+                        )
+                        for a in batch_answers
+                    ]
+                else:
+                    normalized_answers = [
+                        a.content if isinstance(a, AIMessage) else str(a)
+                        for a in batch_answers
+                    ]
                 answers.extend(normalized_answers)
                 pbar.update(len(batch))
                 logger.debug(
@@ -233,9 +297,19 @@ class Evaluator:
                 return template.format(PROMPT=prompt, INPUT=sample)
 
     def _get_default_template(self) -> str:
-        """Returns the default template for the task type."""
+        """Returns the default template for the task type.
+
+        When ``self.use_structured_output`` is ``True`` a structured-output
+        variant of the template is returned — it omits the instruction to
+        wrap the answer in ``<ans>`` tags, since the schema field already
+        defines the answer location.
+        """
         match self.task:
             case Task.CLASSIFICATION:
+                if self.use_structured_output:
+                    return CLASSIFICATION_TASK_TEMPLATE_STRUCTURED
                 return CLASSIFICATION_TASK_TEMPLATE
             case Task.GENERATION:
+                if self.use_structured_output:
+                    return GENERATION_TASK_TEMPLATE_STRUCTURED
                 return GENERATION_TASK_TEMPLATE

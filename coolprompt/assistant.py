@@ -220,7 +220,12 @@ class PromptTuner:
             validate_verbose(verbose)
             set_verbose(verbose)
 
-        task_detector = TaskDetector(self._system_model)
+        use_structured_output = kwargs.get("use_structured_output", False)
+
+        task_detector = TaskDetector(
+            self._system_model,
+            use_structured_output=use_structured_output,
+        )
         if task is None:
             task = task_detector.generate(start_prompt)
 
@@ -252,13 +257,21 @@ class PromptTuner:
             geval_evaluation_steps=geval_evaluation_steps,
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
+            use_structured_output=use_structured_output,
         )
         metric_name = base_metric._get_name()
         evaluator = Evaluator(
-            self._target_model, task_value, base_metric, batch_size=batch_size
+            self._target_model,
+            task_value,
+            base_metric,
+            batch_size=batch_size,
+            use_structured_output=use_structured_output,
         )
         final_prompt = ""
-        generator = SyntheticDataGenerator(self._system_model)
+        generator = SyntheticDataGenerator(
+            self._system_model,
+            use_structured_output=use_structured_output,
+        )
 
         if dataset is None:
             dataset, target, problem_description = generator.generate(

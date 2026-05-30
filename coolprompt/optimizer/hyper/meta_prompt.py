@@ -16,6 +16,9 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     MetaPromptConfig,
     Recommendation,
 )
+from coolprompt.utils.structured_schemas.optimizer.hyper import (
+    ResultPromptResponse,
+)
 
 
 def _build_full_meta_prompt_template(builder: MetaPromptBuilder) -> str:
@@ -87,6 +90,16 @@ class MetaPromptOptimizer(Optimizer):
     ) -> Union[str, List[str]]:
         """Generate improved prompt(s) via the meta-prompt + LLM path."""
         query = self._format_meta_prompt(prompt, **(meta_info or {}))
+        if self.use_structured_output:
+            structured = self.model.with_structured_output(
+                ResultPromptResponse, method="json_schema"
+            )
+            if n_prompts == 1:
+                return structured.invoke(query).result_prompt
+            return [
+                r.result_prompt
+                for r in structured.batch([query] * n_prompts)
+            ]
         raw_result = get_model_answer_extracted(self.model, query, n=n_prompts)
         if n_prompts == 1:
             return self._process_model_output(raw_result)
@@ -131,8 +144,12 @@ class HyPERLightMethod(AutoPromptingMethod):
             "meta_info",
             kwargs.pop("hyper_meta_info", None),
         )
-        kwargs.setdefault("use_structured_output", False)
-        optimizer = MetaPromptOptimizer(model=model, **kwargs)
+        use_structured_output = kwargs.pop("use_structured_output", False)
+        optimizer = MetaPromptOptimizer(
+            model=model,
+            use_structured_output=use_structured_output,
+            **kwargs,
+        )
         meta_info = meta_info.copy() if meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
@@ -149,11 +166,13 @@ class HyPERLightMethod(AutoPromptingMethod):
     ) -> str:
         """Run HyPER Light from a benchmark context."""
         meta = dict(ctx.config.get("meta_info", {}))
+        mc = ctx.config.get("method", {})
         return self.optimize(
             ctx.model,
             start_prompt,
             problem_description=ctx.config.get("problem_description"),
             meta_info=meta if meta else None,
+            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self) -> bool:

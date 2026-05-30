@@ -103,12 +103,15 @@ class ReflectiveMethod(AutoPromptingMethod):
     ) -> str:
         """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
+        mc = ctx.config["method"]
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+            generator = SyntheticDataGenerator(
+                ctx._system_model,
+                use_structured_output=mc.get("use_structured_output", False),
+            )
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt
             )
-        mc = ctx.config["method"]
         return self.optimize(
             ctx.model,
             start_prompt,

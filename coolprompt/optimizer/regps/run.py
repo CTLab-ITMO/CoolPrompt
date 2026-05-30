@@ -103,8 +103,12 @@ class ReGPSMethod(AutoPromptingMethod):
     ) -> str:
         """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
+        mc = ctx.config["method"]
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+            generator = SyntheticDataGenerator(
+                ctx._system_model,
+                use_structured_output=mc.get("use_structured_output", False),
+            )
             indices = sample(range(0, len(ctx.dataset_split[0])), 5)
             examples = [
                 (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
@@ -113,7 +117,6 @@ class ReGPSMethod(AutoPromptingMethod):
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt, examples=examples
             )
-        mc = ctx.config["method"]
         return self.optimize(
             ctx.model,
             start_prompt,
