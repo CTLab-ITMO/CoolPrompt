@@ -525,8 +525,8 @@ class GEvalMetric(GenerationMetric):
         # ``with_structured_output(schema, method="json_schema")`` when
         # DeepEval provides a pydantic ``schema`` (per the
         # ``DeepEvalBaseLLM`` contract). When DeepEval does not supply a
-        # schema, the wrapper falls back to ``DeepEvalJudgeResponse`` so
-        # the legacy ``str`` return contract is preserved.
+        # schema, the wrapper falls back to a plain ``invoke`` that
+        # returns the model's textual answer (legacy behaviour).
         wrapped_model = DeepEvalLangChainModel(
             model, use_structured_output=use_structured_output
         )

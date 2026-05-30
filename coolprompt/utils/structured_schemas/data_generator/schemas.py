@@ -8,23 +8,14 @@ class ProblemDescriptionResponse(BaseModel):
 
     Used by :meth:`coolprompt.data_generator.generator.
     SyntheticDataGenerator._generate_problem_description` to obtain a
-    concise, generalized textual description of the task that the user's
-    initial prompt was created to solve.
+    textual description of the task that the user's initial prompt was
+    created to solve.
     """
 
     problem_description: str = Field(
         description=(
-            "Detailed yet generalized textual description of the task the "
-            "user's prompt was created for. Strict requirements: "
-            "(1) plain text only — no JSON, no bullet lists, no XML tags, "
-            "no enumeration prefix, no quotes; "
-            "(2) describe the task as a whole — do NOT reference specific "
-            "examples, named entities, formulas, exact phrasings or "
-            "dataset rows; "
-            "(3) cover answer format, problem subject and scope when they "
-            "are inferable from the prompt; "
-            "(4) no meta-comments such as 'this prompt', 'as described "
-            "above', 'the user wants'."
+            "Detailed textual problem description for which the user's "
+            "prompt was created."
         )
     )
 
@@ -34,17 +25,14 @@ class ClassificationTaskExample(BaseModel):
 
     input: str = Field(
         description=(
-            "Textual input for the classification task. Must contain ALL "
-            "information required to predict the label (if answer choices "
-            "are part of the task, concatenate them into the input "
-            "string). Plain text only — no JSON, no XML, no enumeration."
+            "Textual input for the classification task. Must contain all "
+            "data required to predict the label; if answer choices are "
+            "part of the task, concatenate them into the input string."
         )
     )
     output: str = Field(
         description=(
-            "Ground-truth class label for the corresponding input. Plain "
-            "text only, no quotes, no trailing explanation, no extra "
-            "fields."
+            "Textual ground-truth label corresponding to the input."
         )
     )
 
@@ -54,14 +42,8 @@ class ClassificationTaskResponse(BaseModel):
 
     examples: List[ClassificationTaskExample] = Field(
         description=(
-            "Synthetic classification examples. Strict requirements: "
-            "(1) the list length MUST equal the requested num_samples; "
-            "(2) the label distribution should be as balanced / random as "
-            "possible across the set of ground-truth labels for the task; "
-            "(3) each item is an object with EXACTLY two string fields "
-            "'input' and 'output' — no 'id', no extra keys; "
-            "(4) inputs must be self-contained (include any answer "
-            "choices inline)."
+            "List of synthetic classification examples. Try to make the "
+            "answer distribution as random as possible."
         )
     )
 
@@ -71,15 +53,13 @@ class GenerationTaskExample(BaseModel):
 
     input: str = Field(
         description=(
-            "Textual input/request for the generation task. Must include "
-            "all data required to produce the expected output. Plain text "
-            "only — no JSON, no XML, no enumeration."
+            "Textual input for the generation task. Must contain all "
+            "data required to produce the expected output."
         )
     )
     output: str = Field(
         description=(
-            "Correct model answer for the corresponding input. Plain text "
-            "only — no quotes, no trailing explanation, no extra fields."
+            "Textual correct model output corresponding to the input."
         )
     )
 
@@ -89,12 +69,7 @@ class GenerationTaskResponse(BaseModel):
 
     examples: List[GenerationTaskExample] = Field(
         description=(
-            "Synthetic generation examples. Strict requirements: "
-            "(1) the list length MUST equal the requested num_samples; "
-            "(2) each item is an object with EXACTLY two string fields "
-            "'input' and 'output' — no 'id', no extra keys; "
-            "(3) examples should cover diverse facets of the task to "
-            "form a useful validation set, while staying faithful to the "
-            "problem description."
+            "List of synthetic input-output examples for the generation "
+            "task."
         )
     )
