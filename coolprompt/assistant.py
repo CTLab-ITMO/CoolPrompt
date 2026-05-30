@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
@@ -20,6 +20,7 @@ from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+from coolprompt.evaluator import Evaluator, validate_and_create_metric
 
 
 class PromptTuner:
@@ -354,3 +355,62 @@ class PromptTuner:
         logger.info("=== Prompt Optimization Completed ===")
 
         return final_prompt if return_final_prompt else None
+
+    def test(
+        self,
+        dataset: Iterable[str],
+        task: str,
+        batch_size: int = 25,
+    ) -> List[str]:
+        """
+        Generate model predictions for a test dataset using final_prompt.
+
+        For each sample in the dataset,
+        the final prompt is formatted with the sample using the task template,
+        passed to the model to generate an output,
+        and all outputs are collected and returned as strings.
+
+        Args:
+            dataset (Iterable[str]): Input samples to process.
+            task (str): Task type ("classification" or "generation").
+            batch_size (int, default=25): Number of samples per inference batch.
+
+        Returns:
+            List[str]: Raw model outputs, one per input sample, in order.
+
+        Raises:
+            ValueError: If final_prompt is not set or task is missing.
+        """
+        if self.final_prompt is None:
+            raise ValueError("Final prompt is not set. Call .run() first.")
+
+        task_str = task.lower()
+        if task_str not in ("classification", "generation"):
+            raise ValueError("task must be 'classification' or 'generation'.")
+
+        from coolprompt.evaluator import Evaluator, validate_and_create_metric
+        from coolprompt.utils.enums import Task
+
+        task_enum = Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
+        metric_name = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
+        metric = validate_and_create_metric(task_enum, metric_name)
+
+        evaluator = Evaluator(
+            model=self._target_model,
+            task=task_enum,
+            metric=metric,
+            batch_size=batch_size,
+        )
+
+        dataset_list = list(dataset)
+        dummy_targets = [""] * len(dataset_list)
+
+        result = evaluator.evaluate(
+            prompt=self.final_prompt,
+            dataset=dataset_list,
+            targets=dummy_targets,
+            template=None,
+            return_detailed=True,
+        )
+
+        return result.raw_outputs
