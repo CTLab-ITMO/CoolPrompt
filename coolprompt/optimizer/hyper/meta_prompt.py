@@ -136,10 +136,11 @@ class HyPERLightMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         meta_prompt_context = kwargs.pop("meta_prompt_context", None)
-        use_structured_output = kwargs.pop("use_structured_output", False)
         optimizer = MetaPromptOptimizer(
             model=model,
             use_structured_output=use_structured_output,
@@ -158,15 +159,16 @@ class HyPERLightMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         meta = dict(ctx.config.get("meta_info", {}))
-        mc = ctx.config.get("method", {})
         return self.optimize(
             ctx.model,
             start_prompt,
             problem_description=ctx.config.get("problem_description"),
             meta_prompt_context=meta if meta else None,
-            use_structured_output=mc.get("use_structured_output", False),
+            use_structured_output=use_structured_output,
         )
 
     def is_data_driven(self) -> bool:

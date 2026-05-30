@@ -94,6 +94,8 @@ class DistillMethod(AutoPromptingMethod):
         dataset_split,
         evaluator,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         return distillprompt(
@@ -101,6 +103,7 @@ class DistillMethod(AutoPromptingMethod):
             dataset_split=dataset_split,
             evaluator=evaluator,
             initial_prompt=initial_prompt,
+            use_structured_output=use_structured_output,
             **kwargs,
         )
 
@@ -108,6 +111,8 @@ class DistillMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         mc = ctx.config.get("method", {})
         return self.optimize(
@@ -115,10 +120,10 @@ class DistillMethod(AutoPromptingMethod):
             start_prompt,
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
+            use_structured_output=use_structured_output,
             num_epochs=mc.get("num_epochs", 5),
             output_path=mc.get("output_path", "./distillprompt_outputs"),
             use_cache=mc.get("use_cache", True),
-            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self):

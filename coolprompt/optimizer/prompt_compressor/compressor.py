@@ -103,8 +103,21 @@ class CompressorMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
+        """Compress ``initial_prompt``.
+
+        Note:
+            :class:`PromptCompressor` is intrinsically built on top of
+            ``with_structured_output``. The ``use_structured_output`` flag is
+            accepted here only for interface uniformity with other methods
+            and is effectively ignored — compression always uses structured
+            output regardless of its value.
+        """
+        del use_structured_output
+
         compressor = PromptCompressor(
             model=model,
             system_prompt=self.system_prompt,
@@ -126,6 +139,8 @@ class CompressorMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         mc = ctx.config.get("method", {})
         method = CompressorMethod(
@@ -133,7 +148,11 @@ class CompressorMethod(AutoPromptingMethod):
             user_prompt=mc.get("user_prompt", self.user_prompt),
             return_metadata=mc.get("return_metadata", False),
         )
-        return method.optimize(ctx.model, start_prompt)
+        return method.optimize(
+            ctx.model,
+            start_prompt,
+            use_structured_output=use_structured_output,
+        )
 
     def is_data_driven(self) -> bool:
         return False

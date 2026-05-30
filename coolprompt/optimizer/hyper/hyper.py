@@ -702,6 +702,8 @@ class HyPERMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         n_iterations = kwargs.pop("n_iterations", 5)
@@ -716,7 +718,6 @@ class HyPERMethod(AutoPromptingMethod):
         feedback_answer_tail_chars = kwargs.pop("feedback_answer_tail_chars", 500)
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
-        use_structured_output = kwargs.pop("use_structured_output", False)
 
         meta_prompt_context = kwargs.pop("meta_prompt_context", None)
         optimizer = HyPEROptimizer(
@@ -752,6 +753,8 @@ class HyPERMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         meta = dict(ctx.config.get("meta_info", {}))
         if "task_description" not in meta:
@@ -765,6 +768,7 @@ class HyPERMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=ctx.config.get("problem_description"),
+            use_structured_output=use_structured_output,
             meta_prompt_context=meta if meta else None,
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),
@@ -778,7 +782,6 @@ class HyPERMethod(AutoPromptingMethod):
             feedback_answer_tail_chars=mc.get("feedback_answer_tail_chars", 500),
             enable_instance_leak_audit=mc.get("enable_instance_leak_audit", True),
             random_seed=mc.get("random_seed", None),
-            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self):
