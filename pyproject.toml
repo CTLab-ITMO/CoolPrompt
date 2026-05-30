@@ -34,7 +34,7 @@ classifiers = [
 ]
 dependencies = [
   "accelerate>=1.10.0",
-  "bert-score>=0.3.0",
+  "code-bert-score>=0.3.0",
   "evaluate>=0.4.0",
   "tqdm>=4.67.0",
   "urllib3>=2.3.0",
