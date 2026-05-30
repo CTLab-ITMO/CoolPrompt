@@ -84,6 +84,8 @@ class ReflectiveMethod(AutoPromptingMethod):
         dataset_split,
         evaluator,
         problem_description,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         """Run ReflectivePrompt through the shared method interface."""
@@ -93,6 +95,7 @@ class ReflectiveMethod(AutoPromptingMethod):
             evaluator=evaluator,
             problem_description=problem_description,
             initial_prompt=initial_prompt,
+            use_structured_output=use_structured_output,
             **kwargs,
         )
 
@@ -100,6 +103,8 @@ class ReflectiveMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
@@ -107,7 +112,7 @@ class ReflectiveMethod(AutoPromptingMethod):
         if problem_description is None:
             generator = SyntheticDataGenerator(
                 ctx._system_model,
-                use_structured_output=mc.get("use_structured_output", False),
+                use_structured_output=use_structured_output,
             )
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt
@@ -118,6 +123,7 @@ class ReflectiveMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=problem_description,
+            use_structured_output=use_structured_output,
             population_size=mc.get("population_size", 10),
             num_epochs=mc.get("num_epochs", 5),
             output_path=mc.get("output_path", "./reflectiveprompt_outputs"),

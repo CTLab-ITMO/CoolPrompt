@@ -98,9 +98,26 @@ class AutoPromptingMethod(ABC):
         dataset_split: Tuple[List[str], List[str], List[str], List[str]] | None,
         evaluator: Evaluator | None,
         problem_description: str | None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ) -> str:
-        """Run the prompt optimization process."""
+        """Run the prompt optimization process.
+
+        Args:
+            model: Language model used by the optimizer.
+            initial_prompt: Starting prompt to optimize.
+            dataset_split: Optional ``(train, val, train_targets, val_targets)``
+                split for data-driven methods.
+            evaluator: Optional evaluator used to score prompts.
+            problem_description: Optional natural-language task description.
+            use_structured_output: If True, the underlying optimizer should use
+                LangChain ``with_structured_output`` calls (JSON schema) for
+                LLM interactions instead of free-form text parsing. Concrete
+                methods that do not support structured output may raise
+                ``NotImplementedError`` when this is True. Defaults to False.
+            **kwargs: Method-specific extra parameters.
+        """
         pass
 
     @abstractmethod
@@ -126,8 +143,18 @@ class AutoPromptingMethod(ABC):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
-        """Optimization step for YAML benchmarks; override where supported."""
+        """Optimization step for YAML benchmarks; override where supported.
+
+        Args:
+            ctx: Pre-built :class:`BenchmarkContext` (datasets + evaluator).
+            start_prompt: Prompt to start optimization from.
+            use_structured_output: Centralized structured-output flag forwarded
+                from :meth:`run`. Subclasses should propagate it to their
+                underlying optimizer. Defaults to False.
+        """
         raise NotImplementedError(
             f"{type(self).__name__} does not support method_evaluation benchmarks"
         )
@@ -146,7 +173,14 @@ class AutoPromptingMethod(ABC):
             dict with keys ``final_prompt``, ``val_score``, ``test_score``.
         """
         ctx = build_benchmark_context(model, config)
-        final_prompt = self.run_configured_benchmark(ctx, start_prompt)
+        use_structured_output = bool(
+            config.get("method", {}).get("use_structured_output", False)
+        )
+        final_prompt = self.run_configured_benchmark(
+            ctx,
+            start_prompt,
+            use_structured_output=use_structured_output,
+        )
         val_score = ctx.evaluator.evaluate(
             prompt=final_prompt,
             dataset=ctx.dataset_split[1],

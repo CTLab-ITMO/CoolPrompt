@@ -700,6 +700,8 @@ class HyPERMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         """Run iterative HyPER optimization through the PromptTuner method API."""
@@ -715,7 +717,6 @@ class HyPERMethod(AutoPromptingMethod):
         feedback_answer_tail_chars = kwargs.pop("feedback_answer_tail_chars", 500)
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
-        use_structured_output = kwargs.pop("use_structured_output", False)
 
         meta_info = kwargs.pop(
             "meta_info",
@@ -754,6 +755,8 @@ class HyPERMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         """Run HyPER from a benchmark context and method config."""
         meta = dict(ctx.config.get("meta_info", {}))
@@ -768,6 +771,7 @@ class HyPERMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=ctx.config.get("problem_description"),
+            use_structured_output=use_structured_output,
             meta_info=meta if meta else None,
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),
@@ -781,7 +785,6 @@ class HyPERMethod(AutoPromptingMethod):
             feedback_answer_tail_chars=mc.get("feedback_answer_tail_chars", 500),
             enable_instance_leak_audit=mc.get("enable_instance_leak_audit", True),
             random_seed=mc.get("random_seed", None),
-            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self):
