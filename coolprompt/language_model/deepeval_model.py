@@ -5,10 +5,6 @@ from langchain_core.language_models import BaseLanguageModel
 from langchain_core.messages import AIMessage
 from pydantic import BaseModel
 
-from coolprompt.utils.structured_schemas.language_model import (
-    DeepEvalJudgeResponse,
-)
-
 
 class DeepEvalLangChainModel(DeepEvalBaseLLM):
     """DeepEval LLM wrapper for a LangChain ``BaseLanguageModel``.
@@ -20,18 +16,14 @@ class DeepEvalLangChainModel(DeepEvalBaseLLM):
 
     Args:
         model: The underlying LangChain language model to delegate to.
-        use_structured_output: If ``True``, calls to ``generate`` /
-            ``a_generate`` are routed through
-            ``model.with_structured_output(schema, method="json_schema")``
-            instead of a plain ``invoke``. The ``schema`` argument
-            forwarded by DeepEval (per the ``DeepEvalBaseLLM`` contract)
-            is used as-is; if the caller does not provide one, the
-            default :class:`coolprompt.utils.structured_schemas.\
-language_model.DeepEvalJudgeResponse` schema is used and its
-            ``response`` field is returned as a string to preserve the
-            legacy unstructured contract. Defaults to ``False``
-            (legacy behaviour: plain ``invoke`` + ``AIMessage`` →
-            ``str`` extraction).
+        use_structured_output: If ``True`` **and** DeepEval supplies a
+            pydantic ``schema`` to ``generate`` / ``a_generate`` (per
+            the ``DeepEvalBaseLLM`` contract), the call is routed
+            through ``model.with_structured_output(schema,
+            method="json_schema")``. Otherwise the wrapper falls back
+            to the legacy plain ``invoke`` + ``AIMessage`` → ``str``
+            extraction. Defaults to ``False`` (always legacy
+            behaviour).
     """
 
     def __init__(
@@ -76,25 +68,15 @@ language_model.DeepEvalJudgeResponse` schema is used and its
                 :attr:`use_structured_output` is ``True``.
 
         Returns:
-            * When :attr:`use_structured_output` is ``False``:
-              the raw text response (legacy behaviour).
             * When :attr:`use_structured_output` is ``True`` **and** a
               ``schema`` is supplied: a populated pydantic instance of
               that schema.
-            * When :attr:`use_structured_output` is ``True`` **and** no
-              schema is supplied: the model is invoked with the
-              fallback :class:`DeepEvalJudgeResponse` schema and only
-              its ``response`` string field is returned, so DeepEval
-              code expecting a ``str`` keeps working.
+            * Otherwise: the raw text response (legacy behaviour).
         """
         chat_model = self.load_model()
-        if self.use_structured_output:
-            if schema is not None:
-                runner = self._structured_runner(schema)
-                return runner.invoke(prompt)
-            runner = self._structured_runner(DeepEvalJudgeResponse)
-            parsed: DeepEvalJudgeResponse = runner.invoke(prompt)
-            return parsed.response
+        if self.use_structured_output and schema is not None:
+            runner = self._structured_runner(schema)
+            return runner.invoke(prompt)
 
         result = chat_model.invoke(prompt)
         return self._extract_text(result)
@@ -106,13 +88,9 @@ language_model.DeepEvalJudgeResponse` schema is used and its
     ) -> Union[str, BaseModel]:
         """Generate an asynchronous text response for DeepEval."""
         chat_model = self.load_model()
-        if self.use_structured_output:
-            if schema is not None:
-                runner = self._structured_runner(schema)
-                return await runner.ainvoke(prompt)
-            runner = self._structured_runner(DeepEvalJudgeResponse)
-            parsed: DeepEvalJudgeResponse = await runner.ainvoke(prompt)
-            return parsed.response
+        if self.use_structured_output and schema is not None:
+            runner = self._structured_runner(schema)
+            return await runner.ainvoke(prompt)
 
         result = await chat_model.ainvoke(prompt)
         return self._extract_text(result)
