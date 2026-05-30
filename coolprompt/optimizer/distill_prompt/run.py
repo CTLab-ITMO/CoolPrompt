@@ -22,6 +22,7 @@ def distillprompt(
     num_epochs: int = 5,
     output_path: str = "./distillprompt_outputs",
     use_cache: bool = True,
+    use_structured_output: bool = False,
 ) -> str:
     """Runs the full DistillPrompt optimization process.
 
@@ -43,12 +44,23 @@ def distillprompt(
             cached results. Defaults to './distillprompt_outputs'.
         use_cache (bool, optional): If True, caches intermediate results to
             the output path. Defaults to True.
+        use_structured_output (bool, optional): Kept for interface parity
+            with other optimizers. DistillPrompt is deprecated and does
+            not support structured output, so passing ``True`` raises
+            ``NotImplementedError``. Defaults to ``False``.
 
     Returns:
         str: The best prompt found after the optimization process.
+
+    Raises:
+        NotImplementedError: If ``use_structured_output`` is ``True``.
     """
 
     warn_deprecated("DistillPrompt")
+    if use_structured_output:
+        raise NotImplementedError(
+            "The method is deprecated and does not support structured output"
+        )
     (
         train_dataset,
         validation_dataset,
@@ -106,6 +118,7 @@ class DistillMethod(AutoPromptingMethod):
             num_epochs=mc.get("num_epochs", 5),
             output_path=mc.get("output_path", "./distillprompt_outputs"),
             use_cache=mc.get("use_cache", True),
+            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self):
