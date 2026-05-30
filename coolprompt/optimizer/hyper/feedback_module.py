@@ -18,7 +18,7 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     Recommendation,
     SECTION_GROUPS_FILTER_PROMPT,
 )
-from coolprompt.optimizer.structured_schemas.hyper import (
+from coolprompt.utils.structured_schemas.optimizer.hyper import (
     InstanceLeakAuditResponse,
     RecommendationGroupsResponse,
     SectionRecommendationResponse,

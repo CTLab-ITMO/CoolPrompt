@@ -21,7 +21,7 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
 from coolprompt.utils.parsing import extract_answer, extract_json
-from coolprompt.optimizer.structured_schemas.reflective_prompt import (
+from coolprompt.utils.structured_schemas.optimizer.reflective_prompt import (
     InitialPromptResponse,
     ParaphrasedPromptsResponse,
     ShortTermHintResponse,

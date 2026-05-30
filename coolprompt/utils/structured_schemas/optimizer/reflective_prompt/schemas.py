@@ -64,12 +64,9 @@ class CrossoverPromptResponse(BaseModel):
 
     prompt: str = Field(
         description=(
-            "An improved prompt produced by crossover of a worse and a better "
-            "parent prompt, explicitly applying the provided short-term "
-            "reflection hint: keep the strengths of the better prompt, "
-            "avoid the weaknesses of the worse one, and follow the hint. "
-            "Output the new prompt as plain text only — no XML tags, no "
-            "explanations, no commentary."
+            "An improved prompt for the same task, written by applying the "
+            "provided short-term reflection hint. Output the new prompt as "
+            "plain text only — no XML tags, no explanations, no commentary."
         )
     )
 
@@ -79,14 +76,8 @@ class MutatedPromptResponse(BaseModel):
 
     prompt: str = Field(
         description=(
-            "A mutated prompt derived from the elitist (best-so-far) prompt "
-            "and guided by the long-term reflection. The model decides "
-            "AUTONOMOUSLY whether to apply a STRUCTURAL transformation "
-            "(reorganize sections, change format) or a SEMANTIC modification "
-            "(rephrase, replace words, adjust voice/tone, add or delete "
-            "content) — pick whichever the long-term reflection suggests is "
-            "most beneficial. The result must remain a valid, self-contained "
-            "prompt for the same task. Plain text only, no XML tags, "
-            "no commentary."
+            "A mutated prompt for the same task, derived from the elitist "
+            "(best-so-far) prompt according to the long-term reflection. "
+            "Plain text only — no XML tags, no explanations, no commentary."
         )
     )

@@ -1,4 +1,4 @@
-from coolprompt.optimizer.structured_schemas.reflective_prompt.schemas import (
+from coolprompt.utils.structured_schemas.optimizer.reflective_prompt.schemas import (
     InitialPromptResponse,
     ParaphrasedPromptsResponse,
     ShortTermHintResponse,

@@ -32,13 +32,42 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(self.generator.model, self.mock_model)
 
     def test_inner_generate(self):
-        """Testing inner generate function"""
+        """Testing inner generate function (raw JSON fallback path)."""
 
         self.mock_model.invoke.return_value = '{"foo": "bar"}'
         self.assertEqual(
             self.generator._generate("Request", None, "foo"), "bar"
         )
         self.mock_model.invoke.assert_called_once_with("Request")
+        self.mock_model.with_structured_output.assert_not_called()
+
+    def test_inner_generate_with_structured_output(self):
+        """Testing inner generate routes through with_structured_output
+        when ``use_structured_output=True``."""
+
+        structured_model = MagicMock()
+        structured_model.invoke.return_value = ProblemDescriptionStructuredOutputSchema(
+            problem_description="bar"
+        )
+        self.mock_model.with_structured_output.return_value = structured_model
+
+        generator = SyntheticDataGenerator(
+            self.mock_model, use_structured_output=True
+        )
+        self.assertEqual(
+            generator._generate(
+                "Request",
+                ProblemDescriptionStructuredOutputSchema,
+                "problem_description",
+            ),
+            "bar",
+        )
+        self.mock_model.with_structured_output.assert_called_once_with(
+            schema=ProblemDescriptionStructuredOutputSchema,
+            method="json_schema",
+        )
+        structured_model.invoke.assert_called_once_with("Request")
+        self.mock_model.invoke.assert_not_called()
 
     def test_generate_problem_description(self):
         """Testing problem description generator"""

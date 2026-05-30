@@ -29,7 +29,7 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     PARAPHRASE_PROMPT,
     Recommendation,
 )
-from coolprompt.optimizer.structured_schemas.hyper import (
+from coolprompt.utils.structured_schemas.optimizer.hyper import (
     ParaphrasedVariantResponse,
 )
 

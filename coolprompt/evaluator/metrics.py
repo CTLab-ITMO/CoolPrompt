@@ -26,6 +26,7 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
     FLUENCY_TEMPLATE,
     RELEVANCE_TEMPLATE,
 )
+from coolprompt.utils.structured_schemas.evaluator import JudgeScoreResponse
 
 
 class HFEvaluateMetric(ABC):
@@ -413,11 +414,30 @@ class LLMAsJudge(GenerationMetric):
         prompt_template: Optional[str] = None,
         custom_templates: Optional[dict[str, str]] = None,
         metric_ceil: int = 10,
+        use_structured_output: bool = False,
     ):
+        """Initialize the LLM-as-a-judge metric.
+
+        Args:
+            model (BaseLanguageModel): LangChain judge model.
+            criteria (str | list[str]): Criterion name(s) to score on.
+            prompt_template (Optional[str]): Unused legacy argument kept
+                for backwards compatibility.
+            custom_templates (Optional[dict[str, str]]): Optional mapping
+                ``criterion -> template`` that overrides/extends the
+                built-in templates.
+            metric_ceil (int): Maximum integer score the judge can give.
+            use_structured_output (bool): If ``True``, the judge is
+                invoked via ``model.with_structured_output(JudgeScoreResponse,
+                method="json_schema")`` so the score is returned as a
+                validated integer instead of being regex-parsed from a
+                free-text response. Defaults to ``False``.
+        """
         super().__init__()
         self.model = model
         self.prompt_template = prompt_template
         self.metric_ceil = metric_ceil
+        self.use_structured_output = use_structured_output
 
         self.prompt_templates = {
             "accuracy": ACCURACY_QA_TEMPLATE,
@@ -439,6 +459,11 @@ class LLMAsJudge(GenerationMetric):
 
     def _compute_raw(self, outputs, targets, dataset):
         scores = []
+        runner = self.model
+        if self.use_structured_output:
+            runner = self.model.with_structured_output(
+                JudgeScoreResponse, method="json_schema"
+            )
         for _, template in self.templates.items():
             requests = [
                 template.format(
@@ -448,20 +473,27 @@ class LLMAsJudge(GenerationMetric):
                 )
                 for request, response in zip(dataset, outputs)
             ]
-            answers = self.model.batch(requests)
+            answers = runner.batch(requests)
 
             parsed = []
-            for a in answers:
-                if isinstance(a, AIMessage):
-                    content = (
-                        a.content
-                        if isinstance(a.content, str)
-                        else str(a.content)
-                    )
-                    match = re.search(r"\d+", content)
-                    parsed.append(int(match.group()) if match else 0)
-                else:
-                    parsed.append(0)
+            if self.use_structured_output:
+                for a in answers:
+                    try:
+                        parsed.append(int(a.score))
+                    except (AttributeError, TypeError, ValueError):
+                        parsed.append(0)
+            else:
+                for a in answers:
+                    if isinstance(a, AIMessage):
+                        content = (
+                            a.content
+                            if isinstance(a.content, str)
+                            else str(a.content)
+                        )
+                        match = re.search(r"\d+", content)
+                        parsed.append(int(match.group()) if match else 0)
+                    else:
+                        parsed.append(0)
 
             normalized = [
                 clip(ans, 0, self.metric_ceil) / self.metric_ceil
@@ -484,9 +516,20 @@ class GEvalMetric(GenerationMetric):
         evaluation_steps: Optional[list[str]] = None,
         evaluation_params: Optional[list[LLMTestCaseParams]] = None,
         strict_mode: bool = False,
+        use_structured_output: bool = False,
     ) -> None:
         super().__init__()
-        wrapped_model = DeepEvalLangChainModel(model)
+        self.use_structured_output = use_structured_output
+        # The flag is forwarded to the DeepEval wrapper so that every
+        # LLM call DeepEval issues for this metric goes through
+        # ``with_structured_output(schema, method="json_schema")`` when
+        # DeepEval provides a pydantic ``schema`` (per the
+        # ``DeepEvalBaseLLM`` contract). When DeepEval does not supply a
+        # schema, the wrapper falls back to ``DeepEvalJudgeResponse`` so
+        # the legacy ``str`` return contract is preserved.
+        wrapped_model = DeepEvalLangChainModel(
+            model, use_structured_output=use_structured_output
+        )
 
         if criteria is not None and evaluation_steps is not None:
             raise ValueError(
@@ -634,6 +677,9 @@ def validate_and_create_metric(
                         "llm_as_judge_custom_templates"
                     ),
                     metric_ceil=kwargs.get("llm_as_judge_metric_ceil", 10),
+                    use_structured_output=kwargs.get(
+                        "use_structured_output", False
+                    ),
                 )
             if metric == "geval":
                 if model is None:
@@ -646,6 +692,9 @@ def validate_and_create_metric(
                     evaluation_steps=kwargs.get("geval_evaluation_steps"),
                     evaluation_params=kwargs.get("geval_evaluation_params"),
                     strict_mode=kwargs.get("geval_strict_mode", False),
+                    use_structured_output=kwargs.get(
+                        "use_structured_output", False
+                    ),
                 )
             if metric in GENERATION_METRIC_NAME_MAPPING.keys():
                 return GENERATION_METRIC_NAME_MAPPING[metric]()

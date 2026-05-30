@@ -1,7 +1,5 @@
-from coolprompt.optimizer.structured_schemas.regps.schemas import (
+from coolprompt.utils.structured_schemas.optimizer.regps.schemas import (
     TextualGradientResponse,
-)
-from coolprompt.optimizer.structured_schemas.reflective_prompt.schemas import (
     ShortTermHintResponse,
     MutatedPromptResponse,
 )
