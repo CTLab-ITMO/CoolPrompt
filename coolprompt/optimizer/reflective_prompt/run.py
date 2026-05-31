@@ -34,7 +34,7 @@ def reflectiveprompt(
     Returns:
         str: best evoluted prompt.
     """
-    (train_dataset, validation_dataset, train_targets, validation_targets) = (
+    train_dataset, validation_dataset, train_targets, validation_targets = (
         dataset_split
     )
     args = {
@@ -77,6 +77,7 @@ def coevo(
     initial_role: Optional[str] = None,
     initial_constraints: Optional[str] = None,
     use_enhancements: bool = True,
+    use_bad_examples: Optional[bool] = None,
     **kwargs,
 ) -> dict:
     """Runs CoevoEvoluter optimization — co-evolves task description, system behavior and output constraints.
@@ -99,7 +100,9 @@ def coevo(
             - system_behavior (str): goes into the system message.
             - output_constraints (str): appended to the human message.
     """
-    (train_dataset, validation_dataset, train_targets, validation_targets) = dataset_split
+    train_dataset, validation_dataset, train_targets, validation_targets = (
+        dataset_split
+    )
     args = {
         "population_size": 10,
         "num_epochs": 5,
@@ -119,6 +122,7 @@ def coevo(
         initial_role=initial_role,
         initial_constraints=initial_constraints,
         use_enhancements=use_enhancements,
+        use_bad_examples=use_bad_examples,
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],

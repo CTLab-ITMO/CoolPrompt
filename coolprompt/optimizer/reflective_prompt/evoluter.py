@@ -119,6 +119,9 @@ class ReflectiveEvoluter:
     ROLE_PROMPT_SIM_THRESHOLD: float = 0.72
     ROLE_PROMPT_SIM_ALPHA: float = 0.05
     ELITIST_MAX_FREEZE: int = 3
+    BAD_EXAMPLES_TOP_K: int = 3
+    PREVIEW_LEN: int = 80
+    HALL_OF_FAME_MIN_SIZE: int = 10
 
     def __init__(
         self,
@@ -139,6 +142,7 @@ class ReflectiveEvoluter:
         output_path: str = "./reflectiveprompt_outputs",
         use_cache: bool = True,
         use_enhancements: bool = True,
+        use_bad_examples: Optional[bool] = None,
         freeze_text: bool = False,
         text_only: bool = False,
         val_evaluator: Optional[Evaluator] = None,
@@ -161,6 +165,9 @@ class ReflectiveEvoluter:
         self.evolve_role = evolve_role
         self.evolve_constraints = evolve_constraints
         self.use_enhancements = use_enhancements
+        self.use_bad_examples = (
+            use_enhancements if use_bad_examples is None else use_bad_examples
+        )
         self.freeze_text = freeze_text
         self.text_only = text_only
         self._role_only = (
@@ -359,9 +366,9 @@ class ReflectiveEvoluter:
         model = _get_embedding_model()
         embs = model.encode([role, prompt_text])
         return float(
-            cosine_similarity(
-                embs[0].reshape(1, -1), embs[1].reshape(1, -1)
-            )[0][0]
+            cosine_similarity(embs[0].reshape(1, -1), embs[1].reshape(1, -1))[
+                0
+            ][0]
         )
 
     def _update_hall_of_fame(self, population: List[Prompt]) -> None:
@@ -382,11 +389,11 @@ class ReflectiveEvoluter:
                 )
                 seen.add(key)
         self._hall_of_fame.sort(key=lambda x: x.score, reverse=True)
-        max_size = max(self.population_size * 2, 10)
+        max_size = max(self.population_size * 2, self.HALL_OF_FAME_MIN_SIZE)
         self._hall_of_fame = self._hall_of_fame[:max_size]
 
     def _format_bad_examples(self) -> str:
-        if not self._elitist_bad_examples:
+        if not self.use_bad_examples or not self._elitist_bad_examples:
             return "(none)"
         lines = []
         for i, ex in enumerate(self._elitist_bad_examples, 1):
@@ -412,15 +419,15 @@ class ReflectiveEvoluter:
                 content = p.constraints or "(empty)"
                 lines.append(f"{i}. [score={score_str}] {content[:120]}")
             elif self.evolve_role and self.evolve_constraints:
-                role = (p.role or "(empty)")[:80]
-                text = (p.text or "(empty)")[:80]
-                constraints = (p.constraints or "(empty)")[:80]
+                role = (p.role or "(empty)")[: self.PREVIEW_LEN]
+                text = (p.text or "(empty)")[: self.PREVIEW_LEN]
+                constraints = (p.constraints or "(empty)")[: self.PREVIEW_LEN]
                 lines.append(
                     f"{i}. [score={score_str}]\n   system_behavior: {role}\n   task_description: {text}\n   output_constraints: {constraints}"
                 )
             elif self.evolve_role:
-                role = (p.role or "(empty)")[:80]
-                text = (p.text or "(empty)")[:80]
+                role = (p.role or "(empty)")[: self.PREVIEW_LEN]
+                text = (p.text or "(empty)")[: self.PREVIEW_LEN]
                 lines.append(
                     f"{i}. [score={score_str}]\n   system_behavior: {role}\n   task_description: {text}"
                 )
@@ -430,7 +437,7 @@ class ReflectiveEvoluter:
         return "\n".join(lines)
 
     def _aggregate_bad_examples(
-        self, population: List[Prompt], top_k: int = 3
+        self, population: List[Prompt], top_k: int = BAD_EXAMPLES_TOP_K
     ) -> None:
         scored = [
             p for p in population if p.score is not None and p.bad_examples
@@ -480,7 +487,9 @@ class ReflectiveEvoluter:
             targets=targets,
             system_role=eval_role if eval_role else None,
             constraints=prompt.constraints if self.evolve_constraints else None,
-            failed_examples=10 if split == "train" else None,
+            failed_examples=(
+                10 if split == "train" and self.use_bad_examples else None
+            ),
         )
         if isinstance(result, tuple):
             score, bad_examples = result

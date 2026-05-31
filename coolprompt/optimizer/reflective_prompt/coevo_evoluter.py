@@ -1,7 +1,12 @@
 import re
 from typing import Dict, List, Optional, Tuple
 
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
@@ -25,6 +30,7 @@ from coolprompt.utils.prompt_templates.reflective_templates_coevo_per_field impo
     MUTATION_TEMPLATE_COEVO_PF,
     PROMPT_BY_DESCRIPTION_TEMPLATE_COEVO_PF,
 )
+
 
 def _sanitize(value: str) -> str:
     value = value.strip().strip('"').strip("'").strip()
@@ -79,6 +85,7 @@ class CoevoEvoluter(ReflectiveEvoluter):
         output_path: str = "./coevo_outputs",
         use_cache: bool = True,
         use_enhancements: bool = True,
+        use_bad_examples: Optional[bool] = None,
         val_evaluator: Optional[Evaluator] = None,
     ) -> None:
         super().__init__(
@@ -99,6 +106,7 @@ class CoevoEvoluter(ReflectiveEvoluter):
             output_path=output_path,
             use_cache=use_cache,
             use_enhancements=use_enhancements,
+            use_bad_examples=use_bad_examples,
             freeze_text=False,
             text_only=False,
             val_evaluator=val_evaluator,
@@ -134,7 +142,7 @@ class CoevoEvoluter(ReflectiveEvoluter):
                 output_constraints=raw.get("output_constraints")
                 or fallback_constraints,
             )
-        except Exception as e:
+        except (ValidationError, ValueError) as e:
             logger.warning(
                 f"_parse_3f_response validation failed ({e}), using fallback"
             )
@@ -274,7 +282,9 @@ class CoevoEvoluter(ReflectiveEvoluter):
                 score_text_role_constraints = self._eval_val(
                     best_text, best_role, best_constraints
                 )
-            logger.info(f"  text_role_constraints: {score_text_role_constraints:.4f}")
+            logger.info(
+                f"  text_role_constraints: {score_text_role_constraints:.4f}"
+            )
             candidates.append(
                 {
                     "combo": "text_role_constraints",
@@ -293,7 +303,9 @@ class CoevoEvoluter(ReflectiveEvoluter):
         best_c = max(
             candidates, key=lambda c: (c["val_score"], _combo_order[c["combo"]])
         )
-        logger.info(f"Best combo: {best_c['combo']} (val={best_c['val_score']:.4f})")
+        logger.info(
+            f"Best combo: {best_c['combo']} (val={best_c['val_score']:.4f})"
+        )
         return candidates, best_c
 
     def evolution(self) -> Optional[str]:
