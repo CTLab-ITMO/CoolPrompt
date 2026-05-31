@@ -114,10 +114,10 @@ class Evaluator:
         aggregate, score_per_task, _ = self.metric.compute(
             answers, targets, dataset, failed_examples, return_per_task=True
         )
-        parsed_answers = [self.metric.parse_output(a) for a in answers]
 
         detailed_failures = []
         if failed_examples and failed_examples > 0:
+            parsed_answers = [self.metric.parse_output(a) for a in answers]
             indices = np.argsort(score_per_task)[:failed_examples]
             for i in indices:
                 detailed_failures.append(
