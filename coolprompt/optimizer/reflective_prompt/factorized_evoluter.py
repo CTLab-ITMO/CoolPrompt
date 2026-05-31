@@ -118,14 +118,14 @@ class FactorizedEvoluter:
         best_constraints: str,
         score_text_role_constraints: Optional[float] = None,
     ) -> Tuple[List[dict], dict]:
-        print(
-            "\n[Field Ablation] Evaluating all field combinations on validation set..."
+        logger.info(
+            "[Field Ablation] Evaluating all field combinations on validation set..."
         )
         assert best_text is not None and best_role is not None
         score_a = self._eval_val(best_text, "", "")
-        print(f"  text_only:              {score_a:.4f}")
+        logger.info(f"  text_only:              {score_a:.4f}")
         score_b = self._eval_val(best_text, best_role, "")
-        print(f"  text_role:              {score_b:.4f}")
+        logger.info(f"  text_role:              {score_b:.4f}")
         candidates = [
             {
                 "combo": "text_only",
@@ -147,7 +147,7 @@ class FactorizedEvoluter:
                 score_text_role_constraints = self._eval_val(
                     best_text, best_role, best_constraints
                 )
-            print(
+            logger.info(
                 f"  text_role_constraints:  {score_text_role_constraints:.4f}"
             )
             candidates.append(
@@ -160,7 +160,7 @@ class FactorizedEvoluter:
                 }
             )
         best_c = max(candidates, key=lambda c: c["val_score"])
-        print(f"Best combo: {best_c['combo']} (val={best_c['val_score']:.4f})")
+        logger.info(f"Best combo: {best_c['combo']} (val={best_c['val_score']:.4f})")
         return candidates, best_c
 
     def _llm_call(self, request: str) -> str:
@@ -180,7 +180,7 @@ class FactorizedEvoluter:
             if parsed and "system_behavior" in parsed:
                 cleaned = str(parsed["system_behavior"]).strip()
                 if cleaned != role:
-                    print(
+                    logger.info(
                         f"[Dedup role] seed cleaned: '{role[:80]}' '{cleaned[:80]}'"
                     )
                 return cleaned
@@ -206,7 +206,7 @@ class FactorizedEvoluter:
             if parsed and "output_constraints" in parsed:
                 cleaned = str(parsed["output_constraints"]).strip()
                 if cleaned != constraints:
-                    print(
+                    logger.info(
                         f"[Dedup constraints] seed cleaned: '{constraints[:80]}' '{cleaned[:80]}'"
                     )
                 return cleaned
@@ -217,7 +217,7 @@ class FactorizedEvoluter:
     def evolution(self) -> str:
         last_phase = 3 if self.run_constraints_phase else 2
 
-        print(
+        logger.info(
             f"Factorized evolution: {self.phase_epochs[0]} + {self.phase_epochs[1]}"
             + (
                 f" + {self.phase_epochs[2]} epochs"
@@ -228,8 +228,8 @@ class FactorizedEvoluter:
             + (" -> constraints" if self.run_constraints_phase else "")
         )
 
-        print(
-            f"\n[Phase 1/{last_phase}] Optimizing task_description ({self.phase_epochs[0]} epochs)"
+        logger.info(
+            f"[Phase 1/{last_phase}] Optimizing task_description ({self.phase_epochs[0]} epochs)"
         )
         p1 = self._make_phase_evoluter(
             phase_name="phase1_text",
@@ -244,11 +244,11 @@ class FactorizedEvoluter:
         p1.evolution(skip_validation=True)
         best_text = p1.best_prompt_overall
         assert best_text is not None
-        print(f"Phase 1 best text score (train): {p1.best_score_overall:.4f}")
-        print(f"Phase 1 best text: {best_text[:120]}")
+        logger.info(f"Phase 1 best text score (train): {p1.best_score_overall:.4f}")
+        logger.info(f"Phase 1 best text: {best_text[:120]}")
 
-        print(
-            f"\n[Phase 2/{last_phase}] Optimizing system_behavior ({self.phase_epochs[1]} epochs)"
+        logger.info(
+            f"[Phase 2/{last_phase}] Optimizing system_behavior ({self.phase_epochs[1]} epochs)"
         )
         initial_role_for_p2 = self._dedup_role(
             best_text, self.initial_role or ""
@@ -266,8 +266,8 @@ class FactorizedEvoluter:
         )
         p2.evolution(skip_validation=skip_p2_val)
         best_role = p2.best_role_overall
-        print(f"Phase 2 best role score (train): {p2.best_score_overall:.4f}")
-        print(f"Phase 2 best role: {(best_role or '')[:120]}")
+        logger.info(f"Phase 2 best role score (train): {p2.best_score_overall:.4f}")
+        logger.info(f"Phase 2 best role: {(best_role or '')[:120]}")
 
         if not self.run_constraints_phase:
             self.initial_prompt = p1.initial_prompt
@@ -287,11 +287,11 @@ class FactorizedEvoluter:
 
         val_text_only = self._eval_val(best_text, "", "")
         val_text_role = self._eval_val(best_text, best_role or "", "")
-        print(
-            f"\n[Pre-Phase 3 check] text_only val: {val_text_only:.4f}, text_role val: {val_text_role:.4f}"
+        logger.info(
+            f"[Pre-Phase 3 check] text_only val: {val_text_only:.4f}, text_role val: {val_text_role:.4f}"
         )
         if val_text_only >= val_text_role:
-            print("Role does not improve on validation. Skipping Phase 3.")
+            logger.info("Role does not improve on validation. Skipping Phase 3.")
             self.initial_prompt = p1.initial_prompt
             self.initial_role = p2.initial_role or ""
             self.initial_constraints = ""
@@ -307,14 +307,14 @@ class FactorizedEvoluter:
             self.best_score_overall = best_c["val_score"]
             return self.best_prompt_overall
 
-        print(
-            f"\n[Phase 3/{last_phase}] Optimizing output_constraints ({self.phase_epochs[2]} epochs)"
+        logger.info(
+            f"[Phase 3/{last_phase}] Optimizing output_constraints ({self.phase_epochs[2]} epochs)"
         )
         initial_constraints_for_p3 = self._dedup_constraints(
             best_text, best_role or "", self.initial_constraints
         )
         if not initial_constraints_for_p3 and self.initial_constraints:
-            print("[Dedup] constraints redundant with task/role, using fallback seed")
+            logger.info("[Dedup] constraints redundant with task/role, using fallback seed")
             initial_constraints_for_p3 = "Return only the final answer."
         p3 = self._make_phase_evoluter(
             phase_name="phase3_constraints",
@@ -327,7 +327,7 @@ class FactorizedEvoluter:
             freeze_text=False,
         )
         p3.evolution(skip_validation=False)
-        print(f"Phase 3 best constraints score: {p3.best_score_overall:.4f}")
+        logger.info(f"Phase 3 best constraints score: {p3.best_score_overall:.4f}")
 
         self.initial_prompt = p1.initial_prompt
         self.initial_role = p2.initial_role or ""

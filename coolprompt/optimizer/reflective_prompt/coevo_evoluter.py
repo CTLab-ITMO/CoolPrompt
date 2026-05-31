@@ -26,16 +26,6 @@ from coolprompt.utils.prompt_templates.reflective_templates_coevo_per_field impo
     PROMPT_BY_DESCRIPTION_TEMPLATE_COEVO_PF,
 )
 
-_TASK_ALIASES = ("task_description", "prompt", "instruction", "task", "text")
-_ROLE_ALIASES = ("system_behavior", "role", "behavior", "system", "persona")
-_CONSTRAINTS_ALIASES = (
-    "output_constraints",
-    "constraints",
-    "format",
-    "output_format",
-)
-
-
 def _sanitize(value: str) -> str:
     value = value.strip().strip('"').strip("'").strip()
     value = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f\u2028\u2029]", "", value)
@@ -137,19 +127,12 @@ class CoevoEvoluter(ReflectiveEvoluter):
     ) -> Dict[str, str]:
         raw = extract_json(response) or {}
 
-        def pick(aliases, fallback):
-            for key in aliases:
-                if raw.get(key):
-                    return raw[key]
-            return fallback
-
         try:
             parsed = _ThreeFieldOutput(
-                task_description=pick(_TASK_ALIASES, fallback_text),
-                system_behavior=pick(_ROLE_ALIASES, fallback_role),
-                output_constraints=pick(
-                    _CONSTRAINTS_ALIASES, fallback_constraints
-                ),
+                task_description=raw.get("task_description") or fallback_text,
+                system_behavior=raw.get("system_behavior") or fallback_role,
+                output_constraints=raw.get("output_constraints")
+                or fallback_constraints,
             )
         except Exception as e:
             logger.warning(
@@ -261,13 +244,13 @@ class CoevoEvoluter(ReflectiveEvoluter):
         best_constraints: str,
         score_text_role_constraints: Optional[float] = None,
     ) -> Tuple[List[Dict], Dict]:
-        print(
-            "\n[Field Ablation] Evaluating field combinations on validation set..."
+        logger.info(
+            "[Field Ablation] Evaluating field combinations on validation set..."
         )
         score_a = self._eval_val(best_text, "", "")
-        print(f"  text_only:             {score_a:.4f}")
+        logger.info(f"  text_only:             {score_a:.4f}")
         score_b = self._eval_val(best_text, best_role, "")
-        print(f"  text_role:             {score_b:.4f}")
+        logger.info(f"  text_role:             {score_b:.4f}")
 
         candidates = [
             {
@@ -291,7 +274,7 @@ class CoevoEvoluter(ReflectiveEvoluter):
                 score_text_role_constraints = self._eval_val(
                     best_text, best_role, best_constraints
                 )
-            print(f"  text_role_constraints: {score_text_role_constraints:.4f}")
+            logger.info(f"  text_role_constraints: {score_text_role_constraints:.4f}")
             candidates.append(
                 {
                     "combo": "text_role_constraints",
@@ -310,7 +293,7 @@ class CoevoEvoluter(ReflectiveEvoluter):
         best_c = max(
             candidates, key=lambda c: (c["val_score"], _combo_order[c["combo"]])
         )
-        print(f"Best combo: {best_c['combo']} (val={best_c['val_score']:.4f})")
+        logger.info(f"Best combo: {best_c['combo']} (val={best_c['val_score']:.4f})")
         return candidates, best_c
 
     def evolution(self) -> Optional[str]:

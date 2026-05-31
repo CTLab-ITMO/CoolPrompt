@@ -6,7 +6,6 @@ from typing import Dict, List, Optional, Tuple, Any
 import numpy as np
 import statistics
 from scipy.special import softmax
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from langchain_core.messages.ai import AIMessage
@@ -72,25 +71,14 @@ from coolprompt.utils.prompt_templates.reflective_templates_factorized import (
 from coolprompt.utils.parsing import extract_answer, extract_json
 
 _embedding_model = None
-_use_embeddings = True
 
 
 def _get_embedding_model():
-    global _embedding_model, _use_embeddings
-    if not _use_embeddings:
-        return None
+    global _embedding_model
     if _embedding_model is None:
-        try:
-            from sentence_transformers import SentenceTransformer
+        from sentence_transformers import SentenceTransformer
 
-            _embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-        except ImportError:
-            logger.warning(
-                "sentence-transformers not installed, "
-                "falling back to TF-IDF for similarity"
-            )
-            _use_embeddings = False
-            return None
+        _embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
     return _embedding_model
 
 
@@ -362,29 +350,19 @@ class ReflectiveEvoluter:
     @staticmethod
     def _role_prompt_sim(role: str, prompt_text: str) -> float:
         """Cosine similarity between system_behavior and task_description.
-        Uses sentence-transformer embeddings when available,
-        falls back to TF-IDF otherwise.
+        Computed from all-MiniLM-L6-v2 sentence-transformer embeddings.
         High similarity means the two components are redundant.
         Returns 0.0 if either string is empty.
         """
         if not role or not prompt_text:
             return 0.0
         model = _get_embedding_model()
-        if model is not None:
-            try:
-                embs = model.encode([role, prompt_text])
-                return float(
-                    cosine_similarity(
-                        embs[0].reshape(1, -1), embs[1].reshape(1, -1)
-                    )[0][0]
-                )
-            except Exception:
-                pass
-        try:
-            vec = TfidfVectorizer().fit_transform([role, prompt_text])
-            return float(cosine_similarity(vec[0], vec[1])[0][0])
-        except Exception:
-            return 0.0
+        embs = model.encode([role, prompt_text])
+        return float(
+            cosine_similarity(
+                embs[0].reshape(1, -1), embs[1].reshape(1, -1)
+            )[0][0]
+        )
 
     def _update_hall_of_fame(self, population: List[Prompt]) -> None:
         seen = {(p.text, p.role, p.constraints) for p in self._hall_of_fame}
