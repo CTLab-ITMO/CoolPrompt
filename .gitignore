@@ -176,8 +176,7 @@ src/solutions/SPELL/outputs/*
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
 
-# macOS
 .DS_Store
-
-# worktrees
 .worktrees/
+run_logs/*
+coolprompt_test/*

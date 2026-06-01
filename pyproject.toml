@@ -34,7 +34,7 @@ classifiers = [
 ]
 dependencies = [
   "accelerate>=1.10.0",
-  "bert-score>=0.3.13",
+  "bert-score>=0.3.0",
   "evaluate>=0.4.0",
   "tqdm>=4.67.0",
   "urllib3>=2.3.0",
@@ -62,3 +62,8 @@ Issues = "https://github.com/CTLab-ITMO/CoolPrompt/issues"
 Documentation = "https://github.com/CTLab-ITMO/CoolPrompt"
 Repository = "https://github.com/CTLab-ITMO/CoolPrompt"
 Changelog = "https://github.com/CTLab-ITMO/CoolPrompt/blob/master/CHANGELOG.md"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: needs OPENROUTER_API_KEY or OPENAI_API_KEY and network (OpenRouter by default)",
+]

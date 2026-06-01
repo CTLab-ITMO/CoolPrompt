@@ -1,7 +1,4 @@
-import json
 from typing import Optional, List, Tuple, Any
-
-import dirtyjson
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages.ai import AIMessage
@@ -18,6 +15,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
     PROBLEM_DESCRIPTION_TEMPLATE,
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
     GENERATION_DATA_GENERATING_TEMPLATE,
+    PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE,
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
@@ -52,11 +50,11 @@ class SyntheticDataGenerator:
         Returns:
             Any: generated data
         """
-        if hasattr(self.model, 'model'):
+        if hasattr(self.model, "model"):
             wrapped_model = self.model.model
         else:
             wrapped_model = self.model
-        
+
         if not isinstance(wrapped_model, BaseChatModel):
             output = self.model.invoke(request)
             if isinstance(output, AIMessage):
@@ -76,7 +74,22 @@ class SyntheticDataGenerator:
             output = output[field_name]
         return output
 
-    def _generate_problem_description(self, prompt: str) -> str:
+    def _examples_to_str(self, examples: List[Tuple[str, str]]) -> str:
+        """Converts list of examples into string format.
+
+        Args:
+            examples (List[Tuple[str, str]]): list of examples.
+
+        Returns:
+            str: string representation of the provided examples.
+        """
+        return "\n\n".join(
+            [f"Input: {inp}\nOutput: {out}" for (inp, out) in examples]
+        )
+
+    def _generate_problem_description(
+        self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
+    ) -> str:
         """Generates problem description based on given user prompt
 
         Args:
@@ -85,7 +98,12 @@ class SyntheticDataGenerator:
         Returns:
             str: generated problem description
         """
-        request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
+        if examples:
+            request = PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
+                prompt=prompt, examples=self._examples_to_str(examples)
+            )
+        else:
+            request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
 
         return self._generate(
             request,
@@ -164,9 +182,7 @@ class SyntheticDataGenerator:
                 + "so it will be generated automatically"
             )
             problem_description = self._generate_problem_description(prompt)
-            logger.info(
-                f"Generated problem description: {problem_description}"
-            )
+            logger.info(f"Generated problem description: {problem_description}")
 
         if task == Task.CLASSIFICATION:
             request = CLASSIFICATION_DATA_GENERATING_TEMPLATE
