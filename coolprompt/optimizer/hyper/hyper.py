@@ -239,18 +239,18 @@ class HyPEROptimizer(Optimizer):
         Args:
             model: Chat model for paraphrases, feedback, and meta-prompt calls.
             evaluator: Task evaluator (mini-batch + validation scores).
-            n_iterations: Maximum outer-loop iterations.
+            n_iterations: Maximum outer-loop iterations. Defaults to 5.
             patience: Optional early-stop patience on validation non-improvement.
-            n_candidates: Paraphrase count per iteration (excluding the original).
-            top_n_candidates: MMR shortlist size for inner optimization.
-            k_samples: Max failed examples sampled per feedback source.
-            mini_batch_size: Train mini-batch size for candidate scoring.
-            contrastive_probability: Bernoulli probability to try contrastive feedback.
-            contrastive_max_answer_chars: Budget for contrastive winning answers.
-            feedback_answer_head_chars: Head truncation for failure answers in feedback.
-            feedback_answer_tail_chars: Tail truncation for failure answers in feedback.
+            n_candidates: Paraphrase count per iteration (excluding the original). Defaults to 3.
+            top_n_candidates: MMR shortlist size for inner optimization. Defaults to 3.
+            k_samples: Max failed examples sampled per feedback source. Defaults to 3.
+            mini_batch_size: Train mini-batch size for candidate scoring. Defaults to 16.
+            contrastive_probability: Bernoulli probability to try contrastive feedback. Defaults to 0.5.
+            contrastive_max_answer_chars: Budget for contrastive winning answers. Defaults to 500.
+            feedback_answer_head_chars: Head truncation for failure answers in feedback. Defaults to 500.
+            feedback_answer_tail_chars: Tail truncation for failure answers in feedback. Defaults to 500.
             enable_instance_leak_audit: If True, run ``drop_instance_leaks`` when
-                ``meta_info`` contains a non-empty ``problem_description``.
+                ``meta_info`` contains a non-empty ``problem_description``. Defaults to True.
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
         """
         super().__init__(model)
