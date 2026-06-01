@@ -1,35 +1,31 @@
-"""Backward-compatibility shim.
-
-The synthetic-data-generator Pydantic schemas have been moved to
-:mod:`coolprompt.utils.structured_schemas.data_generator` to align with
-the project-wide convention used by :mod:`coolprompt.optimizer`.
-
-This module preserves the original import paths and class names so that
-existing user code and tests keep working. Prefer importing from
-``coolprompt.utils.structured_schemas.data_generator`` in new code.
-"""
-
-from coolprompt.utils.structured_schemas.data_generator import (
-    ClassificationTaskExample,
-    ClassificationTaskResponse,
-    GenerationTaskExample,
-    GenerationTaskResponse,
-    ProblemDescriptionResponse,
-)
-
-# Legacy aliases ------------------------------------------------------------
-ProblemDescriptionStructuredOutputSchema = ProblemDescriptionResponse
-ClassificationTaskStructuredOutputSchema = ClassificationTaskResponse
-GenerationTaskStructuredOutputSchema = GenerationTaskResponse
+from pydantic import BaseModel, Field
+from typing import List
 
 
-__all__ = [
-    "ClassificationTaskExample",
-    "ClassificationTaskResponse",
-    "ClassificationTaskStructuredOutputSchema",
-    "GenerationTaskExample",
-    "GenerationTaskResponse",
-    "GenerationTaskStructuredOutputSchema",
-    "ProblemDescriptionResponse",
-    "ProblemDescriptionStructuredOutputSchema",
-]
+class ProblemDescriptionStructuredOutputSchema(BaseModel):
+    problem_description: str = Field(
+        description="Determined problem description"
+    )
+
+
+class ClassificationTaskExample(BaseModel):
+    input: str = Field(description="Input request")
+    output: str = Field(description="Output label")
+
+
+class ClassificationTaskStructuredOutputSchema(BaseModel):
+    examples: List[ClassificationTaskExample] = Field(
+        description="List of examples like "
+        + '{"input": "...", "output": "ground-truth label"}'
+    )
+
+
+class GenerationTaskExample(BaseModel):
+    input: str = Field(description="Input request")
+    output: str = Field(description="LLM answer")
+
+
+class GenerationTaskStructuredOutputSchema(BaseModel):
+    examples: List[GenerationTaskExample] = Field(
+        description='List of examples like {"input": "...", "output": "..."}'
+    )
