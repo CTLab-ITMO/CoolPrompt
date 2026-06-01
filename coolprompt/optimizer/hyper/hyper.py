@@ -11,6 +11,7 @@ from coolprompt.optimizer.autoprompting_method import (
     BenchmarkContext,
 )
 
+from evaluate import load
 import numpy as np
 from tqdm import tqdm
 
@@ -49,9 +50,7 @@ def _get_bertscore_evaluate(metric: Any):
 
     global _bertscore_evaluate
     if _bertscore_evaluate is None:
-        import evaluate
-
-        _bertscore_evaluate = evaluate.load("bertscore")
+        _bertscore_evaluate = load("bertscore")
     return _bertscore_evaluate
 
 logger = logging.getLogger(__name__)
