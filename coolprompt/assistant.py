@@ -295,7 +295,7 @@ class PromptTuner:
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method_impl.name}, Task: {task}")
-        logger.info(f"Metric: {metric}, Validation size: {validation_size}")
+        logger.info(f"Metric: {base_metric}, Validation size: {validation_size}")
         if dataset:
             logger.info(f"Dataset: {len(dataset)} samples")
         else:
@@ -344,8 +344,8 @@ class PromptTuner:
             template=template,
         )
         logger.info(
-            f"Initial {metric} score: {self.init_metric}, "
-            f"final {metric} score: {self.final_metric}"
+            f"Initial {base_metric} score: {self.init_metric}, "
+            f"final {base_metric} score: {self.final_metric}"
         )
 
         self.init_prompt = start_prompt
