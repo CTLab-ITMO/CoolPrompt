@@ -16,6 +16,8 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
     GENERATION_DATA_GENERATING_TEMPLATE,
     PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE,
+    GENERATION_CORNER_CASE_GENERATING_TEMPLATE,
+    CLASSIFICATION_CORNER_CASE_GENERATING_TEMPLATE,
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
@@ -35,7 +37,7 @@ class SyntheticDataGenerator:
         self.model = model
 
     def _generate(
-        self, request: str, schema: BaseModel, field_name: str
+            self, request: str, schema: BaseModel, field_name: str
     ) -> Any:
         """Generates model output
         either using structured output from langchain
@@ -88,7 +90,7 @@ class SyntheticDataGenerator:
         )
 
     def _generate_problem_description(
-        self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
+            self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
     ) -> str:
         """Generates problem description based on given user prompt
 
@@ -112,10 +114,10 @@ class SyntheticDataGenerator:
         )
 
     def _convert_dataset(
-        self,
-        examples: List[
-            dict | ClassificationTaskExample | GenerationTaskExample
-        ],
+            self,
+            examples: List[
+                dict | ClassificationTaskExample | GenerationTaskExample
+                ],
     ) -> Tuple[List[str], List[str]]:
         """Converts outputs to the dataset format
 
@@ -137,7 +139,7 @@ class SyntheticDataGenerator:
 
         for example in examples:
             if isinstance(example, GenerationTaskExample) or isinstance(
-                example, ClassificationTaskExample
+                    example, ClassificationTaskExample
             ):
                 dataset.append(example.input)
                 targets.append(example.output)
@@ -147,11 +149,12 @@ class SyntheticDataGenerator:
         return dataset, targets
 
     def generate(
-        self,
-        prompt: str,
-        task: Task,
-        problem_description: Optional[str] = None,
-        num_samples: int = 8,
+            self,
+            prompt: str,
+            task: Task,
+            problem_description: Optional[str] = None,
+            num_samples: int = 8,
+            corner_ratio: float = 0.4,
     ) -> Tuple[List[str], List[str], str]:
         """Generates synthetic dataset
         based on given user prompt, optimization task
@@ -185,17 +188,42 @@ class SyntheticDataGenerator:
             logger.info(f"Generated problem description: {problem_description}")
 
         if task == Task.CLASSIFICATION:
-            request = CLASSIFICATION_DATA_GENERATING_TEMPLATE
+            regular_template = CLASSIFICATION_DATA_GENERATING_TEMPLATE
+            corner_template = CLASSIFICATION_CORNER_CASE_GENERATING_TEMPLATE
             schema = ClassificationTaskStructuredOutputSchema
         else:
-            request = GENERATION_DATA_GENERATING_TEMPLATE
+            regular_template = GENERATION_DATA_GENERATING_TEMPLATE
+            corner_template = GENERATION_CORNER_CASE_GENERATING_TEMPLATE
             schema = GenerationTaskStructuredOutputSchema
 
-        request = request.format(
-            problem_description=problem_description, num_samples=num_samples
-        )
+        if corner_template is None:
+            request = regular_template.format(
+                problem_description=problem_description, num_samples=num_samples
+            )
+            examples = self._generate(request, schema, "examples")
+        else:
+            n_corner = int(num_samples * corner_ratio)
+            n_regular = num_samples - n_corner
 
-        examples = self._generate(request, schema, "examples")
+            regular_request = regular_template.format(
+                problem_description=problem_description,
+                num_samples=n_regular,
+            )
+
+            corner_request = corner_template.format(
+                problem_description=problem_description,
+                num_samples=n_corner,
+            )
+
+            regular_examples = self._generate(
+                regular_request, schema, "examples"
+            )
+
+            corner_examples = self._generate(
+                corner_request, schema, "examples"
+            )
+
+            examples = list(regular_examples) + list(corner_examples)
         dataset, targets = self._convert_dataset(examples)
 
         return dataset, targets, problem_description
