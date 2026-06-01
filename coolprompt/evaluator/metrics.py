@@ -1,3 +1,5 @@
+import json
+import re
 from abc import ABC, abstractmethod
 import re
 from typing import Optional, Dict, List, Tuple
@@ -26,6 +28,7 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
     FLUENCY_TEMPLATE,
     RELEVANCE_TEMPLATE,
 )
+from coolprompt.evaluator.ifeval_checkers import check_instruction
 
 
 class HFEvaluateMetric(ABC):
@@ -568,6 +571,82 @@ class CodeBertScore(GenerationMetric):
     def parse_output(self, output: str) -> str:
         extracted = extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
         return extract_number_from_text(extracted)
+
+
+class IFEvalMetric(GenerationMetric):
+    """IFEval prompt-level strict accuracy.
+
+    `targets` are JSON specs:
+        {"instruction_id_list": [...], "kwargs": [{...}, ...]}
+    A prompt scores 1.0 iff every listed instruction is
+    satisfied by the raw model output; the metric returns the
+    mean over prompts. Unlike other generation metrics, this
+    scores the raw output (no <ans> tag extraction).
+    """
+
+    @staticmethod
+    def _get_name():
+        return "ifeval"
+
+    def __init__(self):
+        super().__init__()
+
+    def compute(self, outputs, targets, dataset=None):
+        return self._compute_raw(
+            list(map(str, outputs)),
+            list(map(str, targets)),
+            dataset,
+        )
+
+    def _compute_raw(self, outputs, targets, dataset):
+        per_prompt = []
+        for output, spec_json in zip(outputs, targets):
+            try:
+                spec = json.loads(spec_json)
+            except (ValueError, TypeError):
+                per_prompt.append(0.0)
+                continue
+            ids = spec.get("instruction_id_list", [])
+            kw_list = spec.get("kwargs", [{}] * len(ids))
+            satisfied = all(
+                check_instruction(iid, output, kw or {})
+                for iid, kw in zip(ids, kw_list)
+            )
+            per_prompt.append(
+                1.0 if satisfied and ids else 0.0
+            )
+        return float(mean(per_prompt)) if per_prompt else 0.0
+
+    def failure_breakdown(self, outputs, targets):
+        """Per-instruction failure summary for the diagnosis.
+
+        Returns a string like
+        'change_case:english_lowercase failed 3/5; ...' listing
+        only the constraints that failed at least once, or None
+        if every constraint passed / targets are unparseable.
+        """
+        fails = {}
+        totals = {}
+        for output, spec_json in zip(
+            map(str, outputs), map(str, targets)
+        ):
+            try:
+                spec = json.loads(spec_json)
+            except (ValueError, TypeError):
+                continue
+            ids = spec.get("instruction_id_list", [])
+            kw_list = spec.get("kwargs", [{}] * len(ids))
+            for iid, kw in zip(ids, kw_list):
+                totals[iid] = totals.get(iid, 0) + 1
+                if not check_instruction(iid, output, kw or {}):
+                    fails[iid] = fails.get(iid, 0) + 1
+        if not fails:
+            return None
+        parts = [
+            f"{iid} failed {fails[iid]}/{totals[iid]}"
+            for iid in sorted(fails, key=lambda k: -fails[k])
+        ]
+        return "; ".join(parts)
 
 
 def define_lang(outputs, targets):

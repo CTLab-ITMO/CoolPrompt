@@ -123,6 +123,7 @@ celerybeat.pid
 
 # Environments
 .env
+.envrc
 .venv
 env/
 venv/
@@ -175,7 +176,7 @@ src/solutions/SPELL/outputs/*
 src/solutions/evo/self_evo/data/*
 src/solutions/SPELL/data/*
 
-# Let's fix some directory for run logs
+.DS_Store
+.worktrees/
 run_logs/*
-
 coolprompt_test/*
