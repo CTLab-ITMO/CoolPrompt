@@ -389,7 +389,7 @@ class HyPEROptimizer(Optimizer):
 
             for i, (cand, res) in enumerate(zip(candidates, results)):
                 score_str = f"{res.aggregate_score:.4f}" if res.aggregate_score is not None else "N/A"
-                logger.info(f"[HyPER]   Candidate {i+1}: mini_batch_score={score_str}, n_failed={len(res.failed_examples)}")
+                logger.info(f"[HyPER]   Candidate {i+1}: mini_batch_score={score_str}, n_examples_for_analysis={len(res.failed_examples)}")
                 logger.debug(f"[HyPER]   Candidate {i+1} prompt:\n{cand}")
 
             # 3.5. Guard: if no candidate has failures, mini-batch is too easy; resample once.
