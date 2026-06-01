@@ -46,7 +46,7 @@ class ContrastiveCandidate:
 
 
 class FeedbackModule:
-    """Build, parse, group, and audit textual recommendations for prompt sections."""
+    """Build textual recommendations for prompt sections."""
 
     def __init__(
         self,
@@ -312,13 +312,12 @@ class FeedbackModule:
         """Parse a single JSON object ``{"section": ..., "text": ...}`` from model text.
 
         Args:
-            raw_str: Raw model output (possibly containing extra prose).
+            raw_str: Raw model output.
 
         Returns:
             Tuple ``(section, text, error_kind)`` where ``error_kind`` is ``None`` on
-            success, ``"json_error"`` for malformed JSON / missing keys / empty text,
-            or ``"invalid_section"`` when the section is not whitelisted (text still
-            returned, mapped to ``general`` upstream by callers).
+            success, ``"json_error"`` for malformed JSON, or ``"invalid_section"`` when 
+            the section is not whitelisted (text still returned, mapped to ``general`` upstream by callers).
         """
         try:
             data = extract_json(raw_str)
@@ -491,12 +490,10 @@ class FeedbackModule:
                         final_text = rewritten
                         kept_flag = True
                     else:
-                        # A rewrite without actionable text is equivalent to DROP.
                         verdict = "DROP_EMPTY_REWRITE"
                 elif verdict == "DROP":
                     pass
                 else:
-                    # Unknown verdict: conservatively keep
                     kept.append(r)
                     final_text = r.text
                     kept_flag = True
@@ -530,7 +527,7 @@ class FeedbackModule:
                 }
                 for r in recs
             ]
-            return recs  # fail-safe: keep everything
+            return recs
 
     def _filter_section(
         self,
@@ -680,7 +677,7 @@ class FeedbackModule:
         except Exception as exc:
             logger.debug(f"[Feedback] LLM group partition parse failed: {exc}")
 
-        # Fallback: each item in its own singleton group
+        # Fallback: each item in its own group
         return [[i] for i in range(len(texts))]
 
     def _parse_synthesized_filter_response(
