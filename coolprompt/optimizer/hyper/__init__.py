@@ -4,7 +4,6 @@ from coolprompt.optimizer.hyper.meta_prompt import (
     MetaPromptOptimizer,
     Optimizer,
 )
-
 __all__ = [
     "Optimizer",
     "MetaPromptOptimizer",

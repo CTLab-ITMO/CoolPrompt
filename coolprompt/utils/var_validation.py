@@ -4,9 +4,13 @@ from typing import Any, Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+from coolprompt.optimizer.ape import APEMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
 from coolprompt.optimizer.hyper.hyper import HyPERMethod
+from coolprompt.optimizer.opro import OPROMethod
+from coolprompt.optimizer.pe2 import PE2Method
+from coolprompt.optimizer.pe2_sgr import PE2SGRMethod
 from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
@@ -20,6 +24,10 @@ _METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
     "distill": DistillMethod,
     "regps": ReGPSMethod,
     "compress": CompressorMethod,
+    "pe2": PE2Method,
+    "pe2_sgr": PE2SGRMethod,
+    "ape": APEMethod,
+    "opro": OPROMethod,
 }
 
 
