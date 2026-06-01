@@ -17,6 +17,12 @@ _MISSING = object()
 
 
 def _install_temporary_rider_modules() -> Dict[str, Any]:
+    """Install temporary ``rider`` modules for loading the vendored assistant.
+
+    Returns:
+        Previous ``sys.modules`` entries so they can be restored after import.
+    """
+
     previous: Dict[str, Any] = {}
     for name in ("rider", "rider.llm", "rider.llm.client"):
         previous[name] = sys.modules.get(name, _MISSING)
@@ -34,6 +40,12 @@ def _install_temporary_rider_modules() -> Dict[str, Any]:
 
 
 def _restore_modules(previous: Dict[str, Any]) -> None:
+    """Restore ``sys.modules`` entries captured before vendored import.
+
+    Args:
+        previous: Mapping returned by ``_install_temporary_rider_modules``.
+    """
+
     for name, module in previous.items():
         if module is _MISSING:
             sys.modules.pop(name, None)
@@ -42,20 +54,42 @@ def _restore_modules(previous: Dict[str, Any]) -> None:
 
 
 def _disable_instructor_client(self: Any, model: str) -> None:
+    """Disable vendored structured-output client initialization.
+
+    Args:
+        self: Vendored ``RiderGenesis`` instance.
+        model: Model name requested by the vendored runtime.
+
+    Returns:
+        ``None`` so RIDER falls back to the LangChain shim path.
+    """
+
     _ = (self, model)
     return None
 
 
 def load_rider_genesis() -> type:
-    """Load ``RiderGenesis`` from the vendored assistant.py without editing it."""
+    """Load ``RiderGenesis`` from the vendored assistant.py without editing it.
+
+    Returns:
+        Vendored ``RiderGenesis`` class with CoolPrompt runtime patches applied.
+
+    Raises:
+        ImportError: If the vendored assistant module cannot be loaded.
+    """
 
     if _ASSISTANT_MODULE_NAME in sys.modules:
         return sys.modules[_ASSISTANT_MODULE_NAME].RiderGenesis
 
     assistant_path = VENDORED_RIDER_DIR / "assistant.py"
-    spec = importlib.util.spec_from_file_location(_ASSISTANT_MODULE_NAME, assistant_path)
+    spec = importlib.util.spec_from_file_location(
+        _ASSISTANT_MODULE_NAME,
+        assistant_path,
+    )
     if spec is None or spec.loader is None:
-        raise ImportError(f"Cannot load vendored RIDER assistant from {assistant_path}")
+        raise ImportError(
+            f"Cannot load vendored RIDER assistant from {assistant_path}"
+        )
 
     module = importlib.util.module_from_spec(spec)
     previous = _install_temporary_rider_modules()

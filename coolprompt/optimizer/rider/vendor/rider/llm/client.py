@@ -134,14 +134,7 @@ class LLMClient:
         if use_neural_firewall is None and use_uniai is not None:
             use_neural_firewall = use_uniai
         if use_neural_firewall is None:
-            use_neural_firewall = (
-                provider in {"openrouter", "openai"}
-                and os.getenv(
-                    "RIDER_USE_NEURAL_FIREWALL",
-                    os.getenv("RIDER_USE_UNIAI", "1"),
-                ).strip().lower()
-                not in {"0", "false", "no", "off"}
-            )
+            use_neural_firewall = False
         self.use_neural_firewall = bool(use_neural_firewall)
         self._neural_firewall_unavailable_warned = False
 

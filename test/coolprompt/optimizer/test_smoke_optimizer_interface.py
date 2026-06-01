@@ -70,3 +70,69 @@ def test_prompt_tuner_importable():
     from coolprompt.assistant import PromptTuner
 
     assert PromptTuner.__name__ == "PromptTuner"
+
+
+def test_prompt_tuner_runs_rider_method(monkeypatch):
+    from coolprompt.assistant import PromptTuner
+    from coolprompt.utils.enums import Task
+
+    class _FakeTaskDetector:
+        def __init__(self, model):
+            self.model = model
+
+        def generate(self, start_prompt):
+            return Task.GENERATION.value
+
+    class _FakeEvaluator:
+        def __init__(self, *args, **kwargs):
+            self.calls = []
+
+        def evaluate(self, prompt, dataset, targets, template=None, **kwargs):
+            self.calls.append((prompt, dataset, targets, template, kwargs))
+            return 1.0 if "optimized" in prompt else 0.0
+
+    class _FakeRule:
+        def __init__(self, model):
+            self.model = model
+
+    class _FakeRiderMethod(RIDERGenesisMethod):
+        def optimize(self, **kwargs):
+            assert kwargs["initial_prompt"] == "Write a crisp summary"
+            return "optimized rider prompt"
+
+    monkeypatch.setattr(
+        "coolprompt.assistant.validate_model",
+        lambda model: None,
+    )
+    monkeypatch.setattr("coolprompt.assistant.TaskDetector", _FakeTaskDetector)
+    monkeypatch.setattr(
+        "coolprompt.assistant.validate_and_create_metric",
+        lambda *args, **kwargs: object(),
+    )
+    monkeypatch.setattr("coolprompt.assistant.Evaluator", _FakeEvaluator)
+    monkeypatch.setattr("coolprompt.assistant.LanguageRule", _FakeRule)
+    monkeypatch.setattr(
+        "coolprompt.assistant.correct",
+        lambda prompt, **kwargs: prompt,
+    )
+    monkeypatch.setattr(
+        "coolprompt.utils.var_validation._METHOD_BY_NAME",
+        {
+            **_METHOD_BY_NAME,
+            "rider": _FakeRiderMethod,
+        },
+    )
+
+    prompt_tuner = PromptTuner(target_model=object(), system_model=object())
+    result = prompt_tuner.run(
+        "Write a crisp summary",
+        task=Task.GENERATION.value,
+        dataset=["text one", "text two"],
+        target=["summary one", "summary two"],
+        method="rider",
+        problem_description="Return a concise summary.",
+        validation_size=0.5,
+    )
+
+    assert result == "optimized rider prompt"
+    assert prompt_tuner.final_prompt == "optimized rider prompt"

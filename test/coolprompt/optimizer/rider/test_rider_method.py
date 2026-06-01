@@ -40,7 +40,11 @@ class _FakeRiderGenesis:
 
 def test_rider_method_uses_ultra_by_default(monkeypatch):
     _FakeRiderGenesis.instances = []
-    monkeypatch.setattr(rider_module, "load_rider_genesis", lambda: _FakeRiderGenesis)
+    monkeypatch.setattr(
+        rider_module,
+        "load_rider_genesis",
+        lambda: _FakeRiderGenesis,
+    )
 
     result = RIDERGenesisMethod().optimize(
         model=object(),
@@ -50,14 +54,18 @@ def test_rider_method_uses_ultra_by_default(monkeypatch):
     assert result == "optimized via ultra: Improve this prompt"
     instance = _FakeRiderGenesis.instances[-1]
     assert instance.model == RIDEROptimizer._RIDER_MODEL_ALIAS
-    assert instance.api_key == "-"
+    assert instance.api_key == RIDEROptimizer._DUMMY_API_KEY
     assert instance.verbose is False
     assert instance.run_calls == [("Improve this prompt", "ultra", {})]
 
 
 def test_rider_optimizer_runs_ultra_and_reports_calls(monkeypatch):
     _FakeRiderGenesis.instances = []
-    monkeypatch.setattr(rider_module, "load_rider_genesis", lambda: _FakeRiderGenesis)
+    monkeypatch.setattr(
+        rider_module,
+        "load_rider_genesis",
+        lambda: _FakeRiderGenesis,
+    )
 
     optimizer = RIDEROptimizer(model=object(), mode="ultra", verbose=True)
     result = optimizer.optimize("Start prompt")
@@ -83,23 +91,42 @@ def test_load_vendored_rider_genesis_without_api_key(monkeypatch):
 
 def test_vendored_rider_runtime_is_byte_identical_to_source():
     source = Path(r"C:\projects\rider\rider")
-    target = Path(r"C:\projects\CoolPrompt\coolprompt\optimizer\rider\vendor\rider")
+    target = (
+        Path(r"C:\projects\CoolPrompt")
+        / "coolprompt"
+        / "optimizer"
+        / "rider"
+        / "vendor"
+        / "rider"
+    )
     if not source.exists():
         pytest.skip("Local RIDER source tree is not available.")
 
     source_files = {
         path.relative_to(source): path.read_bytes()
         for path in source.rglob("*")
-        if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc"
+        if (
+            path.is_file()
+            and "__pycache__" not in path.parts
+            and path.suffix != ".pyc"
+        )
     }
     target_files = {
         path.relative_to(target): path.read_bytes()
         for path in target.rglob("*")
-        if path.is_file() and "__pycache__" not in path.parts and path.suffix != ".pyc"
+        if (
+            path.is_file()
+            and "__pycache__" not in path.parts
+            and path.suffix != ".pyc"
+        )
     }
 
     assert source_files.keys() == target_files.keys()
-    changed = [rel for rel, content in source_files.items() if target_files[rel] != content]
+    changed = [
+        rel
+        for rel, content in source_files.items()
+        if target_files[rel] != content
+    ]
     assert changed == []
 
 
