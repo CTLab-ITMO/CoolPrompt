@@ -142,7 +142,8 @@ class PromptTuner:
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
-        meta_prompt_context: dict = None,
+        hyper_meta_info: dict = None,
+        system_model_as_optimizer: bool = False,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -200,9 +201,10 @@ class PromptTuner:
             return_final_prompt (bool): If True, return the final prompt;
                 otherwise return None (the prompt is still stored in
                 `self.final_prompt`).
-            meta_prompt_context (dict | None): Optional extra key-value pairs
-                merged into the meta-info block for ``hyper_light`` (same role as
-                ``config['meta_info']`` in YAML benchmarks).
+            hyper_meta_info (dict | None): Optional extra key-value pairs
+                merged into the meta-info block for ``hyper`` and ``hyper_light``.
+            system_model_as_optimizer (bool): If True, use the system model for
+                optimizing processes, while target model will be used for inference.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -309,11 +311,11 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
-        if meta_prompt_context is not None:
-            kwargs = {**kwargs, "meta_prompt_context": meta_prompt_context}
+        if hyper_meta_info is not None:
+            kwargs = {**kwargs, "meta_info": hyper_meta_info}
 
         final_prompt = method_impl.optimize(
-            model=self._target_model,
+            model=self._system_model if system_model_as_optimizer else self._target_model,
             initial_prompt=start_prompt,
             dataset_split=dataset_split,
             evaluator=evaluator,
