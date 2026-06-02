@@ -110,7 +110,10 @@ class ReGPSMethod(AutoPromptingMethod):
         problem_description = ctx.config.get("problem_description")
         mc = ctx.config["method"]
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+            generator = SyntheticDataGenerator(
+                ctx._system_model,
+                use_structured_output=use_structured_output,
+            )
             indices = sample(range(0, len(ctx.dataset_split[0])), 5)
             examples = [
                 (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
