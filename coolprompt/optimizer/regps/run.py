@@ -19,6 +19,7 @@ def regps(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: Optional[str] = None,
+    use_structured_output: bool = False,
     **kwargs,
 ) -> str:
     """Runs Re-GPS evolution.
@@ -64,7 +65,8 @@ def regps(
         output_path=args["output_path"],
         use_cache=args["use_cache"],
         bad_examples_number=args["bad_examples_number"],
-        checkpoint_path=args.get("checkpoint_path"),
+        checkpoint_path=args.get('checkpoint_path'),
+        use_structured_output=use_structured_output,
     )
     logger.info("Starting Re-GPS optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")

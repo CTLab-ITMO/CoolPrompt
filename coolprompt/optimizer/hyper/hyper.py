@@ -29,6 +29,9 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     PARAPHRASE_PROMPT,
     Recommendation,
 )
+from coolprompt.optimizer.structured_schemas.hyper import (
+    ParaphrasedVariantResponse,
+)
 
 _BERTSCORE_MODEL_TYPE = "microsoft/deberta-large-mnli"
 _bertscore_evaluate = None  # module-level singleton
@@ -229,6 +232,7 @@ class HyPEROptimizer(Optimizer):
         feedback_answer_tail_chars: int = 500,
         enable_instance_leak_audit: bool = True,
         random_seed: Optional[int] = None,
+        use_structured_output: bool = False,
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
 
@@ -250,7 +254,10 @@ class HyPEROptimizer(Optimizer):
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
         """
         super().__init__(model)
-        self.meta_prompt_module = MetaPromptOptimizer(model)
+        self.use_structured_output = use_structured_output
+        self.meta_prompt_module = MetaPromptOptimizer(
+            model, use_structured_output=use_structured_output
+        )
         self.evaluator = evaluator
         self.contrastive_probability = contrastive_probability
         self.contrastive_max_answer_chars = contrastive_max_answer_chars
@@ -266,6 +273,7 @@ class HyPEROptimizer(Optimizer):
             contrastive_max_answer_chars=contrastive_max_answer_chars,
             feedback_answer_head_chars=feedback_answer_head_chars,
             feedback_answer_tail_chars=feedback_answer_tail_chars,
+            use_structured_output=use_structured_output,
         )
         self.n_iterations = n_iterations
         self.patience = patience
@@ -285,8 +293,18 @@ class HyPEROptimizer(Optimizer):
         Returns:
             List whose first element is ``best_prompt`` followed by paraphrases.
         """
+        query = PARAPHRASE_PROMPT.format(prompt=best_prompt)
+        if self.use_structured_output:
+            structured = self.model.bind(temperature=0.9).with_structured_output(
+                ParaphrasedVariantResponse, method="json_schema"
+            )
+            raw_outputs = [
+                r.paraphrased_prompt for r in structured.batch([query] * n_candidates)
+            ]
+            raw_outputs = list(dict.fromkeys(raw_outputs))
+            return [best_prompt] + raw_outputs
         raw_result = get_model_answer_extracted(
-            self.model, PARAPHRASE_PROMPT.format(prompt=best_prompt), n=n_candidates, temperature=0.9
+            self.model, query, n=n_candidates, temperature=0.9
         )
         return [best_prompt] + [self._process_model_output(r) for r in raw_result]
 
@@ -698,6 +716,7 @@ class HyPERMethod(AutoPromptingMethod):
         feedback_answer_tail_chars = kwargs.pop("feedback_answer_tail_chars", 500)
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
+        use_structured_output = kwargs.pop("use_structured_output", False)
 
         meta_prompt_context = kwargs.pop("meta_prompt_context", None)
         optimizer = HyPEROptimizer(
@@ -715,6 +734,7 @@ class HyPERMethod(AutoPromptingMethod):
             feedback_answer_tail_chars=feedback_answer_tail_chars,
             enable_instance_leak_audit=enable_instance_leak_audit,
             random_seed=random_seed,
+            use_structured_output=use_structured_output,
         )
 
         meta_info = meta_prompt_context.copy() if meta_prompt_context else {}
@@ -758,6 +778,7 @@ class HyPERMethod(AutoPromptingMethod):
             feedback_answer_tail_chars=mc.get("feedback_answer_tail_chars", 500),
             enable_instance_leak_audit=mc.get("enable_instance_leak_audit", True),
             random_seed=mc.get("random_seed", None),
+            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self):
