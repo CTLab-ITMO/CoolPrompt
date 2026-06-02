@@ -134,6 +134,7 @@ class PromptTuner:
         generate_num_samples: int = 10,
         batch_size: int = 25,
         verbose: int = 1,
+        corner_ratio: float = 0.4,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
         llm_as_judge_metric_ceil: int = 10,
@@ -263,6 +264,7 @@ class PromptTuner:
                 task=task_value,
                 problem_description=problem_description,
                 num_samples=generate_num_samples,
+                corner_ratio=corner_ratio,
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target
