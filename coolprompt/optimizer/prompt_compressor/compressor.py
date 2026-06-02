@@ -111,12 +111,20 @@ class CompressorMethod(AutoPromptingMethod):
 
         Note:
             :class:`PromptCompressor` is intrinsically built on top of
-            ``with_structured_output``. The ``use_structured_output`` flag is
-            accepted here only for interface uniformity with other methods
-            and is effectively ignored — compression always uses structured
-            output regardless of its value.
+            ``with_structured_output`` and cannot operate without it.
+            The ``use_structured_output`` flag is accepted here for
+            interface uniformity with other methods, but passing ``False``
+            raises ``NotImplementedError`` because the compressor does
+            not support a non-structured execution path.
+
+        Raises:
+            NotImplementedError: If ``use_structured_output`` is ``False``.
         """
-        del use_structured_output
+        if not use_structured_output:
+            raise NotImplementedError(
+                "PromptCompressor is built on top of structured output "
+                "and cannot run with use_structured_output=False"
+            )
 
         compressor = PromptCompressor(
             model=model,
