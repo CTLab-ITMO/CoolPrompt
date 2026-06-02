@@ -1,4 +1,4 @@
-"""Loader for the byte-identical vendored RIDER Genesis source."""
+"""Loader for the byte-identical RIDER Genesis Ultra core."""
 
 from __future__ import annotations
 
@@ -11,13 +11,13 @@ from typing import Any, Dict
 from coolprompt.optimizer.rider import _llm_shim
 
 
-VENDORED_RIDER_DIR = Path(__file__).resolve().parent / "vendor" / "rider"
-_ASSISTANT_MODULE_NAME = "coolprompt.optimizer.rider._vendored_assistant"
+RIDER_CORE_DIR = Path(__file__).resolve().parent / "core"
+_ASSISTANT_MODULE_NAME = "coolprompt.optimizer.rider._core_assistant"
 _MISSING = object()
 
 
 def _install_temporary_rider_modules() -> Dict[str, Any]:
-    """Install temporary ``rider`` modules for loading the vendored assistant.
+    """Install temporary ``rider`` modules for loading the RIDER core.
 
     Returns:
         Previous ``sys.modules`` entries so they can be restored after import.
@@ -28,10 +28,10 @@ def _install_temporary_rider_modules() -> Dict[str, Any]:
         previous[name] = sys.modules.get(name, _MISSING)
 
     rider_pkg = types.ModuleType("rider")
-    rider_pkg.__path__ = [str(VENDORED_RIDER_DIR)]
+    rider_pkg.__path__ = [str(RIDER_CORE_DIR)]
 
     llm_pkg = types.ModuleType("rider.llm")
-    llm_pkg.__path__ = [str(VENDORED_RIDER_DIR / "llm")]
+    llm_pkg.__path__ = [str(RIDER_CORE_DIR / "llm")]
 
     sys.modules["rider"] = rider_pkg
     sys.modules["rider.llm"] = llm_pkg
@@ -40,7 +40,7 @@ def _install_temporary_rider_modules() -> Dict[str, Any]:
 
 
 def _restore_modules(previous: Dict[str, Any]) -> None:
-    """Restore ``sys.modules`` entries captured before vendored import.
+    """Restore ``sys.modules`` entries captured before RIDER core import.
 
     Args:
         previous: Mapping returned by ``_install_temporary_rider_modules``.
@@ -54,11 +54,11 @@ def _restore_modules(previous: Dict[str, Any]) -> None:
 
 
 def _disable_instructor_client(self: Any, model: str) -> None:
-    """Disable vendored structured-output client initialization.
+    """Disable RIDER structured-output client initialization.
 
     Args:
-        self: Vendored ``RiderGenesis`` instance.
-        model: Model name requested by the vendored runtime.
+        self: RIDER ``RiderGenesis`` instance.
+        model: Model name requested by the RIDER runtime.
 
     Returns:
         ``None`` so RIDER falls back to the LangChain shim path.
@@ -69,26 +69,26 @@ def _disable_instructor_client(self: Any, model: str) -> None:
 
 
 def load_rider_genesis() -> type:
-    """Load ``RiderGenesis`` from the vendored assistant.py without editing it.
+    """Load ``RiderGenesis`` from the byte-identical core without editing it.
 
     Returns:
-        Vendored ``RiderGenesis`` class with CoolPrompt runtime patches applied.
+        RIDER ``RiderGenesis`` class with CoolPrompt runtime patches applied.
 
     Raises:
-        ImportError: If the vendored assistant module cannot be loaded.
+        ImportError: If the RIDER core module cannot be loaded.
     """
 
     if _ASSISTANT_MODULE_NAME in sys.modules:
         return sys.modules[_ASSISTANT_MODULE_NAME].RiderGenesis
 
-    assistant_path = VENDORED_RIDER_DIR / "assistant.py"
+    assistant_path = RIDER_CORE_DIR / "assistant.py"
     spec = importlib.util.spec_from_file_location(
         _ASSISTANT_MODULE_NAME,
         assistant_path,
     )
     if spec is None or spec.loader is None:
         raise ImportError(
-            f"Cannot load vendored RIDER assistant from {assistant_path}"
+            f"Cannot load RIDER core assistant from {assistant_path}"
         )
 
     module = importlib.util.module_from_spec(spec)

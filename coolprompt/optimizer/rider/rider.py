@@ -1,4 +1,4 @@
-"""CoolPrompt wrapper for vendored RIDER Genesis Ultra."""
+"""CoolPrompt wrapper for RIDER Genesis Ultra."""
 
 from __future__ import annotations
 
@@ -12,12 +12,12 @@ from coolprompt.optimizer.autoprompting_method import (
     BenchmarkContext,
 )
 from coolprompt.optimizer.rider import _llm_shim
-from coolprompt.optimizer.rider._vendor import load_rider_genesis
+from coolprompt.optimizer.rider._core_loader import load_rider_genesis
 from coolprompt.utils.logging_config import logger
 
 
 class RIDEROptimizer:
-    """Run the byte-identical vendored RiderGenesis through LangChain models."""
+    """Run byte-identical RiderGenesis Ultra through LangChain models."""
 
     _RIDER_MODEL_ALIAS = "coolprompt/langchain"
     _DUMMY_API_KEY = "-"
@@ -48,8 +48,8 @@ class RIDEROptimizer:
             mode: Optional RIDER mode override. Only ``"ultra"`` is accepted by
                 the CoolPrompt integration.
             verbose: Whether to enable verbose RIDER Genesis logging.
-            rider_model_alias: Internal model name registered in the vendored
-                RIDER runtime and routed through the LangChain shim.
+            rider_model_alias: Internal model name registered in the RIDER
+                runtime and routed through the LangChain shim.
         """
 
         self.model = model
@@ -87,10 +87,10 @@ class RIDEROptimizer:
         self,
         rider_genesis_cls: type,
     ) -> Dict[str, BaseLanguageModel]:
-        """Build the vendored RIDER model-name to LangChain-model mapping.
+        """Build the RIDER model-name to LangChain-model mapping.
 
         Args:
-            rider_genesis_cls: Vendored ``RiderGenesis`` class with role model
+            rider_genesis_cls: RIDER ``RiderGenesis`` class with role model
                 aliases declared in ``_MODE_ROLE_MODELS``.
 
         Returns:
@@ -124,7 +124,7 @@ class RIDEROptimizer:
         return mapping
 
     def optimize(self, prompt: str) -> str:
-        """Optimize a prompt with the vendored RIDER Genesis Ultra pipeline.
+        """Optimize a prompt with the RIDER Genesis Ultra pipeline.
 
         Args:
             prompt: Prompt text to optimize.
@@ -141,7 +141,7 @@ class RIDEROptimizer:
             )
             rider = rider_genesis_cls(
                 model=self.rider_model_alias,
-                # The vendored constructor keeps an api_key guard, but all calls
+                # The RIDER constructor keeps an api_key guard, but all calls
                 # are routed through the LangChain shim registered above.
                 api_key=self._DUMMY_API_KEY,
                 verbose=self.verbose,
@@ -164,7 +164,7 @@ class RIDEROptimizer:
 
     @property
     def last_rider(self) -> Any:
-        """Return the last constructed vendored ``RiderGenesis`` instance.
+        """Return the last constructed ``RiderGenesis`` instance.
 
         Returns:
             The last RIDER Genesis instance, or ``None`` before the first run.

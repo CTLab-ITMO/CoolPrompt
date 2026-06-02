@@ -128,7 +128,10 @@ def test_hyper_light_method_optimize_delegates(mock_opt_class):
         meta_prompt_context=ctx,
     )
     assert result == "done"
-    mock_opt_class.assert_called_once_with(model=model)
+    mock_opt_class.assert_called_once_with(
+        model=model,
+        use_structured_output=False,
+    )
     mock_opt.optimize.assert_called_once()
     call_kw = mock_opt.optimize.call_args.kwargs
     assert call_kw["meta_info"]["a"] == 1

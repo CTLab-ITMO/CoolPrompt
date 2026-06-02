@@ -1,6 +1,6 @@
-"""LangChain-backed LLMClient shim for the vendored RIDER Genesis source.
+"""LangChain-backed LLMClient shim for RIDER Genesis Ultra.
 
-The vendored RIDER files are kept byte-identical. This module supplies the
+The RIDER core file is kept byte-identical. This module supplies the
 ``rider.llm.client.LLMClient`` surface dynamically when the copied
 ``assistant.py`` is loaded by the CoolPrompt wrapper.
 """
@@ -12,7 +12,7 @@ from typing import Any, Dict, Iterable, List, Optional
 
 
 class _ModelRegistry:
-    """Thread-safe registry used while a vendored RIDER instance is built."""
+    """Thread-safe registry used while a RIDER instance is built."""
 
     def __init__(self) -> None:
         """Initialize an empty model registry."""
@@ -61,7 +61,7 @@ def register_models(
 
     Args:
         default_model: Fallback LangChain model for unresolved RIDER aliases.
-        model_by_name: Optional mapping from vendored RIDER model names to
+        model_by_name: Optional mapping from RIDER model names to
             LangChain model instances.
     """
 
@@ -75,7 +75,7 @@ def _coerce_to_text(value: Any) -> str:
         value: Raw model response, message, dict, or primitive value.
 
     Returns:
-        Text content suitable for the vendored RIDER runtime.
+        Text content suitable for the RIDER runtime.
     """
 
     if isinstance(value, str):
@@ -152,15 +152,15 @@ class LLMClient:
         retry_delay: float = 0.0,
         **_: Any,
     ) -> None:
-        """Create a LangChain-backed client with the vendored RIDER interface.
+        """Create a LangChain-backed client with the RIDER interface.
 
         Args:
-            provider: Provider name kept for vendored compatibility.
-            api_key: API key value kept for vendored compatibility. The shim
+            provider: Provider name kept for RIDER compatibility.
+            api_key: API key value kept for RIDER compatibility. The shim
                 routes calls through registered LangChain models instead.
             max_retries: Retry count field kept for compatibility.
             retry_delay: Retry delay field kept for compatibility.
-            **_: Extra vendored options ignored by the shim.
+            **_: Extra RIDER options ignored by the shim.
 
         Raises:
             RuntimeError: If no LangChain model was registered before
@@ -215,7 +215,7 @@ class LLMClient:
         return "exception"
 
     def _resolve_model(self, model_name: str) -> Any:
-        """Resolve a vendored RIDER model alias to a LangChain model.
+        """Resolve a RIDER model alias to a LangChain model.
 
         Args:
             model_name: Model name requested by RIDER.
@@ -351,7 +351,7 @@ class LLMClient:
         }
 
     def count_tokens(self, text: str) -> int:
-        """Estimate token count for vendored RIDER budget logic.
+        """Estimate token count for RIDER budget logic.
 
         Args:
             text: Text to estimate.

@@ -80,7 +80,7 @@ def test_rider_optimizer_rejects_non_ultra_mode():
         RIDEROptimizer(model=object(), mode="light")
 
 
-def test_load_vendored_rider_genesis_without_api_key(monkeypatch):
+def test_load_rider_genesis_without_api_key(monkeypatch):
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
 
     cls = rider_module.load_rider_genesis()
@@ -89,31 +89,34 @@ def test_load_vendored_rider_genesis_without_api_key(monkeypatch):
     assert hasattr(cls, "run")
 
 
-def test_vendored_rider_runtime_is_byte_identical_to_source():
-    source = Path(r"C:\projects\rider\rider")
+def test_rider_genesis_core_is_byte_identical_to_source():
+    source = Path(r"C:\projects\rider\rider\assistant.py")
     target = (
         Path(r"C:\projects\CoolPrompt")
         / "coolprompt"
         / "optimizer"
         / "rider"
-        / "vendor"
-        / "rider"
+        / "core"
+        / "assistant.py"
     )
     if not source.exists():
         pytest.skip("Local RIDER source tree is not available.")
 
-    source_files = {
-        path.relative_to(source): path.read_bytes()
-        for path in source.rglob("*")
-        if (
-            path.is_file()
-            and "__pycache__" not in path.parts
-            and path.suffix != ".pyc"
-        )
-    }
-    target_files = {
-        path.relative_to(target): path.read_bytes()
-        for path in target.rglob("*")
+    assert target.read_bytes() == source.read_bytes()
+
+
+def test_rider_core_contains_only_ultra_algorithm_source():
+    core = (
+        Path(r"C:\projects\CoolPrompt")
+        / "coolprompt"
+        / "optimizer"
+        / "rider"
+        / "core"
+    )
+
+    files = {
+        path.relative_to(core).as_posix()
+        for path in core.rglob("*")
         if (
             path.is_file()
             and "__pycache__" not in path.parts
@@ -121,13 +124,7 @@ def test_vendored_rider_runtime_is_byte_identical_to_source():
         )
     }
 
-    assert source_files.keys() == target_files.keys()
-    changed = [
-        rel
-        for rel, content in source_files.items()
-        if target_files[rel] != content
-    ]
-    assert changed == []
+    assert files == {"__init__.py", "assistant.py"}
 
 
 def test_rider_method_rejects_light_mode_override():

@@ -5,30 +5,30 @@ autoprompting method.
 
 ## Design
 
-- `vendor/rider/` is a byte-identical copy of the upstream RIDER package from
-  `C:\projects\rider\rider`.
-- `_vendor.py` loads the vendored `RiderGenesis` class without editing the
-  copied source.
+- `core/assistant.py` is a byte-identical copy of the upstream RIDER Genesis
+  Ultra algorithm from `C:\projects\rider\rider\assistant.py`.
+- `_core_loader.py` loads the copied `RiderGenesis` class without editing the
+  RIDER source.
 - `_llm_shim.py` provides the `rider.llm.client.LLMClient` interface on top of
   LangChain models registered by CoolPrompt.
 - `rider.py` exposes the public CoolPrompt wrapper and only allows Ultra mode.
 
-The vendored tree intentionally keeps RIDER prompts, regex helpers, and internal
-pipeline code in their original locations. This keeps the integration auditable:
-updates are copied from the upstream RIDER package and verified byte-for-byte by
-tests instead of being partially refactored inside CoolPrompt.
+Only the production RIDER Genesis Ultra core is copied into CoolPrompt. The
+research repository's benchmark runners, baseline algorithms, dataset loaders,
+CLI, evaluation scripts, and experiment templates stay outside this package.
+This keeps the build small while preserving byte-for-byte auditability for the
+algorithm that CoolPrompt executes.
 
 ## Prompt Templates
 
-RIDER Genesis Ultra prompt templates are included in the vendored source:
+RIDER Genesis Ultra meta-prompts are kept inside the byte-identical
+`core/assistant.py` source, because moving them would break source-level parity
+with upstream RIDER. CoolPrompt-specific prompt templates remain in
+`coolprompt/utils/prompt_templates`.
 
-- `vendor/rider/assistant.py`: strategy, compare, merge, audit, refine,
-  synthetic-evaluation, and red-team meta-prompts used by RiderGenesis Ultra.
-- `vendor/rider/algorithms/rider.py`: data-aware initial population seeding
-  template for the full RIDER experiment runner.
-- `vendor/rider/core/operators.py`: zero-order generation template and
-  task-specific fallback prompts.
-- `vendor/rider/core/genesis.py`: GENESIS lesson-extraction meta-prompt.
+The active RIDER Genesis Ultra templates include strategy generation,
+contract extraction, pairwise comparison, merge, audit, refinement,
+synthetic-evaluation, and red-team prompts.
 
 ## Usage
 
