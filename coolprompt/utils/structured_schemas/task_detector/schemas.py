@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TaskDetectionResponse(BaseModel):
@@ -9,4 +9,4 @@ class TaskDetectionResponse(BaseModel):
     when ``use_structured_output=True``.
     """
 
-    task: str
+    task: str = Field(description="The name of the detected task.")

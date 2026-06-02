@@ -6,11 +6,9 @@ from coolprompt.utils.structured_schemas.data_generator import (
     ProblemDescriptionResponse,
 )
 
-
 ProblemDescriptionStructuredOutputSchema = ProblemDescriptionResponse
 ClassificationTaskStructuredOutputSchema = ClassificationTaskResponse
 GenerationTaskStructuredOutputSchema = GenerationTaskResponse
-
 
 __all__ = [
     "ClassificationTaskExample",
