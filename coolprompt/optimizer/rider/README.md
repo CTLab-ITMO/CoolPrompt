@@ -5,10 +5,13 @@ autoprompting method.
 
 ## Design
 
-- `core/assistant.py` is a byte-identical copy of the upstream RIDER Genesis
-  Ultra algorithm from `C:\projects\rider\rider\assistant.py`.
-- `_core_loader.py` loads the copied `RiderGenesis` class without editing the
-  RIDER source.
+- `core/assistant.py` contains the RIDER Genesis Ultra algorithm adapted for
+  the CoolPrompt package layout.
+- `coolprompt/utils/prompt_templates/rider_templates.py` contains RIDER
+  Genesis Ultra meta-prompts following the CoolPrompt prompt-template
+  convention.
+- `_core_loader.py` loads the copied `RiderGenesis` class and injects the
+  LangChain-backed runtime.
 - `_llm_shim.py` provides the `rider.llm.client.LLMClient` interface on top of
   LangChain models registered by CoolPrompt.
 - `rider.py` exposes the public CoolPrompt wrapper and only allows Ultra mode.
@@ -16,15 +19,13 @@ autoprompting method.
 Only the production RIDER Genesis Ultra core is copied into CoolPrompt. The
 research repository's benchmark runners, baseline algorithms, dataset loaders,
 CLI, evaluation scripts, and experiment templates stay outside this package.
-This keeps the build small while preserving byte-for-byte auditability for the
-algorithm that CoolPrompt executes.
+This keeps the build small and keeps prompt text in the standardized template
+package.
 
 ## Prompt Templates
 
-RIDER Genesis Ultra meta-prompts are kept inside the byte-identical
-`core/assistant.py` source, because moving them would break source-level parity
-with upstream RIDER. CoolPrompt-specific prompt templates remain in
-`coolprompt/utils/prompt_templates`.
+RIDER Genesis Ultra meta-prompts live in
+`coolprompt/utils/prompt_templates/rider_templates.py`.
 
 The active RIDER Genesis Ultra templates include strategy generation,
 contract extraction, pairwise comparison, merge, audit, refinement,

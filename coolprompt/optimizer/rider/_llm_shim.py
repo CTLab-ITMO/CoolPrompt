@@ -1,8 +1,7 @@
 """LangChain-backed LLMClient shim for RIDER Genesis Ultra.
 
-The RIDER core file is kept byte-identical. This module supplies the
-``rider.llm.client.LLMClient`` surface dynamically when the copied
-``assistant.py`` is loaded by the CoolPrompt wrapper.
+This module supplies the ``rider.llm.client.LLMClient`` surface dynamically
+when the RIDER core is loaded by the CoolPrompt wrapper.
 """
 
 from __future__ import annotations

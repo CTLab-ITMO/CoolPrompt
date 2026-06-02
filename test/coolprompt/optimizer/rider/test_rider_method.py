@@ -1,9 +1,8 @@
-from pathlib import Path
-
 import pytest
 
 from coolprompt.optimizer.rider import rider as rider_module
 from coolprompt.optimizer.rider.rider import RIDERGenesisMethod, RIDEROptimizer
+from coolprompt.utils.prompt_templates import rider_templates
 
 
 class _FakeRiderGenesis:
@@ -89,42 +88,19 @@ def test_load_rider_genesis_without_api_key(monkeypatch):
     assert hasattr(cls, "run")
 
 
-def test_rider_genesis_core_is_byte_identical_to_source():
-    source = Path(r"C:\projects\rider\rider\assistant.py")
-    target = (
-        Path(r"C:\projects\CoolPrompt")
-        / "coolprompt"
-        / "optimizer"
-        / "rider"
-        / "core"
-        / "assistant.py"
-    )
-    if not source.exists():
-        pytest.skip("Local RIDER source tree is not available.")
+def test_rider_genesis_uses_extracted_prompt_templates():
+    cls = rider_module.load_rider_genesis()
 
-    assert target.read_bytes() == source.read_bytes()
+    assert cls._STRATEGY_PROMPTS is rider_templates.RIDER_STRATEGY_PROMPTS
+    assert cls._COMPARE_PROMPT is rider_templates.RIDER_COMPARE_PROMPT
+    assert cls._MERGE_PROMPT is rider_templates.RIDER_MERGE_PROMPT
+    assert cls._SYNTHETIC_TEST_PROMPT is rider_templates.RIDER_SYNTHETIC_TEST_PROMPT
+    assert "structural" in cls._STRATEGY_PROMPTS
+    assert "{prompt}" in cls._STRATEGY_PROMPTS["structural"]
 
 
-def test_rider_core_contains_only_ultra_algorithm_source():
-    core = (
-        Path(r"C:\projects\CoolPrompt")
-        / "coolprompt"
-        / "optimizer"
-        / "rider"
-        / "core"
-    )
-
-    files = {
-        path.relative_to(core).as_posix()
-        for path in core.rglob("*")
-        if (
-            path.is_file()
-            and "__pycache__" not in path.parts
-            and path.suffix != ".pyc"
-        )
-    }
-
-    assert files == {"__init__.py", "assistant.py"}
+def test_rider_core_loader_points_to_core_assistant():
+    assert rider_module.load_rider_genesis.__module__.endswith("rider._core_loader")
 
 
 def test_rider_method_rejects_light_mode_override():

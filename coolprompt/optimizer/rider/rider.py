@@ -17,7 +17,7 @@ from coolprompt.utils.logging_config import logger
 
 
 class RIDEROptimizer:
-    """Run byte-identical RiderGenesis Ultra through LangChain models."""
+    """Run RiderGenesis Ultra through LangChain models."""
 
     _RIDER_MODEL_ALIAS = "coolprompt/langchain"
     _DUMMY_API_KEY = "-"

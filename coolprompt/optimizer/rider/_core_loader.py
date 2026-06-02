@@ -1,4 +1,4 @@
-"""Loader for the byte-identical RIDER Genesis Ultra core."""
+"""Loader for the RIDER Genesis Ultra core."""
 
 from __future__ import annotations
 
@@ -69,7 +69,7 @@ def _disable_instructor_client(self: Any, model: str) -> None:
 
 
 def load_rider_genesis() -> type:
-    """Load ``RiderGenesis`` from the byte-identical core without editing it.
+    """Load ``RiderGenesis`` from the CoolPrompt RIDER core.
 
     Returns:
         RIDER ``RiderGenesis`` class with CoolPrompt runtime patches applied.
