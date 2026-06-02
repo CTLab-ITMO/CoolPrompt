@@ -110,7 +110,10 @@ class ReflectiveMethod(AutoPromptingMethod):
         problem_description = ctx.config.get("problem_description")
         mc = ctx.config["method"]
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+            generator = SyntheticDataGenerator(
+                ctx._system_model,
+                use_structured_output=use_structured_output,
+            )
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt
             )
