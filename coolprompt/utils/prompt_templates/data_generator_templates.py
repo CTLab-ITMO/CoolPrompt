@@ -102,3 +102,72 @@ Output format is the JSON structure below:
 }}
 Output JSON data only. Remeber to create exactly {num_samples} examples.
 """
+
+CLASSIFICATION_CORNER_CASE_GENERATING_TEMPLATE = """
+You are an expert in synthetic data generation. You are very experienced in creating task examples.
+You should create a validation dataset of {num_samples} examples.
+Create a set of ground-truth labels. Then make some test questions (inputs) that correlates with problem
+description and use created labels as the responses. Try to make the answers distribution more random.
+The key point of your task is to create as most corner and edge cases for the problem as possible. Try to
+think out of line to create the most difficult or non-trivial or corner scenarios you can imagine.
+Your examples should not be easy in terms of guessing the right answer. They should be diverse and
+challenging.
+Problem description: {problem_description}
+Provide your answer in JSON object with key "examples"containing a list of your artificial corner-case
+examples. Each example is an object with keys "input"and "output"which contain corresponding text.
+Make sure to include all necessary data in "input"object. You must not add any other objects except
+"input"and "output".
+Also remember that "input"and "output"are textual fields. If you have some answer choices for input - just
+concat them with input text into one string.
+Output format is the JSON structure below:
+{{
+   "examples": [
+       {{
+          "input": "Textual corner-case input",
+          "output": "Ground-truth label",
+          "id": 1
+       }},
+       ...
+       {{
+          "input": "Textual corner-case input",
+          "output": "Ground-truth label",
+          "id": {num_samples}
+       }}
+   ]
+}}
+Output JSON data only. Remember to create exactly {num_samples} examples.
+"""
+
+GENERATION_CORNER_CASE_GENERATING_TEMPLATE = """
+You are an expert in synthetic data generation. You are very experienced in creating task examples.
+You should create a validation dataset of {num_samples} examples.
+Create example pairs input-output that will correspond given problem description.
+The key point of your task is to create as most corner and edge cases for the problem as possible. Try to
+think out of line to create the most difficult or non-trivial or corner scenarios you can imagine.
+Your examples should not be easy in terms of guessing the right answer. They should be diverse and
+challenging.
+Problem description: {problem_description}
+Provide your answer in JSON object with key "examples"containing a list of your artificial corner-case
+examples. Each example is an object with keys "input"and "output"which contain corresponding text.
+Make sure to include all necessary data in "input"object. You must not add any other objects except
+"input"and "output".
+Also remember that "input"and "output"are textual fields. If you have some answer choices for input - just
+concat them with input text into one string.
+Output format is the JSON structure below: 
+{{
+   "examples": [
+       {{
+          "input": "Textual corner-case input",
+          "output": "Correct model output",
+          "id": 1
+       }},
+       ...
+       {{
+          "input": "Textual corner-case input",
+          "output": "Correct model output",
+          "id": {num_samples}
+       }}
+   ]
+}}
+Output JSON data only. Remember to create exactly {num_samples} examples.
+"""
