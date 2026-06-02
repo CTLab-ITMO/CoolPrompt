@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
 from sklearn.model_selection import train_test_split
@@ -14,8 +14,7 @@ from coolprompt.utils.var_validation import (
     validate_run,
     validate_verbose,
 )
-from coolprompt.utils.enums import PD_Method
-
+from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 
@@ -356,3 +355,90 @@ class PromptTuner:
         logger.info("=== Prompt Optimization Completed ===")
 
         return final_prompt if return_final_prompt else None
+
+    def test(
+        self,
+        dataset: Iterable[str],
+        prompt: Optional[str] = None,
+        task: Optional[str] = None,
+        targets: Optional[Iterable[str | int]] = None,
+        metric: Optional[str] = None,
+        batch_size: int = 25,
+        return_raw_outputs: bool = True,
+    ) -> List[str] | Tuple[List[str], float]:
+        """
+        Generate model predictions for a test dataset and optionally compute a metric.
+
+        For each sample in the dataset,
+        the prompt is formatted with the sample using the task template,
+        passed to the model to generate an output,
+        and all outputs are collected. If targets are provided,
+        the metric is computed and returned alongside the outputs.
+
+        Args:
+            dataset (Iterable[str]): Input samples to process.
+            prompt (Optional[str]): Prompt to use. If None, falls back to self.final_prompt.
+            task (Optional[str]): Task type ("classification" or "generation").
+                If None, auto-detected via TaskDetector.
+            targets (Optional[Iterable[str|int]]): Ground truth labels.
+                If provided, metric is computed and returned.
+            metric (Optional[str]): Metric name. If None, defaults to "accuracy"
+                for classification or "meteor" for generation.
+            batch_size (int, default=25): Number of samples per inference batch.
+            return_raw_outputs (bool, default=True): If True, return raw model outputs;
+                if False, return parsed outputs via metric.parse_output().
+
+        Returns:
+            If targets is None: List[str] of raw/parsed outputs.
+            If targets provided: Tuple[List[str], float] of outputs and aggregate metric score.
+
+        Raises:
+            ValueError: If no prompt is available or task cannot be determined.
+        """
+        use_prompt = prompt if prompt is not None else self.final_prompt
+        if use_prompt is None:
+            raise ValueError(
+                "No prompt provided and self.final_prompt is not set. "
+                "Either call .run() first or pass prompt explicitly."
+            )
+        
+        if task is None:
+            task_detector = TaskDetector(self._system_model)
+            task = task_detector.generate(use_prompt)
+        
+        task_str = task.lower()
+        if task_str not in ("classification", "generation"):
+            raise ValueError("task must be 'classification' or 'generation'.")
+        
+        task_enum = Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
+        
+        if metric is None:
+            metric = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
+        
+        metric_impl = validate_and_create_metric(task_enum, metric)
+        
+        evaluator = Evaluator(
+            model=self._target_model,
+            task=task_enum,
+            metric=metric_impl,
+            batch_size=batch_size,
+        )
+        
+        dataset_list = list(dataset)
+        use_targets = list(targets) if targets is not None else [""] * len(dataset_list)
+        
+        result = evaluator.evaluate(
+            prompt=use_prompt,
+            dataset=dataset_list,
+            targets=use_targets,
+            template=None,
+            return_detailed=True,
+        )
+        
+        outputs = result.raw_outputs if return_raw_outputs else [
+            metric_impl.parse_output(a) for a in result.raw_outputs
+        ]
+        
+        if targets is not None:
+            return outputs, result.aggregate_score
+        return outputs
