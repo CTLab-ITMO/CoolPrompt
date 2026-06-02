@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from coolprompt.optimizer.rider import rider as rider_module
@@ -101,6 +103,31 @@ def test_rider_genesis_uses_extracted_prompt_templates():
 
 def test_rider_core_loader_points_to_core_assistant():
     assert rider_module.load_rider_genesis.__module__.endswith("rider._core_loader")
+
+
+def test_rider_core_modules_stay_reviewable():
+    core_dir = Path(rider_module.__file__).resolve().parent / "core"
+    modules = [
+        path
+        for path in core_dir.glob("*.py")
+        if path.name not in {"__init__.py"}
+    ]
+
+    assert modules
+    assert {
+        "assistant.py",
+        "runtime.py",
+        "contract.py",
+        "memory.py",
+        "pipeline_config.py",
+        "prompt_ops.py",
+        "preservation.py",
+        "run_modes.py",
+        "ultra.py",
+        "synthetic_eval.py",
+        "schemas.py",
+    } <= {path.name for path in modules}
+    assert max(len(path.read_text(encoding="utf-8").splitlines()) for path in modules) <= 500
 
 
 def test_rider_method_rejects_light_mode_override():

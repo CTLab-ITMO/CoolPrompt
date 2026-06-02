@@ -12,7 +12,7 @@ from coolprompt.optimizer.rider import _llm_shim
 
 
 RIDER_CORE_DIR = Path(__file__).resolve().parent / "core"
-_ASSISTANT_MODULE_NAME = "coolprompt.optimizer.rider._core_assistant"
+_ASSISTANT_MODULE_NAME = "coolprompt.optimizer.rider.core.assistant"
 _MISSING = object()
 
 

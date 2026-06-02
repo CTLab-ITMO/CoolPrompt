@@ -5,8 +5,14 @@ autoprompting method.
 
 ## Design
 
-- `core/assistant.py` contains the RIDER Genesis Ultra algorithm adapted for
-  the CoolPrompt package layout.
+- `core/assistant.py` is the compact `RiderGenesis` facade adapted for the
+  CoolPrompt package layout.
+- `core/runtime.py`, `core/contract.py`, `core/memory.py`,
+  `core/prompt_ops.py`, `core/preservation.py`, `core/run_modes.py`,
+  `core/ultra.py`, and `core/synthetic_eval.py` split the RIDER Genesis Ultra
+  implementation by responsibility so each module stays reviewable.
+- `core/schemas.py` contains the structured Pydantic schemas used by RIDER
+  contract extraction, synthetic tests, judge scores, and red-team findings.
 - `coolprompt/utils/prompt_templates/rider_templates.py` contains RIDER
   Genesis Ultra meta-prompts following the CoolPrompt prompt-template
   convention.
