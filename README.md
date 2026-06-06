@@ -53,7 +53,9 @@ pip install -r requirements.txt
 ```
 
 ## Quick start
-Import and initialize PromptTuner using model qwen3-4b-instruct via HuggingFace
+
+Set your OpenAI API key before running. The default model is `gpt-4o-mini` via the OpenAI API (`OPENAI_API_KEY` environment variable)
+
 ```python
 from coolprompt.assistant import PromptTuner
 

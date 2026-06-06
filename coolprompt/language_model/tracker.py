@@ -98,33 +98,44 @@ class TrackedLLMWrapper(BaseLanguageModel):
     async def agenerate_prompt(self, prompts, stop=None, **kwargs):
         return await self.model.agenerate_prompt(prompts, stop=stop, **kwargs)
 
-    def invoke(self, input, **kwargs):
+    def invoke(self, input, config=None, *, stop=None, **kwargs):
         """Calls model and tracks usage stats.
 
         Args:
             input: Input to pass to model.
+            config: Optional LangChain runnable config.
+            stop: Optional stop sequences.
             **kwargs: Additional model arguments.
 
         Returns:
             Model output.
         """
         with get_openai_callback() as cb:
-            result = self.model.invoke(input, **kwargs)
+            result = self.model.invoke(
+                input, config=config, stop=stop, **kwargs
+            )
             self.tracker._update_stats(cb, True, 0)
             return result
 
-    def batch(self, inputs, **kwargs):
+    def batch(self, inputs, config=None, *, return_exceptions=False, **kwargs):
         """Calls model in batch and tracks usage stats.
 
         Args:
             inputs: List of inputs to process.
+            config: Optional LangChain runnable config.
+            return_exceptions: Whether to return exceptions instead of raising.
             **kwargs: Additional model arguments.
 
         Returns:
             List of model outputs.
         """
         with get_openai_callback() as cb:
-            results = self.model.batch(inputs, **kwargs)
+            results = self.model.batch(
+                inputs,
+                config=config,
+                return_exceptions=return_exceptions,
+                **kwargs,
+            )
             self.tracker._update_stats(cb, False, len(inputs))
             return results
 
