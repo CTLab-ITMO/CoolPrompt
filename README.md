@@ -19,7 +19,7 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
 
 ### Join our [telegram](https://t.me/+0kMcymeAQrczN2Fi) channel to be in touch.
 
-### Join our telegram channel to be on touch
+### Join our telegram channel to be in touch
 https://t.me/+0kMcymeAQrczN2Fi
 
 ## Practical cases
