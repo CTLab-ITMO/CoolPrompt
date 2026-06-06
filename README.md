@@ -156,3 +156,16 @@ For technical details and full experimental results, please check our papers.
       url={https://arxiv.org/abs/2508.18992}, 
 }
 ```
+
+<a href="https://doi.org/10.1145/3803437.3807393">**RIDER**</a>
+```
+@inproceedings{dragomirov2026rider,
+  author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
+  title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
+  booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+  series = {FSE Companion '26},
+  year = {2026},
+  doi = {10.1145/3803437.3807393}
+}
+```
+
