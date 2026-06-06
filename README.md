@@ -15,7 +15,7 @@
 [![ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg)](https://itmo.ru/)
 [![Telegram Channel](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/+0kMcymeAQrczN2Fi)
 
-CoolPrompt is a framework for automative prompting creation and optimization.
+CoolPrompt is a framework for automatic prompt creation and optimization.
 
 ### Join our [telegram](https://t.me/+0kMcymeAQrczN2Fi) channel to be in touch.
 
