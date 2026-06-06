@@ -35,7 +35,7 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     - RE-GPS
     - RIDER
     - PromptCompressor
-    - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
+    - *deprecated*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
 - **Generate synthetic evaluation data** when no input dataset is provided 
 - **Evaluate** prompts incorporating multiple metrics for both classification and generation tasks
@@ -93,6 +93,7 @@ See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/m
 
 ## Reference
 For technical details and full experimental results, please check our papers.
+
 <a href="https://doi.org/10.1145/3803437.3807393">**RIDER**</a>
 ```
 @inproceedings{dragomirov2026rider,
