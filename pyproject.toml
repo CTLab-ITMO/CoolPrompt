@@ -57,7 +57,7 @@ dependencies = [
 ]
 license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]
-keywords = ["prompting", "autoprompting", "llm", "transformers", "prompt-engineering"]
+keywords = ["apo", "autoprompting", "llm", "transformers", "prompt-engineering"]
 
 [project.urls]
 Homepage = "https://github.com/CTLab-ITMO/CoolPrompt"
