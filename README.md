@@ -36,8 +36,10 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     - PromptCompressor
     - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
+- **Develop own custom APO method in one library**
 - **Generate synthetic evaluation data** when no input dataset is provided 
-- **Evaluate** prompts incorporating multiple metrics for both classification and generation tasks
+- **Evaluate a quality** of prompts incorporating multiple metrics for both classification and generation tasks
+- **Evaluate costs** of optimization processes by a number of tokens/calls and a price.
 - **Automatic task detecting** for scenarios without explicit user-defined task specifications
 
 <p align="center">
