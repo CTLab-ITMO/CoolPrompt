@@ -65,7 +65,7 @@ class RiderUltraMixin:
             self._log("[adaptive pipeline] simple tier UPGRADED → medium "
                       "(ultra mode guarantees crystallization + 4 strategies)")
             tier = 'medium'
-        cfg = self._ultra_pipeline_config(tier)
+        cfg = self._apply_budget_overrides(self._ultra_pipeline_config(tier))
         self._log(f"[adaptive pipeline] complexity tier = {tier.upper()} "
                   f"(len={self._original_prompt_len} chars, "
                   f"archetype={self._contract.get('task_archetype')})")

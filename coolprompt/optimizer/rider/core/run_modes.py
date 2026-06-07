@@ -1,4 +1,4 @@
-"""Light, Blitz, and Standard run modes plus lifecycle helpers for RIDER Genesis Ultra."""
+"""Copied-core compatibility run modes and lifecycle helpers for RIDER Genesis Ultra."""
 
 from __future__ import annotations
 
@@ -52,6 +52,7 @@ class RiderRunModesMixin:
         self.model = self._role_model("worker")
         self._synthetic_tests = []
         self._synthetic_rankings = []
+        self._external_rankings = []
         self._llm_attempts = []
         # v4.3 real-quality tracking
         self._synth_best_score: Optional[float] = None
@@ -122,7 +123,7 @@ class RiderRunModesMixin:
     # ══════════════════════════════════════════════════════════════════════
 
     def run_light(self, prompt: str) -> str:
-        """RIDER Light — fast optimization (~15-35s, ~5 calls).
+        """Legacy fast path retained for copied-core compatibility.
 
         1. Contract extraction (1 Sonnet)
         2. 2 adaptive strategies IN PARALLEL at IGNITION temperature (2 working)
@@ -176,7 +177,7 @@ class RiderRunModesMixin:
         return self._finalize_run(prompt, best_text, "light", t0)
 
     def _run_blitz(self, prompt: str) -> str:
-        """RIDER Blitz — PARALLEL multi-strategy + diversity-aware merge + fusion refine (~45-120s).
+        """Legacy parallel path retained for copied-core compatibility.
 
         v4.3: IGNITION strategies at T=1.15, FUSION merge+refine at T=0.85.
         """
@@ -233,7 +234,7 @@ class RiderRunModesMixin:
         return self._finalize_run(prompt, refined, "blitz", t0)
 
     def _run_standard(self, prompt: str) -> str:
-        """RIDER Standard — PHASE REACTOR 3-phase + v4 synthetic eval + beam k=2 (~120s, ~22 calls)."""
+        """Legacy 3-phase path retained for copied-core compatibility."""
         t0 = time.time()
         self._setup_run(prompt, "standard")
 

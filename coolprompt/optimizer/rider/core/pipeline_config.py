@@ -38,7 +38,80 @@ class RiderPipelineConfigMixin:
     """Pipeline temperature, complexity, and phase-selection helpers."""
 
     def _phase_temperature(self, phase: str, default: float = 0.7) -> float:
+        params = getattr(self, "_rider_hyperparams", {}) or {}
+        phase_overrides = params.get("phase_temperatures") or {}
+        if phase in phase_overrides:
+            return float(phase_overrides[phase])
+        if params.get("temperature") is not None:
+            return float(params["temperature"])
         return self._PHASE_T.get(phase, default)
+
+    def _hyper_int(
+        self,
+        name: str,
+        default: int,
+        *,
+        min_value: int = 1,
+        max_value: Optional[int] = None,
+    ) -> int:
+        params = getattr(self, "_rider_hyperparams", {}) or {}
+        value = params.get(name, default)
+        try:
+            result = int(value)
+        except (TypeError, ValueError):
+            result = default
+        result = max(min_value, result)
+        if max_value is not None:
+            result = min(max_value, result)
+        return result
+
+    def _apply_budget_overrides(self, cfg: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply CoolPrompt wrapper budget knobs to the Ultra phase plan."""
+
+        params = getattr(self, "_rider_hyperparams", {}) or {}
+        result = dict(cfg)
+
+        population_size = params.get("population_size")
+        num_strategies = params.get("num_strategies")
+        if num_strategies is not None:
+            result["num_strategies"] = self._hyper_int(
+                "num_strategies",
+                result.get("num_strategies", 5),
+                min_value=2,
+                max_value=5,
+            )
+        elif population_size is not None:
+            pop = self._hyper_int(
+                "population_size",
+                result.get("num_strategies", 5),
+                min_value=2,
+            )
+            result["num_strategies"] = max(2, min(5, pop))
+            result["tournament_k_phase1"] = max(
+                2,
+                min(3, max(2, pop // 2)),
+            )
+
+        num_generations = params.get("num_generations")
+        if num_generations is not None:
+            gens = self._hyper_int("num_generations", 4, min_value=1)
+            if gens <= 1:
+                result["run_crystallization"] = False
+                result["run_validation"] = False
+                result["run_red_team_harden"] = False
+                result["run_triple_merge"] = False
+            elif gens == 2:
+                result["run_crystallization"] = True
+                result["run_validation"] = False
+                result["run_red_team_harden"] = False
+                result["run_triple_merge"] = False
+            elif gens == 3:
+                result["run_crystallization"] = True
+                result["run_validation"] = True
+                result["run_red_team_harden"] = False
+                result["run_triple_merge"] = False
+
+        return result
 
     # v4.4: adaptive complexity detection. Multi-phase pipeline is overkill for
     # short classification prompts (every refine layer adds noise → bloat),

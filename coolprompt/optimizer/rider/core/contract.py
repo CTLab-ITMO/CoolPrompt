@@ -412,6 +412,11 @@ class RiderContractMixin:
         dims = c.get('quality_dimensions') or []
         if dims:
             lines.append(f"  evaluation dimensions: {'; '.join(str(x) for x in dims[:8])}")
+        context_block = getattr(self, "_coolprompt_context_block", "") or ""
+        if context_block:
+            lines.append("")
+            lines.append("CoolPrompt dataset context:")
+            lines.append(context_block)
         return "\n".join(lines) + "\n\n"
 
     def _preservation_block(self) -> str:

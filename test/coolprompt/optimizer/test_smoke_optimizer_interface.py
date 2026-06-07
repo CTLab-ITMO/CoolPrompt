@@ -13,7 +13,7 @@ def test_autoprompting_module_exports():
     assert HyPERLightMethod().name == "hyper_light"
     assert issubclass(RIDERGenesisMethod, AutoPromptingMethod)
     assert RIDERGenesisMethod().name == "rider"
-    assert RIDERGenesisMethod().is_data_driven() is False
+    assert RIDERGenesisMethod().is_data_driven() is True
 
 
 def test_validate_method_string_class_and_instance_equivalent():
@@ -98,6 +98,9 @@ def test_prompt_tuner_runs_rider_method(monkeypatch):
     class _FakeRiderMethod(RIDERGenesisMethod):
         def optimize(self, **kwargs):
             assert kwargs["initial_prompt"] == "Write a crisp summary"
+            assert kwargs["dataset_split"] is not None
+            assert kwargs["evaluator"] is not None
+            assert kwargs["problem_description"] == "Return a concise summary."
             return "optimized rider prompt"
 
     monkeypatch.setattr(
