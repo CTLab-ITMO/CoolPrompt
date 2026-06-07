@@ -32,7 +32,8 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     - HyPER / HyPER Light
     - RE-GPS
     - RIDER
-    - *(deprecated)*: ReflectivePrompt, DistillPrompt
+    - PromptCompressor
+    - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
 - **Generate synthetic evaluation data** when no input dataset is provided 
 - **Evaluate** prompts incorporating multiple metrics for both classification and generation tasks
@@ -54,8 +55,9 @@ pip install coolprompt
 - Install with git:
 ```bash
 git clone https://github.com/CTLab-ITMO/CoolPrompt.git
+cd CoolPrompt
 
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Quick start
@@ -142,4 +144,3 @@ For technical details and full experimental results, please check our papers.
       url={https://arxiv.org/abs/2508.18992}, 
 }
 ```
-
