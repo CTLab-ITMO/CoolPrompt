@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderRunModesMixin:
+    """Shared setup and execution paths for RIDER run modes."""
+
     def _setup_run(self, prompt: str, mode: str):
         self._api_calls_start = self.llm_client.total_api_calls
         self._history = []

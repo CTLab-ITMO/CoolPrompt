@@ -145,6 +145,7 @@ class RiderGenesis(
         api_key: Optional[str] = None,
         verbose: bool = True,
     ):
+        """Initialize RIDER runtime clients, state, and persistent lesson cache."""
         self._model_override = model
         self._role_model_chains: Dict[str, List[str]] = {}
         self._instructor_clients: Dict[str, Any] = {}
@@ -229,20 +230,26 @@ class RiderGenesis(
     @property
     def final_prompt(self) -> Optional[str]:
         return self._final_prompt
+
     @property
     def improvement(self) -> float:
+        """Percentage fitness improvement from the last run."""
         if self._original_fitness <= 0:
             return 0.0
         return (self._best_fitness - self._original_fitness) / self._original_fitness * 100
+
     @property
     def fitness(self) -> float:
         return self._best_fitness
+
     @property
     def history(self) -> List[Dict]:
         return self._history
+
     @property
     def api_calls(self) -> int:
         return self.llm_client.total_api_calls - self._api_calls_start
+
     @property
     def contract(self) -> Dict[str, Any]:
         """Last extracted prompt contract (v3 addition)."""

@@ -25,8 +25,8 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods.
 
     This class provides a unified interface to run various prompt
-    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress, ReGPS)
-    on a target language model. It handles dataset splitting, metric
+    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress,
+    ReGPS, RIDER) on a target language model. It handles dataset splitting, metric
     evaluation, logging, and optional synthetic data generation.
     """
 
@@ -165,7 +165,7 @@ class PromptTuner:
                 (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
-                "meteor" for generation. Special metrics `llm_as_judge` and
+                "bertscore" for generation. Special metrics `llm_as_judge` and
                 `geval` require additional configuration parameters below.
             problem_description (str | None): Natural language description
                 of the task. If None, it will be generated automatically
@@ -385,7 +385,7 @@ class PromptTuner:
             targets (Optional[Iterable[str|int]]): Ground truth labels.
                 If provided, metric is computed and returned.
             metric (Optional[str]): Metric name. If None, defaults to "accuracy"
-                for classification or "meteor" for generation.
+                for classification or "bertscore" for generation.
             batch_size (int, default=25): Number of samples per inference batch.
             return_raw_outputs (bool, default=True): If True, return raw model outputs;
                 if False, return parsed outputs via metric.parse_output().

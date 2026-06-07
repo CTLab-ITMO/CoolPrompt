@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderContractMixin:
+    """Contract extraction and heuristic prompt-contract utilities."""
+
     @staticmethod
     def _append_unique(items: List[Any], value: str) -> None:
         value = str(value).strip()

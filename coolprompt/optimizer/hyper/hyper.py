@@ -11,7 +11,6 @@ from coolprompt.optimizer.autoprompting_method import (
     BenchmarkContext,
 )
 
-from evaluate import load
 import numpy as np
 from tqdm import tqdm
 
@@ -50,7 +49,9 @@ def _get_bertscore_evaluate(metric: Any):
 
     global _bertscore_evaluate
     if _bertscore_evaluate is None:
-        _bertscore_evaluate = load("bertscore")
+        import evaluate
+
+        _bertscore_evaluate = evaluate.load("bertscore")
     return _bertscore_evaluate
 
 logger = logging.getLogger(__name__)
@@ -683,6 +684,7 @@ class HyPERMethod(AutoPromptingMethod):
         problem_description=None,
         **kwargs,
     ):
+        """Run iterative HyPER optimization through the PromptTuner method API."""
         n_iterations = kwargs.pop("n_iterations", 5)
         patience = kwargs.pop("patience", None)
         n_candidates = kwargs.pop("n_candidates", 3)
@@ -696,7 +698,10 @@ class HyPERMethod(AutoPromptingMethod):
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
 
-        meta_prompt_context = kwargs.pop("meta_prompt_context", None)
+        meta_info = kwargs.pop(
+            "meta_info",
+            kwargs.pop("hyper_meta_info", None),
+        )
         optimizer = HyPEROptimizer(
             model=model,
             evaluator=evaluator,
@@ -714,7 +719,7 @@ class HyPERMethod(AutoPromptingMethod):
             random_seed=random_seed,
         )
 
-        meta_info = meta_prompt_context.copy() if meta_prompt_context else {}
+        meta_info = meta_info.copy() if meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
 
@@ -730,6 +735,7 @@ class HyPERMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run HyPER from a benchmark context and method config."""
         meta = dict(ctx.config.get("meta_info", {}))
         if "task_description" not in meta:
             td = ctx.config.get("problem_description")
@@ -742,7 +748,7 @@ class HyPERMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=ctx.config.get("problem_description"),
-            meta_prompt_context=meta if meta else None,
+            meta_info=meta if meta else None,
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),
             n_candidates=mc.get("n_candidates", 3),

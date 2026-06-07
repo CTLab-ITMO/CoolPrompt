@@ -144,6 +144,7 @@ def get_model_answer_extracted(
     n: int = 1,
     temperature=None,
 ):
+    """Invoke a model and return parsed assistant text for one or many generations."""
     if temperature is not None:
         llm = llm.bind(temperature=temperature)
 

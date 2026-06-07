@@ -76,7 +76,7 @@ def test_hyper_light_method_real_llm_smoke():
         model=llm,
         initial_prompt="Translate to French: good morning",
         problem_description="translation",
-        meta_prompt_context={"style": "informal"},
+        hyper_meta_info={"style": "informal"},
     )
     assert isinstance(out, str)
     assert len(out) > 3

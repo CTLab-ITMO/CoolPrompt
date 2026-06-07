@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderRuntimeMixin:
+    """Model routing, schema parsing, and LLM runtime helpers."""
+
     @staticmethod
     def _split_model_chain(value: Optional[str]) -> List[str]:
         if not value:

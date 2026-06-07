@@ -29,6 +29,8 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
 
 
 class HFEvaluateMetric(ABC):
+    """Mixin that delegates metric computation to HuggingFace ``evaluate``."""
+
     def __init__(self, name: str) -> None:
         """Initialize metric with specified evaluate library metric name.
 
@@ -98,8 +100,6 @@ class BaseMetric(ABC):
     ANS_TAGS = ("<ans>", "</ans>")
 
     def __init__(self) -> None:
-        """Initialize metric"""
-
         super().__init__()
 
     @abstractmethod
@@ -254,8 +254,6 @@ class ClassificationMetric(BaseMetric):
     FORMAT_MISMATCH_LABEL = -1
 
     def __init__(self):
-        """Initialize metric"""
-
         super().__init__()
         self.label_to_id = None
 
@@ -306,8 +304,6 @@ class GenerationMetric(BaseMetric):
     FORMAT_MISMATCH_LABEL = ""
 
     def __init__(self):
-        """Initialize metric"""
-
         super().__init__()
 
     def _encode_labels(
@@ -392,6 +388,7 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
         return "bertscore"
 
     def __init__(self):
+        """Load BERTScore with the multilingual base model."""
         super().__init__(self._get_name())
         self._compute_kwargs_func = lambda outputs, targets: {
             "model_type": "bert-base-multilingual-cased"
@@ -414,6 +411,7 @@ class LLMAsJudge(GenerationMetric):
         custom_templates: Optional[dict[str, str]] = None,
         metric_ceil: int = 10,
     ):
+        """Initialize judge prompts and scoring scale."""
         super().__init__()
         self.model = model
         self.prompt_template = prompt_template
@@ -473,6 +471,8 @@ class LLMAsJudge(GenerationMetric):
 
 
 class GEvalMetric(GenerationMetric):
+    """DeepEval GEval-backed generation metric."""
+
     @staticmethod
     def _get_name() -> str:
         return "geval"
@@ -485,6 +485,7 @@ class GEvalMetric(GenerationMetric):
         evaluation_params: Optional[list[LLMTestCaseParams]] = None,
         strict_mode: bool = False,
     ) -> None:
+        """Configure a GEval metric around a LangChain model."""
         super().__init__()
         wrapped_model = DeepEvalLangChainModel(model)
 
@@ -551,12 +552,14 @@ class ExactMatchMetric(GenerationMetric):
 
 
 class CodeBertScore(GenerationMetric):
+    """CodeBERTScore metric for generated code snippets."""
 
     @staticmethod
     def _get_name():
         return "codebertscore"
 
     def __init__(self):
+        """Initialize the Java CodeBERT scorer."""
         super().__init__()
         self.scorer = BERTScorer(lang="java")
 
@@ -566,11 +569,13 @@ class CodeBertScore(GenerationMetric):
         return f1_list
 
     def parse_output(self, output: str) -> str:
+        """Extract the answer tag and then the final numeric token."""
         extracted = extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
         return extract_number_from_text(extracted)
 
 
 def define_lang(outputs, targets):
+    """Infer the most common language among target strings."""
     langs = [detect_language(target) for target in targets]
     return max(set(langs), key=langs.count)
 
@@ -591,8 +596,7 @@ def validate_and_create_metric(
     **kwargs,
 ) -> BaseMetric:
     """
-    Validates given metric in order to correspond the given task.
-    Returns the given metric name back if the validation succeeded.
+    Validate a metric name for the task and create the metric instance.
 
     Args:
         task (Task): The type of task, either "classification" or "generation".
@@ -600,7 +604,7 @@ def validate_and_create_metric(
         model (BaseLanguageModel): model to use for evaluation
             (for LLM-as-judge and GEval)
     Returns:
-        str: the name of the metric.
+        BaseMetric: initialized metric object.
     Raises:
         ValueError: If the specified task name is not recognized
         ValueError: If the specified metric name is not

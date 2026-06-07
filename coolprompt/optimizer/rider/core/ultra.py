@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderUltraMixin:
+    """RIDER Ultra pipeline implementation."""
+
     def _run_ultra(self, prompt: str) -> str:
         """RIDER Ultra+ — 5-phase: ignition/fusion/crystal/validation/red-team+synth-beam k=3 (~180s, ~33 calls)."""
         t0 = time.time()
