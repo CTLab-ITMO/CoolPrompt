@@ -17,6 +17,15 @@ candidates, mini-batch scoring, MMR, feedback, inner meta-prompt, validation).
 One structured meta-prompt and **one** model call. The model should return the new
 prompt inside `<result_prompt>…</result_prompt>`.
 
+### Workflow
+
+<p align="center">
+    <picture>
+    <source srcset="../../../docs/images/hyper_light_pipe.png">
+    <img alt="HyPER Light workflow" width="100%" height="100%">
+    </picture>
+</p>
+
 - **Not data-driven** for optimization: no train/val split is required for the
   optimization step itself (evaluation in `PromptTuner` may still use a dataset).
 - **Context**: pass **`hyper_meta_info`** (dict) to `PromptTuner.run`; direct
@@ -73,6 +82,15 @@ train mini-batch, **MMR** (BERTScore diversity), build recommendations (optional
 contrastive feedback), optional **instance-leak audit** when
 the meta-info block contains `problem_description`, then **inner** `MetaPromptOptimizer`
 per shortlisted candidate and validation scoring.
+
+### Workflow
+
+<p align="center">
+    <picture>
+    <source srcset="../../../docs/images/hyper_pipe.png">
+    <img alt="HyPER workflow" width="100%" height="100%">
+    </picture>
+</p>
 
 Typical constructor / YAML **`method`** fields: `n_iterations`, `patience`,
 `n_candidates`, `top_n_candidates`, `k_samples`, `mini_batch_size`,
