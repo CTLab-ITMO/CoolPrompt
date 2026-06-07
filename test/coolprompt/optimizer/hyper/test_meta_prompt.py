@@ -125,7 +125,7 @@ def test_hyper_light_method_optimize_delegates(mock_opt_class):
         model=model,
         initial_prompt="p",
         problem_description="pd",
-        meta_prompt_context=ctx,
+        hyper_meta_info=ctx,
     )
     assert result == "done"
     mock_opt_class.assert_called_once_with(
@@ -148,7 +148,7 @@ def test_hyper_light_method_problem_description_from_arg(mock_opt_class):
         model=MagicMock(spec=BaseLanguageModel),
         initial_prompt="p",
         problem_description="only_pd",
-        meta_prompt_context=None,
+        hyper_meta_info=None,
     )
     meta = mock_opt.optimize.call_args.kwargs["meta_info"]
     assert meta["problem_description"] == "only_pd"
@@ -164,7 +164,7 @@ def test_hyper_light_meta_context_wins_problem_description(mock_opt_class):
         model=MagicMock(spec=BaseLanguageModel),
         initial_prompt="p",
         problem_description="from_arg",
-        meta_prompt_context={"problem_description": "from_ctx"},
+        hyper_meta_info={"problem_description": "from_ctx"},
     )
     meta = mock_opt.optimize.call_args.kwargs["meta_info"]
     assert meta["problem_description"] == "from_ctx"

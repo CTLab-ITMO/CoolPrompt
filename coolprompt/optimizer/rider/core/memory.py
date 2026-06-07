@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderMemoryMixin:
+    """Persistent lesson-cache helpers for RIDER runs."""
+
     @classmethod
     def _load_lesson_cache(cls) -> Dict[str, List[str]]:
         try:

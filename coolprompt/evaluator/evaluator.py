@@ -18,6 +18,8 @@ from coolprompt.utils.prompt_templates.default_templates import (
 
 @dataclass
 class FailedExampleDetailed:
+    """Per-example evaluation details for a low-scoring sample."""
+
     instance: str
     assistant_answer: str
     model_answer_parsed: Optional[str] = None
@@ -28,6 +30,8 @@ class FailedExampleDetailed:
 
 @dataclass
 class EvalResultDetailed:
+    """Detailed evaluation result with aggregate, per-sample scores, and outputs."""
+
     aggregate_score: float
     score_per_task: List[float | int] = None
     failed_examples: List[FailedExampleDetailed] = None
@@ -49,6 +53,7 @@ class Evaluator:
         metric: BaseMetric,
         batch_size: int = 25,
     ) -> None:
+        """Initialize the evaluator with a model, task type, metric, and batch size."""
         self.model = model
         self.task = task
         self.metric = metric

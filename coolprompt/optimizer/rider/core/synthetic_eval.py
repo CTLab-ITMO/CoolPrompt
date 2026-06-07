@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderSyntheticEvalMixin:
+    """Synthetic evaluation and adversarial audit helpers."""
+
     def _bilingual_adversarial(self, prompt: str, lang: str) -> Optional[str]:
         """Ultra-only: English critique for non-EN prompts to surface universal issues."""
         meta = self._BILINGUAL_ADVERSARIAL_PROMPT.format(prompt=prompt, lang=lang)

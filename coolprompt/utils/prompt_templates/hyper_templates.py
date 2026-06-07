@@ -104,12 +104,16 @@ HYPE_META_PROMPT_TEMPLATE = (
 
 @dataclass
 class PromptSectionSpec:
+    """Name and description for one generated prompt section."""
+
     name: str
     description: str
 
 
 @dataclass
 class MetaPromptConfig:
+    """Configuration for building HyPER meta-prompts."""
+
     target_prompt_form: str = "instructional "
     require_markdown_prompt: bool = True
     include_role: bool = True
@@ -189,6 +193,7 @@ class MetaPromptBuilder:
     """
 
     def __init__(self, config: MetaPromptConfig | None = None) -> None:
+        """Initialize the builder and cache static sections."""
         self.config = config or MetaPromptConfig()
         self._cache_all_sections()
 

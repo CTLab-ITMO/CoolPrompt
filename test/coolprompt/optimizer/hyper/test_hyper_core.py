@@ -157,7 +157,7 @@ def test_hyper_optimizer_get_variants(mock_get):
 
 
 @patch("coolprompt.optimizer.hyper.hyper.HyPEROptimizer")
-def test_hyper_method_passes_meta_prompt_context(mock_cls):
+def test_hyper_method_passes_hyper_meta_info(mock_cls):
     mock_inst = MagicMock()
     mock_inst.optimize.return_value = ("final", [])
     mock_cls.return_value = mock_inst
@@ -171,7 +171,7 @@ def test_hyper_method_passes_meta_prompt_context(mock_cls):
         dataset_split=split,
         evaluator=ev,
         problem_description="ignored_if_in_meta",
-        meta_prompt_context=meta,
+        hyper_meta_info=meta,
     )
     kw = mock_inst.optimize.call_args.kwargs
     assert kw["meta_info"]["problem_description"] == "pd"

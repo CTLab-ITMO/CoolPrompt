@@ -48,8 +48,11 @@ class MetaPromptOptimizer(Optimizer):
         model: Any,
         config: Optional[MetaPromptConfig] = None,
         meta_prompt: Optional[str] = None,
+        use_structured_output: bool = False,
     ) -> None:
+        """Initialize the meta-prompt builder and full prompt template."""
         super().__init__(model)
+        self.use_structured_output = use_structured_output
         self.builder = MetaPromptBuilder(config)
         if meta_prompt is not None:
             self.meta_prompt = meta_prompt
@@ -123,9 +126,14 @@ class HyPERLightMethod(AutoPromptingMethod):
         problem_description=None,
         **kwargs,
     ):
-        meta_prompt_context = kwargs.pop("meta_prompt_context", None)
+        """Run a single HyPER Light meta-prompt optimization call."""
+        meta_info = kwargs.pop(
+            "meta_info",
+            kwargs.pop("hyper_meta_info", None),
+        )
+        kwargs.setdefault("use_structured_output", False)
         optimizer = MetaPromptOptimizer(model=model, **kwargs)
-        meta_info = meta_prompt_context.copy() if meta_prompt_context else {}
+        meta_info = meta_info.copy() if meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
         return optimizer.optimize(
@@ -139,12 +147,13 @@ class HyPERLightMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run HyPER Light from a benchmark context."""
         meta = dict(ctx.config.get("meta_info", {}))
         return self.optimize(
             ctx.model,
             start_prompt,
             problem_description=ctx.config.get("problem_description"),
-            meta_prompt_context=meta if meta else None,
+            meta_info=meta if meta else None,
         )
 
     def is_data_driven(self) -> bool:
