@@ -24,7 +24,8 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
 - Automatic prompt engineering for solving tasks using LLM
 - (Semi-)automatic generation of markup for fine-tuning
 - Formalization of response quality assessment using LLM
-- Prompt tuning for agent systems
+- Prompt adoption for AI Agentic Pipelines
+- Etc.
 
 ## Core features
 
@@ -90,69 +91,66 @@ See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/m
 - We welcome and value any contributions and collaborations, so please contact us. For new code check out <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.
 
 ## Reference
-For technical details and full experimental results, please check our papers.
+For technical details and full experimental results, please check our papers + citations inside.
 
-<a href="https://doi.org/10.1145/3803437.3807393">**RIDER**</a>
-```
-@inproceedings{dragomirov2026rider,
-  author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
-  title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
-  booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
-  series = {FSE Companion '26},
-  year = {2026},
-  doi = {10.1145/3803437.3807393}
-}
-```
+<details close>
+    <summary><a href="https://doi.org/10.1145/3803437.3807393"><b>RIDER</b></a></summary>
+    
+    @inproceedings{dragomirov2026rider,
+      author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
+      title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
+      booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+      series = {FSE Companion '26},
+      year = {2026},
+      doi = {10.1145/3803437.3807393}
+    }
+    
+</details>
 
-<a href="https://doi.org/10.1145/3803437.3807393">**RIDER**</a>
-```
-@inproceedings{dragomirov2026rider,
-  author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
-  title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
-  booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
-  series = {FSE Companion '26},
-  year = {2026},
-  doi = {10.1145/3803437.3807393}
-}
-```
-
-<a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf">**CoolPrompt**</a>
-```
-@INPROCEEDINGS{11239071,
-  author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey},
-  booktitle={2025 38th Conference of Open Innovations Association (FRUCT)}, 
-  title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models}, 
-  year={2025},
-  volume={},
-  number={},
-  pages={158-166},
-  keywords={Technological innovation;Systematics;Large language models;Pipelines;Manuals;Prediction algorithms;Libraries;Prompt engineering;Optimization;Synthetic data},
-  doi={10.23919/FRUCT67853.2025.11239071}
-}
-```
-
-<a href="https://ntv.ifmo.ru/file/article/23927.pdf">**ReflectivePrompt**</a>
-```
-@misc{zhuravlev2025reflectivepromptreflectiveevolutionautoprompting,
-      title={ReflectivePrompt: Reflective evolution in autoprompting algorithms}, 
-      author={Viktor N. Zhuravlev and Artur R. Khairullin and Ernest A. Dyagin and Alena N. Sitkina and Nikita I. Kulin},
+<details close>
+    <summary><a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf"><b>CoolPrompt</b></a></summary>
+    
+    @INPROCEEDINGS{11239071,
+      author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey},
+      booktitle={2025 38th Conference of Open Innovations Association (FRUCT)}, 
+      title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models}, 
       year={2025},
-      eprint={2508.18870},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2508.18870}, 
-}
-```
+      volume={},
+      number={},
+      pages={158-166},
+      keywords={Technological innovation;Systematics;Large language models;Pipelines;Manuals;Prediction algorithms;Libraries;Prompt engineering;Optimization;Synthetic data},
+      doi={10.23919/FRUCT67853.2025.11239071}
+    }
+    
+</details>
 
-<a href="https://arxiv.org/pdf/2508.18992">**DistillPrompt**</a>
-```
-@misc{dyagin2025automaticpromptoptimizationprompt,
-      title={Automatic Prompt Optimization with Prompt Distillation},
-      author={Ernest A. Dyagin and Nikita I. Kulin and Artur R. Khairullin and Viktor N. Zhuravlev and Alena N. Sitkina},
-      year={2025},
-      eprint={2508.18992},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2508.18992}, 
-}
-```
+<details close>
+    <summary><a href="https://ntv.ifmo.ru/file/article/23927.pdf"><b>ReflectivePrompt</b></a></summary>
+    
+    @misc{zhuravlev2025reflectivepromptreflectiveevolutionautoprompting,
+          title={ReflectivePrompt: Reflective evolution in autoprompting algorithms}, 
+          author={Viktor N. Zhuravlev and Artur R. Khairullin and Ernest A. Dyagin and Alena N. Sitkina and Nikita I. Kulin},
+          year={2025},
+          eprint={2508.18870},
+          archivePrefix={arXiv},
+          primaryClass={cs.CL},
+          url={https://arxiv.org/abs/2508.18870}, 
+    }
+    
+</details>
+
+<details close>
+    <summary><a href="https://arxiv.org/pdf/2508.18992"><b>DistillPrompt</b></a></summary>
+    
+    @misc{dyagin2025automaticpromptoptimizationprompt,
+          title={Automatic Prompt Optimization with Prompt Distillation},
+          author={Ernest A. Dyagin and Nikita I. Kulin and Artur R. Khairullin and Viktor N. Zhuravlev and Alena N. Sitkina},
+          year={2025},
+          eprint={2508.18992},
+          archivePrefix={arXiv},
+          primaryClass={cs.CL},
+          url={https://arxiv.org/abs/2508.18992}, 
+    }
+    
+</details>
+
