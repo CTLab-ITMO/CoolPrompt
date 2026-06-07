@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderPromptOpsMixin:
+    """LLM prompt-operation helpers for applying RIDER strategies."""
+
     def _apply_strategy(
         self, prompt: str, strategy: str,
         extra_vars: Optional[Dict[str, str]] = None,

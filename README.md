@@ -13,8 +13,11 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/issues)
 [![Contributions welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?)](https://github.com/CTLab-ITMO/CoolPrompt/pulls)
 [![ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg)](https://itmo.ru/)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/+0kMcymeAQrczN2Fi)
 
-CoolPrompt is a framework for automative prompting creation and optimization.
+CoolPrompt is a framework for automatic prompt creation and optimization.
+
+### Join our [telegram](https://t.me/+0kMcymeAQrczN2Fi) channel to be in touch.
 
 ## Practical cases
 
@@ -25,11 +28,15 @@ CoolPrompt is a framework for automative prompting creation and optimization.
 
 ## Core features
 
-- **Optimize prompts** with our autoprompting optimizers: HyPER, RE-GPS, ReflectivePrompt *(deprecated)*, DistillPrompt *(deprecated)* 
+- **Optimize prompts** with our APO methods:
+    - HyPER / HyPER Light
+    - RE-GPS
+    - RIDER
+    - PromptCompressor
+    - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
 - **Generate synthetic evaluation data** when no input dataset is provided 
 - **Evaluate** prompts incorporating multiple metrics for both classification and generation tasks
-- **Retrieve feedbacks** to interpret prompt optimization results
 - **Automatic task detecting** for scenarios without explicit user-defined task specifications
 
 <p align="center">
@@ -48,12 +55,15 @@ pip install coolprompt
 - Install with git:
 ```bash
 git clone https://github.com/CTLab-ITMO/CoolPrompt.git
+cd CoolPrompt
 
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Quick start
-Import and initialize PromptTuner using model qwen3-4b-instruct via HuggingFace
+
+Set your OpenAI API key before running. The default model is `gpt-4o-mini` via the OpenAI API (`OPENAI_API_KEY` environment variable)
+
 ```python
 from coolprompt.assistant import PromptTuner
 
@@ -81,6 +91,18 @@ See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/m
 
 ## Reference
 For technical details and full experimental results, please check our papers.
+
+<a href="https://doi.org/10.1145/3803437.3807393">**RIDER**</a>
+```
+@inproceedings{dragomirov2026rider,
+  author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
+  title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
+  booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+  series = {FSE Companion '26},
+  year = {2026},
+  doi = {10.1145/3803437.3807393}
+}
+```
 
 <a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf">**CoolPrompt**</a>
 ```
@@ -122,16 +144,3 @@ For technical details and full experimental results, please check our papers.
       url={https://arxiv.org/abs/2508.18992}, 
 }
 ```
-
-<a href="https://doi.org/10.1145/3803437.3807393">**RIDER**</a>
-```
-@inproceedings{dragomirov2026rider,
-  author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
-  title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
-  booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
-  series = {FSE Companion '26},
-  year = {2026},
-  doi = {10.1145/3803437.3807393}
-}
-```
-

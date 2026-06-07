@@ -179,3 +179,5 @@ src/solutions/SPELL/data/*
 run_logs/*
 
 coolprompt_test/*
+
+.DS_Store

@@ -105,6 +105,7 @@ class CompressorMethod(AutoPromptingMethod):
         problem_description=None,
         **kwargs,
     ):
+        """Compress ``initial_prompt`` through the shared method interface."""
         compressor = PromptCompressor(
             model=model,
             system_prompt=self.system_prompt,
@@ -127,6 +128,7 @@ class CompressorMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run prompt compression from a benchmark context."""
         mc = ctx.config.get("method", {})
         method = CompressorMethod(
             system_prompt=mc.get("system_prompt", self.system_prompt),

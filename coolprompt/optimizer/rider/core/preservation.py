@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderPreservationMixin:
+    """Prompt artifact preservation helpers used during refinement."""
+
     def _extract_required_artifacts(self, original: str) -> Dict[str, List[str]]:
         """Detect artifacts in the original that should be preserved."""
         artifacts: Dict[str, List[str]] = {}

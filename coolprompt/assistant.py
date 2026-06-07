@@ -25,8 +25,8 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods.
 
     This class provides a unified interface to run various prompt
-    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress, ReGPS)
-    on a target language model. It handles dataset splitting, metric
+    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress,
+    ReGPS, RIDER) on a target language model. It handles dataset splitting, metric
     evaluation, logging, and optional synthetic data generation.
     """
 
@@ -142,7 +142,8 @@ class PromptTuner:
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
-        meta_prompt_context: dict = None,
+        hyper_meta_info: dict = None,
+        system_model_as_optimizer: bool = False,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -164,7 +165,7 @@ class PromptTuner:
                 (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
-                "meteor" for generation. Special metrics `llm_as_judge` and
+                "bertscore" for generation. Special metrics `llm_as_judge` and
                 `geval` require additional configuration parameters below.
             problem_description (str | None): Natural language description
                 of the task. If None, it will be generated automatically
@@ -200,9 +201,10 @@ class PromptTuner:
             return_final_prompt (bool): If True, return the final prompt;
                 otherwise return None (the prompt is still stored in
                 `self.final_prompt`).
-            meta_prompt_context (dict | None): Optional extra key-value pairs
-                merged into the meta-info block for ``hyper_light`` (same role as
-                ``config['meta_info']`` in YAML benchmarks).
+            hyper_meta_info (dict | None): Optional extra key-value pairs
+                merged into the meta-info block for ``hyper`` and ``hyper_light``.
+            system_model_as_optimizer (bool): If True, use the system model for
+                optimizing processes, while target model will be used for inference.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -296,7 +298,7 @@ class PromptTuner:
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method_impl.name}, Task: {task}")
-        logger.info(f"Metric: {metric}, Validation size: {validation_size}")
+        logger.info(f"Metric: {base_metric}, Validation size: {validation_size}")
         if dataset:
             logger.info(f"Dataset: {len(dataset)} samples")
         else:
@@ -308,11 +310,11 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
-        if meta_prompt_context is not None:
-            kwargs = {**kwargs, "meta_prompt_context": meta_prompt_context}
+        if hyper_meta_info is not None:
+            kwargs = {**kwargs, "meta_info": hyper_meta_info}
 
         final_prompt = method_impl.optimize(
-            model=self._target_model,
+            model=self._system_model if system_model_as_optimizer else self._target_model,
             initial_prompt=start_prompt,
             dataset_split=dataset_split,
             evaluator=evaluator,
@@ -345,8 +347,8 @@ class PromptTuner:
             template=template,
         )
         logger.info(
-            f"Initial {metric} score: {self.init_metric}, "
-            f"final {metric} score: {self.final_metric}"
+            f"Initial {base_metric} score: {self.init_metric}, "
+            f"final {base_metric} score: {self.final_metric}"
         )
 
         self.init_prompt = start_prompt
@@ -383,7 +385,7 @@ class PromptTuner:
             targets (Optional[Iterable[str|int]]): Ground truth labels.
                 If provided, metric is computed and returned.
             metric (Optional[str]): Metric name. If None, defaults to "accuracy"
-                for classification or "meteor" for generation.
+                for classification or "bertscore" for generation.
             batch_size (int, default=25): Number of samples per inference batch.
             return_raw_outputs (bool, default=True): If True, return raw model outputs;
                 if False, return parsed outputs via metric.parse_output().

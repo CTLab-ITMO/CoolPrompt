@@ -86,6 +86,7 @@ class ReGPSMethod(AutoPromptingMethod):
         problem_description,
         **kwargs,
     ):
+        """Run Re-GPS through the shared method interface."""
         return regps(
             model=model,
             dataset_split=dataset_split,
@@ -100,6 +101,7 @@ class ReGPSMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
         if problem_description is None:
             generator = SyntheticDataGenerator(ctx._system_model)

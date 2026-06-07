@@ -2,6 +2,7 @@ from typing import Optional, Tuple, List, Dict
 from tqdm import tqdm
 from time import sleep
 from dataclasses import dataclass
+import yaml
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
@@ -17,6 +18,8 @@ from coolprompt.utils.prompt_templates.default_templates import (
 
 @dataclass
 class FailedExampleDetailed:
+    """Per-example evaluation details for a low-scoring sample."""
+
     instance: str
     assistant_answer: str
     model_answer_parsed: Optional[str] = None
@@ -27,6 +30,8 @@ class FailedExampleDetailed:
 
 @dataclass
 class EvalResultDetailed:
+    """Detailed evaluation result with aggregate, per-sample scores, and outputs."""
+
     aggregate_score: float
     score_per_task: List[float | int] = None
     failed_examples: List[FailedExampleDetailed] = None
@@ -48,6 +53,7 @@ class Evaluator:
         metric: BaseMetric,
         batch_size: int = 25,
     ) -> None:
+        """Initialize the evaluator with a model, task type, metric, and batch size."""
         self.model = model
         self.task = task
         self.metric = metric
@@ -63,6 +69,8 @@ class Evaluator:
         failed_examples: Optional[int] = None,
         *,
         return_detailed: bool = False,
+        save_model_answers: bool = False,
+        model_answers_output_path: str = "./model_answers.yaml",
     ) -> float | Tuple[float, List[Dict[str, str]]] | EvalResultDetailed:
         """
         Evaluate the model on a dataset
@@ -86,6 +94,8 @@ class Evaluator:
                 Number of bad examples to return after evaluating
             return_detailed (bool, default=False): If True, returns EvalResultDetailed with per-task scores
                 and raw outputs.
+            save_model_answers (bool, default=False): If True, saves model answers to a file.
+            model_answers_output_path (str, default="./model_answers.yaml"): Path to save model answers.
 
 
         Returns:
@@ -107,6 +117,10 @@ class Evaluator:
         ]
 
         answers = self._run_batches(full_prompts)
+
+        if save_model_answers:
+            with open(model_answers_output_path, "w") as file:
+                yaml.safe_dump(answers, file)
 
         if not return_detailed:
             return self.metric.compute(answers, targets, dataset, failed_examples)

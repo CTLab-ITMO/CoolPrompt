@@ -67,6 +67,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         bad_examples_number: int = 5,
         checkpoint_path: Optional[str] = None,
     ) -> None:
+        """Initialize Re-GPS state and feedback-generation settings."""
         super().__init__(
             model,
             evaluator,

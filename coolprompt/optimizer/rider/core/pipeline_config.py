@@ -35,6 +35,8 @@ _CONTRACT_PROMPT = RIDER_CONTRACT_PROMPT
 
 
 class RiderPipelineConfigMixin:
+    """Pipeline temperature, complexity, and phase-selection helpers."""
+
     def _phase_temperature(self, phase: str, default: float = 0.7) -> float:
         return self._PHASE_T.get(phase, default)
 

@@ -31,7 +31,7 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
 )
 
 _BERTSCORE_MODEL_TYPE = "microsoft/deberta-large-mnli"
-_bertscore_evaluate = None  # module-level singleton
+_bertscore_evaluate = None
 
 
 def _get_bertscore_evaluate(metric: Any):
@@ -49,8 +49,9 @@ def _get_bertscore_evaluate(metric: Any):
 
     global _bertscore_evaluate
     if _bertscore_evaluate is None:
-        from evaluate import load
-        _bertscore_evaluate = load("bertscore")
+        import evaluate
+
+        _bertscore_evaluate = evaluate.load("bertscore")
     return _bertscore_evaluate
 
 logger = logging.getLogger(__name__)
@@ -165,7 +166,7 @@ def mmr_select(
 ) -> List[Tuple[str, EvalResultDetailed]]:
     """Select ``top_n`` candidates by maximal marginal relevance (MMR).
 
-    Uses ``MMR(d) = λ·score(d) − (1−λ)·max_{j in selected} sim(d, d_j)`` with
+    Uses ``MMR(cand) = λ·score(cand) − (1−λ)·max_{j in selected} sim(cand, cand_j)`` with
     BERTScore-based ``sim``.
 
     Args:
@@ -191,7 +192,6 @@ def mmr_select(
     selected: List[int] = []
     remaining = list(range(len(candidates)))
 
-    # Seed selection with the highest-scoring candidate.
     best_idx = int(np.argmax(scores))
     selected.append(best_idx)
     remaining.remove(best_idx)
@@ -217,7 +217,7 @@ class HyPEROptimizer(Optimizer):
         model: Any,
         evaluator: Evaluator,
         *,
-        n_iterations: int = 5,
+        n_iterations: int = None,
         patience: int = None,
         n_candidates: int = 3,
         top_n_candidates: int = 3,
@@ -229,24 +229,25 @@ class HyPEROptimizer(Optimizer):
         feedback_answer_tail_chars: int = 500,
         enable_instance_leak_audit: bool = True,
         random_seed: Optional[int] = None,
+        **kwargs,
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
 
         Args:
             model: Chat model for paraphrases, feedback, and meta-prompt calls.
             evaluator: Task evaluator (mini-batch + validation scores).
-            n_iterations: Maximum outer-loop iterations.
+            n_iterations: Maximum outer-loop iterations. Defaults to 5.
             patience: Optional early-stop patience on validation non-improvement.
-            n_candidates: Paraphrase count per iteration (excluding the original).
-            top_n_candidates: MMR shortlist size for inner optimization.
-            k_samples: Max failed examples sampled per feedback source.
-            mini_batch_size: Train mini-batch size for candidate scoring.
-            contrastive_probability: Bernoulli probability to try contrastive feedback.
-            contrastive_max_answer_chars: Budget for contrastive winning answers.
-            feedback_answer_head_chars: Head truncation for failure answers in feedback.
-            feedback_answer_tail_chars: Tail truncation for failure answers in feedback.
+            n_candidates: Paraphrase count per iteration (excluding the original). Defaults to 3.
+            top_n_candidates: MMR shortlist size for inner optimization. Defaults to 3.
+            k_samples: Max failed examples sampled per feedback source. Defaults to 3.
+            mini_batch_size: Train mini-batch size for candidate scoring. Defaults to 16.
+            contrastive_probability: Bernoulli probability to try contrastive feedback. Defaults to 0.5.
+            contrastive_max_answer_chars: Budget for contrastive winning answers. Defaults to 500.
+            feedback_answer_head_chars: Head truncation for failure answers in feedback. Defaults to 500.
+            feedback_answer_tail_chars: Tail truncation for failure answers in feedback. Defaults to 500.
             enable_instance_leak_audit: If True, run ``drop_instance_leaks`` when
-                ``meta_info`` contains a non-empty ``problem_description``.
+                ``meta_info`` contains a non-empty ``problem_description``. Defaults to True.
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
         """
         super().__init__(model)
@@ -257,8 +258,6 @@ class HyPEROptimizer(Optimizer):
         self.feedback_answer_head_chars = feedback_answer_head_chars
         self.feedback_answer_tail_chars = feedback_answer_tail_chars
         self.enable_instance_leak_audit = enable_instance_leak_audit
-        # Feedback module knows about the resulting-prompt sections so that
-        # recommendations can be section-targeted (or 'general').
         self.feedback_module = FeedbackModule(
             model,
             section_specs=self.meta_prompt_module.builder.config.section_specs,
@@ -267,7 +266,7 @@ class HyPEROptimizer(Optimizer):
             feedback_answer_head_chars=feedback_answer_head_chars,
             feedback_answer_tail_chars=feedback_answer_tail_chars,
         )
-        self.n_iterations = n_iterations
+        self.n_iterations = n_iterations or kwargs.get("num_epochs", 5)
         self.patience = patience
         self.n_candidates = n_candidates
         self.top_n_candidates = top_n_candidates
@@ -352,8 +351,8 @@ class HyPEROptimizer(Optimizer):
             score_before_iteration = best_score
             best_prompt_before_iteration = best_prompt
 
-            # 1. Generate candidates from best_prompt
-            logger.info(f"[HyPER] Step 1: Generating {self.n_candidates} paraphrase candidates...")
+            # Generate candidates from best_prompt
+            logger.info(f"[HyPER] Generating {self.n_candidates} paraphrase candidates...")
             candidates = self._get_variants_from_best(
                 best_prompt, n_candidates=self.n_candidates
             )
@@ -363,7 +362,7 @@ class HyPEROptimizer(Optimizer):
                 logger.warning("[HyPER] No candidates generated, returning best prompt")
                 return best_prompt, iteration_history
 
-            # 2. Mini-batch from train. Validation is fixed for the whole run;
+            # Mini-batch from train. Validation is fixed for the whole run;
             # mini-batches are deterministic when random_seed is provided.
             mini_batch_seed = (
                 None if self.random_seed is None else self.random_seed + iteration
@@ -372,7 +371,7 @@ class HyPEROptimizer(Optimizer):
                 train_samples, train_targets, self.mini_batch_size, seed=mini_batch_seed
             )
             logger.info(
-                f"[HyPER] Step 2: Mini-batch sampled: {len(samples)} examples "
+                f"[HyPER] Mini-batch sampled: {len(samples)} examples "
                 f"(seed={mini_batch_seed}, indices={mini_batch_indices})"
             )
 
@@ -380,8 +379,7 @@ class HyPEROptimizer(Optimizer):
                 logger.warning("[HyPER] No samples in mini-batch, skipping iteration")
                 continue
 
-            # 3. Evaluate candidates on mini-batch
-            logger.info(f"[HyPER] Step 3: Evaluating {len(candidates)} candidates on mini-batch...")
+            logger.info(f"[HyPER] Evaluating {len(candidates)} candidates on mini-batch...")
             results: List[EvalResultDetailed] = [
                 self.evaluator.evaluate(cand, samples, sample_targets, failed_examples=self.k_samples, return_detailed=True)
                 for cand in candidates
@@ -389,16 +387,16 @@ class HyPEROptimizer(Optimizer):
 
             for i, (cand, res) in enumerate(zip(candidates, results)):
                 score_str = f"{res.aggregate_score:.4f}" if res.aggregate_score is not None else "N/A"
-                logger.info(f"[HyPER]   Candidate {i+1}: mini_batch_score={score_str}, n_failed={len(res.failed_examples)}")
+                logger.info(f"[HyPER]   Candidate {i+1}: mini_batch_score={score_str}, n_examples_for_analysis={len(res.failed_examples)}")
                 logger.debug(f"[HyPER]   Candidate {i+1} prompt:\n{cand}")
 
-            # 3.5. Guard: if no candidate has failures, mini-batch is too easy; resample once.
+            # Guard: if no candidate has failures, mini-batch is too easy; resample once.
             total_failures = sum(len(r.failed_examples) for r in results)
             mini_batch_resampled = False
             mini_batch_resample_seed = None
             if total_failures == 0:
                 logger.info(
-                    f"[HyPER] Step 3.5: All candidates have 0 failures on mini-batch. Resampling once..."
+                    f"[HyPER] All candidates have 0 failures on mini-batch. Resampling once..."
                 )
                 mini_batch_resampled = True
                 mini_batch_resample_seed = (
@@ -421,7 +419,7 @@ class HyPEROptimizer(Optimizer):
                 total_failures = sum(len(r.failed_examples) for r in results)
                 logger.info(f"[HyPER]   After resample: total_failures={total_failures}")
 
-            # 4. MMR selection (relevance + diversity)
+            # MMR selection
             bertscore_evaluate = _get_bertscore_evaluate(self.evaluator.metric)
             lambda_ = _adaptive_lambda(best_score if best_score is not None else 0.0)
             selected = mmr_select(
@@ -433,7 +431,7 @@ class HyPEROptimizer(Optimizer):
             )
             p_star_str = f"{best_score:.4f}" if best_score is not None else "N/A"
             logger.info(
-                f"[HyPER] Step 4: MMR selected {len(selected)}/{len(candidates)} "
+                f"[HyPER] MMR selected {len(selected)}/{len(candidates)} "
                 f"(λ={lambda_:.2f}, p_star_score={p_star_str})"
             )
 
@@ -446,7 +444,7 @@ class HyPEROptimizer(Optimizer):
                 logger.info(f"[HyPER]   MMR[{i+1}] mini_batch_score={score_str}")
                 logger.debug(f"[HyPER]   MMR[{i+1}] prompt:\n{cand_prompt}")
 
-            # 5. Build feedback sources: top_n_candidates contributors with failures.
+            # Build feedback sources: top_n_candidates contributors with failures.
             # Selected candidates with failures go first; selected without failures
             # are substituted with non-selected candidates that have failures
             # (sorted by score desc).
@@ -473,7 +471,7 @@ class HyPEROptimizer(Optimizer):
                     )
 
             logger.info(
-                f"[HyPER] Step 5: Generating recommendations from {len(feedback_sources)} "
+                f"[HyPER] Generating recommendations from {len(feedback_sources)} "
                 f"source(s) (target={self.top_n_candidates})..."
             )
             all_recs: List[Recommendation] = []
@@ -482,9 +480,9 @@ class HyPEROptimizer(Optimizer):
                     res.failed_examples,
                     min(self.k_samples, len(res.failed_examples)),
                 )
-                # For each failure, build the list of OTHER candidates' performance
-                # on the SAME mini-batch index — used by feedback module for
-                # contrastive recommendations (when coin flips heads).
+                # For each failure, build the list of other candidates' performance
+                # on the same mini-batch index — used by feedback module for
+                # contrastive recommendations.
                 contrastive_per_failure: List[List[ContrastiveCandidate]] = []
                 for fe in failed_sample:
                     others: List[ContrastiveCandidate] = []
@@ -524,7 +522,7 @@ class HyPEROptimizer(Optimizer):
                     logger.info(f"[HyPER]   Rec {i+1} [{rec.section}]: {rec.text}")
 
                 # Audit instance leaks: keep broad recs, rewrite useful leaky
-                # recs, and drop narrow/vague ones (one LLM call).
+                # recs, and drop narrow/vague ones.
                 problem_description = (meta_info or {}).get("problem_description", "")
                 if (
                     self.enable_instance_leak_audit
@@ -559,8 +557,8 @@ class HyPEROptimizer(Optimizer):
                     "keeping previous recommendations unchanged"
                 )
 
-            # 6. Meta-prompt optimization for each MMR-selected candidate; validate on val.
-            logger.info(f"[HyPER] Step 6: MetaPrompt-optimizing {len(selected)} MMR candidates + val evaluation...")
+            # Meta-prompt optimization for each MMR-selected candidate; validate on val.
+            logger.info(f"[HyPER] MetaPrompt-optimizing {len(selected)} MMR candidates + val evaluation...")
             validation_score_cache = {best_prompt_before_iteration: score_before_iteration}
             optimized_val_scores: List[dict] = []
             for i, (cand_prompt, res) in enumerate(selected):
@@ -686,6 +684,7 @@ class HyPERMethod(AutoPromptingMethod):
         problem_description=None,
         **kwargs,
     ):
+        """Run iterative HyPER optimization through the PromptTuner method API."""
         n_iterations = kwargs.pop("n_iterations", 5)
         patience = kwargs.pop("patience", None)
         n_candidates = kwargs.pop("n_candidates", 3)
@@ -699,7 +698,10 @@ class HyPERMethod(AutoPromptingMethod):
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
 
-        meta_prompt_context = kwargs.pop("meta_prompt_context", None)
+        meta_info = kwargs.pop(
+            "meta_info",
+            kwargs.pop("hyper_meta_info", None),
+        )
         optimizer = HyPEROptimizer(
             model=model,
             evaluator=evaluator,
@@ -717,7 +719,7 @@ class HyPERMethod(AutoPromptingMethod):
             random_seed=random_seed,
         )
 
-        meta_info = meta_prompt_context.copy() if meta_prompt_context else {}
+        meta_info = meta_info.copy() if meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
 
@@ -733,6 +735,7 @@ class HyPERMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run HyPER from a benchmark context and method config."""
         meta = dict(ctx.config.get("meta_info", {}))
         if "task_description" not in meta:
             td = ctx.config.get("problem_description")
@@ -745,7 +748,7 @@ class HyPERMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=ctx.config.get("problem_description"),
-            meta_prompt_context=meta if meta else None,
+            meta_info=meta if meta else None,
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),
             n_candidates=mc.get("n_candidates", 3),

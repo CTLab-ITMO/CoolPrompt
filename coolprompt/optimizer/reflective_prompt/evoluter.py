@@ -73,6 +73,7 @@ class ReflectiveEvoluter:
         checkpoint_path: Optional[str] = None,
         use_cache: bool = True,
     ) -> None:
+        """Initialize ReflectivePrompt state and search configuration."""
         self.model = model
         self.evaluator = evaluator
         self.train_dataset = train_dataset
