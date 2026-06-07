@@ -28,10 +28,11 @@ prompt inside `<result_prompt>…</result_prompt>`.
 
 - **Not data-driven** for optimization: no train/val split is required for the
   optimization step itself (evaluation in `PromptTuner` may still use a dataset).
-- **Context**: pass **`hyper_meta_info`** (dict) into `optimize` / `PromptTuner.run`;
-  it is merged into the meta-info block. If `problem_description` is missing there,
-  it is taken from the `problem_description` argument. YAML benchmarks fill the same
-  role via `config["meta_info"]` in `run_configured_benchmark`.
+- **Context**: pass **`hyper_meta_info`** (dict) to `PromptTuner.run`; direct
+  method calls use **`meta_info`**. It is merged into the meta-info block. If
+  `problem_description` is missing there, it is taken from the
+  `problem_description` argument. YAML benchmarks fill the same role via
+  `config["meta_info"]` in `run_configured_benchmark`.
 
 ### Programmatic
 
