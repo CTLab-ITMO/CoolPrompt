@@ -142,7 +142,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
             NotImplementedError: If model does not support structured output.
         """
         if hasattr(self.model, "with_structured_output"):
-            return self.model.with_structured_output(schema, **kwargs)
+            return model_tracker.wrap_model(self.model.with_structured_output(schema, **kwargs))
         raise NotImplementedError(
             f"Model {type(self.model)} does not support structured output"
         )
