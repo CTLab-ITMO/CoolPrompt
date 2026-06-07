@@ -15,3 +15,4 @@ langchain_huggingface>=0.3.1
 langchain-openai>=0.3.30
 langdetect>=0.4.31
 deepeval>=3.7.2
+transformers<5
