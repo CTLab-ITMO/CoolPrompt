@@ -44,7 +44,7 @@ out = method.optimize(
     model=llm,
     initial_prompt="Your task prompt…",
     problem_description="Short task description",
-    meta_info={"domain": "news"},
+    hyper_meta_info={"domain": "news"},
 )
 ```
 
@@ -80,7 +80,7 @@ impl = validate_method("hyper_light")
 Several **iterations**: paraphrase around the current best, score candidates on a
 train mini-batch, **MMR** (BERTScore diversity), build recommendations (optional
 contrastive feedback), optional **instance-leak audit** when
-the meta-info block contains `problem_description`, then **inner** `MetaPromptOptimizer`
+`hyper_meta_info["problem_description"]` is set, then **inner** `MetaPromptOptimizer`
 per shortlisted candidate and validation scoring.
 
 ### Workflow
@@ -97,9 +97,8 @@ Typical constructor / YAML **`method`** fields: `n_iterations`, `patience`,
 `contrastive_probability`, `enable_instance_leak_audit`, `random_seed`, and truncation
 limits for feedback prompts.
 
-Pass **`hyper_meta_info`** through `PromptTuner.run`, or **`meta_info`** when
-calling `HyPERMethod.optimize()` directly. Include `problem_description` for the
-audit step.
+Pass **`hyper_meta_info`** the same way as for HyPER Light (includes
+`problem_description` for the audit step).
 
 ### Programmatic
 
@@ -113,7 +112,7 @@ final = method.optimize(
     dataset_split=(train_x, val_x, train_y, val_y),
     evaluator=evaluator,
     problem_description="…",
-    meta_info={"problem_description": "…"},
+    hyper_meta_info={"problem_description": "…"},
     n_iterations=5,
 )
 ```

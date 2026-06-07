@@ -253,6 +253,7 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
+        metric_name = base_metric._get_name()
         evaluator = Evaluator(
             self._target_model, task_value, base_metric, batch_size=batch_size
         )

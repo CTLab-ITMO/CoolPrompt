@@ -229,7 +229,7 @@ class HyPEROptimizer(Optimizer):
         feedback_answer_tail_chars: int = 500,
         enable_instance_leak_audit: bool = True,
         random_seed: Optional[int] = None,
-        **kwargs,
+        **kwargs
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
 
