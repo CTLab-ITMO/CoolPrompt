@@ -35,7 +35,9 @@ Only the production RIDER Genesis Ultra core is copied into CoolPrompt. The
 research repository's benchmark runners, baseline algorithms, dataset loaders,
 CLI, evaluation scripts, and experiment templates stay outside this package.
 This keeps the build small and keeps prompt text in the standardized template
-package.
+package. The CoolPrompt wrapper supplies user train/validation data through
+RIDER context hooks and external validation reranking, so the optimizer adapts
+to the user's dataset without copying the research benchmark stack.
 
 ## Prompt Templates
 
@@ -52,9 +54,22 @@ synthetic-evaluation, and red-team prompts.
 from coolprompt.assistant import PromptTuner
 
 prompt_tuner = PromptTuner(target_model=model)
-prompt_tuner.run("Improve this prompt", method="rider")
+prompt_tuner.run(
+    "Improve this prompt",
+    method="rider",
+    dataset=train_and_validation_inputs,
+    target=train_and_validation_targets,
+    validation_size=0.25,
+    num_samples=5,
+    num_generations=5,
+    population_size=5,
+    temperature=0.7,
+)
 ```
 
 Optional role-specific models may be passed through method kwargs as
 `planner_model`, `judge_model`, and `critic_model`. If omitted, the target model
-is used for all RIDER roles.
+is used for all RIDER roles. Dataset and hyperparameter kwargs accepted by the
+wrapper include `num_samples`, `num_generations`/`epochs`, `population_size`,
+`num_strategies`, `temperature`, `phase_temperatures`, `train_sample_size`,
+`validation_sample_size`, `external_eval_weight`, and `seed`.

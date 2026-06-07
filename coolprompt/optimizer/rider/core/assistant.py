@@ -185,6 +185,14 @@ class RiderGenesis(
         # v4 cross-prompt persistent lesson cache.
         self._lesson_cache: Dict[str, List[str]] = self._load_lesson_cache()
 
+        # CoolPrompt integration state. These hooks keep RIDER Ultra intact while
+        # allowing the wrapper to inject train examples, validation evaluation,
+        # and runtime hyperparameters from PromptTuner.
+        self._coolprompt_context_block: str = ""
+        self._external_eval_context: Optional[Dict[str, Any]] = None
+        self._external_rankings: List[Dict[str, Any]] = []
+        self._rider_hyperparams: Dict[str, Any] = {}
+
     def run(
         self,
         prompt: str,
@@ -198,16 +206,21 @@ class RiderGenesis(
 
         Args:
             prompt: the original prompt to optimize
-            mode: 'light' (~15s), 'blitz' (~45s), 'standard' (~70s), 'ultra' (~120s)
-            num_samples: legacy kwarg (ignored in v3)
-            population_size: legacy kwarg (ignored in v3)
-            num_generations: legacy kwarg (ignored in v3)
-            use_llm_judge: legacy kwarg (ignored in v3)
+            mode: copied-core compatibility mode; CoolPrompt exposes Ultra only.
+            num_samples: synthetic test budget override
+            population_size: strategy/population budget override
+            num_generations: Ultra phase-depth budget override
+            use_llm_judge: copied-core compatibility flag
 
         Returns:
             The optimized prompt.
         """
-        _ = (num_samples, population_size, num_generations, use_llm_judge)
+        self.configure_hyperparameters(
+            num_samples=num_samples,
+            population_size=population_size,
+            num_generations=num_generations,
+            use_llm_judge=use_llm_judge,
+        )
 
         valid_modes = {'light', 'blitz', 'standard', 'ultra'}
         if mode not in valid_modes:
@@ -224,6 +237,58 @@ class RiderGenesis(
         if mode == 'ultra':
             return self._run_ultra(prompt)
         return self._run_standard(prompt)
+
+
+    def configure_coolprompt_context(
+        self,
+        *,
+        problem_description: Optional[str] = None,
+        train_examples: Optional[List[Tuple[Any, Any]]] = None,
+    ) -> None:
+        """Inject CoolPrompt task context into RIDER mutation prompts."""
+
+        blocks: List[str] = []
+        if problem_description:
+            blocks.append("Problem description:\n" + str(problem_description).strip())
+        if train_examples:
+            lines = ["Training examples for prompt optimization:"]
+            for idx, (sample, target) in enumerate(train_examples, 1):
+                sample_text = str(sample).replace("\n", " ")[:500]
+                target_text = str(target).replace("\n", " ")[:300]
+                lines.append(f"  [{idx}] input: {sample_text}")
+                lines.append(f"      expected: {target_text}")
+            blocks.append("\n".join(lines))
+        self._coolprompt_context_block = "\n\n".join(blocks).strip()
+
+    def configure_external_evaluator(
+        self,
+        *,
+        evaluator: Any,
+        val_dataset: List[str],
+        val_targets: List[Any],
+        template: Optional[str] = None,
+        max_examples: Optional[int] = None,
+        weight: float = 0.7,
+        seed: Optional[int] = None,
+    ) -> None:
+        """Register CoolPrompt validation data for RIDER beam reranking."""
+
+        self._external_eval_context = {
+            "evaluator": evaluator,
+            "val_dataset": list(val_dataset or []),
+            "val_targets": list(val_targets or []),
+            "template": template,
+            "max_examples": max_examples,
+            "weight": float(weight),
+            "seed": seed,
+        }
+
+    def configure_hyperparameters(self, **kwargs: Any) -> None:
+        """Store runtime knobs exposed by the CoolPrompt wrapper."""
+
+        for key, value in kwargs.items():
+            if value is not None:
+                self._rider_hyperparams[key] = value
 
     # -- Properties ---------------------------------------------------------
 
@@ -266,6 +331,10 @@ class RiderGenesis(
     def synthetic_rankings(self) -> List[Dict[str, Any]]:
         """Synthetic beam audit trail: cases, candidate names, and scores."""
         return list(self._synthetic_rankings)
+    @property
+    def external_rankings(self) -> List[Dict[str, Any]]:
+        """CoolPrompt validation reranking audit trail."""
+        return list(self._external_rankings)
     @property
     def role_models(self) -> Dict[str, str]:
         """Primary model used by each RIDER Genesis role in the last/current run."""

@@ -33,6 +33,19 @@ class _FakeRiderGenesis:
         self.api_calls = 0
         self.__class__.instances.append(self)
 
+    def configure_coolprompt_context(self, **kwargs):
+        problem_description = kwargs.get("problem_description")
+        train_examples = kwargs.get("train_examples") or []
+        self._coolprompt_context_block = str(problem_description or "")
+        if train_examples:
+            self._coolprompt_context_block += f" examples={train_examples}"
+
+    def configure_external_evaluator(self, **kwargs):
+        self._external_eval_context = kwargs
+
+    def configure_hyperparameters(self, **kwargs):
+        self._rider_hyperparams = {k: v for k, v in kwargs.items() if v is not None}
+
     def run(self, prompt, mode="standard", **kwargs):
         self.run_calls.append((prompt, mode, kwargs))
         self.api_calls = 7
@@ -137,3 +150,150 @@ def test_rider_method_rejects_light_mode_override():
             initial_prompt="Improve this prompt",
             rider_mode="light",
         )
+
+
+
+class _FakeEvaluator:
+    def __init__(self):
+        self.calls = []
+
+    def evaluate(self, prompt, dataset, targets, template=None, **kwargs):
+        self.calls.append((prompt, list(dataset), list(targets), template, kwargs))
+        return 0.9 if "optimized" in prompt else 0.2
+
+
+def test_rider_method_passes_dataset_and_hyperparameters(monkeypatch):
+    _FakeRiderGenesis.instances = []
+    monkeypatch.setattr(
+        rider_module,
+        "load_rider_genesis",
+        lambda: _FakeRiderGenesis,
+    )
+
+    evaluator = _FakeEvaluator()
+    result = RIDERGenesisMethod().optimize(
+        model=object(),
+        initial_prompt="Improve this prompt",
+        dataset_split=(["train in"], ["val in"], ["train out"], ["val out"]),
+        evaluator=evaluator,
+        problem_description="Return a concise answer.",
+        num_samples=3,
+        population_size=4,
+        num_generations=2,
+        temperature=0.4,
+        seed=13,
+    )
+
+    assert result == "optimized via ultra: Improve this prompt"
+    instance = _FakeRiderGenesis.instances[-1]
+    assert instance.run_calls == [
+        (
+            "Improve this prompt",
+            "ultra",
+            {
+                "num_samples": 3,
+                "population_size": 4,
+                "num_generations": 2,
+            },
+        )
+    ]
+    assert instance._coolprompt_context_block
+    assert "Return a concise answer" in instance._coolprompt_context_block
+    assert instance._external_eval_context["evaluator"] is evaluator
+    assert instance._external_eval_context["val_dataset"] == ["val in"]
+    assert instance._rider_hyperparams["temperature"] == 0.4
+
+
+def test_rider_benchmark_context_passes_dataset_and_config(monkeypatch):
+    _FakeRiderGenesis.instances = []
+    monkeypatch.setattr(
+        rider_module,
+        "load_rider_genesis",
+        lambda: _FakeRiderGenesis,
+    )
+
+    class _Ctx:
+        model = object()
+        dataset_split = (["train"], ["val"], ["train-target"], ["val-target"])
+        evaluator = _FakeEvaluator()
+        config = {
+            "problem_description": "Classify the input.",
+            "method": {
+                "num_samples": 2,
+                "num_generations": 3,
+                "population_size": 4,
+                "validation_sample_size": 1,
+                "external_eval_weight": 0.8,
+                "seed": 42,
+            },
+        }
+
+    result = RIDERGenesisMethod().run_configured_benchmark(
+        _Ctx(),
+        "Initial prompt",
+    )
+
+    assert result == "optimized via ultra: Initial prompt"
+    instance = _FakeRiderGenesis.instances[-1]
+    assert "Classify the input" in instance._coolprompt_context_block
+    assert instance._external_eval_context["max_examples"] == 1
+    assert instance._external_eval_context["weight"] == 0.8
+    assert instance._external_eval_context["seed"] == 42
+    assert instance._rider_hyperparams["num_generations"] == 3
+
+
+def test_rider_external_validation_reranks_candidates():
+    rider_cls = rider_module.load_rider_genesis()
+    rider = object.__new__(rider_cls)
+    rider._contract = {"task_archetype": "generation"}
+    rider._synthetic_rankings = []
+    rider._external_rankings = []
+    rider._rider_hyperparams = {}
+    rider._external_eval_context = {
+        "evaluator": _FakeEvaluator(),
+        "val_dataset": ["val a", "val b"],
+        "val_targets": ["target a", "target b"],
+        "template": None,
+        "max_examples": 1,
+        "weight": 1.0,
+        "seed": 123,
+    }
+
+    def fake_synthetic(candidate, tests):
+        return (0.9 if "baseline" in candidate else 0.1), []
+
+    rider._evaluate_candidate_on_tests = fake_synthetic
+    ranked = rider._rank_by_synthetic_eval(
+        [("baseline", "baseline prompt"), ("optimized", "optimized prompt")],
+        ["synthetic test"],
+    )
+
+    assert ranked[0][0][0] == "optimized"
+    assert rider.external_rankings[-1]["num_examples"] == 1
+    assert rider.external_rankings[-1]["combined_scores"][0]["name"] == "optimized"
+
+
+def test_rider_budget_hyperparameters_change_ultra_plan():
+    rider_cls = rider_module.load_rider_genesis()
+    rider = object.__new__(rider_cls)
+    base_cfg = {
+        "num_strategies": 5,
+        "tournament_k_phase1": 3,
+        "run_crystallization": True,
+        "run_validation": True,
+        "run_red_team_harden": True,
+        "run_triple_merge": True,
+    }
+    rider._rider_hyperparams = {
+        "population_size": 4,
+        "num_generations": 2,
+    }
+
+    cfg = rider._apply_budget_overrides(base_cfg)
+
+    assert cfg["num_strategies"] == 4
+    assert cfg["tournament_k_phase1"] == 2
+    assert cfg["run_crystallization"] is True
+    assert cfg["run_validation"] is False
+    assert cfg["run_red_team_harden"] is False
+    assert cfg["run_triple_merge"] is False

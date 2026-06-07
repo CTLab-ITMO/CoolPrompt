@@ -127,6 +127,7 @@ class RiderSyntheticEvalMixin:
 
     def _generate_synthetic_tests(self, candidate_prompt: str, count: int = 3) -> List[str]:
         """v4: Generate safe synthetic test inputs via Sonnet. Returns up to `count` inputs."""
+        count = self._hyper_int("num_samples", count, min_value=1, max_value=20)
         if not self._contract:
             return []
         meta = self._SYNTHETIC_TEST_PROMPT.format(
@@ -230,12 +231,79 @@ class RiderSyntheticEvalMixin:
                 base = max(0.0, base - penalty)
         return base, details
 
+    def _external_eval_subset(self) -> Tuple[List[str], List[Any]]:
+        context = getattr(self, "_external_eval_context", None) or {}
+        dataset = list(context.get("val_dataset") or [])
+        targets = list(context.get("val_targets") or [])
+        size = min(len(dataset), len(targets))
+        if size <= 0:
+            return [], []
+        limit = context.get("max_examples")
+        if limit is None:
+            return dataset[:size], targets[:size]
+        try:
+            limit_int = max(1, int(limit))
+        except (TypeError, ValueError):
+            return dataset[:size], targets[:size]
+        if size <= limit_int:
+            return dataset[:size], targets[:size]
+        seed = context.get("seed")
+        import random
+        indices = sorted(random.Random(seed).sample(range(size), limit_int))
+        return [dataset[i] for i in indices], [targets[i] for i in indices]
+
+    @staticmethod
+    def _normalize_external_score(value: Any) -> float:
+        if isinstance(value, tuple):
+            value = value[0]
+        aggregate = getattr(value, "aggregate_score", value)
+        try:
+            score = float(aggregate)
+        except (TypeError, ValueError):
+            return 0.0
+        return max(0.0, min(1.0, score))
+
+    def _rank_by_external_eval(
+        self, candidates: List[Tuple[str, str]]
+    ) -> Dict[Tuple[str, str], float]:
+        context = getattr(self, "_external_eval_context", None) or {}
+        evaluator = context.get("evaluator")
+        if evaluator is None:
+            return {}
+        dataset, targets = self._external_eval_subset()
+        if not dataset or not targets:
+            return {}
+        template = context.get("template")
+        scores: Dict[Tuple[str, str], float] = {}
+        for candidate in candidates:
+            name, text = candidate
+            try:
+                raw_score = evaluator.evaluate(
+                    prompt=text,
+                    dataset=dataset,
+                    targets=targets,
+                    template=template,
+                )
+            except Exception as exc:
+                logger.debug("External eval failed for %s: %s", name, exc)
+                continue
+            scores[candidate] = self._normalize_external_score(raw_score)
+        if scores:
+            self._external_rankings.append({
+                "num_examples": len(dataset),
+                "scores": [
+                    {"name": cand[0], "score": score}
+                    for cand, score in sorted(
+                        scores.items(), key=lambda item: -item[1]
+                    )
+                ],
+            })
+        return scores
+
     def _rank_by_synthetic_eval(
         self, candidates: List[Tuple[str, str]], tests: List[str]
     ) -> List[Tuple[Tuple[str, str], float]]:
-        """v4.2: Score each candidate on tests in PARALLEL. Outer pool across candidates,
-        inner pool inside _evaluate_candidate_on_tests across tests. Nested threading is safe
-        on HTTP I/O. Total concurrency: N_cands * N_tests capped at 16."""
+        """Score candidates with synthetic tests and optional CoolPrompt val data."""
         if not tests or not candidates:
             return [(c, 0.0) for c in candidates]
 
@@ -253,7 +321,34 @@ class RiderSyntheticEvalMixin:
             'tests': list(tests),
             'scores': [{'name': cand[0], 'score': score} for cand, score in ranked],
         })
-        return ranked
+
+        external_scores = self._rank_by_external_eval(candidates)
+        if not external_scores:
+            return ranked
+
+        weight = (getattr(self, "_external_eval_context", None) or {}).get(
+            "weight", 0.7
+        )
+        try:
+            external_weight = max(0.0, min(1.0, float(weight)))
+        except (TypeError, ValueError):
+            external_weight = 0.7
+        synthetic_scores = dict(ranked)
+        combined = []
+        for cand in candidates:
+            synth = synthetic_scores.get(cand, 0.0)
+            external = external_scores.get(cand)
+            score = (
+                synth
+                if external is None
+                else (1.0 - external_weight) * synth + external_weight * external
+            )
+            combined.append((cand, score))
+        combined.sort(key=lambda x: -x[1])
+        self._external_rankings[-1]["combined_scores"] = [
+            {"name": cand[0], "score": score} for cand, score in combined
+        ]
+        return combined
 
     def _original_margin_for_beam(self) -> float:
         """How much a safe non-original may trail original and still be worth using."""
