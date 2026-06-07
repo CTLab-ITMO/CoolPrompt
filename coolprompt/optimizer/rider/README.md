@@ -3,6 +3,15 @@
 This package integrates RIDER Genesis Ultra into CoolPrompt as the `rider`
 autoprompting method.
 
+## Workflow
+
+<p align="center">
+    <picture>
+    <source srcset="../../../docs/images/rider_ultra_genesis_steps_00_overview.png">
+    <img alt="RIDER Genesis Ultra workflow" width="100%" height="100%">
+    </picture>
+</p>
+
 ## Design
 
 - `core/assistant.py` is the compact `RiderGenesis` facade adapted for the
