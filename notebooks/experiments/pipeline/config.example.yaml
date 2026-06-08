@@ -1,0 +1,31 @@
+openai_api_keys:
+  - "sk-..."  # key 0
+# - "sk-..."  # key 1 (optional, add more for higher RPM)
+# active_keys: [0, 1]  # indices of keys to use; omit to use all
+openrouter_api_key: ""  # only needed when provider: openrouter
+
+provider: openai
+seed: 42
+temperature: 0.7
+model: gpt-4o-mini
+population_size: 5
+num_epochs: 6
+train_size: 50
+val_size: 80
+use_enhancements: true
+use_dedup: true
+evolve_constraints: false
+factorized_phase_epochs: [4, 4, 3]
+output_dir: ../optimization_results
+requests_per_minute:
+  openai: 490
+  openrouter: 5000
+datasets_to_run:
+  - tweet_eval
+  - xsum
+  - common_gen
+  - gsm8k
+  - squad_v2
+  - mediqa
+role_modes_to_run:
+  - coevo_enhanced

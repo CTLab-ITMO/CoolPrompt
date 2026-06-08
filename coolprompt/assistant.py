@@ -61,6 +61,8 @@ class PromptTuner:
         self.init_prompt = None
         self.final_metric = None
         self.final_prompt = None
+        self.final_role = None
+        self.final_constraints = None
         self.assistant_feedback = None
 
         self.synthetic_dataset = None
@@ -323,6 +325,11 @@ class PromptTuner:
             **kwargs,
         )
 
+        self.final_role = getattr(method_impl, "last_role", "") or None
+        self.final_constraints = (
+            getattr(method_impl, "last_constraints", "") or None
+        )
+
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
             prompt=final_prompt,
@@ -346,6 +353,8 @@ class PromptTuner:
             dataset=dataset_split[1],
             targets=dataset_split[3],
             template=template,
+            system_role=self.final_role,
+            constraints=self.final_constraints,
         )
         logger.info(
             f"Initial {base_metric} score: {self.init_metric}, "

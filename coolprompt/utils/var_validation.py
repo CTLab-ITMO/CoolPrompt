@@ -8,7 +8,10 @@ from coolprompt.optimizer.distill_prompt import DistillMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
 from coolprompt.optimizer.hyper.hyper import HyPERMethod
 from coolprompt.optimizer.prompt_compressor import CompressorMethod
-from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
+from coolprompt.optimizer.reflective_prompt import (
+    ReflectiveMethod,
+    CoevoMethod,
+)
 from coolprompt.optimizer.regps import ReGPSMethod
 from coolprompt.optimizer.rider import RIDERGenesisMethod
 from coolprompt.utils.enums import PD_Method, Task
@@ -18,6 +21,7 @@ _METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
     "hyper_light": HyPERLightMethod,
     "hyper": HyPERMethod,
     "reflective": ReflectiveMethod,
+    "coevo": CoevoMethod,
     "distill": DistillMethod,
     "regps": ReGPSMethod,
     "compress": CompressorMethod,
