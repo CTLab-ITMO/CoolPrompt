@@ -30,6 +30,8 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     Recommendation,
 )
 
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
+
 _BERTSCORE_MODEL_TYPE = "microsoft/deberta-large-mnli"
 _bertscore_evaluate = None
 
@@ -229,6 +231,7 @@ class HyPEROptimizer(Optimizer):
         feedback_answer_tail_chars: int = 500,
         enable_instance_leak_audit: bool = True,
         random_seed: Optional[int] = None,
+        hyper_meta_prompt: Optional[str] = None,
         **kwargs
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
@@ -251,7 +254,10 @@ class HyPEROptimizer(Optimizer):
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
         """
         super().__init__(model)
-        self.meta_prompt_module = MetaPromptOptimizer(model)
+        self.meta_prompt_module = MetaPromptOptimizer(
+            model,
+            meta_prompt=hyper_meta_prompt,
+        )
         self.evaluator = evaluator
         self.contrastive_probability = contrastive_probability
         self.contrastive_max_answer_chars = contrastive_max_answer_chars
@@ -300,6 +306,7 @@ class HyPEROptimizer(Optimizer):
             Sequence[str], Sequence[str], Sequence[str], Sequence[str]
         ],
         meta_info: Optional[dict[str, Any]] = None,
+        telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> Tuple[str, list]:
         """Run the full HyPER outer loop over train/val splits.
 
@@ -649,6 +656,13 @@ class HyPEROptimizer(Optimizer):
             }
             iteration_history.append(iter_record)
 
+            if telemetry_callback is not None and best_score is not None:
+                telemetry_callback(
+                    iteration=iteration + 1,
+                    best_score=best_score,
+                    best_prompt=best_prompt,
+                )
+
             _bs_str = f"{best_score:.4f}" if best_score is not None else "N/A"
             _pat_str = str(self.patience) if self.patience else "∞"
             logger.info(
@@ -697,11 +711,11 @@ class HyPERMethod(AutoPromptingMethod):
         feedback_answer_tail_chars = kwargs.pop("feedback_answer_tail_chars", 500)
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
+        use_structured_output = kwargs.pop("use_structured_output", False)
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
+        hyper_meta_prompt = kwargs.pop("hyper_meta_prompt", None)
 
-        meta_info = kwargs.pop(
-            "meta_info",
-            kwargs.pop("hyper_meta_info", None),
-        )
+        hyper_meta_info = kwargs.pop("hyper_meta_info", None)
         optimizer = HyPEROptimizer(
             model=model,
             evaluator=evaluator,
@@ -717,9 +731,10 @@ class HyPERMethod(AutoPromptingMethod):
             feedback_answer_tail_chars=feedback_answer_tail_chars,
             enable_instance_leak_audit=enable_instance_leak_audit,
             random_seed=random_seed,
+            hyper_meta_prompt=hyper_meta_prompt,
         )
 
-        meta_info = meta_info.copy() if meta_info else {}
+        meta_info = hyper_meta_info.copy() if hyper_meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
 
@@ -727,6 +742,7 @@ class HyPERMethod(AutoPromptingMethod):
             prompt=initial_prompt,
             dataset_split=dataset_split,
             meta_info=meta_info if meta_info else None,
+            telemetry_callback=telemetry_callback,
         )
         return final_prompt
 
@@ -748,7 +764,8 @@ class HyPERMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=ctx.config.get("problem_description"),
-            meta_info=meta if meta else None,
+            hyper_meta_info=meta if meta else None,
+            hyper_meta_prompt=mc.get("hyper_meta_prompt"),
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),
             n_candidates=mc.get("n_candidates", 3),

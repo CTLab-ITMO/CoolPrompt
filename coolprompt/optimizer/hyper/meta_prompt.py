@@ -127,20 +127,34 @@ class HyPERLightMethod(AutoPromptingMethod):
         **kwargs,
     ):
         """Run a single HyPER Light meta-prompt optimization call."""
-        meta_info = kwargs.pop(
-            "meta_info",
-            kwargs.pop("hyper_meta_info", None),
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
+        hyper_meta_info = kwargs.pop("hyper_meta_info", None)
+        hyper_meta_prompt = kwargs.pop("hyper_meta_prompt", None)
+        use_structured_output = kwargs.pop("use_structured_output", False)
+        optimizer = MetaPromptOptimizer(
+            model=model,
+            meta_prompt=hyper_meta_prompt,
+            use_structured_output=use_structured_output,
+            **kwargs,
         )
-        kwargs.setdefault("use_structured_output", False)
-        optimizer = MetaPromptOptimizer(model=model, **kwargs)
-        meta_info = meta_info.copy() if meta_info else {}
+        meta_info = hyper_meta_info.copy() if hyper_meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
-        return optimizer.optimize(
+
+        final_prompt = optimizer.optimize(
             prompt=initial_prompt,
             meta_info=meta_info if meta_info else None,
             n_prompts=1,
         )
+
+        if telemetry_callback is not None:
+            telemetry_callback(
+                iteration=1,
+                best_score=0.0,
+                best_prompt=final_prompt,
+            )
+
+        return final_prompt
 
     def run_configured_benchmark(
         self,
@@ -149,11 +163,14 @@ class HyPERLightMethod(AutoPromptingMethod):
     ) -> str:
         """Run HyPER Light from a benchmark context."""
         meta = dict(ctx.config.get("meta_info", {}))
+        mc = ctx.config.get("method", {})
         return self.optimize(
             ctx.model,
             start_prompt,
             problem_description=ctx.config.get("problem_description"),
-            meta_info=meta if meta else None,
+            hyper_meta_info=meta if meta else None,
+            hyper_meta_prompt=mc.get("hyper_meta_prompt"),
+            use_structured_output=mc.get("use_structured_output", False),
         )
 
     def is_data_driven(self) -> bool:

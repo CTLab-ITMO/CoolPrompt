@@ -15,6 +15,12 @@ from coolprompt.utils.prompt_templates.regps_templates import (
     REGPS_TEXTUAL_GRADIENT_TEMPLATE,
     MUTATION_TEXTGRAD_TEMPLATE,
 )
+from coolprompt.optimizer.structured_schemas.regps import (
+    TextualGradientResponse,
+    ShortTermHintResponse,
+    MutatedPromptResponse,
+)
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 
 class ReGPSEvoluter(ReflectiveEvoluter):
@@ -66,6 +72,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         use_cache: bool = True,
         bad_examples_number: int = 5,
         checkpoint_path: Optional[str] = None,
+        use_structured_output: bool = False,
+        telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> None:
         """Initialize Re-GPS state and feedback-generation settings."""
         super().__init__(
@@ -82,6 +90,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             output_path,
             checkpoint_path,
             use_cache,
+            use_structured_output=use_structured_output,
+            telemetry_callback=telemetry_callback,
         )
 
         self.bad_examples_num = bad_examples_number
