@@ -20,6 +20,7 @@ from coolprompt.optimizer.structured_schemas.regps import (
     ShortTermHintResponse,
     MutatedPromptResponse,
 )
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 
 class ReGPSEvoluter(ReflectiveEvoluter):
@@ -72,6 +73,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         bad_examples_number: int = 5,
         checkpoint_path: Optional[str] = None,
         use_structured_output: bool = False,
+        telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> None:
         super().__init__(
             model,
@@ -88,6 +90,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             checkpoint_path,
             use_cache,
             use_structured_output=use_structured_output,
+            telemetry_callback=telemetry_callback,
         )
 
         self.bad_examples_num = bad_examples_number

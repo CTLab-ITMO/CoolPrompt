@@ -1,7 +1,12 @@
 from pathlib import Path
+import time
+from datetime import datetime
+import os
+import csv
 from typing import Iterable, Optional, Tuple
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
+from langchain_openai import ChatOpenAI
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
@@ -20,6 +25,60 @@ from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+
+from coolprompt.language_model.tracker import model_tracker, TrackedLLMWrapper
+from coolprompt.utils.telemetry import IterationSnapshot, OptimizationTelemetry
+
+
+class TelemetryCollector:
+    """Helper to aggregate telemetry during a PromptTuner run."""
+    def __init__(self, method_name: str, task_type: str, target_model):
+        self.method_name = method_name
+        self.task_type = task_type
+        self.target_model = target_model
+        self.start_time = datetime.now()
+        self.start_wall_clock = time.time()
+        self.trajectory = []
+
+    def on_iteration_end(self, iteration: int, best_score: float, best_prompt: str) -> None:
+        stats = self.target_model.get_stats() if hasattr(self.target_model, "get_stats") else {}
+        stats = stats or {}
+        self.trajectory.append(IterationSnapshot(
+            iteration=iteration,
+            best_score=best_score,
+            best_prompt_length=len(best_prompt),
+            cumulative_tokens_in=stats.get("prompt_tokens", 0),
+            cumulative_tokens_out=stats.get("completion_tokens", 0),
+            cumulative_total_cost=stats.get("total_cost", 0.0),
+            cumulative_invoke_calls=stats.get("invoke_calls", 0),
+            cumulative_batch_calls=stats.get("batch_calls", 0),
+            cumulative_api_wait_sec=stats.get("api_wait_sec", 0.0),
+        ))
+
+    def finalize(self, initial_score: float, final_score: float) -> OptimizationTelemetry:
+        stats = self.target_model.get_stats() if hasattr(self.target_model, "get_stats") else {}
+        stats = stats or {}
+        end_wall_clock = time.time()
+        return OptimizationTelemetry(
+            method_name=self.method_name,
+            task_type=self.task_type,
+            start_time=self.start_time,
+            end_time=datetime.now(),
+            total_wall_clock_sec=end_wall_clock - self.start_wall_clock,
+            total_api_wait_sec=stats.get("api_wait_sec", 0.0),
+            total_tokens_in=stats.get("prompt_tokens", 0),
+            total_tokens_out=stats.get("completion_tokens", 0),
+            total_tokens=stats.get("total_tokens", 0),
+            total_cost_usd=stats.get("total_cost", 0.0),
+            total_invoke_calls=stats.get("invoke_calls", 0),
+            total_batch_calls=stats.get("batch_calls", 0),
+            total_batch_items=stats.get("batch_items", 0),
+            total_api_requests=stats.get("invoke_calls", 0) + stats.get("batch_calls", 0),
+            initial_score=initial_score if initial_score is not None else 0.0,
+            final_score=final_score if final_score is not None else 0.0,
+            score_improvement=(final_score - initial_score) if (initial_score is not None and final_score is not None) else 0.0,
+            trajectory=self.trajectory,
+        )
 
 
 class PromptTuner:
@@ -56,7 +115,11 @@ class PromptTuner:
         """
         setup_logging(logs_dir)
         self._target_model = target_model or DefaultLLM.init()
+        if isinstance(self._target_model, ChatOpenAI) and not isinstance(self._target_model, TrackedLLMWrapper):
+            self._target_model = model_tracker.wrap_model(self._target_model)
         self._system_model = system_model or self._target_model
+        if system_model is not None and isinstance(self._system_model, ChatOpenAI) and not isinstance(self._system_model, TrackedLLMWrapper):
+            self._system_model = model_tracker.wrap_model(self._system_model)
 
         self.init_metric = None
         self.init_prompt = None
@@ -143,6 +206,10 @@ class PromptTuner:
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
         meta_prompt_context: dict = None,
+        enable_telemetry: bool = True,      
+        export_telemetry: bool = False,        
+        telemetry_format: str = "json",        
+        telemetry_path: Optional[str] = None,  
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -310,6 +377,15 @@ class PromptTuner:
         if meta_prompt_context is not None:
             kwargs = {**kwargs, "meta_prompt_context": meta_prompt_context}
 
+        telemetry_collector = None
+        if enable_telemetry:
+            method_name = method_impl.name if hasattr(method_impl, "name") else str(method_impl)
+            telemetry_collector = TelemetryCollector(
+                method_name=method_name,
+                task_type=task_value.value,
+                target_model=self._target_model
+            )
+            kwargs["telemetry_callback"] = telemetry_collector.on_iteration_end
         final_prompt = method_impl.optimize(
             model=self._target_model,
             initial_prompt=start_prompt,
@@ -350,7 +426,36 @@ class PromptTuner:
 
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt
+        
+        if telemetry_collector is not None:
+            telemetry_report = telemetry_collector.finalize(
+                initial_score=self.init_metric,
+                final_score=self.final_metric
+            )
+            
+            if export_telemetry:
+                if telemetry_path is None:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    telemetry_path = f"./logs/telemetry_{timestamp}"
+                
+                os.makedirs(os.path.dirname(telemetry_path) if os.path.dirname(telemetry_path) else ".", exist_ok=True)
 
+                if telemetry_format in ("json", "both"):
+                    json_path = f"{telemetry_path}.json"
+                    with open(json_path, "w", encoding="utf-8") as f:
+                        f.write(telemetry_report.model_dump_json(indent=2))
+                    logger.info(f"Telemetry saved to {json_path}")
+                
+                if telemetry_format in ("csv", "both"):
+                    csv_path = f"{telemetry_path}_trajectory.csv"
+                    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+                        writer = csv.DictWriter(f, fieldnames=IterationSnapshot.model_fields.keys())
+                        writer.writeheader()
+                        for snap in telemetry_report.trajectory:
+                            writer.writerow(snap.model_dump())
+                    logger.info(f"Telemetry trajectory saved to {csv_path}")
+ 
+            self.telemetry_report = telemetry_report
         logger.info("=== Prompt Optimization Completed ===")
 
         return final_prompt if return_final_prompt else None

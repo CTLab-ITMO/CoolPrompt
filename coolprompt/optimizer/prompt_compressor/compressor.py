@@ -103,8 +103,12 @@ class CompressorMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+
         **kwargs,
     ):
+
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
+
         compressor = PromptCompressor(
             model=model,
             system_prompt=self.system_prompt,
@@ -117,10 +121,16 @@ class CompressorMethod(AutoPromptingMethod):
             return_metadata=self.return_metadata,
         )
 
-        if self.return_metadata:
-            return result.final_prompt
+        final_prompt = result.final_prompt if self.return_metadata else result
 
-        return result
+        if telemetry_callback is not None:
+            telemetry_callback(
+                iteration=1,
+                best_score=0.0,
+                best_prompt=final_prompt,
+            )
+
+        return final_prompt
 
     def run_configured_benchmark(
         self,

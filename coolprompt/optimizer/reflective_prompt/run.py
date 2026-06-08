@@ -52,6 +52,9 @@ def reflectiveprompt(
         "use_cache": True,
     }
     args.update(kwargs)
+
+    telemetry_callback = args.pop("telemetry_callback", None)
+
     evoluter = ReflectiveEvoluter(
         model=model,
         evaluator=evaluator,
@@ -67,6 +70,7 @@ def reflectiveprompt(
         checkpoint_path=args.get("checkpoint_path"),
         use_cache=args["use_cache"],
         use_structured_output=use_structured_output,
+        telemetry_callback=telemetry_callback,
     )
     logger.info("Starting ReflectivePrompt optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")
@@ -88,12 +92,15 @@ class ReflectiveMethod(AutoPromptingMethod):
         problem_description,
         **kwargs,
     ):
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
+
         return reflectiveprompt(
             model=model,
             dataset_split=dataset_split,
             evaluator=evaluator,
             problem_description=problem_description,
             initial_prompt=initial_prompt,
+            telemetry_callback=telemetry_callback,
             **kwargs,
         )
 
