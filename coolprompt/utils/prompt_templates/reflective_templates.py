@@ -56,7 +56,7 @@ Bracket the final prompt with <prompt> </prompt>.
 
 REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE = """Paraphrase the given prompt text keeping its initial meaning.
 Prompt: {PROMPT}
-Create the new variations of this prompt and output them in JSON structure below:
+Create {NUM_PROMPTS} new variations of this prompt and output them in JSON structure below:
 {{
    "prompts": [
        "New prompt 1",

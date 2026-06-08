@@ -13,28 +13,38 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/CTLab-ITMO/CoolPrompt?style=flat-square)](https://github.com/CTLab-ITMO/CoolPrompt/issues)
 [![Contributions welcome](https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?)](https://github.com/CTLab-ITMO/CoolPrompt/pulls)
 [![ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg)](https://itmo.ru/)
+[![Telegram Channel](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/+0kMcymeAQrczN2Fi)
 
-CoolPrompt is a framework for automative prompting creation and optimization.
+CoolPrompt is a framework for automatic prompt creation and optimization.
+
+### Join our [telegram](https://t.me/+0kMcymeAQrczN2Fi) channel to be in touch.
 
 ## Practical cases
 
 - Automatic prompt engineering for solving tasks using LLM
 - (Semi-)automatic generation of markup for fine-tuning
 - Formalization of response quality assessment using LLM
-- Prompt tuning for agent systems
+- Prompt adoption for AI Agentic Pipelines
+- Etc.
 
 ## Core features
 
-- **Optimize prompts** with our autoprompting optimizers: HyPE, ReflectivePrompt, DistillPrompt
+- **Optimize prompts** with our APO methods:
+    - HyPER / HyPER Light
+    - RE-GPS
+    - RIDER
+    - PromptCompressor
+    - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
+- **Develop own custom APO method in one library**
 - **Generate synthetic evaluation data** when no input dataset is provided 
-- **Evaluate** prompts incorporating multiple metrics for both classification and generation tasks
-- **Retrieve feedbacks** to interpret prompt optimization results
+- **Evaluate a quality** of prompts incorporating multiple metrics for both classification and generation tasks
+- **Evaluate costs** of optimization processes by a number of tokens/calls and a price.
 - **Automatic task detecting** for scenarios without explicit user-defined task specifications
 
 <p align="center">
     <picture>
-    <source srcset="docs/images/coolprompt_scheme.png">
+    <source srcset="docs/images/coolprompt_2.png">
     <img alt="CoolPrompt Scheme" width="100%" height="100%">
     </picture>
 </p>
@@ -48,12 +58,15 @@ pip install coolprompt
 - Install with git:
 ```bash
 git clone https://github.com/CTLab-ITMO/CoolPrompt.git
+cd CoolPrompt
 
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ## Quick start
-Import and initialize PromptTuner using model qwen3-4b-instruct via HuggingFace
+
+Set your OpenAI API key before running. The default model is `gpt-4o-mini` via the OpenAI API (`OPENAI_API_KEY` environment variable)
+
 ```python
 from coolprompt.assistant import PromptTuner
 
@@ -80,49 +93,66 @@ See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/m
 - We welcome and value any contributions and collaborations, so please contact us. For new code check out <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/docs/CONTRIBUTING.md">CONTRIBUTING.md</a>.
 
 ## Reference
-For technical details and full experimental results, please check our papers.
+For technical details and full experimental results, please check our papers + citations inside.
 
-<a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf">**CoolPrompt**</a>
-```
-@INPROCEEDINGS{11239071,
-  author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey},
-  booktitle={2025 38th Conference of Open Innovations Association (FRUCT)}, 
-  title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models}, 
-  year={2025},
-  volume={},
-  number={},
-  pages={158-166},
-  keywords={Technological innovation;Systematics;Large language models;Pipelines;Manuals;Prediction algorithms;Libraries;Prompt engineering;Optimization;Synthetic data},
-  doi={10.23919/FRUCT67853.2025.11239071}
-}
-```
+<details close>
+    <summary><a href="https://doi.org/10.1145/3803437.3807393"><b>RIDER</b></a></summary>
+    
+    @inproceedings{dragomirov2026rider,
+      author = {Dragomirov, Daglar and Kulin, Nikita and Muravyov, Sergey and Makarov, Ilya and Sukhorukov, Daniil and Mozikov, Mikhail},
+      title = {RIDER: Evolutionary Prompt Optimization with Adaptive Operator Selection for Software Engineering},
+      booktitle = {Companion Proceedings of the 34th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering},
+      series = {FSE Companion '26},
+      year = {2026},
+      doi = {10.1145/3803437.3807393}
+    }
+    
+</details>
 
-<a href="https://ntv.ifmo.ru/file/article/23927.pdf">**ReflectivePrompt**</a>
-```
-@misc{zhuravlev2025reflectivepromptreflectiveevolutionautoprompting,
-      title={ReflectivePrompt: Reflective evolution in autoprompting algorithms}, 
-      author={Viktor N. Zhuravlev and Artur R. Khairullin and Ernest A. Dyagin and Alena N. Sitkina and Nikita I. Kulin},
+<details close>
+    <summary><a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf"><b>CoolPrompt</b></a></summary>
+    
+    @INPROCEEDINGS{11239071,
+      author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Sitkina, Alena and Muravyov, Sergey},
+      booktitle={2025 38th Conference of Open Innovations Association (FRUCT)}, 
+      title={CoolPrompt: Automatic Prompt Optimization Framework for Large Language Models}, 
       year={2025},
-      eprint={2508.18870},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2508.18870}, 
-}
-```
+      volume={},
+      number={},
+      pages={158-166},
+      keywords={Technological innovation;Systematics;Large language models;Pipelines;Manuals;Prediction algorithms;Libraries;Prompt engineering;Optimization;Synthetic data},
+      doi={10.23919/FRUCT67853.2025.11239071}
+    }
+    
+</details>
 
-<a href="https://arxiv.org/pdf/2508.18992">**DistillPrompt**</a>
-```
-@misc{dyagin2025automaticpromptoptimizationprompt,
-      title={Automatic Prompt Optimization with Prompt Distillation}, 
-      author={Ernest A. Dyagin and Nikita I. Kulin and Artur R. Khairullin and Viktor N. Zhuravlev and Alena N. Sitkina},
-      year={2025},
-      eprint={2508.18992},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2508.18992}, 
-}
-```
+<details close>
+    <summary><a href="https://ntv.ifmo.ru/file/article/23927.pdf"><b>ReflectivePrompt</b></a></summary>
+    
+    @misc{zhuravlev2025reflectivepromptreflectiveevolutionautoprompting,
+          title={ReflectivePrompt: Reflective evolution in autoprompting algorithms}, 
+          author={Viktor N. Zhuravlev and Artur R. Khairullin and Ernest A. Dyagin and Alena N. Sitkina and Nikita I. Kulin},
+          year={2025},
+          eprint={2508.18870},
+          archivePrefix={arXiv},
+          primaryClass={cs.CL},
+          url={https://arxiv.org/abs/2508.18870}, 
+    }
+    
+</details>
 
-
-
+<details close>
+    <summary><a href="https://arxiv.org/pdf/2508.18992"><b>DistillPrompt</b></a></summary>
+    
+    @misc{dyagin2025automaticpromptoptimizationprompt,
+          title={Automatic Prompt Optimization with Prompt Distillation},
+          author={Ernest A. Dyagin and Nikita I. Kulin and Artur R. Khairullin and Viktor N. Zhuravlev and Alena N. Sitkina},
+          year={2025},
+          eprint={2508.18992},
+          archivePrefix={arXiv},
+          primaryClass={cs.CL},
+          url={https://arxiv.org/abs/2508.18992}, 
+    }
+    
+</details>
 

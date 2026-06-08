@@ -1,8 +1,12 @@
-import random
-from langchain_core.language_models.base import BaseLanguageModel
-from typing import Optional
+from typing import Optional, Tuple, List, Dict
+from tqdm import tqdm
+from time import sleep
+from dataclasses import dataclass
+import yaml
 
+from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
+import numpy as np
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task
@@ -10,6 +14,28 @@ from coolprompt.utils.prompt_templates.default_templates import (
     CLASSIFICATION_TASK_TEMPLATE,
     GENERATION_TASK_TEMPLATE,
 )
+
+
+@dataclass
+class FailedExampleDetailed:
+    """Per-example evaluation details for a low-scoring sample."""
+
+    instance: str
+    assistant_answer: str
+    model_answer_parsed: Optional[str] = None
+    metric_value: float | int = 0.0
+    ground_truth: str | int = ""
+    batch_index: int = -1
+
+
+@dataclass
+class EvalResultDetailed:
+    """Detailed evaluation result with aggregate, per-sample scores, and outputs."""
+
+    aggregate_score: float
+    score_per_task: List[float | int] = None
+    failed_examples: List[FailedExampleDetailed] = None
+    raw_outputs: List[str] = None
 
 
 class Evaluator:
@@ -21,11 +47,17 @@ class Evaluator:
     """
 
     def __init__(
-        self, model: BaseLanguageModel, task: Task, metric: BaseMetric
+        self,
+        model: BaseLanguageModel,
+        task: Task,
+        metric: BaseMetric,
+        batch_size: int = 25,
     ) -> None:
+        """Initialize the evaluator with a model, task type, metric, and batch size."""
         self.model = model
         self.task = task
         self.metric = metric
+        self.batch_size = batch_size
         logger.info(f"Evaluator successfully initialized with {metric} metric")
 
     def evaluate(
@@ -34,7 +66,12 @@ class Evaluator:
         dataset: list[str],
         targets: list[str | int],
         template: Optional[str] = None,
-    ) -> float:
+        failed_examples: Optional[int] = None,
+        *,
+        return_detailed: bool = False,
+        save_model_answers: bool = False,
+        model_answers_output_path: str = "./model_answers.yaml",
+    ) -> float | Tuple[float, List[Dict[str, str]]] | EvalResultDetailed:
         """
         Evaluate the model on a dataset
         by generating answers and computing the metric.
@@ -53,9 +90,17 @@ class Evaluator:
             template (Optional[str]):
                 Prompt template for defined task type.
                 If None, uses default template.
+            failed_examples (Optional[int]):
+                Number of bad examples to return after evaluating
+            return_detailed (bool, default=False): If True, returns EvalResultDetailed with per-task scores
+                and raw outputs.
+            save_model_answers (bool, default=False): If True, saves model answers to a file.
+            model_answers_output_path (str, default="./model_answers.yaml"): Path to save model answers.
+
 
         Returns:
-            float: The computed evaluation metric score.
+            float | Tuple[float, List[Dict[str, str]]]:
+                The computed evaluation metric score with/wo bad examples, or detailed results.
         """
 
         if template is None:
@@ -64,21 +109,94 @@ class Evaluator:
         logger.info(
             f"Evaluating prompt for {self.task} task on {len(dataset)} samples"
         )
-        logger.debug(f"Prompt to evaluate:\n{prompt}")
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
-
-        answers = self.model.batch(
-            [
-                self._get_full_prompt(prompt, sample, template)
-                for sample in dataset
-            ]
-        )
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
+        full_prompts = [
+            self._get_full_prompt(prompt, sample, template)
+            for sample in dataset
         ]
 
-        return self.metric.compute(answers, targets, dataset)
+        answers = self._run_batches(full_prompts)
+
+        if save_model_answers:
+            with open(model_answers_output_path, "w") as file:
+                yaml.safe_dump(answers, file)
+
+        if not return_detailed:
+            return self.metric.compute(answers, targets, dataset, failed_examples)
+
+        aggregate, score_per_task, _ = self.metric.compute(
+            answers, targets, dataset, failed_examples, return_per_task=True
+        )
+
+        detailed_failures = []
+        if failed_examples and failed_examples > 0:
+            parsed_answers = [self.metric.parse_output(a) for a in answers]
+            indices = np.argsort(score_per_task)[:failed_examples]
+            for i in indices:
+                detailed_failures.append(
+                    FailedExampleDetailed(
+                        instance=dataset[i],
+                        assistant_answer=answers[i],
+                        model_answer_parsed=parsed_answers[i],
+                        metric_value=score_per_task[i],
+                        ground_truth=targets[i],
+                        batch_index=int(i),
+                    )
+                )
+
+        return EvalResultDetailed(
+            aggregate_score=aggregate,
+            score_per_task=score_per_task,
+            failed_examples=detailed_failures,
+            raw_outputs=answers,
+        )
+
+    def _run_batches(self, full_prompts: list[str]) -> list[str]:
+        """Run the model on preformatted prompts in batches with progress tracking."""
+        answers: list[str] = []
+        total = len(full_prompts)
+        total_batches = (total + self.batch_size - 1) // self.batch_size
+
+        with tqdm(
+            total=total,
+            desc="Evaluating",
+            unit="sample",
+            dynamic_ncols=True,
+        ) as pbar:
+            for start in range(0, total, self.batch_size):
+                end = min(start + self.batch_size, total)
+                batch = full_prompts[start:end]
+
+                batch_answers = None
+                for attempt in range(5):
+                    try:
+                        batch_answers = self.model.batch(batch)
+                        break
+                    except Exception as exception:
+                        logger.warning(
+                            f"Batch {
+                                start // self.batch_size + 1}/{total_batches} "
+                            f"failed on attempt {attempt + 1}/5: {exception}"
+                        )
+                        if attempt < 4:
+                            sleep(60)
+                        else:
+                            raise RuntimeError(
+                                f"Batch {
+                                    start // self.batch_size + 1}/{total_batches} failed after 5 attempts"
+                            ) from exception
+
+                normalized_answers = [
+                    a.content if isinstance(a, AIMessage) else str(a)
+                    for a in batch_answers
+                ]
+                answers.extend(normalized_answers)
+                pbar.update(len(batch))
+                logger.debug(
+                    f"Batch {start // self.batch_size + 1}/{total_batches} processed"
+                )
+        return answers
 
     def _get_full_prompt(
         self,
@@ -116,7 +234,6 @@ class Evaluator:
 
     def _get_default_template(self) -> str:
         """Returns the default template for the task type."""
-
         match self.task:
             case Task.CLASSIFICATION:
                 return CLASSIFICATION_TASK_TEMPLATE

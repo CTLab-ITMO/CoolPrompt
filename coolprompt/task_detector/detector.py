@@ -6,10 +6,10 @@ from langchain_core.messages.ai import AIMessage
 from pydantic import BaseModel
 
 from coolprompt.task_detector.pydantic_formatters import (
-    TaskDetectionStructuredOutputSchema
+    TaskDetectionStructuredOutputSchema,
 )
 from coolprompt.utils.prompt_templates.task_detector_templates import (
-    TASK_DETECTOR_TEMPLATE
+    TASK_DETECTOR_TEMPLATE,
 )
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.parsing import extract_json
@@ -42,8 +42,15 @@ class TaskDetector:
         Returns:
             Any: generated data
         """
-        if not isinstance(self.model, BaseChatModel):
+        if hasattr(self.model, "model"):
+            wrapped_model = self.model.model
+        else:
+            wrapped_model = self.model
+
+        if not isinstance(wrapped_model, BaseChatModel):
             output = self.model.invoke(request)
+            if isinstance(output, AIMessage):
+                output = output.content
             return extract_json(output)[field_name]
 
         structured_model = self.model.with_structured_output(
@@ -74,18 +81,12 @@ class TaskDetector:
         schema = TaskDetectionStructuredOutputSchema
         request = TASK_DETECTOR_TEMPLATE
 
-        request = request.format(
-            query=prompt
-        )
+        request = request.format(query=prompt)
 
-        logger.info(
-            "Detecting the task by query"
-        )
+        logger.info("Detecting the task by query")
 
         task = self._generate(request, schema, "task")
 
-        logger.info(
-            f"Task defined as {task}"
-        )
+        logger.info(f"Task defined as {task}")
 
         return task

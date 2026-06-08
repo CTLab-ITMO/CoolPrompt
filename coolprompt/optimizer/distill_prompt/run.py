@@ -1,11 +1,16 @@
 """High-level entry point for the DistillPrompt optimization process."""
 
-from typing import List, Tuple
+from typing import List, Tuple, override
 
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
+from coolprompt.optimizer.autoprompting_method import (
+    AutoPromptingMethod,
+    BenchmarkContext,
+)
 from coolprompt.optimizer.distill_prompt.distiller import Distiller
+from coolprompt.utils.deprecation import warn_deprecated
 
 
 def distillprompt(
@@ -15,7 +20,7 @@ def distillprompt(
     initial_prompt: str,
     *,
     num_epochs: int = 5,
-    output_path: str = './distillprompt_outputs',
+    output_path: str = "./distillprompt_outputs",
     use_cache: bool = True,
 ) -> str:
     """Runs the full DistillPrompt optimization process.
@@ -33,7 +38,7 @@ def distillprompt(
         evaluator (Evaluator): The evaluator instance used to score prompts.
         initial_prompt (str): The starting prompt to be optimized.
         num_epochs (int, optional): The number of optimization rounds to
-            perform. Defaults to 10.
+            perform. Defaults to 5.
         output_path (str, optional): The directory path to save logs and
             cached results. Defaults to './distillprompt_outputs'.
         use_cache (bool, optional): If True, caches intermediate results to
@@ -42,6 +47,8 @@ def distillprompt(
     Returns:
         str: The best prompt found after the optimization process.
     """
+
+    warn_deprecated("DistillPrompt")
     (
         train_dataset,
         validation_dataset,
@@ -63,3 +70,50 @@ def distillprompt(
     )
 
     return distiller.distillation()
+
+
+class DistillMethod(AutoPromptingMethod):
+    """Distillation‑based method for auto‑prompting."""
+
+    def optimize(
+        self,
+        model,
+        initial_prompt,
+        dataset_split,
+        evaluator,
+        problem_description=None,
+        **kwargs,
+    ):
+        """Run DistillPrompt through the shared method interface."""
+        return distillprompt(
+            model=model,
+            dataset_split=dataset_split,
+            evaluator=evaluator,
+            initial_prompt=initial_prompt,
+            **kwargs,
+        )
+
+    def run_configured_benchmark(
+        self,
+        ctx: BenchmarkContext,
+        start_prompt: str,
+    ) -> str:
+        """Run DistillPrompt from a benchmark context."""
+        mc = ctx.config.get("method", {})
+        return self.optimize(
+            ctx.model,
+            start_prompt,
+            dataset_split=ctx.dataset_split,
+            evaluator=ctx.evaluator,
+            num_epochs=mc.get("num_epochs", 5),
+            output_path=mc.get("output_path", "./distillprompt_outputs"),
+            use_cache=mc.get("use_cache", True),
+        )
+
+    def is_data_driven(self):
+        return True
+
+    @property
+    @override
+    def name(self):
+        return "distill"
