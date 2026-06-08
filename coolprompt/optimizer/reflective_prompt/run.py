@@ -19,7 +19,6 @@ def reflectiveprompt(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: str = None,
-    use_structured_output: bool = False,
     **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
@@ -92,6 +91,7 @@ class ReflectiveMethod(AutoPromptingMethod):
         problem_description,
         **kwargs,
     ):
+        """Run ReflectivePrompt through the shared method interface."""
         telemetry_callback = kwargs.pop("telemetry_callback", None)
 
         return reflectiveprompt(
@@ -109,6 +109,7 @@ class ReflectiveMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
         if problem_description is None:
             generator = SyntheticDataGenerator(ctx._system_model)

@@ -40,7 +40,7 @@ def distillprompt(
         evaluator (Evaluator): The evaluator instance used to score prompts.
         initial_prompt (str): The starting prompt to be optimized.
         num_epochs (int, optional): The number of optimization rounds to
-            perform. Defaults to 10.
+            perform. Defaults to 5.
         output_path (str, optional): The directory path to save logs and
             cached results. Defaults to './distillprompt_outputs'.
         use_cache (bool, optional): If True, caches intermediate results to
@@ -87,6 +87,7 @@ class DistillMethod(AutoPromptingMethod):
         problem_description=None,
         **kwargs,
     ):
+        """Run DistillPrompt through the shared method interface."""
 
         telemetry_callback = kwargs.pop("telemetry_callback", None)
 
@@ -104,7 +105,7 @@ class DistillMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
-        
+        """Run DistillPrompt from a benchmark context."""
         mc = ctx.config.get("method", {})
         return self.optimize(
             ctx.model,

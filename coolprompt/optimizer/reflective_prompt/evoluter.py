@@ -84,6 +84,7 @@ class ReflectiveEvoluter:
         use_structured_output: bool = False,
         telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> None:
+        """Initialize ReflectivePrompt state and search configuration."""
         self.model = model
         self.evaluator = evaluator
         self.train_dataset = train_dataset
@@ -163,11 +164,6 @@ class ReflectiveEvoluter:
         request = REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description
         )
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                InitialPromptResponse, method="json_schema"
-            )
-            return structured.invoke(request).prompt
         answer = self._llm_query([request])[0]
         return extract_answer(
             answer, self.PROMPT_TAGS, format_mismatch_label=""
@@ -200,14 +196,8 @@ class ReflectiveEvoluter:
         request = REFLECTIVEPROMPT_PARAPHRASING_TEMPLATE.format(
             PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
         )
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                ParaphrasedPromptsResponse, method="json_schema"
-            )
-            prompts = structured.invoke(request).prompts
-        else:
-            answer = self._llm_query([request])[0]
-            prompts = extract_json(answer)["prompts"]
+        answer = self._llm_query([request])[0]
+        prompts = extract_json(answer)["prompts"]
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
@@ -375,19 +365,11 @@ class ReflectiveEvoluter:
             worse_prompts.append(worse_prompt)
             better_prompts.append(better_prompt)
 
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                ShortTermHintResponse, method="json_schema"
-            )
-            responses = [r.hint for r in structured.batch(requests)]
-        else:
-            responses = self._llm_query(requests)
-            responses = [
-                extract_answer(
-                    response, self.HINT_TAGS, format_mismatch_label=""
-                )
-                for response in responses
-            ]
+        responses = self._llm_query(requests)
+        responses = [
+            extract_answer(response, self.HINT_TAGS, format_mismatch_label="")
+            for response in responses
+        ]
         return responses, worse_prompts, better_prompts
 
     def _crossover(
@@ -419,19 +401,11 @@ class ReflectiveEvoluter:
             )
             requests.append(request)
 
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                CrossoverPromptResponse, method="json_schema"
-            )
-            responses = [r.prompt for r in structured.batch(requests)]
-        else:
-            responses = self._llm_query(requests)
-            responses = [
-                extract_answer(
-                    response, self.PROMPT_TAGS, format_mismatch_label=""
-                )
-                for response in responses
-            ]
+        responses = self._llm_query(requests)
+        responses = [
+            extract_answer(response, self.PROMPT_TAGS, format_mismatch_label="")
+            for response in responses
+        ]
         crossed_population = [Prompt(response) for response in responses]
 
         assert len(crossed_population) == self.population_size
@@ -483,16 +457,11 @@ class ReflectiveEvoluter:
             NEW_SHORT_TERM_REFLECTIONS="\n".join(short_term_reflections),
         )
 
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                LongTermHintResponse, method="json_schema"
-            )
-            self._long_term_reflection_str = structured.invoke(request).hint
-        else:
-            response = self._llm_query([request])[0]
-            self._long_term_reflection_str = extract_answer(
-                response, self.HINT_TAGS, format_mismatch_label=""
-            )
+        response = self._llm_query([request])[0]
+
+        self._long_term_reflection_str = extract_answer(
+            response, self.HINT_TAGS, format_mismatch_label=""
+        )
 
     def _llm_query(self, requests: List[str]) -> List[str]:
         """Provides api to query requests to the model.
@@ -524,22 +493,11 @@ class ReflectiveEvoluter:
             LONG_TERM_REFLECTION=self._long_term_reflection_str,
             ELITIST_PROMPT=self.elitist.text,
         )
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                MutatedPromptResponse, method="json_schema"
-            )
-            responses = [
-                r.prompt
-                for r in structured.batch([request] * self.population_size)
-            ]
-        else:
-            responses = self._llm_query([request] * self.population_size)
-            responses = [
-                extract_answer(
-                    response, self.PROMPT_TAGS, format_mismatch_label=""
-                )
-                for response in responses
-            ]
+        responses = self._llm_query([request] * self.population_size)
+        responses = [
+            extract_answer(response, self.PROMPT_TAGS, format_mismatch_label="")
+            for response in responses
+        ]
         population = [
             Prompt(response, origin=PromptOrigin.MUTATED)
             for response in responses

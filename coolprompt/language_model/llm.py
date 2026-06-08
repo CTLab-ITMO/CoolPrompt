@@ -1,41 +1,42 @@
 """LangChain-compatible LLM interface."""
 
-from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
+from typing import Any
+
 from langchain_core.language_models.base import BaseLanguageModel
-from coolprompt.utils.logging_config import logger
+from langchain_openai import ChatOpenAI
+
 from coolprompt.utils.default import (
     DEFAULT_MODEL_NAME,
     DEFAULT_MODEL_PARAMETERS,
 )
+from coolprompt.utils.logging_config import logger
 
 
 class DefaultLLM:
-    """Default LangChain-compatible LLM using transformers."""
+    """Default LangChain-compatible LLM using the OpenAI API."""
 
     @staticmethod
     def init(
-        langchain_config: dict[str, any] | None = None,
+        langchain_config: dict[str, Any] | None = None,
     ) -> BaseLanguageModel:
-        """Initialize the transformers-powered LangChain LLM.
+        """Initialize the OpenAI-powered LangChain LLM.
 
         Args:
             langchain_config (dict[str, Any], optional):
-                Optional dictionary of LangChain VLLM parameters
-                (temperature, top_p, etc).
+                Optional dictionary of ChatOpenAI parameters
+                (temperature, max_tokens, etc).
                 Overrides DEFAULT_MODEL_PARAMETERS.
         Returns:
             BaseLanguageModel:
-                Initialized LangChain-compatible language model instance.
+                Initialized LangChain-compatible language model instance
+                based on OpenAI API.
         """
         logger.info(f"Initializing default model: {DEFAULT_MODEL_NAME}")
-        generation_and_model_config = DEFAULT_MODEL_PARAMETERS.copy()
+        model_config = DEFAULT_MODEL_PARAMETERS.copy()
         if langchain_config is not None:
-            generation_and_model_config.update(langchain_config)
+            model_config.update(langchain_config)
 
-        llm = HuggingFacePipeline.from_model_id(
-            model_id=DEFAULT_MODEL_NAME,
-            task="text-generation",
-            pipeline_kwargs=generation_and_model_config,
-            model_kwargs={"dtype": "float16"},
+        return ChatOpenAI(
+            model=DEFAULT_MODEL_NAME,
+            **model_config,
         )
-        return ChatHuggingFace(llm=llm)

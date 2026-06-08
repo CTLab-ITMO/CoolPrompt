@@ -70,6 +70,8 @@ class BadExample:
 
 
 class Prompt:
+    """Prompt candidate with origin, score, and optional failed examples."""
+
     def __init__(
         self,
         text: str,

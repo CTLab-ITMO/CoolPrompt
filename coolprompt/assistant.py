@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 import os
 import csv
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple, List
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_openai import ChatOpenAI
@@ -19,8 +19,7 @@ from coolprompt.utils.var_validation import (
     validate_run,
     validate_verbose,
 )
-from coolprompt.utils.enums import PD_Method
-
+from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 
@@ -85,8 +84,8 @@ class PromptTuner:
     """Prompt optimization tool supporting multiple methods.
 
     This class provides a unified interface to run various prompt
-    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress, ReGPS)
-    on a target language model. It handles dataset splitting, metric
+    optimization algorithms (HyPER Light, HyPER, Reflective, Distill, Compress,
+    ReGPS, RIDER) on a target language model. It handles dataset splitting, metric
     evaluation, logging, and optional synthetic data generation.
     """
 
@@ -197,6 +196,7 @@ class PromptTuner:
         generate_num_samples: int = 10,
         batch_size: int = 25,
         verbose: int = 1,
+        corner_ratio: float = 0.4,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
         llm_as_judge_metric_ceil: int = 10,
@@ -205,7 +205,8 @@ class PromptTuner:
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
-        meta_prompt_context: dict = None,
+        hyper_meta_info: dict = None,
+        system_model_as_optimizer: bool = False,
         enable_telemetry: bool = True,      
         export_telemetry: bool = False,        
         telemetry_format: str = "json",        
@@ -231,7 +232,7 @@ class PromptTuner:
                 (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
-                "meteor" for generation. Special metrics `llm_as_judge` and
+                "bertscore" for generation. Special metrics `llm_as_judge` and
                 `geval` require additional configuration parameters below.
             problem_description (str | None): Natural language description
                 of the task. If None, it will be generated automatically
@@ -267,9 +268,10 @@ class PromptTuner:
             return_final_prompt (bool): If True, return the final prompt;
                 otherwise return None (the prompt is still stored in
                 `self.final_prompt`).
-            meta_prompt_context (dict | None): Optional extra key-value pairs
-                merged into the meta-info block for ``hyper_light`` (same role as
-                ``config['meta_info']`` in YAML benchmarks).
+            hyper_meta_info (dict | None): Optional extra key-value pairs
+                merged into the meta-info block for ``hyper`` and ``hyper_light``.
+            system_model_as_optimizer (bool): If True, use the system model for
+                optimizing processes, while target model will be used for inference.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -318,6 +320,7 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
+        metric_name = base_metric._get_name()
         evaluator = Evaluator(
             self._target_model, task_value, base_metric, batch_size=batch_size
         )
@@ -330,6 +333,7 @@ class PromptTuner:
                 task=task_value,
                 problem_description=problem_description,
                 num_samples=generate_num_samples,
+                corner_ratio=corner_ratio,
             )
             self.synthetic_dataset = dataset
             self.synthetic_target = target
@@ -362,7 +366,7 @@ class PromptTuner:
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method_impl.name}, Task: {task}")
-        logger.info(f"Metric: {metric}, Validation size: {validation_size}")
+        logger.info(f"Metric: {base_metric}, Validation size: {validation_size}")
         if dataset:
             logger.info(f"Dataset: {len(dataset)} samples")
         else:
@@ -376,6 +380,8 @@ class PromptTuner:
 
         if meta_prompt_context is not None:
             kwargs = {**kwargs, "meta_prompt_context": meta_prompt_context}
+        if hyper_meta_info is not None:
+            kwargs = {**kwargs, "meta_info": hyper_meta_info}
 
         telemetry_collector = None
         if enable_telemetry:
@@ -387,7 +393,7 @@ class PromptTuner:
             )
             kwargs["telemetry_callback"] = telemetry_collector.on_iteration_end
         final_prompt = method_impl.optimize(
-            model=self._target_model,
+            model=self._system_model if system_model_as_optimizer else self._target_model,
             initial_prompt=start_prompt,
             dataset_split=dataset_split,
             evaluator=evaluator,
@@ -420,8 +426,8 @@ class PromptTuner:
             template=template,
         )
         logger.info(
-            f"Initial {metric} score: {self.init_metric}, "
-            f"final {metric} score: {self.final_metric}"
+            f"Initial {base_metric} score: {self.init_metric}, "
+            f"final {base_metric} score: {self.final_metric}"
         )
 
         self.init_prompt = start_prompt
@@ -459,3 +465,90 @@ class PromptTuner:
         logger.info("=== Prompt Optimization Completed ===")
 
         return final_prompt if return_final_prompt else None
+
+    def test(
+        self,
+        dataset: Iterable[str],
+        prompt: Optional[str] = None,
+        task: Optional[str] = None,
+        targets: Optional[Iterable[str | int]] = None,
+        metric: Optional[str] = None,
+        batch_size: int = 25,
+        return_raw_outputs: bool = True,
+    ) -> List[str] | Tuple[List[str], float]:
+        """
+        Generate model predictions for a test dataset and optionally compute a metric.
+
+        For each sample in the dataset,
+        the prompt is formatted with the sample using the task template,
+        passed to the model to generate an output,
+        and all outputs are collected. If targets are provided,
+        the metric is computed and returned alongside the outputs.
+
+        Args:
+            dataset (Iterable[str]): Input samples to process.
+            prompt (Optional[str]): Prompt to use. If None, falls back to self.final_prompt.
+            task (Optional[str]): Task type ("classification" or "generation").
+                If None, auto-detected via TaskDetector.
+            targets (Optional[Iterable[str|int]]): Ground truth labels.
+                If provided, metric is computed and returned.
+            metric (Optional[str]): Metric name. If None, defaults to "accuracy"
+                for classification or "bertscore" for generation.
+            batch_size (int, default=25): Number of samples per inference batch.
+            return_raw_outputs (bool, default=True): If True, return raw model outputs;
+                if False, return parsed outputs via metric.parse_output().
+
+        Returns:
+            If targets is None: List[str] of raw/parsed outputs.
+            If targets provided: Tuple[List[str], float] of outputs and aggregate metric score.
+
+        Raises:
+            ValueError: If no prompt is available or task cannot be determined.
+        """
+        use_prompt = prompt if prompt is not None else self.final_prompt
+        if use_prompt is None:
+            raise ValueError(
+                "No prompt provided and self.final_prompt is not set. "
+                "Either call .run() first or pass prompt explicitly."
+            )
+        
+        if task is None:
+            task_detector = TaskDetector(self._system_model)
+            task = task_detector.generate(use_prompt)
+        
+        task_str = task.lower()
+        if task_str not in ("classification", "generation"):
+            raise ValueError("task must be 'classification' or 'generation'.")
+        
+        task_enum = Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
+        
+        if metric is None:
+            metric = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
+        
+        metric_impl = validate_and_create_metric(task_enum, metric)
+        
+        evaluator = Evaluator(
+            model=self._target_model,
+            task=task_enum,
+            metric=metric_impl,
+            batch_size=batch_size,
+        )
+        
+        dataset_list = list(dataset)
+        use_targets = list(targets) if targets is not None else [""] * len(dataset_list)
+        
+        result = evaluator.evaluate(
+            prompt=use_prompt,
+            dataset=dataset_list,
+            targets=use_targets,
+            template=None,
+            return_detailed=True,
+        )
+        
+        outputs = result.raw_outputs if return_raw_outputs else [
+            metric_impl.parse_output(a) for a in result.raw_outputs
+        ]
+        
+        if targets is not None:
+            return outputs, result.aggregate_score
+        return outputs

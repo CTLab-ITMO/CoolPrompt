@@ -106,6 +106,7 @@ class CompressorMethod(AutoPromptingMethod):
 
         **kwargs,
     ):
+        """Compress ``initial_prompt`` through the shared method interface."""
 
         telemetry_callback = kwargs.pop("telemetry_callback", None)
 
@@ -137,6 +138,7 @@ class CompressorMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run prompt compression from a benchmark context."""
         mc = ctx.config.get("method", {})
         method = CompressorMethod(
             system_prompt=mc.get("system_prompt", self.system_prompt),

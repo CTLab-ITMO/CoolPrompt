@@ -10,17 +10,17 @@ def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
     """Logging config for CoolPrompt.
 
     Args:
-        logs_dir: logs saving directory. Defaults to ../../logs
-        relative to this file's location.
+        logs_dir: Optional log-saving directory. If None, only console
+            logging is configured and no log file is created.
     """
 
     logger = logging.getLogger("coolprompt")
-    if getattr(logger, "_is_configured", False):
+    resolved_logs_dir = Path(logs_dir).expanduser().resolve() if logs_dir else None
+    if (
+        getattr(logger, "_is_configured", False)
+        and getattr(logger, "_logs_dir", None) == resolved_logs_dir
+    ):
         return logger
-
-    if logs_dir is None:
-        logs_dir = Path(__file__).parents[2] / "logs"
-    os.makedirs(logs_dir, exist_ok=True)
 
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
@@ -29,30 +29,31 @@ def setup_logging(logs_dir: str | Path = None) -> logging.Logger:
         "[%(asctime)s] [%(levelname)s] [%(module)s.%(funcName)s] - %(message)s"
     )
 
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    file_handler = TimedRotatingFileHandler(
-        filename=os.path.join(logs_dir, f"run_{current_date}.log"),
-        when="MIDNIGHT",
-        interval=1,
-        backupCount=30,
-        encoding="utf-8",
-    )
-    file_handler.suffix = "%Y-%m-%d.log"
-    file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
-
-    stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(formatter)
-
-    file_handler.setFormatter(formatter)
-
     for handler in logger.handlers[:]:
         logger.removeHandler(handler)
         handler.close()
 
-    logger.addHandler(file_handler)
+    if resolved_logs_dir is not None:
+        os.makedirs(resolved_logs_dir, exist_ok=True)
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        file_handler = TimedRotatingFileHandler(
+            filename=os.path.join(resolved_logs_dir, f"run_{current_date}.log"),
+            when="MIDNIGHT",
+            interval=1,
+            backupCount=30,
+            encoding="utf-8",
+        )
+        file_handler.suffix = "%Y-%m-%d.log"
+        file_handler.extMatch = re.compile(r"^\d{4}-\d{2}-\d{2}.log$")
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
 
     logger._is_configured = True
+    logger._logs_dir = resolved_logs_dir
 
     return logger
 

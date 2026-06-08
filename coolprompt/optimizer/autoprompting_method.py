@@ -122,6 +122,7 @@ class AutoPromptingMethod(ABC):
         pass
 
     def get_template(self, task: Task) -> str:
+        """Return the default prompt-formatting template for a task."""
         match task:
             case Task.CLASSIFICATION:
                 return CLASSIFICATION_TASK_TEMPLATE

@@ -20,7 +20,6 @@ def regps(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: Optional[str] = None,
-    use_structured_output: bool = False,
     **kwargs,
 ) -> str:
     """Runs Re-GPS evolution.
@@ -93,6 +92,7 @@ class ReGPSMethod(AutoPromptingMethod):
         problem_description,
         **kwargs,
     ):
+        """Run Re-GPS through the shared method interface."""
         telemetry_callback = kwargs.pop("telemetry_callback", None)
 
         return regps(
@@ -110,6 +110,7 @@ class ReGPSMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
         if problem_description is None:
             generator = SyntheticDataGenerator(ctx._system_model)

@@ -16,9 +16,6 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     MetaPromptConfig,
     Recommendation,
 )
-from coolprompt.optimizer.structured_schemas.hyper import (
-    ResultPromptResponse,
-)
 
 
 def _build_full_meta_prompt_template(builder: MetaPromptBuilder) -> str:
@@ -53,13 +50,14 @@ class MetaPromptOptimizer(Optimizer):
         meta_prompt: Optional[str] = None,
         use_structured_output: bool = False,
     ) -> None:
+        """Initialize the meta-prompt builder and full prompt template."""
         super().__init__(model)
+        self.use_structured_output = use_structured_output
         self.builder = MetaPromptBuilder(config)
         if meta_prompt is not None:
             self.meta_prompt = meta_prompt
         else:
             self.meta_prompt = _build_full_meta_prompt_template(self.builder)
-        self.use_structured_output = use_structured_output
 
     def get_section(self, name: str) -> Any:
         """Return the current value stored for a named meta-prompt section."""
@@ -89,16 +87,6 @@ class MetaPromptOptimizer(Optimizer):
     ) -> Union[str, List[str]]:
         """Generate improved prompt(s) via the meta-prompt + LLM path."""
         query = self._format_meta_prompt(prompt, **(meta_info or {}))
-        if self.use_structured_output:
-            structured = self.model.with_structured_output(
-                ResultPromptResponse, method="json_schema"
-            )
-            if n_prompts == 1:
-                return structured.invoke(query).result_prompt
-            return [
-                r.result_prompt
-                for r in structured.batch([query] * n_prompts)
-            ]
         raw_result = get_model_answer_extracted(self.model, query, n=n_prompts)
         if n_prompts == 1:
             return self._process_model_output(raw_result)
@@ -138,15 +126,15 @@ class HyPERLightMethod(AutoPromptingMethod):
         problem_description=None,
         **kwargs,
     ):
+        """Run a single HyPER Light meta-prompt optimization call."""
         telemetry_callback = kwargs.pop("telemetry_callback", None)
-        meta_prompt_context = kwargs.pop("meta_prompt_context", None)
-        use_structured_output = kwargs.pop("use_structured_output", False)
-        optimizer = MetaPromptOptimizer(
-            model=model,
-            use_structured_output=use_structured_output,
-            **kwargs,
+        meta_info = kwargs.pop(
+            "meta_info",
+            kwargs.pop("hyper_meta_info", None),
         )
-        meta_info = meta_prompt_context.copy() if meta_prompt_context else {}
+        kwargs.setdefault("use_structured_output", False)
+        optimizer = MetaPromptOptimizer(model=model, **kwargs)
+        meta_info = meta_info.copy() if meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
 
@@ -170,14 +158,13 @@ class HyPERLightMethod(AutoPromptingMethod):
         ctx: BenchmarkContext,
         start_prompt: str,
     ) -> str:
+        """Run HyPER Light from a benchmark context."""
         meta = dict(ctx.config.get("meta_info", {}))
-        mc = ctx.config.get("method", {})
         return self.optimize(
             ctx.model,
             start_prompt,
             problem_description=ctx.config.get("problem_description"),
-            meta_prompt_context=meta if meta else None,
-            use_structured_output=mc.get("use_structured_output", False),
+            meta_info=meta if meta else None,
         )
 
     def is_data_driven(self) -> bool:

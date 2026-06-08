@@ -102,11 +102,13 @@ class TrackedLLMWrapper(BaseLanguageModel):
     async def agenerate_prompt(self, prompts, stop=None, **kwargs):
         return await self.model.agenerate_prompt(prompts, stop=stop, **kwargs)
 
-    def invoke(self, input, config=None, **kwargs):
+    def invoke(self, input, config=None, *, stop=None, **kwargs):
         """Calls model and tracks usage stats.
 
         Args:
             input: Input to pass to model.
+            config: Optional LangChain runnable config.
+            stop: Optional stop sequences.
             **kwargs: Additional model arguments.
 
         Returns:
@@ -114,16 +116,20 @@ class TrackedLLMWrapper(BaseLanguageModel):
         """
         start_time = time.time()
         with get_openai_callback() as cb:
-            result = self.model.invoke(input, config=config, **kwargs)
+            result = self.model.invoke(
+                input, config=config, stop=stop, config=config, **kwargs
+            )
         duration_sec = time.time() - start_time
         self.tracker._update_stats(cb, invoke_flag=True, batch_size=0, duration_sec=duration_sec)
         return result
 
-    def batch(self, inputs, config=None, **kwargs):
+    def batch(self, inputs, config=None, *, return_exceptions=False, **kwargs):
         """Calls model in batch and tracks usage stats.
 
         Args:
             inputs: List of inputs to process.
+            config: Optional LangChain runnable config.
+            return_exceptions: Whether to return exceptions instead of raising.
             **kwargs: Additional model arguments.
 
         Returns:
@@ -131,7 +137,12 @@ class TrackedLLMWrapper(BaseLanguageModel):
         """
         start_time = time.time()
         with get_openai_callback() as cb:
-            results = self.model.batch(inputs, config=config, **kwargs)
+            results = self.model.batch(
+                inputs,
+                config=config,
+                return_exceptions=return_exceptions,
+                config=config, **kwargs,
+            )
         duration_sec = time.time() - start_time
         self.tracker._update_stats(cb, invoke_flag=False, batch_size=len(inputs), duration_sec=duration_sec)
         return results
@@ -150,7 +161,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
             NotImplementedError: If model does not support structured output.
         """
         if hasattr(self.model, "with_structured_output"):
-            return self.model.with_structured_output(schema, **kwargs)
+            return model_tracker.wrap_model(self.model.with_structured_output(schema, **kwargs))
         raise NotImplementedError(
             f"Model {type(self.model)} does not support structured output"
         )
