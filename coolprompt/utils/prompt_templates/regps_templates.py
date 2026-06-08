@@ -31,7 +31,7 @@ Pay close attention to the feedbacks as they contain some useful hints and infor
 I want you to generate only one new hint. For example, you can try to recommend word replacements, active/positive voice conversions, adding words or delete words.
 Bracket the final hint with <hint> </hint>.
 """
-MUTATION_TEXTGRAD_TEMPLATE="""You are an expert in the domain of optimization prompts. Your task is to design prompts that can effectively solve optimization problems.
+MUTATION_TEXTGRAD_TEMPLATE = """You are an expert in the domain of optimization prompts. Your task is to design prompts that can effectively solve optimization problems.
 Your response outputs prompt text and nothing else.
 
 Write a prompt for {PROBLEM_DESCRIPTION}.

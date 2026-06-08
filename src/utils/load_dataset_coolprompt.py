@@ -6,6 +6,34 @@ gsm8k = load_dataset("openai/gsm8k", "main")
 common_gen = load_dataset("allenai/common_gen")
 ag_news = load_dataset("fancyzhx/ag_news")
 xsum = load_dataset("yairfeldman/xsum")
+tweet_eval = load_dataset("cardiffnlp/tweet_eval", "emotion")
+
+tweeteval_emotions = {0: "anger", 1: "joy", 2: "optimism", 3: "sadness"}
+
+
+def medalpaca_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    data["input_data"] = data["instruction"] + "\n" + data["input"]
+    data["target"] = data["output"]
+
+    if size:
+        data = data.head(size)
+
+    return data
+
+
+def tweeteval_preproc(sample, size: int = None):
+    data = pd.DataFrame(sample)
+
+    data["input_data"] = data["text"]
+    data["target"] = data["label"].apply(lambda x: tweeteval_emotions[x])
+
+    if size:
+        data = data.head(size)
+
+    return data
+
 
 ag_labels = {
     "World": 0,
@@ -15,7 +43,7 @@ ag_labels = {
 }
 
 
-def squad_v2_preproc(sample, size: int = None, seed: int = None):
+def squad_v2_preproc(sample, size: int = None):
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["context"] + " " + data["question"]
@@ -26,82 +54,68 @@ def squad_v2_preproc(sample, size: int = None, seed: int = None):
     data = data.dropna()
 
     if size:
-        if seed is not None:
-            data = data.sample(frac=1, random_state=seed).head(size)
-        else:
-            data = data.head(size)
+        data = data.head(size)
 
     return data
 
 
-def gsm8k_preproc(sample, size: int = None, seed: int = None):
+def gsm8k_preproc(sample, size: int = None):
+    sample = sample["train"]
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["question"]
     data["target"] = data["answer"].apply(lambda x: x.split("####")[1].strip())
 
     if size:
-        if seed is not None:
-            data = data.sample(frac=1, random_state=seed).head(size)
-        else:
-            data = data.head(size)
+        data = data.head(size)
 
     return data
 
 
-def common_gen_preproc(sample, size: int = None, seed: int = None):
+def common_gen_preproc(sample, size: int = None):
     data = pd.DataFrame(sample)
 
     data["input_data"] = data["concepts"].apply(lambda x: str(x))
 
     if size:
-        if seed is not None:
-            data = data.sample(frac=1, random_state=seed).head(size)
-        else:
-            data = data.head(size)
+        data = data.head(size)
 
     return data
 
 
-def ag_news_preproc(sample, size: int = None, seed: int = None):
+def ag_news_preproc(sample, size: int = None):
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"text": "input_data", "label": "target"})
     if size:
-        if seed is not None:
-            data = data.sample(frac=1, random_state=seed).head(size)
-        else:
-            data = data.head(size)
+        data = data.head(size)
 
     return data
 
 
-def xsum_preproc(sample, size: int = None, seed: int = None):
+def xsum_preproc(sample, size: int = None):
     data = pd.DataFrame(sample)
 
     data = data.rename(columns={"document": "input_data", "summary": "target"})
     if size:
-        if seed is not None:
-            data = data.sample(frac=1, random_state=seed).head(size)
-        else:
-            data = data.head(size)
+        data = data.head(size)
 
     return data
 
 
-def load_dataset(name: str, size: int = None, seed: int = None):
+def load_dataset(name: str, size: int = None):
     def get_data():
         match name:
             case "squad_v2":
-                return squad_v2_preproc(squad_v2, size, seed)
+                return squad_v2_preproc(squad_v2, size)
             case "gsm8k":
-                return gsm8k_preproc(gsm8k, size, seed)
+                return gsm8k_preproc(gsm8k, size)
             case "common_gen":
-                return common_gen_preproc(common_gen, size, seed)
+                return common_gen_preproc(common_gen, size)
             case "ag_new":
-                return ag_news_preproc(ag_news, size, seed)
+                return ag_news_preproc(ag_news, size)
             case "xsum":
-                return xsum_preproc(xsum, size, seed)
+                return xsum_preproc(xsum, size)
 
     data = get_data()
     return list(data["input_data"]), list(data["target"])

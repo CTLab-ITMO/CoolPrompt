@@ -7,13 +7,13 @@ from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
 from coolprompt.optimizer.reflective_prompt.prompt import (
     Prompt,
     BadExample,
-    PromptOrigin
+    PromptOrigin,
 )
 from coolprompt.utils.parsing import extract_answer
 from coolprompt.utils.prompt_templates.regps_templates import (
     SHORT_TERM_TEXTGRAD_TEMPLATE,
     REGPS_TEXTUAL_GRADIENT_TEMPLATE,
-    MUTATION_TEXTGRAD_TEMPLATE
+    MUTATION_TEXTGRAD_TEMPLATE,
 )
 
 
@@ -47,7 +47,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         PROMPT_TAGS: start and end tags for prompt extraction.
         HINT_TAGS: start and end tags for hint extraction.
     """
-    
+
     FEEDBACK_TAGS = ("<feedback>", "</feedback>")
 
     def __init__(
@@ -64,8 +64,10 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         num_epochs: int = 5,
         output_path: str = "./regps_outputs",
         use_cache: bool = True,
-        bad_examples_number: int = 5
+        bad_examples_number: int = 5,
+        checkpoint_path: Optional[str] = None,
     ) -> None:
+        """Initialize Re-GPS state and feedback-generation settings."""
         super().__init__(
             model,
             evaluator,
@@ -78,7 +80,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             population_size,
             num_epochs,
             output_path,
-            use_cache
+            checkpoint_path,
+            use_cache,
         )
 
         self.bad_examples_num = bad_examples_number
@@ -100,7 +103,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             prompt=prompt.text,
             dataset=dataset,
             targets=targets,
-            failed_examples=self.bad_examples_num
+            failed_examples=self.bad_examples_num,
         )
         prompt.set_score(score)
         prompt.set_bad_examples(bad_examples)
@@ -115,14 +118,18 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             str: string representation of bad examples
         """
 
-        return "\n\n".join([
-            '\n'.join((
-                f"Input: {example.input}",
-                f"Model Output: {example.output}",
-                f"Correct Output: {example.correct}"
-            ))
-            for example in bad_examples
-        ])
+        return "\n\n".join(
+            [
+                "\n".join(
+                    (
+                        f"Input: {example.input}",
+                        f"Model Output: {example.output}",
+                        f"Correct Output: {example.correct}",
+                    )
+                )
+                for example in bad_examples
+            ]
+        )
 
     def _gen_textual_gradient(self, prompt: Prompt) -> str:
         """Generates textual gradient for provided prompt
@@ -137,12 +144,12 @@ class ReGPSEvoluter(ReflectiveEvoluter):
         request = REGPS_TEXTUAL_GRADIENT_TEMPLATE.format(
             PROBLEM_DESCRIPTION=self.problem_description,
             PROMPT=prompt.text,
-            EXAMPLES=self._make_bad_examples(prompt.bad_examples)
+            EXAMPLES=self._make_bad_examples(prompt.bad_examples),
         )
         return extract_answer(
             self._llm_query([request])[0],
             self.FEEDBACK_TAGS,
-            format_mismatch_label=""
+            format_mismatch_label="",
         )
 
     def _gen_short_term_reflection_prompt(
@@ -173,7 +180,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             WORSE_PROMPT=worse_ind.text,
             WORSE_PROMPT_FEEDBACK=worse_feedback,
             BETTER_PROMPT=better_ind.text,
-            BETTER_PROMPT_FEEDBACK=better_feedback
+            BETTER_PROMPT_FEEDBACK=better_feedback,
         )
 
         return (
@@ -181,7 +188,7 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             worse_ind.text,
             better_ind.text,
             worse_feedback,
-            better_feedback
+            better_feedback,
         )
 
     def _short_term_reflection(
@@ -212,10 +219,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
                 worse_prompt,
                 better_prompt,
                 worse_feedback,
-                better_feedback
-            ) = (
-                self._gen_short_term_reflection_prompt(parent_1, parent_2)
-            )
+                better_feedback,
+            ) = self._gen_short_term_reflection_prompt(parent_1, parent_2)
             requests.append(request)
             worse_prompts.append(worse_prompt)
             better_prompts.append(better_prompt)
@@ -247,13 +252,11 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             PROBLEM_DESCRIPTION=self.problem_description,
             LONG_TERM_REFLECTION=self._long_term_reflection_str,
             ELITIST_PROMPT=self.elitist.text,
-            FEEDBACK=feedback
+            FEEDBACK=feedback,
         )
         responses = self._llm_query([request] * self.population_size)
         responses = [
-            extract_answer(
-                response, self.PROMPT_TAGS, format_mismatch_label=""
-            )
+            extract_answer(response, self.PROMPT_TAGS, format_mismatch_label="")
             for response in responses
         ]
         population = [

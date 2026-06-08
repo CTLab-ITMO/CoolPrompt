@@ -1,3 +1,19 @@
+from coolprompt.utils.prompt_templates.basic_methods_templates import (
+    ADAPT_TEMPLATE,
+    IMPLEMENT_TEMPLATE,
+    ROLE_EXTRACTING_TEMPLATE,
+    SELECT_TEMPLATE,
+)
+from langchain_core.language_models.base import BaseLanguageModel
+from coolprompt.utils.prompt_templates.default_templates import (
+    CLASSIFICATION_TASK_TEMPLATE,
+    GENERATION_TASK_TEMPLATE,
+)
+from coolprompt.language_model.llm import DefaultLLM
+from src.utils.load_dataset_iterable import (
+    GENERATION_TASKS,
+    load_dataset_iterable,
+)
 import argparse
 import json
 import os
@@ -8,24 +24,6 @@ from typing import Iterable
 
 project_root = os.path.abspath(os.path.join(os.getcwd(), "../../"))
 sys.path.append(project_root)
-
-from src.utils.load_dataset_iterable import (
-    GENERATION_TASKS,
-    load_dataset_iterable,
-)
-from coolprompt.language_model.llm import DefaultLLM
-from coolprompt.utils.prompt_templates.default_templates import (
-    CLASSIFICATION_TASK_TEMPLATE,
-    GENERATION_TASK_TEMPLATE,
-)
-from langchain_core.language_models.base import BaseLanguageModel
-
-from coolprompt.utils.prompt_templates.basic_methods_templates import (
-    ADAPT_TEMPLATE,
-    IMPLEMENT_TEMPLATE,
-    ROLE_EXTRACTING_TEMPLATE,
-    SELECT_TEMPLATE,
-)
 
 
 BASIC_PROMPTING_METHODS = [
@@ -128,9 +126,7 @@ def run_few_shot(
         formatted_string = ""
         for i, (input, output) in enumerate(samples):
             formatted_string += f"Example {i + 1}:\n"
-            formatted_string += (
-                f'Text: "{input.strip()}"\nAnswer: {output}\n\n'
-            )
+            formatted_string += f'Text: "{input.strip()}"\nAnswer: {output}\n\n'
 
         return formatted_string
 
@@ -250,9 +246,7 @@ def run_few_shot_chain_of_thoughts(
             output = model.invoke(template)
 
             formatted_string += f"Example {i + 1}:\n"
-            formatted_string += (
-                f'Text: "{input.strip()}"\nAnswer: {output}\n\n'
-            )
+            formatted_string += f'Text: "{input.strip()}"\nAnswer: {output}\n\n'
 
         return formatted_string
 

@@ -8,7 +8,7 @@ FEEDBACK_COLLECTING_TEMPLATE = (
     "3. PRESERVE USER'S INTENT: Acknowledge that the final_prompt retains the core goal of the start_prompt but achieves it more effectively.\n"
     "4. NO JUDGMENT: Never phrase feedback in a way that demeans the original prompt. Use neutral, constructive language.\n"
     "5. LANGUAGE: Provide the feedback in the same language as the 'start_prompt' and 'final_prompt'. If they are in different languages, use the language of the 'start_prompt'.\n"
-    "6. OUTPUT FORMAT: Your output MUST be nothing but a valid JSON object: {{\"feedback\": \"Your complete feedback text here\"}}\n"
+    '6. OUTPUT FORMAT: Your output MUST be nothing but a valid JSON object: {{"feedback": "Your complete feedback text here"}}\n'
     "7. CRITICAL: You are a coach, not an assistant. DO NOT answer the final_prompt itself. Only provide feedback on the prompt engineering aspects.\n"
     "\n"
     "EXAMPLES:\n"

@@ -10,7 +10,9 @@ from pydantic import (
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator import Evaluator
-from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.optimizer.reflective_prompt.coevo_base_evoluter import (
+    ReflectiveEvoluter,
+)
 from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.parsing import extract_json, extract_answer

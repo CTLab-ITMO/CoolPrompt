@@ -1,3 +1,7 @@
+from coolprompt.language_model.llm import DefaultLLM
+from coolprompt.assistant import PromptTuner
+from src.utils.load_dataset_coolprompt import ag_labels
+from config_dict import config_dict
 import random
 import sys
 from typing import Any
@@ -10,10 +14,6 @@ from sklearn.model_selection import train_test_split
 project_path = str(Path(__file__).resolve().parent.parent.parent.parent)
 print(project_path)
 sys.path.append(project_path)
-from config_dict import config_dict
-from src.utils.load_dataset_coolprompt import ag_labels
-from coolprompt.assistant import PromptTuner
-from coolprompt.language_model.llm import DefaultLLM
 
 llm = DefaultLLM.init()
 pt = PromptTuner(llm)
@@ -59,7 +59,7 @@ def run_hype_dataset() -> dict[str, Any]:
     result = {}
 
     for task, cfg in config_dict.items():
-        data_train, data_val = cfg["data"]["train"], cfg["data"]["validation"]
+        _, data_val = cfg["data"]["train"], cfg["data"]["validation"]
         preproc_data = cfg["preproc"](data_val)
         data_sample = sample(preproc_data, sample_size=100)
         dataset, target = list(data_sample["input_data"]), list(
@@ -71,7 +71,7 @@ def run_hype_dataset() -> dict[str, Any]:
             cfg["task"],
             dataset,
             target,
-            "hype",
+            "hyper_light",
             cfg["metric"],
             cfg["problem_description"],
             verbose=2,

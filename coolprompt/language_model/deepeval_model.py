@@ -13,6 +13,7 @@ class DeepEvalLangChainModel(DeepEvalBaseLLM):
         return self.model
 
     def generate(self, prompt: str) -> str:
+        """Generate a synchronous text response for DeepEval."""
         chat_model = self.load_model()
         result = chat_model.invoke(prompt)
         if isinstance(result, AIMessage):
@@ -24,6 +25,7 @@ class DeepEvalLangChainModel(DeepEvalBaseLLM):
         return str(result)
 
     async def a_generate(self, prompt: str) -> str:
+        """Generate an asynchronous text response for DeepEval."""
         chat_model = self.load_model()
         result = await chat_model.ainvoke(prompt)
         if isinstance(result, AIMessage):

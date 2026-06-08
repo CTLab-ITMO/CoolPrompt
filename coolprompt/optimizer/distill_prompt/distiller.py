@@ -217,9 +217,7 @@ class Distiller:
                 f"Best candidate score in round {round_num}: "
                 f"{best_candidate.train_score}"
             )
-            self.logger.debug(
-                f"Best candidate prompt: {best_candidate.prompt}"
-            )
+            self.logger.debug(f"Best candidate prompt: {best_candidate.prompt}")
 
             # Cache results
             self._cache_data(

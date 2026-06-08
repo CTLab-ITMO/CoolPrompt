@@ -5,7 +5,9 @@ from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
 
 from coolprompt.evaluator import Evaluator
-from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.optimizer.reflective_prompt.coevo_base_evoluter import (
+    ReflectiveEvoluter,
+)
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.parsing import extract_json
 from coolprompt.utils.prompt_templates.reflective_templates_factorized import (
