@@ -30,6 +30,8 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     Recommendation,
 )
 
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
+
 _BERTSCORE_MODEL_TYPE = "microsoft/deberta-large-mnli"
 _bertscore_evaluate = None
 
@@ -300,6 +302,7 @@ class HyPEROptimizer(Optimizer):
             Sequence[str], Sequence[str], Sequence[str], Sequence[str]
         ],
         meta_info: Optional[dict[str, Any]] = None,
+        telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> Tuple[str, list]:
         """Run the full HyPER outer loop over train/val splits.
 
@@ -649,6 +652,13 @@ class HyPEROptimizer(Optimizer):
             }
             iteration_history.append(iter_record)
 
+            if telemetry_callback is not None and best_score is not None:
+                telemetry_callback(
+                    iteration=iteration + 1,
+                    best_score=best_score,
+                    best_prompt=best_prompt,
+                )
+
             _bs_str = f"{best_score:.4f}" if best_score is not None else "N/A"
             _pat_str = str(self.patience) if self.patience else "∞"
             logger.info(
@@ -697,6 +707,8 @@ class HyPERMethod(AutoPromptingMethod):
         feedback_answer_tail_chars = kwargs.pop("feedback_answer_tail_chars", 500)
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
+        use_structured_output = kwargs.pop("use_structured_output", False)
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
 
         meta_info = kwargs.pop(
             "meta_info",
@@ -727,6 +739,7 @@ class HyPERMethod(AutoPromptingMethod):
             prompt=initial_prompt,
             dataset_split=dataset_split,
             meta_info=meta_info if meta_info else None,
+            telemetry_callback=telemetry_callback,
         )
         return final_prompt
 

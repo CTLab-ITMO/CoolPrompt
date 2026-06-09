@@ -6,7 +6,7 @@ which handles the process of generating, evaluating, and refining prompts.
 
 import os
 import yaml
-from typing import Any, List
+from typing import Any, List, Optional
 
 from tqdm import tqdm
 from langchain_core.language_models.base import BaseLanguageModel
@@ -22,6 +22,8 @@ from coolprompt.optimizer.distill_prompt.utils import (
     TextSampler,
     seed_everything,
 )
+
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 
 class Distiller:
@@ -55,6 +57,7 @@ class Distiller:
         num_epochs: int = 10,
         output_path: str = "./distillprompt_outputs",
         use_cache: bool = True,
+        telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> None:
         """Initializes the Distiller with the given parameters.
 
@@ -86,6 +89,7 @@ class Distiller:
         self.output_path = output_path
         self.iteration = 0
         self.logger = logger
+        self.telemetry_callback = telemetry_callback
 
         seed_everything()
 
@@ -227,6 +231,13 @@ class Distiller:
                 },
                 self._make_output_path("round_results"),
             )
+
+            if self.telemetry_callback is not None and best_candidate.train_score is not None:
+                self.telemetry_callback(
+                    iteration=round_num + 1,
+                    best_score=best_candidate.train_score,
+                    best_prompt=best_candidate.prompt,
+                )
 
         final_prompt = best_candidate.prompt
         final_score = self._evaluate(final_prompt, split="validation")

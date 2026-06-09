@@ -127,6 +127,7 @@ class HyPERLightMethod(AutoPromptingMethod):
         **kwargs,
     ):
         """Run a single HyPER Light meta-prompt optimization call."""
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
         meta_info = kwargs.pop(
             "meta_info",
             kwargs.pop("hyper_meta_info", None),
@@ -136,11 +137,21 @@ class HyPERLightMethod(AutoPromptingMethod):
         meta_info = meta_info.copy() if meta_info else {}
         if "problem_description" not in meta_info:
             meta_info["problem_description"] = problem_description
-        return optimizer.optimize(
+
+        final_prompt = optimizer.optimize(
             prompt=initial_prompt,
             meta_info=meta_info if meta_info else None,
             n_prompts=1,
         )
+
+        if telemetry_callback is not None:
+            telemetry_callback(
+                iteration=1,
+                best_score=0.0,  
+                best_prompt=final_prompt,
+            )
+
+        return final_prompt
 
     def run_configured_benchmark(
         self,
