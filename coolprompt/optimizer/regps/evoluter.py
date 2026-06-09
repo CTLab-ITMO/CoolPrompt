@@ -15,11 +15,7 @@ from coolprompt.utils.prompt_templates.regps_templates import (
     REGPS_TEXTUAL_GRADIENT_TEMPLATE,
     MUTATION_TEXTGRAD_TEMPLATE,
 )
-from coolprompt.optimizer.structured_schemas.regps import (
-    TextualGradientResponse,
-    ShortTermHintResponse,
-    MutatedPromptResponse,
-)
+
 from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 

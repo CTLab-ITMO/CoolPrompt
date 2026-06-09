@@ -29,9 +29,6 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     PARAPHRASE_PROMPT,
     Recommendation,
 )
-from coolprompt.optimizer.structured_schemas.hyper import (
-    ParaphrasedVariantResponse,
-)
 
 from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 

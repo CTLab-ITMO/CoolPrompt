@@ -53,6 +53,7 @@ def regps(
     args.update(kwargs)
 
     telemetry_callback = args.pop("telemetry_callback", None)
+    use_structured_output = args.pop("use_structured_output", False)
 
     evoluter = ReGPSEvoluter(
         model=model,

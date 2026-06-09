@@ -378,8 +378,6 @@ class PromptTuner:
         if kwargs:
             logger.debug(f"Additional kwargs: {kwargs}")
 
-        if meta_prompt_context is not None:
-            kwargs = {**kwargs, "meta_prompt_context": meta_prompt_context}
         if hyper_meta_info is not None:
             kwargs = {**kwargs, "meta_info": hyper_meta_info}
 

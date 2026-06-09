@@ -117,7 +117,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
         start_time = time.time()
         with get_openai_callback() as cb:
             result = self.model.invoke(
-                input, config=config, stop=stop, config=config, **kwargs
+                input, config=config, stop=stop, **kwargs
             )
         duration_sec = time.time() - start_time
         self.tracker._update_stats(cb, invoke_flag=True, batch_size=0, duration_sec=duration_sec)
@@ -141,7 +141,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
                 inputs,
                 config=config,
                 return_exceptions=return_exceptions,
-                config=config, **kwargs,
+                **kwargs,
             )
         duration_sec = time.time() - start_time
         self.tracker._update_stats(cb, invoke_flag=False, batch_size=len(inputs), duration_sec=duration_sec)
