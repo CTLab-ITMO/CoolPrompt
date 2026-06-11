@@ -39,6 +39,11 @@ package. The CoolPrompt wrapper supplies user train/validation data through
 RIDER context hooks and external validation reranking, so the optimizer adapts
 to the user's dataset without copying the research benchmark stack.
 
+The copied core is synced with the current RIDER Genesis Ultra implementation
+from the RIDER research repository. CoolPrompt-specific additions are limited
+to the LangChain runtime shim, train/validation context injection, external
+validation reranking, and public hyperparameter forwarding.
+
 ## Prompt Templates
 
 RIDER Genesis Ultra meta-prompts live in
