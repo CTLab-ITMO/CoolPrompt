@@ -91,6 +91,10 @@ def test_prompt_tuner_runs_rider_method(monkeypatch):
             self.calls.append((prompt, dataset, targets, template, kwargs))
             return 1.0 if "optimized" in prompt else 0.0
 
+    class _FakeMetric:
+        def _get_name(self):
+            return "bertscore"
+
     class _FakeRule:
         def __init__(self, model):
             self.model = model
@@ -110,7 +114,7 @@ def test_prompt_tuner_runs_rider_method(monkeypatch):
     monkeypatch.setattr("coolprompt.assistant.TaskDetector", _FakeTaskDetector)
     monkeypatch.setattr(
         "coolprompt.assistant.validate_and_create_metric",
-        lambda *args, **kwargs: object(),
+        lambda *args, **kwargs: _FakeMetric(),
     )
     monkeypatch.setattr("coolprompt.assistant.Evaluator", _FakeEvaluator)
     monkeypatch.setattr("coolprompt.assistant.LanguageRule", _FakeRule)
