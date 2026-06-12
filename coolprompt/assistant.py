@@ -404,32 +404,32 @@ class PromptTuner:
                 "No prompt provided and self.final_prompt is not set. "
                 "Either call .run() first or pass prompt explicitly."
             )
-        
+
         if task is None:
             task_detector = TaskDetector(self._system_model)
             task = task_detector.generate(use_prompt)
-        
+
         task_str = task.lower()
         if task_str not in ("classification", "generation"):
             raise ValueError("task must be 'classification' or 'generation'.")
-        
+
         task_enum = Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
-        
+
         if metric is None:
             metric = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
-        
+
         metric_impl = validate_and_create_metric(task_enum, metric)
-        
+
         evaluator = Evaluator(
             model=self._target_model,
             task=task_enum,
             metric=metric_impl,
             batch_size=batch_size,
         )
-        
+
         dataset_list = list(dataset)
         use_targets = list(targets) if targets is not None else [""] * len(dataset_list)
-        
+
         result = evaluator.evaluate(
             prompt=use_prompt,
             dataset=dataset_list,
@@ -437,11 +437,11 @@ class PromptTuner:
             template=None,
             return_detailed=True,
         )
-        
+
         outputs = result.raw_outputs if return_raw_outputs else [
             metric_impl.parse_output(a) for a in result.raw_outputs
         ]
-        
+
         if targets is not None:
             return outputs, result.aggregate_score
         return outputs

@@ -84,6 +84,8 @@ class ReGPSMethod(AutoPromptingMethod):
         dataset_split,
         evaluator,
         problem_description,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         """Run Re-GPS through the shared method interface."""
@@ -93,6 +95,7 @@ class ReGPSMethod(AutoPromptingMethod):
             evaluator=evaluator,
             problem_description=problem_description,
             initial_prompt=initial_prompt,
+            use_structured_output=use_structured_output,
             **kwargs,
         )
 
@@ -100,11 +103,17 @@ class ReGPSMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
+        mc = ctx.config["method"]
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+            generator = SyntheticDataGenerator(
+                ctx._system_model,
+                use_structured_output=use_structured_output,
+            )
             indices = sample(range(0, len(ctx.dataset_split[0])), 5)
             examples = [
                 (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
@@ -113,13 +122,13 @@ class ReGPSMethod(AutoPromptingMethod):
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt, examples=examples
             )
-        mc = ctx.config["method"]
         return self.optimize(
             ctx.model,
             start_prompt,
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=problem_description,
+            use_structured_output=use_structured_output,
             population_size=mc.get("population_size", 10),
             num_epochs=mc.get("num_epochs", 5),
             output_path=mc.get("output_path", "./regps_outputs"),

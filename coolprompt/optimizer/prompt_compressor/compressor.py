@@ -103,9 +103,29 @@ class CompressorMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
-        """Compress ``initial_prompt`` through the shared method interface."""
+        """Compress ``initial_prompt`` through the shared method interface.
+
+        Note:
+            :class:`PromptCompressor` is intrinsically built on top of
+            ``with_structured_output`` and cannot operate without it.
+            The ``use_structured_output`` flag is accepted here for
+            interface uniformity with other methods, but passing ``False``
+            raises ``NotImplementedError`` because the compressor does
+            not support a non-structured execution path.
+
+        Raises:
+            NotImplementedError: If ``use_structured_output`` is ``False``.
+        """
+        if not use_structured_output:
+            raise NotImplementedError(
+                "PromptCompressor is built on top of structured output "
+                "and cannot run with use_structured_output=False"
+            )
+
         compressor = PromptCompressor(
             model=model,
             system_prompt=self.system_prompt,
@@ -127,6 +147,8 @@ class CompressorMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         """Run prompt compression from a benchmark context."""
         mc = ctx.config.get("method", {})
@@ -135,7 +157,11 @@ class CompressorMethod(AutoPromptingMethod):
             user_prompt=mc.get("user_prompt", self.user_prompt),
             return_metadata=mc.get("return_metadata", False),
         )
-        return method.optimize(ctx.model, start_prompt)
+        return method.optimize(
+            ctx.model,
+            start_prompt,
+            use_structured_output=use_structured_output,
+        )
 
     def is_data_driven(self) -> bool:
         return False

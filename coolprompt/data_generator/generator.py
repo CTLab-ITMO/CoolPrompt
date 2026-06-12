@@ -1,15 +1,14 @@
 from typing import Optional, List, Tuple, Any
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages.ai import AIMessage
 from pydantic import BaseModel
 
-from coolprompt.data_generator.pydantic_formatters import (
-    ProblemDescriptionStructuredOutputSchema,
-    ClassificationTaskStructuredOutputSchema,
+from coolprompt.utils.structured_schemas.data_generator import (
     ClassificationTaskExample,
+    ClassificationTaskResponse,
     GenerationTaskExample,
-    GenerationTaskStructuredOutputSchema,
+    GenerationTaskResponse,
+    ProblemDescriptionResponse,
 )
 from coolprompt.utils.prompt_templates.data_generator_templates import (
     PROBLEM_DESCRIPTION_TEMPLATE,
@@ -25,39 +24,49 @@ from coolprompt.utils.parsing import extract_json
 
 
 class SyntheticDataGenerator:
-    """Synthetic Data Generator
-    Generates synthetic dataset for prompt optimization
-    based on given initial prompt and optional problem description
+    """Synthetic Data Generator.
+
+    Generates synthetic datasets for prompt optimization based on a
+    given initial prompt and an optional problem description.
 
     Attributes:
-        model: langchain.BaseLanguageModel class of model to use.
+        model: ``langchain.BaseLanguageModel`` instance to use for LLM calls.
+        use_structured_output: When ``True``, every LLM call routes through
+            ``model.with_structured_output(schema, method="json_schema")``
+            using the Pydantic schemas defined in
+            :mod:`coolprompt.utils.structured_schemas.data_generator`.
+            When ``False`` (default), the generator falls back to a plain
+            ``model.invoke`` call followed by JSON extraction from the
+            raw model response — the same convention used by
+            :mod:`coolprompt.optimizer` submodules.
     """
 
-    def __init__(self, model: BaseLanguageModel) -> None:
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        use_structured_output: bool = False,
+    ) -> None:
         self.model = model
+        self.use_structured_output = use_structured_output
 
     def _generate(
-            self, request: str, schema: BaseModel, field_name: str
+            self, request: str, schema: type[BaseModel], field_name: str
     ) -> Any:
-        """Generates model output
-        either using structured output from langchain
-        or just strict json output format for LLM
+        """Generates model output using either structured-output via
+        LangChain or a raw JSON parsing fallback.
 
         Args:
-            request (str): request to LLM
-                when langchain structured output is used
-            schema (BaseModel): Pydantic output format
-            field_name (str): field name to select from output
+            request (str): request to send to the LLM.
+            schema (type[BaseModel]): Pydantic schema describing the
+                expected structured output. Only used when
+                ``self.use_structured_output`` is ``True``.
+            field_name (str): top-level field name to extract from the
+                model output.
 
         Returns:
-            Any: generated data
+            Any: extracted value of ``field_name`` from the model output.
         """
-        if hasattr(self.model, "model"):
-            wrapped_model = self.model.model
-        else:
-            wrapped_model = self.model
-
-        if not isinstance(wrapped_model, BaseChatModel):
+        if not self.use_structured_output:
             output = self.model.invoke(request)
             if isinstance(output, AIMessage):
                 output = output.content
@@ -92,13 +101,16 @@ class SyntheticDataGenerator:
     def _generate_problem_description(
             self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
     ) -> str:
-        """Generates problem description based on given user prompt
+        """Generates problem description based on given user prompt.
 
         Args:
-            prompt (str): initial user prompt
+            prompt (str): initial user prompt.
+            examples (Optional[List[Tuple[str, str]]]): optional list of
+                ``(input, output)`` examples drawn from the task dataset
+                to ground the description.
 
         Returns:
-            str: generated problem description
+            str: generated problem description.
         """
         if examples:
             request = PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
@@ -109,7 +121,7 @@ class SyntheticDataGenerator:
 
         return self._generate(
             request,
-            ProblemDescriptionStructuredOutputSchema,
+            ProblemDescriptionResponse,
             "problem_description",
         )
 
@@ -119,7 +131,7 @@ class SyntheticDataGenerator:
                 dict | ClassificationTaskExample | GenerationTaskExample
                 ],
     ) -> Tuple[List[str], List[str]]:
-        """Converts outputs to the dataset format
+        """Converts outputs to the dataset format.
 
         Args:
             examples (
@@ -128,11 +140,11 @@ class SyntheticDataGenerator:
                     ClassificationTaskExample |
                     GenerationTaskExample
                 ]
-            ): outputs of the model
+            ): outputs of the model.
 
         Returns:
             Tuple[List[str], List[str]]:
-                converted dataset and target
+                converted dataset and target.
         """
         dataset = []
         targets = []
@@ -156,28 +168,25 @@ class SyntheticDataGenerator:
             num_samples: int = 8,
             corner_ratio: float = 0.4,
     ) -> Tuple[List[str], List[str], str]:
-        """Generates synthetic dataset
-        based on given user prompt, optimization task
-        and optionally provided problem description
+        """Generates synthetic dataset based on the given user prompt,
+        optimization task and optionally provided problem description.
 
-        If problem description isn't provided -
-            it will be generated automatically
+        If problem description isn't provided it will be generated
+        automatically.
 
         Args:
-            prompt (str): initial user prompt
-            task (Task): optimization task
-                Either classification or generation
-            problem_description (Optional[str]):
-                problem description provided by user
-                Will be generated if absent
-                Defaults to None
-            num_samples (int):
-                number of samples in dataset to generate
-                Defaults to 8
+            prompt (str): initial user prompt.
+            task (Task): optimization task — either classification or
+                generation.
+            problem_description (Optional[str]): problem description
+                provided by user. Will be generated if absent. Defaults
+                to ``None``.
+            num_samples (int): number of samples in dataset to generate.
+                Defaults to ``8``.
 
         Returns:
             Tuple[List[str], List[str], str]:
-                generated dataset, target and problem description
+                generated dataset, target and problem description.
         """
         if problem_description is None:
             logger.info(
@@ -190,11 +199,11 @@ class SyntheticDataGenerator:
         if task == Task.CLASSIFICATION:
             regular_template = CLASSIFICATION_DATA_GENERATING_TEMPLATE
             corner_template = CLASSIFICATION_CORNER_CASE_GENERATING_TEMPLATE
-            schema = ClassificationTaskStructuredOutputSchema
+            schema = ClassificationTaskResponse
         else:
             regular_template = GENERATION_DATA_GENERATING_TEMPLATE
             corner_template = GENERATION_CORNER_CASE_GENERATING_TEMPLATE
-            schema = GenerationTaskStructuredOutputSchema
+            schema = GenerationTaskResponse
 
         if corner_template is None:
             request = regular_template.format(
