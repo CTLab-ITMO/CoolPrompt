@@ -76,6 +76,7 @@ METHODS: list[dict[str, Any]] = [
     {
         "id": "compress",
         "label": "PromptCompressor",
+        "demo_visible": False,
         "family": "служебный метод",
         "description": "Сжимает длинный промпт, сохраняя смысл задачи.",
         "data_driven": False,
@@ -85,6 +86,7 @@ METHODS: list[dict[str, Any]] = [
     {
         "id": "reflective",
         "label": "ReflectivePrompt",
+        "demo_visible": False,
         "family": "устаревший метод",
         "description": "Устаревший рефлексивный эволюционный оптимизатор.",
         "data_driven": True,
@@ -98,6 +100,7 @@ METHODS: list[dict[str, Any]] = [
     {
         "id": "distill",
         "label": "DistillPrompt",
+        "demo_visible": False,
         "family": "устаревший метод",
         "description": "Устаревший оптимизатор на основе дистилляции промпта.",
         "data_driven": True,
@@ -116,7 +119,7 @@ METHOD_BY_ID: dict[str, dict[str, Any]] = {method["id"]: method for method in ME
 def public_methods() -> list[dict[str, Any]]:
     """Return a defensive copy of UI method metadata."""
 
-    return deepcopy(METHODS)
+    return deepcopy([method for method in METHODS if method.get("demo_visible", True)])
 
 
 def coerce_method_params(method_id: str, raw_params: dict[str, Any] | None) -> dict[str, Any]:

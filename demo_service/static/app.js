@@ -299,14 +299,6 @@ function renderMethods() {
   select.value = "hyper_light";
   applyMethodRuntimeDefaults(select.value);
 
-  const compare = $("compareMethods");
-  compare.innerHTML = "";
-  state.methods.forEach((method) => {
-    const label = document.createElement("label");
-    label.className = "method-check";
-    label.innerHTML = `<input type="checkbox" value="${method.id}" ${["hyper_light", "hyper", "rider"].includes(method.id) ? "checked" : ""} /> <span>${method.label}</span>`;
-    compare.appendChild(label);
-  });
   renderMetricOptions();
   renderParams();
   renderMethodHint();
@@ -474,28 +466,11 @@ function buildBaseRequest() {
 }
 
 async function createJob() {
-  const compareMode = $("compareMode").checked;
   const base = buildBaseRequest();
   if (!base.mock && (!base.dataset || base.dataset.length < 2)) {
     throw new Error("Для реального запуска добавьте минимум 2 строки данных.");
   }
-  let payload;
-  if (compareMode) {
-    const methods = [...document.querySelectorAll("#compareMethods input:checked")].map((input) => input.value);
-    if (!methods.length) {
-      throw new Error("Выберите хотя бы один метод для сравнения.");
-    }
-    payload = {
-      mode: "compare",
-      compare: {
-        base,
-        methods,
-        method_params_by_method: { [base.method]: base.method_params },
-      },
-    };
-  } else {
-    payload = { mode: "single", request: base };
-  }
+  const payload = { mode: "single", request: base };
 
   setBusy(true);
   setStatus("queued", "Задача поставлена в очередь");
@@ -692,12 +667,10 @@ function renderErrorDetailsHtml(message) {
 
 function renderResult(result) {
   if (Array.isArray(result)) {
-    renderComparison(result);
     const best = [...result].sort((a, b) => (b.final_metric ?? 0) - (a.final_metric ?? 0))[0];
     renderSingle(best);
     return;
   }
-  $("comparison").classList.add("hidden");
   renderSingle(result);
 }
 
@@ -878,10 +851,6 @@ $("methodSelect").addEventListener("change", () => {
   applyMethodRuntimeDefaults($("methodSelect").value);
   renderParams();
   renderMethodHint();
-});
-
-$("compareMode").addEventListener("change", () => {
-  $("compareMethods").classList.toggle("hidden", !$("compareMode").checked);
 });
 
 $("modelSelect").addEventListener("change", toggleCustomModel);
