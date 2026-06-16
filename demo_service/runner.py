@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import inspect
 import time
+from contextlib import contextmanager
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from difflib import SequenceMatcher
+from threading import Lock
 from typing import Any, Callable
 
 from .methods import coerce_method_params
@@ -14,6 +17,53 @@ from .settings import DemoSettings
 
 TunerFactory = Callable[..., Any]
 ProgressCallback = Callable[[str, int, str], None]
+_hyper_similarity_lock = Lock()
+
+
+class _LightweightPromptSimilarity:
+    """Small demo-only substitute for HyPER prompt-to-prompt MMR similarity."""
+
+    def compute(
+        self,
+        *,
+        predictions: list[str],
+        references: list[str],
+        **_: Any,
+    ) -> dict[str, list[float]]:
+        scores = [
+            SequenceMatcher(None, prediction, reference).ratio()
+            for prediction, reference in zip(predictions, references)
+        ]
+        return {"f1": scores}
+
+
+@contextmanager
+def _demo_hyper_similarity_patch(request: OptimizationRequest, settings: DemoSettings):
+    """Avoid a heavyweight local BERTScore model load in the customer demo.
+
+    HyPER itself is still executed through CoolPrompt and still calls the real
+    model API. This patch only replaces the internal prompt-similarity helper
+    used for MMR in the web demo, so small Render instances do not look hung
+    while downloading/loading a transformer model.
+    """
+
+    if request.method != "hyper" or not settings.lightweight_hyper_similarity:
+        yield
+        return
+
+    with _hyper_similarity_lock:
+        from coolprompt.optimizer.hyper import hyper as hyper_module
+
+        original = hyper_module._get_bertscore_evaluate
+        hyper_module._get_bertscore_evaluate = lambda _metric: _LightweightPromptSimilarity()
+        try:
+            yield
+        finally:
+            hyper_module._get_bertscore_evaluate = original
+
+
+def _clean_prompt(text: Any) -> str:
+    return str(text or "").strip()
 
 
 def default_tuner_factory(
@@ -69,7 +119,7 @@ def _build_tuner(
 
 
 def _effective_mock(request: OptimizationRequest, settings: DemoSettings) -> bool:
-    return settings.allow_mock and request.mock
+    return settings.force_mock or (settings.allow_mock and request.mock)
 
 
 def _dataset_size(request: OptimizationRequest, tuner: PromptTuner | None = None) -> int:
@@ -114,14 +164,14 @@ def run_mock_optimization(request: OptimizationRequest, settings: DemoSettings) 
         "1. State the task and expected output format explicitly.\n"
         "2. Use the provided examples as calibration signals.\n"
         "3. Return only the final answer inside <ans>...</ans> tags."
-    )
+    ).strip()
     init_metric = 0.52 if request.task == "generation" else 0.58
     final_metric = min(0.99, init_metric + (0.12 if request.method == "rider" else 0.08))
     elapsed = time.perf_counter() - started
     return OptimizationResult(
         method=request.method,
         initial_prompt=request.start_prompt,
-        final_prompt=final_prompt,
+        final_prompt=_clean_prompt(final_prompt),
         task=request.task,
         metric=request.metric,
         init_metric=init_metric,
@@ -170,22 +220,23 @@ def run_single_optimization(
     tuner = _build_tuner(tuner_factory, request, settings, progress_callback)
     if progress_callback:
         progress_callback("optimizing", 45, "Оптимизатор выполняет поиск промпта")
-    final_prompt = tuner.run(
-        start_prompt=request.start_prompt,
-        task=request.task,
-        dataset=request.dataset,
-        target=request.target,
-        method=request.method,
-        metric=request.metric,
-        problem_description=request.problem_description,
-        validation_size=request.validation_size,
-        train_as_test=request.train_as_test,
-        generate_num_samples=request.generate_num_samples,
-        batch_size=request.batch_size,
-        verbose=request.verbose,
-        return_final_prompt=True,
-        **params,
-    )
+    with _demo_hyper_similarity_patch(request, settings):
+        final_prompt = tuner.run(
+            start_prompt=request.start_prompt,
+            task=request.task,
+            dataset=request.dataset,
+            target=request.target,
+            method=request.method,
+            metric=request.metric,
+            problem_description=request.problem_description,
+            validation_size=request.validation_size,
+            train_as_test=request.train_as_test,
+            generate_num_samples=request.generate_num_samples,
+            batch_size=request.batch_size,
+            verbose=request.verbose,
+            return_final_prompt=True,
+            **params,
+        )
     if progress_callback:
         progress_callback("collecting", 88, "Собираем метрики и итоговый промпт")
     elapsed = time.perf_counter() - started
@@ -197,8 +248,8 @@ def run_single_optimization(
 
     return OptimizationResult(
         method=request.method,
-        initial_prompt=tuner.init_prompt or request.start_prompt,
-        final_prompt=final_prompt or tuner.final_prompt or "",
+        initial_prompt=_clean_prompt(tuner.init_prompt or request.start_prompt),
+        final_prompt=_clean_prompt(final_prompt or tuner.final_prompt or ""),
         task=request.task,
         metric=request.metric,
         init_metric=init_metric,
@@ -254,7 +305,7 @@ def run_comparison(
         )
 
     by_method: dict[str, OptimizationResult] = {}
-    max_workers = max(1, min(total, settings.max_compare_methods))
+    max_workers = max(1, min(total, settings.max_compare_methods, settings.max_compare_workers))
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
         futures = {pool.submit(run_method, method_id): method_id for method_id in methods}
         for completed, future in enumerate(as_completed(futures), start=1):

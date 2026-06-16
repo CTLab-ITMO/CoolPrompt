@@ -42,8 +42,13 @@
         <section class="panel">
           <div class="panel-title">
             <span>Метод</span>
+            <label class="toggle">
+              <input id="compareMode" type="checkbox" />
+              <span>Сравнить</span>
+            </label>
           </div>
           <select id="methodSelect"></select>
+          <div id="compareMethods" class="method-grid hidden"></div>
           <div id="methodHint" class="hint"></div>
         </section>
 
@@ -125,6 +130,8 @@
           <div class="status-pill" id="statusPill">готово</div>
         </div>
 
+        <div id="comparison" class="comparison hidden"></div>
+
         <article id="progressCard" class="progress-card">
           <div class="progress-head">
             <div>
@@ -181,6 +188,6 @@
         </article>
       </section>
     </main>
-    <script src="/static/app.js?v=20260616-formatted-details"></script>
+    <script src="/static/app.js?v=20260616-e2e-compare"></script>
   </body>
 </html>

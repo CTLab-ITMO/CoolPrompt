@@ -1,0 +1,30 @@
+name: coolprompt-demo
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      PORT: "8000"
+      COOLPROMPT_DEMO_WORKERS: "${COOLPROMPT_DEMO_WORKERS:-2}"
+      COOLPROMPT_MAX_COMPARE_METHODS: "${COOLPROMPT_MAX_COMPARE_METHODS:-4}"
+      COOLPROMPT_COMPARE_WORKERS: "${COOLPROMPT_COMPARE_WORKERS:-1}"
+      COOLPROMPT_DEMO_LIGHTWEIGHT_HYPER_MMR: "${COOLPROMPT_DEMO_LIGHTWEIGHT_HYPER_MMR:-true}"
+    ports:
+      - "127.0.0.1:8082:8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=5).read()",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

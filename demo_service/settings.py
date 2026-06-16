@@ -37,19 +37,33 @@ def _env_base_url() -> str | None:
     return None
 
 
+def _env_model_name() -> str:
+    configured = os.getenv("COOLPROMPT_DEMO_MODEL")
+    if configured:
+        return configured
+    if _looks_like_openrouter_key(_env_api_key()):
+        return "openai/gpt-4o-mini"
+    return "gpt-4o-mini"
+
+
 @dataclass(frozen=True)
 class DemoSettings:
     """Environment-driven service settings."""
 
     app_name: str = "CoolPrompt Interface Demo"
-    model_name: str = field(default_factory=lambda: os.getenv("COOLPROMPT_DEMO_MODEL", "gpt-4o-mini"))
+    model_name: str = field(default_factory=_env_model_name)
     openai_api_key: str | None = field(default_factory=_env_api_key)
     openai_base_url: str | None = field(default_factory=_env_base_url)
     allow_mock: bool = _bool_env("COOLPROMPT_DEMO_ALLOW_MOCK", default=False)
     force_mock: bool = _bool_env("COOLPROMPT_DEMO_MOCK", default=False)
     max_compare_methods: int = int(os.getenv("COOLPROMPT_MAX_COMPARE_METHODS", "4"))
     max_workers: int = int(os.getenv("COOLPROMPT_DEMO_WORKERS", "2"))
+    max_compare_workers: int = int(os.getenv("COOLPROMPT_COMPARE_WORKERS", "1"))
     request_timeout_seconds: int = int(os.getenv("COOLPROMPT_DEMO_TIMEOUT_SECONDS", "900"))
+    lightweight_hyper_similarity: bool = _bool_env(
+        "COOLPROMPT_DEMO_LIGHTWEIGHT_HYPER_MMR",
+        default=True,
+    )
 
     @property
     def has_openai_key(self) -> bool:

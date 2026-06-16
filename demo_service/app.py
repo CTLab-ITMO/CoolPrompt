@@ -38,8 +38,8 @@ def _model_options() -> list[dict[str, str]]:
     base_url = (settings.openai_base_url or "").lower()
     if "openrouter" in base_url:
         return [
-            {"value": "gpt-4o-mini", "label": "gpt-4o-mini"},
-            {"value": "gpt-4o", "label": "gpt-4o"},
+            {"value": "openai/gpt-4o-mini", "label": "OpenAI GPT-4o mini"},
+            {"value": "openai/gpt-4o", "label": "OpenAI GPT-4o"},
             {"value": "google/gemini-2.5-flash", "label": "Gemini 2.5 Flash"},
             {"value": "anthropic/claude-3.5-haiku", "label": "Claude 3.5 Haiku"},
         ]
@@ -148,6 +148,7 @@ def config() -> dict[str, Any]:
         "allowMock": settings.allow_mock,
         "forceMock": settings.force_mock,
         "maxCompareMethods": settings.max_compare_methods,
+        "maxCompareWorkers": settings.max_compare_workers,
         "modelOptions": _model_options(),
     }
 
