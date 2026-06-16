@@ -3,22 +3,25 @@
 from __future__ import annotations
 
 import time
-from typing import Callable
-
-from langchain_openai import ChatOpenAI
-
-from coolprompt.assistant import PromptTuner
+from typing import Any, Callable
 
 from .methods import coerce_method_params
 from .schemas import CompareRequest, OptimizationRequest, OptimizationResult
 from .settings import DemoSettings
 
 
-TunerFactory = Callable[[OptimizationRequest, DemoSettings], PromptTuner]
+TunerFactory = Callable[[OptimizationRequest, DemoSettings], Any]
 
 
 def default_tuner_factory(request: OptimizationRequest, settings: DemoSettings) -> PromptTuner:
     """Build a PromptTuner with an env-configured LangChain OpenAI model."""
+
+    # Keep heavy CoolPrompt/metric/torch imports out of FastAPI startup.
+    # Render's small instances must open the HTTP port before any optimizer job
+    # pays the full ML import cost.
+    from langchain_openai import ChatOpenAI
+
+    from coolprompt.assistant import PromptTuner
 
     model_name = request.model_name or settings.model_name
     model_kwargs = {
