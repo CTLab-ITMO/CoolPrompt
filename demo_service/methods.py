@@ -27,6 +27,7 @@ METHODS: list[dict[str, Any]] = [
     {
         "id": "hyper",
         "label": "HyPER",
+        "demo_visible": False,
         "family": "итеративный метод",
         "description": "Итеративная оптимизация промпта с обратной связью по ошибкам.",
         "data_driven": True,
