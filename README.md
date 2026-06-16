@@ -110,6 +110,20 @@ For technical details and full experimental results, please check our papers + c
 </details>
 
 <details close>
+    <summary><a href="https://ieeexplore.ieee.org/abstract/document/11506566"><b>RE-GPS</b></a></summary>
+    
+    @inproceedings{kulin2026re,
+      title={RE-GPS: Reflective Evolutionary Gradient Prompting System for Large Language Models},
+      author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Muravyov, Sergey},
+      booktitle={2026 39th Conference of Open Innovations Association (FRUCT)},
+      pages={157--163},
+      year={2026},
+      organization={IEEE}
+    }
+    
+</details>
+
+<details close>
     <summary><a href="https://www.fruct.org/files/publications/volume-38/fruct38/Kul.pdf"><b>CoolPrompt</b></a></summary>
     
     @INPROCEEDINGS{11239071,
