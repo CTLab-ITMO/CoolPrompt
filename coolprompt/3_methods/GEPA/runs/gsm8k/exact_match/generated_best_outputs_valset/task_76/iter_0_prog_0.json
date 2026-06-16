@@ -1,0 +1,4 @@
+{
+    "reasoning": "First year has 365 days. 180 days at 1 cup/day = 180 cups. Remaining 185 days at 2 cups/day = 370 cups. Total cups in first year = 180 + 370 = 550 cups. Each bag has 110 cups, so bags needed = 550 / 110 = 5 bags.",
+    "output": "5"
+}

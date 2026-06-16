@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input appears to be a quote labeled with social media-style hashtags. A plausible task is to normalize the text by removing the hashtags while preserving the quotation and attribution. The output should thus present the same quote sans hashtags, preserving punctuation and the author.",
+    "output": "The optimist proclaims that we live in the best of all possible worlds; and the pessimist fears this is true. ~ James Branch Cabell"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let the starting amount be x. The 8 weeks of $5 allowance totals 8 \u00d7 5 = 40. So x + 40 = 100, hence x = 60.",
+    "output": "60"
+}

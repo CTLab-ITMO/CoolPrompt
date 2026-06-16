@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input contains a user mention \"@user\". To produce a natural-language sentence, remove the \"@\" and capitalize the first word to form a clean sentence: \"User is the man.\" This preserves the meaning with standard capitalization.",
+    "output": "User is the man."
+}

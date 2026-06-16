@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a function that builds a C-style comment from a documentation string using a LINE_SEPARATOR, stores it in a getComments variable, and prints it. Use loc0, loc1, loc2, loc3 as local variables to mirror the target style.",
+    "output": "void function ( ) {\n  String loc0 = \"/*\";\n  String loc1 = \"Documentation\";\n  String loc2 = \"*/\";\n  String loc3 = LINE_SEPARATOR;\n  String result = loc0 + loc3 + loc1 + loc3 + loc2;\n  String getComments = result;\n  System.out.print(getComments);\n}"
+}

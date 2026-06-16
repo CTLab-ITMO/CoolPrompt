@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will define four locals (loc0..loc3) to mirror the compression-related fields described in the input: loc0 as a String holding DEFAULT_IMAGE_FORMAT, loc1 as a float for writeCompressionQuality, loc2 as a String for writeCompressionType, and loc3 as an int for writeCompressionMode. Then I will perform a small sequence: set the compression mode, call write twice (as implied by the repeated \"write\" in the input), then call getImageWriteParameters and lookupImageWriterForFormat to reflect the parse/lookup steps described.",
+    "output": "void function ( ) {\n  String loc0 = DEFAULT_IMAGE_FORMAT;\n  float loc1 = writeCompressionQuality;\n  String loc2 = writeCompressionType;\n  int loc3 = writeCompressionMode;\n\n  setWriteCompressionMode(loc3);\n  write();\n  write();\n  getImageWriteParameters();\n  lookupImageWriterForFormat();\n}"
+}

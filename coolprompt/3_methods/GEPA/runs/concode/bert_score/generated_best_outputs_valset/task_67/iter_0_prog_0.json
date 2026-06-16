@@ -1,0 +1,4 @@
+{
+    "reasoning": "The buffer-related input describes a method to check if the buffer currently contains data. A conventional and concise signature for this is boolean hasData().",
+    "output": "boolean hasData()"
+}

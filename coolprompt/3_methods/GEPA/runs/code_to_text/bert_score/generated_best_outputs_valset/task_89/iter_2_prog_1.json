@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generating a concise docstring that describes the function's purpose, parameters, and raised exceptions.",
+    "output": "Create the database if it does not already exist.\n\nArguments:\n * database_name (str): Name of the database to create. If ``None``, raises AirflowBadRequest.\n\nRaises:\n * :class:`AirflowBadRequest`: if ``database_name`` is ``None``."
+}

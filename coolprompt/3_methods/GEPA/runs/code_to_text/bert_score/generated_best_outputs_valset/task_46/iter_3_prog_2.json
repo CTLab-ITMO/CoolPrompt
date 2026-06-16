@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-like description of the function's behavior, including its parameters, return value, and possible exceptions, without modifying the code.",
+    "output": "Deletes the specified database in the given instance and project, then waits for the deletion operation to complete.\n\nArguments:\n    instance (str): The instance identifier that contains the database to delete.\n    database (str): The name of the database to delete.\n    project_id (str, optional): The Google Cloud project ID. If not provided, the default project configured on the connection is used.\n\nReturns:\n    None: This method does not return a value; it blocks until the delete operation completes.\n\nRaises:\n    Exception: If the delete request fails or waiting for the operation to complete fails."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a no-argument getter named getExitStatus that returns an ExitStatus field named thisExitStatus. Implementing a minimal deterministic function that simply returns the backing field aligns with the getter pattern, keeping the implementation straightforward and consistent with the described structure.",
+    "output": "```java\nExitStatus getExitStatus ( ) {\n    return thisExitStatus;\n}\n```"
+}

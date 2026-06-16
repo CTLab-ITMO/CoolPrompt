@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a small deterministic Java-like function that simulates obtaining an object's id and, if allowed, creates a new id when none exists. It uses the loc0..loc3 pattern and the String fields described (readObjectID, createObjectID, generateID, toString) to mirror the expected style, ensuring the operation remains self-contained within a single function block.",
+    "output": "```java\nvoid function ( ) {\n    boolean cancreate = true;\n    String id = null;\n    String readObjectID = null;\n    String createObjectID = \"NEW_ID\";\n    String generateID = \"GENERATED\";\n    String toString = null;\n    String loc0, loc1, loc2, loc3;\n\n    loc0 = id;\n    id = loc0;\n    if (id == null && cancreate) {\n        id = createObjectID;\n    }\n    toString = String.valueOf(id);\n    loc1 = readObjectID;\n    loc2 = createObjectID;\n    loc3 = generateID;\n}\n```"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated a concise, docstring-style description of _get_pretty_exception_message: a single-line summary followed by Arguments and Returns sections, omitting Raises since none are raised.",
+    "output": "Return a prettified message for exceptions that expose a structured 'message' field; otherwise, return the exception's string representation.\n\nArguments:\n    e (BaseException): The exception instance to format. If e has a 'message' attribute that is a mapping containing 'errorName' and 'message' keys, the function returns \"<errorName>: <message>\"; otherwise, the result is str(e).\n\nReturns:\n    str: The resulting message string."
+}

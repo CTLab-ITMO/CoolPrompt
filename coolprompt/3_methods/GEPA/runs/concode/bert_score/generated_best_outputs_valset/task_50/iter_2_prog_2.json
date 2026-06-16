@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "public long longValue() {\n    return value;\n}"
+}

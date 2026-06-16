@@ -1,0 +1,4 @@
+{
+    "reasoning": "The request asks for the 4-byte BIP32 header used for public keys on the mainnet (the xpub version). The standard header is 0x0488B21E, which equals decimal 76067358.",
+    "output": "0x0488B21E (decimal 76067358)"
+}

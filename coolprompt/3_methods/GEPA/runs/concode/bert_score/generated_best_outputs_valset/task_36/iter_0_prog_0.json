@@ -1,0 +1,4 @@
+{
+    "reasoning": "The set is backed by HashMap<String, symbol> _all. To determine if a particular symbol is contained, you can check by the symbol itself or by its name. Use containsValue for the symbol object, or containsKey for the symbol name. containsKey is typically O(1); containsValue requires iterating over values (O(n)).",
+    "output": "- By symbol object:\n  boolean contains(symbol s) { return _all.containsValue(s); }\n- By symbol name:\n  boolean containsName(String name) { return _all.containsKey(name); }"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "writer.writeCharacters(new String(bytes));"
+}

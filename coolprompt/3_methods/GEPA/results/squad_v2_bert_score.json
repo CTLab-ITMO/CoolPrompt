@@ -1,0 +1,2697 @@
+{
+  "dataset": "squad_v2",
+  "metric": "bert_score",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "bert_score"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.9414446902275085,
+      0.9658002930879593,
+      0.9639949172735214,
+      0.959980993270874,
+      0.9616291493177413,
+      0.9632151091098785
+    ],
+    "val_subscores": [
+      {
+        "0": 0.9901254177093506,
+        "1": 0.860607385635376,
+        "2": 0.9843788146972656,
+        "3": 1.0,
+        "4": 0.9587094783782959,
+        "5": 0.927273690700531,
+        "6": 0.8961032629013062,
+        "7": 0.8458707928657532,
+        "8": 0.8557997941970825,
+        "9": 0.8822646737098694,
+        "10": 1.0,
+        "11": 0.9071970582008362,
+        "12": 0.880962610244751,
+        "13": 1.0,
+        "14": 0.9103687405586243,
+        "15": 0.8294389843940735,
+        "16": 0.9397450685501099,
+        "17": 0.9603303074836731,
+        "18": 0.8671881556510925,
+        "19": 0.9165438413619995,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0000001192092896,
+        "23": 0.9925046563148499,
+        "24": 0.8426994681358337,
+        "25": 0.9999998807907104,
+        "26": 0.9834986925125122,
+        "27": 0.9550498723983765,
+        "28": 0.9159106612205505,
+        "29": 0.9999998807907104,
+        "30": 0.9055663347244263,
+        "31": 1.000000238418579,
+        "32": 1.0,
+        "33": 0.8580724000930786,
+        "34": 0.9137922525405884,
+        "35": 0.9359456896781921,
+        "36": 1.0,
+        "37": 1.000000238418579,
+        "38": 1.000000238418579,
+        "39": 0.9999998807907104,
+        "40": 1.0,
+        "41": 0.8872244358062744,
+        "42": 0.8490169644355774,
+        "43": 0.8714834451675415,
+        "44": 0.932396650314331,
+        "45": 0.9832138419151306,
+        "46": 0.9999997615814209,
+        "47": 1.0,
+        "48": 0.9119812846183777,
+        "49": 0.9032747149467468,
+        "50": 0.9193638563156128,
+        "51": 1.0,
+        "52": 0.8464882969856262,
+        "53": 1.0,
+        "54": 0.9392686486244202,
+        "55": 0.9999996423721313,
+        "56": 0.9999997615814209,
+        "57": 0.9999998211860657,
+        "58": 0.9999998211860657,
+        "59": 0.9999997615814209,
+        "60": 1.0,
+        "61": 0.8091198801994324,
+        "62": 0.9178441166877747,
+        "63": 0.8913663029670715,
+        "64": 1.0000001192092896,
+        "65": 0.9044912457466125,
+        "66": 0.9214488863945007,
+        "67": 0.9999998807907104,
+        "68": 0.9999999403953552,
+        "69": 1.000000238418579,
+        "70": 1.0000001192092896,
+        "71": 1.0000001192092896,
+        "72": 0.9999998807907104,
+        "73": 0.7698389291763306,
+        "74": 0.9188642501831055,
+        "75": 1.0000003576278687,
+        "76": 0.8673701286315918,
+        "77": 0.9391018152236938,
+        "78": 0.8890386819839478,
+        "79": 0.8822441697120667,
+        "80": 1.0,
+        "81": 0.9571530222892761,
+        "82": 0.8880589008331299,
+        "83": 0.9999998807907104,
+        "84": 0.8266348838806152,
+        "85": 0.8668431043624878,
+        "86": 0.9059873819351196,
+        "87": 1.0000001192092896,
+        "88": 0.8672775030136108,
+        "89": 1.0,
+        "90": 0.8907221555709839,
+        "91": 0.9999998807907104,
+        "92": 0.9470920562744141,
+        "93": 0.9774670600891113,
+        "94": 0.9999998807907104,
+        "95": 0.9999996423721313,
+        "96": 0.9999998807907104,
+        "97": 0.8391304016113281,
+        "98": 0.8420771956443787,
+        "99": 0.8656377196311951
+      },
+      {
+        "0": 1.0000003576278687,
+        "1": 0.9500623941421509,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 0.9321319460868835,
+        "5": 0.9999998807907104,
+        "6": 0.8961032629013062,
+        "7": 0.9054590463638306,
+        "8": 0.9283764958381653,
+        "9": 1.000000238418579,
+        "10": 1.0,
+        "11": 0.9393908977508545,
+        "12": 0.8570185899734497,
+        "13": 1.0,
+        "14": 0.9482026696205139,
+        "15": 0.873784065246582,
+        "16": 1.0,
+        "17": 0.9602431058883667,
+        "18": 0.9139289855957031,
+        "19": 0.9340434074401855,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0000001192092896,
+        "23": 1.0,
+        "24": 0.8700500726699829,
+        "25": 0.9999998807907104,
+        "26": 0.9834986925125122,
+        "27": 1.0000003576278687,
+        "28": 0.9159106612205505,
+        "29": 0.9999998807907104,
+        "30": 0.9999999403953552,
+        "31": 1.000000238418579,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 0.9597447514533997,
+        "35": 0.9643611907958984,
+        "36": 1.0,
+        "37": 1.000000238418579,
+        "38": 1.000000238418579,
+        "39": 0.9999998807907104,
+        "40": 1.0,
+        "41": 0.9607796669006348,
+        "42": 0.9144576191902161,
+        "43": 0.9999996423721313,
+        "44": 0.9609262943267822,
+        "45": 0.9999998807907104,
+        "46": 0.9710609912872314,
+        "47": 1.0,
+        "48": 0.9119812846183777,
+        "49": 0.9032747149467468,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 1.000000238418579,
+        "53": 1.0,
+        "54": 0.9392686486244202,
+        "55": 0.9999996423721313,
+        "56": 0.9999997615814209,
+        "57": 0.9999998211860657,
+        "58": 0.8272833824157715,
+        "59": 0.9999997615814209,
+        "60": 1.0,
+        "61": 0.9999996423721313,
+        "62": 1.000000238418579,
+        "63": 0.8913663029670715,
+        "64": 1.0000001192092896,
+        "65": 0.9199171662330627,
+        "66": 0.9999998807907104,
+        "67": 0.9999998807907104,
+        "68": 0.9999999403953552,
+        "69": 1.000000238418579,
+        "70": 0.9146546125411987,
+        "71": 1.0000001192092896,
+        "72": 0.9999998807907104,
+        "73": 1.000000238418579,
+        "74": 0.9170442223548889,
+        "75": 1.0000003576278687,
+        "76": 0.9385705590248108,
+        "77": 0.9999998807907104,
+        "78": 0.9132084846496582,
+        "79": 0.8822441697120667,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 0.8880589008331299,
+        "83": 0.9684311747550964,
+        "84": 0.8677151203155518,
+        "85": 0.9388734698295593,
+        "86": 0.9999998211860657,
+        "87": 0.959905207157135,
+        "88": 0.8688800930976868,
+        "89": 1.0,
+        "90": 0.8907221555709839,
+        "91": 0.9999998807907104,
+        "92": 1.000000238418579,
+        "93": 0.9397928714752197,
+        "94": 0.9999998807907104,
+        "95": 0.913769006729126,
+        "96": 0.9999998807907104,
+        "97": 1.000000238418579,
+        "98": 0.9892802834510803,
+        "99": 0.8562523126602173
+      },
+      {
+        "0": 1.0000003576278687,
+        "1": 0.9618152976036072,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 0.9321319460868835,
+        "5": 0.9999998807907104,
+        "6": 0.8961032629013062,
+        "7": 0.9054590463638306,
+        "8": 0.9283764958381653,
+        "9": 1.000000238418579,
+        "10": 1.0,
+        "11": 0.9393908977508545,
+        "12": 0.8570185899734497,
+        "13": 1.0,
+        "14": 0.9482026696205139,
+        "15": 0.8690666556358337,
+        "16": 1.0,
+        "17": 1.0000001192092896,
+        "18": 0.8746666312217712,
+        "19": 0.9340434074401855,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0000001192092896,
+        "23": 1.0,
+        "24": 0.8566200137138367,
+        "25": 0.9999998807907104,
+        "26": 0.914885938167572,
+        "27": 1.0000003576278687,
+        "28": 0.9096132516860962,
+        "29": 0.9999998807907104,
+        "30": 0.9143744111061096,
+        "31": 1.000000238418579,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 0.9597447514533997,
+        "35": 0.9643611907958984,
+        "36": 1.0,
+        "37": 1.000000238418579,
+        "38": 1.000000238418579,
+        "39": 0.9999998807907104,
+        "40": 1.0,
+        "41": 0.9607796669006348,
+        "42": 0.9144576191902161,
+        "43": 0.9999996423721313,
+        "44": 0.9609262943267822,
+        "45": 0.9999998807907104,
+        "46": 0.9999997615814209,
+        "47": 1.0,
+        "48": 0.9119812846183777,
+        "49": 0.9032747149467468,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 1.000000238418579,
+        "53": 1.0,
+        "54": 0.9392686486244202,
+        "55": 0.9999996423721313,
+        "56": 0.9999997615814209,
+        "57": 0.9999998211860657,
+        "58": 0.9999998211860657,
+        "59": 0.9999997615814209,
+        "60": 1.0,
+        "61": 0.9999996423721313,
+        "62": 1.000000238418579,
+        "63": 0.8913663029670715,
+        "64": 1.0000001192092896,
+        "65": 0.8956810832023621,
+        "66": 0.9999998807907104,
+        "67": 0.9999998807907104,
+        "68": 0.9999999403953552,
+        "69": 1.000000238418579,
+        "70": 0.9146546125411987,
+        "71": 1.0000001192092896,
+        "72": 0.9999998807907104,
+        "73": 1.000000238418579,
+        "74": 0.9188642501831055,
+        "75": 1.0000003576278687,
+        "76": 0.9353162050247192,
+        "77": 0.917532205581665,
+        "78": 0.848026692867279,
+        "79": 0.8822441697120667,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 0.8903928995132446,
+        "83": 0.9598177671432495,
+        "84": 0.8677151203155518,
+        "85": 0.9388734698295593,
+        "86": 0.9999998211860657,
+        "87": 0.959905207157135,
+        "88": 0.8688800930976868,
+        "89": 1.0,
+        "90": 0.8558679223060608,
+        "91": 0.9999998807907104,
+        "92": 1.000000238418579,
+        "93": 0.9397928714752197,
+        "94": 0.9999998807907104,
+        "95": 0.913769006729126,
+        "96": 0.9999998807907104,
+        "97": 0.9550100564956665,
+        "98": 0.9892802834510803,
+        "99": 0.8999388217926025
+      },
+      {
+        "0": 1.0000003576278687,
+        "1": 0.9500623941421509,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 0.9321319460868835,
+        "5": 0.9999998807907104,
+        "6": 0.8961032629013062,
+        "7": 0.8819885849952698,
+        "8": 0.9283764958381653,
+        "9": 1.000000238418579,
+        "10": 1.0,
+        "11": 0.9393908977508545,
+        "12": 0.8570185899734497,
+        "13": 1.0,
+        "14": 0.9482026696205139,
+        "15": 0.84778892993927,
+        "16": 1.0,
+        "17": 0.96214759349823,
+        "18": 0.8746666312217712,
+        "19": 0.9340434074401855,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0000001192092896,
+        "23": 1.0,
+        "24": 0.8700500726699829,
+        "25": 0.9999998807907104,
+        "26": 0.8625284433364868,
+        "27": 0.9550498723983765,
+        "28": 0.9159106612205505,
+        "29": 0.9999998807907104,
+        "30": 0.9143744111061096,
+        "31": 1.000000238418579,
+        "32": 1.0,
+        "33": 0.9625499844551086,
+        "34": 0.9540025591850281,
+        "35": 0.9643611907958984,
+        "36": 1.0,
+        "37": 1.000000238418579,
+        "38": 1.000000238418579,
+        "39": 0.9999998807907104,
+        "40": 1.0,
+        "41": 0.9607796669006348,
+        "42": 0.9144576191902161,
+        "43": 0.9999996423721313,
+        "44": 1.0000001192092896,
+        "45": 0.9999998807907104,
+        "46": 0.9999997615814209,
+        "47": 1.0,
+        "48": 0.9119812846183777,
+        "49": 0.9032747149467468,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 0.8796761631965637,
+        "53": 1.0,
+        "54": 0.9392686486244202,
+        "55": 0.9999996423721313,
+        "56": 0.9999997615814209,
+        "57": 0.9999998211860657,
+        "58": 0.8272833824157715,
+        "59": 0.9999997615814209,
+        "60": 1.0,
+        "61": 0.8976500034332275,
+        "62": 1.000000238418579,
+        "63": 0.8913663029670715,
+        "64": 1.0000001192092896,
+        "65": 0.9199171662330627,
+        "66": 0.9999998807907104,
+        "67": 0.9999998807907104,
+        "68": 0.9999999403953552,
+        "69": 1.000000238418579,
+        "70": 0.9146546125411987,
+        "71": 1.0000001192092896,
+        "72": 0.9999998807907104,
+        "73": 1.000000238418579,
+        "74": 0.9170442223548889,
+        "75": 1.0000003576278687,
+        "76": 0.9328497648239136,
+        "77": 0.9999998807907104,
+        "78": 0.848026692867279,
+        "79": 0.8822441697120667,
+        "80": 1.0,
+        "81": 0.9447154402732849,
+        "82": 0.8903928995132446,
+        "83": 0.9684311747550964,
+        "84": 0.8677151203155518,
+        "85": 0.9592885971069336,
+        "86": 0.9999998211860657,
+        "87": 0.959905207157135,
+        "88": 0.8688800930976868,
+        "89": 1.0,
+        "90": 0.8635262846946716,
+        "91": 0.9999998807907104,
+        "92": 1.000000238418579,
+        "93": 0.9397928714752197,
+        "94": 0.9999998807907104,
+        "95": 0.9999996423721313,
+        "96": 0.9999998807907104,
+        "97": 0.9550100564956665,
+        "98": 0.9892802834510803,
+        "99": 0.8999388217926025
+      },
+      {
+        "0": 1.0000003576278687,
+        "1": 0.9500623941421509,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 0.9321319460868835,
+        "5": 0.9999998807907104,
+        "6": 0.8961032629013062,
+        "7": 0.9054590463638306,
+        "8": 0.9283764958381653,
+        "9": 1.000000238418579,
+        "10": 1.0,
+        "11": 0.9393908977508545,
+        "12": 0.8590670228004456,
+        "13": 1.0,
+        "14": 0.9482026696205139,
+        "15": 0.873784065246582,
+        "16": 1.0,
+        "17": 0.96214759349823,
+        "18": 0.9139289855957031,
+        "19": 0.9322203397750854,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0000001192092896,
+        "23": 1.0,
+        "24": 0.8505685329437256,
+        "25": 0.9999998807907104,
+        "26": 0.8625284433364868,
+        "27": 1.0000003576278687,
+        "28": 0.9999999403953552,
+        "29": 0.9999998807907104,
+        "30": 0.9143744111061096,
+        "31": 0.8688389658927917,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 0.9388513565063477,
+        "35": 0.9643611907958984,
+        "36": 1.0,
+        "37": 1.000000238418579,
+        "38": 1.000000238418579,
+        "39": 0.9999998807907104,
+        "40": 1.0,
+        "41": 0.9607796669006348,
+        "42": 0.9144576191902161,
+        "43": 0.9999996423721313,
+        "44": 0.9609262943267822,
+        "45": 0.9458279609680176,
+        "46": 0.9999997615814209,
+        "47": 1.0,
+        "48": 0.9119812846183777,
+        "49": 0.9032747149467468,
+        "50": 0.9645156860351562,
+        "51": 1.0,
+        "52": 1.000000238418579,
+        "53": 1.0,
+        "54": 0.9392686486244202,
+        "55": 0.9999996423721313,
+        "56": 0.9999997615814209,
+        "57": 0.9999998211860657,
+        "58": 0.8272833824157715,
+        "59": 0.9999997615814209,
+        "60": 1.0,
+        "61": 0.9999996423721313,
+        "62": 1.000000238418579,
+        "63": 0.8913663029670715,
+        "64": 0.911382794380188,
+        "65": 0.9118497967720032,
+        "66": 0.9999998807907104,
+        "67": 0.9999998807907104,
+        "68": 0.9999999403953552,
+        "69": 1.000000238418579,
+        "70": 1.0000001192092896,
+        "71": 1.0000001192092896,
+        "72": 0.9999998807907104,
+        "73": 1.000000238418579,
+        "74": 0.9170442223548889,
+        "75": 1.0000003576278687,
+        "76": 0.9385705590248108,
+        "77": 0.9999998807907104,
+        "78": 0.8475977778434753,
+        "79": 0.8822441697120667,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 0.8903928995132446,
+        "83": 0.9598177671432495,
+        "84": 0.8677151203155518,
+        "85": 0.9388734698295593,
+        "86": 0.9999998211860657,
+        "87": 0.959905207157135,
+        "88": 0.8672775030136108,
+        "89": 1.0,
+        "90": 0.8635262846946716,
+        "91": 0.9999998807907104,
+        "92": 1.000000238418579,
+        "93": 0.9397928714752197,
+        "94": 0.9999998807907104,
+        "95": 0.9123652577400208,
+        "96": 0.9999998807907104,
+        "97": 1.000000238418579,
+        "98": 0.9892802834510803,
+        "99": 0.9051997661590576
+      },
+      {
+        "0": 1.0000003576278687,
+        "1": 0.9500623941421509,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 0.9587094783782959,
+        "5": 0.9999998807907104,
+        "6": 0.8961032629013062,
+        "7": 0.8819885849952698,
+        "8": 0.9283764958381653,
+        "9": 1.000000238418579,
+        "10": 1.0,
+        "11": 0.9393908977508545,
+        "12": 0.8570185899734497,
+        "13": 1.0,
+        "14": 0.9482026696205139,
+        "15": 0.873784065246582,
+        "16": 1.0,
+        "17": 1.0000001192092896,
+        "18": 0.9139289855957031,
+        "19": 0.9340434074401855,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0000001192092896,
+        "23": 1.0,
+        "24": 0.8700500726699829,
+        "25": 0.9999998807907104,
+        "26": 0.8625284433364868,
+        "27": 1.0000003576278687,
+        "28": 0.910293698310852,
+        "29": 0.9999998807907104,
+        "30": 0.9999999403953552,
+        "31": 1.000000238418579,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 0.9597447514533997,
+        "35": 0.9643611907958984,
+        "36": 1.0,
+        "37": 1.000000238418579,
+        "38": 1.000000238418579,
+        "39": 0.9999998807907104,
+        "40": 1.0,
+        "41": 0.9607796669006348,
+        "42": 0.9144576191902161,
+        "43": 0.8876129388809204,
+        "44": 0.9609262943267822,
+        "45": 0.9999998807907104,
+        "46": 0.9999997615814209,
+        "47": 1.0,
+        "48": 0.9119812846183777,
+        "49": 0.9032747149467468,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 1.000000238418579,
+        "53": 1.0,
+        "54": 0.9392686486244202,
+        "55": 0.9999996423721313,
+        "56": 0.9999997615814209,
+        "57": 0.9999998211860657,
+        "58": 0.8272833824157715,
+        "59": 0.9999997615814209,
+        "60": 1.0,
+        "61": 0.9999996423721313,
+        "62": 1.000000238418579,
+        "63": 0.8913663029670715,
+        "64": 1.0000001192092896,
+        "65": 0.9199171662330627,
+        "66": 0.9999998807907104,
+        "67": 0.9999998807907104,
+        "68": 0.9999999403953552,
+        "69": 1.000000238418579,
+        "70": 0.9146546125411987,
+        "71": 1.0000001192092896,
+        "72": 0.9999998807907104,
+        "73": 1.000000238418579,
+        "74": 0.9170442223548889,
+        "75": 1.0000003576278687,
+        "76": 0.9385705590248108,
+        "77": 0.9999998807907104,
+        "78": 0.848026692867279,
+        "79": 0.8822441697120667,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 0.8903928995132446,
+        "83": 0.9684311747550964,
+        "84": 0.8677151203155518,
+        "85": 0.9388734698295593,
+        "86": 0.9999998211860657,
+        "87": 0.959905207157135,
+        "88": 0.8688800930976868,
+        "89": 1.0,
+        "90": 0.8635262846946716,
+        "91": 0.9999998807907104,
+        "92": 1.000000238418579,
+        "93": 0.9397928714752197,
+        "94": 0.9999998807907104,
+        "95": 0.913769006729126,
+        "96": 0.9999998807907104,
+        "97": 0.9550100564956665,
+        "98": 0.9892802834510803,
+        "99": 0.8999388217926025
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states Normandy is a region in France.',\n    output='France'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='France'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[redacted]',\n    output='France'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='France'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='From the passage: Normandy is described as a region in France.',\n    output='France'\n)"
+        ]
+      ],
+      "1": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='the 10th and 11th centuries'\n)"
+        ]
+      ],
+      "2": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states Norse raiders and pirates from Denmark, Iceland and Norway.',\n    output='Denmark, Iceland and Norway'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Denmark, Iceland and Norway'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Denmark, Iceland and Norway'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Denmark, Iceland and Norway'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I cannot provide reasoning.',\n    output='Denmark, Iceland and Norway'\n)"
+        ]
+      ],
+      "3": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly mentions that the Norse leader was Rollo, who led the Norse raiders.',\n    output='Rollo'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text states \"under their leader Rollo,\" identifying the Norse leader as Rollo.',\n    output='Rollo'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Rollo'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Rollo'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Rollo'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The Norse leader mentioned in the passage is Rollo.',\n    output='Rollo'\n)"
+        ]
+      ],
+      "4": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"The passage states that the Normans' distinct cultural and ethnic identity emerged initially in the first half of the 10th century, so the corresponding century is the 10th century.\",\n    output='the 10th century'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='the 10th century'\n)"
+        ]
+      ],
+      "5": [
+        [
+          1,
+          "Prediction(\n    reasoning='Direct answer sourced from the passage.',\n    output='William the Conqueror'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='William the Conqueror'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='William the Conqueror'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will extract the answer directly from the provided text, which states that the expedition on behalf of their duke, William the Conqueror, led to the Norman conquest of England at the Battle of Hastings.',\n    output='William the Conqueror'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='William the Conqueror'\n)"
+        ]
+      ],
+      "6": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly states that under Richard I of Normandy the duchy was forged into a cohesive and formidable principality, indicating that Richard I of Normandy was the ruler.',\n    output='Richard I of Normandy'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states \"under Richard I of Normandy\" indicating the ruler.',\n    output='Richard I of Normandy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='concise extraction from the passage',\n    output='Richard I of Normandy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Richard I of Normandy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The sentence states that the Duchy of Normandy was “under Richard I of Normandy” which identifies him as the ruler.',\n    output='Richard I of Normandy'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct answer from the passage.',\n    output='Richard I of Normandy'\n)"
+        ]
+      ],
+      "7": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states they were \"exponents of the Catholic orthodoxy\" after noting their Christian piety; the exact phrase present is \"Catholic orthodoxy.\" So answer: Catholic orthodoxy.',\n    output='Catholic orthodoxy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Catholic orthodoxy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the text: \"exponents of the Catholic orthodoxy.\"',\n    output='Catholic orthodoxy'\n)"
+        ]
+      ],
+      "8": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage says the term means \"Norseman, Viking\".',\n    output='Norseman, Viking'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Norseman, Viking'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I can’t share step-by-step reasoning, but the answer is provided in the output.',\n    output='Norseman, Viking'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I can’t provide my step-by-step reasoning, but here is the answer.',\n    output='Norseman, Viking'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Norseman, Viking'\n)"
+        ]
+      ],
+      "9": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='9th century'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Reasoning not provided.',\n    output='9th century'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='9th century'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage: \"(recorded in Medieval Latin, 9th century)\" indicates the first recording in the 9th century.',\n    output='9th century'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='From the passage: Latin version was \"recorded in Medieval Latin, 9th century\".',\n    output='9th century'\n)"
+        ]
+      ],
+      "10": [
+        [
+          0,
+          "Prediction(\n    reasoning='The text notes the Duchy began in 911 as a fiefdom and was established by the treaty of Saint-Clair-sur-Epte, indicating its founding year as 911.',\n    output='911'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text states that the Duchy \"began in 911 as a fiefdom,\" so the founding year is 911.',\n    output='911'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='911'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The passage indicates the Duchy began in 911 as a fiefdom.',\n    output='911'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that the Duchy of Normandy “began in 911 as a fiefdom” and was established by the treaty, indicating the founding year as 911.',\n    output='911'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='From the passage: \"began in 911 as a fiefdom\" and \"established by the treaty of Saint-Clair-sur-Epte\" indicate the founding year is 911.',\n    output='911'\n)"
+        ]
+      ],
+      "11": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='King Charles III of West Francia'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='King Charles III of West Francia'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='King Charles III of West Francia'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='King Charles III of West Francia'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='King Charles III of West Francia'\n)"
+        ]
+      ],
+      "12": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that the Duchy was offered lands \"between the river Epte and the Atlantic coast,\" indicating that the Epte bound the Duchy on one side.',\n    output='Epte'\n)"
+        ]
+      ],
+      "13": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Concise justification: The passage indicates that Rollo's arrival and establishment of Normandy unified the diverse Viking contingents (Danes, Norwegians, Norse–Gaels, etc.) into a single Norman identity.\",\n    output='Rollo'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that upon arriving, Rollo gave the original Viking settlers a common identity.',\n    output='Rollo'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Rollo'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Rollo'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='Rollo'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"I can't provide step-by-step reasoning, but the answer is Rollo.\",\n    output='Rollo'\n)"
+        ]
+      ],
+      "14": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that the Norman religion was Catholicism (Christianity).',\n    output='Catholicism (Christianity)'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Catholicism (Christianity)'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Catholicism (Christianity)'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I can’t share detailed step-by-step reasoning, but the answer is directly drawn from the provided text.',\n    output='Catholicism (Christianity)'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='reasoning omitted',\n    output='Catholicism (Christianity)'\n)"
+        ]
+      ],
+      "15": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states \"Norman culture in the north of France,\" so the location is \"the north of France.\"',\n    output='the north of France'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Identified the location described: \"in the north of France\" in the text.',\n    output='the north of France'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='the north of France'\n)"
+        ]
+      ],
+      "16": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='fighting horsemen'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='fighting horsemen'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='N/A',\n    output='fighting horsemen'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage: \"Normandy had been exporting fighting horsemen\" as one of their major exports.',\n    output='fighting horsemen'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage notes that Normandy had been exporting fighting horsemen as a major export.',\n    output='fighting horsemen'\n)"
+        ]
+      ],
+      "17": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Seljuk Turks'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct extraction: the passage states the main enemy in that context as the Seljuk Turks.',\n    output='Seljuk Turks'\n)"
+        ]
+      ],
+      "18": [
+        [
+          1,
+          "Prediction(\n    reasoning='The answer is the time period stated in the passage.',\n    output='in the 1050s'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='in the 1050s'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Reasoning steps are not provided.',\n    output='in the 1050s'\n)"
+        ]
+      ],
+      "19": [
+        [
+          1,
+          "Prediction(\n    reasoning='From the text: \"In the 1060s, Robert Crispin led the Normans of Edessa against the Turks.\" The answer is \"In the 1060s\"',\n    output='In the 1060s'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='In the 1060s'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[redacted]',\n    output='In the 1060s'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='In the 1060s'\n)"
+        ]
+      ],
+      "20": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"The passage states that Roussel de Bailleul's plans were stopped by the Byzantine general Alexius Komnenos.\",\n    output='Alexius Komnenos'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Direct answer found in passage: the Byzantine general Alexius Komnenos stopped him.',\n    output='Alexius Komnenos'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Alexius Komnenos'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Alexius Komnenos'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"From the passage, Roussel de Bailleul's plans were stopped by the Byzantine general Alexius Komnenos.\",\n    output='Alexius Komnenos'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Alexius Komnenos'\n)"
+        ]
+      ],
+      "21": [
+        [
+          0,
+          "Prediction(\n    reasoning='The text explicitly mentions that the Norman castle’s name was Afranji, meaning \"Franks,\" so the answer is Afranji.',\n    output='Afranji'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage says: \"They even lent their ethnicity to the name of their castle: Afranji, meaning \\'Franks.\\'\"',\n    output='Afranji'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Afranji'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The answer is the substring \"Afranji\" as stated in the passage describing the Norman castle.',\n    output='Afranji'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"I can't provide the step-by-step reasoning, but the answer is directly stated in the passage: Afranji.\",\n    output='Afranji'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Afranji'\n)"
+        ]
+      ],
+      "22": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that a Norman named Oursel led the Franks into the upper Euphrates valley, so the leader was Oursel.',\n    output='Oursel'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Oursel was the Norman who led the Franks into the upper Euphrates valley.',\n    output='Oursel'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Identified the sentence describing the leader of the Franks entering the Euphrates valley as \"A Norman named Oursel led a force of \\'Franks\\' into the upper Euphrates valley in northern Syria.\"',\n    output='Oursel'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Oursel'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Oursel'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Oursel'\n)"
+        ]
+      ],
+      "23": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text says \"Some Normans joined Turkish forces\" to aid in destruction in Anatolia, so they teamed up with Turkish forces.',\n    output='Turkish forces'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Turkish forces'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't provide step-by-step reasoning, but the answer is the substring: Turkish forces.\",\n    output='Turkish forces'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that some Normans joined Turkish forces in Anatolia.',\n    output='Turkish forces'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Reasoning not provided.',\n    output='Turkish forces'\n)"
+        ]
+      ],
+      "24": [
+        [
+          1,
+          "Prediction(\n    reasoning='concise answer only',\n    output='Italo-Norman named Raoul'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Italo-Norman named Raoul'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Italo-Norman named Raoul'\n)"
+        ]
+      ],
+      "25": [
+        [
+          0,
+          "Prediction(\n    reasoning='The text explicitly states that Robert Guiscard was elevated to the dignity of count of Apulia, so the count’s name is Robert Guiscard.',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage names him as Robert Guiscard, the count of Apulia.',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The count of Apulia named in the passage is Robert Guiscard.',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Robert Guiscard'\n)"
+        ]
+      ],
+      "26": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that Dyrrachium was lost to the Normans in 1085, after the death of Robert.',\n    output='1085'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Cannot provide step-by-step reasoning, but the answer is a direct extraction: 1085.',\n    output='1085'\n)"
+        ]
+      ],
+      "27": [
+        [
+          1,
+          "Prediction(\n    reasoning='The answer is a number extracted from the text.',\n    output='30,000'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='30,000'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='30,000'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but the answer is 30,000.\",\n    output='30,000'\n)"
+        ]
+      ],
+      "28": [
+        [
+          4,
+          "Prediction(\n    reasoning='Location is given as the city of Deabolis in the passage.',\n    output='Deabolis'\n)"
+        ]
+      ],
+      "29": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states explicitly: \"the Normans under the command of Bohemond, Robert\\'s son,\" so Robert\\'s son is Bohemond.',\n    output='Bohemond'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Direct extraction from the given paragraph.',\n    output='Bohemond'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Bohemond'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The passage states \"Bohemond, Robert\\'s son,\" identifying Bohemond as Robert\\'s son.',\n    output='Bohemond'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states \"the Normans under the command of Bohemond, Robert\\'s son,\" identifying Bohemond as Robert\\'s son.',\n    output='Bohemond'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct extraction from the passage.',\n    output='Bohemond'\n)"
+        ]
+      ],
+      "30": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text says \"the banks of the river Deabolis,\" so the river is Deabolis.',\n    output='Deabolis'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I cannot share chain-of-thought, but the answer is a direct extraction from the passage.',\n    output='Deabolis'\n)"
+        ]
+      ],
+      "31": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage mentions a \"third attack in 1185\" by the Normans against Dyrrachium, so the attack occurred in 1185.',\n    output='1185'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage notes a Norman army invaded Dyrrachium in 1185.',\n    output='1185'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1185'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't provide step-by-step reasoning. The answer is a direct extraction.\",\n    output='1185'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I cannot share detailed reasoning steps, but the answer is directly stated: the Norman attack on Dyrrachium occurred in 1185.',\n    output='1185'\n)"
+        ]
+      ],
+      "32": [
+        [
+          0,
+          "Prediction(\n    reasoning='The naval base referenced in the passage is Dyrrachium.',\n    output='Dyrrachium'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Direct substring from the passage: the naval base mentioned is Dyrrachium.',\n    output='Dyrrachium'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Dyrrachium'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Dyrrachium'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage identifies the naval base as Dyrrachium, described as one of the most important naval bases of the Adriatic.',\n    output='Dyrrachium'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"I can't share my reasoning, but here's the direct answer.\",\n    output='Dyrrachium'\n)"
+        ]
+      ],
+      "33": [
+        [
+          1,
+          "Prediction(\n    reasoning='Directly identified location in the passage: \"the Adriatic\".',\n    output='the Adriatic'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='the Adriatic'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"I can't share my internal reasoning, but the answer is the Adriatic.\",\n    output='the Adriatic'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I can\\'t share detailed reasoning; the answer is drawn directly from the passage: \"the Adriatic.\"',\n    output='the Adriatic'\n)"
+        ]
+      ],
+      "34": [
+        [
+          1,
+          "Prediction(\n    reasoning='Emma married King Ethelred II of England, as stated in the passage.',\n    output='King Ethelred II of England'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Emma\\'s marriage is described in the passage as \"the marriage of Emma ... and King Ethelred II of England.\" So the answer is King Ethelred II of England.',\n    output='King Ethelred II of England'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct answer inferred from the passage.',\n    output='King Ethelred II of England'\n)"
+        ]
+      ],
+      "35": [
+        [
+          1,
+          "Prediction(\n    reasoning='Emma is described as the sister of Duke Richard II of Normandy, so her brother is Duke Richard II of Normandy.',\n    output='Duke Richard II of Normandy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Duke Richard II of Normandy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Duke Richard II of Normandy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Emma is described as the sister of Duke Richard II of Normandy in the passage.',\n    output='Duke Richard II of Normandy'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Duke Richard II of Normandy'\n)"
+        ]
+      ],
+      "36": [
+        [
+          0,
+          "Prediction(\n    reasoning='The text explicitly states that Ethelred fled to Normandy in 1013 after being forced from his kingdom, so his destination was Normandy.',\n    output='Normandy'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that \"Ethelred fled to Normandy in 1013,\" so the location is Normandy.',\n    output='Normandy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Normandy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Normandy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Answer derived from the passage.',\n    output='Normandy'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Normandy'\n)"
+        ]
+      ],
+      "37": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that Ethelred fled to Normandy in 1013 because he was forced from his kingdom by Sweyn Forkbeard, indicating Sweyn was the one who kicked him out.',\n    output='Sweyn Forkbeard'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Extracted answer from the passage.',\n    output='Sweyn Forkbeard'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Sweyn Forkbeard'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Sweyn Forkbeard'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Concise answer only.',\n    output='Sweyn Forkbeard'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Sweyn Forkbeard'\n)"
+        ]
+      ],
+      "38": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"The passage explicitly refers to Edward's half-brother as Harthacnut.\",\n    output='Harthacnut'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Answer: Harthacnut.',\n    output='Harthacnut'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't provide reasoning, but I'll give the answer.\",\n    output='Harthacnut'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Answer determined from the passage: the half-brother mentioned is Harthacnut.',\n    output='Harthacnut'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage: \"his half-brother Harthacnut,\" so the half-brother is Harthacnut.',\n    output='Harthacnut'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Harthacnut'\n)"
+        ]
+      ],
+      "39": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that Edward returned in 1041.',\n    output='1041'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The question asks when Edward returned; the passage states \"When finally Edward the Confessor returned from his father\\'s refuge in 1041,\" so the answer is 1041.',\n    output='1041'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1041'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Extracts the year from the passage.',\n    output='1041'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage indicates Edward returned in 1041.',\n    output='1041'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that he returned in 1041.',\n    output='1041'\n)"
+        ]
+      ],
+      "40": [
+        [
+          0,
+          "Prediction(\n    reasoning='Direct answer not including steps: The passage states that Edward appointed Robert of Jumièges archbishop of Canterbury.',\n    output='Robert of Jumièges'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='From the passage: \"He appointed Robert of Jumièges archbishop of Canterbury...\"',\n    output='Robert of Jumièges'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Answer extracted from the passage.',\n    output='Robert of Jumièges'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide the final answer only.',\n    output='Robert of Jumièges'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Direct answer extracted from the text: Robert of Jumièges was appointed archbishop of Canterbury.',\n    output='Robert of Jumièges'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='omitted',\n    output='Robert of Jumièges'\n)"
+        ]
+      ],
+      "41": [
+        [
+          1,
+          "Prediction(\n    reasoning='The answer is the exact location given in the passage: \"the Battle of Hastings.\"',\n    output='the Battle of Hastings'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='the Battle of Hastings'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='the Battle of Hastings'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage: Harold II was killed at the Battle of Hastings.',\n    output='the Battle of Hastings'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='N/A',\n    output='the Battle of Hastings'\n)"
+        ]
+      ],
+      "42": [
+        [
+          1,
+          "Prediction(\n    reasoning='From the sentence \"killing King Harold II,\" attributed to Duke William II of Normandy.',\n    output='Duke William II of Normandy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Duke William II of Normandy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The passage states that Harold II was killed by Duke William II of Normandy.',\n    output='Duke William II of Normandy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage, Harold II was killed by Duke William II of Normandy.',\n    output='Duke William II of Normandy'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Directly from the passage: Harold II was killed by Duke William II of Normandy.',\n    output='Duke William II of Normandy'\n)"
+        ]
+      ],
+      "43": [
+        [
+          1,
+          "Prediction(\n    reasoning='From the passage: 1066.',\n    output='1066'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1066'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='1066'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states \"In 1066, Duke William II of Normandy conquered England...\" indicating the Battle of Hastings occurred in 1066.',\n    output='1066'\n)"
+        ]
+      ],
+      "44": [
+        [
+          3,
+          "Prediction(\n    reasoning='The text states that Normans and their descendants replaced the Anglo-Saxons as the ruling class, so the ruling class ahead of the Normans were the Anglo-Saxons.',\n    output='Anglo-Saxons'\n)"
+        ]
+      ],
+      "45": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states it \"evolved into Modern English.\"',\n    output='Modern English'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Modern English'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Final form extracted from the passage.',\n    output='Modern English'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Not provided.',\n    output='Modern English'\n)"
+        ]
+      ],
+      "46": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage mentions the invasion at Bannow Bay occurred in 1169.',\n    output='1169'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1169'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Directly extracted from the passage.',\n    output='1169'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states the Norman invasion at Bannow Bay occurred in 1169.',\n    output='1169'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct answer extracted from the passage.',\n    output='1169'\n)"
+        ]
+      ],
+      "47": [
+        [
+          0,
+          "Prediction(\n    reasoning='From the provided text, the Normans invaded Ireland in 1169 (their invasion at Bannow Bay and subsequent influence on Irish culture).',\n    output='Ireland'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='From the text, the invasion occurred at Bannow Bay in 1169 in Ireland, so the invaded country is Ireland.',\n    output='Ireland'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Ireland'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Identify the country mentioned as the target of the 1169 invasion.',\n    output='Ireland'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Direct answer derived from the provided passage: Ireland.',\n    output='Ireland'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Ireland'\n)"
+        ]
+      ],
+      "48": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage indicates that the Normans were subsumed into Irish culture and that both cultures intermixed.',\n    output='Irish culture'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Direct extraction: \"Irish culture\" is the phrase.',\n    output='Irish culture'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Irish culture'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Direct extraction from the passage: the Normans combined with Irish culture.',\n    output='Irish culture'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Irish culture'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct answer: Irish culture',\n    output='Irish culture'\n)"
+        ]
+      ],
+      "49": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Margaret is described as Edgar Atheling's sister in the passage, so her brother would be Edgar Atheling.\",\n    output='Edgar Atheling'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"Margaret is described as Edgar's sister, so her brother is Edgar Atheling.\",\n    output='Edgar Atheling'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"The passage states that Margaret's brother is Edgar Atheling.\",\n    output='Edgar Atheling'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Edgar Atheling'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"The passage states that Margaret is Edgar Atheling's sister, so Margaret's brother is Edgar Atheling.\",\n    output='Edgar Atheling'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Edgar Atheling'\n)"
+        ]
+      ],
+      "50": [
+        [
+          1,
+          "Prediction(\n    reasoning='Direct extraction from passage.',\n    output='King Malcolm III of Scotland'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='King Malcolm III of Scotland'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"The passage states Margaret's husband is King Malcolm III of Scotland.\",\n    output='King Malcolm III of Scotland'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"The passage states that King Malcolm III of Scotland married Edgar's sister Margaret, so Margaret's husband is King Malcolm III of Scotland.\",\n    output='King Malcolm III of Scotland'\n)"
+        ]
+      ],
+      "51": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly states that William invaded Scotland in 1072, so the invasion occurred in 1072.',\n    output='1072'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Date extracted from sentence stating invasion occurred \"in 1072.\"',\n    output='1072'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1072'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='1072'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states the invasion occurred in 1072.',\n    output='1072'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states William invaded Scotland in 1072, so the invasion occurred in 1072.',\n    output='1072'\n)"
+        ]
+      ],
+      "52": [
+        [
+          1,
+          "Prediction(\n    reasoning='The hostage surrendered by Malcolm was Duncan.',\n    output='Duncan'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I cannot provide reasoning.',\n    output='Duncan'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states Malcolm submitted, paid homage to William and surrendered his son Duncan as a hostage.',\n    output='Duncan'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that Malcolm surrendered his son Duncan as a hostage.',\n    output='Duncan'\n)"
+        ]
+      ],
+      "53": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that \"Alexander I had married Sybilla of Normandy,\" which directly answers who Alexander I married.',\n    output='Sybilla of Normandy'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Alexander I married Sybilla of Normandy, as stated in the passage.',\n    output='Sybilla of Normandy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='From the passage: Alexander I had married Sybilla of Normandy.',\n    output='Sybilla of Normandy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Ground-truth extraction: the passage states that Alexander I had married Sybilla of Normandy.',\n    output='Sybilla of Normandy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Sybilla of Normandy'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Directly extracted from the passage.',\n    output='Sybilla of Normandy'\n)"
+        ]
+      ],
+      "54": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage identifies the Norman-derived feudal system and Norman culture as being introduced to Scotland during David I\\'s era, and refers to this as the \"Davidian Revolution.\" Therefore, the culture in question is the Normans.',\n    output='Norman culture'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Norman culture is described as being introduced to Scotland, part of what some scholars call the Davidian Revolution.',\n    output='Norman culture'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The passage states that the Davidian Revolution involved introducing Normans and Norman culture to Scotland, so the culture is Norman culture.',\n    output='Norman culture'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Norman culture'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that Norman culture was introduced to Scotland, a process some scholars call the \"Davidian Revolution,\" so the culture is Norman culture.',\n    output='Norman culture'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I can’t share detailed reasoning steps, but here is the final answer.',\n    output='Norman culture'\n)"
+        ]
+      ],
+      "55": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states he was made earl of Hereford, so the location requested is Hereford.',\n    output='Hereford'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Direct extraction: the passage states Ralph was \"earl of Hereford,\" so the answer is Hereford.',\n    output='Hereford'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Hereford'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Hereford'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Hereford'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Hereford'\n)"
+        ]
+      ],
+      "56": [
+        [
+          0,
+          "Prediction(\n    reasoning='The excerpt states Ralph was tasked with warring with the Welsh, so he was at war with the Welsh.',\n    output='the Welsh'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Identified from the passage.',\n    output='the Welsh'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='the Welsh'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The phrase indicating who Ralph was to be at war with: \"the Welsh\".',\n    output='the Welsh'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='the Welsh'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I cannot provide the reasoning steps, but the answer is derived directly from the passage.',\n    output='the Welsh'\n)"
+        ]
+      ],
+      "57": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that Edward the Confessor had set up Ralph as earl of Hereford, meaning he appointed him.',\n    output='Edward the Confessor'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that Edward the Confessor set up Ralph as earl of Hereford, so he made him earl.',\n    output='Edward the Confessor'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Edward the Confessor'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Concise answer derived from the passage; no reasoning steps included.',\n    output='Edward the Confessor'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Edward the Confessor'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='N/A',\n    output='Edward the Confessor'\n)"
+        ]
+      ],
+      "58": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage notes that almost all of Wales was at some point subject to Norman interference and that Norman barons dominated the border Marches, so the country referred to is Wales.',\n    output='Wales'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Wales'\n)"
+        ]
+      ],
+      "59": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that Roger de Tosny traveled to Iberia in 1018 to carve out a state but failed, so the failure occurred in 1018.',\n    output='1018'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Identifies the year Roger de Tosny failed as stated in the text.',\n    output='1018'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1018'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I cannot reveal chain-of-thought.',\n    output='1018'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Directly stated in the passage as the year Roger de Tosny traveled to Iberia and failed.',\n    output='1018'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that in 1018, Roger de Tosny travelled to the Iberian Peninsula to carve out a state for himself from Moorish lands, but failed.',\n    output='1018'\n)"
+        ]
+      ],
+      "60": [
+        [
+          0,
+          "Prediction(\n    reasoning='The provided text states that William of Montreuil led the papal army in the War of Barbastro, so the answer is William of Montreuil.',\n    output='William of Montreuil'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that during the War of Barbastro in 1064, William of Montreuil led the papal army.',\n    output='William of Montreuil'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='William of Montreuil'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Directly from the passage.',\n    output='William of Montreuil'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Answer sourced from the provided passage.',\n    output='William of Montreuil'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='[omitted]',\n    output='William of Montreuil'\n)"
+        ]
+      ],
+      "61": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text states \"After the successful Siege of Antioch in 1097,\" indicating the date is 1097.',\n    output='1097'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1097'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='1097'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='1097'\n)"
+        ]
+      ],
+      "62": [
+        [
+          1,
+          "Prediction(\n    reasoning='From the passage: \"his nephew Tancred\" identifies the nephew as Tancred.',\n    output='Tancred'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Tancred'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[no reasoning provided]',\n    output='Tancred'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Tancred'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"The passage states that Bohemond's nephew is Tancred.\",\n    output='Tancred'\n)"
+        ]
+      ],
+      "63": [
+        [
+          0,
+          "Prediction(\n    reasoning='Tancred, a key figure in the First Crusade and Bohemond’s ally, is noted for his instrumental role in the conquest of Jerusalem, among his efforts to expand Crusader control in the region.',\n    output='the conquest of Jerusalem'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Direct answer is stated in the passage: \"the conquest of Jerusalem.\"',\n    output='the conquest of Jerusalem'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='the conquest of Jerusalem'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='the conquest of Jerusalem'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage: \"Tancred was instrumental in the conquest of Jerusalem.\"',\n    output='the conquest of Jerusalem'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='the conquest of Jerusalem'\n)"
+        ]
+      ],
+      "64": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that Western Europe dominated Cyprus for 380 years.',\n    output='380 years'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='380 years'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='380 years'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='380 years'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='380 years'\n)"
+        ]
+      ],
+      "65": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that \"a storm dispersed the fleet,\" which disrupted Richard\\'s fleet and spoiled his plans to reach Acre.',\n    output='a storm dispersed the fleet.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Direct answer extracted from passage.',\n    output='a storm dispersed the fleet.'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that a storm dispersed the fleet, which ruined his plans.',\n    output='a storm dispersed the fleet.'\n)"
+        ]
+      ],
+      "66": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Berengaria is identified as Richard's fiancée in the passage.\",\n    output='Berengaria'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Berengaria'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Berengaria'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage refers to \"his fiancée Berengaria,\" so Richard\\'s fiancée was Berengaria.',\n    output='Berengaria'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"Berengaria is identified as Richard's fiancée in the passage.\",\n    output='Berengaria'\n)"
+        ]
+      ],
+      "67": [
+        [
+          0,
+          "Prediction(\n    reasoning='The text states that Richard left Messina in April 1191 and a storm dispersed the fleet. Therefore, the storm occurred in 1191.',\n    output='1191'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text says the storm dispersed the fleet in April 1191.',\n    output='1191'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='1191'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='1191'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states the fleet was dispersed by a storm in April 1191, so the year is 1191.',\n    output='1191'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='1191'\n)"
+        ]
+      ],
+      "68": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly refers to \"the island\\'s despot Isaac Komnenos,\" indicating that Isaac Komnenos ruled Cyprus in 1191.',\n    output='Isaac Komnenos'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states \"island\\'s despot Isaac Komnenos,\" indicating Isaac Komnenos ruled Cyprus in 1191.',\n    output='Isaac Komnenos'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"The passage identifies Isaac Komnenos as the island's despot, i.e., ruler, of Cyprus in 1191.\",\n    output='Isaac Komnenos'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"The passage describes Isaac Komnenos as the island's despot who ruled Cyprus in 1191.\",\n    output='Isaac Komnenos'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='In the passage, Cyprus is described as ruled by \"the island\\'s despot Isaac Komnenos,\" indicating Isaac Komnenos was the ruler in 1191.',\n    output='Isaac Komnenos'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"The passage identifies Isaac Komnenos as the island's despot who ruled Cyprus in 1191.\",\n    output='Isaac Komnenos'\n)"
+        ]
+      ],
+      "69": [
+        [
+          0,
+          "Prediction(\n    reasoning='From the passage: \"All declared their support for Richard provided that he support Guy against his rival Conrad of Montferrat.\" This identifies Guy de Lusignan\\'s rival as Conrad of Montferrat.',\n    output='Conrad of Montferrat'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"Conrad of Montferrat is described as Guy's rival.\",\n    output='Conrad of Montferrat'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Conrad of Montferrat'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Conrad of Montferrat'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Conrad of Montferrat is identified as Guy\\'s rival in the passage: \"all declared their support for Richard ... Guy against his rival Conrad of Montferrat.\"',\n    output='Conrad of Montferrat'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"The passage explicitly states Guy de Lusignan's rival as Conrad of Montferrat.\",\n    output='Conrad of Montferrat'\n)"
+        ]
+      ],
+      "70": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly states Isaac was “confined with silver chains,” indicating the material was silver.',\n    output='silver'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the text: Isaac surrendered and was confined with silver chains, so the chains were made of silver.',\n    output='silver'\n)"
+        ]
+      ],
+      "71": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly states that during the conquest of Cyprus, \"his troops [were] led by Guy de Lusignan.\"',\n    output='Guy de Lusignan'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states \"his troops being led by Guy de Lusignan.\" So the leader of Richard\\'s troops was Guy de Lusignan.',\n    output='Guy de Lusignan'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Guy de Lusignan'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Directly extracted from the passage.',\n    output='Guy de Lusignan'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that \"his troops being led by Guy de Lusignan\" when Cyprus was conquered.',\n    output='Guy de Lusignan'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Concise extraction from the passage.',\n    output='Guy de Lusignan'\n)"
+        ]
+      ],
+      "72": [
+        [
+          0,
+          "Prediction(\n    reasoning='The Canarian Islands are located off the northwest coast of Africa, in the Atlantic Ocean, so the continent is Africa.',\n    output='Africa'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='From the passage: \"off the Atlantic coast of Africa.\" The continent is Africa.',\n    output='Africa'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Direct extraction from the passage.',\n    output='Africa'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Africa'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Africa'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Africa'\n)"
+        ]
+      ],
+      "73": [
+        [
+          1,
+          "Prediction(\n    reasoning='Bethencourt is described as taking the title of King of the Canary Islands in the passage.',\n    output='Bethencourt'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Bethencourt'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Bethencourt'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Bethencourt took the title of King of the Canary Islands, as stated in the passage.',\n    output='Bethencourt'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='[omitted]',\n    output='Bethencourt'\n)"
+        ]
+      ],
+      "74": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states the rights were sold to Enrique Pérez de Guzmán, 2nd Count de Niebla; therefore, he was the buyer.',\n    output='Enrique Pérez de Guzmán, 2nd Count de Niebla'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Enrique Pérez de Guzmán, 2nd Count de Niebla'\n)"
+        ]
+      ],
+      "75": [
+        [
+          0,
+          "Prediction(\n    reasoning='Answer based on the sentence: \"In 1418, Jean\\'s nephew Maciot de Bethencourt sold the rights to the islands\" — the seller was Maciot de Bethencourt.',\n    output='Maciot de Bethencourt'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that \"In 1418, Jean\\'s nephew Maciot de Bethencourt sold the rights...\" so the seller is Maciot de Bethencourt.',\n    output='Maciot de Bethencourt'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Maciot de Bethencourt'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Ground-truth extraction.',\n    output='Maciot de Bethencourt'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Maciot de Bethencourt'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='redacted',\n    output='Maciot de Bethencourt'\n)"
+        ]
+      ],
+      "76": [
+        [
+          1,
+          "Prediction(\n    reasoning='Answer derived directly from the text.',\n    output='the Channel Islands'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Answer derived from the provided text.',\n    output='the Channel Islands'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that Jersey and Guernsey are in the Channel Islands.',\n    output='the Channel Islands'\n)"
+        ]
+      ],
+      "77": [
+        [
+          1,
+          "Prediction(\n    reasoning='Direct extraction: the passage states there are two customaries.',\n    output='two'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't share internal reasoning, but here is the direct answer.\",\n    output='two'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='two'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Direct extraction from the passage: it states Norman customary law was transcribed in two customaries in Latin.',\n    output='two'\n)"
+        ]
+      ],
+      "78": [
+        [
+          1,
+          "Prediction(\n    reasoning='Extracted from the sentence: \"They spread a unique Romanesque idiom to England and Italy.\"',\n    output='Romanesque idiom'\n)"
+        ]
+      ],
+      "79": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states Norman architecture is characterized by rounded arches, especially over windows and doorways.',\n    output='rounded arches'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"The passage states Norman architecture's style was characterised by rounded arches.\",\n    output='rounded arches'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='rounded arches'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Direct answer extracted from the passage.',\n    output='rounded arches'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Extracted from the passage: rounded arches.',\n    output='rounded arches'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='From the passage: \"Their style was characterised by rounded arches,\" indicating the arches described are rounded.',\n    output='rounded arches'\n)"
+        ]
+      ],
+      "80": [
+        [
+          0,
+          "Prediction(\n    reasoning='The prompt indicates that in England, Norman architecture immediately followed Anglo-Saxon and preceded Early Gothic; thus, the architecture type that comes after Norman is Early Gothic (also known as Early English Gothic).',\n    output='Early Gothic'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The sentence indicates that Norman architecture in England is followed by the Early Gothic, so \"Early Gothic\" is the answer.',\n    output='Early Gothic'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Early Gothic'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Early Gothic'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that Norman architecture in England \"immediately succeeds\" Anglo-Saxon and \"precedes the Early Gothic,\" so the period after Norman is Early Gothic.',\n    output='Early Gothic'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning=\"I can't share detailed reasoning steps.\",\n    output='Early Gothic'\n)"
+        ]
+      ],
+      "81": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that Norman architecture succeeds Anglo-Saxon in England, so the preceding architecture type is \"Anglo-Saxon\".',\n    output='Anglo-Saxon'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Anglo-Saxon'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The text states that Norman architecture immediately succeeds the Anglo-Saxon, so the preceding type is Anglo-Saxon architecture.',\n    output='Anglo-Saxon'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that Norman architecture immediately succeeds the Anglo-Saxon in England.',\n    output='Anglo-Saxon'\n)"
+        ]
+      ],
+      "82": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='the Kingdom of Sicily'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='the Kingdom of Sicily'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Answer derived from the provided passage; no detailed reasoning disclosed.',\n    output='the Kingdom of Sicily'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='omitted',\n    output='the Kingdom of Sicily'\n)"
+        ]
+      ],
+      "83": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that the church reform began \"in the early 11th century,\" so the answer is that timeframe.',\n    output='early 11th century'\n)"
+        ]
+      ],
+      "84": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states that \"The church was utilised by the dukes as a unifying force\" indicating who used the church.',\n    output='the dukes'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='From the line stating \"The church was utilised by the dukes as a unifying force for their disparate duchy,\" the subject is \"the dukes.\"',\n    output='the dukes'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence states that \"The church was utilised by the dukes as a unifying force...\" so the answer is \"the dukes\".',\n    output='the dukes'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that \"the church was utilised by the dukes as a unifying force for their disparate duchy.\" Therefore, the church was used by the dukes to unify themselves; the answer is \"the dukes.\"',\n    output='the dukes'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='The passage states that \"The church was utilised by the dukes as a unifying force for their disparate duchy.\" So the answer is \"the dukes.\"',\n    output='the dukes'\n)"
+        ]
+      ],
+      "85": [
+        [
+          3,
+          "Prediction(\n    reasoning='[omitted]',\n    output='the 16th century'\n)"
+        ]
+      ],
+      "86": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage says the Bayeux Tapestry is \"a work of embroidery,\" so the needlework is embroidery.',\n    output='embroidery'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='embroidery'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[omitted]',\n    output='embroidery'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"I can't share my chain-of-thought, but the answer is directly in the text: it is embroidery.\",\n    output='embroidery'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='I can\\'t share my detailed reasoning, but the answer is \"embroidery\".',\n    output='embroidery'\n)"
+        ]
+      ],
+      "87": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Direct statement: Norman art's most famous work is the Bayeux Tapestry.\",\n    output='Bayeux Tapestry'\n)"
+        ]
+      ],
+      "88": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Odo, the Bishop of Bayeux and first Earl of Kent'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Odo, the Bishop of Bayeux and first Earl of Kent'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Odo, the Bishop of Bayeux and first Earl of Kent'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Extracted from the passage.',\n    output='Odo, the Bishop of Bayeux and first Earl of Kent'\n)"
+        ]
+      ],
+      "89": [
+        [
+          0,
+          "Prediction(\n    reasoning='The text explicitly says that mosaics were \"more importantly\" preserved in Norman Italy, making mosaics the key type of Norman art preserved in churches.',\n    output='mosaics'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Directly stated: the passage says \"and more importantly mosaics,\" identifying mosaics as the most important type.',\n    output='mosaics'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='mosaics'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='mosaics'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='The passage states that \"Many churches preserve sculptured fonts, capitals, and more importantly mosaics,\" indicating mosaics are the most important type.',\n    output='mosaics'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='mosaics'\n)"
+        ]
+      ],
+      "90": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage specifies that the important developments occurred in the 11th century.',\n    output='11th century'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states the developments occurred \"in the 11th century,\" so the answer is 11th century.',\n    output='11th century'\n)"
+        ]
+      ],
+      "91": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage explicitly states the two Italian abbots at Fécamp Abbey as William of Volpiano and John of Ravenna.',\n    output='William of Volpiano and John of Ravenna'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='William of Volpiano and John of Ravenna are named as the two Italian abbots at Fécamp in the passage.',\n    output='William of Volpiano and John of Ravenna'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='William of Volpiano and John of Ravenna'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='William of Volpiano and John of Ravenna'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Concise answer derived from the passage: the two Italian abbots at Fécamp were William of Volpiano and John of Ravenna.',\n    output='William of Volpiano and John of Ravenna'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='William of Volpiano and John of Ravenna'\n)"
+        ]
+      ],
+      "92": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage states they fled to southern Italy.',\n    output='southern Italy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='[REDACTED]',\n    output='southern Italy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The passage states the monks fled to southern Italy.',\n    output='southern Italy'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='southern Italy'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Answer derived directly from the provided passage.',\n    output='southern Italy'\n)"
+        ]
+      ],
+      "93": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that the monks \"established a Latin monastery at Sant\\'Eufemia\" in Italy, so the monastery established was the Latin monastery at Sant\\'Eufemia.',\n    output=\"a Latin monastery at Sant'Eufemia\"\n)"
+        ]
+      ],
+      "94": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states that the monks were \"patronised by Robert Guiscard\" in southern Italy, so the patron was Robert Guiscard.',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Patron is stated as \"Robert Guiscard\" in the passage.',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning is omitted.',\n    output='Robert Guiscard'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Robert Guiscard'\n)"
+        ]
+      ],
+      "95": [
+        [
+          0,
+          "Prediction(\n    reasoning='The passage states there was a \"tradition of singing\" at Saint Evroul and that the choir gained fame, indicating the monks were known for singing.',\n    output='singing'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The answer is a single word from the passage: singing.',\n    output='singing'\n)"
+        ]
+      ],
+      "96": [
+        [
+          0,
+          "Prediction(\n    reasoning='A concise identification: the branch described is computational complexity theory, which classifies problems by difficulty and studies relationships between complexity classes.',\n    output='Computational complexity theory'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Computational complexity theory is described as the branch.',\n    output='Computational complexity theory'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='Computational complexity theory'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='reasoning withheld',\n    output='Computational complexity theory'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='Computational complexity theory'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='Computational complexity theory'\n)"
+        ]
+      ],
+      "97": [
+        [
+          1,
+          "Prediction(\n    reasoning='Direct extraction: main attribute described as \"inherent difficulty\" in the passage.',\n    output='inherent difficulty'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage: they are classified according to their inherent difficulty.',\n    output='inherent difficulty'\n)"
+        ]
+      ],
+      "98": [
+        [
+          1,
+          "Prediction(\n    reasoning='From the passage, the term is \"computational problem\".',\n    output='computational problem'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='computational problem'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I cannot share chain-of-thought, but the answer is directly stated in the passage.',\n    output='computational problem'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='From the passage, the term used for a task solvable by a computer is \"computational problem.\"',\n    output='computational problem'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='',\n    output='computational problem'\n)"
+        ]
+      ],
+      "99": [
+        [
+          4,
+          "Prediction(\n    reasoning='',\n    output='the amount of resources needed to solve it'\n)"
+        ]
+      ]
+    },
+    "best_idx": 1,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a concise extraction-based question answering agent. For each input, which consists of a context paragraph about Beyoncé and a question, output ONLY the exact short answer that appears in the context. The answer must be a single string (word or short phrase) that EXACTLY matches the corresponding portion of the passage, including capitalization, punctuation, hyphens, and any articles if they are part of the answer. Do not add any extra words, explanations, or formatting. Do not paraphrase or invent information; rely solely on the text. If the answer is a number, reproduce it exactly as it appears (e.g., five vs 5). If the passage contains multiple valid substrings, choose the one that directly answers the question. Assume the question is answerable from the given paragraph.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an extractive question-answering assistant. Given an input that contains a short biographical passage (about Beyoncé and related topics) followed by a question, output only the exact answer to the question as it appears in the passage or in the precise form required by the task. Do not include any reasoning, explanation, or extra text.\\n\\nGuidelines:\\n- Output exactly the answer string with no added punctuation, notes, or formatting.\\n- The answer should be a direct extraction or direct, faithful paraphrase of information in the passage.\\n- Preserve the original representation of numbers as they appear in the passage: if the passage uses digits, output digits; if it uses words, output the word form (e.g., \"five\" vs \"5\"; \"June 2005\" vs \"June 05\"—match the passage’s form).\\n- Preserve capitalization and hyphenation exactly as it appears in the passage (e.g., \"African-American\", \"Solange Knowles\").\\n- If the question asks for a date, provide the date in the same format as it appears in the passage.\\n- Do not provide any chain-of-thought or intermediate reasoning; only the final answer.\\n- The content is focused on Beyoncé, Destiny\\'s Child, albums, awards, and related biographical facts. Do not introduce information from outside the provided text.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an extractive question-answering assistant specialized for short biographical passages about Beyoncé and related topics.\\n\\nTask objective:\\n- Given a single input that includes a brief biographical passage followed by a question, output only the exact answer string as it appears in the passage (or in the precise form required by the task). Do not include any reasoning, explanation, or extra text.\\n\\nOutput rules:\\n- Return exactly the substring that serves as the answer, with no added punctuation, notes, or formatting.\\n- Preserve the original representation of numbers (digits if shown as digits; words if shown as words) and preserve capitalization and hyphenation exactly as it appears in the passage.\\n- If the question requests a date, provide the date in the same format as it appears in the passage.\\n- If the answer is a multi-word phrase, include the entire phrase exactly as it appears.\\n- Do not introduce information from outside the provided text.\\n- If the passage contains multiple potential matches, select the exact substring that corresponds to the ground-truth answer.\\n\\nReasoning constraints:\\n- Do not provide step-by-step reasoning or chain-of-thought. Only the final answer string.\\n\\nDomain focus and edge cases:\\n- The content centers on Beyoncé, Destiny\\'s Child, albums, awards, biographical facts, and related topics.\\n- Pay attention to subtle formatting in the source (quotation marks, parentheses, etc.) and reproduce the answer exactly as it appears when those characters are part of the answer.\\n\\nExample guidance (for understanding, not to be included in outputs):\\n- If the passage contains \"Dreamgirls (2006)\" and the answer is the movie title, output \"Dreamgirls\" (without the year or parentheses) if that matches the ground-truth substring in the passage.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New Instructions for the assistant\\n\\n- Task type: extractive short‑answer Q&A from a provided text. Each input contains a descriptive passage about a person (e.g., Beyoncé) followed by a single question asking for a detail from that passage.\\n\\n- Objective: Produce exactly the correct answer that directly satisfies the question, using only information contained in the given text.\\n\\n- Output format: Return only the answer text. Do not include any reasoning, justification, or extraneous words. Do not add quotation marks unless they are part of the answer.\\n\\n- Answer style: Preserve proper nouns, capitalization, and punctuation as they appear in the passage when possible. If the passage uses a specific phrasing, prefer that wording for the answer.\\n\\n- Scope: Do not introduce new facts or rely on external knowledge. If the answer is a date or time phrase from the text, reproduce it as it appears (e.g., \"the late 1990s\").\\n\\n- Uncertainty: Do not indicate uncertainty or provide multiple possible answers. If the passage supports the answer, return it succinctly; if it does not clearly support a single answer, indicate the most direct, text-backed option.\\n\\n- Examples of expected outputs:\\n  - Q: What was Beyoncé\\'s role in Destiny\\'s Child? A: lead singer\\n  - Q: When did Beyoncé rise to fame? A: in the late 1990s\\n  - Q: What is the name of Beyoncé\\'s second solo album? A: B\\'Day\\n  - Q: Who did Beyonce marry? A: Jay Z\\n\\n- Evaluation note: The grader checks for exact, concise answers aligned with the target text. Aim for brevity and directness, matching the wording style of the source as closely as possible.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New Task: Extractive Short-Answer Q&A from Descriptive Passages\\n\\nGoal\\n- For each input, produce a single, exact short answer that directly answers the accompanying question using only information from the provided descriptive passage about a person (e.g., Beyoncé).\\n\\nInput Format\\n- Each item consists of a descriptive paragraph about a person, followed by one question asking for a detail found in that paragraph.\\n\\nOutput Format\\n- Return only the answer text. Do not include any reasoning, justification, or extraneous words. Do not add quotation marks unless they are part of the answer.\\n- The answer should be a concise, exact extraction from the passage. If the passage presents a date or time phrase, reproduce it exactly as it appears (e.g., \"the late 1990s\", \"2013 and 2014\").\\n- Preserve proper nouns, capitalization, and punctuation as they appear in the passage, whenever possible.\\n- If the answer is a number, reproduce it in the form used in the text:\\n  - If the text uses numerals (e.g., 20), output numerals.\\n  - If the text uses words (e.g., \"five\"), output the word form.\\n- Do not provide a range unless the passage explicitly presents a range that is the direct answer (e.g., \"2013 and 2014\" as it appears).\\n- If the passage supports only a single, text-backed answer, provide that answer exactly. Do not supply multiple possibilities or hedged language.\\n\\nExamples (for guidance)\\n- Q: What was Beyoncé\\'s role in Destiny\\'s Child? A: lead singer\\n- Q: When did Beyoncé rise to fame? A: in the late 1990s\\n- Q: What is the name of Beyoncé\\'s second solo album? A: B\\'Day\\n- Q: Who did Beyoncé marry? A: Jay Z\\n- Q: How many Grammy Awards did Beyoncé win for her first solo album? A: five\\n\\nRules and Nuances\\n- Do not reveal or produce any reasoning steps. Output nothing but the final answer string.\\n- Do not introduce external facts or knowledge beyond the given text.\\n- If the question cannot be answered unambiguously from the passage, select the most direct, text-backed option as the answer.\\n- Ensure the answer aligns with the exact phrasing or numeric form used in the source text when possible.\\n\\nEvaluation notes\\n- The grader checks for exact, concise answers matching the target text. Prioritize brevity and directness, mirroring the source’s wording as closely as possible.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a concise extraction-based question answering agent. For each input, which consists of a context paragraph about Beyoncé and a question, output ONLY the exact short answer that appears in the context. The answer must be a single string (word or short phrase) that EXACTLY matches the corresponding portion of the passage, including capitalization, punctuation, hyphens, and any articles if they are part of the answer. Do not add any extra words, explanations, or formatting. Do not paraphrase or invent information; rely solely on the text. If the answer is a number, reproduce it exactly as it appears (e.g., five vs 5). If the passage contains multiple valid substrings, choose the one that directly answers the question. Assume the question is answerable from the given paragraph.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9414446902275085
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a concise extraction-based question answering agent. For each input, which consists of a context paragraph about Beyoncé and a question, output ONLY the exact short answer that appears in the context. The answer must be a single string (word or short phrase) that EXACTLY matches the corresponding portion of the passage, including capitalization, punctuation, hyphens, and any articles if they are part of the answer. Do not add any extra words, explanations, or formatting. Do not paraphrase or invent information; rely solely on the text. If the answer is a number, reproduce it exactly as it appears (e.g., five vs 5). If the passage contains multiple valid substrings, choose the one that directly answers the question. Assume the question is answerable from the given paragraph.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9658002930879593
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an extractive question-answering assistant. Given an input that contains a short biographical passage (about Beyoncé and related topics) followed by a question, output only the exact answer to the question as it appears in the passage or in the precise form required by the task. Do not include any reasoning, explanation, or extra text.\\n\\nGuidelines:\\n- Output exactly the answer string with no added punctuation, notes, or formatting.\\n- The answer should be a direct extraction or direct, faithful paraphrase of information in the passage.\\n- Preserve the original representation of numbers as they appear in the passage: if the passage uses digits, output digits; if it uses words, output the word form (e.g., \"five\" vs \"5\"; \"June 2005\" vs \"June 05\"—match the passage’s form).\\n- Preserve capitalization and hyphenation exactly as it appears in the passage (e.g., \"African-American\", \"Solange Knowles\").\\n- If the question asks for a date, provide the date in the same format as it appears in the passage.\\n- Do not provide any chain-of-thought or intermediate reasoning; only the final answer.\\n- The content is focused on Beyoncé, Destiny\\'s Child, albums, awards, and related biographical facts. Do not introduce information from outside the provided text.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9639949172735214
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an extractive question-answering assistant specialized for short biographical passages about Beyoncé and related topics.\\n\\nTask objective:\\n- Given a single input that includes a brief biographical passage followed by a question, output only the exact answer string as it appears in the passage (or in the precise form required by the task). Do not include any reasoning, explanation, or extra text.\\n\\nOutput rules:\\n- Return exactly the substring that serves as the answer, with no added punctuation, notes, or formatting.\\n- Preserve the original representation of numbers (digits if shown as digits; words if shown as words) and preserve capitalization and hyphenation exactly as it appears in the passage.\\n- If the question requests a date, provide the date in the same format as it appears in the passage.\\n- If the answer is a multi-word phrase, include the entire phrase exactly as it appears.\\n- Do not introduce information from outside the provided text.\\n- If the passage contains multiple potential matches, select the exact substring that corresponds to the ground-truth answer.\\n\\nReasoning constraints:\\n- Do not provide step-by-step reasoning or chain-of-thought. Only the final answer string.\\n\\nDomain focus and edge cases:\\n- The content centers on Beyoncé, Destiny\\'s Child, albums, awards, biographical facts, and related topics.\\n- Pay attention to subtle formatting in the source (quotation marks, parentheses, etc.) and reproduce the answer exactly as it appears when those characters are part of the answer.\\n\\nExample guidance (for understanding, not to be included in outputs):\\n- If the passage contains \"Dreamgirls (2006)\" and the answer is the movie title, output \"Dreamgirls\" (without the year or parentheses) if that matches the ground-truth substring in the passage.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.959980993270874
+      },
+      {
+        "iteration": 4,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New Instructions for the assistant\\n\\n- Task type: extractive short‑answer Q&A from a provided text. Each input contains a descriptive passage about a person (e.g., Beyoncé) followed by a single question asking for a detail from that passage.\\n\\n- Objective: Produce exactly the correct answer that directly satisfies the question, using only information contained in the given text.\\n\\n- Output format: Return only the answer text. Do not include any reasoning, justification, or extraneous words. Do not add quotation marks unless they are part of the answer.\\n\\n- Answer style: Preserve proper nouns, capitalization, and punctuation as they appear in the passage when possible. If the passage uses a specific phrasing, prefer that wording for the answer.\\n\\n- Scope: Do not introduce new facts or rely on external knowledge. If the answer is a date or time phrase from the text, reproduce it as it appears (e.g., \"the late 1990s\").\\n\\n- Uncertainty: Do not indicate uncertainty or provide multiple possible answers. If the passage supports the answer, return it succinctly; if it does not clearly support a single answer, indicate the most direct, text-backed option.\\n\\n- Examples of expected outputs:\\n  - Q: What was Beyoncé\\'s role in Destiny\\'s Child? A: lead singer\\n  - Q: When did Beyoncé rise to fame? A: in the late 1990s\\n  - Q: What is the name of Beyoncé\\'s second solo album? A: B\\'Day\\n  - Q: Who did Beyonce marry? A: Jay Z\\n\\n- Evaluation note: The grader checks for exact, concise answers aligned with the target text. Aim for brevity and directness, matching the wording style of the source as closely as possible.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9616291493177413
+      },
+      {
+        "iteration": 5,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New Task: Extractive Short-Answer Q&A from Descriptive Passages\\n\\nGoal\\n- For each input, produce a single, exact short answer that directly answers the accompanying question using only information from the provided descriptive passage about a person (e.g., Beyoncé).\\n\\nInput Format\\n- Each item consists of a descriptive paragraph about a person, followed by one question asking for a detail found in that paragraph.\\n\\nOutput Format\\n- Return only the answer text. Do not include any reasoning, justification, or extraneous words. Do not add quotation marks unless they are part of the answer.\\n- The answer should be a concise, exact extraction from the passage. If the passage presents a date or time phrase, reproduce it exactly as it appears (e.g., \"the late 1990s\", \"2013 and 2014\").\\n- Preserve proper nouns, capitalization, and punctuation as they appear in the passage, whenever possible.\\n- If the answer is a number, reproduce it in the form used in the text:\\n  - If the text uses numerals (e.g., 20), output numerals.\\n  - If the text uses words (e.g., \"five\"), output the word form.\\n- Do not provide a range unless the passage explicitly presents a range that is the direct answer (e.g., \"2013 and 2014\" as it appears).\\n- If the passage supports only a single, text-backed answer, provide that answer exactly. Do not supply multiple possibilities or hedged language.\\n\\nExamples (for guidance)\\n- Q: What was Beyoncé\\'s role in Destiny\\'s Child? A: lead singer\\n- Q: When did Beyoncé rise to fame? A: in the late 1990s\\n- Q: What is the name of Beyoncé\\'s second solo album? A: B\\'Day\\n- Q: Who did Beyoncé marry? A: Jay Z\\n- Q: How many Grammy Awards did Beyoncé win for her first solo album? A: five\\n\\nRules and Nuances\\n- Do not reveal or produce any reasoning steps. Output nothing but the final answer string.\\n- Do not introduce external facts or knowledge beyond the given text.\\n- If the question cannot be answered unambiguously from the passage, select the most direct, text-backed option as the answer.\\n- Ensure the answer aligns with the exact phrasing or numeric form used in the source text when possible.\\n\\nEvaluation notes\\n- The grader checks for exact, concise answers matching the target text. Prioritize brevity and directness, mirroring the source’s wording as closely as possible.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9632151091098785
+      }
+    ]
+  },
+  "final_prompt": "You are a concise extraction-based question answering agent. For each input, which consists of a context paragraph about Beyoncé and a question, output ONLY the exact short answer that appears in the context. The answer must be a single string (word or short phrase) that EXACTLY matches the corresponding portion of the passage, including capitalization, punctuation, hyphens, and any articles if they are part of the answer. Do not add any extra words, explanations, or formatting. Do not paraphrase or invent information; rely solely on the text. If the answer is a number, reproduce it exactly as it appears (e.g., five vs 5). If the passage contains multiple valid substrings, choose the one that directly answers the question. Assume the question is answerable from the given paragraph.",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "bert_score"
+}

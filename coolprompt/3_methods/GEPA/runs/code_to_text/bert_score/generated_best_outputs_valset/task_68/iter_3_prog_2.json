@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function attempts to cast its input to a float; if successful it returns the float, otherwise it returns the original value unchanged.",
+    "output": "Return the input as a float when possible, otherwise return the input unchanged.\n\nArguments:\n    s (<type>): value to be converted to a float if possible; if conversion fails, the original value is returned.\n\nReturns:\n    ret (<type>): the converted float when possible; otherwise the original input value."
+}

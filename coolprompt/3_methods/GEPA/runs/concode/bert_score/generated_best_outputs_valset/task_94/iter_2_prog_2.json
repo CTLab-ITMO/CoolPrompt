@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "return getUserGroups(user);"
+}

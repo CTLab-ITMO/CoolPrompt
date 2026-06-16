@@ -1,0 +1,4 @@
+{
+    "reasoning": "Construct a Node and invoke the sequence described by the input: stripWhitespace, getAttributes, normalizeWhitespace, normalize, getQName, and handleWsRec, while also introducing a SPACE character as a literal, reflecting the concode_field_sep and concode_elem_sep tokens.",
+    "output": "void function ( ) {\n  Node loc0 = new Node();\n  loc0.stripWhitespace();\n  Map<QName,String> loc1 = loc0.getAttributes();\n  loc0.normalizeWhitespace();\n  String loc2 = loc0.normalize();\n  QName loc3 = loc0.getQName();\n  loc0.handleWsRec();\n  char SPACE = ' ';\n}"
+}

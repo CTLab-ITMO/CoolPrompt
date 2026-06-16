@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a small, deterministic Java-like function named function that reflects a GC-testing sequence. Use locals named loc0, loc1, loc2, and a boolean isDone to mirror the typical pattern seen in the gold targets. The body should call createUnreachableLatchFinalizer, then perform a couple of awaits (awaitDone, awaitClear) to simulate waiting for GC finalization and clearing, while introducing a timeout placeholder. Keep the structure tight and self-contained without extra classes or imports.",
+    "output": "void function ( ) {\n    long loc0 = 0L;\n    Long[] loc1 = new Long[] { 0L };\n    TimeIntervalParser loc2 = new TimeIntervalParser();\n    boolean isDone = false;\n    createUnreachableLatchFinalizer();\n    long timeoutSeconds = 5;\n    loc0 = timeoutSeconds;\n    awaitDone();\n    awaitClear();\n}"
+}

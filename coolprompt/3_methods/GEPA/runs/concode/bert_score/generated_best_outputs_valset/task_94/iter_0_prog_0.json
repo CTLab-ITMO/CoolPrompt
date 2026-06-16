@@ -1,0 +1,4 @@
+{
+    "reasoning": "The prompt asks for \"returns list of groups for a user\" but provides only placeholders rather than a real user ID or group data. I\u2019ll supply a generic, templated response with placeholders so it can be filled in later by actual data.",
+    "output": "{\n  \"userId\": \"<PlaceHolder>\",\n  \"groups\": [],\n  \"count\": 0\n}"
+}

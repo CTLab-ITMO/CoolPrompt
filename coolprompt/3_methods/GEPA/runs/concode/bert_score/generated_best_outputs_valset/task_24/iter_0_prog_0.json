@@ -1,0 +1,4 @@
+{
+    "reasoning": "I interpret the request as extracting and presenting the hover information for the standard attribute resolver object by listing its members and their types in a clean, readable format. I\u2019ll consolidate the given entries into a concise set of unique members with their associated types.",
+    "output": "- NamespaceHandler nsh\n- UserInterface ui\n- UserAgentCallback uac\n- String getClass()\n- boolean isLink()\n- String getAttributeValue()\n- boolean isVisited()\n- boolean isFocus()\n- String getLang()\n- String getID()\n- String getNonCssStyling()\n- String getElementStyling()\n- boolean isActive()"
+}

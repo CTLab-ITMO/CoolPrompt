@@ -1,0 +1,4 @@
+{
+    "reasoning": "We implement a compact, deterministic function that mirrors a parse-and-assert pattern using loc0, loc1, loc2, loc3 locals. It creates a TimeIntervalParser, parses two field names, asserts the first parsed value is zero, then performs simple assignments to reflect a minimal operation consistent with the input\u2019s getters/setters style.",
+    "output": "void function ( ) {\n  TimeIntervalParser loc0 = new TimeIntervalParser();\n  long[] loc1 = loc0.parse(\"startDate\", \"endDate\");\n  assertEquals(0L, loc1[0]);\n  long loc2 = loc1[0];\n  byte[] loc3 = new byte[] { 0, 0, 0 };\n  loc3[2] = (byte) 7;\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input contains a field declaration for a list of AttributeStatementProvider objects, named attributeStatementProviders. The request is to get the list corresponding to AttributeStatementProviders, which matches this field name.",
+    "output": "attributeStatementProviders"
+}

@@ -1,0 +1,204 @@
+{
+  "examples": [
+    {
+      "input": "“Worry is a down payment on a problem you may never have'.  Joyce Meyer.  #motivation #leadership #worry",
+      "target": "optimism"
+    },
+    {
+      "input": "My roommate: it's okay that we can't spell because we have autocorrect. #terrible #firstworldprobs",
+      "target": "anger"
+    },
+    {
+      "input": "No but that's so cute. Atsu was probably shy about photos before but cherry helped her out uwu",
+      "target": "joy"
+    },
+    {
+      "input": "Rooneys fucking untouchable isn't he? Been fucking dreadful again, depay has looked decent(ish)tonight",
+      "target": "anger"
+    },
+    {
+      "input": "it's pretty depressing when u hit pan on ur favourite highlighter",
+      "target": "sadness"
+    },
+    {
+      "input": "@user but your pussy was weak from what I heard so stfu up to me bitch . You got to threaten him that your pregnant .",
+      "target": "anger"
+    },
+    {
+      "input": "Making that yearly transition from excited and hopeful college returner to sick and exhausted pessimist. #college",
+      "target": "sadness"
+    },
+    {
+      "input": "Tiller and breezy should do a collab album. Rapping and singing prolly be fire",
+      "target": "joy"
+    },
+    {
+      "input": "@user broadband is shocking regretting signing up now #angry #shouldofgonewithvirgin",
+      "target": "anger"
+    },
+    {
+      "input": "@user Look at those teef! #growl",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user USA was embarrassing to watch. When was the last time you guys won a game..? #horrible #joke",
+      "target": "anger"
+    },
+    {
+      "input": "#NewYork: Several #Baloch &amp; Indian activists hold demonstrations outside @user headquarters demanding Pak to stop exporting #terror into India",
+      "target": "sadness"
+    },
+    {
+      "input": "Your glee filled Normy dry humping of the most recent high profile celebrity break up is pathetic &amp; all that is wrong with the world today.",
+      "target": "anger"
+    },
+    {
+      "input": "What a fucking muppet.  @user  #stalker.",
+      "target": "anger"
+    },
+    {
+      "input": "Autocorrect changes ''em' to 'me' which I resent greatly",
+      "target": "anger"
+    },
+    {
+      "input": "@user I would never strategically vote for someone I don't agree with. A lot of the Clinton vote based on fear and negativity.",
+      "target": "anger"
+    },
+    {
+      "input": "@user Haters!!! You are low in self worth. Self righteous in your delusions. You cower at the thought of change. Change is inevitable.",
+      "target": "anger"
+    },
+    {
+      "input": "I saved him after ordering him to risk his life. I didn't panic but stayed calm and rescued him.",
+      "target": "optimism"
+    },
+    {
+      "input": "@user Uggh that's really horrible. You're not a bad person by any stretch of the imagination. I hope this person realizes that.",
+      "target": "optimism"
+    },
+    {
+      "input": "@user @user @user Tamra would F her up if she swung on Tamra\\nKelly is a piece of 💩 #needstobeadmitted #bully",
+      "target": "anger"
+    },
+    {
+      "input": "Love is when all your happiness and all your sadness and all your feelings are dependent on another person.",
+      "target": "optimism"
+    },
+    {
+      "input": "It’s possible changing meds is best not done while under stress. Difficult to tell what part of despair is circumstantial, what is drugs.",
+      "target": "sadness"
+    },
+    {
+      "input": "im also definitely still bitter about the yellow ranger not being asian, but asian representation in hollywood is essentially a shrug anyway",
+      "target": "anger"
+    },
+    {
+      "input": "@user The irony is that those protesting about this kind of stuff are the Orwellian nightmare they think they’re fighting against.",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user nah way that's horrible",
+      "target": "anger"
+    },
+    {
+      "input": "@user I think just becz u have so much terror in pak nd urself being  a leader u forgot d difference btw a leader nd terrorist !",
+      "target": "anger"
+    },
+    {
+      "input": "angel delight is my everything",
+      "target": "joy"
+    },
+    {
+      "input": "Puzzle investing opening portland feodal population is correlative straight a snorting infuriate: XLzjYhG",
+      "target": "anger"
+    },
+    {
+      "input": "I believe I'm gonna start singing in my snap stories on the tractor. Switch it up a little bit.",
+      "target": "joy"
+    },
+    {
+      "input": "I have a rage rage ep 2 coming out soon I'll keep you posted on it #YouTube #youtubegaming #rage",
+      "target": "anger"
+    },
+    {
+      "input": "Why have I only just started watching glee this week I am now addicted 🙄 #glee #GLEEK",
+      "target": "joy"
+    },
+    {
+      "input": "Jorge deserves it, honestly. He's weak.  #90dayfiance",
+      "target": "anger"
+    },
+    {
+      "input": "@user 'shit' doesn't even begin to describe these fiery little demons straight from hell 🌝🌚 ;)",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user ditto!! Such an amazing atmosphere! #PhilippPlein #cheerleaders #stunt #LondonEvents #cheer",
+      "target": "joy"
+    },
+    {
+      "input": "Interview preparation, I hate talking about myself, one dull subject matter! #yawnoff",
+      "target": "anger"
+    },
+    {
+      "input": "Manchester derby at home",
+      "target": "joy"
+    },
+    {
+      "input": "It'd probably be useful to more than women, but I'm dealing with re-reading an article about a woman being harassed on the subway. #concern",
+      "target": "anger"
+    },
+    {
+      "input": "her; i want a playful relationship\\nme; *kicks her off the couch*",
+      "target": "joy"
+    },
+    {
+      "input": "Romero is fucking dreadful like seriously my 11 month old is better than him.",
+      "target": "anger"
+    },
+    {
+      "input": "@user It’s taken for granted, while the misogyny in the air is treated as normal — and any angry response to it as pathological.",
+      "target": "anger"
+    },
+    {
+      "input": "@user oh I see. I've seen so many people mourn the loss that I was surprised to see your tweet. I suppose same old here in SA",
+      "target": "sadness"
+    },
+    {
+      "input": "so gutted i dropped one of my earrings down the sink at school",
+      "target": "sadness"
+    },
+    {
+      "input": "Happy birthday to Stephen King, a man responsible for some of the best horror of the past 40 years... and a whole bunch of the worst.",
+      "target": "joy"
+    },
+    {
+      "input": "“ My courage always rises at every attempt to intimidate me.”\\n-Elizabeth Bennett (Pride and Prejudice)\\n#Quotes #Courage #FaceYourFears",
+      "target": "optimism"
+    },
+    {
+      "input": "It's a good day at work when you get to shake Jim Lehrer's hand. Thanks, @user Still kicking myself for being to shy to hug @user",
+      "target": "joy"
+    },
+    {
+      "input": "I'm so bored and fat and full and ridiculously overweight and rolls galore",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Flirt, simper, pout, repeat. Yuck.",
+      "target": "anger"
+    },
+    {
+      "input": "Trumpism likewise rests on a bed of racial resentment that was made knowingly and intentionally, long before Trump got into politics.",
+      "target": "anger"
+    },
+    {
+      "input": "There's this Bpharm4 guy Eish that guy brings anger into my life. When I see him nje like darkness fills me @user will know",
+      "target": "anger"
+    },
+    {
+      "input": "Tears and eyes can dry but I won't, I'm burning like the wire in a lightbulb",
+      "target": "anger"
+    }
+  ]
+}

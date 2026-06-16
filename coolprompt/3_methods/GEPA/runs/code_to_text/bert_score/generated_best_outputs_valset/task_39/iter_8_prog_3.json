@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-like block describing the function's interface and behavior without altering the code.",
+    "output": "\"\"\"\nRetrieve the Compute Engine instance resource for the given instance.\n\nArguments:\n    instance (str): The name or ID of the instance to retrieve.\n        - required\n        - type: str\n    project_id (str, optional): The Google Cloud project ID. If omitted, the default project from the client configuration is used.\n        - default: None\n        - type: str\n\nReturns:\n    dict: The Compute Engine instance resource (as returned by the API) representing the instance.\n\nRaises:\n    HttpError: if the API request fails (e.g., the instance is not found or insufficient permissions).\n\"\"\""
+}

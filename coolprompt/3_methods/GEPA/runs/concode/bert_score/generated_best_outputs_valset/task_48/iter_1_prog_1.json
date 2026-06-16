@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a minimal deterministic function that uses four local variables named loc0, loc1, loc2, and loc3 to reflect the input tokens, performing a tiny deterministic operation and avoiding external dependencies.",
+    "output": "void function ( ) {\n    String loc0 = \"concode_field_sep\";\n    String loc1 = \"concode_elem_sep\";\n    int loc2 = 0;\n    boolean loc3 = true;\n    if (loc3) {\n        loc2 = 42;\n    } else {\n        loc2 = -1;\n    }\n    String tmp = loc0 + loc1;\n}"
+}

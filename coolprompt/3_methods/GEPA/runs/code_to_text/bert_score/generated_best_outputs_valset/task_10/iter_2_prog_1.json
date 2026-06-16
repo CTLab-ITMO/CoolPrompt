@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Generate the video URL for the given video ID.\n\nArguments:\n * video_id (str): The identifier of the video to embed in the URL.\n\nReturns:\n - :class:`str` - The generated video URL as a string. The URL contains a dynamic signature parameter 's' produced by an obfuscated routine and may be retried with a new random seed until the 's' parameter is non-negative."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Return the maximum value of a specified partition field from a Hive table.\n\nArguments:\n * table (str): Table name or ``schema.table``; if a dot is present in the value, the string is split into ``schema`` and ``table`` and those components are used accordingly.\n * schema (str): Default is ``default``. The Hive database/schema to use; overridden if ``table`` contains a dot.\n * field (str): The partition field to compute the maximum over.\n * filter_map (dict): Optional mapping of partition metadata used to filter partitions before computing the maximum.\n * metastore_conn_id (str): Airflow connection id for the Hive Metastore; defaults to ``'metastore_default'``.\n\nReturns:\n The maximum value of the specified partition field for the given table and schema, as determined by the Hive Metastore. If no partitions match, returns ``None``. The value type depends on the partition field."
+}

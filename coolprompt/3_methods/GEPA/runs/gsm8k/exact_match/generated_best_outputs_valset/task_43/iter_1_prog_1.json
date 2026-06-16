@@ -1,0 +1,4 @@
+{
+    "reasoning": "Calories per bag = 5 \u00d7 250 = 1250 cal for 300 g. Calories per gram = 1250/300 \u2248 4.1667 cal/g. Remaining calories = 200. Grams allowed = 200 / (1250/300) = 200 \u00d7 300 / 1250 = 48 g.",
+    "output": "48"
+}

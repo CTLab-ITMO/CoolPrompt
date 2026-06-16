@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a single Java-like function with a deterministic sequence of local variable declarations using loc0..loc14 to reflect the described fields from the input. No behavior beyond declarations to satisfy the required structure.",
+    "output": "void function ( ) {\n  Transaction loc0 = null;\n  TableInfo loc1 = null;\n  int loc2 = 0;\n  Scan loc3 = null;\n  int loc4 = 0;\n  int loc5 = 0;\n  Scan loc6 = null;\n  Scan loc7 = null;\n  boolean loc8 = false;\n  int loc9 = 0;\n  Constant loc10 = null;\n  boolean loc11 = false;\n  boolean loc12 = false;\n  String loc13 = \"\";\n  boolean loc14 = false;\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated a compact Java-like function that models the described operation: it declares loc0 as a List<ECKey>, loc1 as a Script, loc2 and loc3 as RedeemData arrays, then iterates loc0 to find the first key with private bytes (hasPrivKey) and asserts that such a key exists. The structure mirrors the loc0/loc1/loc2/loc3 pattern typical of the target style.",
+    "output": "``` \nvoid function ( ) {\n    List<ECKey> loc0 = new ArrayList<ECKey>();\n    Script loc1 = new Script(new byte[] { });\n    RedeemData[] loc2 = new RedeemData[] { new RedeemData(), new RedeemData() };\n    RedeemData[] loc3 = new RedeemData[] { new RedeemData() };\n\n    ECKey firstWithPrivate = null;\n    for (ECKey k : loc0) {\n        if (k.hasPrivKey()) {\n            firstWithPrivate = k;\n            break;\n        }\n    }\n    boolean ok = firstWithPrivate != null;\n    assertEquals(true, ok);\n}\n```"
+}

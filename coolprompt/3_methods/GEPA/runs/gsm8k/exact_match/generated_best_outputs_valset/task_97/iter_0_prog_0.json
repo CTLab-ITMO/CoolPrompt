@@ -1,0 +1,4 @@
+{
+    "reasoning": "Each 16 oz can yields 8 oz of sauce after cooking (volume halves). To make 32 oz, she used 4 cans (4 \u00d7 8 = 32). Each can has 3 tomatoes, so 4 cans \u00d7 3 tomatoes = 12 tomatoes.",
+    "output": "12"
+}

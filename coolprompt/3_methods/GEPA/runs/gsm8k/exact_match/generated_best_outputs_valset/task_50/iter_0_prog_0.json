@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute weekly eggs: 252 \u00d7 7 = 1764 eggs. Price per egg: $2 per 12 eggs \u2192 $2/12 = $1/6 per egg. Revenue: 1764 \u00d7 (1/6) = 294 dollars. So $294 per week.",
+    "output": "$294 per week"
+}

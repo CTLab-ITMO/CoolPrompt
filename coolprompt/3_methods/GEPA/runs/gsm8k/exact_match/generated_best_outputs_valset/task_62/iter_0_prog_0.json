@@ -1,0 +1,4 @@
+{
+    "reasoning": "At 40 years the pension value is $50,000/year. For years beyond 20, she accrues 5% of the final pension value per year. From year 21 to 30 is 10 years, so entitlement = 10 \u00d7 5% = 50% of the final value. Therefore annual pension at 30 years = 0.50 \u00d7 $50,000 = $25,000/year.",
+    "output": "$25,000/year"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let dogs = 60. Cats are two per dog, so cats = 2 * 60 = 120. Combined dogs + cats = 60 + 120 = 180. Rabbits = 180 - 12 = 168. Total pets = 60 + 120 + 168 = 348.",
+    "output": "348"
+}

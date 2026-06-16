@@ -1,0 +1,4 @@
+{
+    "reasoning": "I generated a compact, deterministic Java-like snippet that uses the required loc0..loc3 locals and a minimal set of operations, mirroring the typical parse/assert style used in the gold targets but without introducing external dependencies. The code performs straightforward string handling and length calculation, followed by two simple asserts to reflect typical validation patterns.",
+    "output": "```java\nvoid function ( ) {\n  String loc0 = \"abcd\";\n  long loc1 = 123L;\n  String loc2 = loc0;\n  int loc3 = loc2.length();\n  assertEquals(4, loc3);\n  assertEquals(123L, loc1);\n}\n```"
+}

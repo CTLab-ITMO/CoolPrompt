@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated a concise, present-tense docstring describing the function's purpose (clearing DagRun records for DAG IDs) and its behavior (deleting each DagRun and logging).",
+    "output": "\"\"\"\nClear all DagRun records for DAGs listed in DAG_IDS.\n\nDeletes all DagRun records for the DAG IDs listed in DAG_IDS from the database using the current session, and logs each deletion via logging.info.\n\"\"\""
+}

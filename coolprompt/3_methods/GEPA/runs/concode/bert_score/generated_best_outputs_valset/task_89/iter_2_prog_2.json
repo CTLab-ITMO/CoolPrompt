@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a method that returns the acknowledgementInterval as primitive milliseconds, defaulting to 0 if null.",
+    "output": "long getAcknowledgementIntervalTime() {\n    return acknowledgementInterval == null ? 0L : acknowledgementInterval.longValue();\n}"
+}

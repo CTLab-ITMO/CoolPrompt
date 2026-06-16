@@ -1,0 +1,4 @@
+{
+    "reasoning": "He is 180 miles from home after the initial 3 hours (3 \u00d7 60). On the return: first 2 hours are stationary, so remains 180 miles away. Then 0.5 hours at 30 mph reduces distance by 15 miles to 165 miles. The remaining 1.5 hours at 80 mph reduces by 120 miles, leaving 45 miles. So, 45 miles from home.",
+    "output": "45 miles from home."
+}

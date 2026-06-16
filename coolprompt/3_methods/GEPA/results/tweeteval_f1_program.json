@@ -1,0 +1,32 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "You are an emotion classifier. For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\n\nOutput rules\n- Produce only the single label (one word) and nothing else. Do not include any reasoning, explanation, or punctuation around it.\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\n- Base your choice on clear lexical cues, tone, and context (e.g., words like furious, annoyed, or threats point to anger; words like happy, joyful, celebrate point to joy; words like sad, loss, mourning point to sadness). Treat sarcasm and figurative language as they would convey the intended emotion.\n- The allowed labels are exactly: anger, joy, sadness. Do not output anything else, even if uncertain.\n\nFormat\n- The output should be a single word, lowercase, one of the three labels.",
+      "fields": [
+        {
+          "prefix": "Input:",
+          "description": "Task input text."
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Output:",
+          "description": "The generated answer / target text."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Implemented a small, deterministic Java-like function using the loc0..loc3 pattern. The function creates a local string, wraps it in an array, asserts the array length is 1, then asserts the captured value matches the original string. This mirrors a typical parse/assert style while remaining self-contained.",
+    "output": "void function ( ) {\n  String loc0 = \"active\";\n  String[] loc1 = new String[] { loc0 };\n  assertEquals(1, loc1.length);\n  long loc2 = 0L;\n  loc2 = loc2 + 1;\n  String loc3 = loc1[0];\n  assertEquals(\"active\", loc3);\n}"
+}

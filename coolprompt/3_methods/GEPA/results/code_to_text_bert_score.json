@@ -1,0 +1,1325 @@
+{
+  "dataset": "code_to_text",
+  "metric": "bert_score",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "bert_score"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.8182956701517106,
+      0.828228520154953,
+      0.8423396807909012,
+      0.8389320540428161,
+      0.8444389313459396,
+      0.8375070011615753
+    ],
+    "val_subscores": [
+      {
+        "0": 0.8236221671104431,
+        "1": 0.7680193185806274,
+        "2": 0.8159141540527344,
+        "3": 0.7856377959251404,
+        "4": 0.8004745841026306,
+        "5": 0.8637010455131531,
+        "6": 0.8323704600334167,
+        "7": 0.7614486217498779,
+        "8": 0.7624021172523499,
+        "9": 0.8006905317306519,
+        "10": 0.7999538779258728,
+        "11": 0.8147005438804626,
+        "12": 0.8108021020889282,
+        "13": 0.8313072919845581,
+        "14": 0.7613345980644226,
+        "15": 0.8037052154541016,
+        "16": 0.8609610795974731,
+        "17": 0.8639417290687561,
+        "18": 0.8179770112037659,
+        "19": 0.8087708950042725,
+        "20": 0.7917736172676086,
+        "21": 0.8034817576408386,
+        "22": 0.7982456684112549,
+        "23": 0.7929303050041199,
+        "24": 0.8077300786972046,
+        "25": 0.8718045949935913,
+        "26": 0.8220488429069519,
+        "27": 0.7828369140625,
+        "28": 0.847613513469696,
+        "29": 0.8097711205482483,
+        "30": 0.8670722246170044,
+        "31": 0.8370186686515808,
+        "32": 0.8434309959411621,
+        "33": 0.7853726148605347,
+        "34": 0.8341825604438782,
+        "35": 0.7813535332679749,
+        "36": 0.8331562876701355,
+        "37": 0.8376597762107849,
+        "38": 0.8728064298629761,
+        "39": 0.8590326905250549,
+        "40": 0.8657178282737732,
+        "41": 0.8679758310317993,
+        "42": 0.8741118311882019,
+        "43": 0.8756597638130188,
+        "44": 0.7817240357398987,
+        "45": 0.8075946569442749,
+        "46": 0.8710611462593079,
+        "47": 0.8646577596664429,
+        "48": 0.8207093477249146,
+        "49": 0.8168492913246155,
+        "50": 0.8439522385597229,
+        "51": 0.8376553654670715,
+        "52": 0.855597972869873,
+        "53": 0.7658463716506958,
+        "54": 0.7962255477905273,
+        "55": 0.8272758722305298,
+        "56": 0.8388612866401672,
+        "57": 0.8391351103782654,
+        "58": 0.8362963199615479,
+        "59": 0.7963602542877197,
+        "60": 0.767585039138794,
+        "61": 0.7554635405540466,
+        "62": 0.839530885219574,
+        "63": 0.8124357461929321,
+        "64": 0.7981177568435669,
+        "65": 0.78188556432724,
+        "66": 0.8047195672988892,
+        "67": 0.842940628528595,
+        "68": 0.8236385583877563,
+        "69": 0.817847490310669,
+        "70": 0.8185667395591736,
+        "71": 0.8380844593048096,
+        "72": 0.780833899974823,
+        "73": 0.8246133923530579,
+        "74": 0.7971601486206055,
+        "75": 0.8028960824012756,
+        "76": 0.846736490726471,
+        "77": 0.7717828154563904,
+        "78": 0.8299697637557983,
+        "79": 0.8372509479522705,
+        "80": 0.8121252059936523,
+        "81": 0.827931821346283,
+        "82": 0.8637025952339172,
+        "83": 0.7670503854751587,
+        "84": 0.8677101135253906,
+        "85": 0.789753258228302,
+        "86": 0.8577141165733337,
+        "87": 0.8384726643562317,
+        "88": 0.7813189625740051,
+        "89": 0.7828741073608398,
+        "90": 0.7761300802230835,
+        "91": 0.8659391403198242,
+        "92": 0.8599693179130554,
+        "93": 0.8061422109603882,
+        "94": 0.7390464544296265,
+        "95": 0.7743455171585083,
+        "96": 0.891834557056427,
+        "97": 0.8111047148704529,
+        "98": 0.7870742082595825,
+        "99": 0.7869428992271423
+      },
+      {
+        "0": 0.8048058748245239,
+        "1": 0.82392817735672,
+        "2": 0.8235863447189331,
+        "3": 0.8359051942825317,
+        "4": 0.8735490441322327,
+        "5": 0.8350625038146973,
+        "6": 0.8065973520278931,
+        "7": 0.8330427408218384,
+        "8": 0.7721537947654724,
+        "9": 0.8221907019615173,
+        "10": 0.8193532228469849,
+        "11": 0.7878707647323608,
+        "12": 0.8433491587638855,
+        "13": 0.8211847543716431,
+        "14": 0.7793104648590088,
+        "15": 0.8139708042144775,
+        "16": 0.8332080245018005,
+        "17": 0.8469452857971191,
+        "18": 0.8380729556083679,
+        "19": 0.8192318081855774,
+        "20": 0.8094837665557861,
+        "21": 0.7942918539047241,
+        "22": 0.7907633185386658,
+        "23": 0.7940284013748169,
+        "24": 0.7792064547538757,
+        "25": 0.8359155058860779,
+        "26": 0.8220396637916565,
+        "27": 0.855392575263977,
+        "28": 0.8109899759292603,
+        "29": 0.7930029034614563,
+        "30": 0.8239890336990356,
+        "31": 0.8432453274726868,
+        "32": 0.8892992734909058,
+        "33": 0.8000745177268982,
+        "34": 0.8804198503494263,
+        "35": 0.8424697518348694,
+        "36": 0.7894447445869446,
+        "37": 0.7983503341674805,
+        "38": 0.8131815195083618,
+        "39": 0.8347285389900208,
+        "40": 0.830131471157074,
+        "41": 0.8318175077438354,
+        "42": 0.838556706905365,
+        "43": 0.8167711496353149,
+        "44": 0.8209133744239807,
+        "45": 0.8141698241233826,
+        "46": 0.8341842293739319,
+        "47": 0.8112308382987976,
+        "48": 0.834739625453949,
+        "49": 0.8272275328636169,
+        "50": 0.8319038152694702,
+        "51": 0.8005638122558594,
+        "52": 0.7764562368392944,
+        "53": 0.794376790523529,
+        "54": 0.8774310350418091,
+        "55": 0.8175676465034485,
+        "56": 0.8957721590995789,
+        "57": 0.8405964374542236,
+        "58": 0.819316029548645,
+        "59": 0.8542140126228333,
+        "60": 0.8693251609802246,
+        "61": 0.8961068391799927,
+        "62": 0.8627920150756836,
+        "63": 0.7890385985374451,
+        "64": 0.8329455256462097,
+        "65": 0.868256151676178,
+        "66": 0.8024017810821533,
+        "67": 0.8551998138427734,
+        "68": 0.832653284072876,
+        "69": 0.8199026584625244,
+        "70": 0.8286466598510742,
+        "71": 0.824783980846405,
+        "72": 0.8588432669639587,
+        "73": 0.8102057576179504,
+        "74": 0.7941713929176331,
+        "75": 0.8337725400924683,
+        "76": 0.8047182559967041,
+        "77": 0.8323662281036377,
+        "78": 0.8464376330375671,
+        "79": 0.8985042572021484,
+        "80": 0.8035275936126709,
+        "81": 0.8059295415878296,
+        "82": 0.832931399345398,
+        "83": 0.8404653668403625,
+        "84": 0.8188663125038147,
+        "85": 0.8620843887329102,
+        "86": 0.8413127660751343,
+        "87": 0.8492227792739868,
+        "88": 0.8402266502380371,
+        "89": 0.8436378836631775,
+        "90": 0.8511249423027039,
+        "91": 0.8425831198692322,
+        "92": 0.8235659599304199,
+        "93": 0.8393725156784058,
+        "94": 0.8322772979736328,
+        "95": 0.8247352242469788,
+        "96": 0.8066103458404541,
+        "97": 0.8512510657310486,
+        "98": 0.8227161765098572,
+        "99": 0.8277623653411865
+      },
+      {
+        "0": 0.8343385457992554,
+        "1": 0.8103926777839661,
+        "2": 0.8190816640853882,
+        "3": 0.8257765769958496,
+        "4": 0.8550315499305725,
+        "5": 0.8340031504631042,
+        "6": 0.8140918612480164,
+        "7": 0.8332054615020752,
+        "8": 0.7838619947433472,
+        "9": 0.8026865720748901,
+        "10": 0.8174201250076294,
+        "11": 0.8383587598800659,
+        "12": 0.8443801403045654,
+        "13": 0.805417001247406,
+        "14": 0.7964311838150024,
+        "15": 0.8329881429672241,
+        "16": 0.871642529964447,
+        "17": 0.8991337418556213,
+        "18": 0.8902201652526855,
+        "19": 0.8700056076049805,
+        "20": 0.8238278031349182,
+        "21": 0.7940062880516052,
+        "22": 0.8125626444816589,
+        "23": 0.821860671043396,
+        "24": 0.8131654262542725,
+        "25": 0.8674098253250122,
+        "26": 0.869247555732727,
+        "27": 0.8498420715332031,
+        "28": 0.8465805053710938,
+        "29": 0.8382284641265869,
+        "30": 0.8596073985099792,
+        "31": 0.8276159167289734,
+        "32": 0.8558514714241028,
+        "33": 0.8474835157394409,
+        "34": 0.8371511697769165,
+        "35": 0.8337905406951904,
+        "36": 0.8200639486312866,
+        "37": 0.848271369934082,
+        "38": 0.8456677794456482,
+        "39": 0.8728303909301758,
+        "40": 0.8630496263504028,
+        "41": 0.8572700619697571,
+        "42": 0.8768526911735535,
+        "43": 0.8659050464630127,
+        "44": 0.8600356578826904,
+        "45": 0.860935389995575,
+        "46": 0.8803545236587524,
+        "47": 0.8605223298072815,
+        "48": 0.8421491384506226,
+        "49": 0.8499477505683899,
+        "50": 0.8346664309501648,
+        "51": 0.8462843298912048,
+        "52": 0.8164101839065552,
+        "53": 0.8384451270103455,
+        "54": 0.8594721555709839,
+        "55": 0.8497636914253235,
+        "56": 0.8459333181381226,
+        "57": 0.8191423416137695,
+        "58": 0.8577552437782288,
+        "59": 0.8249333500862122,
+        "60": 0.8689321279525757,
+        "61": 0.8572756052017212,
+        "62": 0.8416153192520142,
+        "63": 0.8373427987098694,
+        "64": 0.833710789680481,
+        "65": 0.8231072425842285,
+        "66": 0.8405386805534363,
+        "67": 0.8653824329376221,
+        "68": 0.8560725450515747,
+        "69": 0.8528234958648682,
+        "70": 0.8558531403541565,
+        "71": 0.8382755517959595,
+        "72": 0.8149369955062866,
+        "73": 0.857964813709259,
+        "74": 0.8461589813232422,
+        "75": 0.8435946106910706,
+        "76": 0.8572660088539124,
+        "77": 0.8231809139251709,
+        "78": 0.8658353686332703,
+        "79": 0.842403769493103,
+        "80": 0.8169295191764832,
+        "81": 0.808771014213562,
+        "82": 0.8235250115394592,
+        "83": 0.8230749368667603,
+        "84": 0.8657730221748352,
+        "85": 0.8389195203781128,
+        "86": 0.8372213244438171,
+        "87": 0.8411768674850464,
+        "88": 0.8288248181343079,
+        "89": 0.8445504903793335,
+        "90": 0.8479793667793274,
+        "91": 0.8480493426322937,
+        "92": 0.8347503542900085,
+        "93": 0.8339987993240356,
+        "94": 0.8181394338607788,
+        "95": 0.8285395503044128,
+        "96": 0.8595529198646545,
+        "97": 0.8914535641670227,
+        "98": 0.8782261610031128,
+        "99": 0.8688802719116211
+      },
+      {
+        "0": 0.8338112235069275,
+        "1": 0.8080456256866455,
+        "2": 0.8100271224975586,
+        "3": 0.8352704644203186,
+        "4": 0.8456985354423523,
+        "5": 0.83290034532547,
+        "6": 0.8064975738525391,
+        "7": 0.833719789981842,
+        "8": 0.7817474603652954,
+        "9": 0.8137160539627075,
+        "10": 0.8038104772567749,
+        "11": 0.8294029235839844,
+        "12": 0.8394895792007446,
+        "13": 0.7890632152557373,
+        "14": 0.7928596138954163,
+        "15": 0.8308058381080627,
+        "16": 0.8730355501174927,
+        "17": 0.8913239240646362,
+        "18": 0.8793264031410217,
+        "19": 0.8732457160949707,
+        "20": 0.8045142889022827,
+        "21": 0.7940582036972046,
+        "22": 0.8086041808128357,
+        "23": 0.8331508636474609,
+        "24": 0.8170865178108215,
+        "25": 0.8652183413505554,
+        "26": 0.8727903962135315,
+        "27": 0.8448944091796875,
+        "28": 0.8564624786376953,
+        "29": 0.836548388004303,
+        "30": 0.8577064275741577,
+        "31": 0.8151494860649109,
+        "32": 0.8633071780204773,
+        "33": 0.8626270294189453,
+        "34": 0.8325967192649841,
+        "35": 0.8458068370819092,
+        "36": 0.8119284510612488,
+        "37": 0.8497893810272217,
+        "38": 0.8376604318618774,
+        "39": 0.8980497121810913,
+        "40": 0.8705861568450928,
+        "41": 0.8547297716140747,
+        "42": 0.87050461769104,
+        "43": 0.8781779408454895,
+        "44": 0.8530331254005432,
+        "45": 0.8573505282402039,
+        "46": 0.8686968088150024,
+        "47": 0.8505406379699707,
+        "48": 0.8381262421607971,
+        "49": 0.8475611805915833,
+        "50": 0.8250473141670227,
+        "51": 0.8553422093391418,
+        "52": 0.8284560441970825,
+        "53": 0.8468307256698608,
+        "54": 0.8663669228553772,
+        "55": 0.8269683122634888,
+        "56": 0.8356462121009827,
+        "57": 0.819507360458374,
+        "58": 0.8553923964500427,
+        "59": 0.8322880268096924,
+        "60": 0.836042582988739,
+        "61": 0.8493121862411499,
+        "62": 0.8139707446098328,
+        "63": 0.8327211141586304,
+        "64": 0.835300862789154,
+        "65": 0.8359646201133728,
+        "66": 0.8276670575141907,
+        "67": 0.8691349029541016,
+        "68": 0.8527459502220154,
+        "69": 0.8454585671424866,
+        "70": 0.8494604825973511,
+        "71": 0.84284907579422,
+        "72": 0.8183403015136719,
+        "73": 0.8638734221458435,
+        "74": 0.8570945262908936,
+        "75": 0.847475528717041,
+        "76": 0.865014374256134,
+        "77": 0.8344296216964722,
+        "78": 0.8660398721694946,
+        "79": 0.8362416625022888,
+        "80": 0.7941903471946716,
+        "81": 0.795647144317627,
+        "82": 0.8321653604507446,
+        "83": 0.823196291923523,
+        "84": 0.8583523035049438,
+        "85": 0.8237985968589783,
+        "86": 0.803813099861145,
+        "87": 0.8261050581932068,
+        "88": 0.8259717226028442,
+        "89": 0.8379057049751282,
+        "90": 0.8391014337539673,
+        "91": 0.8362859487533569,
+        "92": 0.8179295063018799,
+        "93": 0.7973428964614868,
+        "94": 0.8137866854667664,
+        "95": 0.8176071047782898,
+        "96": 0.8601473569869995,
+        "97": 0.8900661468505859,
+        "98": 0.8656253814697266,
+        "99": 0.8621301651000977
+      },
+      {
+        "0": 0.8399761915206909,
+        "1": 0.8181349039077759,
+        "2": 0.8195614814758301,
+        "3": 0.8309054970741272,
+        "4": 0.8505383133888245,
+        "5": 0.8301457166671753,
+        "6": 0.8114408254623413,
+        "7": 0.8250033855438232,
+        "8": 0.7821423411369324,
+        "9": 0.8343433141708374,
+        "10": 0.8077512979507446,
+        "11": 0.8295611143112183,
+        "12": 0.8514896035194397,
+        "13": 0.7950844168663025,
+        "14": 0.8122564554214478,
+        "15": 0.8336514830589294,
+        "16": 0.8821993470191956,
+        "17": 0.8980655074119568,
+        "18": 0.8895958662033081,
+        "19": 0.8762019276618958,
+        "20": 0.8295394778251648,
+        "21": 0.7967702150344849,
+        "22": 0.8144855499267578,
+        "23": 0.8328660726547241,
+        "24": 0.8169525861740112,
+        "25": 0.878097414970398,
+        "26": 0.8836122751235962,
+        "27": 0.861459493637085,
+        "28": 0.8708038926124573,
+        "29": 0.8336701989173889,
+        "30": 0.8568161725997925,
+        "31": 0.8317336440086365,
+        "32": 0.8601394295692444,
+        "33": 0.8465384840965271,
+        "34": 0.8442791700363159,
+        "35": 0.8296470046043396,
+        "36": 0.816340982913971,
+        "37": 0.8719027042388916,
+        "38": 0.8397477865219116,
+        "39": 0.8772193789482117,
+        "40": 0.8578879237174988,
+        "41": 0.8580030798912048,
+        "42": 0.8664306998252869,
+        "43": 0.8656631112098694,
+        "44": 0.8637396693229675,
+        "45": 0.8551827669143677,
+        "46": 0.8723312020301819,
+        "47": 0.8584573864936829,
+        "48": 0.8405954241752625,
+        "49": 0.8408069014549255,
+        "50": 0.8244593143463135,
+        "51": 0.8576155304908752,
+        "52": 0.8445433378219604,
+        "53": 0.8548381328582764,
+        "54": 0.8698495626449585,
+        "55": 0.8627404570579529,
+        "56": 0.8345915079116821,
+        "57": 0.8253398537635803,
+        "58": 0.8577811121940613,
+        "59": 0.8328275084495544,
+        "60": 0.8481920957565308,
+        "61": 0.849958598613739,
+        "62": 0.8494698405265808,
+        "63": 0.8472594618797302,
+        "64": 0.8325405716896057,
+        "65": 0.8331145644187927,
+        "66": 0.8369268774986267,
+        "67": 0.8625867962837219,
+        "68": 0.8538579344749451,
+        "69": 0.8589860200881958,
+        "70": 0.8497415781021118,
+        "71": 0.8418330550193787,
+        "72": 0.8241861462593079,
+        "73": 0.8573505878448486,
+        "74": 0.8469061255455017,
+        "75": 0.8591201901435852,
+        "76": 0.850760817527771,
+        "77": 0.815285861492157,
+        "78": 0.8612141609191895,
+        "79": 0.8586029410362244,
+        "80": 0.813852846622467,
+        "81": 0.812298059463501,
+        "82": 0.8389241099357605,
+        "83": 0.8308828473091125,
+        "84": 0.8646475076675415,
+        "85": 0.8304882645606995,
+        "86": 0.8387644290924072,
+        "87": 0.8475964069366455,
+        "88": 0.8392788171768188,
+        "89": 0.8357605934143066,
+        "90": 0.8437833786010742,
+        "91": 0.8441146612167358,
+        "92": 0.8318686485290527,
+        "93": 0.8302964568138123,
+        "94": 0.8233367800712585,
+        "95": 0.8256343603134155,
+        "96": 0.8801977038383484,
+        "97": 0.8730151653289795,
+        "98": 0.8785005807876587,
+        "99": 0.8684018850326538
+      },
+      {
+        "0": 0.8332825899124146,
+        "1": 0.81475830078125,
+        "2": 0.7929447889328003,
+        "3": 0.7997614741325378,
+        "4": 0.8405628204345703,
+        "5": 0.8240682482719421,
+        "6": 0.8100311756134033,
+        "7": 0.8247770071029663,
+        "8": 0.7767522931098938,
+        "9": 0.8099800944328308,
+        "10": 0.8016630411148071,
+        "11": 0.8295230269432068,
+        "12": 0.8217329978942871,
+        "13": 0.7988107800483704,
+        "14": 0.7916497588157654,
+        "15": 0.8326122760772705,
+        "16": 0.8811114430427551,
+        "17": 0.8937457799911499,
+        "18": 0.8796383738517761,
+        "19": 0.8750187754631042,
+        "20": 0.8195894956588745,
+        "21": 0.7923989295959473,
+        "22": 0.8076729774475098,
+        "23": 0.8329322338104248,
+        "24": 0.8073386549949646,
+        "25": 0.8671097159385681,
+        "26": 0.8709103465080261,
+        "27": 0.8370997309684753,
+        "28": 0.8702747821807861,
+        "29": 0.8422414064407349,
+        "30": 0.8593578338623047,
+        "31": 0.8187129497528076,
+        "32": 0.822260856628418,
+        "33": 0.856618344783783,
+        "34": 0.8243623971939087,
+        "35": 0.8451980352401733,
+        "36": 0.8165652751922607,
+        "37": 0.84147709608078,
+        "38": 0.8814442753791809,
+        "39": 0.8858707547187805,
+        "40": 0.8493757843971252,
+        "41": 0.8513205647468567,
+        "42": 0.8709666132926941,
+        "43": 0.863689124584198,
+        "44": 0.8574458956718445,
+        "45": 0.8618287444114685,
+        "46": 0.8720687627792358,
+        "47": 0.8687660098075867,
+        "48": 0.849388599395752,
+        "49": 0.8363341689109802,
+        "50": 0.8266426920890808,
+        "51": 0.8367680907249451,
+        "52": 0.8393120765686035,
+        "53": 0.8522301912307739,
+        "54": 0.8748371601104736,
+        "55": 0.8375396132469177,
+        "56": 0.8312087059020996,
+        "57": 0.8158697485923767,
+        "58": 0.8690364360809326,
+        "59": 0.8158358931541443,
+        "60": 0.8572807908058167,
+        "61": 0.8561715483665466,
+        "62": 0.8375709652900696,
+        "63": 0.8425198197364807,
+        "64": 0.8236634135246277,
+        "65": 0.8331186175346375,
+        "66": 0.8302143216133118,
+        "67": 0.8643573522567749,
+        "68": 0.8467663526535034,
+        "69": 0.8401684165000916,
+        "70": 0.8529412746429443,
+        "71": 0.831749677658081,
+        "72": 0.808763861656189,
+        "73": 0.8515349626541138,
+        "74": 0.8592348694801331,
+        "75": 0.8599656224250793,
+        "76": 0.8627889752388,
+        "77": 0.8104991912841797,
+        "78": 0.842273473739624,
+        "79": 0.8345389366149902,
+        "80": 0.8021430969238281,
+        "81": 0.7449471950531006,
+        "82": 0.8324500918388367,
+        "83": 0.8087852597236633,
+        "84": 0.8594983816146851,
+        "85": 0.837835967540741,
+        "86": 0.8307565450668335,
+        "87": 0.8141939043998718,
+        "88": 0.8204621076583862,
+        "89": 0.8287097215652466,
+        "90": 0.8317980170249939,
+        "91": 0.8391686677932739,
+        "92": 0.8143065571784973,
+        "93": 0.8018153309822083,
+        "94": 0.811473548412323,
+        "95": 0.8239113688468933,
+        "96": 0.874977707862854,
+        "97": 0.8767397999763489,
+        "98": 0.8746220469474792,
+        "99": 0.8636563420295715
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a concise, one-line imperative summary of the function’s behavior and provide a docstring-like block with Arguments, Returns, and Raises sections that reflect the function's signature and observable behavior, using a reasonable type guess for xml_data and the return value.\",\n    output='Extracts and returns a list of URLs from the given XML data.\\nArguments:\\n    xml_data (str): XML data as a string to parse; contains <durl> elements with nested <url> elements.\\nReturns:\\n    rawurl (list[str]): List of URL strings extracted from the XML data, in document order.\\nRaises:\\n    ExpatError: if XML parsing fails.\\n    IndexError: if expected <durl> or <url> elements or their text content are missing.'\n)"
+        ]
+      ],
+      "1": [
+        [
+          1,
+          "Prediction(\n    reasoning='[omitted]',\n    output='\"\"\"\\nDownload a DailyMotion video from the given URL.\\n\\nArguments:\\n * url (str): The DailyMotion URL to download.\\n * output_dir (str): Directory to save the downloaded file. If not set (``\\'.\\'``, default), the current directory is used.\\n * merge (bool): Whether to merge downloaded parts into a single file. If not set (``True``, default), multiple parts are merged.\\n * info_only (bool): If True, only print information about the video without downloading. If not set (``False``, default), the video will be downloaded.\\n * kwargs (dict): Additional keyword arguments accepted by the downloader (not used directly by this function).\\n\"\"\"'\n)"
+        ]
+      ],
+      "2": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output=\"Download a video from Sina given its URL.\\n\\nArguments:\\n * url (str): The page URL or video URL to download from.\\n * output_dir (str): Directory to save downloaded files. Defaults to ``'.'``.\\n * merge (bool): Whether to merge downloaded video segments into a single file. Defaults to ``True``.\\n * info_only (bool): If True, only retrieve information about the video without downloading. Defaults to ``False``.\\n * kwargs (dict): Additional keyword arguments forwarded to helper download functions.\"\n)"
+        ]
+      ],
+      "3": [
+        [
+          1,
+          "Prediction(\n    reasoning='Documentation block for the sprint function.',\n    output=\"Colorize text with ANSI escape codes when supported.\\n\\nArguments:\\n * text (str): The text to potentially colorize.\\n * colors (tuple): A variadic sequence of color codes to apply when ANSI formatting is enabled. Each code is converted to string and joined with ';' to form the ANSI escape sequence. If none are provided or ANSI coloring is not enabled (IS_ANSI_TERMINAL is falsy), the text is returned unchanged.\\n\\nReturns:\\n * :class:`str`: The formatted string when ANSI coloring is applied; otherwise the original text.\"\n)"
+        ]
+      ],
+      "4": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Print a log message to standard error with optional color formatting.\\n\\nArguments:\\n * text (str): The log message to print, which will be prefixed with the script name and a colon in the output.\\n * colors (tuple): Optional color specifiers passed to sprint to format the log output. If none are provided, the message is printed without color.\\n\\nReturns:\\n    None'\n)"
+        ]
+      ],
+      "5": [
+        [
+          0,
+          "Prediction(\n    reasoning='The snippet defines a function e that takes a message and an optional exit_code. It prints the message using print_log with YELLOW and BOLD styling. If exit_code is not None, it terminates the program with sys.exit(exit_code). If exit_code is None, the function simply returns after printing. The line with \"\"\"\"\"\" is an empty string literal (effectively a no-op) and has no impact.',\n    output='The function e prints a message with yellow bold styling via print_log and, if exit_code is provided, exits the program with that code. If exit_code is None, it just prints and returns. There is an effectively empty string literal as the docstring, which has no functional effect.'\n)"
+        ]
+      ],
+      "6": [
+        [
+          0,
+          "Prediction(\n    reasoning='The snippet defines a function wtf(message, exit_code=1) that logs a message using print_log with styling (RED and BOLD) and then exits the program if exit_code is not None. The docstring is an empty string. By default, it will call sys.exit(1) after logging, causing the program to terminate with status code 1. If exit_code=None, the function will only print the message and not exit. This relies on print_log, RED, BOLD, and sys being defined/imported elsewhere.',\n    output='Defines a function named wtf that prints the given message with red bold styling and then exits the program with the provided exit_code. By default, exit_code is 1, so the function will log the message and terminate with status 1. If exit_code is None, it will log the message but not exit. (Note: print_log, RED, BOLD, and sys must be defined for this to work.)'\n)"
+        ]
+      ],
+      "7": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will create a concise docstring-like block describing the function's behavior. The function has no parameters and returns a string indicating the detected OS, so I will provide a compact one-line summary and a Returns section detailing the return type and possible values.\",\n    output='Return the detected operating system as a string.\\n\\nReturns:\\n    the detected operating system as a string (str): the result of OS detection, one of \"unknown\", \"cygwin\", \"mac\", \"linux\", \"wsl\", \"windows\", or \"bsd\".'\n)"
+        ]
+      ],
+      "8": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-style description of the function, listing its purpose, parameters, return value, and absence of explicit raises.',\n    output=\"Download videos from a Vimeo channel URL.\\n\\nArguments:\\n    url (str): Vimeo channel URL to download from (e.g., http://vimeo.com/channels/<channel_id>).\\n    output_dir (str): Directory to save downloaded videos; defaults to '.'.\\n    merge (bool): If True, merge downloaded items after download; defaults to False.\\n    info_only (bool): If True, only fetch and show information about channel contents without downloading; defaults to False.\\n    **kwargs (dict): Additional keyword arguments passed to the underlying downloader function.\\n\\nReturns:\\n    None: This function does not return a value; it performs downloads or information gathering as a side effect.\"\n)"
+        ]
+      ],
+      "9": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a concise, gold-target style docBlock describing the function ckplayer_get_info_by_xml. It involves parsing an XML string to extract video information and returning a dictionary. I'll provide a single-line imperative summary followed by an Arguments, Returns, and (if applicable) Raises sections, matching the signature exactly and keeping the tone concise and present-tense.\",\n    output=\"Parse the CKPlayer XML input and return a dictionary of video information.\\n\\nArguments:\\n    ckinfo (str): XML content representing the CKPlayer data to parse.\\n\\nReturns:\\n    video_dict (dict): Mapping with keys 'title' (str), 'links' (list[str]), 'size' (int), and 'flashvars' (str).\\n\\nRaises:\\n    xml.etree.ElementTree.ParseError: if the input XML is malformed.\\n    KeyError: if expected fields are missing from the parsed structure.\\n    IndexError: if expected list elements are missing.\"\n)"
+        ]
+      ],
+      "10": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output=\"Generate the video URL for the given video ID.\\n\\nArguments:\\n * video_id (str): The identifier of the video to embed in the URL.\\n\\nReturns:\\n - :class:`str` - The generated video URL as a string. The URL contains a dynamic signature parameter 's' produced by an obfuscated routine and may be retried with a new random seed until the 's' parameter is non-negative.\"\n)"
+        ]
+      ],
+      "11": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generate a concise, docstring-style description of the function's inputs, outputs, and potential exceptions without modifying code.\",\n    output=\"Extracts the real M3U URL, total segment sizes, and absolute segment URLs from a MGTV URL.\\n\\nArguments:\\n    url (str): The MGTV URL to process and resolve to the real M3U URL.\\n\\nReturns:\\n    tuple[str, int, list[str]]: The real M3U URL, the cumulative size of all segments, and the list of absolute segment URLs.\\n\\nRaises:\\n    KeyError: If required keys are missing in the parsed content (e.g., 'info').\\n    ValueError: If a segment size cannot be parsed as an integer.\\n    TypeError: If input types are not as expected or intermediate data is malformed.\"\n)"
+        ]
+      ],
+      "12": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"Generate a gold-target style, docstring-like documentation block that matches the function's signature and behavior: a concise one-line imperative summary, followed by an Arguments section describing text and os (with default detect_os()), and a Returns section describing the returned string. No Raises section is needed since the function does not raise exceptions.\",\n    output='Sanitize a string into a filesystem-safe name for the detected operating system.\\n\\nArguments:\\n    text (str): input text to be sanitized into a filename.\\n    os (str): target operating system name affecting invalid characters and translation rules; default: detect_os().\\n\\nReturns:\\n    text (str): sanitized string suitable for use as a filename.'\n)"
+        ]
+      ],
+      "13": [
+        [
+          0,
+          "Prediction(\n    reasoning='The function cbs_download is a wrapper that:\\n- Fetches the HTML content of the given URL with get_content(url).\\n- Extracts a video platform pid from the page using the pattern video.settings.pid = \\'...\\'.\\n- Extracts a video title from the page using the pattern video.settings.title = \"...\".\\n- Invokes the theplatform downloader with the extracted pid and title, passing along output_dir, merge, and info_only options, plus any extra kwargs.\\n\\nEdge cases: If the pid or title cannot be found, match1 would typically return None or raise an exception depending on the implementation, which would affect subsequent downloading behavior. The function delegates the actual download logic to theplatform_download_by_pid.',\n    output='This function downloads a CBS video by:\\n- Retrieving the page content from the provided URL.\\n- Parsing the page to obtain the video platform PID and title.\\n- Calling thePlatform’s downloader with that PID and title, along with the specified output directory, merge option, and info-only flag. If info_only is True, it will fetch metadata without downloading; otherwise it performs the download and optional merging according to the provided flags.'\n)"
+        ]
+      ],
+      "14": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a gold-style, docstring-like block describing the function's behavior based on its code, focusing on its overall action, parameters (kwargs), return value, and any notable side effects, without modifying the code itself.\",\n    output=\"Download the selected video stream or display stream information based on keyword arguments.\\n\\nArguments:\\n    kwargs (dict[str, Any]): optional keyword arguments controlling behavior and output. Recognized keys include 'json_output', 'info_only', 'stream_id', 'index', 'output_dir', 'merge', and 'caption'.\\n\\nReturns:\\n    None: the function performs actions (displaying information, downloading, and saving captions) and returns no value.\"\n)"
+        ]
+      ],
+      "15": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a gold-target style, code-commented documentation block for the given function. It will include a concise imperative one-line summary, followed by an Arguments section describing parameters exactly as in the signature (including **kwargs as variadic), a Returns section noting the absence of a return value, and a Raises section noting NotImplementedError for unsupported source types. I will avoid modifying the code and keep the tone concise and present-tense.',\n    output=\"acfun_download_by_vid: Download an Acfun video by its vid, dispatching to the appropriate extractor based on sourceType and optionally saving danmaku.\\n\\nArguments:\\n    vid (str): video id to download.\\n    title (str): title for the output files.\\n    output_dir (str): directory to save downloaded content; defaults to '.'.\\n    merge (bool): whether to merge audio/video streams; defaults to True.\\n    info_only (bool): if True, only fetch and print information without downloading; defaults to False.\\n    **kwargs: arbitrary keyword arguments; may include 'caption' (bool) to indicate whether to download danmaku captions; other keys are accepted but ignored.\\n\\nReturns:\\n    None: performs downloads and writes metadata as side effects.\\n\\nRaises:\\n    NotImplementedError: raised when the detected sourceType is not supported.\"\n)"
+        ]
+      ],
+      "16": [
+        [
+          4,
+          "Prediction(\n    reasoning='Produce a concise, docstring-like block describing the function’s behavior: inputs, returns, and possible exceptions, reflecting its signature and runtime behavior.',\n    output='Return all matches of the provided patterns found in the input text.\\n\\nArguments:\\n    text (str): the input text to search.\\n    patterns (Iterable[str]): an iterable of regular expression patterns to apply to the text.\\n\\nReturns:\\n    list: the concatenated list of all matches found by applying each pattern to the text.\\n\\nRaises:\\n    re.error: if any of the patterns is an invalid regular expression.'\n)"
+        ]
+      ],
+      "17": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generate a concise, docstring-style description of the function's behavior, inputs, and return value without modifying the code.\",\n    output=\"Return the first value of a given query parameter from a URL, or None if unavailable.\\n\\nArguments:\\n    url (str): The URL string to parse.\\n    param (str): The name of the query parameter to retrieve from the URL's query string.\\n\\nReturns:\\n    str or None: The first value associated with the provided query parameter as a string, or None if the parameter is missing or an error occurs.\"\n)"
+        ]
+      ],
+      "18": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I will produce a concise, docstring-style documentation block describing the function's purpose, parameters, and return value, mapping types from the signature and clarifying behavior such as decoding and compression handling.\",\n    output='Fetches the content from a URL with optional headers, handling cookies, compression, and decoding.\\n\\nArguments:\\n    url (str): The URL to fetch.\\n    headers (dict): Optional HTTP headers to include in the request. Defaults to an empty dict.\\n    decoded (bool): If True, decode the response body to a string using the response charset when available; otherwise return raw bytes.\\n\\nReturns:\\n    data (str or bytes): The response body content. If decoded is True, a str is returned; otherwise the raw bytes.'\n)"
+        ]
+      ],
+      "19": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a concise, one-line imperative summary of the function's behavior and then provide a docstring-style documentation block that mirrors the requested gold-target format. The block will describe the function's parameters (reflecting the signature), the return value (including behavior when decoding is enabled vs. disabled), and omit a Raises section since no explicit exceptions are raised in the code. The content will be present-tense, objective, and proportional to the observable behavior of the function.\",\n    output=\"Send a POST request to the given URL with optional data and headers, handle compressed responses, and return the decoded body.\\n\\nArguments:\\n    url (str): target URL for the POST request.\\n    headers (dict): HTTP headers to include in the request; defaults to {}.\\n    post_data (dict): data payload to be URL-encoded and sent as the body when no raw post data is provided.\\n    decoded (bool): whether to decode the response body to text using a detected charset or UTF-8 by default.\\n    **kwargs (dict): additional options; if 'post_data_raw' is provided, its string value is used as the raw POST body instead of encoding `post_data`.\\n\\nReturns:\\n    data (str | bytes): the response content; decoded to a string when `decoded` is True, otherwise raw bytes.\"\n)"
+        ]
+      ],
+      "20": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-like block describing the function's behavior, including a one-line imperative summary and an Arguments/Returns section reflecting the actual signature and behavior. No code will be included.\",\n    output=\"Parse a host specification into a (hostname, port) pair.\\nArguments:\\n    host (str): host specification to parse. If a purely numeric string is provided, it is interpreted as a port and the hostname defaults to '0.0.0.0'. Otherwise, the string is parsed as a URL or network location; a missing scheme is treated by prepending '//', and the resulting hostname defaults to '0.0.0.0' if absent and the port defaults to 0 if absent.\\nReturns:\\n    tuple[str, int]: a pair consisting of the resolved hostname and port number.\"\n)"
+        ]
+      ],
+      "21": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"The function showroom_get_roomid_by_room_url_key takes a room_url_key, builds the full URL https://www.showroom-live.com/{room_url_key}, fetches the page content using a mobile-like header, and then searches for a numeric room_id in the page content with the regex r'room\\\\?room_id\\\\=(\\\\d+)'. It asserts that a room_id was found and returns it. If the page does not contain a match or the fetch fails, the assertion will fail (raising an AssertionError or an exception). The docstring is effectively empty. Without a concrete room_url_key input and actual page content, we cannot determine a real output.\",\n    output='Cannot determine the output without a concrete room_url_key input. If you provide a specific room_url_key and the corresponding page content contains a pattern like room?room_id=12345, the function would return the string \"12345\". If the page does not contain such a pattern, the function will raise an assertion error.'\n)"
+        ]
+      ],
+      "22": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a concise, docstring-style block describing the function’s behavior: a single imperative summary line, followed by an Arguments section detailing the three parameters, a Returns section describing the resulting string, and a Raises section listing common errors from list/dict access based on the implementation.',\n    output=\"Builds a title by joining the top-level name, the topic name at tIndex, and the part name at pIndex with underscores.\\n\\nArguments:\\n    json_content (list[dict]): JSON-like content where json_content[0]['name'] is the top-level name, json_content[0]['Topics'] is a list of topics; each topic dict has 'name' and 'Parts', where Parts is a list of dicts with 'name'.\\n    tIndex (int): Index of the topic within json_content[0]['Topics'].\\n    pIndex (int): Index of the part within json_content[0]['Topics'][tIndex]['Parts'].\\n\\nReturns:\\n    str: Title string formed by json_content[0]['name'], json_content[0]['Topics'][tIndex]['name'], and json_content[0]['Topics'][tIndex]['Parts'][pIndex]['name'], joined with underscores.\\n\\nRaises:\\n    IndexError: If tIndex or pIndex are out of range for their respective lists.\\n    KeyError: If expected keys are missing from the dictionaries.\"\n)"
+        ]
+      ],
+      "23": [
+        [
+          3,
+          "Prediction(\n    reasoning='The function iterates over topics and parts within the first element of json_api_content and delegates the download work for each topic-part pair to wanmen_download_by_course_topic_part, forwarding output_dir, merge, info_only and any extra kwargs. I will produce a concise imperative summary plus a docstring-like block describing inputs and behavior without altering the code.',\n    output=\"Download all topics and parts from the provided course JSON content by delegating to wanmen_download_by_course_topic_part for each topic-part pair.\\n\\nArguments:\\n    json_api_content (list): The JSON structure containing the course data; the function uses json_api_content[0]['Topics'] to enumerate topics and their 'Parts'. Required (no default).\\n\\n    output_dir (str): Directory where downloaded content will be saved. Defaults to '.' (current directory). Optional.\\n\\n    merge (bool): Whether to merge downloaded content with existing files. Defaults to True. Optional.\\n\\n    info_only (bool): If True, do not download, only report information. Defaults to False. Optional.\\n\\n    kwargs (dict): Additional keyword arguments forwarded to wanmen_download_by_course_topic_part. Optional.\\n\\nReturns:\\n    None: the function does not return a value.\"\n)"
+        ]
+      ],
+      "24": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-style description that captures the function’s behavior: it extracts a title and BokeCC video ID from the provided JSON content for a given topic/part, then downloads the video (or information) using those details. The docstring will include parameter descriptions, defaults, and the fact that the function returns nothing.',\n    output=\"Download the BokeCC video for the specified Wanmen course topic part.\\n\\nArguments:\\n    json_api_content (str): JSON API content containing the HTML; used to derive the title and video id.\\n    tIndex (int): Topic index within the content to identify the topic part.\\n    pIndex (int): Part index within the topic to identify the specific portion.\\n    output_dir (str, optional, default='.'): Directory to save downloaded files.\\n    merge (bool, optional, default=True): Whether to merge downloaded segments into a single file.\\n    info_only (bool, optional, default=False): If True, only print information about the video without downloading.\\n    **kwargs (dict): Additional keyword arguments forwarded to bokecc_download_by_id.\\n\\nReturns:\\n    None (NoneType): This function does not return a value.\"\n)"
+        ]
+      ],
+      "25": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"The function has_task returns True when the provided task_instance's key is present in either the queued_tasks or running collections. The documentation should reflect the signature and behavior in a concise, docstring-like block, including an Arguments section for the parameter and a Returns section describing the possible return value. No Raises are applicable here.\",\n    output='Return True if the task is currently queued or running.\\nArguments:\\n    task_instance (:class:`TaskInstance`): the task instance to check for membership in the queued or running sets.\\nReturns:\\n    True if the task is currently queued or running; otherwise None. (<Optional[bool]>): boolean indicating the outcome of the check.'\n)"
+        ]
+      ],
+      "26": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-style block that describes the function’s behavior: it returns and clears events from an internal buffer, either all of them when dag_ids is None, or only those matching the provided dag_ids. The block includes an imperative one-line summary, followed by an Arguments section and a Returns section. No Raises section is needed since the function does not raise exceptions.',\n    output='Clear and return events from the internal event buffer; if dag_ids is None, clears all events, otherwise returns and removes events whose dag_id is in dag_ids.\\n\\nArguments:\\n    dag_ids (Iterable[str] | None): identifiers of DAGs to filter; if None, all events are returned.\\n\\nReturns:\\n    dict: mapping of cleared events from the internal event buffer.'\n)"
+        ]
+      ],
+      "27": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-like block describing the function’s behavior: it returns a Snowflake connection using internal configuration, documenting the (non-externally provided) self parameter and the return type.',\n    output='Return a Snowflake database connection using internal configuration parameters.\\nArguments:\\n    self (object): the instance; the class using this method.\\nReturns:\\n    snowflake.connector.connection.Connection: an active Snowflake database connection.'\n)"
+        ]
+      ],
+      "28": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a gold-target style documentation block for the given function. The function has no explicit parameters, retrieves AWS credentials from a Snowflake connection's extras when present, and returns them as a pair. There is a potential NameError if credentials are not defined due to missing data.\",\n    output='Return AWS credentials from the configured Snowflake connection.\\nArguments:\\n\\nReturns:\\n    Tuple[str, str]: AWS access key id and AWS secret access key retrieved from the Snowflake connection extras, if present.\\n\\nRaises:\\n    NameError: if aws_access_key_id or aws_secret_access_key are not defined due to missing credentials.'\n)"
+        ]
+      ],
+      "29": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Identify the function’s behavior: it fetches a value from self.extras using a key prefixed with 'extra__grpc__' and the provided field_name, returning the given default if the key is absent. Produce a concise, docstring-like block with a one-line imperative summary, followed by Arguments and Returns sections describing parameters and return value.\",\n    output='\"\"\"\\nReturn the value for the given field from the extras dictionary, or the provided default if not present.\\n\\nArguments:\\n    field_name (str): the field name to lookup; looked up as \\'extra__grpc__{field_name}\\' in self.extras.\\n        - Required; no default.\\n    default (object): value to return if the field is not present in self.extras.\\n        - Optional; default is None.\\n\\nReturns:\\n    (object): the value associated with the composed key in self.extras if present, otherwise the provided default.\\n\"\"\"'\n)"
+        ]
+      ],
+      "30": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Provide a concise description of the function's purpose and its parameters for the filled docstring, without exposing internal step-by-step thought processes.\",\n    output='def copy_expert(self, sql, filename, open=open):\\n        \"\"\"\\n        Execute a PostgreSQL COPY operation using psycopg2\\'s copy_expert.\\n\\n        This method reads data from the local file named by filename and uses\\n        the provided SQL COPY command to load it into the database. It ensures\\n        the file exists, opens it for reading/writing, and commits the transaction\\n        after the copy completes.\\n\\n        Parameters:\\n        - sql (str): The COPY command to execute (e.g. \"COPY my_table FROM STDIN WITH (FORMAT csv)\").\\n        - filename (str): Path to the data file used as the source for the COPY operation.\\n        - open (callable): Open-like function to open the file; defaults to built-in open.\\n\\n        Returns: None\\n\\n        Side effects:\\n        - Creates the file if it does not exist.\\n        - Truncates the file after copying.\\n        - Commits the database transaction.\\n        \"\"\"\\n        if not os.path.isfile(filename):\\n            with open(filename, \\'w\\'):\\n                pass\\n\\n        with open(filename, \\'r+\\') as f:\\n            with closing(self.get_conn()) as conn:\\n                with closing(conn.cursor()) as cur:\\n                    cur.copy_expert(sql, f)\\n                    f.truncate(f.tell())\\n                    conn.commit()'\n)"
+        ]
+      ],
+      "31": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Dump the contents of a database table to a file-like object using COPY TO STDOUT.\\n\\nArguments:\\n * table (str): name of the database table to dump.\\n * tmp_file (file-like object): file-like object to receive the dumped data.\\n\\nRaises:\\n * :class:`Exception`: if the COPY operation fails.'\n)"
+        ]
+      ],
+      "32": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Upload a file to Google Cloud Storage.\\n\\nArguments:\\n * context (dict): Runtime context for this task instance.'\n)"
+        ]
+      ],
+      "33": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-like documentation block describing the function's behavior and its interface, preserving all parameter defaults and the exact behavior implied by the code.\",\n    output=\"Return the maximum partition value for the specified table from the Hive metastore.\\n\\nArguments:\\n    table (str): the table name to query. If a '.' is present in the value, it is split into schema and table components and used accordingly.\\n        - If a dot appears in table, the string is interpreted as a schema-qualified name and overrides the separate schema argument.\\n    schema (str): default 'default'. The target schema; ignored if table is provided with a schema-qualified name.\\n    field (str): default None. The partition field to compute the maximum value for.\\n        - If None, the function's behavior depends on the underlying HiveMetastoreHook implementation.\\n    filter_map (dict or None): default None. Optional filters applied to partitions before computing the maximum.\\n        - If provided, maps partition keys to values used to filter the partitions considered.\\n    metastore_conn_id (str): default 'metastore_default'. Airflow connection id for the Hive metastore.\\n\\nReturns:\\n    the maximum partition value for the given table and field (object): the maximum value found for the specified partition field.\\n        - The actual Python type depends on the field's data type.\\n\\nRaises:\\n    :class:`AirflowException`: if the underlying Hive metastore operation fails.\"\n)"
+        ]
+      ],
+      "34": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will generate a concise documentation block describing the function’s purpose and its return type, noting that there are no parameters, and describing the returned connection object.',\n    output='Create and return a MySQL database connection.\\n\\nReturns:\\nA :class:`MySQLdb.connections.Connection` object representing the established database connection.'\n)"
+        ]
+      ],
+      "35": [
+        [
+          3,
+          "Prediction(\n    reasoning='The function builds a DAG and a TaskInstance from the provided args and prints the current state of that TaskInstance. I will produce a concise docstring-like block with a one-line imperative summary, followed by Arguments and Returns sections. I will reference TaskInstance in the Returns section and describe the expected attributes of args (task_id and execution_date).',\n    output='Print the current state of the TaskInstance created for the given task and execution date.\\n\\nArguments:\\n    args (object): container with attributes:\\n        - task_id (str): ID of the task to inspect.\\n        - execution_date (datetime): execution date for the DAG run.\\n\\nReturns:\\n    None (NoneType): the function prints the current state of the :class:`TaskInstance` and returns no value.'\n)"
+        ]
+      ],
+      "36": [
+        [
+          0,
+          "Prediction(\n    reasoning='The user provided a function with an empty docstring. The task appears to be completing/documenting the function. I will fill in a clear, concise docstring that explains the purpose, parameters, and behavior of restart_workers, without altering the actual logic.',\n    output='def restart_workers(gunicorn_master_proc, num_workers_expected, master_timeout):\\n    \"\"\"\\n    Restart Gunicorn workers to reach the expected count.\\n\\n    This function manages Gunicorn workers by signaling the master process to\\n    increase or decrease the number of workers until the desired count is reached.\\n    It monitors running and ready workers, performs periodic refreshes in batches,\\n    and handles timeouts and errors by attempting a graceful shutdown.\\n\\n    Parameters:\\n      gunicorn_master_proc: psutil.Process\\n        The Gunicorn master process object.\\n      num_workers_expected: int\\n        The desired number of worker processes to maintain.\\n      master_timeout: int or float\\n        Maximum time (in seconds) to wait for responses from the Gunicorn master\\n        before raising a timeout.\\n\\n    Behavior:\\n      - If there are fewer ready workers than running, waits for them to become ready.\\n      - If there are more running workers than expected, signals to gracefully reduce\\n        the worker count.\\n      - If the running count matches the expected, periodically refreshes workers.\\n      - If workers die unexpectedly, attempts a refresh; on timeout or OSError, shuts down.\\n    \"\"\"\\n\\n    def wait_until_true(fn, timeout=0):\\n        \"\"\"\\n        Sleeps until fn is true\\n        \"\"\"\\n        t = time.time()\\n        while not fn():\\n            if 0 < timeout <= time.time() - t:\\n                raise AirflowWebServerTimeout(\\n                    \"No response from gunicorn master within {0} seconds\"\\n                    .format(timeout))\\n            time.sleep(0.1)\\n\\n    def start_refresh(gunicorn_master_proc):\\n        batch_size = conf.getint(\\'webserver\\', \\'worker_refresh_batch_size\\')\\n        log.debug(\\'%s doing a refresh of %s workers\\', state, batch_size)\\n        sys.stdout.flush()\\n        sys.stderr.flush()\\n\\n        excess = 0\\n        for _ in range(batch_size):\\n            gunicorn_master_proc.send_signal(signal.SIGTTIN)\\n            excess += 1\\n            wait_until_true(lambda: num_workers_expected + excess ==\\n                            get_num_workers_running(gunicorn_master_proc),\\n                            master_timeout)\\n\\n    try:\\n        wait_until_true(lambda: num_workers_expected ==\\n                        get_num_workers_running(gunicorn_master_proc),\\n                        master_timeout)\\n        while True:\\n            num_workers_running = get_num_workers_running(gunicorn_master_proc)\\n            num_ready_workers_running = \\\\\\n                get_num_ready_workers_running(gunicorn_master_proc)\\n\\n            state = \\'[{0} / {1}]\\'.format(num_ready_workers_running, num_workers_running)\\n\\n            # Whenever some workers are not ready, wait until all workers are ready\\n            if num_ready_workers_running < num_workers_running:\\n                log.debug(\\'%s some workers are starting up, waiting...\\', state)\\n                sys.stdout.flush()\\n                time.sleep(1)\\n\\n            # Kill a worker gracefully by asking gunicorn to reduce number of workers\\n            elif num_workers_running > num_workers_expected:\\n                excess = num_workers_running - num_workers_expected\\n                log.debug(\\'%s killing %s workers\\', state, excess)\\n\\n                for _ in range(excess):\\n                    gunicorn_master_proc.send_signal(signal.SIGTTOU)\\n                    excess -= 1\\n                    wait_until_true(lambda: num_workers_expected + excess ==\\n                                    get_num_workers_running(gunicorn_master_proc),\\n                                    master_timeout)\\n\\n            # Start a new worker by asking gunicorn to increase number of workers\\n            elif num_workers_running == num_workers_expected:\\n                refresh_interval = conf.getint(\\'webserver\\', \\'worker_refresh_interval\\')\\n                log.debug(\\n                    \\'%s sleeping for %ss starting doing a refresh...\\',\\n                    state, refresh_interval\\n                )\\n                time.sleep(refresh_interval)\\n                start_refresh(gunicorn_master_proc)\\n\\n            else:\\n                # num_ready_workers_running == num_workers_running < num_workers_expected\\n                log.error((\\n                    \"%s some workers seem to have died and gunicorn\"\\n                    \"did not restart them as expected\"\\n                ), state)\\n                time.sleep(10)\\n                if len(\\n                    psutil.Process(gunicorn_master_proc.pid).children()\\n                ) < num_workers_expected:\\n                    start_refresh(gunicorn_master_proc)\\n    except (AirflowWebServerTimeout, OSError) as err:\\n        log.error(err)\\n        log.error(\"Shutting down webserver\")\\n        try:\\n            gunicorn_master_proc.terminate()\\n            gunicorn_master_proc.wait()\\n        finally:\\n            sys.exit(1)'\n)"
+        ]
+      ],
+      "37": [
+        [
+          4,
+          "Prediction(\n    reasoning='The function get_conn is a lazy accessor that returns a stored client instance, initializing it on first access by calling _get_credentials() and constructing a Client with those credentials, then returning the client. There are no parameters besides self, and no explicit raises in the code, so the documentation will reflect the observed behavior and return type.',\n    output='Return the lazily initialized client, creating it if needed.\\n\\nArguments:\\n    \\nReturns:\\n    :class:`Client`: the lazily initialized client instance.'\n)"
+        ]
+      ],
+      "38": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-like description that documents the function's interface and behavior, noting that it delegates to the translation client obtained via self.get_conn() and returns its result.\",\n    output='\"\"\"\\n        Translate the given values to the target language using the configured translation client.\\n\\n        Arguments:\\n            values (str or list of str): input text(s) to translate.\\n                - if a single string, translates that string.\\n                - if a list, translates each element.\\n            target_language (str): code of the language to translate to.\\n            format_ (str, optional, default: None): the output format to request; default None.\\n            source_language (str, optional, default: None): code of the source language; auto-detect if not provided.\\n            model (str, optional, default: None): translation model to use, if any.\\n\\n        Returns:\\n            object: the translated content produced by the translation client.\\n\\n        Raises:\\n            Exception: if the translation operation fails.\\n\\n        \"\"\"'\n)"
+        ]
+      ],
+      "39": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-like block describing the function's interface and behavior without altering the code.\",\n    output='\"\"\"\\nRetrieve the Compute Engine instance resource for the given instance.\\n\\nArguments:\\n    instance (str): The name or ID of the instance to retrieve.\\n        - required\\n        - type: str\\n    project_id (str, optional): The Google Cloud project ID. If omitted, the default project from the client configuration is used.\\n        - default: None\\n        - type: str\\n\\nReturns:\\n    dict: The Compute Engine instance resource (as returned by the API) representing the instance.\\n\\nRaises:\\n    HttpError: if the API request fails (e.g., the instance is not found or insufficient permissions).\\n\"\"\"'\n)"
+        ]
+      ],
+      "40": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-like documentation block describing the function's behavior, including a one-line summary and Arguments/Returns sections, reflecting the actual parameters and side-effects without modifying the code.\",\n    output='\"\"\"\\nCreate an instance in the specified project and wait for the operation to complete.\\n\\nArguments:\\n    body (dict): description of the instance to create.\\n        - required; no default\\n        - must conform to the API\\'s instance resource schema\\n        - provided as the request body for the insert call\\n    project_id (str): optional project identifier; default None; used as the project in the API call.\\n        - when None, a default project may be used by the client\\n        - must be a valid project id\\n\\nReturns:\\n    None: no return value; this method initiates the insert and blocks until the operation completes.\\n\"\"\"'\n)"
+        ]
+      ],
+      "41": [
+        [
+          0,
+          "Prediction(\n    reasoning='The input function has an empty docstring. I will provide a clear, concise docstring describing the method’s purpose, parameters, return value, and possible exceptions, and keep the rest of the implementation unchanged.',\n    output='def patch_instance(self, body, instance, project_id=None):\\n        \"\"\"\\n        Patch a Google Compute Engine instance.\\n\\n        This method patches an existing instance with the provided patch body\\n        by issuing a instances.patch request and then waiting for the resulting\\n        operation to complete.\\n\\n        Args:\\n            body (dict): Patch body to apply to the instance (e.g., metadata,\\n                         description, or scheduling settings).\\n            instance (str): The name of the instance to patch.\\n            project_id (str, optional): The Google Cloud project ID. If not\\n                                        provided, the default project from the\\n                                        credentials or client configuration will be used.\\n\\n        Returns:\\n            None\\n\\n        Raises:\\n            googleapiclient.errors.HttpError: If the patch request fails.\\n        \"\"\"\\n        response = self.get_conn().instances().patch(\\n            project=project_id,\\n            instance=instance,\\n            body=body\\n        ).execute(num_retries=self.num_retries)\\n        operation_name = response[\"name\"]\\n        self._wait_for_operation_to_complete(project_id=project_id,\\n                                             operation_name=operation_name)'\n)"
+        ]
+      ],
+      "42": [
+        [
+          2,
+          "Prediction(\n    reasoning='Generate a concise, docstring-like description for a method that deletes a Compute Engine instance and waits for the resulting operation to complete, including parameter and return details.',\n    output='Deletes a Compute Engine instance and waits for the deletion operation to complete.\\n\\nArguments:\\n    instance (str): The name or ID of the instance to delete.\\n    project_id (str): The Google Cloud project ID; optional. If omitted, a default/project-scoped value may be used.\\n\\nReturns:\\n    None: Performs the delete operation and blocks until the operation completes; no value is returned.\\n\\nRaises:\\n    HttpError: If the underlying API request fails.'\n)"
+        ]
+      ],
+      "43": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-style block describing the function's behavior. It will start with a concise one-line imperative summary and include Arguments and Returns sections that reflect the function's signature and the API call it makes. I will not modify the actual code.\",\n    output='def get_database(self, instance, database, project_id=None):\\n        \"\"\"\\n        Retrieve the database resource for the given instance and database.\\n\\n        Arguments:\\n            instance (str): The name or identifier of the instance containing the database. Required.\\n            database (str): The name of the database to retrieve. Required.\\n            project_id (str): Optional. The Google Cloud project identifier. Default: None.\\n\\n        Returns:\\n            object: The database resource as returned by the API call.\\n\\n        \"\"\"\\n        return self.get_conn().databases().get(\\n            project=project_id,\\n            instance=instance,\\n            database=database\\n        ).execute(num_retries=self.num_retries)'\n)"
+        ]
+      ],
+      "44": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I created a concise, docstring-style documentation block describing the function's behavior, parameters, and return value based on the given signature and body. No explicit exceptions were identifiable to document under Raises.\",\n    output='Create a database in the specified instance and project.\\nArguments:\\n    instance (object): identifier or reference to the instance where the database will be created.\\n    body (dict): request body describing the database to create.\\n    project_id (str): optional project ID to scope the operation.\\nReturns:\\n    None (NoneType): no return value.'\n)"
+        ]
+      ],
+      "45": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-style documentation block for the given function, describing its purpose, parameters, return behavior, and potential exceptions in the requested format without altering the code.',\n    output='\"\"\"\\nPatch the specified database in the given instance and wait for the operation to complete.\\n\\nArguments:\\n    instance (str): The instance identifier containing the database.\\n        - mandatory\\n    database (str): The name of the database to patch.\\n        - mandatory\\n    body (dict): The request payload describing the patch to apply to the database.\\n        - mandatory\\n    project_id (str, optional): The GCP project ID; defaults to None.\\n\\nReturns:\\n    no return value (None): The function patches the database and waits for the operation to complete; no value is returned.\\n\\nRaises:\\n    Exception: if the patch request fails or the operation polling fails.\\n\"\"\"'\n)"
+        ]
+      ],
+      "46": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generate a concise, docstring-like description of the function's behavior, including its parameters, return value, and possible exceptions, without modifying the code.\",\n    output='Deletes the specified database in the given instance and project, then waits for the deletion operation to complete.\\n\\nArguments:\\n    instance (str): The instance identifier that contains the database to delete.\\n    database (str): The name of the database to delete.\\n    project_id (str, optional): The Google Cloud project ID. If not provided, the default project configured on the connection is used.\\n\\nReturns:\\n    None: This method does not return a value; it blocks until the delete operation completes.\\n\\nRaises:\\n    Exception: If the delete request fails or waiting for the operation to complete fails.'\n)"
+        ]
+      ],
+      "47": [
+        [
+          5,
+          "Prediction(\n    reasoning='Generate a concise, docstring-like block describing the function behavior: it exports an instance using the provided body and optional project_id, waits for the operation to complete, and raises AirflowException on HttpError. The function does not return a value.',\n    output='\"\"\"\\nExport the given instance using the provided body to the specified project.\\n\\nArguments:\\n    instance (str): The name or identifier of the instance to export.\\n        - required\\n    body (dict): The request payload for the export operation.\\n        - required\\n    project_id (str): Optional project identifier. If omitted, uses the default project.\\n        - default: None\\n\\nReturns:\\n    None: The function performs the export operation and does not return a value.\\n\\nRaises:\\n    AirflowException: if the underlying export API call fails due to an HttpError; the exception is raised with a message that includes the instance and the API error content.\\n\"\"\"'\n)"
+        ]
+      ],
+      "48": [
+        [
+          5,
+          "Prediction(\n    reasoning='I prepared a concise, docstring-style documentation block for the given method. Since the function has no parameters besides self, I omitted an Arguments section. The Returns section notes that the function returns None, and the Raises section enumerates the AirflowException conditions observed in the control flow (already running, early non-zero exit, and startup errors reported by the proxy).',\n    output='\"\"\"\\nStart the Cloud SQL proxy and wait for readiness.\\n\\nReturns:\\n    None: the function does not return a value.\\n\\nRaises:\\n    AirflowException: if the sql proxy is already running.\\n    AirflowException: if the cloud_sql_proxy finishes early with a non-zero return code.\\n    AirflowException: if an error is reported by the cloud_sql_proxy during startup (e.g., \"googleapi: Error\" or \"invalid instance name:\").\\n\"\"\"'\n)"
+        ]
+      ],
+      "49": [
+        [
+          2,
+          "Prediction(\n    reasoning='The function stops a running cloud SQL proxy process if it exists, logs and clears resources including the proxy process, socket directory, downloaded proxy binary (if applicable), and generated credentials. It raises an AirflowException if the proxy was not started, and may raise OSError for OS-related errors during file removals (except for missing files, which are ignored for the downloaded proxy).',\n    output='Stops the cloud_sql_proxy process and cleans up its resources.\\n\\nReturns:\\n    None: this method does not return a value.\\n\\nRaises:\\n    AirflowException: if the sql proxy has not been started yet.\\n    OSError: if removing the downloaded proxy file or credentials file fails due to an OS error other than \"No such file or directory\" (ENOENT).'\n)"
+        ]
+      ],
+      "50": [
+        [
+          0,
+          "Prediction(\n    reasoning='The function attempts to determine the proxy version by:\\n- calling the proxy executable with --version\\n- capturing its stdout\\n- applying a regex that looks for a substring matching Version (or version) followed by a space and capturing the text up to a semicolon\\n- returning the captured version string if found, otherwise returning None\\nNote that if the subprocess call fails (non-zero exit status or other I/O errors), an exception would be raised and not handled here.',\n    output='The actual return value depends on the external command\\'s output. If the command prints something like \"Version 1.2.3; ...\" or \"version 1.2.3; ...\", this function will return \"1.2.3\". If such a pattern isn\\'t found, it returns None. If the subprocess call fails, an exception would be raised.'\n)"
+        ]
+      ],
+      "51": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a concise, imperative one-line summary of the function, followed by a docstring-like block detailing the Arguments, Returns, and Raises sections that reflect the function's behavior and signature without modifying the code.\",\n    output='Create a Connection from the generated URI and persist it to the session.\\nArguments:\\n    session (object): optional database session used to persist the new Connection.\\nReturns:\\n    None: the function does not return a value; it persists the Connection via the provided session.\\nRaises:\\n    AttributeError: if `session` is None or not a valid session.\\n    Exception: if database operations fail during add/commit.'\n)"
+        ]
+      ],
+      "52": [
+        [
+          0,
+          "Prediction(\n    reasoning='The original method uses count() to check if any results exist and then accesses the first item via indexing. This can trigger multiple queries: one for count() and another for fetching the first result. A more efficient approach is to fetch at most one matching row using first(), which returns the object or None in a single query. Also, provide a concise docstring describing the behavior.',\n    output='def retrieve_connection(self, session=None):\\n        \"\"\"\\n        Retrieve and return the Connection object matching the configured\\n        database connection identifier (db_conn_id). Returns None if not found.\\n        \"\"\"\\n        self.log.info(\"Retrieving connection %s\", self.db_conn_id)\\n        connection = session.query(Connection).filter(\\n            Connection.conn_id == self.db_conn_id\\n        ).first()\\n        return connection'\n)"
+        ]
+      ],
+      "53": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-style description of the function's behavior: a one-line imperative summary followed by Arguments and Returns sections, reflecting the function signature (session) and noting that no explicit raises occur.\",\n    output='Delete the connection corresponding to self.db_conn_id if it exists.\\nArguments:\\n    session (object): database session used to query and delete the Connection with conn_id == self.db_conn_id; defaults to None.\\nReturns:\\n    None: no return value.'\n)"
+        ]
+      ],
+      "54": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output=\"Return a CloudSqlProxyRunner configured for this operator.\\n\\nReturns:\\n    A :class:`CloudSqlProxyRunner` instance configured with the current operator's SQL proxy settings.\\n\\nRaises:\\n    :class:`AirflowException`: Raised when proxy runner is requested while use_proxy is False.\"\n)"
+        ]
+      ],
+      "55": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"Provide a concise, docstring-style description of the function's behavior. There are no parameters, so the Arguments section remains empty. The Returns section describes the hook instance returned, which can be either PostgresHook or MySqlHook depending on the database type.\",\n    output='Return the appropriate database hook for the configured database type.\\nArguments:\\n\\nReturns:\\n    db_hook (``PostgresHook`` or ``MySqlHook``): the database hook instance configured for the current database type.'\n)"
+        ]
+      ],
+      "56": [
+        [
+          1,
+          "Prediction(\n    reasoning='The function logs any notices from a PostgreSQL database connection if present.',\n    output='Log PostgreSQL connection notices.'\n)"
+        ]
+      ],
+      "57": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Reserve a free TCP port and store references on the instance.\\n\\nArguments:\\n * self (object): The instance on which the method operates.\\n\\nRaises:\\n * :class:`OSError`: If socket creation, binding, or retrieving the port fails due to an OS error.'\n)"
+        ]
+      ],
+      "58": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-like description of the function’s behavior, detailing the parameter semantics and the return value without modifying the code.',\n    output='\"\"\"\\nReturn a normalized ML Engine job id.\\n\\nArguments:\\n    job_id (str): The input job identifier to normalize.\\n        - If job_id starts with a digit or a template ({{...}}), a \\'z_\\' prefix is prepended.\\n\\nReturns:\\n    str: The normalized job identifier. Templates ({{...}}) are preserved; non-template segments are sanitized by replacing non alphanumeric characters with underscores; a leading digit/template results in a leading \\'z_\\' prefix in the final string.\\n\"\"\"'\n)"
+        ]
+      ],
+      "59": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Extract the numeric error code from an exception using a regular expression.\\n\\nArguments:\\n * self (object): the instance of the class.\\n * e (BaseException): the exception from which to extract a numeric error code.\\n\\nReturns: int: the parsed error code if parsing succeeds; otherwise the original exception.'\n)"
+        ]
+      ],
+      "60": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Generated a concise, present-tense docstring describing the function's purpose (clearing DagRun records for DAG IDs) and its behavior (deleting each DagRun and logging).\",\n    output='\"\"\"\\nClear all DagRun records for DAGs listed in DAG_IDS.\\n\\nDeletes all DagRun records for the DAG IDs listed in DAG_IDS from the database using the current session, and logs each deletion via logging.info.\\n\"\"\"'\n)"
+        ]
+      ],
+      "61": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning not shown.',\n    output='Delete all TaskInstance records for DAG IDs in DAG_IDS from the database.'\n)"
+        ]
+      ],
+      "62": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Set the paused state for DAGs.\\n\\nArguments:\\n * is_paused (bool): The desired paused state to apply to each DagModel whose dag_id is in DAG_IDS.'\n)"
+        ]
+      ],
+      "63": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a concise, gold-target style docstring for the given method, including a one-line imperative summary, an Arguments section describing the method parameter (self), and a Returns section indicating the function returns None and prints output. No code is modified.',\n    output='Prints a summary of performance statistics for task instances across the configured DAG IDs and reports any unfinished tasks.\\n\\nArguments:\\n    self (object): the instance on which the method is invoked.\\n\\nReturns:\\n    None: prints performance data and warnings to stdout.'\n)"
+        ]
+      ],
+      "64": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will produce a concise, docstring-style block describing the function’s behavior without modifying the code. The function performs a heartbeat check, queries task instances, computes progress, prints stats, pauses DAGs, and may exit the process; I will capture these aspects in a single-line summary plus Arguments, Returns, and Raises sections. Yields is not applicable since the function is not a generator.',\n    output='Check task instances for the configured DAGs, print stats, pause DAGs, and exit when all tasks are complete or a timeout occurs.\\n\\nArguments:\\n    self (:class:`SchedulerMetricsJob`): the instance on which heartbeat is invoked.\\n\\nReturns:\\n    None: this method does not return a value.\\n\\nRaises:\\n    SystemExit: raised when all tasks have been processed or the maximum runtime has been exceeded, triggering termination after printing available stats.'\n)"
+        ]
+      ],
+      "65": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Invoke the AWS Lambda function with the given payload.\\n\\nArguments:\\n * payload (object): Payload to send to the Lambda function.\\n\\nReturns:\\n * response (dict): The response from the AWS Lambda invoke call.'\n)"
+        ]
+      ],
+      "66": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Provide a concise, docstring-like description of the function's purpose, parameters, return values, and exceptions without altering the code.\",\n    output='Create and wire three Airflow operators to perform ML evaluation: a batch prediction, a summary generation, and a validation step.\\n\\nArguments:\\n    task_prefix (str): prefix for task_ids; must match the allowed Dataflow/DataFlowPythonOperator style (letters or starting with a letter, followed by alphanumerics and hyphens).\\n    data_format (str or object): format of the input data for evaluation, as consumed by the prediction/summary steps.\\n    input_paths (str or sequence of str): one or more paths to input data for prediction.\\n    prediction_path (str): destination path for written predictions (e.g., a GCS path).\\n    metric_fn_and_keys (tuple): pair consisting of a callable metric_fn and an iterable of metric_key strings.\\n    validate_fn (callable): function to validate the evaluation results; will be called with the parsed summary.\\n    batch_prediction_job_id (str, optional): job id or prefix for the batch prediction Dataflow job.\\n    project_id (str, optional): GCP project id to use.\\n    region (str, optional): GCP region to use.\\n    dataflow_options (dict, optional): default options for Dataflow jobs.\\n    model_uri (str, optional): URI of the model to be used for prediction.\\n    model_name (str, optional): name of the model to be used for prediction.\\n    version_name (str, optional): version name of the model to be used for prediction.\\n    dag (airflow.models.DAG, optional): DAG to attach the created tasks to and to derive defaults from.\\n\\nReturns:\\n    The configured operators: evaluate_prediction, evaluate_summary, evaluate_validation (tuple of operators):\\n        - evaluate_prediction (MLEngineBatchPredictionOperator): operator that runs batch prediction.\\n        - evaluate_summary (DataFlowPythonOperator): operator that summarizes predictions using a metric function.\\n        - evaluate_validation (PythonOperator): operator that loads the prediction summary and runs validate_fn.\\n\\nRaises:\\n    AirflowException: if task_prefix contains illegal characters or if metric_fn or validate_fn are not callable.\\n    ValueError: if the generated prediction_path format is not a valid Google Cloud Storage path during the validation step.'\n)"
+        ]
+      ],
+      "67": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-like description of the function's behavior, including its handling of the umask, parameters, return value, and potential exceptions, without altering the code.\",\n    output='Create the directory at path with the given mode, applying the mode exactly regardless of the current umask.\\n\\nArguments:\\n    path (str): The directory path to create.\\n        - Required.\\n    mode (int): The permissions to apply to the created directory.\\n        - Required.\\n        - The mode is applied as-is; the function temporarily sets the process umask to 0 during creation to ensure the exact mode is used.\\n\\nReturns:\\n    None: the function does not return a value; it performs directory creation as a side effect.\\n\\nRaises:\\n    OSError: if the directory cannot be created and the path is not already an existing directory.'\n)"
+        ]
+      ],
+      "68": [
+        [
+          2,
+          "Prediction(\n    reasoning='The function attempts to cast its input to a float; if successful it returns the float, otherwise it returns the original value unchanged.',\n    output='Return the input as a float when possible, otherwise return the input unchanged.\\n\\nArguments:\\n    s (<type>): value to be converted to a float if possible; if conversion fails, the original value is returned.\\n\\nReturns:\\n    ret (<type>): the converted float when possible; otherwise the original input value.'\n)"
+        ]
+      ],
+      "69": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will generate a gold-target style, docstring-like documentation block that succinctly describes the function's purpose, parameters, return value, and exceptions without modifying the code. The function converts a naive datetime to an aware datetime in a specified timezone, handling several timezone implementations and raising a ValueError if the input is already aware.\",\n    output='Make a naive datetime aware in the given timezone.\\n\\nArguments:\\n    value (datetime.datetime): input naive datetime to be localized. Must be naive (no tzinfo); raises ValueError if the value is already tz-aware.\\n    timezone (object): target timezone. If None, uses TIMEZONE. If the timezone provides localize, it is used; if it provides convert, it is used; otherwise tzinfo is set directly.\\n\\nReturns:\\n    datetime.datetime: the input value converted to an aware datetime in the given timezone.\\n\\nRaises:\\n    ValueError: if value is already tz-aware (is_localized(value)).'\n)"
+        ]
+      ],
+      "70": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generate a concise, docstring-like description of the function's behavior, including its parameters, return value, and raised exceptions without exposing internal reasoning.\",\n    output='Convert an aware datetime to a naive datetime in the specified timezone.\\n\\nArguments:\\n    value (:class:`datetime.datetime`): The input aware datetime to convert. This must be aware; otherwise a :class:`ValueError` is raised.\\n    timezone (:class:`datetime.tzinfo`): The target timezone to convert to. Defaults to TIMEZONE.\\n\\nReturns:\\n    :class:`datetime.datetime`: A naive datetime representing the same instant in the target timezone, with tzinfo removed.\\n\\nRaises:\\n    ValueError: If value is naive.'\n)"
+        ]
+      ],
+      "71": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-like block describing this function as a wrapper around dt.datetime that injects a default TIMEZONE when tzinfo is not provided. The docstring will include a one-line imperative summary, an Arguments section describing *args and **kwargs, a Returns section specifying the datetime object type, and a Raises section noting possible exceptions from the underlying datetime construction. No code will be modified.',\n    output=\"Return a datetime object with a default TIMEZONE tzinfo when tzinfo is not provided.\\n\\nArguments:\\n    args (tuple): variadic positional arguments forwarded to ``dt.datetime`` constructor.\\n    kwargs (dict): keyword arguments forwarded to ``dt.datetime`` constructor; if 'tzinfo' is not provided in ``kwargs``, it will be set to TIMEZONE.\\n\\nReturns:\\n    a :class:`datetime.datetime` object: the datetime instance created by ``dt.datetime`` with the supplied arguments; if ``tzinfo`` is not provided, it defaults to TIMEZONE.\\n\\nRaises:\\n    TypeError: when the provided arguments are invalid for ``dt.datetime`` construction.\\n    ValueError: when the resulting date/time is out of range or otherwise invalid.\"\n)"
+        ]
+      ],
+      "72": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='\"\"\"\\nGet a connection to the Druid broker.\\n\\nReturns:\\n  the Druid broker connection object.\\n\"\"\"'\n)"
+        ]
+      ],
+      "73": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I analyzed the function body to identify its behavior and parameters. The function creates a requests.Session, configures it based on an external connection (self.http_conn_id) by building a base URL, setting authentication, and merging headers from both the connection's extra field and the optional headers parameter. It then returns the configured session. The docstring should reflect the one-line summary and provide a concise, structured description of the interface and behavior without modifying the code.\",\n    output='Create and configure a requests.Session from the configured HTTP connection and optional headers, then return the session.\\n\\nArguments:\\n    headers (dict): optional headers to merge into the session; default None.\\n        - If provided, these headers are merged into session.headers.\\n\\nReturns:\\n    ``requests.Session``: the configured session instance, with authentication and headers applied from the connection and optional headers.'\n)"
+        ]
+      ],
+      "74": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will create a concise, docstring-style description for the given function, including a one-line imperative summary and sections for Arguments, Returns, and Raises. I’ll infer parameter usage from the code (how data, headers, and extra_options are used) and describe the return value as the result of run_and_check. No code will be modified.',\n    output='\"\"\"\\nPrepare and send an HTTP request to the given endpoint using the configured method and options.\\n\\nArguments:\\n    endpoint (str): The endpoint path to append to the base_url; optional in practice since None or \\'\\' yields an empty path.\\n        - default: None\\n    data (dict): Query parameters for GET requests or body payload for other methods; optional.\\n        - default: None\\n    headers (dict): HTTP headers to include with the request; optional.\\n        - default: None\\n    extra_options (dict): Extra options forwarded to run_and_check; optional.\\n        - default: None\\n\\nReturns:\\n    Any: The value returned by run_and_check(session, prepped_request, extra_options).\\n\\nRaises:\\n    RequestException: if the request cannot be sent due to a network or protocol error.\\n    Exception: if run_and_check or related code raises an error.\\n\"\"\"'\n)"
+        ]
+      ],
+      "75": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Generate a concise, docstring-like description of the function's behavior, including a one-line summary and sections for Arguments, Returns, and Raises that reflect how the function processes the response and raises AirflowException on HTTP errors.\",\n    output='\"\"\"\\nCheck the HTTP response for errors and raise AirflowException on failure.\\n\\nArguments:\\n    response (:class:`requests.Response`): The HTTP response to validate.\\n\\nReturns:\\n    None: this function does not return a value.\\n\\nRaises:\\n    AirflowException: raised when the response indicates an HTTP error (the call to ``response.raise_for_status()`` raises an ``HTTPError``),\\n        typically including the status code and reason.\\n\"\"\"'\n)"
+        ]
+      ],
+      "76": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I will generate a concise, docstring-style description describing the function's interface and behavior, including parameters, return type, and possible exceptions, without altering the code.\",\n    output='Send the prepared request using the given session and options, optionally validate the response, and return the response.\\n\\n        Arguments:\\n            session (:class:`requests.Session`): The session used to send the prepared request.\\n            prepped_request (:class:`requests.PreparedRequest`): The prepared request to be sent.\\n            extra_options (dict): Optional mapping of per-call options. If None, defaults to {}.\\n                - stream (bool): whether to stream the response; default False.\\n                - verify (bool): whether to verify TLS certificates; default True.\\n                - proxies (dict): proxies to use; default {}.\\n                - cert: client certificate to use; default None.\\n                - timeout: timeout in seconds; default None.\\n                - allow_redirects (bool): whether to follow redirects; default True.\\n                - check_response (bool): whether to call self.check_response on the response; default True.\\n\\n        Returns:\\n            response (:class:`requests.Response`): The HTTP response returned by session.send, possibly after validation.\\n\\n        Raises:\\n            requests.exceptions.ConnectionError: raised when a connection error occurs during the send operation.'\n)"
+        ]
+      ],
+      "77": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-like description of the function behavior, focusing on its generator-based context manager usage (yielding a session and handling commit/rollback/close), without modifying the code.',\n    output='\"\"\"\\nCreate a transactional session within a context manager and manage its lifecycle.\\n\\nYields:\\n    session: a session object (type: ``Session``) provided to the with-block for transactional work.\\n\\nRaises:\\n    Exception: any exception raised inside the with-block is re-raised after rolling back.\\n\"\"\"'\n)"
+        ]
+      ],
+      "78": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"Identify that provide_session is a decorator that ensures a 'session' argument is provided to the wrapped function, by injecting one via create_session when missing. Produce a one-line summary and a docstring-like block with Arguments and Returns sections.\",\n    output='Inject a session into the wrapped function if not provided.\\n\\nArguments:\\n    func (Callable): the function to wrap; the decorator returns a wrapper that calls this function, injecting a ``session`` argument when it is not supplied by the caller.\\n\\nReturns:\\n    wrapper (Callable): a function that, when invoked, ensures a ``session`` is available by using the provided session or creating one via ``create_session``.'\n)"
+        ]
+      ],
+      "79": [
+        [
+          1,
+          "Prediction(\n    reasoning='The function resets the database by dropping existing tables across multiple metadata bases (Airflow, Alembic version table, and Flask AppBuilder Base) and then reinitializes the schema with initdb.',\n    output='Reset the database by dropping existing tables and reinitializing it.'\n)"
+        ]
+      ],
+      "80": [
+        [
+          2,
+          "Prediction(\n    reasoning='Generated a concise, docstring-style description of _get_pretty_exception_message: a single-line summary followed by Arguments and Returns sections, omitting Raises since none are raised.',\n    output='Return a prettified message for exceptions that expose a structured \\'message\\' field; otherwise, return the exception\\'s string representation.\\n\\nArguments:\\n    e (BaseException): The exception instance to format. If e has a \\'message\\' attribute that is a mapping containing \\'errorName\\' and \\'message\\' keys, the function returns \"<errorName>: <message>\"; otherwise, the result is str(e).\\n\\nReturns:\\n    str: The resulting message string.'\n)"
+        ]
+      ],
+      "81": [
+        [
+          0,
+          "Prediction(\n    reasoning='- The function get_records is a method that accepts self, hql, and an optional parameters (default None).\\n- It attempts to call the superclass implementation of get_records, but first it sanitizes the hql by passing it through self._strip_sql(hql).\\n- It forwards the parameters along to the superclass method.\\n- If a DatabaseError is raised during this call, it catches it and re-raises a PrestoException with a user-friendly message produced by self._get_pretty_exception_message(e).\\n- In short, it delegates the record retrieval to the parent class after stripping SQL, and it translates database errors into PrestoException with a prettier message.',\n    output=\"The method delegates the actual retrieval of records to the superclass after stripping the HQL using _strip_sql(hql). It passes along any parameters provided. If a DatabaseError occurs, it catches that error and raises a PrestoException with a readable message produced by _get_pretty_exception_message(e). If no error occurs, it returns whatever the superclass's get_records returns.\"\n)"
+        ]
+      ],
+      "82": [
+        [
+          0,
+          "Prediction(\n    reasoning='The function get_pandas_df executes a SQL (HQL) query using a cursor, with optional parameters. It fetches all rows from the result. If a DatabaseError occurs, it converts and re-raises it as a PrestoException with a pretty message. It obtains column descriptions from cursor.description. If there are any rows, it constructs a pandas DataFrame from the data and assigns the column names from the first element of each column description tuple. If there are no rows, it returns an empty DataFrame. The result is a DataFrame representing the query results (or an empty one if no data).',\n    output=\"This method runs the provided HQL query with optional parameters, fetches all resulting rows, and returns a pandas DataFrame containing those results. If rows are returned, the DataFrame is created from the data and its columns are named using the cursor's description. If no rows are returned, an empty DataFrame is returned. Database errors are caught and re-raised as PrestoException with a prettified message.\"\n)"
+        ]
+      ],
+      "83": [
+        [
+          1,
+          "Prediction(\n    reasoning='Generated documentation block for the run method describing its behavior and parameters.',\n    output=\"Strip the SQL from the HQL and execute it by delegating to the superclass.\\n\\nArguments:\\n * hql (str): The HQL query to execute.\\n * parameters (object): Optional parameters to bind to the query. If not set (``None``, default), no parameters are bound.\\n\\nReturns:\\n The result of the superclass's run method.\"\n)"
+        ]
+      ],
+      "84": [
+        [
+          0,
+          "Prediction(\n    reasoning='The method is a wrapper that delegates to the superclass implementation of insert_rows, always passing an offset of 0. This ensures rows are inserted starting from the beginning of the table, regardless of any other default behavior in higher-level logic. The docstring should reflect this behavior and document the parameters.',\n    output='def insert_rows(self, table, rows, target_fields=None):\\n        \"\"\"\\n        Insert rows into the specified table starting at the beginning.\\n\\n        This method delegates to the superclass implementation, fixing the\\n        offset to 0 so that rows are inserted at the top.\\n        \"\"\"\\n        super().insert_rows(table, rows, target_fields, 0)'\n)"
+        ]
+      ],
+      "85": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Return a configured Cosmos DB client, creating it on first access.\\n\\nReturns:\\n * The active :class:`cosmos_client.CosmosClient` instance representing the configured Cosmos DB client.'\n)"
+        ]
+      ],
+      "86": [
+        [
+          0,
+          "Prediction(\n    reasoning='- The function does_collection_exist takes a collection_name and an optional database_name.\\n- It first checks if collection_name is None and raises AirflowBadRequest if so.\\n- It then queries a data store (likely Cosmos DB given the query syntax) using QueryContainers with a database link derived from database_name.\\n- The query is: SELECT * FROM r WHERE r.id=@id, with parameter @id set to collection_name.\\n- The result is converted to a list (existing_container). If the list is empty, the function returns False; otherwise it returns True.\\n- Important nuance: the query searches for a document whose id equals collection_name inside a container, not for the existence of a container/collection itself. Therefore, the function’s name does not perfectly reflect its behavior; it answers: “Does there exist a document with id equal to collection_name in the targeted container?” rather than “Does a container/collection named collection_name exist?”\\n- Consider edge cases and potential improvements: clarify intent (collection vs. document), handle exceptions from the query, and verify that the correct container is being queried for the intended semantics.',\n    output='The function returns a boolean indicating whether a document with id equal to collection_name exists in the targeted container/database. Specifically:\\n- If collection_name is None, it raises AirflowBadRequest.\\n- If the query finds at least one matching document, it returns True.\\n- If no matching documents are found, it returns False.\\nNote: This checks for a document’s existence by id, not the existence of a collection/container itself; the naming may be misleading and could be refined for clarity.'\n)"
+        ]
+      ],
+      "87": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning is withheld.',\n    output='Create a collection in the database if it does not already exist.\\n\\nArguments:\\n * collection_name (str): The name of the collection to create. If it is ``None``, an AirflowBadRequest is raised.\\n * database_name (str): Optional database name. If not set (``None``, default), uses the default database.\\n\\nRaises:\\n  - :class:`AirflowBadRequest`: If the collection_name is ``None``.'\n)"
+        ]
+      ],
+      "88": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Check whether the specified database exists.\\n\\nArguments:\\n * database_name (str): The name of the database to check.\\n\\nReturns:\\n bool: True if a database with the given name exists, False otherwise.\\n\\nRaises:\\n :class:`AirflowBadRequest`: Raised if ``database_name`` is ``None``.'\n)"
+        ]
+      ],
+      "89": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will generate a concise, docstring-style description of the function, detailing its inputs, behavior (create database if not existing), return value, and exception raises.',\n    output='Create a database if it does not already exist.\\n\\nArguments:\\n    database_name (str): Name of the database to create. Must not be None; used to query existing databases and to create a new one if absent.\\n\\nReturns:\\n    None: The function does not return a value.\\n\\nRaises:\\n    AirflowBadRequest: If database_name is None.'\n)"
+        ]
+      ],
+      "90": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='Delete a database.\\n\\nArguments:\\n * database_name (str): The name of the database to delete.\\n\\nRaises:\\n * :class:`AirflowBadRequest`: If database_name is None.'\n)"
+        ]
+      ],
+      "91": [
+        [
+          0,
+          "Prediction(\n    reasoning='The function delete_collection takes a required collection_name and an optional database_name. It first validates that collection_name is not None; if it is, it raises an AirflowBadRequest. It then builds a collection link using get_collection_link, with the database name resolved via __get_database_name(database_name), and the provided collection_name. Finally, it calls DeleteContainer on the established connection to perform the deletion. The docstring is empty, and the function does not return a value; it relies on the underlying API to raise exceptions on failure. Potential improvements could include a more informative docstring, validation for empty strings, and explicit return/status handling.',\n    output='The function delete_collection validates the input, raises an error if the collection_name is None, constructs a link for the collection using the database name (resolved from database_name), and calls DeleteContainer on the current connection to delete that collection. The docstring is currently empty, and the function does not return a value; error handling relies on the underlying API.'\n)"
+        ]
+      ],
+      "92": [
+        [
+          0,
+          "Prediction(\n    reasoning='This function insert_documents inserts multiple documents into a database/collection. It takes an optional database_name and collection_name. It first checks if documents is None and raises AirflowBadRequest with the message \"You cannot insert empty documents\" if so. If documents is provided, it iterates over each document, constructs the collection link using the resolved database and collection names (via __get_database_name and __get_collection_name), and calls self.get_conn().CreateItem for each document. The results of each CreateItem call are collected into created_documents, which is returned at the end. Note that if documents is an empty list, the loop is skipped and an empty list is returned; the error message may be misleading in that case. Potential improvement: treat empty lists as an error as well or clarify the intended behavior.',\n    output='This method inserts multiple documents into a database collection. It requires that documents is not None; if it is None, it raises an AirflowBadRequest with the message \"You cannot insert empty documents.\" For each document in documents, it creates an item in the target collection (determined by resolving the database and collection names) via the connection\\'s CreateItem method and collects the results. Finally, it returns the list of created documents. If documents is an empty list, it returns an empty list (no items created). Potential improvement: consider also validating that documents is a non-empty list and handling empty lists explicitly.'\n)"
+        ]
+      ],
+      "93": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Generated a formal docstring describing the function's purpose, parameters, and exception behavior.\",\n    output='Delete the specified document from the database.\\n\\nArguments:\\n * document_id (str): The unique identifier of the document to delete.\\n * database_name (str): Optional database name to use. If not set (``None``, default), uses the configured default database name.\\n * collection_name (str): Optional collection name to use. If not set (``None``, default), uses the configured default collection name.\\nRaises:\\n * :class:`AirflowBadRequest`: If `document_id` is ``None``.'\n)"
+        ]
+      ],
+      "94": [
+        [
+          1,
+          "Prediction(\n    reasoning='Generated a structured docstring describing function behavior, parameters, return value, and potential exception.',\n    output='Get a document by its identifier from the database.\\n\\nArguments:\\n * document_id (str): The identifier of the document to retrieve.\\n * database_name (str): Optional database name. If not set (``None``, default), the configured database name is used.\\n * collection_name (str): Optional collection name. If not set (``None``, default), the configured collection name is used.\\n\\nReturns:\\n * The retrieved document item, or ``None`` if an HTTP failure occurs.\\n\\nRaises:\\n * AirflowBadRequest: If document_id is None.'\n)"
+        ]
+      ],
+      "95": [
+        [
+          2,
+          "Prediction(\n    reasoning='Generated a concise, docstring-style API documentation for get_documents, detailing input validation, query construction, remote retrieval, result return semantics, and exception behavior.',\n    output='Execute the given SQL query against the configured collection and return the resulting documents.\\n\\nArguments:\\n    sql_string (str): The SQL query string to execute. Cannot be None; a None value raises AirflowBadRequest.\\n    database_name (str, optional): The target database name. If omitted, defaults are resolved via internal helpers.\\n    collection_name (str, optional): The target collection name. If omitted, defaults are resolved via internal helpers.\\n    partition_key (str, optional): An optional partition key passed to the query operation.\\n\\nReturns:\\n    list or None: The list of documents returned by the query, or None if an HTTPFailure occurs during retrieval.\\n\\nRaises:\\n    AirflowBadRequest: If sql_string is None.'\n)"
+        ]
+      ],
+      "96": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I will fill in the empty docstring to describe the method's purpose, its parameter, and the return value, aligning with typical Python docstring conventions for a function that retrieves a Cloud Function by its full resource name.\",\n    output='\"\"\"\\n        Retrieve a Cloud Function by its full resource name.\\n\\n        Args:\\n            name (str): The full resource name of the function, for example:\\n                        projects/{project}/locations/{location}/functions/{function}\\n\\n        Returns:\\n            dict: The Cloud Function resource as returned by the Cloud Functions API.\\n        \"\"\"'\n)"
+        ]
+      ],
+      "97": [
+        [
+          2,
+          "Prediction(\n    reasoning='The function creates a new Cloud Function by calling the REST API, then waits for the resulting long-running operation to complete. The doc should describe parameters (location, body, project_id), the return value (none), and possible errors from API calls and operation polling.',\n    output='Create a new function resource in the given location and wait for the operation to complete.\\n\\nArguments:\\n              location (str): identifier of the location to create the function in; used by _full_location to construct the API path.\\n              body (dict): request body describing the function resource to create.\\n              project_id (str, optional): Google Cloud project id to use; if omitted, the default project is used.\\n\\nReturns:\\n              None (<type>): The method does not return a value; it waits for the create operation to complete.\\n\\nRaises:\\n              HttpError: if the underlying REST API returns an error.\\n              Exception: if waiting for the operation to complete fails or other unexpected errors occur.'\n)"
+        ]
+      ],
+      "98": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will create a concise, docstring-like description of what the function does based on its implementation: it patches a Cloud Function with a given body and update mask, then waits for the resulting operation to complete. Since there are no type hints in the signature, I will infer reasonable types: name as str, body as dict, and update_mask as a sequence of strings. The Returns section will indicate that the function returns no value, and there are no explicit Raises documented in the code.',\n    output='Patch the Cloud Function and wait for the operation to complete.\\n\\nArguments:\\n    name (str): The full resource name of the Cloud Function to patch.\\n    body (dict): The patch body to apply to the function.\\n    update_mask (Sequence[str]): The list of field paths to update; joined with commas to form updateMask.\\n\\nReturns:\\n    no return value (None): the function does not return a value.'\n)"
+        ]
+      ],
+      "99": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generated a concise, docstring-like documentation describing the function's purpose, parameters, return value, and possible exceptions without altering the original code.\",\n    output='Obtain a signed upload URL for a Cloud Functions ZIP and upload the file to it, returning the URL.\\n\\nArguments:\\n    location (str): The Cloud Functions location where the target function is hosted, used to construct the API path.\\n    zip_path (str): Path to the ZIP archive to upload.\\n    project_id (str, optional): Google Cloud project ID. If omitted, the default project is used.\\n\\nReturns:\\n    upload_url (str): The signed URL returned by the API for uploading the ZIP content; this URL is returned by the function.\\n\\nRaises:\\n    FileNotFoundError: If the ZIP file at zip_path cannot be opened.\\n    googleapiclient.errors.HttpError: If the generateUploadUrl API call fails.\\n    requests.exceptions.RequestException: If the HTTP PUT upload to the signed URL fails due to a network or protocol error.'\n)"
+        ]
+      ]
+    },
+    "best_idx": 4,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are given a Python function (signature and body). Your task is to produce the exact target documentation block that describes the function’s purpose and behavior, in the same style and level of detail as the gold targets shown in the examples. Do not provide any analysis, reasoning, or code—only the documentation text.\\n\\nOutput format and conventions you must follow:\\n- Start with a concise one-sentence description of the function’s purpose, in present tense and capitalized (e.g., \"Save the document to file.\"). This is the summary line.\\n- Leave a blank line after the summary line.\\n- Then include standard docstring-style sections, in this order when applicable:\\n  - Arguments:\\n      - For each parameter, provide a bullet line in this exact form:\\n        \" * name (type): description.\" \\n        If a parameter has a default, note it the same way seen in the gold targets, using inline code formatting for literals (for example: ``None`` or ``current``) and mentioning defaults as appropriate within the description, e.g., \"If not set (``None``, default), ...\".\\n  - Yields: (only if the function uses yield)\\n      - A concise description of what is yielded, including the element type in :class:`...` syntax if used in the project’s style.\\n  - Returns: (only if the function returns a value)\\n      - A concise description of the return value, including its type if applicable (use :class:`...` when appropriate).\\n  - Raises: (if the function may raise exceptions)\\n      - A list of exception types (e.g., :class:`IndexError`, :class:`UnresolvableTextContent`) with a short description of when they are raised, matching the tone and format seen in the gold targets.\\n- Do not include any extraneous content beyond the formatted documentation block.\\n- Strive to mirror the exact style, length, and content pattern of the gold target for consistency (i.e., one-sentence summary followed by structured sections with the same headings and bullet formatting).\\n\\nNotes:\\n- Infer semantics from the code when the docstring is missing or incomplete.\\n- Do not add information that cannot be reasonably inferred from the code.\\n- If a section (Arguments/Yields/Returns/Raises) is not applicable, omit it entirely; do not create empty sections.\\n- Preserve code-related terms and types as they appear in the function signature (including capitalization, underscores, and None formatting).\\n\\nThis instruction aims to produce outputs that align with the provided gold targets’ style and content, enabling direct comparison without additional explanation.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are given the body of a Python function (as text). Your task is to output a concise, gold-target style documentation for that function. Do not modify or return any code from the input; instead, describe its behavior in a structured, docstring-like format that matches the gold targets.\\n\\nWhat to produce\\n- A short, imperative one-line summary of the function’s primary behavior.\\n- Then a structured block with the following sections (in this exact style, when applicable):\\n  Arguments:\\n      <name> (<type>): description of the parameter, including any special meaning, defaults, or constraints. When a parameter is a class or a type, use familiar references like :class:`SomeClass` or ``SomeType`` where appropriate.\\n  Returns:\\n      <description> (<type>): description of the return value and its meaning.\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting notes\\n- Preserve the docstring-like tone and style shown in the gold targets.\\n- Use indentation consistent with the examples (a header line followed by indented parameter descriptions).\\n- Include exact class/type references only if they are present in the input or are standard, using the same markup seen in the gold targets (e.g., :class:`AbstractElement`, ``AnnotationType.POS``, etc.).\\n- Do not output any code from the input; only the descriptive documentation block.\\n\\nGoals\\n- The produced documentation should convey the same semantics as the function: what it does, what it takes, what it returns, and what exceptions it may raise.\\n- The style, length, and structure should align with the provided gold-target examples (one-line summary followed by Arguments, Returns, and Raises sections as appropriate).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New task: Produce gold-target style documentation for a Python function\\n\\nGoal\\nGiven the text of a Python function (its body only), output a concise, docstring-like documentation block that describes the function’s behavior without modifying or returning any code.\\n\\nWhat to output\\n- A single, imperative one-line summary of the function’s primary behavior.\\n- A structured documentation block describing the function’s interface and behavior, using the exact style and sections shown in the gold targets when applicable.\\n\\nSections and formatting (use when applicable)\\n- The documentation should follow this overall shape (docstring-like, with indentation and formatting matching the examples):\\n  \\n  <one-line summary>\\n\\n  Arguments:\\n      <name> (<type>): description of the parameter, including:\\n          - whether the parameter is optional and its default\\n          - any special meaning or constraints\\n          - how complex types should be referenced, e.g. :class:`SomeClass` or ``SomeType``\\n\\n  Returns:\\n      <description> (<type>): description of what is returned and its meaning.\\n  \\n  Yields:\\n      <description> (<type>): description of what the generator yields. (Include only if the function is a generator.)\\n\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting details\\n- Use the docstring-like tone from the gold targets.\\n- Indent parameter descriptions by 4 spaces under the Arguments/Returns/Yields/Raises headings.\\n- For parameter/type references:\\n  - If the parameter is a class or a type that appears in the code, reference it with :class:`ClassName` or ``TypeName`` as appropriate.\\n  - If the type is a standard Python type (int, str, bool, etc.), use the plain name.\\n- For Returns/Yields:\\n  - Describe the return/ yielded values precisely and succinctly, using the same style as the gold targets (e.g., “an annotation element (:class:`AbstractElement`)” or “Generator yielding :class:`SomeType` objects”).\\n- For Raises:\\n  - List exceptions by their class name and provide a brief, concrete condition under which they are raised (not a generic statement).\\n\\nContent guidance\\n- The one-line summary should be a direct, imperative description of the function’s primary action.\\n- The Arguments section should cover all parameters, including defaults and special meaning.\\n- The Returns section should reflect the function’s actual return value or behavior (single value, a generator, etc.), with a type reference.\\n- The Yields section is optional and should be used only if the function yields values; describe the yielded values and their type.\\n- The Raises section should enumerate exceptions that the function may raise, with a short rationale for each.\\n\\nStyle consistency\\n- Do not modify the input code.\\n- Keep the documentation concise; use a minimal but complete description of behavior.\\n- Preserve the exact header capitalisation and punctuation as shown in the gold targets.\\n- If a parameter name is capitalized (e.g., Class) and intended as a type/control flag, reflect its semantics clearly in the description.\\n\\nExample alignment notes\\n- For a function that returns a single item: \"Returns: <description> (<type>): ...\"\\n- For a function that yields items: include a Yields section or describe generator behavior in Returns, depending on which aligns with the target style of the given gold examples.\\n- For optional parameters with None defaults, explicitly note the optional nature and default behavior.\\n\\nInternal conventions to follow\\n- Use imperative mood in the one-line summary.\\n- Use the exact section headers: Arguments:, Returns:, Yields:, Raises:\\n- Use the markup style observed in the gold targets for type references and exceptions (e.g., :class:`AbstractElement`, ``AnnotationType.POS``, :class:`NoSuchAnnotation`).\\n\\nEnd product\\n- A self-contained documentation block suitable for inclusion as a function docstring, mirroring the gold-target style and content fidelity as closely as possible.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Produce a gold-target style documentation block for a given Python function body (provided as text). Do not modify or return any code.\\n\\nWhat to generate\\n- A concise, imperative one-line summary of the function’s primary behavior.\\n- If applicable, a structured documentation block with the exact sections below, preserving the style and tone of the gold targets:\\n  Arguments:\\n      <name> (<type>): description of the parameter, including its meaning, defaults, or constraints. When a parameter is a class or a type, reference it using familiar markup such as :class:`SomeClass` or ``SomeType``. If the parameter is variadic (e.g., *args or **kwargs), describe the variability and the expected element type.\\n  Returns:\\n      <description> (<type>): description of the return value and its meaning.\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting rules\\n- The output must be docstring-like in tone: concise, objective, present-tense.\\n- The summary line should be a single, imperative sentence describing the function’s primary action.\\n- Structure must follow exactly: one-line summary, then an Arguments: block (indented parameter lines), then a Returns: block, then a Raises: block (if applicable).\\n- Indentation for parameter descriptions: 4 spaces per level.\\n- Include only parameters present in the function signature; do not invent extra parameters.\\n- For parameter types, prefer the exact type shown in the signature; when a type is a class or a type, use :class:`Name` or ``Name`` markup as appropriate.\\n- If the function raises multiple exceptions, list each under Raises with a brief description; order is not strictly mandated but should be clear and non-redundant.\\n- Do not output code, examples, or narrative beyond the documentation block.\\n- The documentation should aim to convey the function’s semantics: what it does, what it takes, what it returns, and what it may raise.\\n\\nGoal\\n- The produced documentation should reflect the function’s actual behavior as expressed in the code, matching the gold-target style in wording, structure, and level of detail (brief, precise, and oriented to the signature and observable behavior).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Generate gold-target style function documentation for a Python function\\n\\nGoal\\nGiven the text of a Python function (including its header if present in the input, or its body when the header is not visible), output a concise, docstring-like documentation block that describes the function’s behavior without modifying or returning any code.\\n\\nWhat to output\\n- A single, imperative one-line summary of the function’s primary action.\\n- A structured documentation block describing the function’s interface and behavior, using the exact style and sections shown in the gold targets when applicable.\\n\\nSections and formatting (use when applicable)\\n- The documentation should follow this overall shape (docstring-like, with indentation and formatting matching the examples):\\n  \\n  <one-line summary>\\n\\n  Arguments:\\n      <name> (<type>): description of the parameter, including:\\n          - whether the parameter is optional and its default\\n          - any special meaning or constraints\\n          - how complex types should be referenced, e.g. :class:`SomeClass` or ``SomeType``\\n\\n  Returns:\\n      <description> (<type>): description of what is returned and its meaning.\\n  \\n  Yields:\\n      <description> (<type>): description of what the generator yields. (Include only if the function is a generator.)\\n\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting details\\n- Use the docstring-like tone from the gold targets.\\n- Indent parameter descriptions by 4 spaces under the Arguments/Returns/Yields/Raises headings.\\n- For parameter/type references:\\n  - If the parameter is a class or a type that appears in the code, reference it with :class:`ClassName` or ``TypeName`` as appropriate.\\n  - If the type is a standard Python type (int, str, bool, etc.), use the plain name.\\n- For Returns/Yields:\\n  - Describe the return/ yielded values precisely and succinctly, using the same style as the gold targets (e.g., “an annotation element (:class:`AbstractElement`)” or “Generator yielding :class:`SomeType` objects”).\\n- For Raises:\\n  - List exceptions by their class name and provide a brief, concrete condition under which they are raised (not a generic statement).\\n\\nContent guidance\\n- The one-line summary should be a direct, imperative description of the function’s primary action.\\n- The Arguments section should cover all parameters, including defaults and special meaning.\\n- The Returns section should reflect the function’s actual return value or behavior (single value, a generator, etc.), with a type reference.\\n- The Yields section is optional and should be used only if the function yields values; describe the yielded values and their type.\\n- The Raises section should enumerate exceptions that the function may raise, with a short rationale for each.\\n\\nStyle consistency\\n- Do not modify the input code.\\n- Keep the documentation concise; use a minimal but complete description of behavior.\\n- Preserve the exact header capitalisation and punctuation as shown in the gold targets.\\n- If a parameter name is capitalized (e.g., Class) and intended as a type/control flag, reflect its semantics clearly in the description.\\n\\nInternal conventions to follow\\n- Use imperative mood in the one-line summary.\\n- Use the exact section headers: Arguments:, Returns:, Yields:, Raises:\\n- Use the markup style observed in the gold targets for type references and exceptions (e.g., :class:`AbstractElement`, ``AnnotationType.POS``, :class:`NoSuchAnnotation`).\\n\\nEnd product\\n- A self-contained documentation block suitable for inclusion as a function docstring, mirroring the gold-target style and content fidelity as closely as possible.\\n- The output should be a single, self-contained docstring block (including the opening and closing triple quotes), with no additional prose or commentary outside of it.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Produce a gold-target style documentation block for a given Python function body (provided as text). Do not modify or return any code.\\n\\nWhat to generate\\n- A concise, imperative one-line summary of the function’s primary behavior.\\n- If applicable, a structured documentation block with the exact sections below, preserving the style and tone of the gold targets:\\n  Arguments:\\n      <name> (<type>): description of the parameter, including its meaning, defaults, or constraints. When a parameter is a class or a type, reference it using familiar markup such as :class:`SomeClass` or ``SomeType``. If the parameter is variadic (e.g., *args or **kwargs), describe the variability and the expected element type.\\n  Returns:\\n      <description> (<type>): description of the return value and its meaning.\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting rules\\n- The output must be docstring-like in tone: concise, objective, present-tense.\\n- The summary line should be a single, imperative sentence describing the function’s primary action.\\n- Structure must follow exactly: one-line summary, then an Arguments: block (indented parameter lines), then a Returns: block, then a Raises: block (if applicable).\\n- Indentation for parameter descriptions: 4 spaces per level.\\n- Include only parameters present in the function signature; do not invent extra parameters.\\n- For parameter types, prefer the exact type shown in the signature; when a type is a class or a type, use :class:`Name` or ``Name`` markup as appropriate.\\n- If the function raises multiple exceptions, list each under Raises with a brief description; order is not strictly mandated but should be clear and non-redundant.\\n- Do not output code, examples, or narrative beyond the documentation block.\\n- The documentation should aim to convey the function’s semantics: what it does, what it takes, what it returns, and what it may raise.\\n\\nGoal\\n- The produced documentation should reflect the function’s actual behavior as expressed in the code, matching the gold-target style in wording, structure, and level of detail (brief, precise, and oriented to the signature and observable behavior).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8182956701517106
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are given a Python function (signature and body). Your task is to produce the exact target documentation block that describes the function’s purpose and behavior, in the same style and level of detail as the gold targets shown in the examples. Do not provide any analysis, reasoning, or code—only the documentation text.\\n\\nOutput format and conventions you must follow:\\n- Start with a concise one-sentence description of the function’s purpose, in present tense and capitalized (e.g., \"Save the document to file.\"). This is the summary line.\\n- Leave a blank line after the summary line.\\n- Then include standard docstring-style sections, in this order when applicable:\\n  - Arguments:\\n      - For each parameter, provide a bullet line in this exact form:\\n        \" * name (type): description.\" \\n        If a parameter has a default, note it the same way seen in the gold targets, using inline code formatting for literals (for example: ``None`` or ``current``) and mentioning defaults as appropriate within the description, e.g., \"If not set (``None``, default), ...\".\\n  - Yields: (only if the function uses yield)\\n      - A concise description of what is yielded, including the element type in :class:`...` syntax if used in the project’s style.\\n  - Returns: (only if the function returns a value)\\n      - A concise description of the return value, including its type if applicable (use :class:`...` when appropriate).\\n  - Raises: (if the function may raise exceptions)\\n      - A list of exception types (e.g., :class:`IndexError`, :class:`UnresolvableTextContent`) with a short description of when they are raised, matching the tone and format seen in the gold targets.\\n- Do not include any extraneous content beyond the formatted documentation block.\\n- Strive to mirror the exact style, length, and content pattern of the gold target for consistency (i.e., one-sentence summary followed by structured sections with the same headings and bullet formatting).\\n\\nNotes:\\n- Infer semantics from the code when the docstring is missing or incomplete.\\n- Do not add information that cannot be reasonably inferred from the code.\\n- If a section (Arguments/Yields/Returns/Raises) is not applicable, omit it entirely; do not create empty sections.\\n- Preserve code-related terms and types as they appear in the function signature (including capitalization, underscores, and None formatting).\\n\\nThis instruction aims to produce outputs that align with the provided gold targets’ style and content, enabling direct comparison without additional explanation.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.828228520154953
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are given the body of a Python function (as text). Your task is to output a concise, gold-target style documentation for that function. Do not modify or return any code from the input; instead, describe its behavior in a structured, docstring-like format that matches the gold targets.\\n\\nWhat to produce\\n- A short, imperative one-line summary of the function’s primary behavior.\\n- Then a structured block with the following sections (in this exact style, when applicable):\\n  Arguments:\\n      <name> (<type>): description of the parameter, including any special meaning, defaults, or constraints. When a parameter is a class or a type, use familiar references like :class:`SomeClass` or ``SomeType`` where appropriate.\\n  Returns:\\n      <description> (<type>): description of the return value and its meaning.\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting notes\\n- Preserve the docstring-like tone and style shown in the gold targets.\\n- Use indentation consistent with the examples (a header line followed by indented parameter descriptions).\\n- Include exact class/type references only if they are present in the input or are standard, using the same markup seen in the gold targets (e.g., :class:`AbstractElement`, ``AnnotationType.POS``, etc.).\\n- Do not output any code from the input; only the descriptive documentation block.\\n\\nGoals\\n- The produced documentation should convey the same semantics as the function: what it does, what it takes, what it returns, and what exceptions it may raise.\\n- The style, length, and structure should align with the provided gold-target examples (one-line summary followed by Arguments, Returns, and Raises sections as appropriate).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8423396807909012
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New task: Produce gold-target style documentation for a Python function\\n\\nGoal\\nGiven the text of a Python function (its body only), output a concise, docstring-like documentation block that describes the function’s behavior without modifying or returning any code.\\n\\nWhat to output\\n- A single, imperative one-line summary of the function’s primary behavior.\\n- A structured documentation block describing the function’s interface and behavior, using the exact style and sections shown in the gold targets when applicable.\\n\\nSections and formatting (use when applicable)\\n- The documentation should follow this overall shape (docstring-like, with indentation and formatting matching the examples):\\n  \\n  <one-line summary>\\n\\n  Arguments:\\n      <name> (<type>): description of the parameter, including:\\n          - whether the parameter is optional and its default\\n          - any special meaning or constraints\\n          - how complex types should be referenced, e.g. :class:`SomeClass` or ``SomeType``\\n\\n  Returns:\\n      <description> (<type>): description of what is returned and its meaning.\\n  \\n  Yields:\\n      <description> (<type>): description of what the generator yields. (Include only if the function is a generator.)\\n\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting details\\n- Use the docstring-like tone from the gold targets.\\n- Indent parameter descriptions by 4 spaces under the Arguments/Returns/Yields/Raises headings.\\n- For parameter/type references:\\n  - If the parameter is a class or a type that appears in the code, reference it with :class:`ClassName` or ``TypeName`` as appropriate.\\n  - If the type is a standard Python type (int, str, bool, etc.), use the plain name.\\n- For Returns/Yields:\\n  - Describe the return/ yielded values precisely and succinctly, using the same style as the gold targets (e.g., “an annotation element (:class:`AbstractElement`)” or “Generator yielding :class:`SomeType` objects”).\\n- For Raises:\\n  - List exceptions by their class name and provide a brief, concrete condition under which they are raised (not a generic statement).\\n\\nContent guidance\\n- The one-line summary should be a direct, imperative description of the function’s primary action.\\n- The Arguments section should cover all parameters, including defaults and special meaning.\\n- The Returns section should reflect the function’s actual return value or behavior (single value, a generator, etc.), with a type reference.\\n- The Yields section is optional and should be used only if the function yields values; describe the yielded values and their type.\\n- The Raises section should enumerate exceptions that the function may raise, with a short rationale for each.\\n\\nStyle consistency\\n- Do not modify the input code.\\n- Keep the documentation concise; use a minimal but complete description of behavior.\\n- Preserve the exact header capitalisation and punctuation as shown in the gold targets.\\n- If a parameter name is capitalized (e.g., Class) and intended as a type/control flag, reflect its semantics clearly in the description.\\n\\nExample alignment notes\\n- For a function that returns a single item: \"Returns: <description> (<type>): ...\"\\n- For a function that yields items: include a Yields section or describe generator behavior in Returns, depending on which aligns with the target style of the given gold examples.\\n- For optional parameters with None defaults, explicitly note the optional nature and default behavior.\\n\\nInternal conventions to follow\\n- Use imperative mood in the one-line summary.\\n- Use the exact section headers: Arguments:, Returns:, Yields:, Raises:\\n- Use the markup style observed in the gold targets for type references and exceptions (e.g., :class:`AbstractElement`, ``AnnotationType.POS``, :class:`NoSuchAnnotation`).\\n\\nEnd product\\n- A self-contained documentation block suitable for inclusion as a function docstring, mirroring the gold-target style and content fidelity as closely as possible.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8389320540428161
+      },
+      {
+        "iteration": 4,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Produce a gold-target style documentation block for a given Python function body (provided as text). Do not modify or return any code.\\n\\nWhat to generate\\n- A concise, imperative one-line summary of the function’s primary behavior.\\n- If applicable, a structured documentation block with the exact sections below, preserving the style and tone of the gold targets:\\n  Arguments:\\n      <name> (<type>): description of the parameter, including its meaning, defaults, or constraints. When a parameter is a class or a type, reference it using familiar markup such as :class:`SomeClass` or ``SomeType``. If the parameter is variadic (e.g., *args or **kwargs), describe the variability and the expected element type.\\n  Returns:\\n      <description> (<type>): description of the return value and its meaning.\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting rules\\n- The output must be docstring-like in tone: concise, objective, present-tense.\\n- The summary line should be a single, imperative sentence describing the function’s primary action.\\n- Structure must follow exactly: one-line summary, then an Arguments: block (indented parameter lines), then a Returns: block, then a Raises: block (if applicable).\\n- Indentation for parameter descriptions: 4 spaces per level.\\n- Include only parameters present in the function signature; do not invent extra parameters.\\n- For parameter types, prefer the exact type shown in the signature; when a type is a class or a type, use :class:`Name` or ``Name`` markup as appropriate.\\n- If the function raises multiple exceptions, list each under Raises with a brief description; order is not strictly mandated but should be clear and non-redundant.\\n- Do not output code, examples, or narrative beyond the documentation block.\\n- The documentation should aim to convey the function’s semantics: what it does, what it takes, what it returns, and what it may raise.\\n\\nGoal\\n- The produced documentation should reflect the function’s actual behavior as expressed in the code, matching the gold-target style in wording, structure, and level of detail (brief, precise, and oriented to the signature and observable behavior).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8444389313459396
+      },
+      {
+        "iteration": 5,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Generate gold-target style function documentation for a Python function\\n\\nGoal\\nGiven the text of a Python function (including its header if present in the input, or its body when the header is not visible), output a concise, docstring-like documentation block that describes the function’s behavior without modifying or returning any code.\\n\\nWhat to output\\n- A single, imperative one-line summary of the function’s primary action.\\n- A structured documentation block describing the function’s interface and behavior, using the exact style and sections shown in the gold targets when applicable.\\n\\nSections and formatting (use when applicable)\\n- The documentation should follow this overall shape (docstring-like, with indentation and formatting matching the examples):\\n  \\n  <one-line summary>\\n\\n  Arguments:\\n      <name> (<type>): description of the parameter, including:\\n          - whether the parameter is optional and its default\\n          - any special meaning or constraints\\n          - how complex types should be referenced, e.g. :class:`SomeClass` or ``SomeType``\\n\\n  Returns:\\n      <description> (<type>): description of what is returned and its meaning.\\n  \\n  Yields:\\n      <description> (<type>): description of what the generator yields. (Include only if the function is a generator.)\\n\\n  Raises:\\n      <ExceptionType>: brief description of when/why the exception is raised.\\n\\nFormatting details\\n- Use the docstring-like tone from the gold targets.\\n- Indent parameter descriptions by 4 spaces under the Arguments/Returns/Yields/Raises headings.\\n- For parameter/type references:\\n  - If the parameter is a class or a type that appears in the code, reference it with :class:`ClassName` or ``TypeName`` as appropriate.\\n  - If the type is a standard Python type (int, str, bool, etc.), use the plain name.\\n- For Returns/Yields:\\n  - Describe the return/ yielded values precisely and succinctly, using the same style as the gold targets (e.g., “an annotation element (:class:`AbstractElement`)” or “Generator yielding :class:`SomeType` objects”).\\n- For Raises:\\n  - List exceptions by their class name and provide a brief, concrete condition under which they are raised (not a generic statement).\\n\\nContent guidance\\n- The one-line summary should be a direct, imperative description of the function’s primary action.\\n- The Arguments section should cover all parameters, including defaults and special meaning.\\n- The Returns section should reflect the function’s actual return value or behavior (single value, a generator, etc.), with a type reference.\\n- The Yields section is optional and should be used only if the function yields values; describe the yielded values and their type.\\n- The Raises section should enumerate exceptions that the function may raise, with a short rationale for each.\\n\\nStyle consistency\\n- Do not modify the input code.\\n- Keep the documentation concise; use a minimal but complete description of behavior.\\n- Preserve the exact header capitalisation and punctuation as shown in the gold targets.\\n- If a parameter name is capitalized (e.g., Class) and intended as a type/control flag, reflect its semantics clearly in the description.\\n\\nInternal conventions to follow\\n- Use imperative mood in the one-line summary.\\n- Use the exact section headers: Arguments:, Returns:, Yields:, Raises:\\n- Use the markup style observed in the gold targets for type references and exceptions (e.g., :class:`AbstractElement`, ``AnnotationType.POS``, :class:`NoSuchAnnotation`).\\n\\nEnd product\\n- A self-contained documentation block suitable for inclusion as a function docstring, mirroring the gold-target style and content fidelity as closely as possible.\\n- The output should be a single, self-contained docstring block (including the opening and closing triple quotes), with no additional prose or commentary outside of it.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8375070011615753
+      }
+    ]
+  },
+  "final_prompt": "Task: Produce a gold-target style documentation block for a given Python function body (provided as text). Do not modify or return any code.\n\nWhat to generate\n- A concise, imperative one-line summary of the function’s primary behavior.\n- If applicable, a structured documentation block with the exact sections below, preserving the style and tone of the gold targets:\n  Arguments:\n      <name> (<type>): description of the parameter, including its meaning, defaults, or constraints. When a parameter is a class or a type, reference it using familiar markup such as :class:`SomeClass` or ``SomeType``. If the parameter is variadic (e.g., *args or **kwargs), describe the variability and the expected element type.\n  Returns:\n      <description> (<type>): description of the return value and its meaning.\n  Raises:\n      <ExceptionType>: brief description of when/why the exception is raised.\n\nFormatting rules\n- The output must be docstring-like in tone: concise, objective, present-tense.\n- The summary line should be a single, imperative sentence describing the function’s primary action.\n- Structure must follow exactly: one-line summary, then an Arguments: block (indented parameter lines), then a Returns: block, then a Raises: block (if applicable).\n- Indentation for parameter descriptions: 4 spaces per level.\n- Include only parameters present in the function signature; do not invent extra parameters.\n- For parameter types, prefer the exact type shown in the signature; when a type is a class or a type, use :class:`Name` or ``Name`` markup as appropriate.\n- If the function raises multiple exceptions, list each under Raises with a brief description; order is not strictly mandated but should be clear and non-redundant.\n- Do not output code, examples, or narrative beyond the documentation block.\n- The documentation should aim to convey the function’s semantics: what it does, what it takes, what it returns, and what it may raise.\n\nGoal\n- The produced documentation should reflect the function’s actual behavior as expressed in the code, matching the gold-target style in wording, structure, and level of detail (brief, precise, and oriented to the signature and observable behavior).",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "bert_score"
+}

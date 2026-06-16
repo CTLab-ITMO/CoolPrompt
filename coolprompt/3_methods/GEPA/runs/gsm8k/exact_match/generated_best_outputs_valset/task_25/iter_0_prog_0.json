@@ -1,0 +1,4 @@
+{
+    "reasoning": "Non-pizza items total: 12 + (5\u00d73) + (4\u00d71.5) = 12 + 15 + 6 = 33. Remaining for pizza: 50 \u2212 33 = 17. Each pizza box costs 8.50, so 17 \u00f7 8.50 = 2.",
+    "output": "2"
+}

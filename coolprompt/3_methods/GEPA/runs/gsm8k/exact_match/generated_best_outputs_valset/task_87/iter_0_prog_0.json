@@ -1,0 +1,4 @@
+{
+    "reasoning": "After reaching 5 years, each year adds 10% of the initial monthly salary ($600), i.e., $60 per month. Over 3 more years: 3 \u00d7 $60 = $180 increase in monthly pay. New monthly salary = $600 + $180 = $780. Annual salary = $780 \u00d7 12 = $9,360.",
+    "output": "$9,360 per year"
+}

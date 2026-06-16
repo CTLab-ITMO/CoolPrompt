@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description of the function, listing its purpose, parameters, return value, and absence of explicit raises.",
+    "output": "Download videos from a Vimeo channel URL.\n\nArguments:\n    url (str): Vimeo channel URL to download from (e.g., http://vimeo.com/channels/<channel_id>).\n    output_dir (str): Directory to save downloaded videos; defaults to '.'.\n    merge (bool): If True, merge downloaded items after download; defaults to False.\n    info_only (bool): If True, only fetch and show information about channel contents without downloading; defaults to False.\n    **kwargs (dict): Additional keyword arguments passed to the underlying downloader function.\n\nReturns:\n    None: This function does not return a value; it performs downloads or information gathering as a side effect."
+}

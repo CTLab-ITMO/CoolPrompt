@@ -1,0 +1,4 @@
+{
+    "reasoning": "Produce a small, no-argument Java-like function named exactly \"function\" that follows the observed style: use loc0..loc3 for locals, access endpoints and streams via no-arg getters, log a brief operation, and perform a simple sequence of calls (connect, send, shutdown) to reflect the described actions.",
+    "output": "void function ( ) {\n    logger.info(\"flush outstanding data and make sure it is acknowledged\");\n    final UDPEndPoint loc0 = getEndpoint();\n    final Socket loc1 = getSocket();\n    final OutputStream loc2 = getOutputStream();\n    final InputStream loc3 = getInputStream();\n    connect();\n    send();\n    shutdown();\n}"
+}

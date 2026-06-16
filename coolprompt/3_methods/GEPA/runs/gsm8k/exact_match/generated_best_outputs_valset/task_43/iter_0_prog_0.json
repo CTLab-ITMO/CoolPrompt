@@ -1,0 +1,4 @@
+{
+    "reasoning": "A 2000 calorie target minus 1800 consumed leaves 200 calories remaining. Each serving is 60 g (300 g bag / 5 servings) and 1 serving is 250 calories. 200 calories correspond to 0.8 of a serving, which is 0.8 \u00d7 60 g = 48 g.",
+    "output": "48 g"
+}

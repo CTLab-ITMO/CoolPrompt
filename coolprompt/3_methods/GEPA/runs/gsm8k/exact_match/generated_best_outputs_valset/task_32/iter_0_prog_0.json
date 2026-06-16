@@ -1,0 +1,4 @@
+{
+    "reasoning": "To compute weekly time: Each dog takes 0.5 hours per day. For 10 dogs: 10 \u00d7 0.5 = 5 hours per day. Across 7 days: 5 \u00d7 7 = 35 hours per week.",
+    "output": "35 hours per week"
+}

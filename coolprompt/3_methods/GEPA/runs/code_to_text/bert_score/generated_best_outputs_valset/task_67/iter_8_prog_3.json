@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-like description of the function's behavior, including its handling of the umask, parameters, return value, and potential exceptions, without altering the code.",
+    "output": "Create the directory at path with the given mode, applying the mode exactly regardless of the current umask.\n\nArguments:\n    path (str): The directory path to create.\n        - Required.\n    mode (int): The permissions to apply to the created directory.\n        - Required.\n        - The mode is applied as-is; the function temporarily sets the process umask to 0 during creation to ensure the exact mode is used.\n\nReturns:\n    None: the function does not return a value; it performs directory creation as a side effect.\n\nRaises:\n    OSError: if the directory cannot be created and the path is not already an existing directory."
+}

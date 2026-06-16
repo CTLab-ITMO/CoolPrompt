@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a gold-style, docstring-like block describing the function's behavior based on its code, focusing on its overall action, parameters (kwargs), return value, and any notable side effects, without modifying the code itself.",
+    "output": "Download the selected video stream or display stream information based on keyword arguments.\n\nArguments:\n    kwargs (dict[str, Any]): optional keyword arguments controlling behavior and output. Recognized keys include 'json_output', 'info_only', 'stream_id', 'index', 'output_dir', 'merge', and 'caption'.\n\nReturns:\n    None: the function performs actions (displaying information, downloading, and saving captions) and returns no value."
+}

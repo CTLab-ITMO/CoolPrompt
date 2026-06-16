@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Create the directory tree at the given path with the specified mode, temporarily setting the umask to 0 during creation and restoring the original umask afterwards, and not raising an error if the directory already exists.\n\nArguments:\n * path (str): The path to create, including any missing parent directories.\n * mode (int): The mode to apply to newly created directories, as passed to os.makedirs.\n\nRaises:\n * :class:`OSError`: If the directory cannot be created and the path does not already exist as a directory after the attempt."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a small, deterministic Java-like function that mirrors the described factory fields. Use four locals named loc0, loc1, loc2, and loc3 to represent PlaceHolder, int getPort, boolean isClosed, and String getBindHost respectively. Update loc3 to combine host and port, keeping the structure strictly within a single function block.",
+    "output": "``` \nvoid function ( ) {\n  PlaceHolder loc0 = new PlaceHolder ( );\n  int loc1 = getPort;\n  boolean loc2 = isClosed;\n  String loc3 = getBindHost;\n  loc3 = loc3 + \":\" + loc1;\n}\n```"
+}

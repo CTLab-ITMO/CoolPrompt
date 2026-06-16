@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style documentation block for the given function, describing its purpose, parameters, return behavior, and potential exceptions in the requested format without altering the code.",
+    "output": "\"\"\"\nPatch the specified database in the given instance and wait for the operation to complete.\n\nArguments:\n    instance (str): The instance identifier containing the database.\n        - mandatory\n    database (str): The name of the database to patch.\n        - mandatory\n    body (dict): The request payload describing the patch to apply to the database.\n        - mandatory\n    project_id (str, optional): The GCP project ID; defaults to None.\n\nReturns:\n    no return value (None): The function patches the database and waits for the operation to complete; no value is returned.\n\nRaises:\n    Exception: if the patch request fails or the operation polling fails.\n\"\"\""
+}

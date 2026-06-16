@@ -1,0 +1,4 @@
+{
+    "reasoning": "We will produce a Java-like function named function that initializes two separator strings, a Hashtable, and uses getStatusFor and lookupChecklist with the concode_elem_sep token, then calls register with that token. The code uses loc0..loc3 as local variables per the gold style.",
+    "output": "void function ( ) {\n  String loc0 = \"concode_field_sep\";\n  String loc1 = \"concode_elem_sep\";\n  Hashtable statuses = new Hashtable();\n  ChecklistStatus loc2 = getStatusFor(loc1);\n  Object loc3 = lookupChecklist(loc1);\n  register(loc1);\n}"
+}

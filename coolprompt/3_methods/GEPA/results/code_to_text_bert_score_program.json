@@ -1,0 +1,32 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Task: Produce a gold-target style documentation block for a given Python function body (provided as text). Do not modify or return any code.\n\nWhat to generate\n- A concise, imperative one-line summary of the function’s primary behavior.\n- If applicable, a structured documentation block with the exact sections below, preserving the style and tone of the gold targets:\n  Arguments:\n      <name> (<type>): description of the parameter, including its meaning, defaults, or constraints. When a parameter is a class or a type, reference it using familiar markup such as :class:`SomeClass` or ``SomeType``. If the parameter is variadic (e.g., *args or **kwargs), describe the variability and the expected element type.\n  Returns:\n      <description> (<type>): description of the return value and its meaning.\n  Raises:\n      <ExceptionType>: brief description of when/why the exception is raised.\n\nFormatting rules\n- The output must be docstring-like in tone: concise, objective, present-tense.\n- The summary line should be a single, imperative sentence describing the function’s primary action.\n- Structure must follow exactly: one-line summary, then an Arguments: block (indented parameter lines), then a Returns: block, then a Raises: block (if applicable).\n- Indentation for parameter descriptions: 4 spaces per level.\n- Include only parameters present in the function signature; do not invent extra parameters.\n- For parameter types, prefer the exact type shown in the signature; when a type is a class or a type, use :class:`Name` or ``Name`` markup as appropriate.\n- If the function raises multiple exceptions, list each under Raises with a brief description; order is not strictly mandated but should be clear and non-redundant.\n- Do not output code, examples, or narrative beyond the documentation block.\n- The documentation should aim to convey the function’s semantics: what it does, what it takes, what it returns, and what it may raise.\n\nGoal\n- The produced documentation should reflect the function’s actual behavior as expressed in the code, matching the gold-target style in wording, structure, and level of detail (brief, precise, and oriented to the signature and observable behavior).",
+      "fields": [
+        {
+          "prefix": "Input:",
+          "description": "Task input text."
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Output:",
+          "description": "The generated answer / target text."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

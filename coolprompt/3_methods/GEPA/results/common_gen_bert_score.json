@@ -1,0 +1,1468 @@
+{
+  "dataset": "common_gen",
+  "metric": "bert_score",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "bert_score"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.8716500109434128,
+      0.9297516810894012,
+      0.9291051024198532,
+      0.9275727635622024,
+      0.9287339669466018
+    ],
+    "val_subscores": [
+      {
+        "0": 0.8163121342658997,
+        "1": 0.8177725672721863,
+        "2": 0.8191734552383423,
+        "3": 0.8228534460067749,
+        "4": 0.8544188737869263,
+        "5": 0.8610958456993103,
+        "6": 0.8643693923950195,
+        "7": 0.8557462692260742,
+        "8": 0.83043372631073,
+        "9": 0.8248869776725769,
+        "10": 0.8212623000144958,
+        "11": 0.8030875325202942,
+        "12": 0.9516704678535461,
+        "13": 0.9647090435028076,
+        "14": 0.9402081966400146,
+        "15": 0.916129469871521,
+        "16": 0.9053852558135986,
+        "17": 0.9117913246154785,
+        "18": 0.9058840870857239,
+        "19": 0.8943444490432739,
+        "20": 0.9392196536064148,
+        "21": 0.9525527358055115,
+        "22": 0.917543888092041,
+        "23": 0.9431799650192261,
+        "24": 0.8234604001045227,
+        "25": 0.8445314764976501,
+        "26": 0.8262657523155212,
+        "27": 0.8267081379890442,
+        "28": 0.823965311050415,
+        "29": 0.8410458564758301,
+        "30": 0.8169442415237427,
+        "31": 0.8281311392784119,
+        "32": 0.8167470693588257,
+        "33": 0.8350315093994141,
+        "34": 0.8858798146247864,
+        "35": 0.9156975150108337,
+        "36": 0.8638948202133179,
+        "37": 0.9089971780776978,
+        "38": 0.9092044234275818,
+        "39": 0.9486491084098816,
+        "40": 0.9165924191474915,
+        "41": 0.9498919248580933,
+        "42": 0.9234722256660461,
+        "43": 0.955919086933136,
+        "44": 0.955919086933136,
+        "45": 0.9260309934616089,
+        "46": 0.8193005919456482,
+        "47": 0.8208642601966858,
+        "48": 0.8313462138175964,
+        "49": 0.8244627118110657,
+        "50": 0.8049631714820862,
+        "51": 0.8160876631736755,
+        "52": 0.810266375541687,
+        "53": 0.8250635862350464,
+        "54": 0.9486708641052246,
+        "55": 0.9678249955177307,
+        "56": 0.925051748752594,
+        "57": 0.9594086408615112,
+        "58": 0.8378849029541016,
+        "59": 0.8329193592071533,
+        "60": 0.8283423185348511,
+        "61": 0.8419489860534668,
+        "62": 0.9233757257461548,
+        "63": 0.9413585066795349,
+        "64": 0.9401012659072876,
+        "65": 0.9301776885986328,
+        "66": 0.8827495574951172,
+        "67": 0.9247968792915344,
+        "68": 0.9569104313850403,
+        "69": 0.9028794765472412,
+        "70": 0.8198866844177246,
+        "71": 0.8304527401924133,
+        "72": 0.8227329850196838,
+        "73": 0.8216409087181091,
+        "74": 0.895325243473053,
+        "75": 0.9413176774978638,
+        "76": 0.8355118036270142,
+        "77": 0.8321075439453125,
+        "78": 0.8258295059204102,
+        "79": 0.8274969458580017,
+        "80": 0.8886327147483826,
+        "81": 0.9282041192054749,
+        "82": 0.9050611853599548,
+        "83": 0.905026376247406,
+        "84": 0.8085601329803467,
+        "85": 0.8033561110496521,
+        "86": 0.8139054775238037,
+        "87": 0.8161510229110718,
+        "88": 0.9184536337852478,
+        "89": 0.9208928346633911,
+        "90": 0.8561330437660217,
+        "91": 0.9111193418502808,
+        "92": 0.8759340047836304,
+        "93": 0.8478653430938721,
+        "94": 0.8553178310394287,
+        "95": 0.8469789028167725,
+        "96": 0.8142807483673096,
+        "97": 0.8142232894897461,
+        "98": 0.8040904998779297,
+        "99": 0.8047459721565247
+      },
+      {
+        "0": 0.9038794636726379,
+        "1": 0.906511664390564,
+        "2": 0.9137586355209351,
+        "3": 0.9054793119430542,
+        "4": 0.9365786910057068,
+        "5": 0.8937509059906006,
+        "6": 0.9775737524032593,
+        "7": 0.9337553977966309,
+        "8": 0.9470311403274536,
+        "9": 0.9397584199905396,
+        "10": 0.9327545762062073,
+        "11": 0.8866336345672607,
+        "12": 0.9409360289573669,
+        "13": 0.9540182948112488,
+        "14": 0.9297928810119629,
+        "15": 0.9050980806350708,
+        "16": 0.9203285574913025,
+        "17": 0.9284759163856506,
+        "18": 0.9208452105522156,
+        "19": 0.907809317111969,
+        "20": 0.9939765334129333,
+        "21": 0.9370935559272766,
+        "22": 0.9531967639923096,
+        "23": 0.9395696520805359,
+        "24": 0.9194924235343933,
+        "25": 0.9287762641906738,
+        "26": 0.9065463542938232,
+        "27": 0.9664646983146667,
+        "28": 0.9648539423942566,
+        "29": 0.9737734794616699,
+        "30": 0.9446289539337158,
+        "31": 0.9044446349143982,
+        "32": 0.9022467136383057,
+        "33": 0.9554733633995056,
+        "34": 0.903773844242096,
+        "35": 0.9227049350738525,
+        "36": 0.8816278576850891,
+        "37": 0.9179890751838684,
+        "38": 0.9188225269317627,
+        "39": 0.9432488083839417,
+        "40": 0.9293540716171265,
+        "41": 0.9520926475524902,
+        "42": 0.9398221969604492,
+        "43": 0.9739562273025513,
+        "44": 0.9739562273025513,
+        "45": 0.9369490742683411,
+        "46": 0.9113035798072815,
+        "47": 0.9320821762084961,
+        "48": 0.9663016200065613,
+        "49": 0.9142194390296936,
+        "50": 0.9169344902038574,
+        "51": 0.9260823726654053,
+        "52": 0.9185331463813782,
+        "53": 0.9222205281257629,
+        "54": 0.9568529725074768,
+        "55": 0.9868534803390503,
+        "56": 0.9403054714202881,
+        "57": 0.965495228767395,
+        "58": 0.9192667007446289,
+        "59": 0.922408938407898,
+        "60": 0.9049387574195862,
+        "61": 0.9160242676734924,
+        "62": 0.9397071599960327,
+        "63": 0.9424920082092285,
+        "64": 0.9451590180397034,
+        "65": 0.9316555261611938,
+        "66": 0.8935017585754395,
+        "67": 0.9504048824310303,
+        "68": 0.9825911521911621,
+        "69": 0.9152140617370605,
+        "70": 0.899543821811676,
+        "71": 0.8739700317382812,
+        "72": 0.920799732208252,
+        "73": 0.8828826546669006,
+        "74": 0.9001440405845642,
+        "75": 0.9473962783813477,
+        "76": 0.9733508229255676,
+        "77": 0.9745147228240967,
+        "78": 0.9378853440284729,
+        "79": 0.946479856967926,
+        "80": 0.9032456278800964,
+        "81": 0.9687472581863403,
+        "82": 0.915009617805481,
+        "83": 0.9208936095237732,
+        "84": 0.9262909889221191,
+        "85": 0.929129421710968,
+        "86": 0.9311708807945251,
+        "87": 0.9155223965644836,
+        "88": 0.8984798789024353,
+        "89": 0.9233289361000061,
+        "90": 0.8758053779602051,
+        "91": 0.8959633708000183,
+        "92": 0.9416259527206421,
+        "93": 0.9353207349777222,
+        "94": 0.9209855794906616,
+        "95": 0.9291253089904785,
+        "96": 0.9330345988273621,
+        "97": 0.9345061182975769,
+        "98": 0.9134854078292847,
+        "99": 0.9163762927055359
+      },
+      {
+        "0": 0.8947163224220276,
+        "1": 0.9309626221656799,
+        "2": 0.94579017162323,
+        "3": 0.9044660329818726,
+        "4": 0.9365786910057068,
+        "5": 0.8937509059906006,
+        "6": 0.9775737524032593,
+        "7": 0.9337553977966309,
+        "8": 0.9446000456809998,
+        "9": 0.941016435623169,
+        "10": 0.922498881816864,
+        "11": 0.8854536414146423,
+        "12": 0.9516704678535461,
+        "13": 0.9647090435028076,
+        "14": 0.9402081966400146,
+        "15": 0.916129469871521,
+        "16": 0.9079120755195618,
+        "17": 0.9336038827896118,
+        "18": 0.9079738259315491,
+        "19": 0.9087935090065002,
+        "20": 0.9498311281204224,
+        "21": 0.9370935559272766,
+        "22": 0.9523019194602966,
+        "23": 0.9395696520805359,
+        "24": 0.9198442101478577,
+        "25": 0.9280592203140259,
+        "26": 0.9293214678764343,
+        "27": 0.9372925162315369,
+        "28": 0.9705017805099487,
+        "29": 0.9559416174888611,
+        "30": 0.9451991319656372,
+        "31": 0.904076099395752,
+        "32": 0.9012820720672607,
+        "33": 0.9595606327056885,
+        "34": 0.9045923948287964,
+        "35": 0.9047255516052246,
+        "36": 0.876384973526001,
+        "37": 0.9277982711791992,
+        "38": 0.9188225269317627,
+        "39": 0.9520540237426758,
+        "40": 0.9280058145523071,
+        "41": 0.9520926475524902,
+        "42": 0.9492145776748657,
+        "43": 0.9687281250953674,
+        "44": 0.9772297143936157,
+        "45": 0.9433614015579224,
+        "46": 0.9033128023147583,
+        "47": 0.9320821762084961,
+        "48": 0.9534311890602112,
+        "49": 0.915626049041748,
+        "50": 0.9200220108032227,
+        "51": 0.9349440336227417,
+        "52": 0.9209965467453003,
+        "53": 0.9093321561813354,
+        "54": 0.9568529725074768,
+        "55": 0.9868534803390503,
+        "56": 0.9403054714202881,
+        "57": 0.965495228767395,
+        "58": 0.9252110123634338,
+        "59": 0.92284095287323,
+        "60": 0.9005270004272461,
+        "61": 0.926328718662262,
+        "62": 0.9437528252601624,
+        "63": 0.9374159574508667,
+        "64": 0.9478643536567688,
+        "65": 0.9352569580078125,
+        "66": 0.9037190675735474,
+        "67": 0.95074862241745,
+        "68": 0.9589040279388428,
+        "69": 0.9148757457733154,
+        "70": 0.9248809218406677,
+        "71": 0.8802307844161987,
+        "72": 0.920799732208252,
+        "73": 0.8828826546669006,
+        "74": 0.895325243473053,
+        "75": 0.9413176774978638,
+        "76": 0.9731751680374146,
+        "77": 0.9727740287780762,
+        "78": 0.9459630250930786,
+        "79": 0.94635409116745,
+        "80": 0.8886327147483826,
+        "81": 0.9467120170593262,
+        "82": 0.9189373850822449,
+        "83": 0.9170401692390442,
+        "84": 0.9289781451225281,
+        "85": 0.9126071929931641,
+        "86": 0.9311708807945251,
+        "87": 0.9204102158546448,
+        "88": 0.9003835320472717,
+        "89": 0.9233289361000061,
+        "90": 0.8545551300048828,
+        "91": 0.8969709277153015,
+        "92": 0.9433313608169556,
+        "93": 0.9381965398788452,
+        "94": 0.9209855794906616,
+        "95": 0.9356932640075684,
+        "96": 0.9330345988273621,
+        "97": 0.91696697473526,
+        "98": 0.9149621725082397,
+        "99": 0.9021614193916321
+      },
+      {
+        "0": 0.9166092276573181,
+        "1": 0.9261801242828369,
+        "2": 0.9089163541793823,
+        "3": 0.9075631499290466,
+        "4": 0.9365786910057068,
+        "5": 0.8937509059906006,
+        "6": 0.9775737524032593,
+        "7": 0.9337553977966309,
+        "8": 0.9416706562042236,
+        "9": 0.9346002340316772,
+        "10": 0.9327545762062073,
+        "11": 0.8854536414146423,
+        "12": 0.9516704678535461,
+        "13": 0.9647090435028076,
+        "14": 0.9402081966400146,
+        "15": 0.9050980806350708,
+        "16": 0.9275979995727539,
+        "17": 0.9182490110397339,
+        "18": 0.910011351108551,
+        "19": 0.9119939804077148,
+        "20": 0.9508283138275146,
+        "21": 0.9370935559272766,
+        "22": 0.930134117603302,
+        "23": 0.9520260095596313,
+        "24": 0.9031241536140442,
+        "25": 0.9265202879905701,
+        "26": 0.9037179946899414,
+        "27": 0.9447189569473267,
+        "28": 0.9648539423942566,
+        "29": 0.9606112837791443,
+        "30": 0.9446289539337158,
+        "31": 0.9054731726646423,
+        "32": 0.9053956270217896,
+        "33": 0.9573829174041748,
+        "34": 0.8974452018737793,
+        "35": 0.9047255516052246,
+        "36": 0.8950151801109314,
+        "37": 0.9133964776992798,
+        "38": 0.9113224148750305,
+        "39": 0.9520540237426758,
+        "40": 0.9293540716171265,
+        "41": 0.9554880261421204,
+        "42": 0.9395642876625061,
+        "43": 0.9772297143936157,
+        "44": 0.9687281250953674,
+        "45": 0.9415121674537659,
+        "46": 0.9113035798072815,
+        "47": 0.9320821762084961,
+        "48": 0.9055137038230896,
+        "49": 0.9142194390296936,
+        "50": 0.9247921109199524,
+        "51": 0.9233768582344055,
+        "52": 0.9227812886238098,
+        "53": 0.9095525145530701,
+        "54": 0.9568529725074768,
+        "55": 0.9868534803390503,
+        "56": 0.9403054714202881,
+        "57": 0.965495228767395,
+        "58": 0.9062761664390564,
+        "59": 0.9127322435379028,
+        "60": 0.8854117393493652,
+        "61": 0.9122881293296814,
+        "62": 0.9415033459663391,
+        "63": 0.9486116766929626,
+        "64": 0.9478643536567688,
+        "65": 0.942261815071106,
+        "66": 0.8920962810516357,
+        "67": 0.9446126818656921,
+        "68": 0.9584110379219055,
+        "69": 0.9148757457733154,
+        "70": 0.918583869934082,
+        "71": 0.8802307844161987,
+        "72": 0.9303503632545471,
+        "73": 0.9167428612709045,
+        "74": 0.9001440405845642,
+        "75": 0.9473962783813477,
+        "76": 0.9569238424301147,
+        "77": 0.9727740287780762,
+        "78": 0.9389338493347168,
+        "79": 0.94635409116745,
+        "80": 0.9048832654953003,
+        "81": 0.9318649172782898,
+        "82": 0.9171052575111389,
+        "83": 0.9213938117027283,
+        "84": 0.9385939836502075,
+        "85": 0.9039180874824524,
+        "86": 0.9227513074874878,
+        "87": 0.9194950461387634,
+        "88": 0.8984798789024353,
+        "89": 0.9225978851318359,
+        "90": 0.8718315958976746,
+        "91": 0.9138385653495789,
+        "92": 0.9433313608169556,
+        "93": 0.9353207349777222,
+        "94": 0.9365238547325134,
+        "95": 0.9300075173377991,
+        "96": 0.9251423478126526,
+        "97": 0.9183550477027893,
+        "98": 0.9029311537742615,
+        "99": 0.8931133151054382
+      },
+      {
+        "0": 0.9191986918449402,
+        "1": 0.9261801242828369,
+        "2": 0.9346945881843567,
+        "3": 0.9039176106452942,
+        "4": 0.9365786910057068,
+        "5": 0.8937509059906006,
+        "6": 0.9775737524032593,
+        "7": 0.9337553977966309,
+        "8": 0.9446000456809998,
+        "9": 0.941016435623169,
+        "10": 0.922498881816864,
+        "11": 0.8854536414146423,
+        "12": 0.9516704678535461,
+        "13": 0.9647090435028076,
+        "14": 0.9402081966400146,
+        "15": 0.916129469871521,
+        "16": 0.9193546772003174,
+        "17": 0.9182490110397339,
+        "18": 0.9254213571548462,
+        "19": 0.9049505591392517,
+        "20": 0.9939765334129333,
+        "21": 0.9480825066566467,
+        "22": 0.9282552599906921,
+        "23": 0.9395696520805359,
+        "24": 0.906580924987793,
+        "25": 0.9053082466125488,
+        "26": 0.909194827079773,
+        "27": 0.9447189569473267,
+        "28": 0.9999999403953552,
+        "29": 0.9606112837791443,
+        "30": 0.9451991319656372,
+        "31": 0.904076099395752,
+        "32": 0.9053956270217896,
+        "33": 0.9336331486701965,
+        "34": 0.9081845283508301,
+        "35": 0.9273815155029297,
+        "36": 0.8824796080589294,
+        "37": 0.8856011629104614,
+        "38": 0.9113224148750305,
+        "39": 0.9520540237426758,
+        "40": 0.9280058145523071,
+        "41": 0.947391927242279,
+        "42": 0.9477221369743347,
+        "43": 0.9687281250953674,
+        "44": 0.9772297143936157,
+        "45": 0.9433614015579224,
+        "46": 0.9113035798072815,
+        "47": 0.9320821762084961,
+        "48": 0.9663016200065613,
+        "49": 0.893580436706543,
+        "50": 0.9247921109199524,
+        "51": 0.9233768582344055,
+        "52": 0.9244832396507263,
+        "53": 0.9095525145530701,
+        "54": 0.9568529725074768,
+        "55": 0.9868534803390503,
+        "56": 0.9403054714202881,
+        "57": 0.965495228767395,
+        "58": 0.905848503112793,
+        "59": 0.9248780012130737,
+        "60": 0.8887324929237366,
+        "61": 0.9135234355926514,
+        "62": 0.9389920830726624,
+        "63": 0.9544578194618225,
+        "64": 0.9533975124359131,
+        "65": 0.9370725154876709,
+        "66": 0.8920962810516357,
+        "67": 0.9446126818656921,
+        "68": 0.9566952586174011,
+        "69": 0.9158216714859009,
+        "70": 0.9136636853218079,
+        "71": 0.8778567910194397,
+        "72": 0.920799732208252,
+        "73": 0.8999506831169128,
+        "74": 0.8988398313522339,
+        "75": 0.9473962783813477,
+        "76": 0.9733508229255676,
+        "77": 0.9727740287780762,
+        "78": 0.9389338493347168,
+        "79": 0.946479856967926,
+        "80": 0.9032456278800964,
+        "81": 0.9318649172782898,
+        "82": 0.916256308555603,
+        "83": 0.9140515327453613,
+        "84": 0.9180790781974792,
+        "85": 0.9174899458885193,
+        "86": 0.9264881610870361,
+        "87": 0.9443007111549377,
+        "88": 0.9078678488731384,
+        "89": 0.9283294081687927,
+        "90": 0.8735037446022034,
+        "91": 0.8969709277153015,
+        "92": 0.9416259527206421,
+        "93": 0.9381965398788452,
+        "94": 0.9327202439308167,
+        "95": 0.9259471893310547,
+        "96": 0.9185208678245544,
+        "97": 0.9001332521438599,
+        "98": 0.9134854078292847,
+        "99": 0.9091894626617432
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          4,
+          "Prediction(\n    reasoning='A concise sentence will be created that uses each input word (field, look, stand) at least once.',\n    output='In the field, I look and stand.'\n)"
+        ]
+      ],
+      "1": [
+        [
+          2,
+          "Prediction(\n    reasoning='To satisfy the task, I will craft a natural sentence that includes all three input words: field, stand, and look, with proper grammar. \"You stand in the field and look.\"',\n    output='You stand in the field and look.'\n)"
+        ]
+      ],
+      "2": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will generate a concise natural sentence that includes all three input words.',\n    output='I stand in the field and look.'\n)"
+        ]
+      ],
+      "3": [
+        [
+          3,
+          "Prediction(\n    reasoning='I created one natural sentence using field, look (inflected to looks), and stand with necessary function words to form a coherent scene.',\n    output='The field looks as I stand.'\n)"
+        ]
+      ],
+      "4": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I'll craft a natural, concise sentence that uses all given words: kid, room, and dance, with proper subject-verb agreement.\",\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I will generate a single natural sentence that includes all input words (kid, room, dance).',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I will create a single natural sentence that includes all input words: kid, room, dance.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will craft a concise sentence using all input words by making \"kid\" the subject and \"dance\" the verb, placing them in a simple \"The kid dances in the room.\" structure.',\n    output='The kid dances in the room.'\n)"
+        ]
+      ],
+      "5": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I'll craft a natural, concise sentence that uses all given words: kid, room, and dance, with proper subject-verb agreement.\",\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I produced a concise sentence that uses all input words with appropriate grammatical inflection.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='To include all input words (kid, room, dance) in a natural sentence with proper inflection.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I created a natural sentence using all input words with proper grammar and minimal inflection.',\n    output='The kid dances in the room.'\n)"
+        ]
+      ],
+      "6": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I'll craft a natural, concise sentence that uses all given words: kid, room, and dance, with proper subject-verb agreement.\",\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I will produce a single natural sentence that uses all input words: kid, room, and dance, in grammatical form.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I can’t share my step-by-step reasoning, but here is a sentence that uses all the input words.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will form a natural sentence that includes all three input words, using \"dance\" as a verb and conjugating it to agree with the singular subject \"kid\".',\n    output='The kid dances in the room.'\n)"
+        ]
+      ],
+      "7": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I'll craft a natural, concise sentence that uses all given words: kid, room, and dance, with proper subject-verb agreement.\",\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Generated a single natural sentence using all input words.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Created a natural sentence that uses all input words.',\n    output='The kid dances in the room.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will compose a concise sentence that uses all three input words: kid, room, and dance, with a simple verb form to fit grammar.',\n    output='The kid dances in the room.'\n)"
+        ]
+      ],
+      "8": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will craft a concise sentence that uses all three words: \"cat\", \"pet\", and \"couch\", adding only function words and a verb to form a natural sentence: \"The cat, a pet, sits on the couch.\"',\n    output='The cat, a pet, sits on the couch.'\n)"
+        ]
+      ],
+      "9": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will form a concise natural sentence that uses all three words with proper grammar.',\n    output='The cat is a pet on the couch.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I generated a simple, natural sentence that uses all three given words: cat, pet, and couch, in a coherent way.',\n    output='The cat is a pet on the couch.'\n)"
+        ]
+      ],
+      "10": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will craft a concise sentence that uses all three words: \"cat\", \"pet\", and \"couch\", adding only function words and a verb to form a natural sentence: \"The cat, a pet, sits on the couch.\"',\n    output='The cat, a pet, sits on the couch.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence uses all input words—cat as the subject, pet as an appositive describing the cat, with couch as the location.',\n    output='The cat, a pet, sits on the couch.'\n)"
+        ]
+      ],
+      "11": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will craft a concise sentence that uses all three words: \"cat\", \"pet\", and \"couch\", adding only function words and a verb to form a natural sentence: \"The cat, a pet, sits on the couch.\"',\n    output='The cat, a pet, sits on the couch.'\n)"
+        ]
+      ],
+      "12": [
+        [
+          0,
+          "Prediction(\n    reasoning='I interpreted the three words as a prompt to form a simple imperative sentence. The natural rendering is: \"Climb the side of the building.\"',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I cannot reveal step-by-step reasoning; the final sentence is provided in the output field and uses all given words.',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but here's the final sentence.\",\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I created a concise imperative sentence that uses all three input words—climb, side, and building—while forming a natural instruction that links them.',\n    output='Climb the side of the building.'\n)"
+        ]
+      ],
+      "13": [
+        [
+          0,
+          "Prediction(\n    reasoning='I interpreted the three words as a prompt to form a simple imperative sentence. The natural rendering is: \"Climb the side of the building.\"',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Create a concise imperative sentence that includes all input words: climb, building, side.',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't reveal my internal reasoning, but here's a single sentence using all input words.\",\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Create a concise imperative sentence that uses all input words: climb, building, side.',\n    output='Climb the side of the building.'\n)"
+        ]
+      ],
+      "14": [
+        [
+          0,
+          "Prediction(\n    reasoning='I interpreted the three words as a prompt to form a simple imperative sentence. The natural rendering is: \"Climb the side of the building.\"',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I cannot share internal reasoning, but here is the final sentence.',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Create a concise imperative sentence that includes all input words.',\n    output='Climb the side of the building.'\n)"
+        ]
+      ],
+      "15": [
+        [
+          0,
+          "Prediction(\n    reasoning='I interpreted the three words as a prompt to form a simple imperative sentence. The natural rendering is: \"Climb the side of the building.\"',\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but here is the final sentence.\",\n    output='Climb the side of the building.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I used all input words by forming a natural imperative sentence: \"Climb the side of the building.\" It uses climb as the verb and side and building as the noun objects, with the necessary function words to make a grammatical sentence.',\n    output='Climb the side of the building.'\n)"
+        ]
+      ],
+      "16": [
+        [
+          3,
+          "Prediction(\n    reasoning='Provide a concise sentence that uses all three input words: climb, wall, talk, in a natural, imperative construction.',\n    output='Talk while you climb the wall.'\n)"
+        ]
+      ],
+      "17": [
+        [
+          2,
+          "Prediction(\n    reasoning='I created a concise, natural sentence that includes each input word: \"climb,\" \"wall,\" and \"talk.\"',\n    output='They climb the wall while they talk.'\n)"
+        ]
+      ],
+      "18": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a single natural sentence that uses all input words: climb, wall, talk.',\n    output='You climb the wall and talk.'\n)"
+        ]
+      ],
+      "19": [
+        [
+          3,
+          "Prediction(\n    reasoning='Generated a concise sentence that includes all input words.',\n    output='We talk about how to climb the wall.'\n)"
+        ]
+      ],
+      "20": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share chain-of-thought, but here's the final sentence that uses all given words with minimal inflection.\",\n    output='The car drives through the snow.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"I can't provide step-by-step reasoning, but here's the final sentence using all input words.\",\n    output='The car drives through the snow.'\n)"
+        ]
+      ],
+      "21": [
+        [
+          0,
+          "Prediction(\n    reasoning='Form a sentence using all three input words: drive, snow, car.',\n    output='I can drive a car in the snow.'\n)"
+        ]
+      ],
+      "22": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share chain-of-thought, but here's the final sentence that uses all given words with minimal inflection.\",\n    output='The car drives through the snow.'\n)"
+        ]
+      ],
+      "23": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will form a natural sentence using the given words.',\n    output='Drive the car through the snow.'\n)"
+        ]
+      ],
+      "24": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generated a single natural sentence using all input words 'talk', 'wear', and 'phone' with minor inflection to fit grammar.\",\n    output='They talk on the phone while wearing a phone.'\n)"
+        ]
+      ],
+      "25": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share detailed reasoning, but I will provide a natural sentence that includes all the given words.\",\n    output='Wear the phone while you talk.'\n)"
+        ]
+      ],
+      "26": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will generate one natural sentence that uses talk, wear, and phone at least once, with appropriate function words.',\n    output='She talks on the phone while wearing a phone.'\n)"
+        ]
+      ],
+      "27": [
+        [
+          1,
+          "Prediction(\n    reasoning='I used all input words by making them part of a natural sentence with proper grammar, using \"team\" as the singular subject and \"trains\" to agree with it, and including necessary function words.',\n    output='The hockey team trains at the rink.'\n)"
+        ]
+      ],
+      "28": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will craft a natural sentence that includes all three words: hockey, rink, and team.',\n    output='The team plays hockey on the rink.'\n)"
+        ]
+      ],
+      "29": [
+        [
+          1,
+          "Prediction(\n    reasoning='I used all input words by making them part of a natural sentence with proper grammar, using \"team\" as the singular subject and \"trains\" to agree with it, and including necessary function words.',\n    output='The hockey team trains at the rink.'\n)"
+        ]
+      ],
+      "30": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I used all input words by making 'hockey team' the subject and 'on the rink' the predicate phrase; the sentence starts with a capital letter and ends with a period.\",\n    output='The hockey team plays on the rink.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I created a natural sentence that uses all input words (hockey, rink, team) with a simple verb to describe an action.',\n    output='The hockey team plays on the rink.'\n)"
+        ]
+      ],
+      "31": [
+        [
+          3,
+          "Prediction(\n    reasoning='[omitted]',\n    output='The ocean surfer rides the surf.'\n)"
+        ]
+      ],
+      "32": [
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='The surfer rides the ocean surf.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I created a natural sentence that includes all three input words: ocean, surfer, and surf.',\n    output='The surfer rides the ocean surf.'\n)"
+        ]
+      ],
+      "33": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will craft a single natural sentence that includes all input words at least once.',\n    output='The surfer rides the surf on the ocean.'\n)"
+        ]
+      ],
+      "34": [
+        [
+          4,
+          "Prediction(\n    reasoning='I created a natural, single sentence that uses all three input words at least once and ends with a period.',\n    output='The stair jump follows a flight of stairs.'\n)"
+        ]
+      ],
+      "35": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I can't share internal chain-of-thought, but here's a concise final sentence that uses all input words.\",\n    output='A stair jump leads to a flight.'\n)"
+        ]
+      ],
+      "36": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't share my internal reasoning, but here's the final sentence.\",\n    output='The stair jump is part of the flight.'\n)"
+        ]
+      ],
+      "37": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will provide a concise sentence that includes all input words.',\n    output='A jump from the stair leads to a flight of stairs.'\n)"
+        ]
+      ],
+      "38": [
+        [
+          1,
+          "Prediction(\n    reasoning='To satisfy the constraint, the sentence should include all input words and be grammatically coherent.',\n    output='The band plays music with an instrument.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share my internal reasoning, but here's the final sentence.\",\n    output='The band plays music with an instrument.'\n)"
+        ]
+      ],
+      "39": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Sorry, I can't reveal my reasoning, but here's the result.\",\n    output='The band makes music with an instrument.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I formed a natural sentence using all input words.',\n    output='The band makes music with an instrument.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will construct a simple, natural sentence that includes all three input words: band, music, instrument. A plausible, concise sentence is \"The band makes music with an instrument.\" It uses each word at least once and uses a natural verb \"makes\" with a plural noun \"band\" as the subject; it is grammatical and clear.',\n    output='The band makes music with an instrument.'\n)"
+        ]
+      ],
+      "40": [
+        [
+          1,
+          "Prediction(\n    reasoning='To satisfy the constraint, the sentence should include all input words and be grammatically coherent.',\n    output='The band plays music with an instrument.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[omitted]',\n    output='The band plays music with an instrument.'\n)"
+        ]
+      ],
+      "41": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will craft one natural sentence that uses all input words at least once.',\n    output='The band plays music with instruments.'\n)"
+        ]
+      ],
+      "42": [
+        [
+          2,
+          "Prediction(\n    reasoning='To satisfy the constraint, I will create a concise, natural sentence that uses sit, circle, and talk.',\n    output='They sit in a circle and talk.'\n)"
+        ]
+      ],
+      "43": [
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning withheld to protect chain-of-thought.',\n    output='Sit in a circle and talk.'\n)"
+        ]
+      ],
+      "44": [
+        [
+          2,
+          "Prediction(\n    reasoning='I can’t share my internal reasoning, but here is the final sentence using all provided words.',\n    output='Sit in a circle and talk.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I created a natural imperative sentence that includes all three input words: sit, circle, and talk. The sentence uses a simple directive \"Sit in a circle and talk.\" with \"circle\" as a noun in the prepositional phrase.',\n    output='Sit in a circle and talk.'\n)"
+        ]
+      ],
+      "45": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but here is a final sentence using all provided words.\",\n    output='They sit in a circle and talk.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will form a natural sentence that uses all three input words: sit, talk, and circle, to describe a plausible scene.',\n    output='They sit in a circle and talk.'\n)"
+        ]
+      ],
+      "46": [
+        [
+          1,
+          "Prediction(\n    reasoning='[omitted]',\n    output='The eye moves to look.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Formed a natural sentence using all input words.',\n    output='The eye moves to look.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='To form a natural sentence that includes all three words, I use \"eye\" as the subject, conjugate \"move\" to \"moves\" to agree with \"eye,\" and use \"to look\" as the infinitive to express purpose.',\n    output='The eye moves to look.'\n)"
+        ]
+      ],
+      "47": [
+        [
+          1,
+          "Prediction(\n    reasoning='[omitted]',\n    output='The eye moves to look.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I will craft a single natural sentence that uses all three input words.',\n    output='The eye moves to look.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='reasoning withheld.',\n    output='The eye moves to look.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Formed a natural sentence using all input words with proper inflection.',\n    output='The eye moves to look.'\n)"
+        ]
+      ],
+      "48": [
+        [
+          1,
+          "Prediction(\n    reasoning='[omitted]',\n    output='The eye moves to look.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will craft a natural sentence that includes all three words, using a minor inflection of \"move\" to fit grammar: \"The eye moves to look.\"',\n    output='The eye moves to look.'\n)"
+        ]
+      ],
+      "49": [
+        [
+          2,
+          "Prediction(\n    reasoning='Crafted a simple, grammatically correct sentence using all input words with natural inflection: eye, move (as moves), look (as looks).',\n    output='The eye moves and looks.'\n)"
+        ]
+      ],
+      "50": [
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='Look and watch the window.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I formed a natural imperative sentence that uses all three input words.',\n    output='Look and watch the window.'\n)"
+        ]
+      ],
+      "51": [
+        [
+          2,
+          "Prediction(\n    reasoning='Create a natural imperative sentence that includes all input words: look, window, and watch.',\n    output='Look out the window and watch.'\n)"
+        ]
+      ],
+      "52": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will create a natural imperative sentence that includes all input words: look, watch, and window, using the window as a noun and the two verbs as actions.',\n    output='Look through the window and watch the street outside.'\n)"
+        ]
+      ],
+      "53": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will craft a concise imperative sentence using all three words.',\n    output='Look through the window and watch.'\n)"
+        ]
+      ],
+      "54": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share internal reasoning steps, but here's the final sentence.\",\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I will craft a concise, natural sentence that uses all input words: athlete, prepare, run, with appropriate inflection and necessary function words.',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[reasoning withheld]',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will create a natural sentence using all input words: athlete, prepare, run.',\n    output='The athlete prepares to run.'\n)"
+        ]
+      ],
+      "55": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share internal reasoning steps, but here's the final sentence.\",\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share my step-by-step reasoning, but here's the answer.\",\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Brief answer: produce a natural sentence that uses all input words exactly and with minimal inflection.',\n    output='The athlete prepares to run.'\n)"
+        ]
+      ],
+      "56": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share internal reasoning steps, but here's the final sentence.\",\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='This sentence uses all input words in a natural, grammatically correct form.',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise final sentence that uses all the given words.',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Constructed a natural sentence using all given words with minimal inflection.',\n    output='The athlete prepares to run.'\n)"
+        ]
+      ],
+      "57": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share internal reasoning steps, but here's the final sentence.\",\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I will craft a concise, natural sentence that uses all input words: athlete, prepare, run, with appropriate inflection and necessary function words.',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='The athlete prepares to run.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I will create a natural sentence using all input words: athlete, prepare, run.',\n    output='The athlete prepares to run.'\n)"
+        ]
+      ],
+      "58": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share my step-by-step reasoning, but here's the final sentence using all the words.\",\n    output='Wear your gear while you walk.'\n)"
+        ]
+      ],
+      "59": [
+        [
+          4,
+          "Prediction(\n    reasoning='Create a natural sentence that uses all input words at least once; a concise option is \"I wear gear for a walk.\"',\n    output='I wear gear for a walk.'\n)"
+        ]
+      ],
+      "60": [
+        [
+          1,
+          "Prediction(\n    reasoning='I created a concise sentence that uses all three words: walk, wear, and gear, in a natural imperative form.',\n    output='On the walk, wear gear.'\n)"
+        ]
+      ],
+      "61": [
+        [
+          2,
+          "Prediction(\n    reasoning='Compose a concise imperative sentence that uses all three input words: wear, gear, walk.',\n    output='Wear gear for the walk.'\n)"
+        ]
+      ],
+      "62": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will produce a concise, natural sentence using the three input words with appropriate inflection.',\n    output='The stage gives a speech.'\n)"
+        ]
+      ],
+      "63": [
+        [
+          4,
+          "Prediction(\n    reasoning='I formed a natural sentence that uses all input words, applying the verb \\'give\\' as \\'given\\' to convey a passive construction: \"A speech is given on the stage.\"',\n    output='A speech is given on the stage.'\n)"
+        ]
+      ],
+      "64": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will craft a concise imperative sentence that uses all three input words: \\'stage\\', \\'give\\', and \\'speech\\'. The natural form is \"Give a speech on the stage.\" which uses each word and is grammatically correct.',\n    output='Give a speech on the stage.'\n)"
+        ]
+      ],
+      "65": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't share my internal reasoning, but here is the final sentence.\",\n    output='Give a speech on the stage.'\n)"
+        ]
+      ],
+      "66": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will craft a natural sentence that uses all three input words at least once with proper grammar.',\n    output='He rubs soap on his hand.'\n)"
+        ]
+      ],
+      "67": [
+        [
+          2,
+          "Prediction(\n    reasoning='I created a natural, single sentence that uses all three words (soap, rub, hand) in a coherent action.',\n    output='She rubs soap on her hand.'\n)"
+        ]
+      ],
+      "68": [
+        [
+          1,
+          "Prediction(\n    reasoning='I formed a natural imperative sentence that uses all three words: soap, rub, and hand.',\n    output='Rub the soap on your hand.'\n)"
+        ]
+      ],
+      "69": [
+        [
+          4,
+          "Prediction(\n    reasoning='I created a simple sentence that uses all three input words: soap, rub, and hand, in a common washing action.',\n    output='I rub soap on my hand.'\n)"
+        ]
+      ],
+      "70": [
+        [
+          2,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='The hand waves in front.'\n)"
+        ]
+      ],
+      "71": [
+        [
+          2,
+          "Prediction(\n    reasoning='Use all input words by making \"hand\" the subject, conjugating \"wave\" to \"waves,\" and placing \"front\" in the prepositional phrase \"in front,\" yielding a concise, natural sentence: \"The hand waves in front.\"',\n    output='The hand waves in front.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='The hand waves in front.'\n)"
+        ]
+      ],
+      "72": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will form a concise sentence that uses all three words as subject, verb, and a noun with a prepositional phrase.',\n    output='The hand waves at the front.'\n)"
+        ]
+      ],
+      "73": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will craft a concise sentence that uses all three input words naturally, adding only necessary function words.',\n    output='A hand waves in front.'\n)"
+        ]
+      ],
+      "74": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will compose a concise sentence using all three given words: mow, lawn, yard.',\n    output='I mow the lawn in the yard.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Concise: craft a single natural sentence that uses all input words at least once.',\n    output='I mow the lawn in the yard.'\n)"
+        ]
+      ],
+      "75": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will compose a concise sentence using all three given words: mow, lawn, yard.',\n    output='I mow the lawn in the yard.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='[reasoning omitted]',\n    output='I mow the lawn in the yard.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a concise sentence that includes all input words: mow, yard, lawn.',\n    output='I mow the lawn in the yard.'\n)"
+        ]
+      ],
+      "76": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='Create pottery on a wheel.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning=\"I'll craft a single, natural imperative sentence that includes all three input words: create, pottery, wheel.\",\n    output='Create pottery on a wheel.'\n)"
+        ]
+      ],
+      "77": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='Create pottery on a wheel.'\n)"
+        ]
+      ],
+      "78": [
+        [
+          2,
+          "Prediction(\n    reasoning='Created a natural sentence using all input words with proper subject-verb agreement.',\n    output='The pottery wheel creates pottery.'\n)"
+        ]
+      ],
+      "79": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning withheld.',\n    output='Create pottery on a wheel.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='We will form a natural imperative sentence using all three input words: \"create,\" \"pottery,\" and \"wheel.\"',\n    output='Create pottery on a wheel.'\n)"
+        ]
+      ],
+      "80": [
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='Sit on the sofa and hold it.'\n)"
+        ]
+      ],
+      "81": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share my step-by-step reasoning, but here's a concise sentence using the given words.\",\n    output='Sit on the sofa and hold.'\n)"
+        ]
+      ],
+      "82": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will compose a concise sentence that uses all three input words with minimal additional content.',\n    output='I sit on the sofa and hold it.'\n)"
+        ]
+      ],
+      "83": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but here's the final sentence that uses all input words.\",\n    output='Sit on the sofa while you hold it.'\n)"
+        ]
+      ],
+      "84": [
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='Sit and hold the newspaper.'\n)"
+        ]
+      ],
+      "85": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='I hold the newspaper while I sit.'\n)"
+        ]
+      ],
+      "86": [
+        [
+          1,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='I hold the newspaper while I sit.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Created a natural sentence that includes all input words with proper grammar.',\n    output='I hold the newspaper while I sit.'\n)"
+        ]
+      ],
+      "87": [
+        [
+          4,
+          "Prediction(\n    reasoning='I formed a natural sentence using all input words by giving them appropriate forms and a simple subject: \"The man sits and holds a newspaper.\"',\n    output='The man sits and holds a newspaper.'\n)"
+        ]
+      ],
+      "88": [
+        [
+          0,
+          "Prediction(\n    reasoning='I’m interpreting the input as three words that should be combined into a simple caption or sentence describing an action. A natural, grammatical sentence using all three is: \"A person sits and looks at their hair.\"',\n    output='A person sits and looks at their hair.'\n)"
+        ]
+      ],
+      "89": [
+        [
+          4,
+          "Prediction(\n    reasoning='Construct a natural sentence that uses all three input words: look, hair, sit, with minimal inflection for grammar. The sentence \"Look at the hair while you sit.\" uses each word at least once and sounds natural.',\n    output='Look at the hair while you sit.'\n)"
+        ]
+      ],
+      "90": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share chain-of-thought, but here's the final sentence.\",\n    output='Sit and look at hair.'\n)"
+        ]
+      ],
+      "91": [
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='She sits and looks at her hair.'\n)"
+        ]
+      ],
+      "92": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but I'll provide the final sentence that uses all input words.\",\n    output='The mountain climb requires equipment.'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Reasoning omitted.',\n    output='The mountain climb requires equipment.'\n)"
+        ]
+      ],
+      "93": [
+        [
+          2,
+          "Prediction(\n    reasoning='Create a natural sentence using all input words.',\n    output='The mountain climb requires equipment.'\n)"
+        ],
+        [
+          4,
+          "Prediction(\n    reasoning='I formed a natural sentence that includes all three input words: mountain, climb, and equipment.',\n    output='The mountain climb requires equipment.'\n)"
+        ]
+      ],
+      "94": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will create a concise sentence that includes all input words.',\n    output='A mountain climb requires proper equipment.'\n)"
+        ]
+      ],
+      "95": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share detailed reasoning, but here's the final sentence.\",\n    output='The mountain climb requires equipment.'\n)"
+        ]
+      ],
+      "96": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share my step-by-step reasoning, but here's the final sentence that uses all given words.\",\n    output='In space, I sit and stare.'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I will craft a single natural sentence that uses all input words at least once, with appropriate function words to form a coherent scene: \"In space, I sit and stare.\"',\n    output='In space, I sit and stare.'\n)"
+        ]
+      ],
+      "97": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share my step-by-step reasoning, but here's the final sentence that uses all given words.\",\n    output='In space, I sit and stare.'\n)"
+        ]
+      ],
+      "98": [
+        [
+          2,
+          "Prediction(\n    reasoning='Craft a concise sentence that includes all three input words: space, stare, sit, with natural grammar.',\n    output='I stare into space and sit.'\n)"
+        ]
+      ],
+      "99": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share my step-by-step reasoning, but here's the final sentence that uses all given words.\",\n    output='In space, I sit and stare.'\n)"
+        ]
+      ]
+    },
+    "best_idx": 1,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Given a list of input words, produce a single natural English sentence that uses all the input words at least once (allowing minor inflection to fit grammar, such as pluralization or verb conjugation). The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the words. Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence, but do not introduce new semantic content beyond the provided terms. End the sentence with a period. Do not include any reasoning or explanations—only the final sentence.\\n\\nGuidelines:\\n- If a verb is provided, conjugate it to agree with the subject.\\n- If a noun could serve as an object, include it appropriately.\\n- The sentence may be declarative or imperative.\\n- When multiple valid sentences exist, prefer a natural, common-sense phrasing that closely reflects typical English usage.\\n\\nExample (illustrative only): For input [\\'lake\\', \\'shore\\', \\'canoe\\'], a valid output could be \"The canoe rests on the lake shore.\"'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New Instruction for the Assistant:\\n\\nTask overview\\n- Given a list of input words (strings), produce exactly one natural English sentence that uses every input word at least once (allowing minor inflection such as pluralization or verb conjugation to fit grammar).\\n- The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the provided words.\\n- End the sentence with a single period. Do not include any reasoning, explanations, or extra commentary.\\n\\nOutput constraints\\n- Output exactly one sentence and nothing else.\\n- Begin the sentence with a capital letter; end with a period.\\n- Do not introduce new semantic content beyond the provided words and the necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.).\\n- Include necessary determiners and prepositions to form a natural sentence (but avoid creating new nouns, adjectives, or verbs not present in the input unless required for grammar and only in a natural way).\\n- If a word is a verb, conjugate it to agree with its subject. If the sentence is imperative (e.g., the first word is a verb), use the imperative mood with an understood subject “you.”\\n- If a noun could serve as an object, include it appropriately to satisfy grammatical role while using all words.\\n- Do not add extraneous content beyond the provided words and necessary function words.\\n\\nWord usage rules\\n- Each input word must appear in the final sentence at least once, in some grammatically permissible form.\\n- Minor inflection is allowed (e.g., pluralization, tense/conjugation) to fit grammar and maintain naturalness.\\n- If multiple natural sentences exist, prefer the most natural, common-sense phrasing that would be used in everyday English.\\n\\nExample reminder\\n- For input [\\'lake\\', \\'shore\\', \\'canoe\\'], a valid output is: \"The canoe rests on the lake shore.\"'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions=\"New task instruction for the assistant:\\n\\nGoal\\n- Given a list of input words (strings), produce exactly one natural English sentence that uses all the input words at least once. You may apply minor inflection (e.g., pluralization, verb conjugation) to fit grammar. The sentence should be grammatical, concise, coherent, and describe a plausible scene or action that links the input words. End the sentence with a period.\\n\\nOutput constraints\\n- Output exactly one sentence, with no explanations, reasoning, or extra text.\\n- Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence.\\n- Do not introduce new semantic content beyond what is provided by the input words, apart from standard function words required for grammar.\\n- If a word from the input can serve as a subject, use it as the subject; if a verb is provided, conjugate it to agree with the chosen subject.\\n\\nWord usage rules\\n- Use the input words as content words (nouns, verbs, etc.) where appropriate. You may also use the same input word more than once if needed to form a natural sentence, but you must include all input words at least once.\\n- You may add common small words (articles, prepositions, auxiliaries, etc.) to connect the input words into a coherent sentence.\\n- If multiple valid sentences can be formed with the given words, prefer a natural, common-sense phrasing that would occur in everyday English.\\n\\nExamples of approach (for reference)\\n- Input: ['lake', 'shore', 'canoe'] → The canoe rests on the lake shore.\\n- Input: ['grass', 'horse', 'eat'] → The horse eats grass.\\n- Input: ['boat', 'lake', 'drive'] → Drive the boat on the lake.\\n\\nEdge considerations\\n- If the input contains only nouns with no explicit verb, you may introduce a simple finite verb (e.g., is/are, rests, sits) to bind the words into a sentence, but keep to a natural interpretation and avoid adding new concepts not implied by the words.\\n- The sentence should be a single declarative or imperative sentence ending with a period.\\n\\nNo chain-of-thought\\n- Do not include any reasoning, steps, or explanations—only the final sentence.\"\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: From a list of input words (strings), produce exactly one natural English sentence that uses every input word at least once. You may apply minor inflection (e.g., pluralization, verb conjugation) to fit grammar. The sentence should be grammatical, concise, coherent, and describe a plausible scene or action that links the input words. End the sentence with a period.\\n\\nOutput rules:\\n- Output exactly one sentence, with no explanations, reasoning, or extra text.\\n- Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence.\\n- Do not introduce new semantic content beyond what is provided by the input words, apart from standard function words required for grammar.\\n- If a word from the input can serve as a subject, use it as the subject; if a verb is provided, conjugate it to agree with the chosen subject.\\n- If the input contains only nouns with no explicit verb, you may introduce a simple finite verb (e.g., is/are, rests, sits) to bind the words into a sentence, but keep to a natural interpretation and avoid adding new concepts not implied by the words.\\n- You may add the same input word more than once if needed to form a natural sentence, but you must include all input words at least once.\\n- If multiple valid sentences can be formed, prefer a natural, common-sense phrasing that would occur in everyday English.\\n- The sentence should be a single declarative or imperative sentence ending with a period.\\n\\nFormatting and style:\\n- Capitalize the first letter of the sentence.\\n- Do not include any extraneous characters or formatting beyond the final sentence.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Given a list of input words, produce a single natural English sentence that uses all the input words at least once (allowing minor inflection to fit grammar, such as pluralization or verb conjugation). The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the words. Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence, but do not introduce new semantic content beyond the provided terms. End the sentence with a period. Do not include any reasoning or explanations—only the final sentence.\\n\\nGuidelines:\\n- If a verb is provided, conjugate it to agree with the subject.\\n- If a noun could serve as an object, include it appropriately.\\n- The sentence may be declarative or imperative.\\n- When multiple valid sentences exist, prefer a natural, common-sense phrasing that closely reflects typical English usage.\\n\\nExample (illustrative only): For input [\\'lake\\', \\'shore\\', \\'canoe\\'], a valid output could be \"The canoe rests on the lake shore.\"'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8716500109434128
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Given a list of input words, produce a single natural English sentence that uses all the input words at least once (allowing minor inflection to fit grammar, such as pluralization or verb conjugation). The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the words. Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence, but do not introduce new semantic content beyond the provided terms. End the sentence with a period. Do not include any reasoning or explanations—only the final sentence.\\n\\nGuidelines:\\n- If a verb is provided, conjugate it to agree with the subject.\\n- If a noun could serve as an object, include it appropriately.\\n- The sentence may be declarative or imperative.\\n- When multiple valid sentences exist, prefer a natural, common-sense phrasing that closely reflects typical English usage.\\n\\nExample (illustrative only): For input [\\'lake\\', \\'shore\\', \\'canoe\\'], a valid output could be \"The canoe rests on the lake shore.\"'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9297516810894012
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New Instruction for the Assistant:\\n\\nTask overview\\n- Given a list of input words (strings), produce exactly one natural English sentence that uses every input word at least once (allowing minor inflection such as pluralization or verb conjugation to fit grammar).\\n- The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the provided words.\\n- End the sentence with a single period. Do not include any reasoning, explanations, or extra commentary.\\n\\nOutput constraints\\n- Output exactly one sentence and nothing else.\\n- Begin the sentence with a capital letter; end with a period.\\n- Do not introduce new semantic content beyond the provided words and the necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.).\\n- Include necessary determiners and prepositions to form a natural sentence (but avoid creating new nouns, adjectives, or verbs not present in the input unless required for grammar and only in a natural way).\\n- If a word is a verb, conjugate it to agree with its subject. If the sentence is imperative (e.g., the first word is a verb), use the imperative mood with an understood subject “you.”\\n- If a noun could serve as an object, include it appropriately to satisfy grammatical role while using all words.\\n- Do not add extraneous content beyond the provided words and necessary function words.\\n\\nWord usage rules\\n- Each input word must appear in the final sentence at least once, in some grammatically permissible form.\\n- Minor inflection is allowed (e.g., pluralization, tense/conjugation) to fit grammar and maintain naturalness.\\n- If multiple natural sentences exist, prefer the most natural, common-sense phrasing that would be used in everyday English.\\n\\nExample reminder\\n- For input [\\'lake\\', \\'shore\\', \\'canoe\\'], a valid output is: \"The canoe rests on the lake shore.\"'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9291051024198532
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions=\"New task instruction for the assistant:\\n\\nGoal\\n- Given a list of input words (strings), produce exactly one natural English sentence that uses all the input words at least once. You may apply minor inflection (e.g., pluralization, verb conjugation) to fit grammar. The sentence should be grammatical, concise, coherent, and describe a plausible scene or action that links the input words. End the sentence with a period.\\n\\nOutput constraints\\n- Output exactly one sentence, with no explanations, reasoning, or extra text.\\n- Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence.\\n- Do not introduce new semantic content beyond what is provided by the input words, apart from standard function words required for grammar.\\n- If a word from the input can serve as a subject, use it as the subject; if a verb is provided, conjugate it to agree with the chosen subject.\\n\\nWord usage rules\\n- Use the input words as content words (nouns, verbs, etc.) where appropriate. You may also use the same input word more than once if needed to form a natural sentence, but you must include all input words at least once.\\n- You may add common small words (articles, prepositions, auxiliaries, etc.) to connect the input words into a coherent sentence.\\n- If multiple valid sentences can be formed with the given words, prefer a natural, common-sense phrasing that would occur in everyday English.\\n\\nExamples of approach (for reference)\\n- Input: ['lake', 'shore', 'canoe'] → The canoe rests on the lake shore.\\n- Input: ['grass', 'horse', 'eat'] → The horse eats grass.\\n- Input: ['boat', 'lake', 'drive'] → Drive the boat on the lake.\\n\\nEdge considerations\\n- If the input contains only nouns with no explicit verb, you may introduce a simple finite verb (e.g., is/are, rests, sits) to bind the words into a sentence, but keep to a natural interpretation and avoid adding new concepts not implied by the words.\\n- The sentence should be a single declarative or imperative sentence ending with a period.\\n\\nNo chain-of-thought\\n- Do not include any reasoning, steps, or explanations—only the final sentence.\"\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9275727635622024
+      },
+      {
+        "iteration": 4,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: From a list of input words (strings), produce exactly one natural English sentence that uses every input word at least once. You may apply minor inflection (e.g., pluralization, verb conjugation) to fit grammar. The sentence should be grammatical, concise, coherent, and describe a plausible scene or action that links the input words. End the sentence with a period.\\n\\nOutput rules:\\n- Output exactly one sentence, with no explanations, reasoning, or extra text.\\n- Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence.\\n- Do not introduce new semantic content beyond what is provided by the input words, apart from standard function words required for grammar.\\n- If a word from the input can serve as a subject, use it as the subject; if a verb is provided, conjugate it to agree with the chosen subject.\\n- If the input contains only nouns with no explicit verb, you may introduce a simple finite verb (e.g., is/are, rests, sits) to bind the words into a sentence, but keep to a natural interpretation and avoid adding new concepts not implied by the words.\\n- You may add the same input word more than once if needed to form a natural sentence, but you must include all input words at least once.\\n- If multiple valid sentences can be formed, prefer a natural, common-sense phrasing that would occur in everyday English.\\n- The sentence should be a single declarative or imperative sentence ending with a period.\\n\\nFormatting and style:\\n- Capitalize the first letter of the sentence.\\n- Do not include any extraneous characters or formatting beyond the final sentence.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.9287339669466018
+      }
+    ]
+  },
+  "final_prompt": "Task: Given a list of input words, produce a single natural English sentence that uses all the input words at least once (allowing minor inflection to fit grammar, such as pluralization or verb conjugation). The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the words. Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence, but do not introduce new semantic content beyond the provided terms. End the sentence with a period. Do not include any reasoning or explanations—only the final sentence.\n\nGuidelines:\n- If a verb is provided, conjugate it to agree with the subject.\n- If a noun could serve as an object, include it appropriately.\n- The sentence may be declarative or imperative.\n- When multiple valid sentences exist, prefer a natural, common-sense phrasing that closely reflects typical English usage.\n\nExample (illustrative only): For input ['lake', 'shore', 'canoe'], a valid output could be \"The canoe rests on the lake shore.\"",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "bert_score"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise docstring-style description of the function's purpose, parameters, and return value.",
+    "output": "Fetch the content from a URL and return the response body (decoded by default).\n\n\nArguments:\n * url (str): The URL to fetch.\n * headers (dict): HTTP headers to include in the request. If not provided (``{}``, default), an empty header dictionary is used.\n * decoded (bool): If True, decode the response body to a string using an inferred charset from the Content-Type header (defaulting to utf-8 if not specified). If False, return raw bytes.\n\nReturns:\n * data (str or bytes): The response body. When decoded is True, the data is returned as a string decoded using the detected charset (default to utf-8). If decoded is False, raw bytes are returned. The response may be decompressed if Content-Encoding indicates gzip or deflate."
+}

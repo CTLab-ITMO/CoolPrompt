@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a single Java-like function named function with four locals: loc0 as String, loc1 as long, loc2 as TSTNode, loc3 as boolean. It will perform a small deterministic sequence of calls that mirror the described operations (traverse, makeEmpty, insert, main, delete), using those locals. The code reflects a minimal, self-contained sequence consistent with the described TST-like operations.",
+    "output": "void function ( ) {\n  String loc0 = \"word\";\n  long loc1 = 0L;\n  TSTNode loc2 = new TSTNode ( );\n  boolean loc3 = false;\n  traverse ( loc2 );\n  makeEmpty ( );\n  loc3 = true;\n  insert ( loc0 );\n  main ( );\n  delete ( );\n  delete ( );\n}"
+}

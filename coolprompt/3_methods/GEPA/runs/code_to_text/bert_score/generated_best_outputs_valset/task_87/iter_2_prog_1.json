@@ -1,0 +1,4 @@
+{
+    "reasoning": "Reasoning is withheld.",
+    "output": "Create a collection in the database if it does not already exist.\n\nArguments:\n * collection_name (str): The name of the collection to create. If it is ``None``, an AirflowBadRequest is raised.\n * database_name (str): Optional database name. If not set (``None``, default), uses the default database.\n\nRaises:\n  - :class:`AirflowBadRequest`: If the collection_name is ``None``."
+}

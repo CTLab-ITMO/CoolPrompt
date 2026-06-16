@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "public void addRecipientToList(String recipient) {\n    if (selectedRecipients == null) {\n        selectedRecipients = new java.util.ArrayList<String>();\n    }\n    selectedRecipients.add(recipient);\n}"
+}

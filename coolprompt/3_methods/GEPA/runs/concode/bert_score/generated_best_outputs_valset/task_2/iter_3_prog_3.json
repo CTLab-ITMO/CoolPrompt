@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will create a small, deterministic Java-like function that follows the described behavior: obtain an object's id via readObjectID, if it's null and creation is allowed (cancreate = true), generate a new id with generateID and register it with createObjectID. Finally, convert the id to a string using toString and assign it to the id field. I will use four local String variables loc0, loc1, loc2, loc3 to match the loc-based pattern and a cancreate flag.",
+    "output": "void function ( ) {\n  String loc0;\n  String loc1;\n  String loc2;\n  String loc3;\n  boolean cancreate = true;\n  loc0 = readObjectID ( );\n  if (loc0 == null) {\n    if (cancreate) {\n      loc0 = generateID ( );\n      createObjectID ( loc0 );\n    }\n  }\n  loc1 = toString ( loc0 );\n  loc2 = loc1;\n  loc3 = loc2;\n  id = loc3;\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will provide a minimal deterministic sequence that matches the nodetest pattern: obtain a DocumentTraversal with getDocumentTraversal(), prepare a short[] nodeTypes, a Node rootNode, invoke acceptNode, and assert the result is true using assertEquals.",
+    "output": "```java\nvoid function ( ) {\n    DocumentTraversal loc0;\n    short[] loc1;\n    Node loc2;\n    boolean loc3;\n    loc0 = getDocumentTraversal ( );\n    loc1 = new short[] { 0 } ;\n    loc3 = loc0.acceptNode ( loc2 , loc1 ) ;\n    assertEquals ( true , loc3 ) ;\n}\n```"
+}

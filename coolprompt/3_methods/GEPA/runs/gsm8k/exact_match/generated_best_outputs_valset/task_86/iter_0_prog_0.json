@@ -1,0 +1,4 @@
+{
+    "reasoning": "First alarm: 4 rings. Second alarm: three times as long as the first \u2192 3 \u00d7 4 = 12 rings. Third alarm: half as long as the second \u2192 1/2 \u00d7 12 = 6 rings. Total rings = 4 + 12 + 6 = 22.",
+    "output": "22"
+}

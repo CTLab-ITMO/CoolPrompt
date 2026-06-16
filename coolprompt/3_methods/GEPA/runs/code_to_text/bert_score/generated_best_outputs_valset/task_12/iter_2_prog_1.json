@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Sanitize a filename by removing or replacing invalid characters based on the operating system and trimming its length.\n\nArguments:\n * text (str): The input text to sanitize.\n * os (str): The target operating system name. If not set (``detect_os()``, default), the value returned by detect_os() at definition time is used.\n\nReturns:\n * :class:`str`: The sanitized text."
+}

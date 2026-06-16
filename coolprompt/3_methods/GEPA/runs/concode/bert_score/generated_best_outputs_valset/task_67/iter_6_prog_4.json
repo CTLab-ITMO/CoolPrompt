@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a buffer-related component with fields and operations but asks for a small deterministic operation. I implement a simple function that checks whether a given ByteBuffer contains data by verifying it is non-null and has remaining bytes.",
+    "output": "boolean function ( final ByteBuffer buffer ) { boolean loc0 = buffer != null && buffer.hasRemaining ( ); return loc0; }"
+}

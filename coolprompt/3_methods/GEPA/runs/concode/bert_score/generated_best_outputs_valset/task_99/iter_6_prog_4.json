@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a single no-argument Java-like test function named testGetDirectionOfVariation. The body will declare a few loc variables (loc0\u2013loc3 pattern) and perform simple assertions to mirror a deterministic test flow described by the input. This adheres to the expected style without relying on external context.",
+    "output": "void testGetDirectionOfVariation ( ) {\n    String loc0 = \"W\";\n    final long loc1 = 15L;\n    Long[] loc2 = new Long[] { 1L, 2L };\n    assertEquals( \"W\", loc0 );\n    assertEquals( 15L, loc1 );\n    assertEquals( 2, loc2.length );\n}"
+}

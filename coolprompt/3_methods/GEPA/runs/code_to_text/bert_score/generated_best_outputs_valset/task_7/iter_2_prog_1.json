@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Detect the current operating system and return it as a string.\n\nReturns:\n  - The detected operating system as a :class:`str`. Possible values include: 'unknown', 'cygwin', 'mac', 'linux', 'wsl', 'windows', 'bsd'. If running on Linux under Windows Subsystem for Linux, the value may be 'wsl'."
+}

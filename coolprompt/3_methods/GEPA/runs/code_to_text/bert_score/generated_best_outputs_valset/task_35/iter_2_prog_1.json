@@ -1,0 +1,4 @@
+{
+    "reasoning": "I generated a concise docstring describing the function's purpose, arguments, and behavior based on the code.",
+    "output": "Print the current state of the specified task for the given execution date.\n\nArguments:\n * args (object): Input arguments containing task_id and execution_date."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The main attribute is the resources required by an algorithm to solve a problem, primarily the time needed (time complexity); space (memory) usage is also considered but time is the core attribute.",
+    "output": "Time complexity (the amount of time required by an algorithm to solve a problem), with space complexity often considered as well."
+}

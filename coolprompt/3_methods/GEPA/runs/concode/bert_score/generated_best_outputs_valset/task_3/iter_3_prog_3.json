@@ -1,0 +1,4 @@
+{
+    "reasoning": "I cannot provide detailed chain-of-thought, but here is a Java-like function that represents creating a greater-than matcher and performing a simple assertion using the loc0/loc1/loc2 pattern.",
+    "output": "```java\nvoid function ( ) {\n  Long loc0 = 1L;\n  Matcher loc1 = greaterThan(loc0);\n  Long[] loc2 = new Long[]{2L};\n  assertEquals(2L, loc2[0]);\n}\n```"
+}

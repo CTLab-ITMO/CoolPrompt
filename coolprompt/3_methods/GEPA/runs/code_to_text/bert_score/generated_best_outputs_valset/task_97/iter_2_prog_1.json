@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Create a new function in the specified location and wait for the operation to complete.\n\nArguments:\n  * location (str): The Cloud Functions location to create the function in (e.g., 'us-central1').\n  * body (dict): The function resource to create, as expected by the API.\n  * project_id (str, optional): Google Cloud project ID. If not set (``None``, default), uses the default project configured for the client.\n\nRaises:\n  - :class:`googleapiclient.errors.HttpError`: If the create request to the API fails.\n  - :class:`KeyError`: If the API response does not contain the required 'name' field for the operation."
+}

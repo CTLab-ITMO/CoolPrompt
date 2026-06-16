@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "\"\"\"\nGet a connection to the Druid broker.\n\nReturns:\n  the Druid broker connection object.\n\"\"\""
+}

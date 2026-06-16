@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise, docstring-style description of the function's behavior. There are no parameters, so the Arguments section remains empty. The Returns section describes the hook instance returned, which can be either PostgresHook or MySqlHook depending on the database type.",
+    "output": "Return the appropriate database hook for the configured database type.\nArguments:\n\nReturns:\n    db_hook (``PostgresHook`` or ``MySqlHook``): the database hook instance configured for the current database type."
+}

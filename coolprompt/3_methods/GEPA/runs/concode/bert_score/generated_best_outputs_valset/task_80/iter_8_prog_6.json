@@ -1,0 +1,4 @@
+{
+    "reasoning": "Implemented a small deterministic function to retrieve a cached BlockStoreContext by master address, creating and caching a new one if absent. Uses loc0 as local variable and follows the naming/style pattern seen in the input (BlockStoreContext, CACHED_CONTEXTS, InetSocketAddress).",
+    "output": "```java\nBlockStoreContext getContext ( final InetSocketAddress masterAddress ) {\n  BlockStoreContext loc0 = CACHED_CONTEXTS.get( masterAddress );\n  if ( loc0 != null ) {\n    return loc0;\n  }\n  loc0 = new BlockStoreContext();\n  CACHED_CONTEXTS.put( masterAddress, loc0 );\n  return loc0;\n}\n```"
+}

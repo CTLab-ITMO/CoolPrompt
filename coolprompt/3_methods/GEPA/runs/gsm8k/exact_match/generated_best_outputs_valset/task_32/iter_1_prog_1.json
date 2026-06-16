@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute daily hours: 10 \u00d7 0.5 = 5 hours per day. Multiply by 7 days: 5 \u00d7 7 = 35 hours per week.",
+    "output": "35"
+}

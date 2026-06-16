@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-like description of the function behavior, focusing on its generator-based context manager usage (yielding a session and handling commit/rollback/close), without modifying the code.",
+    "output": "\"\"\"\nCreate a transactional session within a context manager and manage its lifecycle.\n\nYields:\n    session: a session object (type: ``Session``) provided to the with-block for transactional work.\n\nRaises:\n    Exception: any exception raised inside the with-block is re-raised after rolling back.\n\"\"\""
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated documentation block for the run method describing its behavior and parameters.",
+    "output": "Strip the SQL from the HQL and execute it by delegating to the superclass.\n\nArguments:\n * hql (str): The HQL query to execute.\n * parameters (object): Optional parameters to bind to the query. If not set (``None``, default), no parameters are bound.\n\nReturns:\n The result of the superclass's run method."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The task suggests adding a recipient to the \"required recipients list.\" The relevant field appears to be selectedRecipients (List<String>). I\u2019ll provide a straightforward Java method that:\n- validates input (non-null, non-empty after trim)\n- initializes the list if needed\n- avoids duplicates\n- adds the recipient when appropriate",
+    "output": "public void addRecipientToList(String recipient) {\n    if (recipient == null) {\n        return;\n    }\n    String trimmed = recipient.trim();\n    if (trimmed.isEmpty()) {\n        return;\n    }\n    if (selectedRecipients == null) {\n        selectedRecipients = new java.util.ArrayList<>();\n    }\n    if (!selectedRecipients.contains(trimmed)) {\n        selectedRecipients.add(trimmed);\n    }\n}"
+}

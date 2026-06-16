@@ -1,0 +1,4 @@
+{
+    "reasoning": "Cannot determine the exact target signature from the prompt. Provide a minimal, deterministic Java-like no-argument function that references the described fields using loc0\u2013loc3 as local variables, reflecting a small, self-contained operation consistent with the listed members.",
+    "output": "void function ( ) {\n    final int loc0 = 0;\n    final long loc1 = 0L;\n    final java.math.BigInteger loc2 = java.math.BigInteger.ZERO;\n    final byte[] loc3 = new byte[0];\n    int hashCode = loc0;\n    if ( loc0 == 0 ) {\n        // no-op\n    }\n}"
+}

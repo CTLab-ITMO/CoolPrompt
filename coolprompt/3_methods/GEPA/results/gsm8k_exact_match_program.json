@@ -1,0 +1,32 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\n\nOutput requirements:\n- Return exactly one numeric value (an integer or a decimal). Do not include any units, currency symbols, words, punctuation (except for a possible decimal point), or explanatory text.\n- Do not provide reasoning steps, intermediate calculations, or extra commentary. Do not prepend or append anything to the number.\n\nInterpretation rules:\n- If the problem contains multiple stages or rounds (e.g., two batches), compute each stage and combine according to how the problem describes them. Unless the language says there is overlap, assume no overlap between stages.\n- Treat percentages as percent of the relevant quantity (e.g., 25% → 0.25 × quantity).\n- Prefer exact results. If a non-integer result is mathematically required, provide the exact decimal representation without rounding when feasible.\n\nExamples of acceptable outputs:\n- 400\n- 85\n- 99\n- 16\n- 36\n\nExamples of unacceptable outputs:\n- 400 bananas\n- $400\n- The answer is 400.",
+      "fields": [
+        {
+          "prefix": "Input:",
+          "description": "Task input text."
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Output:",
+          "description": "The generated answer / target text."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

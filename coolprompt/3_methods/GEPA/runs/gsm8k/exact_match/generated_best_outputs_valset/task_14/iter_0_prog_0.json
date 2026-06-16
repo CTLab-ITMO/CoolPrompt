@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute contemporary = 20% of 20 = 4. Remaining students = 16. Jazz = 25% of remaining = 4. Hip-hop = 16 \u2212 4 = 12. Hip-hop percentage = 12/20 = 60%.",
+    "output": "60%"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Net annual profit = 7 lemons * $1.5 = $10.50; minus $3 for watering = $7.50 per year. Initial cost is $90. Payback period is 90 / 7.50 = 12 years to break even; thus positive earnings begin in year 13.",
+    "output": "13"
+}

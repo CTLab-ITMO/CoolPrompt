@@ -1,0 +1,4 @@
+{
+    "reasoning": "Since the call is a purely one-way RPC, no response data is produced; thus the output is empty.",
+    "output": ""
+}

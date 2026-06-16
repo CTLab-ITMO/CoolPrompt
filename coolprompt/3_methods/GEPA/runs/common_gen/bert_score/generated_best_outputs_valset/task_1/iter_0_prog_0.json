@@ -1,0 +1,4 @@
+{
+    "reasoning": "Adding the string \"out\" to each base word forms common English words: field -> outfield, look -> lookout, stand -> standout.",
+    "output": "['outfield', 'lookout', 'standout']"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a setup step that initializes four locals to configure test properties: a TransferManager, a bucket name, a key, and an S3ADirectOutputStream, followed by invoking a close operation. I will create a small, deterministic Java-like function that uses loc0..loc3, instantiates the appropriate types, assigns string literals for BUCKET_NAME and KEY, and finally calls close on the stream to reflect the void close operation.",
+    "output": "void function ( ) {\n  TransferManager loc0 = new TransferManager();\n  String loc1 = \"BUCKET_NAME\";\n  String loc2 = \"KEY\";\n  S3ADirectOutputStream loc3 = new S3ADirectOutputStream();\n  loc3.close();\n}"
+}

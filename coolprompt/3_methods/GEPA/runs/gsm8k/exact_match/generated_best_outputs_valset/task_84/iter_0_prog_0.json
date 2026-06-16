@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let L be losses. Wins = L + 8. Total games: L + (L + 8) = 22. So 2L + 8 = 22 -> 2L = 14 -> L = 7. Wins = 7 + 8 = 15.",
+    "output": "15"
+}

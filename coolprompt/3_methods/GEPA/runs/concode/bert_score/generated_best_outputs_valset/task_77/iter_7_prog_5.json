@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a compact function using four locals named loc0..loc3 to reflect the described fields via simple, deterministic operations (assignments, list usage, and a conditional).",
+    "output": "void function ( ) {\n  long loc0 = 0L;\n  int loc1 = 0;\n  String loc2 = \"\";\n  java.util.ArrayList<String> loc3 = new java.util.ArrayList<>();\n\n  loc0 = 100L;\n  loc1 = (int) (loc0 / 10);\n  loc2 = \"currentMessage\";\n  loc3.add(\"debug\");\n  loc3.add(loc2);\n  if (loc1 > 5) {\n    loc2 = loc2 + \"_updated\";\n  } else {\n    loc2 = loc2 + \"_init\";\n  }\n  loc1 = loc3.size();\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function get_conn is a lazy accessor that returns a stored client instance, initializing it on first access by calling _get_credentials() and constructing a Client with those credentials, then returning the client. There are no parameters besides self, and no explicit raises in the code, so the documentation will reflect the observed behavior and return type.",
+    "output": "Return the lazily initialized client, creating it if needed.\n\nArguments:\n    \nReturns:\n    :class:`Client`: the lazily initialized client instance."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will create a small, deterministic Java-like function that models a getter-like setup for an exit code. It initializes a default empty exit code string, builds a list of JobExitStatus values to reflect partial exit codes, computes a hash from the exit code, derives a boolean flag from the list size, and prints the exit code to mirror a toString/getter pattern without relying on external context.",
+    "output": "```java\nvoid function ( ) {\n  String loc0 = \"\";\n  List<JobExitStatus> loc1 = new ArrayList<>();\n  loc1.add(JobExitStatus.NOOP);\n  loc1.add(JobExitStatus.FILES_AVAILABLE);\n  int loc2 = loc0.hashCode();\n  boolean loc3 = loc1.size() > 0;\n  System.out.println(loc0.toString());\n}\n```"
+}

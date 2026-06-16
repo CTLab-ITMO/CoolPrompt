@@ -1,0 +1,4 @@
+{
+    "reasoning": "To find final meal: total daily cups = 20 chickens * 3 cups per chicken = 60 cups. Given morning 15 and afternoon 25, subtotal = 40. Final meal cups = 60 - 40 = 20.",
+    "output": "20"
+}

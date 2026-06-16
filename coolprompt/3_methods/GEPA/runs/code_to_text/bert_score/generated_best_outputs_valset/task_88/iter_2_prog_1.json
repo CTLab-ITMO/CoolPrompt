@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Check whether the specified database exists.\n\nArguments:\n * database_name (str): The name of the database to check.\n\nReturns:\n bool: True if a database with the given name exists, False otherwise.\n\nRaises:\n :class:`AirflowBadRequest`: Raised if ``database_name`` is ``None``."
+}

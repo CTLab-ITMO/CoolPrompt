@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-like documentation block describing the function's behavior, including a one-line summary and Arguments/Returns sections, reflecting the actual parameters and side-effects without modifying the code.",
+    "output": "\"\"\"\nCreate an instance in the specified project and wait for the operation to complete.\n\nArguments:\n    body (dict): description of the instance to create.\n        - required; no default\n        - must conform to the API's instance resource schema\n        - provided as the request body for the insert call\n    project_id (str): optional project identifier; default None; used as the project in the API call.\n        - when None, a default project may be used by the client\n        - must be a valid project id\n\nReturns:\n    None: no return value; this method initiates the insert and blocks until the operation completes.\n\"\"\""
+}

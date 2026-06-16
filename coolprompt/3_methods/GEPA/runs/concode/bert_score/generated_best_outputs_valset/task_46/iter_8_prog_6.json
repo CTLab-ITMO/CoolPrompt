@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a no-argument function named destroyInstrumentationService that represents destroying the instrumentation service by nullifying the instrumentation field if it is non-null. This mirrors the described operation with a small, deterministic sequence.",
+    "output": "void destroyInstrumentationService ( ) {\n  if ( instrumentation != null ) {\n    instrumentation = null;\n  }\n}"
+}

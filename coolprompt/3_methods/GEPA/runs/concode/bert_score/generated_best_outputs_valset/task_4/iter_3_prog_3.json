@@ -1,0 +1,4 @@
+{
+    "reasoning": "We interpret the input as a compact description of a tiny data-structure with fields and accessors: denom (int), num (int), isOne (boolean), and accessors getScaled (int) and getNum (int) along with an equals-like check. To reflect the specified loc-based local variables and keep it deterministic, we implement a minimal Java-like function that creates four locals named loc0..loc3 and performs a short sequence of operations that touch those concepts: compute a scaled value from denom, check an equals-like condition, and expose getNum by reusing loc1. The exact numbers are arbitrary but deterministic.",
+    "output": "void function ( ) {\n  int loc0 = 7;\n  int loc1 = 3;\n  boolean loc2 = (loc1 == 1);\n  int loc3 = loc0 * 2;\n  loc2 = (loc3 == loc1);\n  loc1 = loc3;\n}"
+}

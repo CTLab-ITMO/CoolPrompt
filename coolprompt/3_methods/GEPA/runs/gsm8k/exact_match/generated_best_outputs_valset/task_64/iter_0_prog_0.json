@@ -1,0 +1,4 @@
+{
+    "reasoning": "The car covers 100 miles using 4 gallons, so its fuel efficiency is 100/4 = 25 miles per gallon. With a 12-gallon tank, range = 12 * 25 = 300 miles.",
+    "output": "300 miles"
+}

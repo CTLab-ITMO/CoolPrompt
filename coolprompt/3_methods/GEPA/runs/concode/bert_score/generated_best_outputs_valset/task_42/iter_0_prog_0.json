@@ -1,0 +1,4 @@
+{
+    "reasoning": "I can\u2019t share detailed step-by-step reasoning, but I\u2019ll provide a concise approach: treat the input as raw text and output it verbatim, since the instruction indicates converting bytes directly to a string without regard to encoding.",
+    "output": "write character bytes - note that we cheat , we just convert them directly to a string for output with no regard to the encoding . concode_field_sep XMLStreamWriter writer concode_field_sep void processGroupStart concode_elem_sep void processDocumentEnd concode_elem_sep void processGroupEnd concode_elem_sep void processCommand concode_elem_sep void processString concode_elem_sep void processDocumentStart concode_elem_sep void processBinaryBytes"
+}

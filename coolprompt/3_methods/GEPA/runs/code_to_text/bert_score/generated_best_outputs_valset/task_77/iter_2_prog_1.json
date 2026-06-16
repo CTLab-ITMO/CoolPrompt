@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Yield a database session as a context manager and handle commit/rollback.\n\nYields:\n - A :class:`Session` object yielded by the context manager.\n\nRaises:\n - :class:`Exception`: If an error occurs during the session usage, the transaction is rolled back and the exception is re-raised."
+}

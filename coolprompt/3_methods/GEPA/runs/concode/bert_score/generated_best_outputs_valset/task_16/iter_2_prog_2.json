@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "boolean runToGoal(List<ExtensionInfo> allExtensions) {\n  return true;\n}"
+}

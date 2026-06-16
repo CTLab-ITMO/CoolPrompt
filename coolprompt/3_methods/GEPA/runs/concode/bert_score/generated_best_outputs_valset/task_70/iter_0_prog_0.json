@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a ThreadLocal<User> field with operations to get, set, and remove the thread-local User. I\u2019ll provide a concise Java utility class that encapsulates this ThreadLocal and exposes:\n- get() to retrieve the current thread\u2019s User\n- set(User user) to store a User for the current thread\n- remove() to clear the value for the current thread",
+    "output": "public class UserContext {\n    private static final ThreadLocal<User> sUserThreadLocal = new ThreadLocal<>();\n\n    public static User get() {\n        return sUserThreadLocal.get();\n    }\n\n    public static void set(User user) {\n        sUserThreadLocal.set(user);\n    }\n\n    public static void remove() {\n        sUserThreadLocal.remove();\n    }\n}"
+}

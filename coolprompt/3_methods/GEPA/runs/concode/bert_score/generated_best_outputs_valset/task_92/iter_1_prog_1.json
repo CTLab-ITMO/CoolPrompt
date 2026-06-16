@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a minimal, deterministic function using the loc0..loc3 pattern to mirror the described operation without relying on the full input set. Keeps to a simple parse-and-assert style using TimeIntervalParser as a placeholder.",
+    "output": "void function ( ) {\n    String loc0 = \"srini_string\";\n    TimeIntervalParser loc1 = new TimeIntervalParser();\n    String loc2 = loc1.parse(\"PT1M\");\n    assertEquals(\"PT1M\", loc2);\n    Long[] loc3 = new Long[] { 1L, 2L, 3L };\n}"
+}

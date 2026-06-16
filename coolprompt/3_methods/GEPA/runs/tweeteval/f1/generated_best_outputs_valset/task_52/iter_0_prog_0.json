@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input appears to be a social media post with a newline before hashtags and no defined task. I will produce a cleaned, single-line caption by removing the newline and normalizing spacing, preserving the @user handle and hashtags.",
+    "output": "Are you always looking for quotes of your days? Then follow @user to learn more! #quote #doubleviz"
+}

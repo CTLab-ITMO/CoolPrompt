@@ -1,0 +1,4 @@
+{
+    "reasoning": "Determines the return value by looking up the key formed as 'extra__grpc__{field_name}' in self.extras and returning it if present, otherwise returning the provided default.",
+    "output": "Get the value for the given field from self.extras using the 'extra__grpc__{field_name}' key, with a fallback to default.\n\nArguments:\n    field_name (str): The field name to lookup; it will be prefixed with 'extra__grpc__' to form the dictionary key.\n    default (Any, optional): The value to return if the constructed key is not present in self.extras. Defaults to None.\n\nReturns:\n    Any: The value associated with the constructed key in self.extras, if present; otherwise the provided default."
+}

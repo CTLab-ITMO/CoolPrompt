@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Provide a decorator that ensures a database session is supplied to the wrapped function.\n\nArguments:\n * func (callable): The function to be wrapped by the decorator. The wrapper will inject a ``session`` keyword argument if the function does not already declare a parameter named ``session``.\nReturns:\n * A callable that takes a function and returns a wrapped function which, when invoked, provides a ``session`` to the wrapped function if it does not already receive one via positional or keyword arguments."
+}

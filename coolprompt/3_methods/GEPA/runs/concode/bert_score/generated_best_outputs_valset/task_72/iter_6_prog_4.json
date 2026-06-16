@@ -1,0 +1,4 @@
+{
+    "reasoning": "We will output a no-argument void method named deleteFile that mirrors the described test: attempting to delete a non-existent file should throw an exception. The body will attempt the deletion with a non-existent path and assert that an IOException is thrown, using a try-catch block and signaling a failure if no exception occurs.",
+    "output": "```java\nvoid deleteFile ( ) {\n  final String loc0 = \"anon-existent-file.txt\";\n  try {\n    FileUtils.deleteFile ( loc0 );\n    throw new AssertionError ( \"Expected exception\" );\n  } catch ( final java.io.IOException expected ) {\n  }\n}\n```"
+}

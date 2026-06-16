@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-style block describing the function\u2019s behavior without modifying the code. The function performs a heartbeat check, queries task instances, computes progress, prints stats, pauses DAGs, and may exit the process; I will capture these aspects in a single-line summary plus Arguments, Returns, and Raises sections. Yields is not applicable since the function is not a generator.",
+    "output": "Check task instances for the configured DAGs, print stats, pause DAGs, and exit when all tasks are complete or a timeout occurs.\n\nArguments:\n    self (:class:`SchedulerMetricsJob`): the instance on which heartbeat is invoked.\n\nReturns:\n    None: this method does not return a value.\n\nRaises:\n    SystemExit: raised when all tasks have been processed or the maximum runtime has been exceeded, triggering termination after printing available stats."
+}

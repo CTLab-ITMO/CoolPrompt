@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a method that should \u201cclose the current scans.\u201d A minimal, deterministic implementation is to close the lhsscan, prodscan, and rhsscan objects if they are non-null, and then reset the next flag to false. This aligns with a small, straightforward sequence of statements using typical Java-like syntax and field names found in the input.",
+    "output": "```java\nvoid function ( ) {\n    if ( lhsscan != null ) {\n        lhsscan.close();\n    }\n    if ( prodscan != null ) {\n        prodscan.close();\n    }\n    if ( rhsscan != null ) {\n        rhsscan.close();\n    }\n    next = false;\n}\n```"
+}

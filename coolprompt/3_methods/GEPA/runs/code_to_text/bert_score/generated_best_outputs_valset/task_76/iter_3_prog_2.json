@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description of the function's purpose, inputs, outputs, and possible exception.",
+    "output": "Sends a prepared HTTP request via a session with configurable options and optional response validation, returning the response.\n\nArguments:\n    session (:class:`requests.Session`): The HTTP session to use for sending the request.\n    prepped_request (:class:`requests.PreparedRequest`): The prepared request to send.\n    extra_options (dict): Optional overrides for session.send and response handling. Supported keys include stream, verify, proxies, cert, timeout, allow_redirects, and check_response (default: {}).\n\nReturns:\n    :class:`requests.Response`: The response produced by session.send, after optional response validation.\n\nRaises:\n    requests.exceptions.ConnectionError: If a connection error occurs during the request; the exception is logged and re-raised."
+}

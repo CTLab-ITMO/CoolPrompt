@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will provide a Java field with a default value of 512 bits, along with a getter and a setter (including basic validation) for maximumKeySize.",
+    "output": "private long maximumKeySize = 512L;\n\npublic long getMaximumKeySize() {\n    return maximumKeySize;\n}\n\npublic void setMaximumKeySize(long maximumKeySize) {\n    if (maximumKeySize <= 0) {\n        throw new IllegalArgumentException(\"maximumKeySize must be positive\");\n    }\n    this.maximumKeySize = maximumKeySize;\n}"
+}

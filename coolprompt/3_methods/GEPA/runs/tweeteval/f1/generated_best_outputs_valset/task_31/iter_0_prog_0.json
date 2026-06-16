@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input looks like casual, noisy social text. I will remove the extraneous leading punctuation, fix spacing, and turn the hashtag into a plain word to produce a clean, readable sentence: \"The solar eclipse was really cool. Inspiring!\"",
+    "output": "The solar eclipse was really cool. Inspiring!"
+}

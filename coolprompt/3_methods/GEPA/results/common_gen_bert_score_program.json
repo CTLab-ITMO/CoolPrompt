@@ -1,0 +1,32 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "Task: Given a list of input words, produce a single natural English sentence that uses all the input words at least once (allowing minor inflection to fit grammar, such as pluralization or verb conjugation). The sentence should be grammatical, concise, and coherent, describing a plausible scene or action that connects the words. Include necessary function words (the, a, an, of, in, on, with, to, by, is, are, etc.) to form a natural sentence, but do not introduce new semantic content beyond the provided terms. End the sentence with a period. Do not include any reasoning or explanations—only the final sentence.\n\nGuidelines:\n- If a verb is provided, conjugate it to agree with the subject.\n- If a noun could serve as an object, include it appropriately.\n- The sentence may be declarative or imperative.\n- When multiple valid sentences exist, prefer a natural, common-sense phrasing that closely reflects typical English usage.\n\nExample (illustrative only): For input ['lake', 'shore', 'canoe'], a valid output could be \"The canoe rests on the lake shore.\"",
+      "fields": [
+        {
+          "prefix": "Input:",
+          "description": "Task input text."
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Output:",
+          "description": "The generated answer / target text."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

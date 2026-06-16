@@ -1,0 +1,4 @@
+{
+    "reasoning": "The snippet references sys, sprint, and script_name, but none are defined. I\u2019ll provide a small, self-contained, working version that preserves the original intent (write a formatted message to stderr, with optional color arguments) by adding a minimal sprint helper and defining script_name. I also replace the odd \"\"\"\"\"\" docstring with a conventional docstring.",
+    "output": "import sys\n\ndef sprint(*parts):\n    return \" \".join(str(p) for p in parts)\n\nscript_name = __name__\n\ndef print_log(text, *colors):\n    \"\"\"Log a message to stderr with optional color codes.\"\"\"\n    sys.stderr.write(sprint(\"{}: {}\".format(script_name, text), *colors) + \"\\n\")"
+}

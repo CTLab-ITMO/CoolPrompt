@@ -1,0 +1,4 @@
+{
+    "reasoning": "From James = 10 and \u201cJames is 1 year younger than Corey,\u201d Corey = James + 1 = 11. Amy = Corey - 2 = 9. Since Amy = Jackson + 5, Jackson = Amy - 5 = 4.",
+    "output": "4"
+}

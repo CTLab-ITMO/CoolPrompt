@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes hashing the contents of given files by reading them into memory and producing a hash, using a few API elements like ZERO_HASH, createDouble, and toBigInteger. I implement a compact, deterministic Java-like function that mirrors this concept with a minimal sequence: initialize a baseline hash, prepare a small byte sequence (simulating file contents), create a new hash with createDouble from those bytes, and convert the result to a BigInteger. This uses loc0..loc3 as the local variables in order and follows the described element names.",
+    "output": "void function ( ) {\n    Sha256Hash loc0 = ZERO_HASH;\n    byte[] loc1 = new byte[] { 0x01, 0x02, 0x03 };\n    Sha256Hash loc2 = createDouble(loc1);\n    BigInteger loc3 = loc2.toBigInteger();\n}"
+}

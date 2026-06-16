@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a gold-target style, docstring-like documentation block that matches the function's signature and behavior: a concise one-line imperative summary, followed by an Arguments section describing text and os (with default detect_os()), and a Returns section describing the returned string. No Raises section is needed since the function does not raise exceptions.",
+    "output": "Sanitize a string into a filesystem-safe name for the detected operating system.\n\nArguments:\n    text (str): input text to be sanitized into a filename.\n    os (str): target operating system name affecting invalid characters and translation rules; default: detect_os().\n\nReturns:\n    text (str): sanitized string suitable for use as a filename."
+}

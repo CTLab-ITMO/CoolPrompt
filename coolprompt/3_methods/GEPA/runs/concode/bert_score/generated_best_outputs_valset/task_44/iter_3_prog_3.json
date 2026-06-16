@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create four locals named loc0..loc3 to match the pattern, representing a PlaceHolder, port, closed flag, and bind host, then instantiate a DataServerFactory via a fluent chain setting these fields to reflect a \"factory for dataserver\" described by the input.",
+    "output": "void function ( ) {\n  PlaceHolder loc0 = new PlaceHolder();\n  int loc1 = 0;\n  boolean loc2 = false;\n  String loc3 = \"127.0.0.1\";\n  new DataServerFactory().setPlaceHolder(loc0).setPort(loc1).setClosed(loc2).setBindHost(loc3);\n}"
+}

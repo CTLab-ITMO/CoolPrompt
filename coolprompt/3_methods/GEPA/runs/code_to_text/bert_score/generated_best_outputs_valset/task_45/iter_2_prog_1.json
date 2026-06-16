@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Patch a database resource for an instance in the project.\n\nArguments:\n * instance (str): The name of the database instance.\n * database (str): The name of the database resource to patch.\n * body (dict): The patch body containing the fields to update.\n * project_id (str or None): Optional project identifier. If not set (``None``, default), uses the default project."
+}

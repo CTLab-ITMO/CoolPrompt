@@ -1,0 +1,4 @@
+{
+    "reasoning": "First guess = 80. Second guess = half of the first plus 20 = 40 + 20 = 60. Third guess = 25% more than the first = 0.25*80 + 80 = 100. Average = (80 + 60 + 100) / 3 = 240 / 3 = 80.",
+    "output": "80"
+}

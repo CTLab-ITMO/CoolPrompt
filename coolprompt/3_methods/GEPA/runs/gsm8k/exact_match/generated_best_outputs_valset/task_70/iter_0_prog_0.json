@@ -1,0 +1,4 @@
+{
+    "reasoning": "Weekdays: 5 days \u00d7 5 classes = 25 classes. Saturday: 8 classes. Total classes = 25 + 8 = 33. Revenue per class = 15 students \u00d7 $15 = $225. Total weekly revenue = 33 \u00d7 $225 = $7,425.00.",
+    "output": "$7,425.00"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise docstring-style description of a decorator that injects a session argument into the wrapped function when it is not already supplied, using create_session() as a context manager.",
+    "output": "Decorator that injects a session into the wrapped function when it is not already supplied.\n\nArguments:\n    func (Callable): The function to decorate.\n\nReturns:\n    Callable: The wrapper that ensures a ``session`` argument is provided to the wrapped function, creating one with ``create_session()`` if absent.\n\nRaises:\n    Exception: If creating the session fails or if the wrapped function raises an exception."
+}

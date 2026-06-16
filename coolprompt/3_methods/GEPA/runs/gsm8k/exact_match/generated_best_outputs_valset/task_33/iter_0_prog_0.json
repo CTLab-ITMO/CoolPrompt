@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let G be gold and S be silver. G = S + 30 and G + S = 110. Substituting: (S + 30) + S = 110 \u2192 2S = 80 \u2192 S = 40, so G = S + 30 = 70. Gretchen has 70 gold coins.",
+    "output": "70"
+}

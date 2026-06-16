@@ -1,0 +1,4 @@
+{
+    "reasoning": "30 comics weigh 30 \u00d7 1/4 = 7.5 lb. Need to remove 15 lb total, so remaining weight to remove is 15 \u2212 7.5 = 7.5 lb. Each toy weighs 1/2 lb, so number of toys = 7.5 \u00f7 0.5 = 15.",
+    "output": "15"
+}

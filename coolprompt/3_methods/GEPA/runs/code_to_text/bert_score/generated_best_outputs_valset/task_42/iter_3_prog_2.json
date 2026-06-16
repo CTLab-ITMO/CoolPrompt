@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-like description for a method that deletes a Compute Engine instance and waits for the resulting operation to complete, including parameter and return details.",
+    "output": "Deletes a Compute Engine instance and waits for the deletion operation to complete.\n\nArguments:\n    instance (str): The name or ID of the instance to delete.\n    project_id (str): The Google Cloud project ID; optional. If omitted, a default/project-scoped value may be used.\n\nReturns:\n    None: Performs the delete operation and blocks until the operation completes; no value is returned.\n\nRaises:\n    HttpError: If the underlying API request fails."
+}

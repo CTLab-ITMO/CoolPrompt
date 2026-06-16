@@ -1,0 +1,4 @@
+{
+    "reasoning": "Implemented a compact, deterministic function using four locals named loc0..loc3, mirroring a minimal operation sequence without external dependencies. It aligns with the required loc-based pattern and preserves a plausible structure for a GC-test style stub while staying self-contained.",
+    "output": "void function ( ) {\n  long loc0 = 0L;\n  Long[] loc1 = new Long[]{0L};\n  String loc2 = \"\";\n  boolean loc3 = false;\n\n  loc1[0] = 1L;\n  loc3 = true;\n  loc2 = \"awaitClear\";\n  loc1[0] = loc0;\n  if (loc3) {\n    loc0++;\n  }\n}"
+}

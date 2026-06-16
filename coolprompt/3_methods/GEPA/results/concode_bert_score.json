@@ -1,0 +1,1434 @@
+{
+  "dataset": "concode",
+  "metric": "bert_score",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "bert_score"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.7801938724517822,
+      0.8199198985099793,
+      0.8035939210653305,
+      0.8291792815923691,
+      0.8303844958543778,
+      0.8235752958059311,
+      0.8264903521537781
+    ],
+    "val_subscores": [
+      {
+        "0": 0.7374531626701355,
+        "1": 0.7765371203422546,
+        "2": 0.8029406666755676,
+        "3": 0.8002168536186218,
+        "4": 0.8019775152206421,
+        "5": 0.7528505325317383,
+        "6": 0.7871880531311035,
+        "7": 0.7883251309394836,
+        "8": 0.7862383127212524,
+        "9": 0.7779447436332703,
+        "10": 0.7949651479721069,
+        "11": 0.771697461605072,
+        "12": 0.7589775919914246,
+        "13": 0.7523503303527832,
+        "14": 0.8525317907333374,
+        "15": 0.7737752795219421,
+        "16": 0.7684382200241089,
+        "17": 0.8172963261604309,
+        "18": 0.7622524499893188,
+        "19": 0.7780399322509766,
+        "20": 0.7429158687591553,
+        "21": 0.7997590899467468,
+        "22": 0.779812216758728,
+        "23": 0.7868092656135559,
+        "24": 0.7700334191322327,
+        "25": 0.8678016066551208,
+        "26": 0.7719001770019531,
+        "27": 0.8387135863304138,
+        "28": 0.7652335166931152,
+        "29": 0.7732003927230835,
+        "30": 0.7642379999160767,
+        "31": 0.7735199928283691,
+        "32": 0.8049818277359009,
+        "33": 0.8191496133804321,
+        "34": 0.7907141447067261,
+        "35": 0.7554049491882324,
+        "36": 0.8489354252815247,
+        "37": 0.788823127746582,
+        "38": 0.7884303331375122,
+        "39": 0.8042349815368652,
+        "40": 0.7723355889320374,
+        "41": 0.760199785232544,
+        "42": 0.7630264759063721,
+        "43": 0.7335518598556519,
+        "44": 0.782195508480072,
+        "45": 0.7577037811279297,
+        "46": 0.8172127604484558,
+        "47": 0.8349443674087524,
+        "48": 0.7694917321205139,
+        "49": 0.7521070837974548,
+        "50": 0.8199204802513123,
+        "51": 0.8059263825416565,
+        "52": 0.762890100479126,
+        "53": 0.757215142250061,
+        "54": 0.8100017309188843,
+        "55": 0.9003417491912842,
+        "56": 0.879420816898346,
+        "57": 0.809806764125824,
+        "58": 0.7997642755508423,
+        "59": 0.80833899974823,
+        "60": 0.7823046445846558,
+        "61": 0.7549993395805359,
+        "62": 0.7519148588180542,
+        "63": 0.7743291258811951,
+        "64": 0.7863764762878418,
+        "65": 0.8194594383239746,
+        "66": 0.7818940281867981,
+        "67": 0.8411208391189575,
+        "68": 0.7803873419761658,
+        "69": 0.7942656874656677,
+        "70": 0.7776035666465759,
+        "71": 0.8211373090744019,
+        "72": 0.7959641218185425,
+        "73": 0.8348763585090637,
+        "74": 0.7689836621284485,
+        "75": 0.808332622051239,
+        "76": 0.0,
+        "77": 0.7645967602729797,
+        "78": 0.7917581796646118,
+        "79": 0.7871512174606323,
+        "80": 0.7724772691726685,
+        "81": 0.8094860315322876,
+        "82": 0.785505473613739,
+        "83": 0.875091016292572,
+        "84": 0.7787933349609375,
+        "85": 0.7688236236572266,
+        "86": 0.7125967741012573,
+        "87": 0.8239098787307739,
+        "88": 0.7842325568199158,
+        "89": 0.8119499683380127,
+        "90": 0.776260495185852,
+        "91": 0.7595438957214355,
+        "92": 0.7418435215950012,
+        "93": 0.7782537937164307,
+        "94": 0.7767680883407593,
+        "95": 0.7714222073554993,
+        "96": 0.8035321831703186,
+        "97": 0.7559838891029358,
+        "98": 0.7894842028617859,
+        "99": 0.7529699206352234
+      },
+      {
+        "0": 0.8231802582740784,
+        "1": 0.8278299570083618,
+        "2": 0.8376718759536743,
+        "3": 0.8182215094566345,
+        "4": 0.8008012771606445,
+        "5": 0.7995883822441101,
+        "6": 0.8370162844657898,
+        "7": 0.823619544506073,
+        "8": 0.8261928558349609,
+        "9": 0.8328565359115601,
+        "10": 0.8342751860618591,
+        "11": 0.787889301776886,
+        "12": 0.8069975972175598,
+        "13": 0.8041507005691528,
+        "14": 0.8286762237548828,
+        "15": 0.8391613960266113,
+        "16": 0.8015621304512024,
+        "17": 0.8461458683013916,
+        "18": 0.7680166363716125,
+        "19": 0.8438927531242371,
+        "20": 0.834100604057312,
+        "21": 0.8300588726997375,
+        "22": 0.7965424656867981,
+        "23": 0.833898663520813,
+        "24": 0.8140214085578918,
+        "25": 0.8242895007133484,
+        "26": 0.7942469716072083,
+        "27": 0.8455206155776978,
+        "28": 0.8202241659164429,
+        "29": 0.8312234878540039,
+        "30": 0.8301388621330261,
+        "31": 0.8051923513412476,
+        "32": 0.862335741519928,
+        "33": 0.8093040585517883,
+        "34": 0.8329467177391052,
+        "35": 0.8288319110870361,
+        "36": 0.8076978921890259,
+        "37": 0.8134480118751526,
+        "38": 0.8030372262001038,
+        "39": 0.8747918605804443,
+        "40": 0.8094260096549988,
+        "41": 0.7911525964736938,
+        "42": 0.8290929794311523,
+        "43": 0.8223572969436646,
+        "44": 0.8065458536148071,
+        "45": 0.8146662712097168,
+        "46": 0.8338618278503418,
+        "47": 0.859282910823822,
+        "48": 0.8084646463394165,
+        "49": 0.7800871133804321,
+        "50": 0.827875018119812,
+        "51": 0.8393521904945374,
+        "52": 0.7965003252029419,
+        "53": 0.7970528602600098,
+        "54": 0.786852240562439,
+        "55": 0.7707573771476746,
+        "56": 0.8424386382102966,
+        "57": 0.8019037246704102,
+        "58": 0.8342812657356262,
+        "59": 0.8383107781410217,
+        "60": 0.82102370262146,
+        "61": 0.7978433966636658,
+        "62": 0.8452141284942627,
+        "63": 0.8207595944404602,
+        "64": 0.8230075240135193,
+        "65": 0.8156248331069946,
+        "66": 0.8128673434257507,
+        "67": 0.78075110912323,
+        "68": 0.8138830065727234,
+        "69": 0.8201775550842285,
+        "70": 0.8218669891357422,
+        "71": 0.8238588571548462,
+        "72": 0.8309471011161804,
+        "73": 0.8082263469696045,
+        "74": 0.8269087672233582,
+        "75": 0.8160886764526367,
+        "76": 0.8104115128517151,
+        "77": 0.8185712099075317,
+        "78": 0.8242141604423523,
+        "79": 0.8126156330108643,
+        "80": 0.8793635368347168,
+        "81": 0.8659023642539978,
+        "82": 0.8583788275718689,
+        "83": 0.8101668953895569,
+        "84": 0.8325886130332947,
+        "85": 0.8504349589347839,
+        "86": 0.816194474697113,
+        "87": 0.8058909773826599,
+        "88": 0.7913340926170349,
+        "89": 0.8098968863487244,
+        "90": 0.8038355112075806,
+        "91": 0.8131565451622009,
+        "92": 0.8241472244262695,
+        "93": 0.812318742275238,
+        "94": 0.8247835040092468,
+        "95": 0.8163735270500183,
+        "96": 0.8177540898323059,
+        "97": 0.8039701581001282,
+        "98": 0.8265551328659058,
+        "99": 0.8142227530479431
+      },
+      {
+        "0": 0.7919405102729797,
+        "1": 0.7886089086532593,
+        "2": 0.8367739915847778,
+        "3": 0.8069317936897278,
+        "4": 0.81982421875,
+        "5": 0.773638904094696,
+        "6": 0.8104766607284546,
+        "7": 0.790704071521759,
+        "8": 0.7950062155723572,
+        "9": 0.833905816078186,
+        "10": 0.8002594113349915,
+        "11": 0.7563566565513611,
+        "12": 0.7736843824386597,
+        "13": 0.7549499869346619,
+        "14": 0.8086384534835815,
+        "15": 0.7847625613212585,
+        "16": 0.8579152822494507,
+        "17": 0.8289313912391663,
+        "18": 0.8709207773208618,
+        "19": 0.8105664253234863,
+        "20": 0.7555736303329468,
+        "21": 0.7875151634216309,
+        "22": 0.7732241153717041,
+        "23": 0.7661406397819519,
+        "24": 0.8011563420295715,
+        "25": 0.8975586891174316,
+        "26": 0.7748803496360779,
+        "27": 0.784810483455658,
+        "28": 0.7836716175079346,
+        "29": 0.7776598930358887,
+        "30": 0.729735791683197,
+        "31": 0.7703859210014343,
+        "32": 0.878359317779541,
+        "33": 0.7841252088546753,
+        "34": 0.7888826131820679,
+        "35": 0.7628132104873657,
+        "36": 0.8593549728393555,
+        "37": 0.8349642157554626,
+        "38": 0.7945201992988586,
+        "39": 0.8499616980552673,
+        "40": 0.782037615776062,
+        "41": 0.7602730393409729,
+        "42": 0.8499549031257629,
+        "43": 0.7675430178642273,
+        "44": 0.7783223986625671,
+        "45": 0.8353495001792908,
+        "46": 0.8014360666275024,
+        "47": 0.7804726958274841,
+        "48": 0.8044986128807068,
+        "49": 0.8675690293312073,
+        "50": 0.8573853373527527,
+        "51": 0.8793988823890686,
+        "52": 0.768676221370697,
+        "53": 0.7618297934532166,
+        "54": 0.795638382434845,
+        "55": 0.8936053514480591,
+        "56": 0.8301577568054199,
+        "57": 0.7536543011665344,
+        "58": 0.9439020156860352,
+        "59": 0.8210036158561707,
+        "60": 0.7888411283493042,
+        "61": 0.7638631463050842,
+        "62": 0.7605250477790833,
+        "63": 0.7745392918586731,
+        "64": 0.8212913274765015,
+        "65": 0.791864812374115,
+        "66": 0.7826808094978333,
+        "67": 0.7843579053878784,
+        "68": 0.789344310760498,
+        "69": 0.7986584305763245,
+        "70": 0.820626974105835,
+        "71": 0.8447670340538025,
+        "72": 0.7877727746963501,
+        "73": 0.8570956587791443,
+        "74": 0.7808527946472168,
+        "75": 0.7718199491500854,
+        "76": 0.7799476385116577,
+        "77": 0.7712504863739014,
+        "78": 0.9104926586151123,
+        "79": 0.8276193737983704,
+        "80": 0.7825568318367004,
+        "81": 0.8199213743209839,
+        "82": 0.8019636869430542,
+        "83": 0.7870253920555115,
+        "84": 0.7762693762779236,
+        "85": 0.8592449426651001,
+        "86": 0.7621569037437439,
+        "87": 0.770849347114563,
+        "88": 0.8101176619529724,
+        "89": 0.8997471332550049,
+        "90": 0.846332848072052,
+        "91": 0.7763119339942932,
+        "92": 0.7396767735481262,
+        "93": 0.7737544775009155,
+        "94": 0.8483109474182129,
+        "95": 0.7949466109275818,
+        "96": 0.8202291131019592,
+        "97": 0.7490346431732178,
+        "98": 0.7868649959564209,
+        "99": 0.7630665302276611
+      },
+      {
+        "0": 0.8111585378646851,
+        "1": 0.8388530611991882,
+        "2": 0.8607861399650574,
+        "3": 0.8256951570510864,
+        "4": 0.8285045623779297,
+        "5": 0.8095604777336121,
+        "6": 0.8354626893997192,
+        "7": 0.8016510009765625,
+        "8": 0.8302573561668396,
+        "9": 0.8192418217658997,
+        "10": 0.8325930237770081,
+        "11": 0.8141666650772095,
+        "12": 0.8286017179489136,
+        "13": 0.809520959854126,
+        "14": 0.8497703075408936,
+        "15": 0.8353539705276489,
+        "16": 0.8154433369636536,
+        "17": 0.8176152110099792,
+        "18": 0.8034132719039917,
+        "19": 0.8387384414672852,
+        "20": 0.8173925280570984,
+        "21": 0.814106822013855,
+        "22": 0.8292312622070312,
+        "23": 0.8351116180419922,
+        "24": 0.824506938457489,
+        "25": 0.835719645023346,
+        "26": 0.8358868956565857,
+        "27": 0.8173531293869019,
+        "28": 0.8280763626098633,
+        "29": 0.8241590857505798,
+        "30": 0.823566198348999,
+        "31": 0.826846718788147,
+        "32": 0.8625349402427673,
+        "33": 0.813450276851654,
+        "34": 0.8002037405967712,
+        "35": 0.8392392992973328,
+        "36": 0.8134554028511047,
+        "37": 0.842825710773468,
+        "38": 0.8295159935951233,
+        "39": 0.8549304604530334,
+        "40": 0.8123288750648499,
+        "41": 0.8134711980819702,
+        "42": 0.8054736852645874,
+        "43": 0.8264093399047852,
+        "44": 0.8151689171791077,
+        "45": 0.8296765685081482,
+        "46": 0.8737989068031311,
+        "47": 0.8726094961166382,
+        "48": 0.8194775581359863,
+        "49": 0.7873334884643555,
+        "50": 0.8535013794898987,
+        "51": 0.8440901637077332,
+        "52": 0.8049907684326172,
+        "53": 0.8262490630149841,
+        "54": 0.8477768301963806,
+        "55": 0.8604127764701843,
+        "56": 0.856852114200592,
+        "57": 0.804918646812439,
+        "58": 0.8698739409446716,
+        "59": 0.8259187340736389,
+        "60": 0.8219722509384155,
+        "61": 0.8114392757415771,
+        "62": 0.8497995734214783,
+        "63": 0.8263611793518066,
+        "64": 0.840451180934906,
+        "65": 0.8600667715072632,
+        "66": 0.817750871181488,
+        "67": 0.8331232070922852,
+        "68": 0.8238874673843384,
+        "69": 0.8084661364555359,
+        "70": 0.8141958713531494,
+        "71": 0.8297651410102844,
+        "72": 0.8039129376411438,
+        "73": 0.8352247476577759,
+        "74": 0.8268166780471802,
+        "75": 0.8180901408195496,
+        "76": 0.8265058994293213,
+        "77": 0.8232839703559875,
+        "78": 0.8384378552436829,
+        "79": 0.8391953110694885,
+        "80": 0.8736807107925415,
+        "81": 0.8687034249305725,
+        "82": 0.8685482740402222,
+        "83": 0.8266253471374512,
+        "84": 0.8294288516044617,
+        "85": 0.835762083530426,
+        "86": 0.8165289163589478,
+        "87": 0.8332955837249756,
+        "88": 0.8390138149261475,
+        "89": 0.8348393440246582,
+        "90": 0.8198865056037903,
+        "91": 0.8413899540901184,
+        "92": 0.8251943588256836,
+        "93": 0.8357711434364319,
+        "94": 0.8284553289413452,
+        "95": 0.8103840351104736,
+        "96": 0.8412843346595764,
+        "97": 0.7913277745246887,
+        "98": 0.7974089980125427,
+        "99": 0.8268197178840637
+      },
+      {
+        "0": 0.8155278563499451,
+        "1": 0.7988343238830566,
+        "2": 0.8375251889228821,
+        "3": 0.779247522354126,
+        "4": 0.8358463048934937,
+        "5": 0.7918221950531006,
+        "6": 0.8682319521903992,
+        "7": 0.8515899777412415,
+        "8": 0.8285060524940491,
+        "9": 0.8367535471916199,
+        "10": 0.8268011212348938,
+        "11": 0.8672040700912476,
+        "12": 0.81043541431427,
+        "13": 0.8179817795753479,
+        "14": 0.844556987285614,
+        "15": 0.8415225148200989,
+        "16": 0.8156145811080933,
+        "17": 0.8272362351417542,
+        "18": 0.8589864373207092,
+        "19": 0.8446190357208252,
+        "20": 0.8110267519950867,
+        "21": 0.7791600823402405,
+        "22": 0.8120793104171753,
+        "23": 0.8057580590248108,
+        "24": 0.8150998950004578,
+        "25": 0.8349652290344238,
+        "26": 0.7975760102272034,
+        "27": 0.8484624624252319,
+        "28": 0.7955270409584045,
+        "29": 0.8295038938522339,
+        "30": 0.8282009959220886,
+        "31": 0.8113998770713806,
+        "32": 0.9030313491821289,
+        "33": 0.8099962472915649,
+        "34": 0.8512870073318481,
+        "35": 0.8261619806289673,
+        "36": 0.7976871728897095,
+        "37": 0.827136754989624,
+        "38": 0.8410484790802002,
+        "39": 0.8541338443756104,
+        "40": 0.893656313419342,
+        "41": 0.7832713723182678,
+        "42": 0.8158656358718872,
+        "43": 0.8327563405036926,
+        "44": 0.8087936043739319,
+        "45": 0.8268938660621643,
+        "46": 0.8245871663093567,
+        "47": 0.8905229568481445,
+        "48": 0.8461459875106812,
+        "49": 0.8517265915870667,
+        "50": 0.8610227704048157,
+        "51": 0.8279456496238708,
+        "52": 0.8020210862159729,
+        "53": 0.8118966817855835,
+        "54": 0.8444240689277649,
+        "55": 0.7878686785697937,
+        "56": 0.8199326395988464,
+        "57": 0.8353531360626221,
+        "58": 0.9161127209663391,
+        "59": 0.8410728573799133,
+        "60": 0.7840176820755005,
+        "61": 0.8052136301994324,
+        "62": 0.8475982546806335,
+        "63": 0.8226993083953857,
+        "64": 0.8382157683372498,
+        "65": 0.8352594375610352,
+        "66": 0.7981943488121033,
+        "67": 0.8947663903236389,
+        "68": 0.8208147287368774,
+        "69": 0.8418394327163696,
+        "70": 0.8153755068778992,
+        "71": 0.833540678024292,
+        "72": 0.844957709312439,
+        "73": 0.8672129511833191,
+        "74": 0.8097655773162842,
+        "75": 0.8051486015319824,
+        "76": 0.8180421590805054,
+        "77": 0.8048454523086548,
+        "78": 0.7871434688568115,
+        "79": 0.8223525285720825,
+        "80": 0.8865126967430115,
+        "81": 0.8513951301574707,
+        "82": 0.8298181891441345,
+        "83": 0.8354930281639099,
+        "84": 0.840389609336853,
+        "85": 0.8468904495239258,
+        "86": 0.8163709044456482,
+        "87": 0.828420102596283,
+        "88": 0.8281719088554382,
+        "89": 0.8773136138916016,
+        "90": 0.8081783652305603,
+        "91": 0.8471988439559937,
+        "92": 0.8777415156364441,
+        "93": 0.8374699950218201,
+        "94": 0.8301988244056702,
+        "95": 0.810310423374176,
+        "96": 0.8359043598175049,
+        "97": 0.7901937961578369,
+        "98": 0.8294191360473633,
+        "99": 0.8340994119644165
+      },
+      {
+        "0": 0.8070286512374878,
+        "1": 0.8242354989051819,
+        "2": 0.8616622686386108,
+        "3": 0.8385577201843262,
+        "4": 0.8048918843269348,
+        "5": 0.8060739040374756,
+        "6": 0.8103219270706177,
+        "7": 0.7914054989814758,
+        "8": 0.8313704133033752,
+        "9": 0.846727728843689,
+        "10": 0.8087518811225891,
+        "11": 0.8190522193908691,
+        "12": 0.8163725137710571,
+        "13": 0.8063860535621643,
+        "14": 0.8304377198219299,
+        "15": 0.8225191235542297,
+        "16": 0.8217505216598511,
+        "17": 0.8421117067337036,
+        "18": 0.7807671427726746,
+        "19": 0.8510862588882446,
+        "20": 0.8119736909866333,
+        "21": 0.8529223203659058,
+        "22": 0.8170753717422485,
+        "23": 0.7831315994262695,
+        "24": 0.8189851641654968,
+        "25": 0.8239362239837646,
+        "26": 0.8094068169593811,
+        "27": 0.8499240279197693,
+        "28": 0.8352222442626953,
+        "29": 0.8135360479354858,
+        "30": 0.8370685577392578,
+        "31": 0.8205469846725464,
+        "32": 0.8655238747596741,
+        "33": 0.8143793344497681,
+        "34": 0.8318901062011719,
+        "35": 0.8021852374076843,
+        "36": 0.8207917213439941,
+        "37": 0.8306578993797302,
+        "38": 0.8162473440170288,
+        "39": 0.8628506660461426,
+        "40": 0.8108323812484741,
+        "41": 0.7970828413963318,
+        "42": 0.823493480682373,
+        "43": 0.8156255483627319,
+        "44": 0.7928630709648132,
+        "45": 0.8305352926254272,
+        "46": 0.8441152572631836,
+        "47": 0.835166871547699,
+        "48": 0.8106891512870789,
+        "49": 0.7929900884628296,
+        "50": 0.8251691460609436,
+        "51": 0.843788206577301,
+        "52": 0.8227815628051758,
+        "53": 0.812881588935852,
+        "54": 0.8411813378334045,
+        "55": 0.8951864838600159,
+        "56": 0.8507669568061829,
+        "57": 0.7836830019950867,
+        "58": 0.8556981086730957,
+        "59": 0.8195091485977173,
+        "60": 0.8453387022018433,
+        "61": 0.8059943318367004,
+        "62": 0.8554431796073914,
+        "63": 0.8205642104148865,
+        "64": 0.8536555171012878,
+        "65": 0.8241385221481323,
+        "66": 0.8267768025398254,
+        "67": 0.8174635767936707,
+        "68": 0.7985482215881348,
+        "69": 0.8398532867431641,
+        "70": 0.8093123435974121,
+        "71": 0.8351178169250488,
+        "72": 0.8200207352638245,
+        "73": 0.8127265572547913,
+        "74": 0.7624556422233582,
+        "75": 0.827407717704773,
+        "76": 0.8221200704574585,
+        "77": 0.8241845369338989,
+        "78": 0.8182805180549622,
+        "79": 0.8164654970169067,
+        "80": 0.8761945366859436,
+        "81": 0.8469764590263367,
+        "82": 0.8311136960983276,
+        "83": 0.8536776900291443,
+        "84": 0.8492220044136047,
+        "85": 0.8239642381668091,
+        "86": 0.816112756729126,
+        "87": 0.7875275015830994,
+        "88": 0.8453221917152405,
+        "89": 0.8291134238243103,
+        "90": 0.8095455169677734,
+        "91": 0.8325274586677551,
+        "92": 0.7898321747779846,
+        "93": 0.8234430551528931,
+        "94": 0.8338484168052673,
+        "95": 0.7990938425064087,
+        "96": 0.8199080228805542,
+        "97": 0.7964640259742737,
+        "98": 0.8133183121681213,
+        "99": 0.8006510734558105
+      },
+      {
+        "0": 0.814500629901886,
+        "1": 0.8049846291542053,
+        "2": 0.8421663045883179,
+        "3": 0.8326641917228699,
+        "4": 0.84478360414505,
+        "5": 0.8072998523712158,
+        "6": 0.8443524837493896,
+        "7": 0.8295558094978333,
+        "8": 0.8126041889190674,
+        "9": 0.8433510661125183,
+        "10": 0.823377251625061,
+        "11": 0.7846769690513611,
+        "12": 0.778950035572052,
+        "13": 0.7853591442108154,
+        "14": 0.8321547508239746,
+        "15": 0.8300433158874512,
+        "16": 0.8266015648841858,
+        "17": 0.8198495507240295,
+        "18": 0.8685913681983948,
+        "19": 0.8448953628540039,
+        "20": 0.8090541958808899,
+        "21": 0.7859023213386536,
+        "22": 0.8341795206069946,
+        "23": 0.8635882139205933,
+        "24": 0.834800124168396,
+        "25": 0.8450359106063843,
+        "26": 0.83534836769104,
+        "27": 0.8518847823143005,
+        "28": 0.8216366767883301,
+        "29": 0.8288557529449463,
+        "30": 0.8027181029319763,
+        "31": 0.8076842427253723,
+        "32": 0.9035374522209167,
+        "33": 0.7899379134178162,
+        "34": 0.8160556554794312,
+        "35": 0.7805470824241638,
+        "36": 0.8779391050338745,
+        "37": 0.8200011253356934,
+        "38": 0.7850481867790222,
+        "39": 0.8952414989471436,
+        "40": 0.8335408568382263,
+        "41": 0.7858602404594421,
+        "42": 0.8420159816741943,
+        "43": 0.8104264736175537,
+        "44": 0.7962551116943359,
+        "45": 0.8166502118110657,
+        "46": 0.8844404220581055,
+        "47": 0.8330042362213135,
+        "48": 0.8548552393913269,
+        "49": 0.80037921667099,
+        "50": 0.8444470763206482,
+        "51": 0.8498651385307312,
+        "52": 0.8184854984283447,
+        "53": 0.8005833029747009,
+        "54": 0.8060735464096069,
+        "55": 0.745466411113739,
+        "56": 0.8465244770050049,
+        "57": 0.8089267611503601,
+        "58": 0.9623181223869324,
+        "59": 0.8339741230010986,
+        "60": 0.7734048366546631,
+        "61": 0.8131967186927795,
+        "62": 0.8718286752700806,
+        "63": 0.8270911574363708,
+        "64": 0.8175241947174072,
+        "65": 0.8108894228935242,
+        "66": 0.8076770901679993,
+        "67": 0.8335272073745728,
+        "68": 0.7930291295051575,
+        "69": 0.810872495174408,
+        "70": 0.8134189248085022,
+        "71": 0.8189913630485535,
+        "72": 0.8217412829399109,
+        "73": 0.8714512586593628,
+        "74": 0.8364375233650208,
+        "75": 0.8081298470497131,
+        "76": 0.8355224132537842,
+        "77": 0.8066199421882629,
+        "78": 0.8127360939979553,
+        "79": 0.8331841230392456,
+        "80": 0.9002859592437744,
+        "81": 0.8564112186431885,
+        "82": 0.8262457251548767,
+        "83": 0.8328909873962402,
+        "84": 0.8285764455795288,
+        "85": 0.8289899826049805,
+        "86": 0.8186638951301575,
+        "87": 0.8308375477790833,
+        "88": 0.8430502414703369,
+        "89": 0.8475404381752014,
+        "90": 0.8220532536506653,
+        "91": 0.8145672678947449,
+        "92": 0.8154352903366089,
+        "93": 0.8405196666717529,
+        "94": 0.843277096748352,
+        "95": 0.8219375610351562,
+        "96": 0.8101193308830261,
+        "97": 0.7892354130744934,
+        "98": 0.8139005899429321,
+        "99": 0.8133728504180908
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          1,
+          "Prediction(\n    reasoning='Created a self-contained Java-like function that mirrors the input-token structure by declaring local variables for each described field (functionBracePositions, funcObjects, functionNum, etc.) and invoking the listed void-style operations (reset, leaveNestingLevel, collectFuncNodes, enterNestingLevel) to reflect a deterministic mapping/collection flow.',\n    output='```java\\nvoid function ( ) {\\n    int loc0 = 0;\\n    ArrayList functionBracePositions = new ArrayList();\\n    ObjArray funcObjects = null;\\n    int functionNum = 0;\\n    ArrayList functionVarMappings = new ArrayList();\\n    int lastTokenCount = 0;\\n    ArrayList replacedTokens = new ArrayList();\\n    boolean isInScopeChain = false;\\n    reset();\\n    leaveNestingLevel();\\n    String getMappedToken = \"\";\\n    String getPreviousTokenMapping = \"\";\\n    collectFuncNodes(0);\\n    int sourceCompress = 0;\\n    enterNestingLevel();\\n}\\n```'\n)"
+        ]
+      ],
+      "1": [
+        [
+          3,
+          "Prediction(\n    reasoning='The input describes hashing the contents of given files by reading them into memory and producing a hash, using a few API elements like ZERO_HASH, createDouble, and toBigInteger. I implement a compact, deterministic Java-like function that mirrors this concept with a minimal sequence: initialize a baseline hash, prepare a small byte sequence (simulating file contents), create a new hash with createDouble from those bytes, and convert the result to a BigInteger. This uses loc0..loc3 as the local variables in order and follows the described element names.',\n    output='void function ( ) {\\n    Sha256Hash loc0 = ZERO_HASH;\\n    byte[] loc1 = new byte[] { 0x01, 0x02, 0x03 };\\n    Sha256Hash loc2 = createDouble(loc1);\\n    BigInteger loc3 = loc2.toBigInteger();\\n}'\n)"
+        ]
+      ],
+      "2": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Generate a small deterministic sequence: read an object id into loc0, if it's missing (null or empty) and can create, assign a new id via generateID; then convert the id to string via toString into loc3 and assert equality between the original and the stringified value to reflect the parse-and-assert pattern.\",\n    output='```java\\nvoid function ( ) {\\n  String loc0;\\n  boolean loc1;\\n  String loc2;\\n  String loc3;\\n\\n  loc0 = readObjectID;\\n  loc1 = (loc0 == null || loc0.length() == 0);\\n  if (loc1) {\\n    loc0 = generateID;\\n  }\\n  loc2 = loc0.toString();\\n  loc3 = loc2;\\n  assertEquals(loc0, loc3);\\n}\\n```'\n)"
+        ]
+      ],
+      "3": [
+        [
+          5,
+          "Prediction(\n    reasoning='The input describes creating a matcher for values greater than a specified value and verifying it with an example. I implement a small deterministic snippet using four locals (loc0..loc3): loc0 holds the threshold (1L), loc1 holds the examined value (2L), loc2 is a Matcher<T> built by greaterThan(loc0), and loc3 stores the result of loc2.matches(loc1). Finally, an assertion checks that the matcher matches.',\n    output='void function ( ) {\\n    Long loc0 = 1L;\\n    Long loc1 = 2L;\\n    Matcher<T> loc2 = greaterThan(loc0);\\n    boolean loc3 = loc2.matches(loc1);\\n    assertEquals(true, loc3);\\n}'\n)"
+        ]
+      ],
+      "4": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input appears to describe a function that returns an int (the denominator) and lists several fields: denom, num, isOne, getScaled, equals, getNum. I will implement a simple deterministic function that declares those variables, assigns straightforward values, and returns denom, using a compact, Java-like style consistent with the expected target pattern.',\n    output='int function ( ) {\\n    int denom = 1;\\n    int num = 1;\\n    boolean isOne = ( num == 1 );\\n    int getScaled = denom * num;\\n    boolean equals = ( getScaled == num );\\n    int getNum = num;\\n    return denom;\\n}'\n)"
+        ]
+      ],
+      "5": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a single Java-like function that uses four local string variables named loc0 through loc3 and operates on an existing GenericJSONBuilder instance named builder (as implied by the input). The function will perform a deterministic sequence of builder operations reflecting the described fields and methods: setIDstr, setPlaceName, addText, addField, insert, setCoordinateRadius, setAuthor, setCoordinate, setCreatedTime, persist, buildFieldJSON, and setUserid. The values are chosen as literals to remain deterministic.',\n    output='void function ( ) {\\n  String loc0 = \"id_str_value\";\\n  String loc1 = \"screen_name_value\";\\n  String loc2 = \"place_name_value\";\\n  String loc3 = \"user_id_789\";\\n\\n  builder.setIDstr(loc0);\\n  builder.setPlaceName(loc2);\\n  builder.addText(\"sample text\");\\n  builder.addField(\"id_str\", loc0);\\n  builder.insert();\\n  builder.setCoordinateRadius(100);\\n  builder.setAuthor(loc1);\\n  builder.setCoordinate(12.34, 56.78);\\n  builder.setCreatedTime(new java.util.Date());\\n  builder.persist();\\n  loc0 = builder.buildFieldJSON();\\n  builder.setUserid(loc3);\\n}'\n)"
+        ]
+      ],
+      "6": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input describes a BundleActivator stop method that does nothing. The target is a single function with the stop signature; implement an empty stop method with the appropriate final BundleContext parameter.',\n    output='void stop ( final BundleContext context ) { }'\n)"
+        ]
+      ],
+      "7": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a single Java-like function with signature including three final parameters and statements that perform two seeks on the provided stream and asserts that the position matches the expected values using loc0 and loc1.',\n    output='void testBufferedBlockInStream_seek_long ( final TestBufferedBlockInStream mTestStream , final long mBlockSize , final long mBufferSize ) {\\n  final long loc0 = mBlockSize;\\n  mTestStream.seek( loc0 );\\n  assertEquals( loc0, mTestStream.getPosition() );\\n  final long loc1 = mBufferSize;\\n  mTestStream.seek( loc1 );\\n  assertEquals( loc1, mTestStream.getPosition() );\\n}'\n)"
+        ]
+      ],
+      "8": [
+        [
+          5,
+          "Prediction(\n    reasoning='Implemented a compact, deterministic function using four locals named loc0..loc3, mirroring a minimal operation sequence without external dependencies. It aligns with the required loc-based pattern and preserves a plausible structure for a GC-test style stub while staying self-contained.',\n    output='void function ( ) {\\n  long loc0 = 0L;\\n  Long[] loc1 = new Long[]{0L};\\n  String loc2 = \"\";\\n  boolean loc3 = false;\\n\\n  loc1[0] = 1L;\\n  loc3 = true;\\n  loc2 = \"awaitClear\";\\n  loc1[0] = loc0;\\n  if (loc3) {\\n    loc0++;\\n  }\\n}'\n)"
+        ]
+      ],
+      "9": [
+        [
+          5,
+          "Prediction(\n    reasoning='The input describes a setup step that initializes four locals to configure test properties: a TransferManager, a bucket name, a key, and an S3ADirectOutputStream, followed by invoking a close operation. I will create a small, deterministic Java-like function that uses loc0..loc3, instantiates the appropriate types, assigns string literals for BUCKET_NAME and KEY, and finally calls close on the stream to reflect the void close operation.',\n    output='void function ( ) {\\n  TransferManager loc0 = new TransferManager();\\n  String loc1 = \"BUCKET_NAME\";\\n  String loc2 = \"KEY\";\\n  S3ADirectOutputStream loc3 = new S3ADirectOutputStream();\\n  loc3.close();\\n}'\n)"
+        ]
+      ],
+      "10": [
+        [
+          1,
+          "Prediction(\n    reasoning='Create a function that builds a C-style comment from a documentation string using a LINE_SEPARATOR, stores it in a getComments variable, and prints it. Use loc0, loc1, loc2, loc3 as local variables to mirror the target style.',\n    output='void function ( ) {\\n  String loc0 = \"/*\";\\n  String loc1 = \"Documentation\";\\n  String loc2 = \"*/\";\\n  String loc3 = LINE_SEPARATOR;\\n  String result = loc0 + loc3 + loc1 + loc3 + loc2;\\n  String getComments = result;\\n  System.out.print(getComments);\\n}'\n)"
+        ]
+      ],
+      "11": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input describes a scenario involving logging and selection of alternate addresses/endpoints. I will implement a simple no-argument function that returns the current log level from the existing Logger field LOG, reflecting the operation described (getting the log level for reporting the selection). The function mirrors a minimal, deterministic sequence: obtain LOG.getLevel() and return it, using a straightforward loc0 local variable to align with the target style.',\n    output='public Level getLogLevel ( ) {\\n  final Level loc0 = LOG.getLevel ( );\\n  return loc0;\\n}'\n)"
+        ]
+      ],
+      "12": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a single Java-like function named function with four locals: loc0 as String, loc1 as long, loc2 as TSTNode, loc3 as boolean. It will perform a small deterministic sequence of calls that mirror the described operations (traverse, makeEmpty, insert, main, delete), using those locals. The code reflects a minimal, self-contained sequence consistent with the described TST-like operations.',\n    output='void function ( ) {\\n  String loc0 = \"word\";\\n  long loc1 = 0L;\\n  TSTNode loc2 = new TSTNode ( );\\n  boolean loc3 = false;\\n  traverse ( loc2 );\\n  makeEmpty ( );\\n  loc3 = true;\\n  insert ( loc0 );\\n  main ( );\\n  delete ( );\\n  delete ( );\\n}'\n)"
+        ]
+      ],
+      "13": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input describes a method that should “close the current scans.” A minimal, deterministic implementation is to close the lhsscan, prodscan, and rhsscan objects if they are non-null, and then reset the next flag to false. This aligns with a small, straightforward sequence of statements using typical Java-like syntax and field names found in the input.',\n    output='```java\\nvoid function ( ) {\\n    if ( lhsscan != null ) {\\n        lhsscan.close();\\n    }\\n    if ( prodscan != null ) {\\n        prodscan.close();\\n    }\\n    if ( rhsscan != null ) {\\n        rhsscan.close();\\n    }\\n    next = false;\\n}\\n```'\n)"
+        ]
+      ],
+      "14": [
+        [
+          0,
+          "Prediction(\n    reasoning='I interpret the instruction as converting the single pair \"propertyname #propertyvalue\" into a nested map representation of type Map<String, Map<String, String>>. The outer map\\'s key will be \"propertyname\", and the inner map will map \"propertyname\" to \"propertyvalue\", forming a concrete example of Map<String, Map<String, String>>.',\n    output='Map<String, Map<String, String>> map = new HashMap<>();\\nMap<String, String> inner = new HashMap<>();\\ninner.put(\"propertyname\", \"propertyvalue\");\\nmap.put(\"propertyname\", inner);'\n)"
+        ]
+      ],
+      "15": [
+        [
+          4,
+          "Prediction(\n    reasoning='Generate a minimal, deterministic no-argument function that uses the key types surfaced in the input (String, URI[], Map<String,String>, Document) and follows the loc0–loc3 naming convention observed in the gold targets. The body simply declares four local variables with those types and representative initializations to reflect a small sequence of operations without external dependencies.',\n    output='```java\\nvoid function ( ) {\\n  final String loc0 = \"srini_string\";\\n  final URI[] loc1 = new URI[0];\\n  final Map<String,String> loc2 = new java.util.HashMap<String,String>();\\n  final Document loc3 = null;\\n}\\n```'\n)"
+        ]
+      ],
+      "16": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='boolean runToGoal(List<ExtensionInfo> allExtensions) {\\n  return true;\\n}'\n)"
+        ]
+      ],
+      "17": [
+        [
+          1,
+          "Prediction(\n    reasoning='The input tokens describe enabling/disabling GPS, using a Context, rebooting, and retrieving GPS status. I generate a small self-contained Java-like function that toggles an enable flag, declares a Context, calls reboot, then reads GPS status via a getGPS() method, and asserts that GPS is enabled. This mirrors the expected local variable naming (loc0, loc1), standard Java-like types (Context, boolean), and a simple assert pattern observed in the gold targets.',\n    output='void function ( ) {\\n  boolean loc0 = true;\\n  Context context = null;\\n  reboot();\\n  boolean loc1 = getGPS();\\n  assertEquals(true, loc1);\\n}'\n)"
+        ]
+      ],
+      "18": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I provided a minimal Java method that checks if a view's layout direction is RTL, matching the first sentence of the input.\",\n    output='public static boolean isLayoutDirectionRTL(View view) {\\n    return view != null && view.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;\\n}'\n)"
+        ]
+      ],
+      "19": [
+        [
+          5,
+          "Prediction(\n    reasoning='Create a small, deterministic Java-like snippet that reflects \"getting the checklist for an element\" using a Hashtable to register and retrieve a value. Use four locals named loc0..loc3, with loc0 as the Hashtable, loc1 as the element key, loc2 as the expected checklist value, and loc3 as the retrieved value, followed by a simple assertion.',\n    output='```java\\nvoid function ( ) {\\n  Hashtable loc0 = new Hashtable();\\n  String loc1 = \"element\";\\n  String loc2 = \"Checklist\";\\n  loc0.put(loc1, loc2);\\n  Object loc3 = loc0.get(loc1);\\n  if (loc3 == null || !loc3.equals(loc2)) {\\n    throw new AssertionError(\"unexpected value\");\\n  }\\n}\\n```'\n)"
+        ]
+      ],
+      "20": [
+        [
+          1,
+          "Prediction(\n    reasoning='Produce a minimal, deterministic Java-like function that uses the locX naming convention (loc0..loc3) and involves a short sequence of operations on a GregorianCalendar and Date, reflecting a typical date-construction-oriented test setup without external dependencies or assertions.',\n    output='void function ( ) {\\n  String loc0 = \"placeholder\";\\n  int loc1 = 0;\\n  java.util.GregorianCalendar loc2 = new java.util.GregorianCalendar(2000, 0, 1);\\n  java.util.Date loc3 = loc2.getTime();\\n  loc2.set(java.util.Calendar.MONTH, 0);\\n  loc3 = loc2.getTime();\\n}'\n)"
+        ]
+      ],
+      "21": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will output a minimal, self-contained Java-like function that deterministically computes the next available tile as lane 0, tile 0, using the required loc0..loc3 local variable naming pattern. It will declare loc0 as a placeholder for tiles, and use loc1 and loc2 to hold the next lane and tile, then assert their values to reflect the result described in the input.',\n    output='void function ( ) {\\n  Array<Array<Array<Card>>> loc0 = null;\\n  int loc1 = 0;\\n  int loc2 = 0;\\n  int loc3 = 0;\\n  // Determine next available tile (deterministic for this test): lane 0, tile 0\\n  loc1 = 0;\\n  loc2 = 0;\\n  assertEquals(0, loc1);\\n  assertEquals(0, loc2);\\n}'\n)"
+        ]
+      ],
+      "22": [
+        [
+          6,
+          "Prediction(\n    reasoning='I will output a single self-contained Java-like function block that sketches the inverse-related operations using the tokens provided. The function uses loc0–loc3 as Matrix variables to reflect a small, deterministic sequence: initialize a 2x2 matrix, create a submatrix, compute a cofactor, transpose, and prepare a candidate inverse while computing determinant. This adheres to the required constraint of a compact, deterministic operation sequence related to matrix inversion without introducing extra boilerplate or commentary.',\n    output='void function ( ) {\\n  final PlaceHolder placeHolder = new PlaceHolder();\\n  int changeSign = 1;\\n  final Matrix loc0 = new Matrix( new double[][] { { 1.0, 2.0 }, { 3.0, 4.0 } } );\\n  final Matrix loc1 = loc0.createSubMatrix( 0, 0 );\\n  final Matrix loc2 = loc0.cofactor( 0, 0 );\\n  final Matrix loc3 = loc0.transpose();\\n  final Matrix invCandidate = loc3.multiply( loc2 );\\n  double determinant = loc0.determinant;\\n}'\n)"
+        ]
+      ],
+      "23": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input describes a no-argument getter named getExitStatus that returns an ExitStatus field named thisExitStatus. Implementing a minimal deterministic function that simply returns the backing field aligns with the getter pattern, keeping the implementation straightforward and consistent with the described structure.',\n    output='```java\\nExitStatus getExitStatus ( ) {\\n    return thisExitStatus;\\n}\\n```'\n)"
+        ]
+      ],
+      "24": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input describes obtaining the hover attribute from a standard attribute resolver, with several related components listed. Since the exact target signature is not given, provide a concise, self-contained Java-like function that mirrors the described operation by defining two local variables (loc0 and loc1) and performing simple assertions to simulate retrieval/validation of the hover attribute.',\n    output='void function ( ) {\\n  String loc0 = \"hover\";\\n  String loc1 = \"standardAttributeResolver\";\\n  assertEquals(\"hover\", loc0);\\n  assertEquals(\"standardAttributeResolver\", loc1);\\n}'\n)"
+        ]
+      ],
+      "25": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='public List<AttributeStatementProvider> getAttributeStatementProviders() {\\n    return attributeStatementProviders;\\n}'\n)"
+        ]
+      ],
+      "26": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will produce a single Java-like function that reflects unloading sounds by calling unloadSounds(), and I will use small, deterministic local variables named loc0 and loc1 to mirror the common pattern, keeping the structure minimal and faithful to the required style.',\n    output='void function ( ) {\\n  long loc0 = 0L;\\n  unloadSounds();\\n  long loc1 = 1L;\\n  loc0 = loc1;\\n}'\n)"
+        ]
+      ],
+      "27": [
+        [
+          6,
+          "Prediction(\n    reasoning='I will implement a simple cache-backed accessor getProjectModel that looks up the user in projectCache and creates a new ProjectModel from the user when absent, caching it for future calls.',\n    output='ProjectModel getProjectModel ( final String user ) {\\n    final ProjectModel loc0 = projectCache.get( user );\\n    if ( loc0 != null ) {\\n        return loc0;\\n    }\\n    final ProjectModel loc1 = new ProjectModel( user );\\n    projectCache.put( user, loc1 );\\n    return loc1;\\n}'\n)"
+        ]
+      ],
+      "28": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will produce a small, deterministic Java-like function that uses four local variables named loc0..loc3 to reflect the described operation. The function will take a 6-digit hex string \"ffffff\", obtain a Color via getColor(loc0), fetch an optional named color with getNamedColor(), extract the name if present, default to \"unknown\" otherwise, and finally assert that the resulting name is \"white\" to match the closest color for white (#ffffff). This mirrors the parse/assert style and uses the exact loc0..loc3 pattern described.',\n    output='```java\\nvoid function ( ) {\\n  String loc0 = \"ffffff\";\\n  Color loc1 = getColor(loc0);\\n  Optional<String> loc2 = loc1.getNamedColor();\\n  String loc3;\\n  if (loc2.isPresent()) {\\n    loc3 = loc2.get();\\n  } else {\\n    loc3 = \"unknown\";\\n  }\\n  assertEquals(\"white\", loc3);\\n}\\n```'\n)"
+        ]
+      ],
+      "29": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will implement a small, self-contained Java-like function that mirrors the described operation: using a pseudo-file name \"faux-file\" and deriving a suffix from the type to reflect how a language parser would be chosen. I’ll use the loc0..loc3 variables to follow the naming pattern observed in gold targets and perform a simple suffix derivation.',\n    output='void function ( ) {\\n  String loc0 = \"faux-file\";\\n  String loc1 = \"CLASS_NAME\";\\n  String loc2 = \"name\";\\n  String loc3 = \"type\";\\n\\n  String locSuffixFromType;\\n  if (loc1 != null && loc1.length() > 0) {\\n    locSuffixFromType = \"_\" + loc3;\\n  } else {\\n    locSuffixFromType = \"\";\\n  }\\n\\n  String loc0WithSuffix = loc0 + locSuffixFromType;\\n}'\n)"
+        ]
+      ],
+      "30": [
+        [
+          5,
+          "Prediction(\n    reasoning='Create a small, deterministic function that mirrors a default TCP port usage by introducing four locals (loc0..loc3). Use a concrete port value (8333) and perform a couple of simple operations to produce deterministic results, without relying on external context.',\n    output='void function ( ) {\\n  long loc0 = 8333L;\\n  int loc1 = (int) (loc0 & 0xFFFF);\\n  int loc2 = loc1 + 1;\\n  long loc3 = loc0 + loc2;\\n}'\n)"
+        ]
+      ],
+      "31": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will produce a tiny, deterministic Java-like function using exactly four local variables named loc0..loc3 to reflect a minimal indexing-related operation. The function will declare a simple string, a long, an array of strings, and a long derived from the array length, then perform a basic print to exercise the locals without importing or requiring extra classes beyond standard Java syntax.',\n    output='void function ( ) {\\n  String loc0 = \"initialized\";\\n  long loc1 = 0L;\\n  String[] loc2 = new String[] { \"term1\", \"term2\" };\\n  long loc3 = loc2.length;\\n  System.out.println(loc0);\\n}'\n)"
+        ]
+      ],
+      "32": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input describes a view with marks for blocks to move in/out and related size counters. A minimal, deterministic implementation is to clear both block-move sets and reset their size counters, which directly fulfills \"clears all marks about blocks to move in/out in this view\".',\n    output='void clearAllMarks ( ) \\n{ \\n    mBlocksToMoveIn.clear ( ) ; \\n    mBlocksToMoveOut.clear ( ) ; \\n    mBlocksToMoveInSize = 0L ; \\n    mBlocksToMoveOutSize = 0L ; \\n}'\n)"
+        ]
+      ],
+      "33": [
+        [
+          0,
+          "Prediction(\n    reasoning='The task describes a field named \"subject\" of type UserSubject that captures the login name of the end user who authenticated the request. The key output here is identifying the field and its type that holds the user identity.',\n    output='UserSubject subject'\n)"
+        ]
+      ],
+      "34": [
+        [
+          4,
+          "Prediction(\n    reasoning='We implement getIntFromFormat(final boolean arg0) to return the length extracted from the format: if formatRepeatCount > 0 return that, else return 1. If arg0 is true we advance the stream by incrementing formatOff. It uses fields formatOff and formatRepeatCount.',\n    output='int getIntFromFormat ( final boolean arg0 ) {\\n    int loc0;\\n    if ( this.formatRepeatCount > 0 ) {\\n        loc0 = this.formatRepeatCount;\\n    } else {\\n        loc0 = 1;\\n    }\\n    if ( arg0 ) {\\n        this.formatOff++;\\n    }\\n    return loc0;\\n}'\n)"
+        ]
+      ],
+      "35": [
+        [
+          3,
+          "Prediction(\n    reasoning='The function demonstrates a small, deterministic sequence using four local variables (loc0..loc3) to reflect handling of an error message described in the input. It assigns a sample error message to loc0 and initializes three Longs, then copies loc0 to another local to indicate retrieval of the message.',\n    output='void function ( ) {\\n    String loc0 = \"errorMsg\";\\n    Long loc1 = 123L;\\n    Long loc2 = 456L;\\n    Long loc3 = 789L;\\n    String value = loc0;\\n}'\n)"
+        ]
+      ],
+      "36": [
+        [
+          6,
+          "Prediction(\n    reasoning=\"We infer from the prompt that the operation is to check if the set contains a given symbol. The class stores elements in a HashMap<String,symbol> named _all, so a natural implementation is to use containsValue to determine if the provided symbol exists in the map's values. The function signature likely is boolean contains(final symbol arg0) as per the description.\",\n    output='```java\\nboolean contains ( final symbol arg0 ) {\\n    return _all.containsValue( arg0 );\\n}\\n```'\n)"
+        ]
+      ],
+      "37": [
+        [
+          3,
+          "Prediction(\n    reasoning='Construct a Node and invoke the sequence described by the input: stripWhitespace, getAttributes, normalizeWhitespace, normalize, getQName, and handleWsRec, while also introducing a SPACE character as a literal, reflecting the concode_field_sep and concode_elem_sep tokens.',\n    output=\"void function ( ) {\\n  Node loc0 = new Node();\\n  loc0.stripWhitespace();\\n  Map<QName,String> loc1 = loc0.getAttributes();\\n  loc0.normalizeWhitespace();\\n  String loc2 = loc0.normalize();\\n  QName loc3 = loc0.getQName();\\n  loc0.handleWsRec();\\n  char SPACE = ' ';\\n}\"\n)"
+        ]
+      ],
+      "38": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a single Java-like function that retrieves a MarshalRegistry from the provided context, creating a new one if absent. I will declare the local variables as indicated by the tokens: nextId, instances, notMarshalled, getInstanceId, and iterator. I will use loc0 and loc1 as helper locals to mirror the naming pattern in typical gold targets, and perform a null-check with a cast to MarshalRegistry.',\n    output='```java\\nvoid getMarshalRegistry ( final Context context ) {\\n    MarshalRegistry loc0;\\n    Object loc1 = context.getMarshalRegistry();\\n    if ( loc1 == null ) {\\n        loc0 = new MarshalRegistry();\\n        context.setMarshalRegistry(loc0);\\n    } else {\\n        loc0 = (MarshalRegistry) loc1;\\n    }\\n    int nextId = 0;\\n    Map<Object,String> instances = new HashMap<Object,String>();\\n    Map<String,Object> notMarshalled = new HashMap<String,Object>();\\n    String getInstanceId = null;\\n    Iterator<Object> iterator = null;\\n}\\n```'\n)"
+        ]
+      ],
+      "39": [
+        [
+          6,
+          "Prediction(\n    reasoning='Interpreting the instruction as producing a Java-like function that returns a List containing the two input arguments o1 and o2. Implement a minimal deterministic body using loc0 as the internal list variable, and populate it with o1 and o2, returning loc0.',\n    output='List<Object> function ( final Object o1 , final Object o2 ) {\\n    final List<Object> loc0 = new ArrayList<>();\\n    loc0.add( o1 );\\n    loc0.add( o2 );\\n    return loc0;\\n}'\n)"
+        ]
+      ],
+      "40": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input describes setting the value of the parametersMetaData property of type ParametersMetaData, along with related getters/setters. The appropriate single, deterministic Java-like function is a standard setter:\\nvoid setParametersMetaData ( final ParametersMetaData parametersMetaData ) { this.parametersMetaData = parametersMetaData; }',\n    output='```java\\nvoid setParametersMetaData ( final ParametersMetaData parametersMetaData ) { this.parametersMetaData = parametersMetaData; }\\n```'\n)"
+        ]
+      ],
+      "41": [
+        [
+          3,
+          "Prediction(\n    reasoning='Interpreting the input as defining a small set of fields for a minimal, proof-of-concept piece of code: a long for serialVersionUID, a String for aboutName, a Logger for LOG, and a String for getInfo. I implement these as four local variables (loc0..loc3) inside a single void function, performing a deterministic, minimal transformation to reflect a basic operation without introducing extra structures. The mapping is:\\n- loc0 -> long serialVersionUID\\n- loc1 -> String aboutName\\n- loc2 -> Logger LOG\\n- loc3 -> String getInfo\\nThe function then does simple deterministic updates to these locals.',\n    output='void function ( ) {\\n  long loc0 = 0L;\\n  String loc1 = \"aboutName\";\\n  Logger loc2 = LOG;\\n  String loc3 = \"getInfo\";\\n  loc0 = loc0 + 1L;\\n  loc1 = loc1 + \"|\" + loc3;\\n}'\n)"
+        ]
+      ],
+      "42": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='writer.writeCharacters(new String(bytes));'\n)"
+        ]
+      ],
+      "43": [
+        [
+          4,
+          "Prediction(\n    reasoning='The task describes implementing a small, deterministic operation to check if the object is active by using the existing getStatus() method. I will implement a no-argument boolean method named isActive() that obtains the status via getStatus(), guards against null, and returns true if the status equals \"ACTIVE\" in a case-insensitive manner.',\n    output='boolean isActive ( ) {\\n    final String loc0 = getStatus ( );\\n    if ( loc0 == null ) {\\n        return false;\\n    }\\n    return \"ACTIVE\".equalsIgnoreCase ( loc0 );\\n}'\n)"
+        ]
+      ],
+      "44": [
+        [
+          3,
+          "Prediction(\n    reasoning='Create four locals named loc0..loc3 to match the pattern, representing a PlaceHolder, port, closed flag, and bind host, then instantiate a DataServerFactory via a fluent chain setting these fields to reflect a \"factory for dataserver\" described by the input.',\n    output='void function ( ) {\\n  PlaceHolder loc0 = new PlaceHolder();\\n  int loc1 = 0;\\n  boolean loc2 = false;\\n  String loc3 = \"127.0.0.1\";\\n  new DataServerFactory().setPlaceHolder(loc0).setPort(loc1).setClosed(loc2).setBindHost(loc3);\\n}'\n)"
+        ]
+      ],
+      "45": [
+        [
+          2,
+          "Prediction(\n    reasoning='Return the first ECKey in the list that has a private key, using a stream filter on hasPrivKey.',\n    output='return keys.stream().filter(ECKey::hasPrivKey).findFirst().orElse(null);'\n)"
+        ]
+      ],
+      "46": [
+        [
+          6,
+          "Prediction(\n    reasoning='Create a no-argument function named destroyInstrumentationService that represents destroying the instrumentation service by nullifying the instrumentation field if it is non-null. This mirrors the described operation with a small, deterministic sequence.',\n    output='void destroyInstrumentationService ( ) {\\n  if ( instrumentation != null ) {\\n    instrumentation = null;\\n  }\\n}'\n)"
+        ]
+      ],
+      "47": [
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a simple setter for the maximumKeySize field, following the naming and formatting conventions inferred from the input tokens.',\n    output='```java\\nvoid setMaximumKeySize ( final long maximumKeySize ) { this.maximumKeySize = maximumKeySize; }\\n```'\n)"
+        ]
+      ],
+      "48": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input describes a scenario involving retrieving a constant value for a specified field, alongside several related classes and methods (Scan, TableScan, Index, getInt, getString, hasField, etc.). To produce a deterministic, self-contained Java-like function that aligns with the described operation while remaining generic and compilable, I implement a minimal function that returns a constant string value representing the field\\'s value. I use a plausible signature that accepts a Scan parameter (to reflect the field access context) and return a constant string \"CONST_VALUE\" to satisfy \"returns the constant value of the specified field\" without relying on external state. The body uses a local variable loc0 to mirror the loc naming convention observed in target code samples.',\n    output='String getConstantValue ( final Scan s ) {\\n  final String loc0 = \"CONST_VALUE\";\\n  return loc0;\\n}'\n)"
+        ]
+      ],
+      "49": [
+        [
+          2,
+          "Prediction(\n    reasoning='The input describes a getter for the 4-byte BIP32 public header, so implement a public method that returns the bip32HeaderPub field.',\n    output='public int getBip32HeaderPub() {\\n    return bip32HeaderPub;\\n}'\n)"
+        ]
+      ],
+      "50": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"We assume the task requires implementing a method that returns the number of satoshis by invoking the Coin's longValue() method. We implement a minimal function with a deterministic body that uses the provided argument and returns the computed long.\",\n    output='long value ( final Coin arg0 ) {\\n    long loc0 = arg0.longValue ( ) ;\\n    return loc0 ;\\n}'\n)"
+        ]
+      ],
+      "51": [
+        [
+          2,
+          "Prediction(\n    reasoning='The input describes setting an action view on a MenuItem; produce a code snippet invoking setActionView with a View argument.',\n    output='mMenuItem.setActionView(view);'\n)"
+        ]
+      ],
+      "52": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will generate a compact, deterministic Java-like function named function that uses four locals (loc0..loc3), sets up a mock session identifier and a value array, and performs a parse call followed by an assertion. This mirrors a typical parse-and-assert flow described by the input (legal-argument/exception-testing scenarios) in a minimal, self-contained way.',\n    output='void function ( ) {\\n  String loc0 = \"MOCK_SESSION_ID\";\\n  long loc1 = 0L;\\n  Long[] loc2 = new Long[] { loc1 };\\n  TimeIntervalParser loc3 = null;\\n  parse(loc0, loc2);\\n  assertEquals(0L, loc2[0].longValue());\\n}'\n)"
+        ]
+      ],
+      "53": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will output a single self-contained Java-like function named function with the required signature void function ( ) { ... }. It will create four local variables named loc0, loc1, loc2, and loc3, initialize them to deterministic values, perform a small sequence of arithmetic and assignment steps to reflect handling of the described time-related fields (offsetHours, offsetMinutes, minutes, hour, seconds, TIME_PATTERN), and finally assign a representative string to loc3. The code is kept minimal and self-contained, with no external dependencies.',\n    output='void function ( ) {\\n  long loc0 = 0L;\\n  int loc1 = 0;\\n  double loc2 = 0.0;\\n  String loc3 = \"\";\\n  loc0 = loc0 + 3600000L;\\n  loc1 = (int)(loc0 / 1000);\\n  loc2 = loc1 * 0.5;\\n  loc3 = \"TIME_PATTERN\";\\n}'\n)"
+        ]
+      ],
+      "54": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will produce a single Java-like function that demonstrates the operation described: setting the service ID for a datagram packet. I will follow the required structure by using loc0 through loc3 locals and calling a hypothetical setServiceID method on a DatagramPacket instance, reflecting the described fields and methods in the input. The function will be minimal and deterministic with a small sequence of statements.',\n    output='void function ( ) {\\n    Long[] loc0 = new Long[1];\\n    loc0[0] = 0L;\\n    InetAddress loc1 = null;\\n    ServiceID loc2 = new ServiceID();\\n    DatagramPacket loc3 = new DatagramPacket();\\n    loc3.setServiceID(loc2);\\n}'\n)"
+        ]
+      ],
+      "55": [
+        [
+          0,
+          "Prediction(\n    reasoning='Using the provided fields, the file appears to consist of a fixed prologue section of FILE_PROLOGUE_BYTES bytes, followed by a sequence of header records, each RECORD_SIZE bytes long. With numHeaders representing the number of headers, the total file size in bytes should be: FILE_PROLOGUE_BYTES + numHeaders * RECORD_SIZE. Using a long for the multiplication avoids overflow.',\n    output='FILE_PROLOGUE_BYTES + (long)numHeaders * RECORD_SIZE'\n)"
+        ]
+      ],
+      "56": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"The user asks for the method that returns the node's payload. Given the field mPayload of type T, implement a public accessor getPayload() that returns mPayload.\",\n    output='public T getPayload() {\\n    return mPayload;\\n}'\n)"
+        ]
+      ],
+      "57": [
+        [
+          4,
+          "Prediction(\n    reasoning='Create a no-argument method getAddedDateLocalTime that formats the addedDate field into \"yyyy-MM-dd HH:mm:ss\" using SimpleDateFormat and returns the resulting string.',\n    output='String getAddedDateLocalTime ( ) {\\n    final java.text.SimpleDateFormat loc0 = new java.text.SimpleDateFormat(\"yyyy-MM-dd HH:mm:ss\");\\n    return loc0.format( addedDate );\\n}'\n)"
+        ]
+      ],
+      "58": [
+        [
+          6,
+          "Prediction(\n    reasoning='Create a getter that returns the mChildren field to expose the children nodes.',\n    output='List<DirectedAcyclicGraphNode<T>> getChildren ( ) { return mChildren; }'\n)"
+        ]
+      ],
+      "59": [
+        [
+          4,
+          "Prediction(\n    reasoning='I created a small, deterministic Java-like function that mirrors the described operation (returning the first item not obscured by a header) using a minimal sequence with loc0–loc3 variables, and a placeholder return value. The function signature is chosen to resemble a typical getter-style method and uses the provided fields (mAdapter, itemIsObscuredByHeader) in a concise, consistent pattern.',\n    output='```java\\npublic Object getFirstVisibleItemNotObscuredByHeader ( ) {\\n    Rect loc0 = new Rect ( );\\n    int loc1 = ( mAdapter != null ) ? 0 : -1;\\n    boolean loc2 = ! itemIsObscuredByHeader;\\n    Object loc3 = null;\\n    if ( loc1 == 0 && loc2 ) {\\n        loc3 = \"firstItem\";\\n    }\\n    return loc3;\\n}\\n```'\n)"
+        ]
+      ],
+      "60": [
+        [
+          5,
+          "Prediction(\n    reasoning='The input lists a set of fields and accessor methods for a data object, but does not specify a concrete computation. To provide a deterministic, self-contained Java-like snippet that adheres to the required structure (a single void function using only loc0..loc3 locals), I implement a minimal initialization flow: declare four locals corresponding to representative types seen in the input (Date, Long, String, List<TestResultDetailsDTO>), and initialize them with safe, deterministic values. This mirrors the parse/initialize style while remaining compliant with the constraints.',\n    output='```java\\nvoid function ( ) {\\n    java.util.Date loc0 = new java.util.Date(0);\\n    Long loc1 = 0L;\\n    String loc2 = \"\";\\n    java.util.List<TestResultDetailsDTO> loc3 = new java.util.ArrayList<>();\\n}\\n```'\n)"
+        ]
+      ],
+      "61": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input describes a Java bean with several fields and accessors related to test results. Since the exact target signature is not provided, I provide a no-argument function that follows the common pattern observed in the gold targets: declare a small set of loc0–loc3 variables with types inspired by the bean (timestamps, a long testId placeholder, a list of details, and a run status), and perform a deterministic sequence of assignments to reflect a basic \"get test id\" style operation without requiring external context. The code uses fully-qualified types to avoid dependencies on imports.',\n    output='void function ( ) {\\n    java.sql.Timestamp loc0 = new java.sql.Timestamp(0L);\\n    long loc1 = 0L;\\n    java.util.List<RegPCLTestResultDetailsEntity> loc2 = new java.util.ArrayList<>();\\n    RunStatusType loc3 = null;\\n\\n    loc1 = 1001L;\\n    loc0 = new java.sql.Timestamp(loc0.getTime() + 1000L);\\n    loc2.addAll(java.util.Collections.emptyList());\\n}'\n)"
+        ]
+      ],
+      "62": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input lists a set of test method names related to time parsing/formatting, suggesting a small, deterministic round-trip test. I implement a single function that demonstrates parsing a time string into a TimeIntervalParser and formatting it back to a date string, asserting the equality to reflect the round-trip concept, while using loc0/loc1/loc2 as locals and a straightforward assertion pattern.',\n    output='void testEquals ( ) {\\n    final String loc0 = \"12:34:56.7\";\\n    final TimeIntervalParser loc1 = new TimeIntervalParser( loc0 );\\n    final String loc2 = loc1.toDate();\\n    assertEquals( loc0, loc2 );\\n}'\n)"
+        ]
+      ],
+      "63": [
+        [
+          6,
+          "Prediction(\n    reasoning='Generate a minimal, deterministic Java-like function named \"function\" that uses four local variables (loc0–loc3) with simple operations and assertions to reflect a basic parse/assert style observed in gold targets, without external dependencies.',\n    output='void function ( ) {\\n  String loc0 = \"srini_string\";\\n  String[] loc1 = new String[] { loc0, \"end\" };\\n  long loc2 = 12345L;\\n  java.math.BigDecimal loc3 = new java.math.BigDecimal(\"0.0\");\\n  assertEquals(2, loc1.length);\\n  loc1[1] = \"updated\";\\n  assertEquals(\"updated\", loc1[1]);\\n}'\n)"
+        ]
+      ],
+      "64": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will define four locals (loc0..loc3) to mirror the compression-related fields described in the input: loc0 as a String holding DEFAULT_IMAGE_FORMAT, loc1 as a float for writeCompressionQuality, loc2 as a String for writeCompressionType, and loc3 as an int for writeCompressionMode. Then I will perform a small sequence: set the compression mode, call write twice (as implied by the repeated \"write\" in the input), then call getImageWriteParameters and lookupImageWriterForFormat to reflect the parse/lookup steps described.',\n    output='void function ( ) {\\n  String loc0 = DEFAULT_IMAGE_FORMAT;\\n  float loc1 = writeCompressionQuality;\\n  String loc2 = writeCompressionType;\\n  int loc3 = writeCompressionMode;\\n\\n  setWriteCompressionMode(loc3);\\n  write();\\n  write();\\n  getImageWriteParameters();\\n  lookupImageWriterForFormat();\\n}'\n)"
+        ]
+      ],
+      "65": [
+        [
+          3,
+          "Prediction(\n    reasoning='The input describes a boolean check for enclosure of ranges across two RangeSet containers. I implement a small Java-like function that follows the required signature and uses loc0, loc1, and loc2 to mirror the loc-based pattern seen in the gold targets. It computes whether loc0 encloses the set of ranges loc1 and asserts that the result is true, reflecting the description that this should hold (including the case where the relevant input would be considered true for emptiness).',\n    output='void function ( ) {\\n  RangeSet<C> loc0 = null;\\n  Set<Range<C>> loc1 = null;\\n  boolean loc2 = loc0.encloses(loc1);\\n  assertEquals(true, loc2);\\n}'\n)"
+        ]
+      ],
+      "66": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will implement a compact, deterministic function that initializes four loc variables to represent different context-related structures and performs a couple of straightforward operations (adding a placeholder function entry and clearing a thread-local) to reflect the described operations, without introducing additional locals or methods.',\n    output='```java\\nvoid function ( ) {\\n  Object loc0 = new java.util.HashMap<String, java.lang.reflect.Method>();\\n  Object loc1 = new java.lang.ThreadLocal<ELEvaluator>();\\n  Object loc2 = new Context();\\n  Object loc3 = new ExpressionEvaluator();\\n\\n  ((java.util.Map<String, java.lang.reflect.Method>)loc0).put(\"resolveFunction\", null);\\n  ((java.lang.ThreadLocal<ELEvaluator>)loc1).set(null);\\n  loc2 = loc3;\\n}\\n```'\n)"
+        ]
+      ],
+      "67": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input describes a buffer-related component with fields and operations but asks for a small deterministic operation. I implement a simple function that checks whether a given ByteBuffer contains data by verifying it is non-null and has remaining bytes.',\n    output='boolean function ( final ByteBuffer buffer ) { boolean loc0 = buffer != null && buffer.hasRemaining ( ); return loc0; }'\n)"
+        ]
+      ],
+      "68": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a single Java-like function named function that constructs a log record for a SetString operation using four locals loc0..loc3, and prints a textual log record including txnum, filename, block, offset, and old value.',\n    output='void function ( ) {\\n  Block loc0 = new Block();\\n  String loc1 = \"oldval\";\\n  int loc2 = 7;\\n  int loc3 = 12345;\\n  String record = \"setstring,\" + loc3 + \",\" + \"file.txt\" + \",\" + loc0 + \",\" + loc2 + \",\" + loc1;\\n  System.out.println(record);\\n}'\n)"
+        ]
+      ],
+      "69": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will implement a minimal pushOnStack method that just pushes the provided StackObject onto the braceStack field to reflect procedural stacking as described.',\n    output='```java\\nvoid pushOnStack ( final StackObject arg0 ) {\\n    final Stack<StackObject> loc0 = this.braceStack;\\n    loc0.push( arg0 );\\n}\\n```'\n)"
+        ]
+      ],
+      "70": [
+        [
+          1,
+          "Prediction(\n    reasoning='The task describes obtaining a User from a ThreadLocal named sUserThreadLocal, then performing set and remove operations. I implement a small function that gets the user, then calls set with null and finally removes the value.',\n    output='``` \\nvoid function ( ) {\\n  User loc0 = sUserThreadLocal.get();\\n  sUserThreadLocal.set(null);\\n  sUserThreadLocal.remove();\\n}\\n```'\n)"
+        ]
+      ],
+      "71": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='public void addRecipientToList(String recipient) {\\n    if (selectedRecipients == null) {\\n        selectedRecipients = new java.util.ArrayList<String>();\\n    }\\n    selectedRecipients.add(recipient);\\n}'\n)"
+        ]
+      ],
+      "72": [
+        [
+          4,
+          "Prediction(\n    reasoning='We will output a no-argument void method named deleteFile that mirrors the described test: attempting to delete a non-existent file should throw an exception. The body will attempt the deletion with a non-existent path and assert that an IOException is thrown, using a try-catch block and signaling a failure if no exception occurs.',\n    output='```java\\nvoid deleteFile ( ) {\\n  final String loc0 = \"anon-existent-file.txt\";\\n  try {\\n    FileUtils.deleteFile ( loc0 );\\n    throw new AssertionError ( \"Expected exception\" );\\n  } catch ( final java.io.IOException expected ) {\\n  }\\n}\\n```'\n)"
+        ]
+      ],
+      "73": [
+        [
+          6,
+          "Prediction(\n    reasoning='I will implement a hasOperation function that checks whether an operation is declared for a given OperationSignature and name by querying the nested operations map. It safely handles missing keys by returning false when the outer map yields null.',\n    output='boolean hasOperation ( final OperationSignature arg0 , final String arg1 ) {\\n    final Map<String,OperationStats> loc0 = operations.get( arg0 );\\n    if ( loc0 == null ) {\\n        return false;\\n    }\\n    return loc0.containsKey( arg1 );\\n}'\n)"
+        ]
+      ],
+      "74": [
+        [
+          6,
+          "Prediction(\n    reasoning='I cannot determine the exact target signature from the input, so I provide a safe no-argument function that follows the common pattern of implementing a small, deterministic operation using the provided methods (getAllUsers, updateUserModel, getAllTeams, updateTeamModels) and simple local variables named loc0, loc1, etc., to reflect the requested style.',\n    output='void function ( ) {\\n  final String loc0 = \"updates/writes all specified user objects\";\\n  final List<UserModel> loc1 = getAllUsers();\\n  if ( loc1 != null && !loc1.isEmpty() ) {\\n    updateUserModel( loc1 );\\n  }\\n  final List<TeamModel> loc2 = getAllTeams();\\n  if ( loc2 != null && !loc2.isEmpty() ) {\\n    updateTeamModels( loc2 );\\n  }\\n}'\n)"
+        ]
+      ],
+      "75": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will produce a single Java-like function with exactly four local variables named loc0, loc1, loc2, and loc3. The code will perform a tiny, deterministic sequence that echoes the described logging/resource-related motif without introducing new identifiers, by using simple string operations and no-ops on those locals.',\n    output='void function ( ) {\\n  String loc0 = \"genericservlet\";\\n  String loc1 = \"#log\";\\n  String loc2 = \"concode_field_sep\";\\n  String loc3 = \"CLASSPATH_PREFIX\";\\n\\n  loc0 = loc0 + loc1;\\n  loc2 = loc3;\\n  loc0.length();\\n  loc2.length();\\n}'\n)"
+        ]
+      ],
+      "76": [
+        [
+          6,
+          "Prediction(\n    reasoning='The input describes handling calls that are purely one-way RPC by writing an empty response. I implement a small Java-like function that performs no response while optionally logging an informational message when a Logger is provided.',\n    output='void writeEmptyResponse ( final Logger LOG , final placeholderType placeHolder ) {\\n    if ( LOG != null ) {\\n        LOG.info( \"one-way RPC: no response\" );\\n    }\\n}'\n)"
+        ]
+      ],
+      "77": [
+        [
+          5,
+          "Prediction(\n    reasoning='Provide a compact function using four locals named loc0..loc3 to reflect the described fields via simple, deterministic operations (assignments, list usage, and a conditional).',\n    output='void function ( ) {\\n  long loc0 = 0L;\\n  int loc1 = 0;\\n  String loc2 = \"\";\\n  java.util.ArrayList<String> loc3 = new java.util.ArrayList<>();\\n\\n  loc0 = 100L;\\n  loc1 = (int) (loc0 / 10);\\n  loc2 = \"currentMessage\";\\n  loc3.add(\"debug\");\\n  loc3.add(loc2);\\n  if (loc1 > 5) {\\n    loc2 = loc2 + \"_updated\";\\n  } else {\\n    loc2 = loc2 + \"_init\";\\n  }\\n  loc1 = loc3.size();\\n}'\n)"
+        ]
+      ],
+      "78": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='public String getEscapedJson() { return m_escapedJson; }'\n)"
+        ]
+      ],
+      "79": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a minimal deterministic sequence that matches the nodetest pattern: obtain a DocumentTraversal with getDocumentTraversal(), prepare a short[] nodeTypes, a Node rootNode, invoke acceptNode, and assert the result is true using assertEquals.',\n    output='```java\\nvoid function ( ) {\\n    DocumentTraversal loc0;\\n    short[] loc1;\\n    Node loc2;\\n    boolean loc3;\\n    loc0 = getDocumentTraversal ( );\\n    loc1 = new short[] { 0 } ;\\n    loc3 = loc0.acceptNode ( loc2 , loc1 ) ;\\n    assertEquals ( true , loc3 ) ;\\n}\\n```'\n)"
+        ]
+      ],
+      "80": [
+        [
+          6,
+          "Prediction(\n    reasoning='Implemented a small deterministic function to retrieve a cached BlockStoreContext by master address, creating and caching a new one if absent. Uses loc0 as local variable and follows the naming/style pattern seen in the input (BlockStoreContext, CACHED_CONTEXTS, InetSocketAddress).',\n    output='```java\\nBlockStoreContext getContext ( final InetSocketAddress masterAddress ) {\\n  BlockStoreContext loc0 = CACHED_CONTEXTS.get( masterAddress );\\n  if ( loc0 != null ) {\\n    return loc0;\\n  }\\n  loc0 = new BlockStoreContext();\\n  CACHED_CONTEXTS.put( masterAddress, loc0 );\\n  return loc0;\\n}\\n```'\n)"
+        ]
+      ],
+      "81": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will implement a single Java-like function named function that initializes a writer for the JPEG image format by using the DEFAULT_IMAGE_FORMAT, obtaining image write parameters, looking up a writer for the format, configuring compression settings, and performing two write calls to mirror the described convenience method behavior.',\n    output='void function ( ) {\\n  String imageFormat = DEFAULT_IMAGE_FORMAT;\\n  ImageWriteParam loc0 = getImageWriteParameters ( );\\n  ImageWriter loc1 = lookupImageWriterForFormat ( imageFormat );\\n  setWriteCompressionMode ( 0 );\\n  setWriteCompressionType ( \"DEFAULT\" );\\n  setWriteCompressionQuality ( 0.92f );\\n  write ( );\\n  write ( );\\n}'\n)"
+        ]
+      ],
+      "82": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will generate a compact, deterministic Java-like function that builds a parameters map, creates a query string, forms an Oma link, then applies path removal and HTTP prefixing. It will reference the tokens provided (OMA_REDIRECT_LINK, SITE_PARAM, removePath, conditionallyPrependHttp, createOmaLink, createQueryString, getParameterMap, getKeyList, getDelimiter) in a minimal, coherent sequence using loc0..loc3 as the designated locals.',\n    output='void function ( ) {\\n  String loc0 = OMA_REDIRECT_LINK;\\n  HashMap<String,String> loc1 = getParameterMap();\\n  ArrayList<String> loc2 = getKeyList();\\n  String loc3 = createQueryString(loc1);\\n  loc2.toString();\\n  loc0 = createOmaLink(loc3);\\n  loc0 = removePath(loc0);\\n  loc0 = conditionallyPrependHttp(loc0);\\n  loc1.put(SITE_PARAM, \"\");\\n}'\n)"
+        ]
+      ],
+      "83": [
+        [
+          0,
+          "Prediction(\n    reasoning='From the provided description, the call that sets threading parameters for a Jetty HTTP server engine corresponds to a setter that assigns ThreadingParameters for a specific port. Given the surrounding methods like getThreadingParametersMap and setTLSServerParametersForPort, the natural Java signature would take a port identifier (as String) and a ThreadingParameters object, returning void.',\n    output='void setThreadingParametersForPort(String port, ThreadingParameters threadingParameters)'\n)"
+        ]
+      ],
+      "84": [
+        [
+          5,
+          "Prediction(\n    reasoning='The function should reflect a deterministic, minimal sequence that mimics registering a generator by interacting with the singleton GeneratorManager. It obtains the instance, reads the current language and the internal generators map, fetches the existing generator for that language, and then re-inserts it into the map to simulate a replacement operation without introducing new classes or literals.',\n    output='void function ( ) {\\n  GeneratorManager loc0 = GeneratorManager.getInstance ( );\\n  Language loc1 = loc0.getCurrLanguage ( );\\n  Map<Language,CodeGenerator> loc2 = loc0.getGenerators ( );\\n  CodeGenerator loc3 = loc2.get ( loc1 );\\n  loc2.put ( loc1 , loc3 );\\n}'\n)"
+        ]
+      ],
+      "85": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"Generate a Java method that sets the 'vars' field from the provided Map<String,Object> vars parameter.\",\n    output='void setVariables(Map<String,Object> vars) {\\n    this.vars = vars;\\n}'\n)"
+        ]
+      ],
+      "86": [
+        [
+          6,
+          "Prediction(\n    reasoning='Cannot determine the exact target signature from the prompt. Provide a minimal, deterministic Java-like no-argument function that references the described fields using loc0–loc3 as local variables, reflecting a small, self-contained operation consistent with the listed members.',\n    output='void function ( ) {\\n    final int loc0 = 0;\\n    final long loc1 = 0L;\\n    final java.math.BigInteger loc2 = java.math.BigInteger.ZERO;\\n    final byte[] loc3 = new byte[0];\\n    int hashCode = loc0;\\n    if ( loc0 == 0 ) {\\n        // no-op\\n    }\\n}'\n)"
+        ]
+      ],
+      "87": [
+        [
+          3,
+          "Prediction(\n    reasoning='The input describes firing a bullet under certain conditions and managing bullet count. I implemented a minimal, deterministic Java-like function that checks bulletTime, compares current bullets against MAX_BULLETS, and if allowed, creates a new Bullet with position coordinates (xPos, yPos, zPos) and adds it to bullets. This mirrors common patterns where a bullet is spawned only when allowed by interval and capacity constraints, using loc0 and loc1 as the local temporaries.',\n    output='void function ( ) {\\n    long loc0 = bulletTime;\\n    if (loc0 > 0) {\\n        int loc1 = bullets.size();\\n        if (loc1 < MAX_BULLETS) {\\n            Bullet b = new Bullet(xPos, yPos, zPos);\\n            bullets.add(b);\\n        }\\n    }\\n}'\n)"
+        ]
+      ],
+      "88": [
+        [
+          5,
+          "Prediction(\n    reasoning='Provide a minimal deterministic function that uses four loc variables and invokes the factory methods referenced in the input to reflect the described operation at a basic level.',\n    output='void function ( ) {\\n    Object loc0 = createGetOfferDetailsResponseReturnDetailOfferDataSourceGeos();\\n    Object loc1 = createGetOfferDetailsResponseReturnDetailOfferDataTargetGeos();\\n    Object loc2 = createGetOfferDetailsResponseReturnDetailOfferDataMerchant();\\n    Object loc3 = createGetOfferDetailsResponseReturnDetailOfferDataOfferMedia();\\n}'\n)"
+        ]
+      ],
+      "89": [
+        [
+          2,
+          "Prediction(\n    reasoning='Provide a method that returns the acknowledgementInterval as primitive milliseconds, defaulting to 0 if null.',\n    output='long getAcknowledgementIntervalTime() {\\n    return acknowledgementInterval == null ? 0L : acknowledgementInterval.longValue();\\n}'\n)"
+        ]
+      ],
+      "90": [
+        [
+          2,
+          "Prediction(\n    reasoning='Produce a minimal method signature for bindAndStart with ServerConnectionEventHandler onNewConnection.',\n    output='void bindAndStart(ServerConnectionEventHandler onNewConnection) { }'\n)"
+        ]
+      ],
+      "91": [
+        [
+          4,
+          "Prediction(\n    reasoning='I generated a simple no-argument Java-like function that uses four local variables named loc0–loc3, reflecting the \"loc\" naming pattern mentioned. The code creates a list, adds a string, checks its size, and asserts containment and size to mirror a deterministic, small operation consistent with the debugging/reporting domain described in the input.',\n    output='void function ( ) {\\n  String loc0 = \"debug\";\\n  java.util.List<String> loc1 = new java.util.ArrayList<>();\\n  loc1.add(loc0);\\n  int loc2 = loc1.size();\\n  assertEquals(1, loc2);\\n  boolean loc3 = loc1.contains(\"debug\");\\n  assertEquals(true, loc3);\\n}'\n)"
+        ]
+      ],
+      "92": [
+        [
+          4,
+          "Prediction(\n    reasoning='I cannot determine the exact target function signature and body from the provided input without additional context about the gold target style. To conform with the required single-function output format, I provide a minimal no-argument function as a placeholder that compiles in Java-like syntax, avoiding assumptions about specific object creation patterns.',\n    output='void function ( ) {\\n}'\n)"
+        ]
+      ],
+      "93": [
+        [
+          6,
+          "Prediction(\n    reasoning='I created a no-argument Java-like function that uses the same loc0–loc3 variable pattern and reflects the operation described by the input by constructing and printing a string that combines the tokens \"toString\" and \"getErrorMsg\" mentioned in the input.',\n    output='void function ( ) {\\n    String loc0 = \"toString\";\\n    String loc1 = \"getErrorMsg\";\\n    String loc2 = loc0 + \" \" + loc1;\\n    String loc3 = loc2;\\n    System.out.println(loc3);\\n}'\n)"
+        ]
+      ],
+      "94": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='return getUserGroups(user);'\n)"
+        ]
+      ],
+      "95": [
+        [
+          6,
+          "Prediction(\n    reasoning='Produce a small, no-argument Java-like function named exactly \"function\" that follows the observed style: use loc0..loc3 for locals, access endpoints and streams via no-arg getters, log a brief operation, and perform a simple sequence of calls (connect, send, shutdown) to reflect the described actions.',\n    output='void function ( ) {\\n    logger.info(\"flush outstanding data and make sure it is acknowledged\");\\n    final UDPEndPoint loc0 = getEndpoint();\\n    final Socket loc1 = getSocket();\\n    final OutputStream loc2 = getOutputStream();\\n    final InputStream loc3 = getInputStream();\\n    connect();\\n    send();\\n    shutdown();\\n}'\n)"
+        ]
+      ],
+      "96": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"The input describes a scenario involving a metadata editor and a remote control client, with several related members. I implement a compact, deterministic Java-like function that declares the four locals used in the described pattern (loc0..loc3) and initializes a few supporting variables that mirror the named fields/members (HAS_REMOTE_CONTROL_APIS, mActualMetadataEditor, METADATA_KEY_ARTWORK, mActualRemoteControlClient). The function then wires the loc variables to the corresponding members and performs a minimal operation to reflect an information update (without introducing any new behavior beyond what's implied). This preserves the required structure and naming conventions observed in the target style.\",\n    output='void function ( ) {\\n  boolean HAS_REMOTE_CONTROL_APIS = true;\\n  Object mActualMetadataEditor = new Object();\\n  int METADATA_KEY_ARTWORK = 1;\\n  Object mActualRemoteControlClient = new Object();\\n\\n  String loc0 = \"textual information to be displayed\";\\n  Object loc1 = mActualMetadataEditor;\\n  int loc2 = METADATA_KEY_ARTWORK;\\n  Object loc3 = mActualRemoteControlClient;\\n\\n  loc0 = loc0 + \"\";\\n}'\n)"
+        ]
+      ],
+      "97": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will create a small, deterministic function that defines a set of local variables mirroring the tokens in the input, including obtaining a GeneralMotorCon instance via getInstance, and declare placeholders for the other fields without performing external operations.',\n    output='void function ( ) {\\n  GeneralMotorCon loc0 = GeneralMotorCon.getInstance( );\\n  int loc1 = 0;\\n  String TAG = \"landing\";\\n  int batLvl = 0;\\n  long threadTimer = 0L;\\n  int spinSpeed = 0;\\n  CommandManager cmd = null;\\n  int hoverTime = 0;\\n  int speed = 0;\\n  int spin90Speed = 0;\\n  ARDrone drone = null;\\n  int spinTime = 0;\\n  int spin90Time = 0;\\n  Long[] loc2 = new Long[0];\\n  int loc3 = 0;\\n}'\n)"
+        ]
+      ],
+      "98": [
+        [
+          4,
+          "Prediction(\n    reasoning='I create a simple no-argument function that demonstrates constructing a GroupConfiguration via its Builder, setting metadata and basic fields, building the object, and converting it to a string. Local variables loc0–loc3 follow the naming pattern observed in the target style.',\n    output='void function ( ) {\\n    GroupConfiguration.Builder loc0 = GroupConfiguration.builder();\\n    ImmutableMap<String,String> loc1 = ImmutableMap.of(\"owner\",\"admin\");\\n    loc0.metadata(loc1);\\n    loc0.name(\"default\");\\n    loc0.maxEntities(100);\\n    loc0.minEntities(1);\\n    loc0.cooldown(60);\\n    GroupConfiguration loc2 = loc0.build();\\n    String loc3 = loc2.toString();\\n}'\n)"
+        ]
+      ],
+      "99": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a single no-argument Java-like test function named testGetDirectionOfVariation. The body will declare a few loc variables (loc0–loc3 pattern) and perform simple assertions to mirror a deterministic test flow described by the input. This adheres to the expected style without relying on external context.',\n    output='void testGetDirectionOfVariation ( ) {\\n    String loc0 = \"W\";\\n    final long loc1 = 15L;\\n    Long[] loc2 = new Long[] { 1L, 2L };\\n    assertEquals( \"W\", loc0 );\\n    assertEquals( 15L, loc1 );\\n    assertEquals( 2, loc2.length );\\n}'\n)"
+        ]
+      ]
+    },
+    "best_idx": 4,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java-like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask behavior\\n- For every input, produce exactly one function declaration and body (no explanations, no commentary).\\n- The required signature is: void function ( ) { ... } with the same spacing and formatting conventions as the gold targets.\\n- The function body should implement a small, deterministic sequence of statements that reflect the described operation in the input, using the same naming and patterns observed in the gold targets. In practice, this means:\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold target pattern uses them.\\n  - Use Java-like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse-like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser-based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: void function ( ) { ... } as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-only code transformer. For each given input, generate exactly the target code snippet that the gold standard would contain for that input. Do not include any explanation, reasoning, or meta-text—only the code content.\\n\\nGuidelines:\\n- Output exactly the code fragment (which may be a single line or multiple lines) that represents the transformed result. Do not prepend or append any commentary.\\n- Mirror the exact style, syntax, and formatting used in the gold targets (spacing around parentheses, semicolon placement, line breaks, etc.). Treat the gold target as the canonical reference for formatting.\\n- The code should implement the transformation described by the input. When the input references a specific function or placeholder (e.g., replaceInjectedValuesWithPlaceholders, getCenter, etc.), the snippet should perform a return or call to that function with the appropriate argument(s) to realize the transformation.\\n- Do not include any reasoning traces, explanations, or auxiliary text. If the target is multi-line, reproduce the multi-line structure exactly as in the gold target.\\n- If multiple valid targets could exist, choose the one that matches the exact minimal form or the exact pattern demonstrated in the gold targets for that input.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java-like function snippet that exactly matches the target style used by the gold outputs.\\n\\nTask rules\\n- For every input, output exactly one function declaration and body (no explanations, no commentary), with the exact signature and formatting:\\n  void function ( ) { ... }\\n  and with the same line breaks and indentation pattern as the gold targets (do not add extra methods, classes, imports, or comments).\\n- The function body must implement a small, deterministic sequence of statements that reflect the operation described in the input, using the same naming and patterns observed in the gold targets. In practice:\\n  - Use local variables named loc0, loc1, loc2, loc3 as locals when the gold pattern uses them; declare only as many locals as the gold target pattern uses.\\n  - Use Java-like types and syntax seen in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as shown.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present, reflect that pattern: create loc0, call a parse-like method, then perform asserts on the resulting array or values (e.g., loc1[0] in an assertEquals).\\n  - If the input implies returning a value, mirror the style from the gold targets (e.g., use return statements or appropriate final expressions) within the void or non-void constraints as observed in the gold outputs.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions of the gold targets (loc-based locals, exact method names, exact assertion style, and exact delimiters/spaces).\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function:\\n  void function ( ) { ... }'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java‑like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask behavior\\n- For every input, produce exactly one function declaration and body (no explanations, no commentary).\\n- The required signature is the same as the gold target for the given input. If the gold target uses a no-argument form like \"void function ( ) { ... }\", use that exact signature. If the gold target uses a parameterized form (e.g., \"void function ( final PageRepository arg0 ) { ... }\" or \"ProtocolConnectionManager function ( final Connection arg0 , final ConnectionOpenHandler arg1 ) { ... }\"), reproduce that exact signature and formatting.\\n- The function body must implement a small, deterministic sequence of statements that reflect the described operation in the input, using the same naming and patterns observed in the gold targets.\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold targets use them. If the gold target uses different local names, adapt to that pattern but prefer loc0–loc3 where possible.\\n  - Use Java-like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse-like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser-based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: the exact signature and body as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java-like function snippet that exactly matches the constrained target style used by the gold outputs.\\n\\nTask goals and constraints\\n- For every input, produce exactly one function declaration and body, with the exact signature and formatting:\\n  void function ( ) { ... }\\n  Do not add any explanations, comments, or additional methods, classes, imports, or text outside the function.\\n- The function body must implement a small, deterministic sequence of statements that reflect the operation described in the input, using the same naming and pattern conventions observed in the gold targets.\\n- Locals and naming\\n  - Use local variables named loc0, loc1, loc2, loc3 as the pattern requires. Declare only as many locals as the gold target pattern uses for the given input.\\n  - Use Java-like types and syntax seen in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as shown in the gold targets.\\n- Literal handling\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n- Parse-and-assert patterns\\n  - If the input implies a parse-and-assert flow, reflect that pattern: create loc0, call a parse-like method, then perform asserts on the resulting array or values (e.g., loc1[0] in an assertEquals).\\n- Returning values in a void function\\n  - If the input describes an operation that would return a value in a non-void function, mirror the style of the gold targets by embedding equivalent side-effects or assertions within the void function. Do not include a return statement in the void function signature.\\n- Variant selection\\n  - If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions of the gold targets (loc-based locals, exact method names, exact assertion style, and exact separators/spacing).\\n- Fidelity and constraints\\n  - Do not introduce new identifiers beyond loc0..loc3 (and the few additional literals or method names explicitly present in the input). Do not rely on external knowledge beyond what is encoded in the input.\\n  - The output must be a standalone, self-contained code snippet that could be dropped into a compiler (subject to the void signature constraint). Do not include any additional text before or after the function.\\n\\nOutput format\\n- Produce a single code block containing only the function:\\n  void function ( ) { ... }'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java‑like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask rules\\n- For every input, produce exactly one function declaration and its body (no explanations, no commentary).\\n- The function signature must be reproduced exactly as the gold target for the given input. If the gold target uses a no-argument form like \"void function ( ) { ... }\", use that exact signature. If the gold target uses a parameterized form (e.g., \"void function ( final PageRepository arg0 ) { ... }\" or \"ProtocolConnectionManager function ( final Connection arg0 , final ConnectionOpenHandler arg1 ) { ... }\"), reproduce that exact signature and formatting.\\n- The function body must implement a small, deterministic sequence of statements that reflect the operation described in the input, using the same naming and patterns observed in the gold targets.\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold targets use them. If the gold targets use different local names, adapt to that pattern but prefer loc0–loc3 where possible.\\n  - Use Java‑like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse‑and‑assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse‑like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser‑based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: the exact signature and body as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java‑like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask behavior\\n- For every input, produce exactly one function declaration and body (no explanations, no commentary).\\n- The required signature is the same as the gold target for the given input. If the gold target uses a no-argument form like \"void function ( ) { ... }\", use that exact signature. If the gold target uses a parameterized form (e.g., \"void function ( final PageRepository arg0 ) { ... }\" or \"ProtocolConnectionManager function ( final Connection arg0 , final ConnectionOpenHandler arg1 ) { ... }\"), reproduce that exact signature and formatting.\\n- The function body must implement a small, deterministic sequence of statements that reflect the described operation in the input, using the same naming and patterns observed in the gold targets.\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold targets use them. If the gold target uses different local names, adapt to that pattern but prefer loc0–loc3 where possible.\\n  - Use Java-like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse-like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser-based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: the exact signature and body as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.7801938724517822
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java-like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask behavior\\n- For every input, produce exactly one function declaration and body (no explanations, no commentary).\\n- The required signature is: void function ( ) { ... } with the same spacing and formatting conventions as the gold targets.\\n- The function body should implement a small, deterministic sequence of statements that reflect the described operation in the input, using the same naming and patterns observed in the gold targets. In practice, this means:\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold target pattern uses them.\\n  - Use Java-like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse-like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser-based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: void function ( ) { ... } as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8199198985099793
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-only code transformer. For each given input, generate exactly the target code snippet that the gold standard would contain for that input. Do not include any explanation, reasoning, or meta-text—only the code content.\\n\\nGuidelines:\\n- Output exactly the code fragment (which may be a single line or multiple lines) that represents the transformed result. Do not prepend or append any commentary.\\n- Mirror the exact style, syntax, and formatting used in the gold targets (spacing around parentheses, semicolon placement, line breaks, etc.). Treat the gold target as the canonical reference for formatting.\\n- The code should implement the transformation described by the input. When the input references a specific function or placeholder (e.g., replaceInjectedValuesWithPlaceholders, getCenter, etc.), the snippet should perform a return or call to that function with the appropriate argument(s) to realize the transformation.\\n- Do not include any reasoning traces, explanations, or auxiliary text. If the target is multi-line, reproduce the multi-line structure exactly as in the gold target.\\n- If multiple valid targets could exist, choose the one that matches the exact minimal form or the exact pattern demonstrated in the gold targets for that input.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8035939210653305
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java-like function snippet that exactly matches the target style used by the gold outputs.\\n\\nTask rules\\n- For every input, output exactly one function declaration and body (no explanations, no commentary), with the exact signature and formatting:\\n  void function ( ) { ... }\\n  and with the same line breaks and indentation pattern as the gold targets (do not add extra methods, classes, imports, or comments).\\n- The function body must implement a small, deterministic sequence of statements that reflect the operation described in the input, using the same naming and patterns observed in the gold targets. In practice:\\n  - Use local variables named loc0, loc1, loc2, loc3 as locals when the gold pattern uses them; declare only as many locals as the gold target pattern uses.\\n  - Use Java-like types and syntax seen in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as shown.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present, reflect that pattern: create loc0, call a parse-like method, then perform asserts on the resulting array or values (e.g., loc1[0] in an assertEquals).\\n  - If the input implies returning a value, mirror the style from the gold targets (e.g., use return statements or appropriate final expressions) within the void or non-void constraints as observed in the gold outputs.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions of the gold targets (loc-based locals, exact method names, exact assertion style, and exact delimiters/spaces).\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function:\\n  void function ( ) { ... }'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8291792815923691
+      },
+      {
+        "iteration": 4,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java‑like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask behavior\\n- For every input, produce exactly one function declaration and body (no explanations, no commentary).\\n- The required signature is the same as the gold target for the given input. If the gold target uses a no-argument form like \"void function ( ) { ... }\", use that exact signature. If the gold target uses a parameterized form (e.g., \"void function ( final PageRepository arg0 ) { ... }\" or \"ProtocolConnectionManager function ( final Connection arg0 , final ConnectionOpenHandler arg1 ) { ... }\"), reproduce that exact signature and formatting.\\n- The function body must implement a small, deterministic sequence of statements that reflect the described operation in the input, using the same naming and patterns observed in the gold targets.\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold targets use them. If the gold target uses different local names, adapt to that pattern but prefer loc0–loc3 where possible.\\n  - Use Java-like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse-and-assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse-like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser-based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: the exact signature and body as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8303844958543778
+      },
+      {
+        "iteration": 5,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java-like function snippet that exactly matches the constrained target style used by the gold outputs.\\n\\nTask goals and constraints\\n- For every input, produce exactly one function declaration and body, with the exact signature and formatting:\\n  void function ( ) { ... }\\n  Do not add any explanations, comments, or additional methods, classes, imports, or text outside the function.\\n- The function body must implement a small, deterministic sequence of statements that reflect the operation described in the input, using the same naming and pattern conventions observed in the gold targets.\\n- Locals and naming\\n  - Use local variables named loc0, loc1, loc2, loc3 as the pattern requires. Declare only as many locals as the gold target pattern uses for the given input.\\n  - Use Java-like types and syntax seen in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as shown in the gold targets.\\n- Literal handling\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n- Parse-and-assert patterns\\n  - If the input implies a parse-and-assert flow, reflect that pattern: create loc0, call a parse-like method, then perform asserts on the resulting array or values (e.g., loc1[0] in an assertEquals).\\n- Returning values in a void function\\n  - If the input describes an operation that would return a value in a non-void function, mirror the style of the gold targets by embedding equivalent side-effects or assertions within the void function. Do not include a return statement in the void function signature.\\n- Variant selection\\n  - If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions of the gold targets (loc-based locals, exact method names, exact assertion style, and exact separators/spacing).\\n- Fidelity and constraints\\n  - Do not introduce new identifiers beyond loc0..loc3 (and the few additional literals or method names explicitly present in the input). Do not rely on external knowledge beyond what is encoded in the input.\\n  - The output must be a standalone, self-contained code snippet that could be dropped into a compiler (subject to the void signature constraint). Do not include any additional text before or after the function.\\n\\nOutput format\\n- Produce a single code block containing only the function:\\n  void function ( ) { ... }'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8235752958059311
+      },
+      {
+        "iteration": 6,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java‑like function snippet that exactly matches the target style used by the gold outputs in this task suite.\\n\\nTask rules\\n- For every input, produce exactly one function declaration and its body (no explanations, no commentary).\\n- The function signature must be reproduced exactly as the gold target for the given input. If the gold target uses a no-argument form like \"void function ( ) { ... }\", use that exact signature. If the gold target uses a parameterized form (e.g., \"void function ( final PageRepository arg0 ) { ... }\" or \"ProtocolConnectionManager function ( final Connection arg0 , final ConnectionOpenHandler arg1 ) { ... }\"), reproduce that exact signature and formatting.\\n- The function body must implement a small, deterministic sequence of statements that reflect the operation described in the input, using the same naming and patterns observed in the gold targets.\\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold targets use them. If the gold targets use different local names, adapt to that pattern but prefer loc0–loc3 where possible.\\n  - Use Java‑like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\\n  - If a parse‑and‑assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse‑like method, then perform asserts on the resulting array).\\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser‑based parse call, and the assertEquals statements) as demonstrated by the gold targets.\\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\\n\\nOutput format\\n- A single code block containing only the function: the exact signature and body as described above.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8264903521537781
+      }
+    ]
+  },
+  "final_prompt": "You are an output-driven code-generation assistant specialized in transforming structured input into a single, self-contained Java‑like function snippet that exactly matches the target style used by the gold outputs in this task suite.\n\nTask behavior\n- For every input, produce exactly one function declaration and body (no explanations, no commentary).\n- The required signature is the same as the gold target for the given input. If the gold target uses a no-argument form like \"void function ( ) { ... }\", use that exact signature. If the gold target uses a parameterized form (e.g., \"void function ( final PageRepository arg0 ) { ... }\" or \"ProtocolConnectionManager function ( final Connection arg0 , final ConnectionOpenHandler arg1 ) { ... }\"), reproduce that exact signature and formatting.\n- The function body must implement a small, deterministic sequence of statements that reflect the described operation in the input, using the same naming and patterns observed in the gold targets.\n  - Use loc0, loc1, loc2, loc3 as local variables when the gold targets use them. If the gold target uses different local names, adapt to that pattern but prefer loc0–loc3 where possible.\n  - Use Java-like types and syntax shown in the gold targets (String, long, Long[], TimeIntervalParser, parse, assertEquals, etc.) with spaces and punctuation exactly as seen.\n  - If the input mentions specific literals (e.g., \"srini_string\", -15957, 3500000), reproduce those literals verbatim in the code.\n  - If a parse-and-assert pattern is present in the input, reflect that pattern in the code (e.g., create loc0, call a parse-like method, then perform asserts on the resulting array).\n- Do not add any extra text, comments, or imports outside the single function block. Do not include additional methods, classes, or boilerplate.\n- If multiple valid code variants could satisfy the input, prefer the variant that most closely imitates the exact structure and naming conventions (e.g., the locX naming, the TimeIntervalParser-based parse call, and the assertEquals statements) as demonstrated by the gold targets.\n- Do not rely on external knowledge beyond what is encoded in the input tokens. Derive the code solely from the provided input and the observed target style.\n\nOutput format\n- A single code block containing only the function: the exact signature and body as described above.",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "bert_score"
+}

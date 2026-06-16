@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Return a configured Cosmos DB client, creating it on first access.\n\nReturns:\n * The active :class:`cosmos_client.CosmosClient` instance representing the configured Cosmos DB client."
+}

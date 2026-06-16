@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "MAKE AN AWARE DATETIME BY ATTACHING A TIMEZONE.\n\n \nArguments:\n * value (datetime): Naive datetime to which the timezone will be attached. The value must be naive (not localized); otherwise a :class:`ValueError` is raised.\n * timezone (object): Timezone to apply. If not set (``None``, default), uses TIMEZONE. The function will use ``timezone.localize(value)`` if available (as with pytz), otherwise ``timezone.convert(value)`` if available (as with pendulum), or fall back to ``value.replace(tzinfo=timezone)``.\n\nReturns:\n - The returned value is an aware :class:`datetime.datetime` object representing the input value with the applied timezone.\n\nRaises:\n - :class:`ValueError`: Raised when ``value`` is already localized (an aware datetime)."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-like description of the function\u2019s behavior, detailing the parameter semantics and the return value without modifying the code.",
+    "output": "\"\"\"\nReturn a normalized ML Engine job id.\n\nArguments:\n    job_id (str): The input job identifier to normalize.\n        - If job_id starts with a digit or a template ({{...}}), a 'z_' prefix is prepended.\n\nReturns:\n    str: The normalized job identifier. Templates ({{...}}) are preserved; non-template segments are sanitized by replacing non alphanumeric characters with underscores; a leading digit/template results in a leading 'z_' prefix in the final string.\n\"\"\""
+}

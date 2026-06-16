@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will classify each word by broad category: 'cat' -> animal; 'pet' -> animal (domesticated); 'couch' -> furniture.",
+    "output": "['animal', 'animal', 'furniture']"
+}

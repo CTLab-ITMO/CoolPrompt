@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a small, self-contained Java-like function named registerGenerator that updates the internal map of generators. If a generator for the same language already exists, it will be removed and replaced with the new one. The function will update the current language tracker and log the registration using the provided LOG logger. The implementation uses the naming conventions consistent with the input description (Language, CodeGenerator, GENERATORS map, currLanguage, and LOG).",
+    "output": "void registerGenerator ( final Language language , final CodeGenerator generator ) {\n    if ( generators.containsKey( language ) ) {\n        generators.remove( language );\n    }\n    generators.put( language , generator );\n    currLanguage = language;\n    LOG.info( \"Registered generator for language: \" + language );\n}"
+}

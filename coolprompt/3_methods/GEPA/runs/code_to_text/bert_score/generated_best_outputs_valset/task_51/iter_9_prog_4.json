@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, imperative one-line summary of the function, followed by a docstring-like block detailing the Arguments, Returns, and Raises sections that reflect the function's behavior and signature without modifying the code.",
+    "output": "Create a Connection from the generated URI and persist it to the session.\nArguments:\n    session (object): optional database session used to persist the new Connection.\nReturns:\n    None: the function does not return a value; it persists the Connection via the provided session.\nRaises:\n    AttributeError: if `session` is None or not a valid session.\n    Exception: if database operations fail during add/commit."
+}

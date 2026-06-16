@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will strip the internal concode separators and present the readable sequence of declarations. The input describes a scanning/field-access API with the following elements: Scan s; String joinfield; Index idx; TableScan ts; boolean next; int getInt; void resetIndex; void beforeFirst; String getString; void close; boolean hasField.",
+    "output": "- Scan s\n- String joinfield\n- Index idx\n- TableScan ts\n- boolean next\n- int getInt\n- void resetIndex\n- void beforeFirst\n- String getString\n- void close\n- boolean hasField"
+}

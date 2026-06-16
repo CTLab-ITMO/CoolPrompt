@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Start the cloud_sql_proxy and wait until it is ready for new connections.\n\nRaises:\n  * :class:`AirflowException`: If the sql proxy is already running when start_proxy is invoked.\n  * :class:`AirflowException`: If the cloud_sql_proxy finishes early before becoming ready (the process terminates and no readiness line is seen).\n  * :class:`AirflowException`: If an error line is encountered during startup (for example, lines containing \"googleapi: Error\" or \"invalid instance name:\") while starting the proxy."
+}

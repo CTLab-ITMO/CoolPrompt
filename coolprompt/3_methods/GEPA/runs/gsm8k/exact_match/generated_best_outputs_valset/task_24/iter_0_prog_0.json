@@ -1,0 +1,4 @@
+{
+    "reasoning": "Since the sale price is after a 25% discount, it equals 75% of the original price. Let original price be P: 0.75P = 19.50, so P = 19.50 / 0.75 = 26.00.",
+    "output": "$26.00"
+}

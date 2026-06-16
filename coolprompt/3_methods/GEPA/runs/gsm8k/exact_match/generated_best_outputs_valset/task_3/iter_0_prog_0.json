@@ -1,0 +1,4 @@
+{
+    "reasoning": "There are 3 sprints per session and 3 sessions per week, so total sprints = 3 \u00d7 3 = 9. Each sprint is 60 meters, so total distance = 9 \u00d7 60 = 540 meters.",
+    "output": "540"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "This creates a small deterministic function that emulates a parse-and-assert test pattern described in the input, using loc0 and loc1 locals and calling TimeIntervalParser.parse followed by assertEquals on loc1[0].",
+    "output": "void function ( ) {\n  String loc0 = \"EXAMPLE\";\n  Long[] loc1 = TimeIntervalParser.parse(loc0);\n  assertEquals(0L, loc1[0].longValue());\n  loc0 = \"RMCParser\";\n  loc1 = TimeIntervalParser.parse(loc0);\n  assertEquals(0L, loc1[0].longValue());\n}"
+}

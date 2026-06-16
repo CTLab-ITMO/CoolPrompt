@@ -1,0 +1,4 @@
+{
+    "reasoning": "I create a simple no-argument function that demonstrates constructing a GroupConfiguration via its Builder, setting metadata and basic fields, building the object, and converting it to a string. Local variables loc0\u2013loc3 follow the naming pattern observed in the target style.",
+    "output": "void function ( ) {\n    GroupConfiguration.Builder loc0 = GroupConfiguration.builder();\n    ImmutableMap<String,String> loc1 = ImmutableMap.of(\"owner\",\"admin\");\n    loc0.metadata(loc1);\n    loc0.name(\"default\");\n    loc0.maxEntities(100);\n    loc0.minEntities(1);\n    loc0.cooldown(60);\n    GroupConfiguration loc2 = loc0.build();\n    String loc3 = loc2.toString();\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a small, deterministic function that mirrors a default TCP port usage by introducing four locals (loc0..loc3). Use a concrete port value (8333) and perform a couple of simple operations to produce deterministic results, without relying on external context.",
+    "output": "void function ( ) {\n  long loc0 = 8333L;\n  int loc1 = (int) (loc0 & 0xFFFF);\n  int loc2 = loc1 + 1;\n  long loc3 = loc0 + loc2;\n}"
+}

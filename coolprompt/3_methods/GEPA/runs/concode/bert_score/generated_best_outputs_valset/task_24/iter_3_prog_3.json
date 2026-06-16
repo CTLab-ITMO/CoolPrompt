@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes obtaining a hover attribute from a standard attribute resolver context. I will implement a small deterministic sequence using local variables loc0 and loc1 to emulate retrieving the hover attribute and then asserting its value, following the typical pattern of parse/assert style observed in prior tasks.",
+    "output": "```java\nvoid function ( ) {\n  String loc0;\n  String loc1;\n  loc0 = \"hover\";\n  loc1 = \"standardattributeresolver\";\n  String hoverAttr = loc0;\n  assertEquals(\"hover\", hoverAttr);\n}\n```"
+}

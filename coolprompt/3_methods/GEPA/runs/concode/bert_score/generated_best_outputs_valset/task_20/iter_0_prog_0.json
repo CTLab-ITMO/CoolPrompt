@@ -1,0 +1,4 @@
+{
+    "reasoning": "I extracted the Java test method names from the input in the given order and formatted them as a clean, readable list.",
+    "output": "- testConstructorWithString\n- testSetMonth\n- testSetYearThreeDigits\n- testConstructor\n- testToStringFourDigitYear\n- testEqualsAfterInit\n- testEqualsWrongType\n- testSetYearTwoDigit\n- testEqualsWhenChanged\n- testToISO8601WithTime\n- setUp\n- testGetMonth\n- testEqualsItself\n- testSetYearNegative\n- testConstructorWithValues\n- testGetYear\n- testToISO8601WithTimeAndZeroZone\n- testToISO8601FourDigitYear\n- testSetDay\n- testSetYearFourDigit\n- testToStringTwoDigitYear\n- testToISO8601WithTimeAndPositiveOffset\n- testToISO8601TwoDigitYear\n- testSetYearFiveDigits\n- testToISO8601WithTimeAndNegativeOffset\n- testGetDay\n- testSetMonthOutOfBounds"
+}

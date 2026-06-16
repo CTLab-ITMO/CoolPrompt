@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated a formal docstring describing the function's purpose, parameters, and exception behavior.",
+    "output": "Delete the specified document from the database.\n\nArguments:\n * document_id (str): The unique identifier of the document to delete.\n * database_name (str): Optional database name to use. If not set (``None``, default), uses the configured default database name.\n * collection_name (str): Optional collection name to use. If not set (``None``, default), uses the configured default collection name.\nRaises:\n * :class:`AirflowBadRequest`: If `document_id` is ``None``."
+}

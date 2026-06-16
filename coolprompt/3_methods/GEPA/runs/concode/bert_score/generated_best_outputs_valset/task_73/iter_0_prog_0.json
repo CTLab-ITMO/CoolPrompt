@@ -1,0 +1,4 @@
+{
+    "reasoning": "The class tracks declared operations in a map keyed by OperationSignature and then by operation name, so a method should check whether an operation with a given name exists under a provided signature mask. The method would take the operation name and the signature mask as parameters and return a boolean indicating presence.",
+    "output": "public boolean declaresOperation(String name, OperationSignature mask)"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I generated a simple no-argument Java-like function that uses four local variables named loc0\u2013loc3, reflecting the \"loc\" naming pattern mentioned. The code creates a list, adds a string, checks its size, and asserts containment and size to mirror a deterministic, small operation consistent with the debugging/reporting domain described in the input.",
+    "output": "void function ( ) {\n  String loc0 = \"debug\";\n  java.util.List<String> loc1 = new java.util.ArrayList<>();\n  loc1.add(loc0);\n  int loc2 = loc1.size();\n  assertEquals(1, loc2);\n  boolean loc3 = loc1.contains(\"debug\");\n  assertEquals(true, loc3);\n}"
+}

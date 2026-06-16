@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise, docstring-like description of make_aware: its purpose to attach a timezone to a naive datetime, handling different timezone implementations (pytz, pendulum, or plain tzinfo), and noting the error when the input is already aware and the Python 3.6 fold handling.",
+    "output": "Make a naive datetime aware by attaching the given timezone.\n\nArguments:\n    value (datetime): A naive datetime to be made timezone-aware. This must not already be timezone-aware.\n    timezone (object, optional): Timezone information to apply. If None, TIMEZONE is used. The object may implement localize() (as for pytz) or convert() (as for pendulum); otherwise, tzinfo is attached via replace(tzinfo=timezone).\n\nReturns:\n    datetime: An aware datetime corresponding to the input value in the specified timezone.\n\nRaises:\n    ValueError: If value is already timezone-aware (is_localized(value) is True)."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "We implement a simple cache lookup: try to fetch a BlockStoreContext for a master address from CACHED_CONTEXTS; if missing, create a new BlockStoreContext with that address and store it back in the cache. Variables loc0 and loc1 reflect the pattern.",
+    "output": "```java\nvoid function ( ) {\n    InetSocketAddress loc0 = new InetSocketAddress(0);\n    BlockStoreContext loc1 = CACHED_CONTEXTS.get(loc0);\n    if (loc1 == null) {\n        loc1 = new BlockStoreContext(loc0);\n        CACHED_CONTEXTS.put(loc0, loc1);\n    }\n}\n```"
+}

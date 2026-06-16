@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a Hamcrest-style matcher for Comparable objects that checks if the examined value is greater than a specified value using compareTo. I\u2019ll provide a concise restatement with an example and list related matchers.",
+    "output": "Creates a matcher for Comparable objects that matches when the examined object is greater than the specified value, as determined by the compareTo method. Example: assertThat(2, greaterThan(1)); Related matchers include lessThan, comparesEqualTo, greaterThanOrEqualTo, and lessThanOrEqualTo."
+}

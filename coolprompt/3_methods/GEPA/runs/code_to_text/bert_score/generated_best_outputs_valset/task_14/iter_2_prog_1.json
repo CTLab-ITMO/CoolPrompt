@@ -1,0 +1,4 @@
+{
+    "reasoning": "N/A",
+    "output": "Download a video stream for the current object, with options for JSON output, information display, and caption handling.\n\nArguments:\n * kwargs (dict): keyword arguments used to control the download behavior; recognized keys include 'json_output', 'info_only', 'stream_id', 'index', 'output_dir', 'merge', and 'caption'."
+}

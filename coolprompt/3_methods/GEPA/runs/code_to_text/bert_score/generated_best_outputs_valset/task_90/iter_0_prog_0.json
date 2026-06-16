@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise description of the function's behavior by filling in a proper docstring that explains validation, the delete operation, and the raised exception.",
+    "output": "def delete_database(self, database_name):\n        \"\"\"\n        Delete a database by name.\n\n        This method validates that the provided database_name is not None and\n        raises AirflowBadRequest if it is. It then obtains a connection and\n        issues a DeleteDatabase call using a link derived from the database name.\n\n        Parameters:\n            database_name (str): The name of the database to delete.\n\n        Raises:\n            AirflowBadRequest: If database_name is None.\n        \"\"\"\n        if database_name is None:\n            raise AirflowBadRequest(\"Database name cannot be None.\")\n\n        self.get_conn().DeleteDatabase(get_database_link(database_name))"
+}

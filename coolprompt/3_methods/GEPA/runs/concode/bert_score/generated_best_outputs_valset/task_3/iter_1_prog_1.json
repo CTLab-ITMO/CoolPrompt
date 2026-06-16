@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes creating a matcher that checks if an examined object is greater than a specified value using compareTo semantics. I implement a small deterministic snippet: construct a Matcher<Long> for greaterThan(1), test it against 2L, and assert the result is true. This mirrors the described behavior without relying on external context.",
+    "output": "void function ( ) {\n    Long loc0;\n    Long loc1;\n    Matcher<Long> loc2;\n    boolean loc3;\n    loc1 = 1L;\n    loc0 = 2L;\n    loc2 = greaterThan( loc1 );\n    loc3 = loc2.matches( loc0 );\n    assertEquals( true, loc3 );\n}"
+}

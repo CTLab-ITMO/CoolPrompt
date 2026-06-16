@@ -1,0 +1,4 @@
+{
+    "reasoning": "I interpret the instruction as converting the single pair \"propertyname #propertyvalue\" into a nested map representation of type Map<String, Map<String, String>>. The outer map's key will be \"propertyname\", and the inner map will map \"propertyname\" to \"propertyvalue\", forming a concrete example of Map<String, Map<String, String>>.",
+    "output": "Map<String, Map<String, String>> map = new HashMap<>();\nMap<String, String> inner = new HashMap<>();\ninner.put(\"propertyname\", \"propertyvalue\");\nmap.put(\"propertyname\", inner);"
+}

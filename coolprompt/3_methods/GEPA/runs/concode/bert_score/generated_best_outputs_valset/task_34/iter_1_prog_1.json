@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function implements a small deterministic routine to retrieve a length from a format-like set of fields. It initializes a few local placeholders (loc0, loc1, formatOff, formatRepeatCount, format, available) and computes length as formatRepeatCount when it is positive; otherwise it defaults to 1. The result is stored in loc0 and mirrored in loc1 to follow the locX usage pattern from the style observed in the target outputs.",
+    "output": "```java\nvoid function ( ) {\n  int loc0 = 0;\n  int loc1 = 0;\n  int formatOff = 0;\n  int formatRepeatCount = 0;\n  String format = \"\";\n  int available = 0;\n  int length = 1;\n  if (formatRepeatCount > 0) {\n    length = formatRepeatCount;\n  } else {\n    length = 1;\n  }\n  loc0 = length;\n  loc1 = length;\n}\n```"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a simple, deterministic function that models returning a constant field value by using four locals named loc0..loc3. loc0 holds the constant string representing the field value, and loc1..loc3 are used to reflect a minimal processing flow (a conditional and a trivial operation) consistent with the expected style.",
+    "output": "void function ( ) {\n    String loc0 = \"FIELD_CONST\";\n    int loc1 = 0;\n    boolean loc2 = true;\n    int loc3 = 0;\n\n    if (loc2) {\n        loc3 = loc0.length();\n    }\n}"
+}

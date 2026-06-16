@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style block that describes the function\u2019s behavior: it returns and clears events from an internal buffer, either all of them when dag_ids is None, or only those matching the provided dag_ids. The block includes an imperative one-line summary, followed by an Arguments section and a Returns section. No Raises section is needed since the function does not raise exceptions.",
+    "output": "Clear and return events from the internal event buffer; if dag_ids is None, clears all events, otherwise returns and removes events whose dag_id is in dag_ids.\n\nArguments:\n    dag_ids (Iterable[str] | None): identifiers of DAGs to filter; if None, all events are returned.\n\nReturns:\n    dict: mapping of cleared events from the internal event buffer."
+}

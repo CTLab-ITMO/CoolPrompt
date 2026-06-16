@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-style documentation block describing the function's purpose, parameters, and return value, mapping types from the signature and clarifying behavior such as decoding and compression handling.",
+    "output": "Fetches the content from a URL with optional headers, handling cookies, compression, and decoding.\n\nArguments:\n    url (str): The URL to fetch.\n    headers (dict): Optional HTTP headers to include in the request. Defaults to an empty dict.\n    decoded (bool): If True, decode the response body to a string using the response charset when available; otherwise return raw bytes.\n\nReturns:\n    data (str or bytes): The response body content. If decoded is True, a str is returned; otherwise the raw bytes."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The snippet defines a function wtf(message, exit_code=1) that logs a message using print_log with styling (RED and BOLD) and then exits the program if exit_code is not None. The docstring is an empty string. By default, it will call sys.exit(1) after logging, causing the program to terminate with status code 1. If exit_code=None, the function will only print the message and not exit. This relies on print_log, RED, BOLD, and sys being defined/imported elsewhere.",
+    "output": "Defines a function named wtf that prints the given message with red bold styling and then exits the program with the provided exit_code. By default, exit_code is 1, so the function will log the message and terminate with status 1. If exit_code is None, it will log the message but not exit. (Note: print_log, RED, BOLD, and sys must be defined for this to work.)"
+}

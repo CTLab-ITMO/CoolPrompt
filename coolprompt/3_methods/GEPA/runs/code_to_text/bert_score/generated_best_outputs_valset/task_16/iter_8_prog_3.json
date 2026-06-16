@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise docstring describing the function's behavior based on its body, without modifying code.",
+    "output": "Return all regex matches found in text for every pattern in patterns.\n\nArguments:\n    text (str): The input text to search; must be a string.\n    patterns (Iterable[str]): An iterable of regular expression patterns to apply to text in order. Each pattern can be a string or a compiled regular expression object.\n\nReturns:\n    list: A list containing all matches found for all patterns, in order. Each element corresponds to the matches produced by a pattern; strings are returned when the pattern has no capturing groups, otherwise tuples of strings are returned.\n\nRaises:\n    re.error: a pattern is not a valid regular expression.\n    TypeError: text is not a string or patterns is not an iterable of patterns."
+}

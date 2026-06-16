@@ -1,0 +1,4 @@
+{
+    "reasoning": "The Google Compute Engine API requires a zone parameter for instances().get. The original function signature lacks zone and thus would fail at runtime. Provide a corrected signature that includes zone (and optionally default project_id from self) to properly fetch the instance resource.",
+    "output": "def get_instance(self, instance, zone, project_id=None):\n    \"\"\"\n    Retrieve a Compute Engine instance by name in a given zone.\n    If project_id is not provided, uses self.project_id.\n    \"\"\"\n    if project_id is None:\n        project_id = self.project_id\n    if not project_id:\n        raise ValueError(\"project_id must be provided either as an argument or set on self.project_id\")\n\n    return self.get_conn().instances().get(\n        project=project_id,\n        zone=zone,\n        instance=instance\n    ).execute(num_retries=self.num_retries)"
+}

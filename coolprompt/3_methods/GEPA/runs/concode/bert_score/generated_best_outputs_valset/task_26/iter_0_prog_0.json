@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will interpret the tokenized input as a description of a class or component with fields and methods. I\u2019ll extract the field declarations (types and names) and the method signatures, and present them in a clean, readable outline.",
+    "output": "Fields:\n- game: ShadowStruggles\n- textures: Array<Asset>\n- sounds: Array<Asset>\n- rpgMaps: Array<Asset>\n- assetName: String\n- textureRegions: Array<Asset>\n- LOG: String\n- assetType: String\n\nMethods:\n- void loadMaps()\n- TextureRegion getTextureRegion()\n- TiledMap getTiledMap()\n- void disposeTextures()\n- void disposeMaps()\n- Texture getTexture()\n- void unloadSounds()\n- void loadSounds()\n- boolean equals(Object obj)\n- void setAssetsToLoad()\n- void loadAssets()\n- void dispose()\n- void loadTextureAtlas()\n- void createTextureAtlas()\n- void disposeAtlas()\n- void loadTextures()"
+}

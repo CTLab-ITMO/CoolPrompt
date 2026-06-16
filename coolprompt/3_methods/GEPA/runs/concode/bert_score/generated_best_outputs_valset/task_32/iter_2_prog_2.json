@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "public void clearMarks() {\n    mBlocksToMoveIn.clear();\n    mBlocksToMoveOut.clear();\n    mBlocksToMoveInSize = 0;\n    mBlocksToMoveOutSize = 0;\n    isMarkedToMoveOut = false;\n}"
+}

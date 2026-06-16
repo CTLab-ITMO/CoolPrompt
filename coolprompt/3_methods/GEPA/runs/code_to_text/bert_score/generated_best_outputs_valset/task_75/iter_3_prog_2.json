@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description that captures the function\u2019s purpose, inputs, return behavior, and exceptions without altering the code.",
+    "output": "Validate an HTTP response, log details on error, and raise AirflowException with status code and reason.\n\nArguments:\n    self (object): instance on which the method operates.\n    response (``requests.Response``): HTTP response to validate; its status is checked via ``raise_for_status`` and, on error, logged with the reason and, for non-GET/HEAD methods, the response text.\n\nReturns:\n    None: returns nothing when the response is successful; on error, this method raises ``AirflowException`` containing the status code and reason.\n\nRaises:\n    AirflowException: if the HTTP response indicates an error after ``response.raise_for_status()``; the exception message includes the status code and reason."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes obtaining the hover attribute from a standard attribute resolver, with several related components listed. Since the exact target signature is not given, provide a concise, self-contained Java-like function that mirrors the described operation by defining two local variables (loc0 and loc1) and performing simple assertions to simulate retrieval/validation of the hover attribute.",
+    "output": "void function ( ) {\n  String loc0 = \"hover\";\n  String loc1 = \"standardAttributeResolver\";\n  assertEquals(\"hover\", loc0);\n  assertEquals(\"standardAttributeResolver\", loc1);\n}"
+}

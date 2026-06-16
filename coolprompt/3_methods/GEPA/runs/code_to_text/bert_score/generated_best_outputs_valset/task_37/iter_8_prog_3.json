@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function get_conn lazily initializes and returns a Client instance stored on self._client; it creates the client using credentials from _get_credentials() on first access and returns the cached object on subsequent calls.",
+    "output": "Return the lazily initialized Client instance.\n\nReturns:\n    a Client instance (:class:`Client`): The cached Client object, created on first access using credentials obtained from ``_get_credentials()``."
+}

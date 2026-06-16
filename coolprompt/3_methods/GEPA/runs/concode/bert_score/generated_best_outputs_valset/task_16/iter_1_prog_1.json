@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a minimal, deterministic function that references all provided inputs by creating local variables (loc0..loc13) corresponding to each field in the input. No side effects or external calls are performed; a simple boolean combination demonstrates usage of the inputs.",
+    "output": "void function ( ) {\n    ExtensionInfo loc0 = extensionInfo;\n    ClassFileLoader loc1 = loader;\n    ErrorQueue loc2 = errorQueue;\n    Collection<JavaFileObject> loc3 = outputFiles;\n    List<ExtensionInfo> loc4 = allExtensions;\n    List<Job> loc5 = jobs;\n    int loc6 = outputWidth;\n    CodeWriter loc7 = createCodeWriter;\n    boolean loc8 = useFullyQualifiedNames;\n    boolean loc9 = compile;\n    Goal loc10 = getGoal;\n    ExtensionInfo loc11 = sourceExtension;\n    boolean loc12 = compileFiles;\n    boolean loc13 = serializeClassInfo;\n    boolean success = loc9 && (loc10 != null);\n}"
+}

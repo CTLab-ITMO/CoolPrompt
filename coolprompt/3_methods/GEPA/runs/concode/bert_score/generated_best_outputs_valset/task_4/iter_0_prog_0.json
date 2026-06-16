@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise Java class skeleton that exposes fields denom (int), num (int), isOne (boolean) and includes methods getDenominator(), getScaled(int), equals(Object), and getNum() as described in the input.",
+    "output": "public class Fraction {\n  private int denom;\n  private int num;\n  private boolean isOne;\n\n  public int getDenominator() {\n    return denom;\n  }\n\n  public int getScaled(int scale) {\n    // Placeholder implementation; actual behavior may vary\n    return (denom != 0) ? (num * scale) / denom : 0;\n  }\n\n  @Override\n  public boolean equals(Object obj) {\n    if (this == obj) return true;\n    if (!(obj instanceof Fraction)) return false;\n    Fraction other = (Fraction) obj;\n    return this.num == other.num && this.denom == other.denom && this.isOne == other.isOne;\n  }\n\n  public int getNum() {\n    return num;\n  }\n}"
+}

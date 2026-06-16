@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a small, deterministic Java-like function that mirrors the described operation (returning the first item not obscured by a header) using a minimal sequence with loc0\u2013loc3 variables, and a placeholder return value. The function signature is chosen to resemble a typical getter-style method and uses the provided fields (mAdapter, itemIsObscuredByHeader) in a concise, consistent pattern.",
+    "output": "```java\npublic Object getFirstVisibleItemNotObscuredByHeader ( ) {\n    Rect loc0 = new Rect ( );\n    int loc1 = ( mAdapter != null ) ? 0 : -1;\n    boolean loc2 = ! itemIsObscuredByHeader;\n    Object loc3 = null;\n    if ( loc1 == 0 && loc2 ) {\n        loc3 = \"firstItem\";\n    }\n    return loc3;\n}\n```"
+}

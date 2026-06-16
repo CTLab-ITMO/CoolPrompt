@@ -1,0 +1,4 @@
+{
+    "reasoning": "There are 4 weeks = 28 days. She uses 3 eggs each day, so 3 \u00d7 28 = 84 eggs. There are 12 eggs in a dozen, so 84 \u00f7 12 = 7 dozen.",
+    "output": "7 dozen eggs"
+}

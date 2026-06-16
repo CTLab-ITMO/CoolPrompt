@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-like documentation block describing the function's parameters, return value, and behavior without modifying the code.",
+    "output": "Prepare and send an HTTP request using the configured method and endpoint, then execute it and return the result.\n\nArguments:\n    endpoint (str): The endpoint path to append to the base URL when constructing the full request URL.\n    data (dict or None): Payload data for the request; for GET requests it is sent as query parameters, for other methods it is sent in the request body. Can be None.\n    headers (dict or None): HTTP headers to include with the request.\n    extra_options (dict or None): Additional options forwarded to ``self.run_and_check``; defaults to an empty dict if None.\n\nReturns:\n    The result produced by ``self.run_and_check(session, prepped_request, extra_options)``. (object)"
+}

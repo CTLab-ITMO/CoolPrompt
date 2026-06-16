@@ -1,0 +1,4 @@
+{
+    "reasoning": "Month 2 = 3 \u00d7 60 = 180; Month 3 = 70% of 180 = 126; Total = 60 + 180 + 126 = 366.",
+    "output": "366"
+}

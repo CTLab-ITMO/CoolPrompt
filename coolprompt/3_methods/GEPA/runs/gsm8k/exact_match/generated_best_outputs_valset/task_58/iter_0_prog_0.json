@@ -1,0 +1,4 @@
+{
+    "reasoning": "The initial bill is $40. A 25% fee on that amount adds $10, bringing the subtotal to $50. Adding the delivery fee of $3 yields $53. Adding the $4 tip results in a final price of $57.00.",
+    "output": "$57.00"
+}

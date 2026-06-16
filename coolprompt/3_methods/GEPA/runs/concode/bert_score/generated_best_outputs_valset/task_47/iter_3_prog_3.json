@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a configuration field maximumKeySize with a default of 512 bits and that a requestor may supply a key size. Since there is no input mechanism provided here, the function will demonstrate a deterministic sequence that establishes a default value and threads it through a chain of local variables using the loc0, loc1, loc2, loc3 naming convention commonly seen in the target style. This mirrors the idea of a value propagating through intermediate locals before being assigned to a final maximumKeySize variable.",
+    "output": "void function ( ) {\n  long loc0 = 512;\n  long loc1 = loc0;\n  long loc2 = loc1;\n  long loc3 = loc2;\n  long maximumKeySize = loc3;\n}"
+}

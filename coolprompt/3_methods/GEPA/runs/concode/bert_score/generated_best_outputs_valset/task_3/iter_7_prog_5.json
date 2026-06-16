@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes creating a matcher for values greater than a specified value and verifying it with an example. I implement a small deterministic snippet using four locals (loc0..loc3): loc0 holds the threshold (1L), loc1 holds the examined value (2L), loc2 is a Matcher<T> built by greaterThan(loc0), and loc3 stores the result of loc2.matches(loc1). Finally, an assertion checks that the matcher matches.",
+    "output": "void function ( ) {\n    Long loc0 = 1L;\n    Long loc1 = 2L;\n    Matcher<T> loc2 = greaterThan(loc0);\n    boolean loc3 = loc2.matches(loc1);\n    assertEquals(true, loc3);\n}"
+}

@@ -1,0 +1,1329 @@
+{
+  "dataset": "xsum",
+  "metric": "bert_score",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "bert_score"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.8574995386600495,
+      0.8826151996850967,
+      0.8770316112041473,
+      0.8841264420747756,
+      0.88618532538414,
+      0.8857153326272964
+    ],
+    "val_subscores": [
+      {
+        "0": 0.8545074462890625,
+        "1": 0.9134346842765808,
+        "2": 0.8524768352508545,
+        "3": 0.8505902290344238,
+        "4": 0.8679536581039429,
+        "5": 0.8542685508728027,
+        "6": 0.8768771290779114,
+        "7": 0.8425741791725159,
+        "8": 0.8488412499427795,
+        "9": 0.8682793974876404,
+        "10": 0.8679131269454956,
+        "11": 0.8844091296195984,
+        "12": 0.8702074289321899,
+        "13": 0.8592172265052795,
+        "14": 0.8388370871543884,
+        "15": 0.8830753564834595,
+        "16": 0.8514793515205383,
+        "17": 0.860720157623291,
+        "18": 0.872570276260376,
+        "19": 0.8634335994720459,
+        "20": 0.849497377872467,
+        "21": 0.8627222180366516,
+        "22": 0.857211709022522,
+        "23": 0.8885321617126465,
+        "24": 0.8193764090538025,
+        "25": 0.8590512871742249,
+        "26": 0.8360534906387329,
+        "27": 0.8369901776313782,
+        "28": 0.8457484841346741,
+        "29": 0.8659683465957642,
+        "30": 0.8581782579421997,
+        "31": 0.8491158485412598,
+        "32": 0.8258442282676697,
+        "33": 0.8430107235908508,
+        "34": 0.8516422510147095,
+        "35": 0.8564902544021606,
+        "36": 0.8438639640808105,
+        "37": 0.8769605755805969,
+        "38": 0.8572297096252441,
+        "39": 0.8389480710029602,
+        "40": 0.8345215320587158,
+        "41": 0.8498427867889404,
+        "42": 0.8513752818107605,
+        "43": 0.8666750192642212,
+        "44": 0.8674921989440918,
+        "45": 0.837821900844574,
+        "46": 0.8669514656066895,
+        "47": 0.8516196608543396,
+        "48": 0.8292351961135864,
+        "49": 0.8506982922554016,
+        "50": 0.8541585803031921,
+        "51": 0.8526211380958557,
+        "52": 0.8518218994140625,
+        "53": 0.7970213890075684,
+        "54": 0.8179984092712402,
+        "55": 0.8704755902290344,
+        "56": 0.895587682723999,
+        "57": 0.8528398871421814,
+        "58": 0.855854332447052,
+        "59": 0.8758016228675842,
+        "60": 0.8688570261001587,
+        "61": 0.8549012541770935,
+        "62": 0.8782992959022522,
+        "63": 0.8308761715888977,
+        "64": 0.8679577112197876,
+        "65": 0.8502482771873474,
+        "66": 0.8698545694351196,
+        "67": 0.8799217343330383,
+        "68": 0.8925559520721436,
+        "69": 0.857734739780426,
+        "70": 0.8837802410125732,
+        "71": 0.8397433757781982,
+        "72": 0.8576133251190186,
+        "73": 0.8608035445213318,
+        "74": 0.8241028189659119,
+        "75": 0.856075644493103,
+        "76": 0.859561026096344,
+        "77": 0.8653033375740051,
+        "78": 0.843650758266449,
+        "79": 0.8542383313179016,
+        "80": 0.8534378409385681,
+        "81": 0.8629450798034668,
+        "82": 0.8485003709793091,
+        "83": 0.8897972702980042,
+        "84": 0.8736964464187622,
+        "85": 0.8519945740699768,
+        "86": 0.8572811484336853,
+        "87": 0.8564603924751282,
+        "88": 0.8668612837791443,
+        "89": 0.8398411870002747,
+        "90": 0.844556450843811,
+        "91": 0.8607208132743835,
+        "92": 0.8923183083534241,
+        "93": 0.8787686228752136,
+        "94": 0.840549647808075,
+        "95": 0.8834229707717896,
+        "96": 0.8587353229522705,
+        "97": 0.8645056486129761,
+        "98": 0.8615992665290833,
+        "99": 0.8333665728569031
+      },
+      {
+        "0": 0.9061594009399414,
+        "1": 0.8977261185646057,
+        "2": 0.8391310572624207,
+        "3": 0.8669793009757996,
+        "4": 0.8726734519004822,
+        "5": 0.896092414855957,
+        "6": 0.892227828502655,
+        "7": 0.8673511743545532,
+        "8": 0.8654141426086426,
+        "9": 0.9000439047813416,
+        "10": 0.909227192401886,
+        "11": 0.900959312915802,
+        "12": 0.8718308806419373,
+        "13": 0.9028287529945374,
+        "14": 0.8648697137832642,
+        "15": 0.9076048135757446,
+        "16": 0.8732709884643555,
+        "17": 0.9455128908157349,
+        "18": 0.8845071196556091,
+        "19": 0.8870998024940491,
+        "20": 0.8730114102363586,
+        "21": 0.9054818153381348,
+        "22": 0.8895969390869141,
+        "23": 0.8847081065177917,
+        "24": 0.8253942728042603,
+        "25": 0.8737964630126953,
+        "26": 0.8680102825164795,
+        "27": 0.8519771695137024,
+        "28": 0.8543362021446228,
+        "29": 0.9047158360481262,
+        "30": 0.8836648464202881,
+        "31": 0.8805116415023804,
+        "32": 0.9127131700515747,
+        "33": 0.8779876232147217,
+        "34": 0.8681159615516663,
+        "35": 0.8706125020980835,
+        "36": 0.8651749491691589,
+        "37": 0.9077089428901672,
+        "38": 0.8831818699836731,
+        "39": 0.8441346287727356,
+        "40": 0.8507503867149353,
+        "41": 0.8803353905677795,
+        "42": 0.8626726269721985,
+        "43": 0.9122188687324524,
+        "44": 0.8649699091911316,
+        "45": 0.8795919418334961,
+        "46": 0.8969674706459045,
+        "47": 0.8683627247810364,
+        "48": 0.8943062424659729,
+        "49": 0.8775182366371155,
+        "50": 0.8589773178100586,
+        "51": 0.8670276999473572,
+        "52": 0.8652788996696472,
+        "53": 0.8428112864494324,
+        "54": 0.8435770869255066,
+        "55": 0.8845918774604797,
+        "56": 0.9361674189567566,
+        "57": 0.943793535232544,
+        "58": 0.8643321990966797,
+        "59": 0.9061722159385681,
+        "60": 0.9038487076759338,
+        "61": 0.8966586589813232,
+        "62": 0.8913618326187134,
+        "63": 0.855122983455658,
+        "64": 0.9071266651153564,
+        "65": 0.904196560382843,
+        "66": 0.9082363247871399,
+        "67": 0.9037405848503113,
+        "68": 0.9287735819816589,
+        "69": 0.8990529775619507,
+        "70": 0.9018886089324951,
+        "71": 0.8793131709098816,
+        "72": 0.8634567856788635,
+        "73": 0.8867283463478088,
+        "74": 0.8916074633598328,
+        "75": 0.8768289089202881,
+        "76": 0.8817161917686462,
+        "77": 0.8929768800735474,
+        "78": 0.876526415348053,
+        "79": 0.879289448261261,
+        "80": 0.8730575442314148,
+        "81": 0.8635275959968567,
+        "82": 0.8378556966781616,
+        "83": 0.9205332398414612,
+        "84": 0.8663102388381958,
+        "85": 0.8702364563941956,
+        "86": 0.8628228306770325,
+        "87": 0.8979235291481018,
+        "88": 0.8988271355628967,
+        "89": 0.8712583780288696,
+        "90": 0.8753946423530579,
+        "91": 0.9086069464683533,
+        "92": 0.8943129777908325,
+        "93": 0.8803253769874573,
+        "94": 0.8753731846809387,
+        "95": 0.9070270657539368,
+        "96": 0.8669425249099731,
+        "97": 0.8839693069458008,
+        "98": 0.87351393699646,
+        "99": 0.8284820318222046
+      },
+      {
+        "0": 0.8913004994392395,
+        "1": 0.9114089012145996,
+        "2": 0.831222653388977,
+        "3": 0.8633469343185425,
+        "4": 0.8756707906723022,
+        "5": 0.8775877952575684,
+        "6": 0.8889400959014893,
+        "7": 0.8708111047744751,
+        "8": 0.8843290209770203,
+        "9": 0.9105455279350281,
+        "10": 0.9143270254135132,
+        "11": 0.8675034046173096,
+        "12": 0.8789353370666504,
+        "13": 0.9231163859367371,
+        "14": 0.8447583317756653,
+        "15": 0.9028163552284241,
+        "16": 0.8806207776069641,
+        "17": 0.8938862085342407,
+        "18": 0.8724320530891418,
+        "19": 0.8994681239128113,
+        "20": 0.8750892281532288,
+        "21": 0.8831019997596741,
+        "22": 0.8705919981002808,
+        "23": 0.8720767498016357,
+        "24": 0.8253194093704224,
+        "25": 0.8660477995872498,
+        "26": 0.883170485496521,
+        "27": 0.8481995463371277,
+        "28": 0.8444324731826782,
+        "29": 0.8714291453361511,
+        "30": 0.9257968068122864,
+        "31": 0.8678091168403625,
+        "32": 0.8988633751869202,
+        "33": 0.8739381432533264,
+        "34": 0.8692331314086914,
+        "35": 0.8732376098632812,
+        "36": 0.8565340638160706,
+        "37": 0.8812400698661804,
+        "38": 0.8857894539833069,
+        "39": 0.8543135523796082,
+        "40": 0.8426360487937927,
+        "41": 0.8709321618080139,
+        "42": 0.8476371169090271,
+        "43": 0.9138630032539368,
+        "44": 0.8747127652168274,
+        "45": 0.8641946911811829,
+        "46": 0.8970956802368164,
+        "47": 0.8560819029808044,
+        "48": 0.8604134321212769,
+        "49": 0.8936408758163452,
+        "50": 0.8607659935951233,
+        "51": 0.8602932095527649,
+        "52": 0.8482073545455933,
+        "53": 0.808899462223053,
+        "54": 0.8480834364891052,
+        "55": 0.8598672151565552,
+        "56": 0.8926540613174438,
+        "57": 0.9107691049575806,
+        "58": 0.8824304342269897,
+        "59": 0.9084588885307312,
+        "60": 0.8998122811317444,
+        "61": 0.8583308458328247,
+        "62": 0.8779687881469727,
+        "63": 0.8620242476463318,
+        "64": 0.88670814037323,
+        "65": 0.8949216604232788,
+        "66": 0.9166792631149292,
+        "67": 0.9096887111663818,
+        "68": 0.9063142538070679,
+        "69": 0.9001343250274658,
+        "70": 0.8838495016098022,
+        "71": 0.8882066011428833,
+        "72": 0.8613298535346985,
+        "73": 0.8881968855857849,
+        "74": 0.8577258586883545,
+        "75": 0.8713560104370117,
+        "76": 0.8591194748878479,
+        "77": 0.8675994277000427,
+        "78": 0.8592830896377563,
+        "79": 0.8668900728225708,
+        "80": 0.8829864263534546,
+        "81": 0.8883268237113953,
+        "82": 0.8404074907302856,
+        "83": 0.8970634341239929,
+        "84": 0.8663058876991272,
+        "85": 0.8826488256454468,
+        "86": 0.8642039895057678,
+        "87": 0.8848307132720947,
+        "88": 0.8988626003265381,
+        "89": 0.8531672358512878,
+        "90": 0.8677788376808167,
+        "91": 0.9090719223022461,
+        "92": 0.906575083732605,
+        "93": 0.9192148447036743,
+        "94": 0.865797221660614,
+        "95": 0.8932486772537231,
+        "96": 0.8615044951438904,
+        "97": 0.8860425353050232,
+        "98": 0.8748626708984375,
+        "99": 0.8332437872886658
+      },
+      {
+        "0": 0.903605580329895,
+        "1": 0.9150010347366333,
+        "2": 0.8303496241569519,
+        "3": 0.8695459365844727,
+        "4": 0.87531977891922,
+        "5": 0.9008355140686035,
+        "6": 0.9013175964355469,
+        "7": 0.8590667247772217,
+        "8": 0.8747411370277405,
+        "9": 0.9267167448997498,
+        "10": 0.893015444278717,
+        "11": 0.8992834091186523,
+        "12": 0.8811216354370117,
+        "13": 0.9022284746170044,
+        "14": 0.8573644757270813,
+        "15": 0.9019103050231934,
+        "16": 0.8781337738037109,
+        "17": 0.926255464553833,
+        "18": 0.8982130885124207,
+        "19": 0.8854467272758484,
+        "20": 0.8653232455253601,
+        "21": 0.8892474174499512,
+        "22": 0.9018557667732239,
+        "23": 0.8788754940032959,
+        "24": 0.8274334073066711,
+        "25": 0.8715048432350159,
+        "26": 0.8900042176246643,
+        "27": 0.845399022102356,
+        "28": 0.8662942051887512,
+        "29": 0.8962850570678711,
+        "30": 0.8939887881278992,
+        "31": 0.8998481035232544,
+        "32": 0.8919747471809387,
+        "33": 0.8498255610466003,
+        "34": 0.8741546869277954,
+        "35": 0.8749991655349731,
+        "36": 0.8805033564567566,
+        "37": 0.9223132133483887,
+        "38": 0.882731556892395,
+        "39": 0.8579014539718628,
+        "40": 0.8598873615264893,
+        "41": 0.8838402628898621,
+        "42": 0.8535540699958801,
+        "43": 0.9103386998176575,
+        "44": 0.8680539131164551,
+        "45": 0.8953530192375183,
+        "46": 0.895990252494812,
+        "47": 0.8604531288146973,
+        "48": 0.8669536709785461,
+        "49": 0.9013809561729431,
+        "50": 0.8612318634986877,
+        "51": 0.8614048361778259,
+        "52": 0.8720138669013977,
+        "53": 0.8240228295326233,
+        "54": 0.8502582311630249,
+        "55": 0.861064076423645,
+        "56": 0.9259024262428284,
+        "57": 0.9441010355949402,
+        "58": 0.8701320886611938,
+        "59": 0.9127194285392761,
+        "60": 0.8931122422218323,
+        "61": 0.871654212474823,
+        "62": 0.8917450904846191,
+        "63": 0.8568935990333557,
+        "64": 0.9097873568534851,
+        "65": 0.8983009457588196,
+        "66": 0.9153412580490112,
+        "67": 0.9000902771949768,
+        "68": 0.938991129398346,
+        "69": 0.9053283929824829,
+        "70": 0.8973724842071533,
+        "71": 0.8843081593513489,
+        "72": 0.8646533489227295,
+        "73": 0.8898105621337891,
+        "74": 0.8805601000785828,
+        "75": 0.8791957497596741,
+        "76": 0.8817161917686462,
+        "77": 0.905604898929596,
+        "78": 0.8887091279029846,
+        "79": 0.8931558728218079,
+        "80": 0.8929545879364014,
+        "81": 0.8759415745735168,
+        "82": 0.8331188559532166,
+        "83": 0.9191335439682007,
+        "84": 0.8781372904777527,
+        "85": 0.8742565512657166,
+        "86": 0.8626554608345032,
+        "87": 0.8991419076919556,
+        "88": 0.8969002962112427,
+        "89": 0.8515011072158813,
+        "90": 0.8940609693527222,
+        "91": 0.9130275845527649,
+        "92": 0.8901810646057129,
+        "93": 0.8854485750198364,
+        "94": 0.8779589533805847,
+        "95": 0.9107983112335205,
+        "96": 0.8621875643730164,
+        "97": 0.8883458375930786,
+        "98": 0.8732205629348755,
+        "99": 0.868750810623169
+      },
+      {
+        "0": 0.9001086950302124,
+        "1": 0.9351587295532227,
+        "2": 0.8564804196357727,
+        "3": 0.8703747391700745,
+        "4": 0.8801483511924744,
+        "5": 0.8974010944366455,
+        "6": 0.900260865688324,
+        "7": 0.8665599822998047,
+        "8": 0.8755497336387634,
+        "9": 0.9378730058670044,
+        "10": 0.9150503277778625,
+        "11": 0.8925693035125732,
+        "12": 0.8720807433128357,
+        "13": 0.9063146710395813,
+        "14": 0.8847428560256958,
+        "15": 0.9031277298927307,
+        "16": 0.8799650073051453,
+        "17": 0.923408567905426,
+        "18": 0.8824794292449951,
+        "19": 0.9067305326461792,
+        "20": 0.8738471865653992,
+        "21": 0.8764095902442932,
+        "22": 0.8935311436653137,
+        "23": 0.8755454421043396,
+        "24": 0.8464863300323486,
+        "25": 0.8724207878112793,
+        "26": 0.8817127346992493,
+        "27": 0.8555802702903748,
+        "28": 0.8609304428100586,
+        "29": 0.8993661403656006,
+        "30": 0.892235279083252,
+        "31": 0.8950053453445435,
+        "32": 0.9067339897155762,
+        "33": 0.8805754780769348,
+        "34": 0.8764250874519348,
+        "35": 0.885524570941925,
+        "36": 0.877153754234314,
+        "37": 0.8982498645782471,
+        "38": 0.8784006834030151,
+        "39": 0.8456522822380066,
+        "40": 0.8450289368629456,
+        "41": 0.8680119514465332,
+        "42": 0.8572829961776733,
+        "43": 0.9266860485076904,
+        "44": 0.860849142074585,
+        "45": 0.8862789273262024,
+        "46": 0.8932451009750366,
+        "47": 0.8520062565803528,
+        "48": 0.9040966033935547,
+        "49": 0.8904870748519897,
+        "50": 0.8663330674171448,
+        "51": 0.8829867243766785,
+        "52": 0.8688027262687683,
+        "53": 0.838855504989624,
+        "54": 0.8621764183044434,
+        "55": 0.8845914602279663,
+        "56": 0.9149611592292786,
+        "57": 0.9709267020225525,
+        "58": 0.8862789869308472,
+        "59": 0.9225846529006958,
+        "60": 0.9100919365882874,
+        "61": 0.8824179768562317,
+        "62": 0.9112750887870789,
+        "63": 0.853222668170929,
+        "64": 0.8910719752311707,
+        "65": 0.8959651589393616,
+        "66": 0.9012669324874878,
+        "67": 0.9042217135429382,
+        "68": 0.9273663759231567,
+        "69": 0.8837999701499939,
+        "70": 0.8950744867324829,
+        "71": 0.8876256346702576,
+        "72": 0.8611958026885986,
+        "73": 0.8823356032371521,
+        "74": 0.8696825504302979,
+        "75": 0.8787064552307129,
+        "76": 0.8836817145347595,
+        "77": 0.8960517644882202,
+        "78": 0.8786571025848389,
+        "79": 0.893639326095581,
+        "80": 0.8817870616912842,
+        "81": 0.8837576508522034,
+        "82": 0.8448999524116516,
+        "83": 0.9189178943634033,
+        "84": 0.8929420113563538,
+        "85": 0.8770279884338379,
+        "86": 0.870904803276062,
+        "87": 0.8966248035430908,
+        "88": 0.9121314883232117,
+        "89": 0.8737121224403381,
+        "90": 0.894377589225769,
+        "91": 0.9062389135360718,
+        "92": 0.8937068581581116,
+        "93": 0.8727051615715027,
+        "94": 0.8772770166397095,
+        "95": 0.9121605157852173,
+        "96": 0.8756977915763855,
+        "97": 0.8918197154998779,
+        "98": 0.8862352967262268,
+        "99": 0.8276160359382629
+      },
+      {
+        "0": 0.9094638228416443,
+        "1": 0.8949219584465027,
+        "2": 0.8498656153678894,
+        "3": 0.8690025210380554,
+        "4": 0.8684119582176208,
+        "5": 0.9001381993293762,
+        "6": 0.9006999731063843,
+        "7": 0.8585047721862793,
+        "8": 0.870405912399292,
+        "9": 0.9364213943481445,
+        "10": 0.9170116782188416,
+        "11": 0.9011644124984741,
+        "12": 0.8815587759017944,
+        "13": 0.9112420678138733,
+        "14": 0.8835095167160034,
+        "15": 0.8839631080627441,
+        "16": 0.8720798492431641,
+        "17": 0.9286897778511047,
+        "18": 0.8883600234985352,
+        "19": 0.890461266040802,
+        "20": 0.8783194422721863,
+        "21": 0.9055100679397583,
+        "22": 0.9018557667732239,
+        "23": 0.8802872896194458,
+        "24": 0.8438174724578857,
+        "25": 0.8676981925964355,
+        "26": 0.892852246761322,
+        "27": 0.855752170085907,
+        "28": 0.861857533454895,
+        "29": 0.905530571937561,
+        "30": 0.8800387382507324,
+        "31": 0.9051602482795715,
+        "32": 0.8985067009925842,
+        "33": 0.8439454436302185,
+        "34": 0.8672840595245361,
+        "35": 0.8799610733985901,
+        "36": 0.8782323002815247,
+        "37": 0.9010613560676575,
+        "38": 0.8805083632469177,
+        "39": 0.8538192510604858,
+        "40": 0.84199458360672,
+        "41": 0.8834084868431091,
+        "42": 0.8544982671737671,
+        "43": 0.9231948256492615,
+        "44": 0.8651959896087646,
+        "45": 0.891674280166626,
+        "46": 0.8997732996940613,
+        "47": 0.8783057928085327,
+        "48": 0.8895589709281921,
+        "49": 0.886928915977478,
+        "50": 0.8929566144943237,
+        "51": 0.8580665588378906,
+        "52": 0.8721079230308533,
+        "53": 0.8210666179656982,
+        "54": 0.8484048247337341,
+        "55": 0.8796351552009583,
+        "56": 0.9123644828796387,
+        "57": 0.9602739214897156,
+        "58": 0.8701320886611938,
+        "59": 0.9132729768753052,
+        "60": 0.8942935466766357,
+        "61": 0.9040612578392029,
+        "62": 0.8905496597290039,
+        "63": 0.8591177463531494,
+        "64": 0.8901662230491638,
+        "65": 0.9110719561576843,
+        "66": 0.9247176051139832,
+        "67": 0.9077641367912292,
+        "68": 0.923943281173706,
+        "69": 0.9028013944625854,
+        "70": 0.877376914024353,
+        "71": 0.8928039073944092,
+        "72": 0.8655992746353149,
+        "73": 0.8903319835662842,
+        "74": 0.8840935826301575,
+        "75": 0.8797847032546997,
+        "76": 0.8957518339157104,
+        "77": 0.8949822783470154,
+        "78": 0.8850727677345276,
+        "79": 0.8979122042655945,
+        "80": 0.8596189022064209,
+        "81": 0.8749924302101135,
+        "82": 0.8284611701965332,
+        "83": 0.9187028408050537,
+        "84": 0.8804158568382263,
+        "85": 0.8903899192810059,
+        "86": 0.8540228009223938,
+        "87": 0.900374710559845,
+        "88": 0.8985910415649414,
+        "89": 0.8728528022766113,
+        "90": 0.8836809396743774,
+        "91": 0.9104793667793274,
+        "92": 0.8988165855407715,
+        "93": 0.8875590562820435,
+        "94": 0.8983327746391296,
+        "95": 0.9104284048080444,
+        "96": 0.8748167157173157,
+        "97": 0.8982840776443481,
+        "98": 0.8862625956535339,
+        "99": 0.8315645456314087
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          5,
+          "Prediction(\n    reasoning='The piece centers on policy change: 2015 Housing Act changes removing priority housing for prison leavers; the lead should name the actor (Welsh Government) and the consequence (reduced priority housing, calls for more affordable accommodation).',\n    output=\"Welsh Government's 2015 Housing Act changes removed priority housing for prison leavers, sparking calls for more affordable accommodation.\"\n)"
+        ]
+      ],
+      "1": [
+        [
+          4,
+          "Prediction(\n    reasoning='To produce a concise, neutral lead, I identified the central development: an arrest and court appearance tied to a police search recovery of firearms, ammunition, and money, and I included actor (26-year-old man) and status (appeared in Edinburgh Sheriff Court) with key location.',\n    output='A 26-year-old man arrested in Edinburgh appeared in Edinburgh Sheriff Court after detectives recovered three firearms, ammunition and a five-figure sum.'\n)"
+        ]
+      ],
+      "2": [
+        [
+          4,
+          "Prediction(\n    reasoning='I drafted a concise, neutral lead highlighting the central development (charges) and the four named suspects with the victim context, in present-tense style.',\n    output='Four suspects—Jordan Hill, Tesfaye Cooper, Brittany Covington and Tanishia Covington—are charged with hate crimes and aggravated kidnapping in the beating of an 18-year-old white victim.'\n)"
+        ]
+      ],
+      "3": [
+        [
+          4,
+          "Prediction(\n    reasoning='Generate a neutral, concise lead (12–25 words) naming the actor as the former Arsenal goalkeeper, noting his long-running role as West Bromwich Albion’s director of football, and stating his involvement in two Premier League promotions with years.',\n    output=\"West Bromwich Albion's director of football since 2003, the former Arsenal goalkeeper, played a key role in two Premier League promotions in 2006 and 2012.\"\n)"
+        ]
+      ],
+      "4": [
+        [
+          4,
+          "Prediction(\n    reasoning='A concise neutral lead should identify the actor (the USC researchers led by Valter Longo), the main development (fasting-mimicking diet regenerates pancreatic beta cells and reverses diabetes symptoms in mice), and the implication (potential new treatment subject to human validation). The output should be a single sentence in present tense.',\n    output='USC researchers led by Valter Longo show that a fasting-mimicking diet regenerates pancreatic beta cells and reverses diabetes symptoms in mice.'\n)"
+        ]
+      ],
+      "5": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will produce a concise, 12–25 word lead that names the two companies and states the merger is planned and is under European antitrust scrutiny.',\n    output='Essilor and Luxottica announce a merger to form EssilorLuxottica, triggering European antitrust scrutiny over potential reduced competition.'\n)"
+        ]
+      ],
+      "6": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"We identified the central development as Wendy Houvenaghel's accusation of ageism and welfare neglect by British Cycling, connected to a leaked draft report detailing failures. The lead should present the principal actor and the outcome in a concise, neutral sentence, suitable for a publication lead.\",\n    output='Wendy Houvenaghel accuses British Cycling of ageism and welfare neglect after a leaked draft report details failures.'\n)"
+        ]
+      ],
+      "7": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will produce a concise, headline-style sentence in present tense that names Kareem Badr and the Hideout, notes the 2009 purchase, and highlights the club’s transformation, expansion, and current staff.',\n    output='Kareem Badr and two friends buy Austin’s Hideout for $20,000 in 2009 and transform it into a growing comedy club that expands its premises and now employs around 25 people.'\n)"
+        ]
+      ],
+      "8": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"The article centers on Ofcom's plan to enforce the separation of Openreach from BT via governance changes, presenting a decisive regulatory move that could lead to conflicts or a court battle; the sentence should be a concise, present-tense headline reflecting the main development.\",\n    output='Ofcom plans to enforce the separation of Openreach from BT by establishing a new board and articles of association, a move that could lead to conflicts and potential court battles.'\n)"
+        ]
+      ],
+      "9": [
+        [
+          4,
+          "Prediction(\n    reasoning='Summarize the main development: Rodgers emphasizes performance in ahead-of-the-semi-final framing, naming the Celtic-Rangers tie at Hampden.',\n    output='Brendan Rodgers says Celtic will focus on performance as they prepare for the Scottish Cup semi-final against Rangers at Hampden.'\n)"
+        ]
+      ],
+      "10": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"The article's main update is that Queen's University Belfast is cutting undergraduate places in response to an £8m subsidy cut from DEL, so the lead should name the institution, the action, and the consequence in present tense within 12–25 words.\",\n    output=\"Queen's University Belfast is cutting undergraduate places by 1,010 over three years in response to an £8m DEL funding cut.\"\n)"
+        ]
+      ],
+      "11": [
+        [
+          5,
+          "Prediction(\n    reasoning='I extracted the article’s main update: a misprint affected 850 appointment letters causing inappropriate leaflets, with the trust apologising; the sentence names the actor and consequence in a present-tense lead.',\n    output='East Sussex NHS Trust says 850 appointment letters wrongly included cancer-related leaflets due to an external printing error, apologising to affected patients.'\n)"
+        ]
+      ],
+      "12": [
+        [
+          5,
+          "Prediction(\n    reasoning='Summarizes the article’s main update: Labour maintaining it will not frustrate Brexit, while frontbenchers who rebel risk stepping down.',\n    output='Labour says it will not frustrate Brexit, but frontbenchers who rebel will have to step down.'\n)"
+        ]
+      ],
+      "13": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I will produce a single-sentence headline-style sentence in present tense that names Torquay United and O'Kane and indicates that any proceeds from his sale will aid the cash-strapped club.\",\n    output='Torquay United say any money from O’Kane’s sale to Bournemouth will go to help the cash-strapped club.'\n)"
+        ]
+      ],
+      "14": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a concise lead that identifies the central development (an inquest) and the key finding (police ward visit potentially increasing distress), naming the subject and keeping within 12–25 words.',\n    output='An inquest into the death of Iwan Wyn Lewis heard a doctor say a police visit to his ward may have increased his distress.'\n)"
+        ]
+      ],
+      "15": [
+        [
+          1,
+          "Prediction(\n    reasoning='Provide a concise lead: the central development is that Taylor-Fletcher joins Sheffield Wednesday before a match with Norwich City.',\n    output=\"Former Blackpool forward Taylor-Fletcher joins Sheffield Wednesday ahead of Saturday's league clash with Norwich City.\"\n)"
+        ]
+      ],
+      "16": [
+        [
+          2,
+          "Prediction(\n    reasoning='The article centers on scientists preemptively copying climate data to non-federal servers due to fears the incoming Trump administration may restrict access, making this the main development.',\n    output='US scientists rush to copy climate data onto non-federal servers amid fears the Trump administration will curb access.'\n)"
+        ]
+      ],
+      "17": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Provide a concise, publication-style one-sentence lead noting Bradbury's death, location, and that the cause is not disclosed.\",\n    output=\"John 'Brad' Bradbury, longtime drummer for The Specials, has died in England; no cause of death has been disclosed.\"\n)"
+        ]
+      ],
+      "18": [
+        [
+          3,
+          "Prediction(\n    reasoning='Identify the central development: Tiger Woods missing the cut at Torrey Pines in his return to a full PGA Tour event; craft a concise lead that states actor and outcome with minor supporting detail (first-round 76, second-round 72).',\n    output='Tiger Woods missed the cut at Torrey Pines after a first-round 76, despite a second-round 72.'\n)"
+        ]
+      ],
+      "19": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will generate a single, concise lead sentence naming Andy Cole, noting his return as Manchester United ambassador after a kidney transplant donated by his nephew Alexander, and his ongoing recovery from 2015 kidney failure.',\n    output='Andy Cole has returned as Manchester United ambassador after a kidney transplant, donated by his nephew Alexander, as he continues recovery from 2015 kidney failure.'\n)"
+        ]
+      ],
+      "20": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"The article's main update is the lifting of the YouTube ban after Google launches a Pakistan-specific version, enabling access; the lead should reflect the key actor and consequence.\",\n    output='Pakistan lifts its ban on YouTube after Google launches a Pakistan-specific version, opening access for users.'\n)"
+        ]
+      ],
+      "21": [
+        [
+          5,
+          "Prediction(\n    reasoning='Identify the article’s main update: Benjamin’s injury likely ends his season; craft a concise lead mentioning the team and recovery timeframe.',\n    output='Benjamin of Leicester Tigers is set to miss the rest of the season after injuring himself against Exeter, with an eight to ten week recovery.'\n)"
+        ]
+      ],
+      "22": [
+        [
+          3,
+          "Prediction(\n    reasoning='Concise lead that names Owain Doull and states Great Britain won the Olympic team pursuit gold in a world-record time.',\n    output='Owain Doull helped Great Britain win Olympic team pursuit gold in a world-record time.'\n)"
+        ],
+        [
+          5,
+          "Prediction(\n    reasoning='Generate a concise, neutral lead that names Owain Doull and states Great Britain won Olympic team pursuit gold in a world-record time.',\n    output='Owain Doull helped Great Britain win Olympic team pursuit gold in a world-record time.'\n)"
+        ]
+      ],
+      "23": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will provide a concise summary of the provided news passage without revealing step-by-step reasoning.',\n    output='Monsoon floods have affected millions across at least 20 Indian states, with Assam reporting dozens of deaths and hundreds of thousands displaced. Officials say 450,000 people in one state have been affected. The government has announced aid packages, and Prime Minister Narendra Modi will visit Assam to seek a permanent solution to the recurring floods. Meanwhile, many affected people in Gujarat have begun returning to their villages.'\n)"
+        ]
+      ],
+      "24": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will create a concise, neutral lead sentence that identifies the couple, the venue (Nevis Range), the event (wedding on skis), and the resulting status as a rare, slopes-based ceremony.',\n    output='Bridget and Jonathan Reid wed on skis at Nevis Range in Scotland, marking a rare wedding ceremony on the slopes.'\n)"
+        ]
+      ],
+      "25": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Generated a concise, publication-style lead that states the sanction, the reason (inadequate controls), and the connection to Shirlina Tsang's conviction.\",\n    output=\"Hong Kong's regulator fined RBS for seriously inadequate controls after former trader Shirlina Tsang's fraud conviction and 50-month sentence.\"\n)"
+        ]
+      ],
+      "26": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Selected the article's main update as Tom Holland winning the Bafta Rising Star Award at the Baftas, which anchors the backstage piece as the clearest single development.\",\n    output='Tom Holland wins the Bafta Rising Star Award at the Baftas, calling the win a whirlwind and expressing happiness.'\n)"
+        ]
+      ],
+      "27": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"I focused on the article's central update: Murray's hip problems and declining form jeopardize his world No. 1 status as rivals Nadal and Djokovic close in; produced a concise lead-style sentence (19 words) that reflects the main development.\",\n    output=\"Andy Murray's hip problems and shaky form threaten his world number one status as Nadal and Djokovic close in.\"\n)"
+        ]
+      ],
+      "28": [
+        [
+          3,
+          "Prediction(\n    reasoning='Generate a concise lead that identifies the central figure (Mandla Hlatshwayo), notes the outcome (shot dead), and references the ongoing police inquiry linking suspects to the killing, in a neutral, publication-style sentence.',\n    output='Mandla Hlatshwayo, a Jozi FM DJ, was shot dead after confronting robbers at a Soweto pub, as police question suspects linked to the killing.'\n)"
+        ]
+      ],
+      "29": [
+        [
+          5,
+          "Prediction(\n    reasoning='The article centers on a police investigation into a gunshot near the school, with the immediate consequence that pupils and staff remain indoors; the lead should name the police as the actor and describe the ongoing status in present tense.',\n    output='Merseyside Police are investigating after a gun was fired near Anfield Road Primary School, with pupils and staff staying indoors.'\n)"
+        ]
+      ],
+      "30": [
+        [
+          2,
+          "Prediction(\n    reasoning='Identify the main development: Ennis-Hill is third after day one while Theisen-Eaton leads; craft a concise, present-tense headline highlighting both figures and the event.',\n    output='Jessica Ennis-Hill sits third after day one at the Gotzis Hypo-Meeting as Brianne Theisen-Eaton leads the field.'\n)"
+        ]
+      ],
+      "31": [
+        [
+          5,
+          "Prediction(\n    reasoning='I will produce a concise, neutral lead that identifies the key development (administration status) and its consequence (end of F1 participation), using present-perfect tense for ongoing relevance and a single sentence.',\n    output='Manor Racing has entered administration after failing to secure a buyer, effectively ending its F1 participation.'\n)"
+        ]
+      ],
+      "32": [
+        [
+          1,
+          "Prediction(\n    reasoning='Provide a concise one-sentence lead highlighting the main development: the number of seats and candidates.',\n    output='Only 90 seats will be returned to Stormont in the Northern Ireland election, as 228 candidates contest the vote.'\n)"
+        ]
+      ],
+      "33": [
+        [
+          4,
+          "Prediction(\n    reasoning='I crafted a concise, neutral lead capturing the central development: the pound’s decline since Brexit and BBC Reality Check’s hedge-friendly guidance, in 12–25 words.',\n    output='BBC Reality Check notes the pound has fallen about 18% against the dollar since Brexit and suggests hedging by buying in two instalments.'\n)"
+        ]
+      ],
+      "34": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a single, concise lead sentence (12–25 words) that names the winner (Zoe Waters), the award (Alternative Model of the Year), and the action (wins/selected by judges) with location (Newcastle).',\n    output='19-year-old Zoe Waters wins the Alternative Model of the Year title after judges select her in Newcastle.'\n)"
+        ]
+      ],
+      "35": [
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a concise, neutral lead focusing on the main development: the NMRN’s plan to relocate the Royal Marines Museum and the potential relocation of the Yomper statue.',\n    output='The National Museum of the Royal Navy plans to relocate the Royal Marines Museum to Portsmouth Historic Dockyard, potentially moving the Yomper statue.'\n)"
+        ]
+      ],
+      "36": [
+        [
+          3,
+          "Prediction(\n    reasoning='I generated a concise lead that names the principal actor (BM) under a TPim and states the main development (charged with two TPim breaches after alleged January failures), in neutral, publication-style form.',\n    output='BM, a British citizen under TPim, was charged with two breaches after allegedly failing to contact a monitoring company and report to police.'\n)"
+        ]
+      ],
+      "37": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"Identify the main development: Anyon is appointed to coach Sussex women's under-19 and under-21 sides, replacing Charlotte Burton.\",\n    output=\"Sussex appoints Anyon as coach of the women's under-19 and under-21 sides, taking over from Charlotte Burton.\"\n)"
+        ]
+      ],
+      "38": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will condense the article into a single, neutral sentence that states the main development: a 23-year-old brother of Wes Brown is on trial with Bury and available for their League One opener at Doncaster.',\n    output='The 23-year-old younger brother of Wes Brown is on trial with Bury and is available for their League One opener at Doncaster.'\n)"
+        ]
+      ],
+      "39": [
+        [
+          3,
+          "Prediction(\n    reasoning='A concise lead summarizing the central development: the live-action Cinderella directed by Branagh, starring Lily James, opening with about $70 million in the US and remaining faithful to the original fairy tale.',\n    output=\"Lily James's Cinderella, directed by Kenneth Branagh, opens with $70 million in the US and stays faithful to the classic fairy tale.\"\n)"
+        ]
+      ],
+      "40": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"Identify the article’s core development: Ukraine barred Russia's Julia Samoilova from Eurovision, and Russia chose not to participate, highlighting the central actors (Ukraine/Julia Samoilova and Russia) and the resulting outcome (non-participation). Keep it concise in lead style (12–25 words).\",\n    output=\"Ukraine barred Russia's Julia Samoilova from Eurovision, and Russia declined to participate in the contest.\"\n)"
+        ]
+      ],
+      "41": [
+        [
+          3,
+          "Prediction(\n    reasoning='The central development is The Cavern Club marking its anniversary with tribute events alongside the airing of an ITV1 documentary about the Beatles’ first Cavern gig, so the lead should mention the anniversary and the documentary as the main outcomes.',\n    output=\"The Cavern Club marks its anniversary with tribute events as ITV1 airs a documentary on the Beatles' first Cavern gig.\"\n)"
+        ]
+      ],
+      "42": [
+        [
+          1,
+          "Prediction(\n    reasoning='I produced a concise, neutral lead-style sentence capturing the main development: a national minimum wage proposal after advisers’ rate, with Ramaphosa signaling progress toward a two-year rollout.',\n    output='South Africa proposes a national minimum wage after advisers proposed a rate, with Ramaphosa saying discussions are advancing toward a two-year rollout.'\n)"
+        ]
+      ],
+      "43": [
+        [
+          4,
+          "Prediction(\n    reasoning='Identify the central development: the death of Meles Zenawi, and its consequence: a leadership vacuum with potential regional destabilization; craft a concise, neutral lead (12–25 words) in present/past framing.',\n    output='Ethiopian Prime Minister Meles Zenawi has died, creating a leadership vacuum and potential regional destabilization.'\n)"
+        ]
+      ],
+      "44": [
+        [
+          2,
+          "Prediction(\n    reasoning='Identify the main development: despite limited overs at the MCG, Australia’s Jackson Bird takes two wickets and weather ends play early, with Pakistan’s Azhar Ali and Babar Azam still at the crease.',\n    output='Australia’s Jackson Bird takes two wickets as play ends early at the MCG due to weather, with Azhar Ali and Babar Azam still batting for Pakistan.'\n)"
+        ]
+      ],
+      "45": [
+        [
+          3,
+          "Prediction(\n    reasoning='I crafted a concise lead of 19 words that neutrally summarizes the central development: SNP topped the Leith Walk poll and Labour won the second seat from the Greens, using present-tense framing and including the main actors.',\n    output='In the Leith Walk by-election, the SNP topped the poll and Labour won the second seat from the Greens.'\n)"
+        ]
+      ],
+      "46": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"The article centers on Kremlin spokesman Peskov's statement that Russia will keep supporting the Syrian military, signaling ongoing Russian backing despite stalled U.S.-Russian ceasefire talks; I’ll craft a concise, lead-style sentence that names the key actor and the resulting status.\",\n    output='Russia says its air force continues to back Syrian forces as US-Russia ceasefire talks falter.'\n)"
+        ]
+      ],
+      "47": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"The article's main update is that Wales has included Hooker Hughes and flanker Evans in its squad for the Junior World Championship in June, which is best conveyed in a concise lead using present perfect tense.\",\n    output='Wales have named Hooker Hughes and flanker Evans in their squad for the Junior World Championship in June.'\n)"
+        ]
+      ],
+      "48": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a neutral, 12–25 word lead that states the central development: the United States has announced sanctions on Russia over election interference, and Moscow has condemned the move.',\n    output='The United States has announced a new wave of sanctions on Russia over alleged election interference, drawing sharp condemnation from Moscow.'\n)"
+        ]
+      ],
+      "49": [
+        [
+          3,
+          "Prediction(\n    reasoning='Identify the central development: Jeremy Corbyn/Labour proposing to abolish university tuition fees in England and restore direct government funding, signaling a decisive policy shift. Compose a single, neutral lead that includes the principal actor and the outcome.',\n    output='Labour leader Jeremy Corbyn proposes abolishing tuition fees in England and returning to direct government funding for universities.'\n)"
+        ]
+      ],
+      "50": [
+        [
+          5,
+          "Prediction(\n    reasoning='I identify the article’s main update as the police finishing work at the crash scene with investigations continuing; the lead emphasizes the status and the key actor (Sussex police) using present-perfect tense to reflect ongoing developments.',\n    output='Sussex police have finished their work at the A27 crash scene, and investigations have continued.'\n)"
+        ]
+      ],
+      "51": [
+        [
+          4,
+          "Prediction(\n    reasoning='I distilled the article to a concise, neutral lead that names the key actors (Dan Coats and Mike Rogers) and notes their refusal to discuss presidential conversations publicly while testifying on the Russia investigation.',\n    output=\"US intelligence chiefs Dan Coats and Mike Rogers tell the Senate they won't discuss presidential conversations publicly as they testify on the Russia investigation.\"\n)"
+        ]
+      ],
+      "52": [
+        [
+          5,
+          "Prediction(\n    reasoning='The article’s main update is the confirmation that the Obamas hosted a private party on Saturday, funded on their own dime, with 500 attendees; produce a concise lead in past tense.',\n    output='The Obamas hosted a private Saturday party, paid for on their own dime, with 500 guests.'\n)"
+        ]
+      ],
+      "53": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will generate a concise, neutral one-sentence summary reflecting the given list of roads.',\n    output='A list of roads across several Northern Ireland towns is provided, including Causanagh Road in Loughgall and Tannyoky Road in Poyntzpass.'\n)"
+        ]
+      ],
+      "54": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I will produce a single neutral lead sentence that summarizes the central development: Emma Gleeson's anxiety/panic symptoms lessen after dietary changes guided by Dr Rangan, reflecting the article's emphasis on nutrition's impact on mental health.\",\n    output='Dr Rangan helps Emma Gleeson reduce anxiety and panic attacks by changing her diet, highlighting growing evidence that nutrition affects mental health.'\n)"
+        ]
+      ],
+      "55": [
+        [
+          1,
+          "Prediction(\n    reasoning='Generate a concise, neutral lead of 12–25 words that identifies the key actor, the action taken, and the consequence, focusing on the investigation outcome and its status.',\n    output=\"The Alabama Securities Commission has closed its inquiry into Harper Lee's consent for the release of Go Set a Watchman, saying she answered questions satisfactorily.\"\n)"
+        ]
+      ],
+      "56": [
+        [
+          1,
+          "Prediction(\n    reasoning='Identify the central development: the United States suspends bilateral talks with Russia over the Aleppo offensive, reflecting a breakdown in ceasefire adherence. Craft a concise, publication-style lead sentence (12–25 words) that names the key actors and the immediate consequence.',\n    output='The United States suspends bilateral talks with Russia over the Aleppo offensive, accusing Moscow of failing to uphold the ceasefire.'\n)"
+        ]
+      ],
+      "57": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"A concise neutral lead is produced to summarize Khan's victory as London's first Muslim mayor, reflecting the central development stated.\",\n    output=\"Sadiq Khan has won the London mayoral election, becoming the capital's first Muslim mayor.\"\n)"
+        ]
+      ],
+      "58": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I created a neutral, concise lead that identifies the key actor and the consequence: Harriet(e) Howarth being appointed as the new vicar at St Paul's, Shipley, following a viral recruitment video.\",\n    output=\"St Paul's Church, Shipley appoints Henriette Howarth as new vicar after viral recruitment video drew more than 30,000 views.\"\n)"
+        ]
+      ],
+      "59": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"Constructed a concise, neutral lead focusing on Kevin De Bruyne's 10-week absence and the consequential missed matches, preserving proper nouns.\",\n    output=\"Manchester City's Kevin De Bruyne will be out for around 10 weeks, missing the League Cup final against Liverpool and key Champions League fixtures.\"\n)"
+        ]
+      ],
+      "60": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I generated a concise, neutral lead focusing on the main development: the attacker's death, that he acted alone, and no indicated political/terrorist motive, within 12–25 words.\",\n    output='A 27-year-old Swiss man who attacked a train died on Sunday; police say he acted alone and no indication of political or terrorist motive.'\n)"
+        ]
+      ],
+      "61": [
+        [
+          5,
+          "Prediction(\n    reasoning='A concise lead capturing the main development: police are searching for the drone operator after a near-miss involving a Flybe flight near Cornwall Airport Newquay.',\n    output='Police search for drone operator after near-miss with a Flybe aircraft near Cornwall Airport Newquay.'\n)"
+        ]
+      ],
+      "62": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"Generated a concise neutral lead (~22 words) stating the seal's rescue and release by the Scottish SPCA at Cruden Bay.\",\n    output='A grey seal found at Cruden Bay was freed from entangling netting by the Scottish SPCA and released back into the water.'\n)"
+        ]
+      ],
+      "63": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I generated a concise, present-tense headline-style sentence that highlights the main development: the National Library of Scotland cataloguing Sir Patrick Leigh Fermor's archive, noting notable contents.\",\n    output='The National Library of Scotland has catalogued the archive of travel writer Sir Patrick Leigh Fermor, revealing thousands of items including letters from Prince Charles and Truman Capote.'\n)"
+        ]
+      ],
+      "64": [
+        [
+          3,
+          "Prediction(\n    reasoning='Provide a concise, publication-style lead stating the main development: Roache’s election as GMB general secretary and the vote share, neutral tone.',\n    output='GMB elects Yorkshire regional secretary Roache as its new general secretary after a 56.7% vote.'\n)"
+        ]
+      ],
+      "65": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Create a single, neutral lead sentence (12–25 words) about the article's main update: Laura Mvula opened the new series of Later... with Jools Holland and performed Phenomenal Woman despite stage fright.\",\n    output='Laura Mvula opened the new series of Later... with Jools Holland, performing Phenomenal Woman despite stage fright.'\n)"
+        ]
+      ],
+      "66": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Concise justification: The article centers on Jonas Gutierrez's cancer recovery and return to Newcastle United, highlighting his emotional comeback and aim to continue playing in the Premier League.\",\n    output='Jonas Gutierrez returns to Newcastle United after cancer treatment, saying he feels reborn and aims to prove he can still play in the Premier League.'\n)"
+        ]
+      ],
+      "67": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"The main development is Exeter City's 2014-15 profit, largely from the record sale of Matt Grimes to Swansea City, so the headline should reflect that profit and the transfer milestone.\",\n    output='Exeter City reports a £1.642m profit for 2014-15, boosted by the club’s record £1.75m sale of Matt Grimes to Swansea City.'\n)"
+        ]
+      ],
+      "68": [
+        [
+          3,
+          "Prediction(\n    reasoning='Produce a single, neutral lead that names the main actor and states the outcome, referencing the incident and its context (training for the World Para-athletics Championships in London).',\n    output='Abdullah Hayayei, UAE para-athlete, died after a throwing cage collapsed on his head during training for the World Para-athletics Championships in London.'\n)"
+        ]
+      ],
+      "69": [
+        [
+          3,
+          "Prediction(\n    reasoning='Craft a concise lead focusing on the central finding: the Scottish Chambers of Commerce presents a more positive 2017 outlook than GDP data, highlighting private contract growth and buoyant exporters, in a neutral, publication-style sentence.',\n    output='The Scottish Chambers of Commerce reports a more positive 2017 outlook than GDP data, with private contract growth and buoyant exporters.'\n)"
+        ]
+      ],
+      "70": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will produce a concise, neutral one-sentence summary of the key development, including the main actor and consequence.',\n    output='A public inquiry into undercover policing, chaired by Lord Justice Pitchford, opens in London to examine alleged abuses and miscarriages of justice.'\n)"
+        ]
+      ],
+      "71": [
+        [
+          5,
+          "Prediction(\n    reasoning='Main update: New Zealand defeats South Africa 20-18 to advance to the World Cup final, where they will face the winner of Australia vs Argentina.',\n    output='New Zealand defeated South Africa 20-18 to reach the World Cup final, set to meet either Australia or Argentina.'\n)"
+        ]
+      ],
+      "72": [
+        [
+          5,
+          "Prediction(\n    reasoning='Main update: National Trust uses ground-penetrating radar on the Wellington Monument to guide repairs.',\n    output='The National Trust is using ground-penetrating radar on the Wellington Monument on the Blackdown Hills to guide repairs.'\n)"
+        ]
+      ],
+      "73": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"The main update in the article is Inditex's solid six-month earnings alongside its push on online expansion and store openings, so the lead emphasizes both earnings and strategic growth.\",\n    output='Inditex reports six months to 31 July net earnings of €1.26bn as online expansion and store openings drive growth.'\n)"
+        ]
+      ],
+      "74": [
+        [
+          1,
+          "Prediction(\n    reasoning='Identify the core development: Lady Gaga’s preparation for the Super Bowl halftime show and its large audience, summarized concisely in a neutral lead.',\n    output='Lady Gaga is rehearsing for the Super Bowl halftime show before an audience of 110 million, promising a career-spanning performance.'\n)"
+        ]
+      ],
+      "75": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Craft a concise lead highlighting the BBC documentary and GMP's pledge to tackle exploitation.\",\n    output=\"BBC One's The Betrayed Girls documents the 2012 Rochdale grooming case as Greater Manchester Police pledges to tackle child exploitation.\"\n)"
+        ]
+      ],
+      "76": [
+        [
+          5,
+          "Prediction(\n    reasoning='The article’s central update is the store’s closure until further notice due to water damage from a rooftop leak, so the lead should state the closure and its cause succinctly.',\n    output='The Victoria Centre store is closed until further notice after water damage from a rooftop leak.'\n)"
+        ]
+      ],
+      "77": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"Identify the article's central point: a large influx of automated comments to the FCC concerning net neutrality, observed by researchers, with the consequence being concern about authenticity and possible manipulation of public comment signals.\",\n    output=\"Researchers say a surge of automated comments to the FCC's net neutrality proposals raises concerns about authenticity and potential manipulation.\"\n)"
+        ]
+      ],
+      "78": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"The central development is Sale Sharks forming a new 10-man board led by Cotton following Simon Orange's takeover, with a pledge to improve the fan experience and competitiveness.\",\n    output=\"Sale Sharks have formed a new 10-man board led by Cotton after Simon Orange's takeover, pledging to improve fan experience and competitiveness.\"\n)"
+        ]
+      ],
+      "79": [
+        [
+          5,
+          "Prediction(\n    reasoning='The article’s main update is Moana’s box office debut and its ranking as the second-largest Thanksgiving opening, behind Frozen; the lead should state the amount and the status succinctly.',\n    output=\"Disney's Moana debuts to an estimated $81.1m at the Thanksgiving box office, the second-largest on record behind Frozen.\"\n)"
+        ]
+      ],
+      "80": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"Provide a concise, publication-style lead that highlights Konta's advancement to the quarterfinals and her next opponent, including her world ranking.\",\n    output='Konta, world number 18, advances to the quarterfinals by defeating the American wildcard in straight sets and will face Saisai Zheng.'\n)"
+        ]
+      ],
+      "81": [
+        [
+          2,
+          "Prediction(\n    reasoning='The article centers on an attack on Linn Road resulting in two men being hospitalized, with police asking the public for information.',\n    output='Two men are in hospital with injuries after an attack on Linn Road, and police appeal for information.'\n)"
+        ]
+      ],
+      "82": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will provide a concise summary of the passage, focusing on the main investigation findings and conclusions.',\n    output='Scientists traced the Ebola outbreak to Emile’s village, Meliandou, Guinea. During a four‑week field visit in April 2014, researchers found a hollow tree about 50 meters from Emile’s home where children played; villagers said the tree burned on March 24, 2014, after which a “rain of bats” was seen. Large numbers of Mops condylurus bats were collected for food but disposed of after a government bushmeat ban. Ash from the tree contained DNA traces matching these bats, though tests of around a hundred living bats in and around Meliandou found no Ebola. Researchers note that while this bat species can carry Ebola, outbreaks are rare, and culling bats is not the solution; they urge further study of bat reservoirs and ways to coexist with wildlife since bats increasingly inhabit human settlements.'\n)"
+        ]
+      ],
+      "83": [
+        [
+          1,
+          "Prediction(\n    reasoning='One-sentence neutral summary focusing on the conditional participation: Bingham would play the World Championship if his wife goes into labor before his first-round match.',\n    output='Stuart Bingham says he will play in the World Championship if his wife goes into labor before his first-round match against Joe Perry.'\n)"
+        ]
+      ],
+      "84": [
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a concise, neutral lead that captures the main development (council decision) and its immediate consequence (duration) while preserving key entities.',\n    output='The council voted to dismantle the dangerous section of the Grade II pier due to collapse risk, with work expected to last about three weeks.'\n)"
+        ]
+      ],
+      "85": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Reasoning: Identify the article's main update and craft a neutral, 12–25 word lead mentioning the key actor (CPRE), the action (judicial review), the subject (Castle Mill development), and the date.\",\n    output=\"The Campaign to Protect Rural England will seek a judicial review of Oxford's Castle Mill development before a High Court judge on 23 October.\"\n)"
+        ]
+      ],
+      "86": [
+        [
+          4,
+          "Prediction(\n    reasoning='The lead identifies the core development: Olympus Trust near Bristol says funding cuts have left it at crisis point, framed neutrally and succinctly as a publishable lead.',\n    output='The Olympus Trust near Bristol says government funding cuts have left it at crisis point.'\n)"
+        ]
+      ],
+      "87": [
+        [
+          5,
+          "Prediction(\n    reasoning='Chosen the core development: a study warns that expanding forest reserves in Liberia and DR Congo could displace up to 1.3 million people, highlighting potential rights concerns without adding extraneous details.',\n    output='A study warns that designating forest reserves in Liberia and DR Congo could displace up to 1.3 million people.'\n)"
+        ]
+      ],
+      "88": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a single, concise lead (12–25 words) naming the main actor (West Mercia Police), the key discovery (skull and skeletal remains), the location (M54 slip road, Telford), and the ongoing status (partial road closure, investigation).',\n    output='West Mercia Police are investigating after a skull and skeletal remains were found near the M54 slip road at Telford, with the road partially closed.'\n)"
+        ]
+      ],
+      "89": [
+        [
+          4,
+          "Prediction(\n    reasoning='A concise lead should report the main development: Dusmatov defeated Martinez by unanimous decision to advance to the Olympic boxing final.',\n    output='Dusmatov defeated Martinez by unanimous decision to advance to the Olympic boxing final.'\n)"
+        ]
+      ],
+      "90": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will craft a concise, neutral lead sentence that states the central development: the UCU rejects the 1.1% pay offer and outlines autumn strikes, naming the key actor and the consequence.',\n    output='University staff unions, led by the UCU, reject a 1.1% pay offer and plan autumn strikes.'\n)"
+        ]
+      ],
+      "91": [
+        [
+          3,
+          "Prediction(\n    reasoning='I crafted a single lead sentence that states the central action by the Scottish government, naming the actors and the consequence (a review of consultation).',\n    output=\"The Scottish government has called in East Dunbartonshire Council's plan to close St Joseph's Primary and merge with St Andrew's, ordering a review of consultation.\"\n)"
+        ]
+      ],
+      "92": [
+        [
+          2,
+          "Prediction(\n    reasoning='Create a concise headline stating that Kazuyoshi Miura signs a contract extension to stay with the second-division club beyond age 49.',\n    output='Kazuyoshi Miura extends his contract to remain with the second-division club beyond his 49th birthday.'\n)"
+        ]
+      ],
+      "93": [
+        [
+          2,
+          "Prediction(\n    reasoning=\"I will produce a concise, headline-like sentence in present tense that centers on the seven deaths from shelling across the Line of Control and the ongoing protests linked to Burhan Wani's death.\",\n    output='Seven people are killed in shelling across the Line of Control as security forces confront protesters in Indian-administered Kashmir on the anniversary of Burhan Wani’s death.'\n)"
+        ]
+      ],
+      "94": [
+        [
+          5,
+          "Prediction(\n    reasoning='I distilled the piece to the central update: authorities are ready to act to maintain financial stability in a Brexit scenario, signaling preparedness and leadership by the Bank of England.',\n    output='Central banks, led by the Bank of England, are prepared to act to preserve financial stability in the event of Brexit.'\n)"
+        ]
+      ],
+      "95": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will produce a single, neutral lead sentence identifying Easter and his move to a teaching role at Wrekin College after the season.',\n    output='Sale back-row forward Easter, 33, will leave Sale after the season to take up a teaching role at Wrekin College in Shropshire.'\n)"
+        ]
+      ],
+      "96": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I identified the central development as the ongoing independent Hascas investigation into Tawel Fan ward at Glan Clwyd Hospital to determine whether care quality contributed to patients' deaths, and crafted a concise, neutral lead within 12–25 words.\",\n    output=\"An independent Hascas review into Tawel Fan ward at Glan Clwyd Hospital is examining whether care quality contributed to patients' deaths.\"\n)"
+        ]
+      ],
+      "97": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"Produce a concise lead that states the main update: the defendant was sentenced to 14 months in prison for two 'single punch' assaults, naming Declan Paul Butcher and Limavady.\",\n    output=\"Declan Paul Butcher, of Roe Park Court, was sentenced to 14 months in prison for two 'single punch' assaults in Limavady.\"\n)"
+        ]
+      ],
+      "98": [
+        [
+          5,
+          "Prediction(\n    reasoning=\"I will produce a concise, neutral lead that states the main update: Solo will miss two February matches after the coach's assessment.\",\n    output='Hope Solo will miss two upcoming U.S. matches against France and England after head coach Jill Ellis said she made a poor decision.'\n)"
+        ]
+      ],
+      "99": [
+        [
+          3,
+          "Prediction(\n    reasoning='Created a concise, publication-style lead highlighting the central development: Khan and three associates admitted the conspiracy and face sentencing on 15 April at Nottingham Crown Court.',\n    output='Omar Khan and three associates admitted conspiracy to supply cocaine at Nottingham Crown Court, and are due to be sentenced on 15 April.'\n)"
+        ]
+      ]
+    },
+    "best_idx": 4,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are given a news article or briefing text (the \"input\"). Your task is to produce a single, concise, neutral summary that mirrors the style and length of the gold targets. Specifically:\\n\\n- Output exactly one sentence (roughly 12–25 words) that captures the main development, decision, or finding reported, including the key actor and the resulting consequence or status.\\n\\n- Do not include multiple points, background details, or auxiliary information. Do not provide reasoning, justification, or commentary—only the final summary.\\n\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\\n\\n- Use tense that matches the article’s framing (present/present perfect when appropriate; past simple if the article is reporting a past event).\\n\\n- Preserve essential proper nouns (names, organizations, places) and avoid introducing new facts.\\n\\n- The output should read like a publication-style lead: objective, concise, and informative.\\n\\n- Do not include any meta-text, explanation, or additional lines beyond the single sentence.\\n\\n- The goal is to produce a summary that closely matches the gold target in style, length, and content across diverse topics (politics, sports, business, etc.).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are to generate a single-sentence target output from a given news article input, matching the gold targets’ style, length, and content: a concise, neutral, headline-like sentence that states the main development or outcome. \\nGuidelines:\\n- Output exactly one sentence, ending with a period.\\n- Use present tense and active voice where possible.\\n- Include the key entities (people, teams, organizations) involved and their role when possible.\\n- If the article contains a direct quote about the main point, include the quote and attribute it to the speaker (e.g., \"says head coach Denis Betts\").\\n- If there is no direct quote, summarize the main development plainly (e.g., \"X has done Y.\").\\n- Do not include extra background, peripheral details, or multiple points; focus on the single most important development reported.\\n- Ensure the sentence faithfully reflects the article’s core meaning and mirrors the succinct, factual style of the gold targets.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Given a news article or briefing text (the input), produce exactly one concise, publication-style lead sentence (roughly 12–25 words) that communicates the main development, decision, or finding, including the key actor (person, organization, or body) and the resulting consequence or status.\\n\\nRequirements:\\n- Output exactly one sentence with no meta-text, formatting, or extra lines.\\n- The sentence must present a neutral, objective summary of the central point, mirroring the style and length of typical gold targets.\\n- Include the principal actor and the outcome or stance resulting from the development; avoid background details, side points, or speculative language.\\n- You may include a brief direct quotation only if it succinctly encapsulates the central point; otherwise, do not include quotes.\\n- Tense should align with the article’s framing: use present/present perfect when appropriate; use past simple for clearly past events.\\n- Preserve essential proper nouns (names, organizations, places) exactly as in the input; do not introduce new facts.\\n- If the central point is a policy, decision, or action, emphasize that, not ancillary context.\\n- The output should function as a lead: clear, concise, and informative across topics (politics, business, sports, etc.).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New task instruction for the assistant:\\n\\nGoal\\nGiven a news article or briefing text (the input), produce a single, concise, neutral lead that mirrors the style and length of typical gold targets.\\n\\nOutput format\\n- Output exactly one sentence.\\n- End with a period; no meta-text, no reasoning steps, and no extra lines.\\n\\nContent and scope\\n- The sentence must capture the main development, decision, or finding reported.\\n- Include the key actor (person, organization, or entity) and the resulting consequence or status.\\n- Preserve essential proper nouns (names, organizations, places) from the input; do not introduce new facts, entities, or context.\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\\n\\nStyle and tense\\n- Write in a publication-style lead: objective, concise, informative.\\n- Use tense aligned with the article’s framing:\\n  - present or present perfect for ongoing or current status,\\n  - past simple for clearly reported past events.\\n\\nLength and focus\\n- Target roughly 12–25 words; content should reflect a single development or finding without multiple points or background detail.\\n- Do not include background information, explanations, or justifications.\\n\\nAmbiguity and nuance\\n- If the article presents conflicting views, select the central point as reported and present it neutrally.\\n- Do not embellish or infer facts beyond what is stated.\\n\\nExamples (guidance only)\\n- If the article reports a decision by an actor leading to a consequence, include both parts: Who did what, and the result.\\n- If a quote encapsulates the point, include it briefly and only if it cleanly fits the lead’s central idea.\\n\\nConsistency\\n- The output should read like a lead from a reputable publication and be directly usable as a stand-alone summary.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You will receive a news article or briefing text (the input). Your task is to output a single, concise, neutral lead-style sentence (12–25 words) that captures the article’s main development, decision, or finding, including the key actor and the resulting consequence or status.\\n\\n- Output exactly one sentence in plain text. Do not add meta-text, explanations, or lines beyond the sentence.\\n\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise and centered on the main point.\\n\\n- Use tense that matches the article’s framing: present/present perfect for ongoing or recent events; past simple for completed events. Do not mix tenses within the sentence.\\n\\n- Preserve essential proper nouns (names, organizations, places) and avoid introducing new facts or speculation beyond the article’s content.\\n\\n- The sentence should read like a publication-style lead: objective, concise, informative. No opinion, speculation, or rationale.\\n\\n- Do not list multiple points or provide background details. Focus on the single most important update the article communicates.\\n\\n- If the article outlines a sequence of events, choose the event that constitutes the article’s main update (as framed in the lede or headline).\\n\\n- Copy numerical data as stated in the article; do not reinterpret or add new figures.\\n\\n- When unsure which point is central, rely on the article’s own framing of the main development.\\n\\n- The goal is to produce a lead that mirrors the gold targets in style, length, and content across topics (politics, sport, business, etc.).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New task instruction for the assistant:\\n\\nGoal\\nGiven a news article or briefing text (the input), produce a single, concise, neutral lead that mirrors the style and length of typical gold targets.\\n\\nOutput format\\n- Output exactly one sentence.\\n- End with a period; no meta-text, no reasoning steps, and no extra lines.\\n\\nContent and scope\\n- The sentence must capture the main development, decision, or finding reported.\\n- Include the key actor (person, organization, or entity) and the resulting consequence or status.\\n- Preserve essential proper nouns (names, organizations, places) from the input; do not introduce new facts, entities, or context.\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\\n\\nStyle and tense\\n- Write in a publication-style lead: objective, concise, informative.\\n- Use tense aligned with the article’s framing:\\n  - present or present perfect for ongoing or current status,\\n  - past simple for clearly reported past events.\\n\\nLength and focus\\n- Target roughly 12–25 words; content should reflect a single development or finding without multiple points or background detail.\\n- Do not include background information, explanations, or justifications.\\n\\nAmbiguity and nuance\\n- If the article presents conflicting views, select the central point as reported and present it neutrally.\\n- Do not embellish or infer facts beyond what is stated.\\n\\nExamples (guidance only)\\n- If the article reports a decision by an actor leading to a consequence, include both parts: Who did what, and the result.\\n- If a quote encapsulates the point, include it briefly and only if it cleanly fits the lead’s central idea.\\n\\nConsistency\\n- The output should read like a lead from a reputable publication and be directly usable as a stand-alone summary.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8574995386600495
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are given a news article or briefing text (the \"input\"). Your task is to produce a single, concise, neutral summary that mirrors the style and length of the gold targets. Specifically:\\n\\n- Output exactly one sentence (roughly 12–25 words) that captures the main development, decision, or finding reported, including the key actor and the resulting consequence or status.\\n\\n- Do not include multiple points, background details, or auxiliary information. Do not provide reasoning, justification, or commentary—only the final summary.\\n\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\\n\\n- Use tense that matches the article’s framing (present/present perfect when appropriate; past simple if the article is reporting a past event).\\n\\n- Preserve essential proper nouns (names, organizations, places) and avoid introducing new facts.\\n\\n- The output should read like a publication-style lead: objective, concise, and informative.\\n\\n- Do not include any meta-text, explanation, or additional lines beyond the single sentence.\\n\\n- The goal is to produce a summary that closely matches the gold target in style, length, and content across diverse topics (politics, sports, business, etc.).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8826151996850967
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are to generate a single-sentence target output from a given news article input, matching the gold targets’ style, length, and content: a concise, neutral, headline-like sentence that states the main development or outcome. \\nGuidelines:\\n- Output exactly one sentence, ending with a period.\\n- Use present tense and active voice where possible.\\n- Include the key entities (people, teams, organizations) involved and their role when possible.\\n- If the article contains a direct quote about the main point, include the quote and attribute it to the speaker (e.g., \"says head coach Denis Betts\").\\n- If there is no direct quote, summarize the main development plainly (e.g., \"X has done Y.\").\\n- Do not include extra background, peripheral details, or multiple points; focus on the single most important development reported.\\n- Ensure the sentence faithfully reflects the article’s core meaning and mirrors the succinct, factual style of the gold targets.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8770316112041473
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Task: Given a news article or briefing text (the input), produce exactly one concise, publication-style lead sentence (roughly 12–25 words) that communicates the main development, decision, or finding, including the key actor (person, organization, or body) and the resulting consequence or status.\\n\\nRequirements:\\n- Output exactly one sentence with no meta-text, formatting, or extra lines.\\n- The sentence must present a neutral, objective summary of the central point, mirroring the style and length of typical gold targets.\\n- Include the principal actor and the outcome or stance resulting from the development; avoid background details, side points, or speculative language.\\n- You may include a brief direct quotation only if it succinctly encapsulates the central point; otherwise, do not include quotes.\\n- Tense should align with the article’s framing: use present/present perfect when appropriate; use past simple for clearly past events.\\n- Preserve essential proper nouns (names, organizations, places) exactly as in the input; do not introduce new facts.\\n- If the central point is a policy, decision, or action, emphasize that, not ancillary context.\\n- The output should function as a lead: clear, concise, and informative across topics (politics, business, sports, etc.).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8841264420747756
+      },
+      {
+        "iteration": 4,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New task instruction for the assistant:\\n\\nGoal\\nGiven a news article or briefing text (the input), produce a single, concise, neutral lead that mirrors the style and length of typical gold targets.\\n\\nOutput format\\n- Output exactly one sentence.\\n- End with a period; no meta-text, no reasoning steps, and no extra lines.\\n\\nContent and scope\\n- The sentence must capture the main development, decision, or finding reported.\\n- Include the key actor (person, organization, or entity) and the resulting consequence or status.\\n- Preserve essential proper nouns (names, organizations, places) from the input; do not introduce new facts, entities, or context.\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\\n\\nStyle and tense\\n- Write in a publication-style lead: objective, concise, informative.\\n- Use tense aligned with the article’s framing:\\n  - present or present perfect for ongoing or current status,\\n  - past simple for clearly reported past events.\\n\\nLength and focus\\n- Target roughly 12–25 words; content should reflect a single development or finding without multiple points or background detail.\\n- Do not include background information, explanations, or justifications.\\n\\nAmbiguity and nuance\\n- If the article presents conflicting views, select the central point as reported and present it neutrally.\\n- Do not embellish or infer facts beyond what is stated.\\n\\nExamples (guidance only)\\n- If the article reports a decision by an actor leading to a consequence, include both parts: Who did what, and the result.\\n- If a quote encapsulates the point, include it briefly and only if it cleanly fits the lead’s central idea.\\n\\nConsistency\\n- The output should read like a lead from a reputable publication and be directly usable as a stand-alone summary.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.88618532538414
+      },
+      {
+        "iteration": 5,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You will receive a news article or briefing text (the input). Your task is to output a single, concise, neutral lead-style sentence (12–25 words) that captures the article’s main development, decision, or finding, including the key actor and the resulting consequence or status.\\n\\n- Output exactly one sentence in plain text. Do not add meta-text, explanations, or lines beyond the sentence.\\n\\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise and centered on the main point.\\n\\n- Use tense that matches the article’s framing: present/present perfect for ongoing or recent events; past simple for completed events. Do not mix tenses within the sentence.\\n\\n- Preserve essential proper nouns (names, organizations, places) and avoid introducing new facts or speculation beyond the article’s content.\\n\\n- The sentence should read like a publication-style lead: objective, concise, informative. No opinion, speculation, or rationale.\\n\\n- Do not list multiple points or provide background details. Focus on the single most important update the article communicates.\\n\\n- If the article outlines a sequence of events, choose the event that constitutes the article’s main update (as framed in the lede or headline).\\n\\n- Copy numerical data as stated in the article; do not reinterpret or add new figures.\\n\\n- When unsure which point is central, rely on the article’s own framing of the main development.\\n\\n- The goal is to produce a lead that mirrors the gold targets in style, length, and content across topics (politics, sport, business, etc.).'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8857153326272964
+      }
+    ]
+  },
+  "final_prompt": "New task instruction for the assistant:\n\nGoal\nGiven a news article or briefing text (the input), produce a single, concise, neutral lead that mirrors the style and length of typical gold targets.\n\nOutput format\n- Output exactly one sentence.\n- End with a period; no meta-text, no reasoning steps, and no extra lines.\n\nContent and scope\n- The sentence must capture the main development, decision, or finding reported.\n- Include the key actor (person, organization, or entity) and the resulting consequence or status.\n- Preserve essential proper nouns (names, organizations, places) from the input; do not introduce new facts, entities, or context.\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\n\nStyle and tense\n- Write in a publication-style lead: objective, concise, informative.\n- Use tense aligned with the article’s framing:\n  - present or present perfect for ongoing or current status,\n  - past simple for clearly reported past events.\n\nLength and focus\n- Target roughly 12–25 words; content should reflect a single development or finding without multiple points or background detail.\n- Do not include background information, explanations, or justifications.\n\nAmbiguity and nuance\n- If the article presents conflicting views, select the central point as reported and present it neutrally.\n- Do not embellish or infer facts beyond what is stated.\n\nExamples (guidance only)\n- If the article reports a decision by an actor leading to a consequence, include both parts: Who did what, and the result.\n- If a quote encapsulates the point, include it briefly and only if it cleanly fits the lead’s central idea.\n\nConsistency\n- The output should read like a lead from a reputable publication and be directly usable as a stand-alone summary.",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "bert_score"
+}

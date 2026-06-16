@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let N be the starting number. After the green house: remaining 2N/3. Red house sale is (N/3) + 2, leaving N/3 \u2212 2. Orange house sale is half of the remaining: (1/2)(N/3 \u2212 2) = N/6 \u2212 1, so remaining after orange is (N/3 \u2212 2) \u2212 (N/6 \u2212 1) = N/6 \u2212 1. Set N/6 \u2212 1 = 5, giving N = 36.",
+    "output": "36"
+}

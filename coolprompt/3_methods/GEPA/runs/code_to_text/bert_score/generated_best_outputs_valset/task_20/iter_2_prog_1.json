@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Parse a host string into a (hostname, port) tuple.\n\nArguments:\n * host (str): The input host value. If it consists only of digits, the function returns ( \"0.0.0.0\", port ), where port is the integer value of the digits. If the string does not contain a URL scheme, a leading \"//\" is prepended to facilitate parsing. The URL is parsed and the resulting hostname and port are used, with defaults of \"0.0.0.0\" for hostname and 0 for port when not specified.\n\nReturns:\n :class:`tuple`: A 2-tuple containing the resolved hostname and port. The hostname is a :class:`str` and the port is a :class:`int`. If the input is digits-only, the hostname is \"0.0.0.0\" and the port is the integer value provided; otherwise, the hostname defaults to \"0.0.0.0\" when missing and the port defaults to 0 when missing."
+}

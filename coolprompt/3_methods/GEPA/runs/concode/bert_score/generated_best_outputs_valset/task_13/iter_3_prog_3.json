@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a minimal function with four locals named loc0..loc3 and a small sequence of deterministic assignments to mimic \"closing current scans\" in a Java-like style, matching the loc-based pattern used in the targets.",
+    "output": "```java\nvoid function ( ) {\n  long loc0 = 0L;\n  int loc1 = 0;\n  int loc2 = 0;\n  boolean loc3 = false;\n  loc0 = -1L;\n  loc1 = 1;\n  loc2 = 0;\n  loc3 = true;\n}\n```"
+}

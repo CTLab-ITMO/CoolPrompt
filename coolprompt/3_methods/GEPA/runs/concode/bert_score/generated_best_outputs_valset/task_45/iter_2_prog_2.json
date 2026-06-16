@@ -1,0 +1,4 @@
+{
+    "reasoning": "Return the first ECKey in the list that has a private key, using a stream filter on hasPrivKey.",
+    "output": "return keys.stream().filter(ECKey::hasPrivKey).findFirst().orElse(null);"
+}

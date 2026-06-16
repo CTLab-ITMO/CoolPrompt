@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will provide a concise, structured summary of the class structure and its members as described by the input, preserving field names, types, and method signatures where possible.",
+    "output": "Class: BlockMetadataManagerView\n\nFields:\n- mManagerView: BlockMetadataManagerView\n- mDir: StorageDir\n- mBlocksToMoveOutSize: long\n- mBlocksToMoveInSize: long\n- mTierView: StorageTierView\n- mBlocksToMoveIn: Set<Long>\n- mBlocksToMoveOut: Set<Long>\n\nMethods:\n- long getEvitableBytes()\n- StorageTierView getParentTierView()\n- boolean isMarkedToMoveOut()\n- void markBlockMoveIn()\n- TempBlockMeta createTempBlockMeta()\n- int getDirViewIndex()\n- long getCommittedBytes()\n- List<BlockMeta> getEvictableBlocks()\n- long getCapacityBytes()\n- long getAvailableBytes()\n- BlockStoreLocation toBlockStoreLocation()\n- void markBlockMoveOut()"
+}

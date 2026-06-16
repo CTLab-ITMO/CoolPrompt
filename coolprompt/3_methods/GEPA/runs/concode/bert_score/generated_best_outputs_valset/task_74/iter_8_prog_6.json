@@ -1,0 +1,4 @@
+{
+    "reasoning": "I cannot determine the exact target signature from the input, so I provide a safe no-argument function that follows the common pattern of implementing a small, deterministic operation using the provided methods (getAllUsers, updateUserModel, getAllTeams, updateTeamModels) and simple local variables named loc0, loc1, etc., to reflect the requested style.",
+    "output": "void function ( ) {\n  final String loc0 = \"updates/writes all specified user objects\";\n  final List<UserModel> loc1 = getAllUsers();\n  if ( loc1 != null && !loc1.isEmpty() ) {\n    updateUserModel( loc1 );\n  }\n  final List<TeamModel> loc2 = getAllTeams();\n  if ( loc2 != null && !loc2.isEmpty() ) {\n    updateTeamModels( loc2 );\n  }\n}"
+}

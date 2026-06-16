@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a Java method that sets the 'vars' field from the provided Map<String,Object> vars parameter.",
+    "output": "void setVariables(Map<String,Object> vars) {\n    this.vars = vars;\n}"
+}

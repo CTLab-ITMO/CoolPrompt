@@ -1,0 +1,4 @@
+{
+    "reasoning": "I'll implement a small, deterministic function that follows the described API: obtain a writer for DEFAULT_IMAGE_FORMAT, fetch ImageWriteParam, configure compression using the provided setters, and perform two write calls to reflect the repeated \"write\" references in the input. It uses loc0, loc1, loc2 as local variables to mirror the expected pattern.",
+    "output": "void function ( ) {\n  String loc0 = DEFAULT_IMAGE_FORMAT;\n  ImageWriter loc1 = lookupImageWriterForFormat(loc0);\n  ImageWriteParam loc2 = getImageWriteParameters(loc1);\n  setWriteCompressionMode(loc2, 0);\n  setWriteCompressionType(loc2, \"TYPE_DEFAULT\");\n  setWriteCompressionQuality(loc2, 0.85f);\n  write(loc1, loc2);\n  write(loc1);\n}"
+}

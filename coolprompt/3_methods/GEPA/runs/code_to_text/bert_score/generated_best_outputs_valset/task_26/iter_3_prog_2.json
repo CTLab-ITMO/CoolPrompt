@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-style description of the function's behavior and signature without exposing implementation details.",
+    "output": "Return and clear entries from the internal event buffer, optionally filtering by DAG IDs.\n\nArguments:\n    dag_ids (Optional[Iterable[str]]): IDs of DAGs to clear; if None, clears the entire buffer.\nReturns:\n    cleared_events (dict): Mapping of removed event entries; contains all buffered events if dag_ids is None, otherwise only those with a dag_id in dag_ids."
+}

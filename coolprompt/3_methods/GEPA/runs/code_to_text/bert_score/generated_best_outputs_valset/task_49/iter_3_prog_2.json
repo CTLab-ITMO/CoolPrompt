@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function stops a running cloud SQL proxy process if it exists, logs and clears resources including the proxy process, socket directory, downloaded proxy binary (if applicable), and generated credentials. It raises an AirflowException if the proxy was not started, and may raise OSError for OS-related errors during file removals (except for missing files, which are ignored for the downloaded proxy).",
+    "output": "Stops the cloud_sql_proxy process and cleans up its resources.\n\nReturns:\n    None: this method does not return a value.\n\nRaises:\n    AirflowException: if the sql proxy has not been started yet.\n    OSError: if removing the downloaded proxy file or credentials file fails due to an OS error other than \"No such file or directory\" (ENOENT)."
+}

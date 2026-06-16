@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will provide a concise summary that preserves the original description and lists the described members (types and names) separated by semicolons, as indicated by the input.",
+    "output": "Tries to merge all direct text and CDATA children of the given node and concatenates their value. Node stripWhitespace; Map<QName,String> getAttributes; Node normalizeWhitespace; String normalize; QName getQName; void handleWsRec"
+}

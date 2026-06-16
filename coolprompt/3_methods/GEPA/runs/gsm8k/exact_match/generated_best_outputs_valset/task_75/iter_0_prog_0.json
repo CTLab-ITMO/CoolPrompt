@@ -1,0 +1,4 @@
+{
+    "reasoning": "Top level = 16. Each lower level has twice the square footage of the level above, so the four levels from top to bottom are: 16, 32, 64, 128. The average is (16 + 32 + 64 + 128) / 4 = 240 / 4 = 60.",
+    "output": "60"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a small deterministic snippet that demonstrates inverting a matrix using cofactors, the transpose (adjugate), and determinant, including a square-check that throws if non-square. The function will use four locals named loc0 through loc3 to reflect the required pattern and include a simple assertion to validate the inverse operation.",
+    "output": "```java\nvoid function ( ) {\n    Matrix loc0 = new Matrix(new double[][] { {1.0, 0.0}, {0.0, 1.0} });\n    boolean loc1 = (loc0.getRows() == loc0.getCols());\n    if (!loc1) {\n        throw new RuntimeException(\"Matrix must be square\");\n    }\n    Matrix loc2 = loc0.cofactor();\n    Matrix loc3 = loc2.transpose().multiply(1.0 / loc0.determinant());\n    loc3 = loc0.multiply(loc3);\n    assertEquals(1.0, loc3.determinant(), 1e-9);\n}\n```"
+}

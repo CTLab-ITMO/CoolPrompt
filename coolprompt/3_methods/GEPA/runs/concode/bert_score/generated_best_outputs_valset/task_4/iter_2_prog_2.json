@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "public class Concode {\n    private int denom;\n    private int num;\n    private boolean isOne;\n\n    public int getScaled() { return 0; }\n    public boolean equals(Object obj) { return this == obj; }\n    public int getNum() { return num; }\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Return a CloudSqlProxyRunner configured for this operator.\n\nReturns:\n    A :class:`CloudSqlProxyRunner` instance configured with the current operator's SQL proxy settings.\n\nRaises:\n    :class:`AirflowException`: Raised when proxy runner is requested while use_proxy is False."
+}

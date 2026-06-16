@@ -1,0 +1,4 @@
+{
+    "reasoning": "The inherent difficulty is captured by the problem\u2019s complexity\u2014the amount of resources required to solve it, typically measured by time and space (and more broadly other resource measures).",
+    "output": "The complexity of the problem, i.e., the amount of resources (most notably time and space) required to solve it."
+}

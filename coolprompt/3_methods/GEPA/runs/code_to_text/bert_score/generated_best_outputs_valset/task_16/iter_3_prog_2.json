@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-style documentation describing the function\u2019s purpose, parameters, return value, and possible exceptions, in the requested gold-target style.",
+    "output": "Return all regex matches found in text for each pattern in patterns.\n\nArguments:\n    text (str): the input text to search.\n    patterns (Iterable[str]): a collection of regular expression patterns; each pattern is applied to text via re.findall and all matches are collected in a single list.\n\nReturns:\n    list: all matches found by re.findall for each pattern, concatenated in order. The elements may be strings when the pattern has no capturing groups, or tuples when the pattern contains capturing groups.\n\nRaises:\n    re.error: if any of the provided patterns is not a valid regular expression.\n    TypeError: if text is not a string or patterns is not an iterable of strings."
+}

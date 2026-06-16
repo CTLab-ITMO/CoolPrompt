@@ -1,0 +1,4 @@
+{
+    "reasoning": "We implement a small, deterministic Java-like function that retrieves a marshal registry from a context, creates a new one if needed, and initializes the locals described in the prompt (nextId, instances, notMarshalled, getInstanceId, iterator) using straightforward, explicit statements. We rely on the existing context variable and use fully qualified names for standard collections to avoid requiring imports.",
+    "output": "void function ( ) {\n  Object registry = context.get(\"marshalregistry\");\n  if (registry == null) {\n    registry = new Object();\n    context.put(\"marshalregistry\", registry);\n  }\n  int nextId = 0;\n  java.util.Map<Object,String> instances = new java.util.HashMap<>();\n  java.util.Map<String,Object> notMarshalled = new java.util.HashMap<>();\n  String getInstanceId = null;\n  java.util.Iterator<Object> iterator = java.util.Collections.<Object>emptyIterator();\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Dump the contents of a database table to a file-like object using COPY TO STDOUT.\n\nArguments:\n * table (str): name of the database table to dump.\n * tmp_file (file-like object): file-like object to receive the dumped data.\n\nRaises:\n * :class:`Exception`: if the COPY operation fails."
+}

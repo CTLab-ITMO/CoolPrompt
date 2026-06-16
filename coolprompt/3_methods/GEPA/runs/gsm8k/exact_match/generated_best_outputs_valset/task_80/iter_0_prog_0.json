@@ -1,0 +1,4 @@
+{
+    "reasoning": "Each girl gets 1/6 of 24 liters = 4 liters. Two girls: 2 \u00d7 4 = 8 liters. Boy takes 6 liters. Total distributed: 8 + 6 = 14 liters. Remaining: 24 \u2212 14 = 10 liters.",
+    "output": "10 liters"
+}

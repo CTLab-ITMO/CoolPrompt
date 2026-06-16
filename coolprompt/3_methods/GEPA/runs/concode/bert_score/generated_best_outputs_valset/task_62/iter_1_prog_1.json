@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input lists a series of test names related to parsing and formatting times. I generate a compact, deterministic Java-like function that exercises a TimeIntervalParser.parse call on two time strings (one with decimals and one without) and asserts the expected hour/minute/second values, using the loc0/loc1/loc2 naming pattern typical for these targets. This mirrors a minimal parse-and-assert pattern found in the described tests.",
+    "output": "void function ( ) {\n  String loc0 = \"12:34:56.7\";\n  Long[] loc1 = TimeIntervalParser.parse(loc0);\n  assertEquals(12L, loc1[0].longValue());\n  assertEquals(34L, loc1[1].longValue());\n  assertEquals(56L, loc1[2].longValue());\n\n  Long[] loc2 = TimeIntervalParser.parse(\"12:34:56\");\n  assertEquals(12L, loc2[0].longValue());\n  assertEquals(34L, loc2[1].longValue());\n  assertEquals(56L, loc2[2].longValue());\n}"
+}

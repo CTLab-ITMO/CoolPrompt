@@ -1,0 +1,4 @@
+{
+    "reasoning": "Documentation block for the sprint function.",
+    "output": "Colorize text with ANSI escape codes when supported.\n\nArguments:\n * text (str): The text to potentially colorize.\n * colors (tuple): A variadic sequence of color codes to apply when ANSI formatting is enabled. Each code is converted to string and joined with ';' to form the ANSI escape sequence. If none are provided or ANSI coloring is not enabled (IS_ANSI_TERMINAL is falsy), the text is returned unchanged.\n\nReturns:\n * :class:`str`: The formatted string when ANSI coloring is applied; otherwise the original text."
+}

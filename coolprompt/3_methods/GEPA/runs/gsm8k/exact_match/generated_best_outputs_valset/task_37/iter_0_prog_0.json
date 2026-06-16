@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let s be the number of lego sets sold. Revenue from selling s sets is 15s. He spent 160 on 8 games and had 5 left, so total revenue is 160 + 5 = 165. Solve 15s = 165 \u2192 s = 11. Remaining sets = 13 \u2212 11 = 2.",
+    "output": "2"
+}

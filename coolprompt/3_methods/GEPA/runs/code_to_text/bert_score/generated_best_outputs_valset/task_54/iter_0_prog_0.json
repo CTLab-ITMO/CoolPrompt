@@ -1,0 +1,4 @@
+{
+    "reasoning": "A concise description of the function's behavior: it checks whether proxies are enabled; if not, it raises an AirflowException. If proxies are enabled, it constructs and returns a CloudSqlProxyRunner configured with the provided attributes (path_prefix, instance_specification, project_id, sql_proxy_version, sql_proxy_binary_path).",
+    "output": "The function get_sqlproxy_runner returns a CloudSqlProxyRunner when use_proxy is True; otherwise it raises AirflowException. It configures the runner with:\n- path_prefix from sql_proxy_unique_path\n- instance_specification from _get_sqlproxy_instance_specification()\n- project_id\n- sql_proxy_version\n- sql_proxy_binary_path"
+}

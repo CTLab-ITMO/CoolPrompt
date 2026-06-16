@@ -1,0 +1,4 @@
+{
+    "reasoning": "N/A",
+    "output": "Download all topics and parts of a Wanmen course from the provided JSON API content.\n\nArguments:\n * json_api_content (list): The JSON API content for a course, as a list with at least one element containing a 'Topics' key, whose value is a list of topics, each containing a 'Parts' list.\n * output_dir (str): Directory to save downloaded content. If not set (``'.'``, default), the current working directory is used.\n * merge (bool): Whether to merge downloaded parts into a single file per topic/part. If not set (``True``, default), parts are merged; otherwise, they remain separate.\n * info_only (bool): If True, only display information about the files that would be downloaded without performing downloads; default is ``False``.\n * kwargs (dict): Additional keyword arguments forwarded to wanmen_download_by_course_topic_part."
+}

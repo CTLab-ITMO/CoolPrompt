@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function should reflect a deterministic, minimal sequence that mimics registering a generator by interacting with the singleton GeneratorManager. It obtains the instance, reads the current language and the internal generators map, fetches the existing generator for that language, and then re-inserts it into the map to simulate a replacement operation without introducing new classes or literals.",
+    "output": "void function ( ) {\n  GeneratorManager loc0 = GeneratorManager.getInstance ( );\n  Language loc1 = loc0.getCurrLanguage ( );\n  Map<Language,CodeGenerator> loc2 = loc0.getGenerators ( );\n  CodeGenerator loc3 = loc2.get ( loc1 );\n  loc2.put ( loc1 , loc3 );\n}"
+}

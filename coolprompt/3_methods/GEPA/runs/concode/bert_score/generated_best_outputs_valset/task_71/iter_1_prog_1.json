@@ -1,0 +1,4 @@
+{
+    "reasoning": "I implemented a small deterministic function that simulates adding a recipient to the required recipients list by using loc0 through loc3 as local variables, uses the getter/setter pattern implied by the input, and demonstrates a simple parse-like flow by handling a non-null list and extending it with a new value.",
+    "output": "void function ( ) {\n    java.util.List<String> loc0 = new java.util.ArrayList<>();\n    loc0.add(\"recipient1\");\n    setSelectedRecipients(loc0);\n\n    String loc1 = \"srini_string\";\n\n    java.util.List<String> loc2 = getSelectedRecipients();\n    if (loc2 == null) {\n        loc2 = new java.util.ArrayList<>();\n    }\n    loc2.add(loc1);\n    setSelectedRecipients(loc2);\n\n    java.util.List<String> loc3 = new java.util.ArrayList<>(loc2);\n    setSelectedRecipients(loc3);\n}"
+}

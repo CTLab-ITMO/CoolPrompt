@@ -1,0 +1,4 @@
+{
+    "reasoning": "A self-contained Java-like function that logs a message prepended by a filter name and simulates handling of a throwable, while declaring placeholders for CLASSPATH_PREFIX and resource-related locals to reflect the described DoFilter/init/destroy pattern without external dependencies.",
+    "output": "``` \nvoid function ( ) {\n    String loc0 = \"genericservlet\";\n    Throwable loc1 = new Throwable(\"log\");\n    String loc2 = \" #log string , throwable\";\n    System.out.println(loc0 + loc2);\n    if (loc1 != null) {\n        System.err.println(loc0 + \" \" + loc1.getMessage());\n    }\n    String CLASSPATH_PREFIX = \"CLASSPATH_PREFIX\";\n    java.net.URL findResource = null;\n    String loadResource = null;\n    long loc3 = 0L;\n}\n```"
+}

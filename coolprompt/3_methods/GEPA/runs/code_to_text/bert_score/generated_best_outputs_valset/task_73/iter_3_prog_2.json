@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise doc-style description of get_conn: it creates a requests.Session, configures it from a stored HTTP connection (base URL, port, auth, and any extra headers), merges optional headers, and returns the configured session.",
+    "output": "One-line summary:\nCreate and return a configured requests.Session from the stored HTTP connection, applying base URL, authentication, and extra headers.\n\nArguments:\n    headers (dict): Optional headers to update the session with.\n\nReturns:\n    session (requests.Session): The configured HTTP session, ready for making requests."
+}

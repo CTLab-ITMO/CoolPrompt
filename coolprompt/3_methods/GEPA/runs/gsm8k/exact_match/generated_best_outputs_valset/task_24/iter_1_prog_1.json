@@ -1,0 +1,4 @@
+{
+    "reasoning": "Original price = sale price / (1 - discount) = 19.50 / 0.75 = 26.",
+    "output": "26"
+}

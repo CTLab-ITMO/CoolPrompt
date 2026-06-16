@@ -1,0 +1,4 @@
+{
+    "reasoning": "Identify that provide_session is a decorator that ensures a 'session' argument is provided to the wrapped function, by injecting one via create_session when missing. Produce a one-line summary and a docstring-like block with Arguments and Returns sections.",
+    "output": "Inject a session into the wrapped function if not provided.\n\nArguments:\n    func (Callable): the function to wrap; the decorator returns a wrapper that calls this function, injecting a ``session`` argument when it is not supplied by the caller.\n\nReturns:\n    wrapper (Callable): a function that, when invoked, ensures a ``session`` is available by using the provided session or creating one via ``create_session``."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Reserve a free TCP port and store references on the instance.\n\nArguments:\n * self (object): The instance on which the method operates.\n\nRaises:\n * :class:`OSError`: If socket creation, binding, or retrieving the port fails due to an OS error."
+}

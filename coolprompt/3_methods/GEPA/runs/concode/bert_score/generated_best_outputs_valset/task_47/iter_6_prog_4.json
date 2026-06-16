@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a simple setter for the maximumKeySize field, following the naming and formatting conventions inferred from the input tokens.",
+    "output": "```java\nvoid setMaximumKeySize ( final long maximumKeySize ) { this.maximumKeySize = maximumKeySize; }\n```"
+}

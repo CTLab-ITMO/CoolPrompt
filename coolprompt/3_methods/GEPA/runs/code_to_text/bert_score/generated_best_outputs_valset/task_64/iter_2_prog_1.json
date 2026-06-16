@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will create a concise docstring for heartbeat describing its behavior, including task progress calculation, condition for exiting, and possible SystemExit.",
+    "output": "Check task progress, print statistics, pause DAGs, and exit when all tasks are processed or the runtime limit is reached.\n\nThis method gathers the set of successful TaskInstances for DAGs in DAG_IDS, computes the total number of task instances across the relevant DAGs, and compares these counts. If all tasks have completed or the elapsed time since start_date exceeds MAX_RUNTIME_SECS, it logs an informational message, prints stats, pauses the DAGs, and terminates execution.\n\nRaises:\n * :class:`SystemExit`: Raised to terminate the process when all tasks have been processed or when the timeout is reached."
+}

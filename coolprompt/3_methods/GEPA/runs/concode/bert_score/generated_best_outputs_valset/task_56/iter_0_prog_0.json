@@ -1,0 +1,4 @@
+{
+    "reasoning": "The user asks for the method that returns the node's payload. Given the field mPayload of type T, implement a public accessor getPayload() that returns mPayload.",
+    "output": "public T getPayload() {\n    return mPayload;\n}"
+}

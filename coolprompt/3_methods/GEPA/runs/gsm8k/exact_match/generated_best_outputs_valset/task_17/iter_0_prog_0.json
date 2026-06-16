@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute weekly earnings: teacher = 35 hours * $20 = $700; coach = 15 hours * $30 = $450; total per week = $1,150. Over 50 weeks: $1,150 * 50 = $57,500.",
+    "output": "$57,500"
+}

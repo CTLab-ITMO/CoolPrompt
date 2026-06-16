@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total cars originally: 30. 5 exit, so 25 remain to drive through the jam. 20 drive through in the remaining 15 minutes, leaving 25 - 20 = 5 cars that drove through in the first 15 minutes.",
+    "output": "5"
+}

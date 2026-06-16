@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let Harald = h. Marilyn = 10h. Combined copies: h + 10h = 11h = 88,000. Solve for h: h = 88,000 / 11 = 8,000.",
+    "output": "8000"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function delete_document validates that a document_id is provided, then constructs a document link using the possibly overridden database/collection names and calls DeleteItem on the connection. A concise, robust rewrite preserves behavior, adds a clarifying docstring, and ensures local variables are computed before the call.",
+    "output": "def delete_document(self, document_id, database_name=None, collection_name=None):\n    \"\"\"\n    Delete a document by its id from the specified database/collection.\n\n    Raises:\n        AirflowBadRequest: If no document_id is provided.\n    \"\"\"\n    if document_id is None:\n        raise AirflowBadRequest(\"Cannot delete a document without an id\")\n\n    db_name = self.__get_database_name(database_name)\n    coll_name = self.__get_collection_name(collection_name)\n\n    self.get_conn().DeleteItem(\n        get_document_link(db_name, coll_name, document_id)\n    )"
+}

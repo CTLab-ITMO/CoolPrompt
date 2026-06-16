@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes setting the value of the parametersMetaData property of type ParametersMetaData, along with related getters/setters. The appropriate single, deterministic Java-like function is a standard setter:\nvoid setParametersMetaData ( final ParametersMetaData parametersMetaData ) { this.parametersMetaData = parametersMetaData; }",
+    "output": "```java\nvoid setParametersMetaData ( final ParametersMetaData parametersMetaData ) { this.parametersMetaData = parametersMetaData; }\n```"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let Raymond = 40. Half of Raymond's jewels = 20. Aaron has 5 more than that: 20 + 5 = 25. Siobhan has 2 fewer than Aaron: 25 \u2212 2 = 23.",
+    "output": "23"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "We identify and extract the explicit task directive from the input: \"destroy the instrumentation service.\" The rest appears to be a metadata/field list and separators that don't alter the action. Therefore the target output is simply that instruction.",
+    "output": "destroy the instrumentation service."
+}

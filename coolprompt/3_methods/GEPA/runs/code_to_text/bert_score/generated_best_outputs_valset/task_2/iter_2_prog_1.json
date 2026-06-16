@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Download a video from Sina given its URL.\n\nArguments:\n * url (str): The page URL or video URL to download from.\n * output_dir (str): Directory to save downloaded files. Defaults to ``'.'``.\n * merge (bool): Whether to merge downloaded video segments into a single file. Defaults to ``True``.\n * info_only (bool): If True, only retrieve information about the video without downloading. Defaults to ``False``.\n * kwargs (dict): Additional keyword arguments forwarded to helper download functions."
+}

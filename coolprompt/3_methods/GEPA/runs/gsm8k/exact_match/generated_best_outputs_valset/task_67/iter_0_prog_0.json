@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let diamonds D = 175. Rubies R = D - 35 = 140. Emeralds E = 2R = 280. Total gems T = D + R + E = 175 + 140 + 280 = 595.",
+    "output": "595"
+}

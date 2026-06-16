@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input is a list of three words. In absence of a specified transformation, a reasonable default is to concatenate the elements in their given order to form a simple phrase: \"look watch window\".",
+    "output": "look watch window"
+}

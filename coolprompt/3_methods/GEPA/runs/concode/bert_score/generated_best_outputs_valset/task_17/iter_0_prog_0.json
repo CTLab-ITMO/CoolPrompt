@@ -1,0 +1,4 @@
+{
+    "reasoning": "Interpret input as three API signatures:\n- enable/disable gps -> void enableGPS(boolean enabled)\n- Context context with reboot -> void reboot(Context context)\n- boolean getGPS -> boolean getGPS()\nProvide the three method signatures, one per line.",
+    "output": "void enableGPS(boolean enabled);\nvoid reboot(Context context);\nboolean getGPS();"
+}

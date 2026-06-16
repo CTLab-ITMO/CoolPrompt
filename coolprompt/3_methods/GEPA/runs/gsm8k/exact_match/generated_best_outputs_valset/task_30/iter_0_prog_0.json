@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let Darrell = 7x and Allen = 11x. Their total age: 7x + 11x = 18x = 162, so x = 9. Allen's current age = 11x = 99. Ten years from now: 99 + 10 = 109.",
+    "output": "109"
+}

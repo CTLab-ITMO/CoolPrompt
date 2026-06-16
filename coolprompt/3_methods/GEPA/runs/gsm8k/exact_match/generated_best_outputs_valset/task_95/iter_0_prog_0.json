@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total students = 200. Boys = (2/5)*200 = 80, so girls = 200 - 80 = 120. Girls in girl scout = (2/3)*120 = 80. Therefore, girls not in girl scout = 120 - 80 = 40.",
+    "output": "40"
+}

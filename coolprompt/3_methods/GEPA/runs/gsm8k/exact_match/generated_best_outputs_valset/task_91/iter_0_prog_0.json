@@ -1,0 +1,4 @@
+{
+    "reasoning": "Cindy = 4. Marcia = Cindy + 2 = 6. Jan = 3 \u00d7 Marcia = 18. Total = 4 + 6 + 18 = 28.",
+    "output": "28"
+}

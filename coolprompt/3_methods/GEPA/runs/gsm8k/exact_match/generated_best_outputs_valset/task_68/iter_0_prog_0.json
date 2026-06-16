@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let number of girls = 60. Boys = 2 * 60 = 120. Total students = 60 + 120 = 180. With 5 students per teacher, teachers = 180 \u00f7 5 = 36.",
+    "output": "36"
+}

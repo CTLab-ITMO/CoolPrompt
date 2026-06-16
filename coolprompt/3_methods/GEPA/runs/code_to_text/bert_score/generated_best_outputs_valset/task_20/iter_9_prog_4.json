@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-like block describing the function's behavior, including a one-line imperative summary and an Arguments/Returns section reflecting the actual signature and behavior. No code will be included.",
+    "output": "Parse a host specification into a (hostname, port) pair.\nArguments:\n    host (str): host specification to parse. If a purely numeric string is provided, it is interpreted as a port and the hostname defaults to '0.0.0.0'. Otherwise, the string is parsed as a URL or network location; a missing scheme is treated by prepending '//', and the resulting hostname defaults to '0.0.0.0' if absent and the port defaults to 0 if absent.\nReturns:\n    tuple[str, int]: a pair consisting of the resolved hostname and port number."
+}

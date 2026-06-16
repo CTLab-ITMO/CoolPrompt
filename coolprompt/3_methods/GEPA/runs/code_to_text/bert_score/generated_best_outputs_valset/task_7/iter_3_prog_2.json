@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-style description of the function's behavior, focusing on its purpose, return value, and any notable internal logic, without including any code.",
+    "output": "Detects the host operating system and returns a concise label string.\n\nReturns:\n    os (str): the detected operating system label. Possible values include 'unknown', 'cygwin', 'mac', 'linux', 'wsl', 'windows', or 'bsd'. When running on Linux, 'wsl' may be returned if /proc/version contains the string 'microsoft'."
+}

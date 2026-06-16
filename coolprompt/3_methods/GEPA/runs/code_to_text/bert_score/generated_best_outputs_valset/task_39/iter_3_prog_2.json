@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise, docstring-style description of the function's behavior, including its parameters, return value, and possible exception.",
+    "output": "Get an instance by name from the configured project via the API connection.\n\nArguments:\n    instance (str): name or identifier of the instance to fetch.\n    project_id (str): optional project identifier; if omitted, the default project is used.\n\nReturns:\n    dict: the instance resource retrieved from the API.\n\nRaises:\n    Exception: if the underlying API request fails or the connection is unavailable."
+}

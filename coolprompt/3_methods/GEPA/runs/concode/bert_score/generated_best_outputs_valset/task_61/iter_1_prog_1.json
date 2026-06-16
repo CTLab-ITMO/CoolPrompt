@@ -1,0 +1,4 @@
+{
+    "reasoning": "A minimal deterministic function is produced, declaring loc0/loc1 as long, loc2 as String, loc3 as a List of RegPCLTestResultDetailsEntity, and performing simple assignments to reflect the described class fields without external dependencies.",
+    "output": "```java\nvoid function ( ) {\n    long loc0 = 0L;\n    long loc1 = 0L;\n    String loc2 = \"\";\n    java.util.List<RegPCLTestResultDetailsEntity> loc3 = new java.util.ArrayList<RegPCLTestResultDetailsEntity>();\n    loc0 = 123456789L;\n    loc1 = 987654321L;\n    loc2 = \"initialized\";\n    loc3.add(null);\n}\n```"
+}

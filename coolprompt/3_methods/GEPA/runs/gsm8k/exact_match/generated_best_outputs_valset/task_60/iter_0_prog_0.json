@@ -1,0 +1,4 @@
+{
+    "reasoning": "Assuming the categories are disjoint: 20% of 25 is 5 unripe; plus 1 bad and 2 sour gives 1 + 5 + 2 = 8 non-good; hence good oranges = 25 - 8 = 17.",
+    "output": "17"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a convenience method that interacts with an EL evaluator context, involving creating a variables map, setting variables, resolving and adding a function, obtaining the current evaluator, retrieving a variable, and evaluating within the current context. I implemented a compact, deterministic sequence using four locals named loc0 through loc3 to reflect this flow: create and populate a Map for variables, call setVariables, resolve and add a function, fetch the current ELEvaluator, read a variable, and perform an evaluate call with the evaluator, context, and retrieved variable.",
+    "output": "void function ( ) {\n  Map<String,Object> loc0 = new HashMap<String,Object>();\n  loc0.put(\"alpha\", 42);\n  setVariables(loc0);\n  Method loc1 = resolveFunction(\"alpha\");\n  addFunction(loc1);\n  ELEvaluator loc2 = getCurrent();\n  Object loc3 = getVariable(\"alpha\");\n  evaluate(loc2, getContext(), loc3);\n}"
+}

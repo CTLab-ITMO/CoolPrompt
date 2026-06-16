@@ -1,0 +1,4 @@
+{
+    "reasoning": "Let Monday = 5 articles.\nTuesday = Monday + (2/5)*Monday = 5 + 2 = 7 articles.\nWednesday = 2 * Tuesday = 14 articles.\nTotal articles = 5 + 7 + 14 = 26.\nEach article takes 4 hours, so total hours = 26 * 4 = 104 hours.",
+    "output": "104 hours"
+}

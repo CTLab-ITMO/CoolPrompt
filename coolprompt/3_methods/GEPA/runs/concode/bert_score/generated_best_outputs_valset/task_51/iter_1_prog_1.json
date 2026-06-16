@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a compact Java-like function that demonstrates setting an action view on a MenuItem and querying a few properties to resemble typical Android UI code patterns, using loc0/loc1/loc2/loc3 variable names and fully qualified android types to avoid imports.",
+    "output": "void function ( ) {\n  android.view.MenuItem mMenuItem = null;\n  android.view.View loc0 = null;\n  mMenuItem.setActionView(loc0);\n  boolean hasSubMenu = mMenuItem.hasSubMenu();\n  android.view.View loc1 = mMenuItem.getActionView();\n  mMenuItem.setVisible(true);\n  CharSequence titleCondensed = mMenuItem.getTitleCondensed();\n  boolean isEnabled = mMenuItem.isEnabled();\n  int order = mMenuItem.getOrder();\n  android.view.View loc2 = mMenuItem.getActionView();\n  mMenuItem.setActionView(null);\n  android.view.View loc3 = mMenuItem.getActionView();\n}"
+}

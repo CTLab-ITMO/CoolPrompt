@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input lists a set of test method names related to time parsing/formatting, suggesting a small, deterministic round-trip test. I implement a single function that demonstrates parsing a time string into a TimeIntervalParser and formatting it back to a date string, asserting the equality to reflect the round-trip concept, while using loc0/loc1/loc2 as locals and a straightforward assertion pattern.",
+    "output": "void testEquals ( ) {\n    final String loc0 = \"12:34:56.7\";\n    final TimeIntervalParser loc1 = new TimeIntervalParser( loc0 );\n    final String loc2 = loc1.toDate();\n    assertEquals( loc0, loc2 );\n}"
+}

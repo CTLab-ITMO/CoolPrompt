@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description of the function, detailing its inputs, behavior (create database if not existing), return value, and exception raises.",
+    "output": "Create a database if it does not already exist.\n\nArguments:\n    database_name (str): Name of the database to create. Must not be None; used to query existing databases and to create a new one if absent.\n\nReturns:\n    None: The function does not return a value.\n\nRaises:\n    AirflowBadRequest: If database_name is None."
+}

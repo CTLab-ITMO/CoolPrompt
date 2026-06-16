@@ -1,0 +1,4 @@
+{
+    "reasoning": "Initial monthly salary = 600. The policy increase = 10% of initial salary = 0.10 \u00d7 600 = 60 per year. After 3 more years, total raise = 3 \u00d7 60 = 180. New monthly salary = 600 + 180 = 780. Annual salary = 780 \u00d7 12 = 9360.",
+    "output": "9360"
+}

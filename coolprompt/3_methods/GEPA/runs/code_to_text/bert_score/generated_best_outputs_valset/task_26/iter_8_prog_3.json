@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-like description of the function's behavior, including a one-line imperative summary, the Arguments and Returns sections with appropriate type references, and clarify behavior for both when dag_ids is None and when it is provided. I will not modify the code and will mirror the exact formatting/style requested.",
+    "output": "\"\"\"\nReturn event buffers and, if dag_ids is provided, remove and return only those for the given dag_ids; otherwise clear and return all buffers.\n\nArguments:\n    dag_ids (iterable of str, optional): A collection of dag_id values to filter which events are removed and returned. If None (default), all events are returned and the buffer is cleared. The keys in the buffer are tuples whose first element is the dag_id.\n\nReturns:\n    cleared_events (dict): A mapping of the removed events, with the same keys as the internal event buffer.\n\"\"\""
+}

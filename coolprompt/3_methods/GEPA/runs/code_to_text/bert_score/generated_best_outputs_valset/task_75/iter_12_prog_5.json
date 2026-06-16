@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-like description of the function's behavior, including a one-line summary and sections for Arguments, Returns, and Raises that reflect how the function processes the response and raises AirflowException on HTTP errors.",
+    "output": "\"\"\"\nCheck the HTTP response for errors and raise AirflowException on failure.\n\nArguments:\n    response (:class:`requests.Response`): The HTTP response to validate.\n\nReturns:\n    None: this function does not return a value.\n\nRaises:\n    AirflowException: raised when the response indicates an HTTP error (the call to ``response.raise_for_status()`` raises an ``HTTPError``),\n        typically including the status code and reason.\n\"\"\""
+}

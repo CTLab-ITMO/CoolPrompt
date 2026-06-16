@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total eggs = 16. Eggs used for breakfast = 3; eggs used for muffins = 4; remaining eggs = 16 - (3 + 4) = 9. Price = $2 per egg, so earnings = 9 * 2 = $18.",
+    "output": "18"
+}

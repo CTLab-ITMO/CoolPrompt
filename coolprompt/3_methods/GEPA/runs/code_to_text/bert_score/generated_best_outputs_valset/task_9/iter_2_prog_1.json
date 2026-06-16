@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Extract CKPlayer information from an XML string.\n\nArguments:\n * ckinfo (str): XML string containing CKPlayer data.\n\nReturns:\n dict: A dictionary containing the extracted video information with keys 'title' (str), 'links' (list of str), 'size' (int), and 'flashvars' (str) populated from the CKPlayer XML."
+}

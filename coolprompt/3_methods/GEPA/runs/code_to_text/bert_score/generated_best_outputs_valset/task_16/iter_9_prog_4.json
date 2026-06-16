@@ -1,0 +1,4 @@
+{
+    "reasoning": "Produce a concise, docstring-like block describing the function\u2019s behavior: inputs, returns, and possible exceptions, reflecting its signature and runtime behavior.",
+    "output": "Return all matches of the provided patterns found in the input text.\n\nArguments:\n    text (str): the input text to search.\n    patterns (Iterable[str]): an iterable of regular expression patterns to apply to the text.\n\nReturns:\n    list: the concatenated list of all matches found by applying each pattern to the text.\n\nRaises:\n    re.error: if any of the patterns is an invalid regular expression."
+}

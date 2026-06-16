@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise one-line imperative summary of the function, followed by a docstring-style block detailing the single parameter, the return value, and the exception raised, accurately reflecting the function\u2019s behavior.",
+    "output": "Raise an AirflowException if the HTTP response indicates an error after attempting to raise_for_status.\n\nArguments:\n    response (``requests.Response``): HTTP response object to validate and inspect for errors.\n\nReturns:\n    None: the function does not return a value.\n\nRaises:\n    AirflowException: when an HTTP error is detected after raise_for_status; includes the status code and reason."
+}

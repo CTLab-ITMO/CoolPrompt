@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a compact, deterministic Java-like function that builds a parameters map, creates a query string, forms an Oma link, then applies path removal and HTTP prefixing. It will reference the tokens provided (OMA_REDIRECT_LINK, SITE_PARAM, removePath, conditionallyPrependHttp, createOmaLink, createQueryString, getParameterMap, getKeyList, getDelimiter) in a minimal, coherent sequence using loc0..loc3 as the designated locals.",
+    "output": "void function ( ) {\n  String loc0 = OMA_REDIRECT_LINK;\n  HashMap<String,String> loc1 = getParameterMap();\n  ArrayList<String> loc2 = getKeyList();\n  String loc3 = createQueryString(loc1);\n  loc2.toString();\n  loc0 = createOmaLink(loc3);\n  loc0 = removePath(loc0);\n  loc0 = conditionallyPrependHttp(loc0);\n  loc1.put(SITE_PARAM, \"\");\n}"
+}

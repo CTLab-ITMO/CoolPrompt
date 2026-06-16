@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a small deterministic Java-like function that models inverting a 2x2 matrix as described: it defines a 2x2 matrix, computes determinant, checks for singularity, computes the inverse using the standard formula, and stores the result in loc2/loc3 following the loc0..loc3 naming. This reflects the inverse-of-a-matrix concept and uses a consistent loc-based variable naming pattern.",
+    "output": "void function ( ) {\n    double[][] loc0 = { {1, 2}, {3, 4} };\n    double loc1 = loc0[0][0] * loc0[1][1] - loc0[0][1] * loc0[1][0];\n    if (loc1 == 0.0) {\n        throw new IllegalArgumentException(\"Matrix is singular\");\n    }\n    double[][] loc2 = new double[2][2];\n    loc2[0][0] = loc0[1][1] / loc1;\n    loc2[0][1] = -loc0[0][1] / loc1;\n    loc2[1][0] = -loc0[1][0] / loc1;\n    loc2[1][1] = loc0[0][0] / loc1;\n    double[][] loc3 = loc2;\n}"
+}

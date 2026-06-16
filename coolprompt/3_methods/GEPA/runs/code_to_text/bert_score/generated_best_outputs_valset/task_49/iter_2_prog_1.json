@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "\"\"\"Stop the Cloud SQL proxy and remove associated artifacts.\n\nRaises:\n * :class:`AirflowException`: Raised if the sql proxy has not been started yet.\n * :class:`OSError`: Raised when removing downloaded proxy or credentials file fails for reasons other than the file not existing.\n\"\"\""
+}

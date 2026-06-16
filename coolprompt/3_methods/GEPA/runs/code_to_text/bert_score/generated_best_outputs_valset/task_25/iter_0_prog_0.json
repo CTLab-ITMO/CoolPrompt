@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function currently returns True when the condition is met, but it has no return value otherwise, so it would return None. To provide a proper boolean result, add a return False when the condition is not met (or simplify to a single expression). I'll add an explicit return False at the end to preserve the existing structure.",
+    "output": "def has_task(self, task_instance):\n        \"\"\"\n        \n        \"\"\"\n        if task_instance.key in self.queued_tasks or task_instance.key in self.running:\n            return True\n        return False"
+}

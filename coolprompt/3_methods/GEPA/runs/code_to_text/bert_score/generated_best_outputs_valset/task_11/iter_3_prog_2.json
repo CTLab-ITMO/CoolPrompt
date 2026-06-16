@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-style description of the function's inputs, outputs, and potential exceptions without modifying code.",
+    "output": "Extracts the real M3U URL, total segment sizes, and absolute segment URLs from a MGTV URL.\n\nArguments:\n    url (str): The MGTV URL to process and resolve to the real M3U URL.\n\nReturns:\n    tuple[str, int, list[str]]: The real M3U URL, the cumulative size of all segments, and the list of absolute segment URLs.\n\nRaises:\n    KeyError: If required keys are missing in the parsed content (e.g., 'info').\n    ValueError: If a segment size cannot be parsed as an integer.\n    TypeError: If input types are not as expected or intermediate data is malformed."
+}

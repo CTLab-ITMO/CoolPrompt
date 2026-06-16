@@ -1,0 +1,1815 @@
+{
+  "dataset": "tweeteval",
+  "metric": "f1",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "f1"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.0018831120504398543,
+      0.8,
+      0.61,
+      0.79
+    ],
+    "val_subscores": [
+      {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0,
+        "4": 0.042553191489361694,
+        "5": 0.027027027027027025,
+        "6": 0.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 0.0,
+        "10": 0.0,
+        "11": 0.0,
+        "12": 0.0,
+        "13": 0.0,
+        "14": 0.0,
+        "15": 0.0,
+        "16": 0.0,
+        "17": 0.0,
+        "18": 0.0,
+        "19": 0.0,
+        "20": 0.0,
+        "21": 0.0,
+        "22": 0.0,
+        "23": 0.0,
+        "24": 0.1,
+        "25": 0.0,
+        "26": 0.0,
+        "27": 0.0,
+        "28": 0.0,
+        "29": 0.0,
+        "30": 0.0,
+        "31": 0.0,
+        "32": 0.0,
+        "33": 0.0,
+        "34": 0.0,
+        "35": 0.0,
+        "36": 0.0,
+        "37": 0.0,
+        "38": 0.0,
+        "39": 0.0,
+        "40": 0.0,
+        "41": 0.0,
+        "42": 0.0,
+        "43": 0.0,
+        "44": 0.0,
+        "45": 0.0,
+        "46": 0.0,
+        "47": 0.0,
+        "48": 0.0,
+        "49": 0.0,
+        "50": 0.0,
+        "51": 0.008474576271186442,
+        "52": 0.0,
+        "53": 0.0,
+        "54": 0.0,
+        "55": 0.0,
+        "56": 0.0,
+        "57": 0.0,
+        "58": 0.0,
+        "59": 0.0,
+        "60": 0.0,
+        "61": 0.0,
+        "62": 0.0,
+        "63": 0.0,
+        "64": 0.0,
+        "65": 0.0,
+        "66": 0.0,
+        "67": 0.0,
+        "68": 0.0,
+        "69": 0.0,
+        "70": 0.0,
+        "71": 0.0,
+        "72": 0.0,
+        "73": 0.0,
+        "74": 0.0,
+        "75": 0.0,
+        "76": 0.0,
+        "77": 0.0,
+        "78": 0.0,
+        "79": 0.0,
+        "80": 0.0,
+        "81": 0.0,
+        "82": 0.0,
+        "83": 0.0,
+        "84": 0.0,
+        "85": 0.0,
+        "86": 0.0,
+        "87": 0.0,
+        "88": 0.0,
+        "89": 0.0,
+        "90": 0.010256410256410256,
+        "91": 0.0,
+        "92": 0.0,
+        "93": 0.0,
+        "94": 0.0,
+        "95": 0.0,
+        "96": 0.0,
+        "97": 0.0,
+        "98": 0.0,
+        "99": 0.0
+      },
+      {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 1.0,
+        "12": 0.0,
+        "13": 1.0,
+        "14": 1.0,
+        "15": 1.0,
+        "16": 1.0,
+        "17": 1.0,
+        "18": 1.0,
+        "19": 1.0,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0,
+        "23": 0.0,
+        "24": 0.0,
+        "25": 1.0,
+        "26": 0.0,
+        "27": 0.0,
+        "28": 1.0,
+        "29": 1.0,
+        "30": 1.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 0.0,
+        "37": 0.0,
+        "38": 1.0,
+        "39": 1.0,
+        "40": 0.0,
+        "41": 1.0,
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0,
+        "47": 1.0,
+        "48": 0.0,
+        "49": 0.0,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 0.0,
+        "53": 1.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 1.0,
+        "57": 1.0,
+        "58": 0.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 0.0,
+        "63": 1.0,
+        "64": 0.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 0.0,
+        "71": 0.0,
+        "72": 1.0,
+        "73": 1.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 1.0,
+        "77": 0.0,
+        "78": 0.0,
+        "79": 1.0,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 1.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 1.0,
+        "88": 1.0,
+        "89": 1.0,
+        "90": 1.0,
+        "91": 1.0,
+        "92": 1.0,
+        "93": 1.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 1.0,
+        "97": 1.0,
+        "98": 1.0,
+        "99": 1.0
+      },
+      {
+        "0": 0.0,
+        "1": 1.0,
+        "2": 0.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 0.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 0.0,
+        "12": 0.0,
+        "13": 1.0,
+        "14": 1.0,
+        "15": 0.0,
+        "16": 1.0,
+        "17": 1.0,
+        "18": 0.0,
+        "19": 1.0,
+        "20": 1.0,
+        "21": 0.0,
+        "22": 0.0,
+        "23": 0.0,
+        "24": 0.0,
+        "25": 1.0,
+        "26": 0.0,
+        "27": 1.0,
+        "28": 0.0,
+        "29": 1.0,
+        "30": 0.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 0.0,
+        "37": 0.0,
+        "38": 1.0,
+        "39": 0.0,
+        "40": 0.0,
+        "41": 1.0,
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0,
+        "47": 0.0,
+        "48": 0.0,
+        "49": 1.0,
+        "50": 0.0,
+        "51": 0.0,
+        "52": 0.0,
+        "53": 0.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 0.0,
+        "57": 0.0,
+        "58": 0.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 1.0,
+        "63": 1.0,
+        "64": 0.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 1.0,
+        "71": 0.0,
+        "72": 1.0,
+        "73": 1.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 0.0,
+        "77": 0.0,
+        "78": 0.0,
+        "79": 1.0,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 0.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 1.0,
+        "88": 1.0,
+        "89": 0.0,
+        "90": 0.0,
+        "91": 0.0,
+        "92": 1.0,
+        "93": 1.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 1.0,
+        "97": 0.0,
+        "98": 1.0,
+        "99": 1.0
+      },
+      {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 0.0,
+        "6": 1.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 1.0,
+        "12": 0.0,
+        "13": 1.0,
+        "14": 1.0,
+        "15": 1.0,
+        "16": 1.0,
+        "17": 1.0,
+        "18": 1.0,
+        "19": 1.0,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0,
+        "23": 0.0,
+        "24": 0.0,
+        "25": 1.0,
+        "26": 0.0,
+        "27": 0.0,
+        "28": 1.0,
+        "29": 1.0,
+        "30": 0.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 0.0,
+        "37": 0.0,
+        "38": 1.0,
+        "39": 1.0,
+        "40": 0.0,
+        "41": 1.0,
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0,
+        "47": 1.0,
+        "48": 0.0,
+        "49": 1.0,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 0.0,
+        "53": 1.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 1.0,
+        "57": 1.0,
+        "58": 0.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 0.0,
+        "63": 1.0,
+        "64": 0.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 0.0,
+        "71": 1.0,
+        "72": 1.0,
+        "73": 1.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 1.0,
+        "77": 0.0,
+        "78": 0.0,
+        "79": 1.0,
+        "80": 0.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 1.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 1.0,
+        "88": 1.0,
+        "89": 1.0,
+        "90": 1.0,
+        "91": 1.0,
+        "92": 1.0,
+        "93": 1.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 1.0,
+        "97": 1.0,
+        "98": 1.0,
+        "99": 1.0
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text discusses depression and anxiety and conveys a sense of distress and sadness about how these conditions affect others, indicating sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ]
+      ],
+      "1": [
+        [
+          1,
+          "Prediction(\n    reasoning='I cannot share detailed reasoning, but the text conveys anger (confrontational and accusatory tone).',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The user message conveys negative, accusatory sentiments about governments and terrorism, indicating anger.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text shows a confrontational/suspicious tone toward governments and mentions funding terrorism, which signals anger rather than joy or sadness. Therefore classify as anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "2": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user describes trauma reminders, an image of a deceased brother, and depression symptoms, indicating sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text describes trauma triggers and depressive feelings, with a somber, negative affect; the dominant emotion expressed is sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "3": [
+        [
+          1,
+          "Prediction(\n    reasoning='The message expresses happiness and gratitude (delighted to have you).',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The input expresses positive and celebratory language: delighted and grateful.',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys happiness and positive reception; words like \"delighted\" indicate joy. No anger or sadness present; thus label is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "4": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text centers on joy and asks about what makes you feel joyful.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence references joy and uses the word “joyful,” indicating the positive emotion of joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "5": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The phrase conveys defiant or hostile feeling toward something, with the word 'revolting' signaling anger as the dominant emotion.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ]
+      ],
+      "6": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion inferred: sadness, due to mentions of gloominess and missing a friend.',\n    output='sadness'\n)"
+        ]
+      ],
+      "7": [
+        [
+          0,
+          "Prediction(\n    reasoning='You\\'re asking for output based on the short caption \"In need of a change! #restless.\" I\\'ll interpret this as a request for polished social-media caption options that convey a desire for change while keeping the #restless vibe. I\\'ll provide several concise variants to choose from.',\n    output='- Craving a change. Ready for something new. #restless\\n- Feeling restless—time for a fresh start. #restless\\n- Change is calling. I’m listening. #restless\\n- Yearning for a new chapter. #restless\\n- On the verge of something different. Change ahead. #restless'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The message conveys restlessness and a need for change, indicating agitation commonly mapped to anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='not provided',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys dissatisfaction and agitation (restlessness) with the current situation, which aligns best with anger among the available labels.',\n    output='anger'\n)"
+        ]
+      ],
+      "8": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will turn the input into a clean social post announcing that #cmbyn will screen on August 4 and 6 at #miff, preserving the handles and hashtags and using natural wording.',\n    output='@user @user #cmbyn screens on August 4 and 6 at #miff.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Neutral informational content about a film screening; no strong emotion expressed. The closest implied sentiment is mild positivity about the event.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message is a neutral, informational social post about a film screening at a festival, with no explicit negative cues. The positive context of attending or sharing film screenings suggests a mild positive emotion (joy) rather than anger or sadness.',\n    output='joy'\n)"
+        ]
+      ],
+      "9": [
+        [
+          1,
+          "Prediction(\n    reasoning='I’m unable to share detailed reasoning, but the emotion expressed is anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message expresses strong negative sentiment toward a person (Donovan) with descriptors like \"awful\" and \"bitter\" and a demand to remove him, signaling anger. No positive or sad emotional cues dominate.',\n    output='anger'\n)"
+        ]
+      ],
+      "10": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user expresses strong frustration and uses profanity about bugs and lag, signaling anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys strong hostility and frustration toward the recipient, with explicit insult and criticism about bugs and performance, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "11": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The word 'Pressured' conveys stress and worry, and the accompanying sad-looking emoji suggests sadness rather than anger or joy.\",\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys negative emotion and the emoji reinforces a worried/sad mood; dominant emotion: sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "12": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I will provide a clean paraphrase of the user's message to improve readability while preserving the sentiment. I'll fix typos (bein -> being, i -> I, wanna -> want to), replace HTML entities (&amp; -> and), standardize punctuation, and present it as a concise, positive statement.\",\n    output='Yes, depression and anxiety are real, but so is being grateful and choosing happiness. I choose how I want to live my life, not defined by a disorder.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text emphasizes gratitude and happiness despite acknowledging depression and anxiety, with a confident, positive tone about choosing to live, indicating the dominant emotion is joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='positive sentiment detected',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text centers on positive feelings like gratitude and happiness and presents a confident, empowered stance, making joy the dominant emotion.',\n    output='joy'\n)"
+        ]
+      ],
+      "13": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The speaker's aggressive language and profanity indicate anger rather than joy or sadness.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='N/A',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains insults toward others, phrases like \"the worst\" and \"fucking asked,\" along with the angry emoji 😤, showing a hostile/irritated tone. There are no clear joy or sadness cues, so the dominant emotion is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "14": [
+        [
+          1,
+          "Prediction(\n    reasoning='The passage conveys hostile, accusatory sentiment toward a political group, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message expresses hostility and negative sentiment toward a political group, with references to hatred and a police state, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "15": [
+        [
+          1,
+          "Prediction(\n    reasoning='I cannot share detailed reasoning, but the text conveys sadness.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys mourning and sympathy for a death, indicating sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "16": [
+        [
+          1,
+          "Prediction(\n    reasoning='joy',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't share chain-of-thought, but the sentence conveys positive, unified sentiment.\",\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message is positive and celebratory about diversity and the lack of racial tension, conveying joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "17": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text conveys frustration and anger toward the notion of skipping prescribed medicine, indicating an angry emotional tone.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses frustration and admonition toward others about medicine, indicating anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "18": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"I can't reveal step-by-step reasoning, but the text expresses disapproval toward insulting a group, implying a protective/annoyed stance. The dominant emotion is anger.\",\n    output='anger'\n)"
+        ]
+      ],
+      "19": [
+        [
+          1,
+          "Prediction(\n    reasoning='The message uses a hostile insult and expletive directed at someone, conveying anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The input contains negative, aggressive sentiment toward someone described as a liar; thus anger is the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains an insult directed at someone (\"liar\") along with a strong expletive, signaling anger rather than joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "20": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys irritation and frustration toward others, with an irritated tone; dominant emotion inferred is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "21": [
+        [
+          1,
+          "Prediction(\n    reasoning='dominant emotion: sadness',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text includes explicit sadness cues: \"I miss your personality\" and hashtags like #Sad and #depressed, indicating a sad emotional state. The dominant emotion conveyed is sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "22": [
+        [
+          1,
+          "Prediction(\n    reasoning='sadness',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text centers on feelings of unhappiness and depression, which aligns with sadness as the primary emotion.',\n    output='sadness'\n)"
+        ]
+      ],
+      "23": [
+        [
+          0,
+          "Prediction(\n    reasoning='The input makes a broad generalization about Americans. Provide a respectful, balanced reply that acknowledges diversity in parenting practices and religious beliefs, and avoid endorsing stereotypes. Offer to discuss data or to rephrase the statement more precisely.',\n    output='Generalizations about an entire nationality are not accurate. Americans differ widely in parenting practices and religious beliefs. Spanking is not universal—many families do not spank, while others may. Attitudes toward hypocrisy vary individually and cannot be attributed to all Americans. If you’d like, I can share data on parenting practices in the U.S. or help rephrase the statement to be more precise and respectful.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text conveys a critical, accusatory stance toward Americans, with moral judgments and a hostile tone, indicating anger rather than joy or sadness.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence takes a critical, accusatory stance and denounces hypocrisy, signaling an angry, confrontational tone rather than joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "24": [
+        [
+          0,
+          "Prediction(\n    reasoning='Provide a concise paraphrase suitable for a social post while preserving tone and humor.',\n    output='The only upside to being this sick this week is that I’ve become pretty good at taking my pills. #optimism'\n)"
+        ]
+      ],
+      "25": [
+        [
+          1,
+          "Prediction(\n    reasoning='The input is a neutral question about a favorite character with no explicit emotion. If forced to choose among anger, joy, sadness, the positive/neutral tone aligns best with joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The user prompt is a neutral question about favorite characters and does not convey negative sentiment; it implies a positive/neutral engagement with pop culture. Therefore, classify as joy.',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message is a neutral question with no explicit negative emotion; it conveys positive interest in favorites, which aligns with joy rather than anger or sadness.',\n    output='joy'\n)"
+        ]
+      ],
+      "26": [
+        [
+          0,
+          "Prediction(\n    reasoning='I can’t reveal my internal step-by-step reasoning, but here’s a concise summary: the user is experiencing acute anxiety with possible physical symptoms (feeling hot, nausea). I’ll offer empathetic validation, quick grounding and breathing techniques, practical tips to reduce distress, and safety checks if fever or alarming symptoms are present.',\n    output='I’m glad you told me—that sounds really uncomfortable. It’s common for anxiety to make you feel nauseous and feel like your body is heating up, even though it might just be adrenaline in the moment. Here are some quick steps that can help right now:\\n\\nGrounding (5-4-3-2-1)\\n- Name 5 things you can see\\n- 4 things you can touch\\n- 3 things you can hear\\n- 2 things you can smell\\n- 1 thing you can taste\\n\\nBreathing\\n- Try a slow 4-4-6 technique: inhale for 4 seconds, hold for 4, exhale slowly for 6 seconds. Repeat 4–6 times.\\n\\nIf you’re feeling hot or nauseous\\n- Remove any extra layers and try to cool down with a fan or a cool (not cold) cloth on your neck or forehead.\\n- Sip small sips of water or a small amount of electrolyte drink when you can. Avoid large gulps if you feel nauseous.\\n- Sit or lie down in a comfortable position and rest until you feel a bit more settled.\\n\\nNausea/anxiety tips\\n- Rest upright or lying on your side with your head slightly raised.\\n- Avoid heavy meals for now; light snacks or crackers can help if you’re hungry.\\n\\nMedical safety checks\\n- If you have a fever (feverish with chills, sweating, or temperature above 100.4°F / 38°C) that lasts more than a few hours, or if you experience chest pain, severe shortness of breath, fainting, or vomiting that won’t stop, seek medical help promptly.\\n\\nWould you like me to guide you through a quick 5-minute calming routine now, or tell me if you’re feeling any specific symptoms right now (fever, chest pain, dizziness, etc.) so I can tailor advice?'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The message communicates nervousness and physical symptoms indicating anxiety; among the allowed emotions (anger, joy, sadness), sadness is the closest fit.',\n    output='sadness'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The user expresses nervousness and physical discomfort, showing negative emotion; classified as anger per the guideline.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys distress and negative emotions (nervousness, physical discomfort). Among the allowed labels, sadness is the closest match to negative affect, despite the lack of explicit sadness words.',\n    output='sadness'\n)"
+        ]
+      ],
+      "27": [
+        [
+          2,
+          "Prediction(\n    reasoning='The user text expresses negative sentiment and potential hostility toward someone (bearing a grudge, lack of care), indicating anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "28": [
+        [
+          1,
+          "Prediction(\n    reasoning='The line frames depression as taking the stage, signaling a somber, melancholic mood, which indicates sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text centers on depression and negative mood, indicating sadness; choose sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ]
+      ],
+      "29": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses a positive sentiment with the word \"love\" toward swimming and meditating, indicating joy as the dominant emotion.',\n    output='joy'\n)"
+        ]
+      ],
+      "30": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='sadness'\n)"
+        ]
+      ],
+      "31": [
+        [
+          1,
+          "Prediction(\n    reasoning='Positive sentiment and excitement from the inspiring solar eclipse.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"The message expresses positive sentiment about the solar eclipse, using words like 'cool' and 'inspiring'.\",\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='I can’t share step-by-step reasoning, but the sentence expresses positive excitement and inspiration, which aligns with joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "32": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user expresses clear frustration and anger with phrases like \"Really???\" and \"I\\'ve had to hang up.\"',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='n/a',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The dominant emotion is anger, indicated by the frustrated tone (\"Really???\") and the statement about having to hang up.',\n    output='anger'\n)"
+        ]
+      ],
+      "33": [
+        [
+          1,
+          "Prediction(\n    reasoning='Dominant emotion inferred: anger, based on the frustrated demand and aggressive tone (emphasis on not speaking and exclamations).',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The message conveys frustration and annoyance toward someone not speaking, indicating a negative/angry sentiment.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys a negative, frustrated tone: the speaker is reacting to someone not speaking while in the presence of Jim Sheridan, emphasizing with \"A WORD!!!\" and using hashtags like #facepalm and #tonguetied that signal exasperation and annoyance. There is no positive or sorrowful language, so the dominant emotion appears to be anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "34": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text uses \"fury\" and intense aggression; \"Carl yelled back in fury\" indicates anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text shows \"yelled back in fury\" and violent imagery, signaling anger as the primary emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "35": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The text describes a negative, hostile situation with people being angry; classify as anger.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant cue is \"raging\" describing others\\' anger; no clear joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "36": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I can't share my internal chain-of-thought, but here is a concise, positive response aligned with the prompt.\",\n    output='Yes to love. No to racism, hatred, or sectarianism. Embrace all people with kindness, respect, and empathy. Let unity shine through our actions, celebrate diversity, and choose compassion every day.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Promotes love and unity; positive sentiment suggests joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text promotes love and rejects hate, indicating a positive emotion; the dominant emotion is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "37": [
+        [
+          0,
+          "Prediction(\n    reasoning='The task appears to be generating a paraphrase that preserves the meaning of the given sentence.',\n    output='Sleep remains one of the best remedies for a tired and weary soul.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The sentence conveys a positive, comforting sentiment about sleep as a remedy, indicating joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The line conveys a positive, soothing view of sleep as a remedy for fatigue, indicating joy/positive emotion.',\n    output='joy'\n)"
+        ]
+      ],
+      "38": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion: anger. The message expresses explicit frustration and hostility about a delayed order and poor customer service (words like annoyed, hurryup, awful).',\n    output='anger'\n)"
+        ]
+      ],
+      "39": [
+        [
+          1,
+          "Prediction(\n    reasoning='The sentence describes a negative, distressing situation with \"the world is shaking,\" indicating sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence lacks explicit joy or anger words; the phrase “the world is shaking” conveys a negative, alarming mood. Among the given options, sadness best fits the implied melancholy or concern.',\n    output='sadness'\n)"
+        ]
+      ],
+      "40": [
+        [
+          0,
+          "Prediction(\n    reasoning='I can’t reveal my private chain-of-thought, but here’s a concise plan: provide a constructive, empathetic response that helps the speaker initiate a respectful talk. Include a brief explanation of the distinction between conflicts and value judgments, a practical talk framework, and a ready-to-use opening message with sample prompts to guide the conversation.',\n    output='Absolutely. Here’s a constructive way to approach this and invite a productive discussion.\\n\\nAcknowledgment and purpose\\n- I understand you’re concerned about how conflicts and value judgments relate, and you want to talk through it in a way that doesn’t alienate people. That’s a worthwhile goal.\\n\\nClarify the distinction (brief framework)\\n- Conflicts: Disagreements about actions, methods, or outcomes. They’re about how to proceed, not about whether someone is inherently worthy.\\n- Value judgments: Beliefs about what is good or right, often tied to identity or character. They influence how we interpret issues and respond to others.\\n- Separating the two can help reduce defensiveness, but it’s also okay—sometimes values drive the conflict itself. The aim is to discuss both clearly and respectfully.\\n\\nProposed talk framework\\n1) Set ground rules\\n   - One conversation at a time; speak from “I” statements; listen without interrupting; assume good intentions.\\n2) Name harm and intent\\n   - Acknowledge any hurt caused by the framing and explain what you’re trying to understand or achieve.\\n3) Define terms together\\n   - Agree on what “conflict” means in this context and what counts as a “value judgment.”\\n4) Explore underlying values\\n   - Ask: What values are at stake for you? How do those values shape your view of the issue?\\n5) Separate analysis from judgment (where possible)\\n   - Identify which parts are about methods vs. beliefs about people or worth.\\n6) Find common ground or respectful boundaries\\n   - Look for shared goals or agree to disagree with mutual respect if needed.\\n7) Action steps\\n   - Decide on concrete next steps, such as revisiting a specific topic, using a neutral facilitator, or agreeing to check in later.\\n\\nStarter opening you can use\\n- “I realize my claim that conflicts and value judgments are separate may have caused offense. I want to have a respectful talk about how we handle disagreements, and I’d like to understand how you see the relationship between values and conflicts. My goal is to discuss issues without devaluing people. If you’re open, here’s how I’d propose we proceed: one, let’s listen actively; two, we’ll define our terms; three, we’ll share concerns and underlying values; four, we’ll look for constructive options or agree to disagree respectfully. How does that sound?”\\n\\nOptional prompts you can use during the talk\\n- What values are most important to you in this issue?\\n- Can you share an example where you felt my framing undermined your position?\\n- What outcome would feel fair or acceptable to you?\\n- How can we discuss this so both of us feel heard?\\n\\nIf you want, tell me your context (audience, setting, topics) and I can tailor the message and a short conversation plan even more specifically.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The speaker expresses remorse for offending others; the dominant emotion is sadness.',\n    output='sadness'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The speaker expresses remorse for having offended others and signals a serious, introspective tone, which aligns with sadness/regret rather than anger or joy.',\n    output='sadness'\n)"
+        ]
+      ],
+      "41": [
+        [
+          1,
+          "Prediction(\n    reasoning='dominant emotion: anger',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The message expresses frustration and includes the tag #rage, indicating negative/angry sentiment toward a situation.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys anger through explicit mentions of rage and a hostile/frustrated tone toward service and communication.',\n    output='anger'\n)"
+        ]
+      ],
+      "42": [
+        [
+          1,
+          "Prediction(\n    reasoning='Dominant emotion inferred: anger based on insulting and mocking language toward a public figure.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='NA',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text teases and insults DJT, conveying a hostile, angry tone rather than joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "43": [
+        [
+          1,
+          "Prediction(\n    reasoning='The message contains a birthday greeting with positive expressions and emojis, indicating joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message is a cheerful birthday greeting with positive language and celebration emojis, indicating joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "44": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text expresses frustration and annoyance about not working and choosing shopping over duties; the dominant emotion appears to be anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='This expresses frustration/annoyance at not working and shopping instead; the tone is negative and confrontational toward oneself or the situation, aligning with anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "45": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text expresses an angry, hostile sentiment through insults and a punitive tone toward someone, indicating anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='redacted',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains explicit profanity and a hostile, accusatory tone directed at someone, indicating anger as the dominant emotion. The laughing emoji does not negate the overall angry intent.',\n    output='anger'\n)"
+        ]
+      ],
+      "46": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share chain-of-thought, but the message contains insults and a hostile tone, indicating anger.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='anger',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message contains insults and a confrontational tone directed at the reader, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "47": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text exhibits a hostile, mocking tone with insults toward others, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion appears to be anger due to hostile and mocking tone; no clear joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "48": [
+        [
+          0,
+          "Prediction(\n    reasoning='Create a short, witty social-media reply that echoes the taunt while emphasizing accountability; keep it pointed but non-violent and suitable for public posting.',\n    output='Bold line. The real nightmare for any party is accountability and results. Game on, Nawaz. #GameOverNawaz'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text contains a threatening taunt (\"haunt you in your nightmares\") with aggressive language, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Expresses hostility and threat toward a political group, indicating anger.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text includes a clear threat and hostile, confrontational tone toward a political opponent, implying anger. The sarcastic capitalization does not negate the underlying aggression; the dominant emotion conveyed is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "49": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys negative, confrontational annoyance toward a baby in a restaurant, indicating anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "50": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user expresses worry about someone else and shows a sad emoji, indicating sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message expresses worry and distress toward someone, reinforced by the sad emoji; the dominant emotion conveyed is sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "51": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion appears to be sadness due to explicit reference to sadness and a melancholic, reflective tone.',\n    output='sadness'\n)"
+        ]
+      ],
+      "52": [
+        [
+          0,
+          "Prediction(\n    reasoning='The input appears to be a social media post with a newline before hashtags and no defined task. I will produce a cleaned, single-line caption by removing the newline and normalizing spacing, preserving the @user handle and hashtags.',\n    output='Are you always looking for quotes of your days? Then follow @user to learn more! #quote #doubleviz'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message is friendly and promotional with no anger or sadness cues; it conveys a positive, inviting tone. Thus the dominant emotion is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "53": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The user expresses distress and crying cues ('huhu') and asks for help, indicating sadness as the dominant emotion.\",\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The user expresses distress and asks for help, indicating sadness rather than anger or joy.',\n    output='sadness'\n)"
+        ]
+      ],
+      "54": [
+        [
+          1,
+          "Prediction(\n    reasoning='Brief justification: The text includes \"happiness\" and themes of love/loyalty, indicating joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I can’t share detailed internal reasoning, but I can provide the final classification.',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text includes positive cues such as happiness and loyalty, with an upbeat tone, indicating the emotion of joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "55": [
+        [
+          1,
+          "Prediction(\n    reasoning='emotion inferred: anger',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The input expresses negative, hostile sentiment toward a protected group, labeling Muslims and associated figures in a hateful context. The dominant emotion is anger.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text uses hostile and accusatory language toward a protected religious group and political opponents, framing the issue with terms like “terrorism” and blaming a group. This conveys clear anger and hostility rather than joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "56": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses a mixed message but leans toward a negative mood due to the line about not having a productive day and the gloomy hashtags, indicating sadness overall.',\n    output='sadness'\n)"
+        ]
+      ],
+      "57": [
+        [
+          1,
+          "Prediction(\n    reasoning='The message conveys distress and overwhelm with a reference to panic, suggesting sadness as the dominant emotion among the options (not joy or anger).',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message expresses distress and overwhelm with a sense of distress or sadness implied by panic; among the given options, sadness best fits negative affect and emotional tension described, whereas anger or joy are less aligned with the conveyed mood.',\n    output='sadness'\n)"
+        ]
+      ],
+      "58": [
+        [
+          0,
+          "Prediction(\n    reasoning='The input appears to be a quote labeled with social media-style hashtags. A plausible task is to normalize the text by removing the hashtags while preserving the quotation and attribution. The output should thus present the same quote sans hashtags, preserving punctuation and the author.',\n    output='The optimist proclaims that we live in the best of all possible worlds; and the pessimist fears this is true. ~ James Branch Cabell'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The quote uses irony about optimism and pessimism and conveys a subtle somber tone; the reference to fear suggests sadness as the dominant emotion over anger or joy.',\n    output='sadness'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence is a witty contrast about optimism and pessimism, conveying amusement/humor rather than anger or sadness; thus the dominant emotion is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "59": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Explicitly indicates anger with the word 'mad' about Red Sox fans; the dominant emotion conveyed is anger.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The text conveys negative, hostile sentiment toward a group (Red Sox fans) directed at them and their injuries, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses anger toward Red Sox fans, using \"mad\" and a confrontational framing.',\n    output='anger'\n)"
+        ]
+      ],
+      "60": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user message expresses frustration about a traffic situation caused by someone occupying a lane for toll collection, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text complains about someone occupying a toll lane and causing daily traffic snarls, expressing frustration and hostility toward the situation or person, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "61": [
+        [
+          1,
+          "Prediction(\n    reasoning='dominant emotion: joy',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses strong happiness and affectionate sentiment toward someone, signaling the joy emotion.',\n    output='joy'\n)"
+        ]
+      ],
+      "62": [
+        [
+          2,
+          "Prediction(\n    reasoning='Not provided per instructions.',\n    output='anger'\n)"
+        ]
+      ],
+      "63": [
+        [
+          1,
+          "Prediction(\n    reasoning='The word \"fuming\" signals anger, overriding the conflicting sad/laughing emojis.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Not applicable.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The phrase uses \"fuming\" which signals anger and a confrontational tone, despite the mixed emojis; dominant emotion: anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "64": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will craft a brief, friendly reply that acknowledges the spoiler-heavy comment, keeps the tone light, and invites discussion without introducing unnecessary spoilers.',\n    output='lol nice—that moment with Cid was wild. Since you already know the plot, I’ll keep spoilers light, but that slap scene definitely sticks with you. Any other scenes or characters you’ve got thoughts on, or want to debate favorite moments?'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The text mixes casual laughter cues (lel, :D) with a dramatic moment, giving a playful, joyful tone overall.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Not provided',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text uses playful language, laughter cues like \"lel\" and \":D\", indicating a lighthearted, joyful tone despite the insult; the dominant emotion appears to be joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "65": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Dominant emotion: anger. The text expresses frustration and confrontation ('blocked me', 'can't handle the truth').\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The user text conveys negative sentiment toward a person (Maura Rankin), expressing frustration and hostility about being blocked for calling her out. This aligns with anger. The instruction prioritizes negative sentiment as anger over joy.',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys frustration and a confrontational tone toward the person who blocked the speaker, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "66": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The input contains no explicit emotion, it is neutral. Since a label must be chosen from anger, joy, sadness, I assign 'joy' as the default closest-to-neutral option.\",\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='redacted',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The input contains no explicit emotion words; it appears as a praising fragment \"the man\" which is commonly used positively (e.g., \"you are the man\"). Interpreting it as a positive emotion yields joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "67": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='-',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence centers on explicit anger about someone being angry and unhinged; the tone is hostile and accusatory, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "68": [
+        [
+          1,
+          "Prediction(\n    reasoning='The message expresses strong frustration and anger about delays in medical care.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The user expresses frustration and anger about medical delays, evidenced by phrases like \"I\\'m still waiting on appointment\" and the hashtags #mssucks #healthcareFail. The dominant emotion conveyed is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "69": [
+        [
+          1,
+          "Prediction(\n    reasoning='emotion classifier decision based on negative evaluation of character and lack of positive cues; dominant emotion inferred as anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='negative, hostile sentiment toward a person',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains a hostile, accusatory remark directed at someone, signaling anger rather than joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "70": [
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ]
+      ],
+      "71": [
+        [
+          3,
+          "Prediction(\n    reasoning='The input expresses concern about viewership decline and requests improvement, indicating negatively valenced sentiment rather than positive (joy) or angry (anger) tones; thus sadness is the most fitting label among the three.',\n    output='sadness'\n)"
+        ]
+      ],
+      "72": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The phrase 'fuming' and the profane intensity indicate anger as the dominant emotion.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='reasoning omitted per policy',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The phrase conveys strong anger: \"fuming\" plus explicit profanity indicates anger; lacks joyful or sad cues; dominant emotion is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "73": [
+        [
+          1,
+          "Prediction(\n    reasoning='Dominant emotion: anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='anger',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion: anger. The text criticizes outrage-driven content and uses forceful, negative language (e.g., \"pisses us off,\" \"negativity\"), expressing frustration and hostility toward the subject.',\n    output='anger'\n)"
+        ]
+      ],
+      "74": [
+        [
+          1,
+          "Prediction(\n    reasoning='Dominant emotion appears to be anger due to hostile language, profanity, and a confrontational tone expressing frustration.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='irrelevant',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses clear anger and hostility, including insults and directives to not smile.',\n    output='anger'\n)"
+        ]
+      ],
+      "75": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user expresses frustration and anger toward political figures and media coverage (e.g., demands to remove a commentator, calling the situation awful), indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"The user expresses negative, hostile sentiment toward political figures and the administration, using phrases like 'awful' and 'get off my tv', indicating anger.\",\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys strong negative emotion and frustration toward a political figure and media, with a confrontational tone and words like \"awful.\" This aligns with anger rather than joy or sadness.',\n    output='anger'\n)"
+        ]
+      ],
+      "76": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user mentions early morning class and includes a crying emoji, indicating sadness/frustration rather than anger or joy.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses frustration about early 7am classes and includes a crying emoji, indicating sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ]
+      ],
+      "77": [
+        [
+          0,
+          "Prediction(\n    reasoning='Task appears to be to generate a courteous, professional reply to the given social post that acknowledges partnership and maintains hashtags. I will craft a short, grateful comment addressing @user and preserving hashtags.',\n    output=\"@user Couldn't have delivered this without you—your leadership and partnership made all the difference. Thank you for everything! Here’s to more great work together. #inspiring #partnership #women\"\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The message conveys appreciation and positive sentiment toward collaboration, indicating joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='null',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message conveys gratitude and positive sentiment toward a collaboration, with hashtags signaling inspiration and partnership, indicating joy rather than anger or sadness.',\n    output='joy'\n)"
+        ]
+      ],
+      "78": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will provide a concise devotional reflection inspired by the verse without reproducing more of the NIV text beyond what was provided.',\n    output='Keep going in doing good, even when you feel weary. Trust that your steady efforts have value and that, at the right time, you will see a harvest if you don’t give up. Stay encouraged, take small faithful steps today, and rely on God’s timing.'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The passage conveys encouragement, perseverance, and a hopeful outlook, indicating a positive emotional tone.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The passage is uplifting and encourages perseverance, conveying a positive, hopeful tone that aligns with joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "79": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The user expresses warmth and delight at Kyungsoo's smile, indicating joy as the dominant emotion.\",\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion: joy. The text expresses delight and warmth in response to Kyungsoo\\'s smile, with phrases like \"i\\'m melting\" indicating positive emotion.',\n    output='joy'\n)"
+        ]
+      ],
+      "80": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The user expresses a negative reaction to an aspect outside of gameplay and uses 'awful', signaling anger/frustration.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='not provided',\n    output='anger'\n)"
+        ]
+      ],
+      "81": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message includes a direct warning about a speed trap and ends with a #angry tag, indicating anger; no joyful or sad cues dominate, so the dominant emotion is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "82": [
+        [
+          1,
+          "Prediction(\n    reasoning='Positive, joyful sentiment.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message expresses positive sentiment about observing interaction, supported by joyful emojis and hashtags indicating laughter and happiness, signaling joy as the dominant emotion.',\n    output='joy'\n)"
+        ]
+      ],
+      "83": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text expresses distress about a physical sensation, indicating sadness as the dominant emotion.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses physical discomfort and negative affect without clear anger or joy cues, so the dominant emotion is sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "84": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text conveys a strong negative emotion toward the topic, evidenced by the angry emoji 😠 and a dismissive tone about discussing sterilization, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text includes an angry emoji and a confrontational line (\"What exactly is there to discuss?\"), conveying anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "85": [
+        [
+          1,
+          "Prediction(\n    reasoning='The sentence expresses negative, accusatory tone toward others for causing outrage and making the director look bad, indicating anger rather than joy or sadness.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains accusatory language and a hostile tone directed at others for causing controversy; the dominant emotion expressed is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "86": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The input expresses intense anger, using words like 'rage' and context suggesting a venting tone; no elements indicating joy or sadness are stronger.\",\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text centers on the verb \"rage\" and presents an aggressive, confrontational tone, indicating anger as the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "87": [
+        [
+          1,
+          "Prediction(\n    reasoning='N/A',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains multiple explicit positive cues (e.g., #happy, #good mood, #love) and celebratory context (#birthday), indicating joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "88": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text expresses positive amusement and attraction, conveying joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text expresses positive feelings with \"funny\" and \"sexy\" plus a heart-eyes emoji, indicating joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "89": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text references depression and conveys a somber, negative emotion; the dominant conveyed emotion is sadness.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence references the condition of depression, a negative mood/mental health topic, which aligns with sadness as the dominant conveyed emotion.',\n    output='sadness'\n)"
+        ]
+      ],
+      "90": [
+        [
+          1,
+          "Prediction(\n    reasoning='Dominant emotion is sadness; the user describes distress and uses the #sad tag along with a sense of dread.',\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys negative emotion with mentions of dread and sadness; the dominant and explicit emotion appears as sadness.',\n    output='sadness'\n)"
+        ]
+      ],
+      "91": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text includes a laughing emoji and a humorous, playful description, indicating amusement/joy.',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text contains a laughing emoji and humorous description, indicating amusement and a positive, lighthearted tone. The dominant emotion conveyed is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "92": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user text shows a playful, bragging tone about drinking and still being relatively sober. It conveys a light-hearted, positive sentiment rather than anger or sadness. Therefore the dominant emotion is joy.',\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='classifying sentiment as positive.',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The user text contains a lighthearted boast about drinking; there are no explicit anger or sadness cues, so the dominant emotion inferred is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "93": [
+        [
+          1,
+          "Prediction(\n    reasoning='The text conveys strong disapproval and frustration about the way the Canadian anthem is sung, signaling anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"The user expresses negative sentiment towards how Canada is sung, using 'terrible' and #terrible, indicating frustration or hostility.\",\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message expresses disapproval and frustration about how the song is performed, with \"terrible\" as a negative evaluation, indicating anger/annoyance. The dominant emotion is anger.',\n    output='anger'\n)"
+        ]
+      ],
+      "94": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The sentence conveys excitement and praise toward Mima's energetic performance, indicating joy.\",\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='not provided',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The sentence praises Mima for being tremendous at \"bringing the noise,\" conveying energetic, positive sentiment. No explicit anger or sadness; dominant emotion inferred is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "95": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The message includes 'Lol' and '#smiles', indicating lighthearted amusement and positive mood; there is no indication of anger or sadness, so the dominant emotion is joy.\",\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The message uses \"Lol\" and \"smiles\" indicating a light, positive tone; no angry or sad language. The dominant emotion appears to be joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "96": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The message uses the phrase it's hilarious and the 😂 emoji, indicating amusement and joy despite mentioning people being mad.\",\n    output='joy'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='joy'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text references anger/frustration toward Twitter (\"making everybody mad\") but explicitly calls the situation \"hilarious\" and includes a laughing emoji, signaling amusement. The humorous tone appears stronger and more sustained, so the dominant emotion is joy.',\n    output='joy'\n)"
+        ]
+      ],
+      "97": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"The message emphasizes gloom and sadness through references to overcast, rainy weather, plus words like 'glum' and 'sad', indicating sadness as the dominant emotion.\",\n    output='sadness'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion expressed is sadness due to explicit words like \"sad\" and \"glum\".',\n    output='sadness'\n)"
+        ]
+      ],
+      "98": [
+        [
+          1,
+          "Prediction(\n    reasoning='The message expresses frustration about missing episode uploads, indicating anger/irritation rather than joy or sadness.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The text conveys frustration about someone not uploading episodes; the tone is annoyed/angry, making anger the dominant emotion.',\n    output='anger'\n)"
+        ]
+      ],
+      "99": [
+        [
+          1,
+          "Prediction(\n    reasoning='The user expresses frustration toward Madrid and uses explicit profanity directed at others, indicating anger.',\n    output='anger'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='not provided',\n    output='anger'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dominant emotion detected is anger, evidenced by hostile language and the insult \"Fuck them.\"',\n    output='anger'\n)"
+        ]
+      ]
+    },
+    "best_idx": 1,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an emotion classifier. For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\\n\\nOutput rules\\n- Produce only the single label (one word) and nothing else. Do not include any reasoning, explanation, or punctuation around it.\\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\\n- Base your choice on clear lexical cues, tone, and context (e.g., words like furious, annoyed, or threats point to anger; words like happy, joyful, celebrate point to joy; words like sad, loss, mourning point to sadness). Treat sarcasm and figurative language as they would convey the intended emotion.\\n- The allowed labels are exactly: anger, joy, sadness. Do not output anything else, even if uncertain.\\n\\nFormat\\n- The output should be a single word, lowercase, one of the three labels.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a binary emotion classifier. For each user input, output exactly one token from the following two options, in lowercase and without any extra text:\\n- anger\\n- joy\\n\\nWhat to do:\\n- Determine the dominant emotion conveyed in the input text.\\n- If the text expresses negative, hostile, frustrated, or aggressive sentiment toward a person, group, or situation, output: anger.\\n- If the text expresses positive, upbeat, enthusiastic, or affectionate sentiment, output: joy.\\n- Do not produce any reasoning, explanations, or additional text. Do not output anything other than the single label token.\\n- If the sentiment is clearly positive, choose joy; if clearly negative/hostile, choose anger. When in doubt, favor anger for negative content and joy for positive content.\\n\\nExamples:\\n- Input: \"I’m furious about this injustice.\" -> anger\\n- Input: \"This news makes me so happy!\" -> joy\\n- Input: \"I hate this\" -> anger\\n- Input: \"What a wonderful day\" -> joy'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Instruction for the Emotion Classifier\\n\\nTask:\\n- For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\\n\\nOutput rules:\\n- Output a single word, lowercase, with no punctuation, commentary, or extra text.\\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\\n- Judge emotion from clear lexical cues, tone, and context. Treat sarcasm and figurative language as conveying the intended emotion.\\n- Do not consider neutral as a separate category; always choose one of the three labels.\\n\\nCues and mapping:\\n- Anger: explicit anger words (e.g., furious, angry, annoyed, rage, hate, threaten), hostile or confrontational tone, expressions of wrongdoing or injustice toward someone or something.\\n- Joy: explicit positive emotion words (e.g., happy, joyful, delighted, excited, thrilled, celebrate, love), upbeat or celebratory tone.\\n- Sadness: explicit negative affect words (e.g., sad, sorrow, mourning, depressed, despair, grief), self-directed or empathetic tone of loss or unhappiness.\\n\\nAmbiguities and edge cases:\\n- If multiple emotions appear, favor the emotion that is most strongly and consistently expressed throughout the text.\\n- If the text uses ironic or sarcastic language, infer the emotion the speaker intends to convey rather than the literal surface meaning.\\n- Emojis, symbols, or hashtags should be treated as emotional signals that can reinforce the detected emotion.\\n\\nFormat and consistency:\\n- The output must be exactly one of: anger, joy, sadness.\\n- Do not include any extra characters, whitespace, or newline beyond the label itself.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an emotion classifier. For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\\n\\nOutput rules\\n- Produce only the single label (one word) and nothing else. Do not include any reasoning, explanation, or punctuation around it.\\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\\n- Base your choice on clear lexical cues, tone, and context (e.g., words like furious, annoyed, or threats point to anger; words like happy, joyful, celebrate point to joy; words like sad, loss, mourning point to sadness). Treat sarcasm and figurative language as they would convey the intended emotion.\\n- The allowed labels are exactly: anger, joy, sadness. Do not output anything else, even if uncertain.\\n\\nFormat\\n- The output should be a single word, lowercase, one of the three labels.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.0018831120504398543
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are an emotion classifier. For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\\n\\nOutput rules\\n- Produce only the single label (one word) and nothing else. Do not include any reasoning, explanation, or punctuation around it.\\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\\n- Base your choice on clear lexical cues, tone, and context (e.g., words like furious, annoyed, or threats point to anger; words like happy, joyful, celebrate point to joy; words like sad, loss, mourning point to sadness). Treat sarcasm and figurative language as they would convey the intended emotion.\\n- The allowed labels are exactly: anger, joy, sadness. Do not output anything else, even if uncertain.\\n\\nFormat\\n- The output should be a single word, lowercase, one of the three labels.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a binary emotion classifier. For each user input, output exactly one token from the following two options, in lowercase and without any extra text:\\n- anger\\n- joy\\n\\nWhat to do:\\n- Determine the dominant emotion conveyed in the input text.\\n- If the text expresses negative, hostile, frustrated, or aggressive sentiment toward a person, group, or situation, output: anger.\\n- If the text expresses positive, upbeat, enthusiastic, or affectionate sentiment, output: joy.\\n- Do not produce any reasoning, explanations, or additional text. Do not output anything other than the single label token.\\n- If the sentiment is clearly positive, choose joy; if clearly negative/hostile, choose anger. When in doubt, favor anger for negative content and joy for positive content.\\n\\nExamples:\\n- Input: \"I’m furious about this injustice.\" -> anger\\n- Input: \"This news makes me so happy!\" -> joy\\n- Input: \"I hate this\" -> anger\\n- Input: \"What a wonderful day\" -> joy'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.61
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Instruction for the Emotion Classifier\\n\\nTask:\\n- For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\\n\\nOutput rules:\\n- Output a single word, lowercase, with no punctuation, commentary, or extra text.\\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\\n- Judge emotion from clear lexical cues, tone, and context. Treat sarcasm and figurative language as conveying the intended emotion.\\n- Do not consider neutral as a separate category; always choose one of the three labels.\\n\\nCues and mapping:\\n- Anger: explicit anger words (e.g., furious, angry, annoyed, rage, hate, threaten), hostile or confrontational tone, expressions of wrongdoing or injustice toward someone or something.\\n- Joy: explicit positive emotion words (e.g., happy, joyful, delighted, excited, thrilled, celebrate, love), upbeat or celebratory tone.\\n- Sadness: explicit negative affect words (e.g., sad, sorrow, mourning, depressed, despair, grief), self-directed or empathetic tone of loss or unhappiness.\\n\\nAmbiguities and edge cases:\\n- If multiple emotions appear, favor the emotion that is most strongly and consistently expressed throughout the text.\\n- If the text uses ironic or sarcastic language, infer the emotion the speaker intends to convey rather than the literal surface meaning.\\n- Emojis, symbols, or hashtags should be treated as emotional signals that can reinforce the detected emotion.\\n\\nFormat and consistency:\\n- The output must be exactly one of: anger, joy, sadness.\\n- Do not include any extra characters, whitespace, or newline beyond the label itself.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.79
+      }
+    ]
+  },
+  "final_prompt": "You are an emotion classifier. For every given input text, output exactly one of the following lowercase labels that best describes the primary emotion conveyed: anger, joy, sadness.\n\nOutput rules\n- Produce only the single label (one word) and nothing else. Do not include any reasoning, explanation, or punctuation around it.\n- If the input expresses multiple emotions, select the dominant/emphatically conveyed emotion.\n- Base your choice on clear lexical cues, tone, and context (e.g., words like furious, annoyed, or threats point to anger; words like happy, joyful, celebrate point to joy; words like sad, loss, mourning point to sadness). Treat sarcasm and figurative language as they would convey the intended emotion.\n- The allowed labels are exactly: anger, joy, sadness. Do not output anything else, even if uncertain.\n\nFormat\n- The output should be a single word, lowercase, one of the three labels.",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "f1"
+}

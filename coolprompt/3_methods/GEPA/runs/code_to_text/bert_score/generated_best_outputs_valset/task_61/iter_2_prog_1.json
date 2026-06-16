@@ -1,0 +1,4 @@
+{
+    "reasoning": "Reasoning not shown.",
+    "output": "Delete all TaskInstance records for DAG IDs in DAG_IDS from the database."
+}

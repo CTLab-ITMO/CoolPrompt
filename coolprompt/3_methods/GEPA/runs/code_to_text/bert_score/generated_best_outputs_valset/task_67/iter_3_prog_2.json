@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description of the function's behavior, including its parameters, return value, and possible exceptions, without modifying the code.",
+    "output": "Create the directory at path (and any necessary parent directories) with the given mode, restoring the original umask.\n\nArguments:\n    path (str): path of the directory to create, including any necessary parent directories.\n    mode (int): permission bits to apply when creating the directory; passed to os.makedirs.\nReturns:\n    None: this function returns nothing; it performs its effect by creating directories.\nRaises:\n    OSError: if a non-directory path exists at path or if os.makedirs raises an OS-related error; note that if path already exists and is a directory, no exception is raised."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The described operation corresponds to obtaining the raw numeric value in satoshis from a Coin object. In the Coin API, the method that returns this value as a long is longValue().",
+    "output": "longValue()"
+}

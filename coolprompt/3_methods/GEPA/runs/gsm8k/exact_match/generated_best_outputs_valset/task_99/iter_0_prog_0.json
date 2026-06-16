@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total on ledges: 2 \u00d7 40 = 80. Add 18 new plants: 80 + 18 = 98. She will give 1 plant from each ledge, i.e., 40 plants. Remaining: 98 \u2212 40 = 58.",
+    "output": "58"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will create a concise, docstring-like description of what the function does based on its implementation: it patches a Cloud Function with a given body and update mask, then waits for the resulting operation to complete. Since there are no type hints in the signature, I will infer reasonable types: name as str, body as dict, and update_mask as a sequence of strings. The Returns section will indicate that the function returns no value, and there are no explicit Raises documented in the code.",
+    "output": "Patch the Cloud Function and wait for the operation to complete.\n\nArguments:\n    name (str): The full resource name of the Cloud Function to patch.\n    body (dict): The patch body to apply to the function.\n    update_mask (Sequence[str]): The list of field paths to update; joined with commas to form updateMask.\n\nReturns:\n    no return value (None): the function does not return a value."
+}

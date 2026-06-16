@@ -1,0 +1,4 @@
+{
+    "reasoning": "First glass costs $5. Every second glass costs 60% of the price, i.e., $3. So glasses alternate: 5, 3, 5, 3, ..., for 16 glasses. There are 8 of each: total = 8\u00d75 + 8\u00d73 = 40 + 24 = $64.",
+    "output": "$64"
+}

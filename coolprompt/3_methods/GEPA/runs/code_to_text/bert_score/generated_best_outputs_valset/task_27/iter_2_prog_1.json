@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Return a Snowflake database connection.\n\nReturns:\n    :class:`snowflake.connector.connection.Connection`: The active Snowflake connection object.\nRaises:\n    :class:`snowflake.connector.errors.Error`: If a connection cannot be established or an error occurs during connection."
+}

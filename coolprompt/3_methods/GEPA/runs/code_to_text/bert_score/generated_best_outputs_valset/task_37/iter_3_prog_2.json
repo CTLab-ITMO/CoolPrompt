@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function lazily initializes and returns a client, creating it on the first call using credentials obtained from _get_credentials.",
+    "output": "Return a lazily-initialized client connection, creating it on first access.\n\nArguments:\n    self (object): the instance on which get_conn is invoked.\n\nReturns:\n    :class:`Client`: the underlying client instance; created on first access using ``_get_credentials()``, otherwise the cached instance.\n\nRaises:\n    Exception: if credentials retrieval or client initialization fails."
+}

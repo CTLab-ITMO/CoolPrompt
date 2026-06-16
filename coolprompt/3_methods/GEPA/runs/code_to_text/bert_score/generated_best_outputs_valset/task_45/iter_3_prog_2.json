@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description for the given function, capturing its purpose (patch a database on an instance) and its parameters, return value, and potential exceptions in a structured, gold-target\u2013style format without modifying the code.",
+    "output": "Patch the specified database on a given instance and wait for the operation to complete.\n\nArguments:\n    instance (str): The identifier of the instance containing the database.\n    database (str): The name of the database to patch.\n    body (dict): The request payload describing the patch to apply to the database.\n    project_id (str, optional): The Google Cloud project ID to use; if not provided, a default project is used.\n\nReturns:\n    None: This method performs the patch operation and does not return a value."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a minimal, deterministic function that demonstrates extracting the satoshis from a Coin by constructing a Coin using valueOf(long) and then using longValue() to retrieve the underlying long representation. I will also include simple assertions using isPositive() and isZero() to mirror common patterns in the gold targets (assertEquals with primitive results). The function uses loc0 and loc1 as local variables to match the locX naming convention.",
+    "output": "void function ( ) {\n  long value = 123L;\n  Coin loc0 = Coin.valueOf(value);\n  long loc1 = loc0.longValue();\n  assertEquals(value, loc1);\n  boolean isPositive = loc0.isPositive();\n  assertEquals(true, isPositive);\n  boolean isZero = loc0.isZero();\n  assertEquals(false, isZero);\n}"
+}

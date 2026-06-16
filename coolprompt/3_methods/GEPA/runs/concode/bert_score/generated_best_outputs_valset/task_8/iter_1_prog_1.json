@@ -1,0 +1,4 @@
+{
+    "reasoning": "I create a small, deterministic Java-like function that uses the usual loc0, loc1 patterns and simple assertions to reflect a GC-like check without external dependencies. It initializes local variables, mutates them in a predictable way, and uses assertEquals to simulate observable checks.",
+    "output": "```java\nvoid function ( ) {\n  long loc0 = 0L;\n  Long[] loc1 = new Long[]{0L, 1L, 2L};\n  boolean isDone = false;\n  long timeoutSeconds = 3L;\n  loc0 = 5L;\n  loc1[0] = loc0;\n  isDone = true;\n  assertEquals(true, isDone);\n  assertEquals(3, loc1.length);\n  assertEquals(3L, timeoutSeconds);\n}\n```"
+}

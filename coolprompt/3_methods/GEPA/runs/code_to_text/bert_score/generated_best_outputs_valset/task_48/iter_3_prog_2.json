@@ -1,0 +1,4 @@
+{
+    "reasoning": "Produce a gold-target style, one-line summary followed by an Arguments/Returns/Raises block describing the function's behavior, inputs, outputs, and possible exceptions without modifying the code.",
+    "output": "Start the Cloud SQL proxy process if not already running and wait for readiness, logging progress and handling startup errors.\n\nArguments:\n    self (<type>): the instance of the class that manages the Cloud SQL proxy lifecycle.\n\nReturns:\n    None: This method does not return a value; it blocks until the proxy is ready or raises an exception.\n\nRaises:\n    AirflowException: if the proxy is already running when start_proxy is invoked.\n    AirflowException: if the cloud_sql_proxy process finishes prematurely with a non-zero return code.\n    AirflowException: if startup logs report errors such as \"googleapi: Error\" or \"invalid instance name.\""
+}

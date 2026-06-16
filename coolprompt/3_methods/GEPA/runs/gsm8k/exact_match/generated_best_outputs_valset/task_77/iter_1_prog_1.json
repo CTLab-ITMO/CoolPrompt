@@ -1,0 +1,4 @@
+{
+    "reasoning": "R = S/2, D = S/4 with S = 400; difference = 100.",
+    "output": "100"
+}

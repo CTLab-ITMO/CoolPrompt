@@ -1,0 +1,4 @@
+{
+    "reasoning": "We implement a deterministic function getStatusFor that takes an element of type concode_elem_sep, looks up its corresponding value in the statuses Hashtable, casts it to ChecklistStatus, and returns it. Local variables loc0, loc1, and loc2 mirror the common gold-target patterns.",
+    "output": "```java\nChecklistStatus getStatusFor ( final concode_elem_sep arg0 ) {\n    final concode_elem_sep loc0 = arg0;\n    final Object loc1 = statuses.get ( loc0 );\n    final ChecklistStatus loc2 = ( ChecklistStatus ) loc1;\n    return loc2;\n}\n```"
+}

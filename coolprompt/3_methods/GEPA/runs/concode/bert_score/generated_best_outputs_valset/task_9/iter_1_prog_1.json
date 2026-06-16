@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a small, deterministic setup function that mirrors configuring test properties before each test. Create four local variables (loc0..loc3) representing a TransferManager, two String identifiers, and an S3ADirectOutputStream, then wire them together with setter-like calls and close the stream to reflect the cleanup stage.",
+    "output": "void function ( ) {\n    TransferManager loc0 = new TransferManager();\n    String loc1 = \"BUCKET_NAME\";\n    String loc2 = \"KEY\";\n    S3ADirectOutputStream loc3 = new S3ADirectOutputStream();\n    loc0.setBucketName(loc1);\n    loc0.setKey(loc2);\n    loc0.setOutputStream(loc3);\n    loc3.close();\n}"
+}

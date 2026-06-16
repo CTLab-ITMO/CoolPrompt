@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a minimal, deterministic Java-like function named \"function\" that uses four local variables (loc0\u2013loc3) with simple operations and assertions to reflect a basic parse/assert style observed in gold targets, without external dependencies.",
+    "output": "void function ( ) {\n  String loc0 = \"srini_string\";\n  String[] loc1 = new String[] { loc0, \"end\" };\n  long loc2 = 12345L;\n  java.math.BigDecimal loc3 = new java.math.BigDecimal(\"0.0\");\n  assertEquals(2, loc1.length);\n  loc1[1] = \"updated\";\n  assertEquals(\"updated\", loc1[1]);\n}"
+}

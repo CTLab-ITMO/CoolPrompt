@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Check the HTTP response for errors and raise an AirflowException on failure.\n\nArguments:\n * response (requests.Response): The HTTP response to validate. If the response indicates an error status, an AirflowException is raised.\n\nRaises:\n * :class:`AirflowException`: If the HTTP response indicates an error, with the status code and reason included in the exception message."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The event of selecting a new alternative address or endpoint is an informational occurrence. Typically logged at INFO level (e.g., LOG.info(...)) to record normal workflow decisions.",
+    "output": "INFO"
+}

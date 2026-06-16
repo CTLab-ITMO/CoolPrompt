@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a hasOperation function that checks whether an operation is declared for a given OperationSignature and name by querying the nested operations map. It safely handles missing keys by returning false when the outer map yields null.",
+    "output": "boolean hasOperation ( final OperationSignature arg0 , final String arg1 ) {\n    final Map<String,OperationStats> loc0 = operations.get( arg0 );\n    if ( loc0 == null ) {\n        return false;\n    }\n    return loc0.containsKey( arg1 );\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Each session includes 2 hours of TV plus half as long for reading, which is 1 hour. So per session = 2 + 1 = 3 hours.\nHe does this 3 times per week, so weekly hours = 3 \u00d7 3 = 9 hours.\nOver 4 weeks, total hours = 9 \u00d7 4 = 36 hours.",
+    "output": "36"
+}

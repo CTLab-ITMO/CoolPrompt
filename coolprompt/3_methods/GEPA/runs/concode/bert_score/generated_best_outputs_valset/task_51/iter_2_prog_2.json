@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes setting an action view on a MenuItem; produce a code snippet invoking setActionView with a View argument.",
+    "output": "mMenuItem.setActionView(view);"
+}

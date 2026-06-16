@@ -1,0 +1,4 @@
+{
+    "reasoning": "First recipe has 20 instructions. The second has twice as many, i.e., 40. Total instructions to read = 20 + 40 = 60.",
+    "output": "60"
+}

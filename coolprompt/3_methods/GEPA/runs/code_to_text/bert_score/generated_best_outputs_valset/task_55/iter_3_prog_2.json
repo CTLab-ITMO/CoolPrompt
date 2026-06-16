@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function selects and returns a database hook based on the configured database_type, creating and storing it on self.db_hook.",
+    "output": "Create and return the appropriate database hook based on the configured database type.\n\nReturns:\n    hook (``PostgresHook`` or ``MySqlHook``): The instantiated database hook wired to the configured connection and schema, stored on self.db_hook and returned.\n\nRaises:\n    AttributeError: if required attributes (database_type, db_conn_id, database) are missing on self."
+}

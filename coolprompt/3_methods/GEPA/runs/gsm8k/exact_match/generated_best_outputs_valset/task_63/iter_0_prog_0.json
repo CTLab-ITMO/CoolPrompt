@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute total for the year: First half (6 months) at $140/month = 6 * 140 = 840. Second half (6 months) at 10% less = 140 * 0.90 = 126/month; 6 * 126 = 756. Grand total = 840 + 756 = 1596.",
+    "output": "$1596"
+}

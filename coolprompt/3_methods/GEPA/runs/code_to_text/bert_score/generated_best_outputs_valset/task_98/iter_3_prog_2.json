@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, docstring-style description of the function\u2019s purpose, parameters, return value, and potential exceptions without altering the code.",
+    "output": "Patch an existing Cloud Function using the provided update mask and wait for the operation to complete.\n\nArguments:\n    name (str): The full resource name of the function to update.\n    body (dict): The patch body containing updated function fields.\n    update_mask (Iterable[str]): The list of field paths to update; these will be joined with commas to form the API updateMask.\n\nReturns:\n    None (<type>): This method does not return a value; it triggers the patch and waits for the operation to finish.\n\nRaises:\n    Exception: if the patch request fails or waiting for the operation fails."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a single Java-like function named function that initializes a writer for the JPEG image format by using the DEFAULT_IMAGE_FORMAT, obtaining image write parameters, looking up a writer for the format, configuring compression settings, and performing two write calls to mirror the described convenience method behavior.",
+    "output": "void function ( ) {\n  String imageFormat = DEFAULT_IMAGE_FORMAT;\n  ImageWriteParam loc0 = getImageWriteParameters ( );\n  ImageWriter loc1 = lookupImageWriterForFormat ( imageFormat );\n  setWriteCompressionMode ( 0 );\n  setWriteCompressionType ( \"DEFAULT\" );\n  setWriteCompressionQuality ( 0.92f );\n  write ( );\n  write ( );\n}"
+}

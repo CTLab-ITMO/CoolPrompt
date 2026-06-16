@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, one-line imperative summary of the function\u2019s behavior and provide a docstring-like block with Arguments, Returns, and Raises sections that reflect the function's signature and observable behavior, using a reasonable type guess for xml_data and the return value.",
+    "output": "Extracts and returns a list of URLs from the given XML data.\nArguments:\n    xml_data (str): XML data as a string to parse; contains <durl> elements with nested <url> elements.\nReturns:\n    rawurl (list[str]): List of URL strings extracted from the XML data, in document order.\nRaises:\n    ExpatError: if XML parsing fails.\n    IndexError: if expected <durl> or <url> elements or their text content are missing."
+}

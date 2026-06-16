@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Print a log message to standard error with optional color formatting.\n\nArguments:\n * text (str): The log message to print, which will be prefixed with the script name and a colon in the output.\n * colors (tuple): Optional color specifiers passed to sprint to format the log output. If none are provided, the message is printed without color.\n\nReturns:\n    None"
+}

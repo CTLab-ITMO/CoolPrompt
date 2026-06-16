@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a BundleActivator stop method that does nothing. The target is a single function with the stop signature; implement an empty stop method with the appropriate final BundleContext parameter.",
+    "output": "void stop ( final BundleContext context ) { }"
+}

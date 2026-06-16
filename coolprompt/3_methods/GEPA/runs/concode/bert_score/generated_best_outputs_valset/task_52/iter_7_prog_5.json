@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a compact, deterministic Java-like function named function that uses four locals (loc0..loc3), sets up a mock session identifier and a value array, and performs a parse call followed by an assertion. This mirrors a typical parse-and-assert flow described by the input (legal-argument/exception-testing scenarios) in a minimal, self-contained way.",
+    "output": "void function ( ) {\n  String loc0 = \"MOCK_SESSION_ID\";\n  long loc1 = 0L;\n  Long[] loc2 = new Long[] { loc1 };\n  TimeIntervalParser loc3 = null;\n  parse(loc0, loc2);\n  assertEquals(0L, loc2[0].longValue());\n}"
+}

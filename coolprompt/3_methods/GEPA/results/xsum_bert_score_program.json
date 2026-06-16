@@ -1,0 +1,32 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "New task instruction for the assistant:\n\nGoal\nGiven a news article or briefing text (the input), produce a single, concise, neutral lead that mirrors the style and length of typical gold targets.\n\nOutput format\n- Output exactly one sentence.\n- End with a period; no meta-text, no reasoning steps, and no extra lines.\n\nContent and scope\n- The sentence must capture the main development, decision, or finding reported.\n- Include the key actor (person, organization, or entity) and the resulting consequence or status.\n- Preserve essential proper nouns (names, organizations, places) from the input; do not introduce new facts, entities, or context.\n- If a brief direct quote encapsulates the central point, you may include a short quotation, but keep it concise.\n\nStyle and tense\n- Write in a publication-style lead: objective, concise, informative.\n- Use tense aligned with the article’s framing:\n  - present or present perfect for ongoing or current status,\n  - past simple for clearly reported past events.\n\nLength and focus\n- Target roughly 12–25 words; content should reflect a single development or finding without multiple points or background detail.\n- Do not include background information, explanations, or justifications.\n\nAmbiguity and nuance\n- If the article presents conflicting views, select the central point as reported and present it neutrally.\n- Do not embellish or infer facts beyond what is stated.\n\nExamples (guidance only)\n- If the article reports a decision by an actor leading to a consequence, include both parts: Who did what, and the result.\n- If a quote encapsulates the point, include it briefly and only if it cleanly fits the lead’s central idea.\n\nConsistency\n- The output should read like a lead from a reputable publication and be directly usable as a stand-alone summary.",
+      "fields": [
+        {
+          "prefix": "Input:",
+          "description": "Task input text."
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Output:",
+          "description": "The generated answer / target text."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

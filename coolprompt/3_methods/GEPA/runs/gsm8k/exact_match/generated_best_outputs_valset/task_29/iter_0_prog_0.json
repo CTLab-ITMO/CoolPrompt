@@ -1,0 +1,4 @@
+{
+    "reasoning": "To solve, compute the total cost of the two heel pairs: 33 + (2 \u00d7 33) = 33 + 66 = 99. They cost five dollars less than the boots, so boots = 99 + 5 = 104 dollars.",
+    "output": "104"
+}

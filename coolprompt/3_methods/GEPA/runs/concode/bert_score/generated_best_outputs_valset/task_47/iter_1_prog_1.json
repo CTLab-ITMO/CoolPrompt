@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a default maximum key size of 512 bits and setters/getters for maximumKeySize. The function will simulate this by initializing a local variable to 512L, assigning it through an intermediate variable, and asserting the value matches the expected maximumKeySize. This adheres to the style of the gold targets by using loc0/loc1-like variables and an assertEquals check.",
+    "output": "void function ( ) {\n    long loc0 = 512L;\n    long maximumKeySize = loc0;\n    long loc1 = maximumKeySize;\n    assertEquals(512L, loc1);\n}"
+}

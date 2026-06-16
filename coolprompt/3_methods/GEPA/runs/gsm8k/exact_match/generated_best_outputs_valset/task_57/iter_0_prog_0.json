@@ -1,0 +1,4 @@
+{
+    "reasoning": "Bridge capacity 5000 minus empty truck weight 3755 gives available for boxes: 1245 pounds. Each box weighs 15 pounds, so maximum number of boxes is floor(1245 / 15) = 83. Since 83 \u00d7 15 = 1245, it uses all remaining capacity.",
+    "output": "83"
+}

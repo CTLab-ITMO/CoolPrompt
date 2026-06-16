@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function attempts to determine the proxy version by:\n- calling the proxy executable with --version\n- capturing its stdout\n- applying a regex that looks for a substring matching Version (or version) followed by a space and capturing the text up to a semicolon\n- returning the captured version string if found, otherwise returning None\nNote that if the subprocess call fails (non-zero exit status or other I/O errors), an exception would be raised and not handled here.",
+    "output": "The actual return value depends on the external command's output. If the command prints something like \"Version 1.2.3; ...\" or \"version 1.2.3; ...\", this function will return \"1.2.3\". If such a pattern isn't found, it returns None. If the subprocess call fails, an exception would be raised."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a functionality to return the next available tile in a lane closest to the base. I provide a small deterministic function that computes the nextAvailableLane and nextAvailableTile using simple local variables, with a basic guard against negative indices, reflecting the described operation without relying on external context.",
+    "output": "void function ( ) {\n    int loc0;\n    int loc1;\n    loc0 = nextAvailableLane;\n    loc1 = nextAvailableTile;\n    if (loc0 < 0) loc0 = 0;\n    if (loc1 < 0) loc1 = 0;\n    if (loc0 == 0 && loc1 == 0) {\n        loc0 = 1;\n        loc1 = 0;\n    }\n    nextAvailableLane = loc0;\n    nextAvailableTile = loc1;\n}"
+}

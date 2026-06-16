@@ -1,0 +1,4 @@
+{
+    "reasoning": "Produce a minimal, deterministic Java-like function that uses the locX naming convention (loc0..loc3) and involves a short sequence of operations on a GregorianCalendar and Date, reflecting a typical date-construction-oriented test setup without external dependencies or assertions.",
+    "output": "void function ( ) {\n  String loc0 = \"placeholder\";\n  int loc1 = 0;\n  java.util.GregorianCalendar loc2 = new java.util.GregorianCalendar(2000, 0, 1);\n  java.util.Date loc3 = loc2.getTime();\n  loc2.set(java.util.Calendar.MONTH, 0);\n  loc3 = loc2.getTime();\n}"
+}

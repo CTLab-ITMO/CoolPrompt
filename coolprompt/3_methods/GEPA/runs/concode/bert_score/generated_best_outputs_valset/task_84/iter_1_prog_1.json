@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a function that registers a new CodeGenerator in the GeneratorManager singleton. It creates a new generator, looks up the existing generator for the current language, removes the old one if present, and then stores the new generator in the generators map under currLanguage.",
+    "output": "void function ( ) {\n    CodeGenerator loc0 = new CodeGenerator();\n    Language loc1 = currLanguage;\n    Map<Language,CodeGenerator> loc2 = GeneratorManager.INSTANCE.getGenerators();\n    CodeGenerator loc3 = loc2.get(loc1);\n    if (loc3 != null) {\n        GeneratorManager.INSTANCE.removeGenerator(loc3);\n    }\n    loc2.put(loc1, loc0);\n}"
+}

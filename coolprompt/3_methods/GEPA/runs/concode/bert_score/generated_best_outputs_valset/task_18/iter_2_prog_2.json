@@ -1,0 +1,4 @@
+{
+    "reasoning": "I provided a minimal Java method that checks if a view's layout direction is RTL, matching the first sentence of the input.",
+    "output": "public static boolean isLayoutDirectionRTL(View view) {\n    return view != null && view.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;\n}"
+}

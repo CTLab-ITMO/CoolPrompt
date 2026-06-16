@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input appears to describe a debugging/reporting API with a number of fields (with various types) and several methods for managing a message queue and topics. I will extract a coherent set of fields (with their types) and a concise list of related methods that are implied by the text.",
+    "output": "Fields:\n- types: String\n- verbose: String\n- reportTopics: Map<String, Integer>\n- dataflow: Stack<String>\n- frontend: String\n- imports: String\n- loader: String\n- time: String\n- debug: String\n- cfg: String\n- context: String\n- visit: String\n- resolver: String\n- topics: Collection<String>\n- serialize: String\n- noReporting: boolean\n- errors: String\n- should_report: boolean\n- queue: ErrorQueue\n- level: int\n\nMethods:\n- void setQueue(ErrorQueue)\n- ErrorQueue getQueue()\n- void pushTopic(String)\n- void popTopic()\n- void addTopic(String)\n- void setTopic(String)"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function has_task returns True when the provided task_instance's key is present in either the queued_tasks or running collections. The documentation should reflect the signature and behavior in a concise, docstring-like block, including an Arguments section for the parameter and a Returns section describing the possible return value. No Raises are applicable here.",
+    "output": "Return True if the task is currently queued or running.\nArguments:\n    task_instance (:class:`TaskInstance`): the task instance to check for membership in the queued or running sets.\nReturns:\n    True if the task is currently queued or running; otherwise None. (<Optional[bool]>): boolean indicating the outcome of the check."
+}

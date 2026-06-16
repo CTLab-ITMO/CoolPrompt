@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function heartbeat gathers successful TaskInstance records for configured DAGs, computes how many task instances are expected based on the current time and task start dates, prints stats, pauses DAGs, and exits when all tasks are processed or a maximum runtime has elapsed. The documentation describes the method signature (self), its behavior, return value, and possible exception (SystemExit) without altering code.",
+    "output": "Heartbeat the scheduler by collecting and reporting task statistics, pausing DAGs, and exiting when complete or timed out.\n\nArguments:\n    self (:class:`SchedulerMetricsJob`): instance on which the method is invoked.\n\nReturns:\n    None: this method does not return a value; it may terminate the process via ``sys.exit()`` when exit conditions are met.\n\nRaises:\n    SystemExit: raised when the method decides to terminate execution due to all tasks processed or timeout."
+}

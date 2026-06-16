@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a small, deterministic Java-like snippet that reflects \"getting the checklist for an element\" using a Hashtable to register and retrieve a value. Use four locals named loc0..loc3, with loc0 as the Hashtable, loc1 as the element key, loc2 as the expected checklist value, and loc3 as the retrieved value, followed by a simple assertion.",
+    "output": "```java\nvoid function ( ) {\n  Hashtable loc0 = new Hashtable();\n  String loc1 = \"element\";\n  String loc2 = \"Checklist\";\n  loc0.put(loc1, loc2);\n  Object loc3 = loc0.get(loc1);\n  if (loc3 == null || !loc3.equals(loc2)) {\n    throw new AssertionError(\"unexpected value\");\n  }\n}\n```"
+}

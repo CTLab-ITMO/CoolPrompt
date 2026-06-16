@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Convert an aware datetime to a naive datetime in the target timezone.\n\nArguments:\n * value (datetime.datetime): An aware datetime to convert to the target timezone; must be timezone-aware (i.e., not naive).\n * timezone (datetime.tzinfo): Target timezone to convert to. If not set (``None``, default), uses the module's ``TIMEZONE``.\n\nReturns:\n * :class:`datetime.datetime`: A naive datetime representing the same instant in the target timezone, with tzinfo removed.\n\nRaises:\n * :class:`ValueError`: If ``value`` is naive."
+}

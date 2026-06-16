@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function builds a title by selecting three nested strings from json_content and joining them with underscores. Specifically, it uses:\n- json_content[0]['name'] for the root name,\n- json_content[0]['Topics'][tIndex]['name'] for the topic name at index tIndex,\n- json_content[0]['Topics'][tIndex]['Parts'][pIndex]['name'] for the part name at index pIndex within that topic.\nIt then returns the concatenated string. It assumes json_content is a non-empty list with the expected nested structure.",
+    "output": "\"Root_Topic_Part\"  (General form: \"<root_name>_<topic_name>_<part_name>\")\n\nExample:\nIf json_content = [{\"name\": \"Root\", \"Topics\": [{\"name\": \"Topic\", \"Parts\": [{\"name\": \"Part\"}]}]}], tIndex = 0, pIndex = 0,\nthe function returns \"Root_Topic_Part\"."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes a view that tracks blocks to move in and out, and the task is to clear all such marks. Implement a small, deterministic method that clears both move-in and move-out sets and resets their corresponding counters to zero, using the existing field names mBlocksToMoveIn, mBlocksToMoveOut, mBlocksToMoveInSize, and mBlocksToMoveOutSize.",
+    "output": "```java\nvoid clearBlockMoveMarks ( ) {\n    mBlocksToMoveIn.clear ( ) ;\n    mBlocksToMoveOut.clear ( ) ;\n    mBlocksToMoveInSize = 0L ;\n    mBlocksToMoveOutSize = 0L ;\n}\n```"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input appears to define a dataserver factory with a PlaceHolder field and accessor methods for port, closed state, and bind host. I will provide a compact Java-like interface skeleton that reflects these members: a PlaceHolder field accessor, and methods getPort(), isClosed(), and getBindHost().",
+    "output": "public interface DataServerFactory {\n  PlaceHolder placeHolder();\n  int getPort();\n  boolean isClosed();\n  String getBindHost();\n}\n\nclass PlaceHolder {\n  // placeholder implementation\n}"
+}

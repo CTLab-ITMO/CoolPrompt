@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a minimal Java-like function that mirrors the input by creating several objects through hypothetical factory methods. Use four local variables named loc0..loc3 to reflect a small deterministic sequence of createX calls corresponding to the listed items.",
+    "output": "void function ( ) {\n    Object loc0 = createValidateTokenResponse();\n    Object loc1 = createCertificateChainInfo();\n    Object loc2 = createRoleList();\n    Object loc3 = createCheckServiceAccessRequest();\n}"
+}

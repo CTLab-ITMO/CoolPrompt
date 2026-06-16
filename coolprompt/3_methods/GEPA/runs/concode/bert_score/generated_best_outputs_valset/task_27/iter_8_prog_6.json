@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a simple cache-backed accessor getProjectModel that looks up the user in projectCache and creates a new ProjectModel from the user when absent, caching it for future calls.",
+    "output": "ProjectModel getProjectModel ( final String user ) {\n    final ProjectModel loc0 = projectCache.get( user );\n    if ( loc0 != null ) {\n        return loc0;\n    }\n    final ProjectModel loc1 = new ProjectModel( user );\n    projectCache.put( user, loc1 );\n    return loc1;\n}"
+}

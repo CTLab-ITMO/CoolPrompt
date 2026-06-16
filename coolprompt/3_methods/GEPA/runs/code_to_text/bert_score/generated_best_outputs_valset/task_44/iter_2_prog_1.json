@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Create a new database in the specified instance and wait for the operation to complete.\n\nArguments:\n * instance (str): The database instance in which to create the new database.\n * body (dict): The request body describing the database to be created.\n * project_id (str, optional): The Google Cloud project ID. If not set (``None``, default), uses the default project."
+}

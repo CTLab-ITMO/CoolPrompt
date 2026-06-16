@@ -1,0 +1,4 @@
+{
+    "reasoning": "To account for notes: initial 80, plus purchase x equals notes spent on cups (220) plus notes left (23). So 80 + x = 220 + 23 = 243, hence x = 243 - 80 = 163.",
+    "output": "163"
+}

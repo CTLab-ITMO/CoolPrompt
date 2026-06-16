@@ -1,0 +1,4 @@
+{
+    "reasoning": "The task describes obtaining a User from a ThreadLocal named sUserThreadLocal, then performing set and remove operations. I implement a small function that gets the user, then calls set with null and finally removes the value.",
+    "output": "``` \nvoid function ( ) {\n  User loc0 = sUserThreadLocal.get();\n  sUserThreadLocal.set(null);\n  sUserThreadLocal.remove();\n}\n```"
+}

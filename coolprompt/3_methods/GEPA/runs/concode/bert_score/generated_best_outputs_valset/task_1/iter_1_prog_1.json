@@ -1,0 +1,4 @@
+{
+    "reasoning": "We generate a small, deterministic Java-like function that mirrors the described hashing-related API surface from the input. The function uses loc0, loc1, loc2, and loc3 as local variables to reflect the pattern seen in the gold targets: it builds a hash from an empty byte array, then derives hashCode, equals, toBigInteger, toString, duplicate, compareTo, and getBytes in a compact sequence without external dependencies.",
+    "output": "```java\nvoid function ( ) {\n  Sha256Hash ZERO_HASH = Sha256Hash.ZERO_HASH;\n  byte[] loc0 = new byte[0];\n  Sha256Hash loc1 = Sha256Hash.createDouble(Sha256Hash.create(loc0));\n  int loc2 = loc1.hashCode();\n  boolean loc3 = loc1.equals(ZERO_HASH);\n  BigInteger toBigInteger = loc1.toBigInteger();\n  String toString = loc1.toString();\n  Sha256Hash duplicate = loc1.duplicate();\n  int compareTo = duplicate.compareTo(ZERO_HASH);\n  byte[] getBytes = duplicate.getBytes();\n}\n```"
+}

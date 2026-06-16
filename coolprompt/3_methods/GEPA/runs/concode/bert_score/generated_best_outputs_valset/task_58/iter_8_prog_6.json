@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a getter that returns the mChildren field to expose the children nodes.",
+    "output": "List<DirectedAcyclicGraphNode<T>> getChildren ( ) { return mChildren; }"
+}

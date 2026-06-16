@@ -1,0 +1,4 @@
+{
+    "reasoning": "- Orange: 10 L with 2/3 water => water = 20/3 L; non-water = 10/3 L.\n- Pineapple: 15 L with 3/5 water => water = 9 L; non-water = 6 L.\n- Spill 1 L of orange reduces orange to 9 L; water and non-water decrease proportionally: water becomes 20/3 - 2/3 = 6 L; non-water becomes 10/3 - 1/3 = 3 L.\n- After spill: orange contributes 9 L (6 L water, 3 L other), pineapple contributes 15 L (9 L water, 6 L other).\n- Total water in the 24 L remaining = 6 L + 9 L = 15 L.",
+    "output": "15"
+}

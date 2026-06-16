@@ -1,0 +1,4 @@
+{
+    "reasoning": "Interpreting \"two times older\" as \"two times as old\" (double). Suzy = 1 year. Ben = 2 \u00d7 Suzy = 2 years. Brandon = 4 \u00d7 Ben = 8 years.",
+    "output": "8"
+}

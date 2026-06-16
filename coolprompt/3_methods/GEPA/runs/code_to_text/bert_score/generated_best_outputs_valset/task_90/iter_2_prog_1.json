@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Delete a database.\n\nArguments:\n * database_name (str): The name of the database to delete.\n\nRaises:\n * :class:`AirflowBadRequest`: If database_name is None."
+}

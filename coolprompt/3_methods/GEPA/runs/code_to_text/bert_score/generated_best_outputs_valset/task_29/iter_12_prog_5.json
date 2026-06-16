@@ -1,0 +1,4 @@
+{
+    "reasoning": "Identify the function\u2019s behavior: it fetches a value from self.extras using a key prefixed with 'extra__grpc__' and the provided field_name, returning the given default if the key is absent. Produce a concise, docstring-like block with a one-line imperative summary, followed by Arguments and Returns sections describing parameters and return value.",
+    "output": "\"\"\"\nReturn the value for the given field from the extras dictionary, or the provided default if not present.\n\nArguments:\n    field_name (str): the field name to lookup; looked up as 'extra__grpc__{field_name}' in self.extras.\n        - Required; no default.\n    default (object): value to return if the field is not present in self.extras.\n        - Optional; default is None.\n\nReturns:\n    (object): the value associated with the composed key in self.extras if present, otherwise the provided default.\n\"\"\""
+}

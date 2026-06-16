@@ -1,0 +1,4 @@
+{
+    "reasoning": "Identify task: fill in the missing docstring for the bulk_dump method. Provide a clear, concise description of the method\u2019s purpose, along with parameter details and return value. The method uses PostgreSQL COPY TO STDOUT via copy_expert to stream a table\u2019s contents into a file-like object, so the docstring should reflect that behavior.",
+    "output": "\"\"\"\nDump the contents of a database table to a file-like object using COPY TO STDOUT.\n\nThis method executes a PostgreSQL COPY command to stream the table data and writes the\noutput to the provided tmp_file object.\n\nParameters:\n- table (str): The name of the table to dump.\n- tmp_file: A file-like object with a write(string) method where the COPY output will be written.\n\nReturns:\nNone\n\"\"\""
+}

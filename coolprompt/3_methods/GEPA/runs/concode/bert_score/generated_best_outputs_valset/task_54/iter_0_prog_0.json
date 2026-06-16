@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input appears to describe a datagram-packet-like class with fields (data, offset, length, serviceID, capacity, address) and a set of getter/setter methods (including overloaded setters for data and several accessors). I\u2019ve extracted the field names and provided corresponding Java-style method declarations, including plausible overloads for setData and a no-arg setLengthOnly to match the provided tokenized names.",
+    "output": "void setServiceID(ServiceID serviceID)\nServiceID getServiceID()\nvoid setLengthOnly()\nvoid setLength(int length)\nvoid setAddress(InetAddress address)\nvoid setData(byte[] data)\nvoid setData(byte[] data, int offset, int length)\nSocketAddress getSocketAddress()\nint getOffset()\nint getLength()\nInetAddress getAddress()\nvoid setSocketAddress(SocketAddress socketAddress)\nbyte[] getData()\nint getCapacity()"
+}

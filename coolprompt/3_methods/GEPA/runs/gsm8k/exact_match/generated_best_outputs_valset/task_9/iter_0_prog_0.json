@@ -1,0 +1,4 @@
+{
+    "reasoning": "Regular pay for 40 hours: 40 \u00d7 10 = 400. Overtime rate: 1.2 \u00d7 10 = 12 per hour. Overtime hours: 45 \u2212 40 = 5. Overtime pay: 5 \u00d7 12 = 60. Total earnings: 400 + 60 = 460.",
+    "output": "$460"
+}

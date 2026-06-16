@@ -1,0 +1,4 @@
+{
+    "reasoning": "The method is a wrapper that delegates to the superclass implementation of insert_rows, always passing an offset of 0. This ensures rows are inserted starting from the beginning of the table, regardless of any other default behavior in higher-level logic. The docstring should reflect this behavior and document the parameters.",
+    "output": "def insert_rows(self, table, rows, target_fields=None):\n        \"\"\"\n        Insert rows into the specified table starting at the beginning.\n\n        This method delegates to the superclass implementation, fixing the\n        offset to 0 so that rows are inserted at the top.\n        \"\"\"\n        super().insert_rows(table, rows, target_fields, 0)"
+}

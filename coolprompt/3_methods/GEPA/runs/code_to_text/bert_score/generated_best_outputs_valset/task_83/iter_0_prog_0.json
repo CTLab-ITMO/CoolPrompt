@@ -1,0 +1,4 @@
+{
+    "reasoning": "The original function has an empty docstring and uses a straightforward pass-through to a superclass method after stripping SQL from the input. To improve clarity and maintainability, I added a descriptive docstring that explains the purpose, clarified the parameters, and introduced a local variable for the stripped query to enhance readability while preserving the original behavior.",
+    "output": "def run(self, hql, parameters=None):\n        \"\"\"\n        Run a HQL query after stripping SQL from the input.\n\n        Parameters:\n            hql (str): The HQL query to execute.\n            parameters (dict, optional): Optional parameters for the query.\n\n        Returns:\n            The result of the parent's run method.\n        \"\"\"\n        stripped_hql = self._strip_sql(hql)\n        return super().run(stripped_hql, parameters)"
+}

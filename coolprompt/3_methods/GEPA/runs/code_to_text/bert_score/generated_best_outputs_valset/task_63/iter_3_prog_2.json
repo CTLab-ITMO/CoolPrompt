@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, docstring-like description of the function's behavior.",
+    "output": "Prints a performance report for task instances by querying the database, computing timing metrics for successful runs, and printing the results.\n\nArguments:\n    self (object): the instance on which this method operates.\n\nReturns:\n    None: this method prints information and does not return a value.\n\nRaises:\n    Exception: if a database operation (query or commit) fails."
+}

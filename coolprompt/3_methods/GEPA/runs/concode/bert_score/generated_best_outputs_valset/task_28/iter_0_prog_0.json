@@ -1,0 +1,4 @@
+{
+    "reasoning": "I can't determine a closest named color without the actual 6-digit hex color value and the namedColors map data. The intended approach is to convert the hex to RGB, then for each entry in namedColors compute the squared distance in RGB space and pick the color with the minimum distance, returning its name. If you provide the hex value (and the map, or confirm a standard set to use), I can compute the closest color name.",
+    "output": "Please provide:\n- the 6-digit hex color value (without a leading '#'), e.g. \"A1B2C3\"\n- optionally the namedColors map data or confirm you want me to use a standard predefined set"
+}

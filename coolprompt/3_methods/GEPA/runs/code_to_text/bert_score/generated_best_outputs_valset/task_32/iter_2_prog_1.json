@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Upload a file to Google Cloud Storage.\n\nArguments:\n * context (dict): Runtime context for this task instance."
+}

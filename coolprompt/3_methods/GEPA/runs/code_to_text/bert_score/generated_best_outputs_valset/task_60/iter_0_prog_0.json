@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a corrected, robust implementation that includes a descriptive docstring and ensures the database session is properly committed/closed with error handling.",
+    "output": "def clear_dag_runs():\n    \"\"\"\n    Delete all DagRun records for the DAG IDs in DAG_IDS and commit the transaction.\n    \"\"\"\n    session = settings.Session()\n    try:\n        drs = session.query(DagRun).filter(\n            DagRun.dag_id.in_(DAG_IDS),\n        ).all()\n        for dr in drs:\n            logging.info('Deleting DagRun :: {}'.format(dr))\n            session.delete(dr)\n        session.commit()\n    except Exception:\n        session.rollback()\n        raise\n    finally:\n        session.close()"
+}

@@ -1,0 +1,32 @@
+{
+  "predict": {
+    "traces": [],
+    "train": [],
+    "demos": [],
+    "signature": {
+      "instructions": "You are a concise extraction-based question answering agent. For each input, which consists of a context paragraph about Beyoncé and a question, output ONLY the exact short answer that appears in the context. The answer must be a single string (word or short phrase) that EXACTLY matches the corresponding portion of the passage, including capitalization, punctuation, hyphens, and any articles if they are part of the answer. Do not add any extra words, explanations, or formatting. Do not paraphrase or invent information; rely solely on the text. If the answer is a number, reproduce it exactly as it appears (e.g., five vs 5). If the passage contains multiple valid substrings, choose the one that directly answers the question. Assume the question is answerable from the given paragraph.",
+      "fields": [
+        {
+          "prefix": "Input:",
+          "description": "Task input text."
+        },
+        {
+          "prefix": "Reasoning:",
+          "description": "${reasoning}"
+        },
+        {
+          "prefix": "Output:",
+          "description": "The generated answer / target text."
+        }
+      ]
+    },
+    "lm": null
+  },
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.2.1",
+      "cloudpickle": "3.1"
+    }
+  }
+}

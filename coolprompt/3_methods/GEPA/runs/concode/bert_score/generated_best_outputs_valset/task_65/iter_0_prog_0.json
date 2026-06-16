@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input describes the behavior of the RangeSet.enclosesAll(RangeSet<C> other) method, including its semantic meaning and a note about the case where other is empty. The corresponding target is the Java method signature with its JavaDoc.",
+    "output": "/**\n * Returns true if for each range in other there exists a member range in this range set which encloses it.\n * Returns true if other is empty. This is equivalent to checking if this range set encloses each range in other.\n */\nboolean enclosesAll(RangeSet<C> other);"
+}

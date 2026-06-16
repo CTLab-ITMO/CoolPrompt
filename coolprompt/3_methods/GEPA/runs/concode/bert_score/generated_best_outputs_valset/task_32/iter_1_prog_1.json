@@ -1,0 +1,4 @@
+{
+    "reasoning": "We implement a simple method that clears all marks about blocks to move in/out by clearing the corresponding Sets and resetting the size counters. We introduce four locals loc0..loc3 mapped to the fields mBlocksToMoveIn, mBlocksToMoveInSize, mBlocksToMoveOut, mBlocksToMoveOutSize, perform null checks before clearing the sets, and then reset the size fields to 0. This mimics the \"clears all marks\" operation described in the input while following the loc0/loc1/loc2/loc3 naming convention.",
+    "output": "```java\nvoid function ( ) {\n  Set<Long> loc0 = mBlocksToMoveIn;\n  long loc1 = mBlocksToMoveInSize;\n  Set<Long> loc2 = mBlocksToMoveOut;\n  long loc3 = mBlocksToMoveOutSize;\n\n  if (loc0 != null) loc0.clear();\n  if (loc2 != null) loc2.clear();\n  mBlocksToMoveInSize = 0;\n  mBlocksToMoveOutSize = 0;\n}\n```"
+}

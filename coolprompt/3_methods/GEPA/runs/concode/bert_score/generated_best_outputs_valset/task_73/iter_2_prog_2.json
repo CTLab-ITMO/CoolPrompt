@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "boolean hasOperation(String name, OperationSignature signature) {\n  Map<String, OperationStats> byName = operations.get(signature);\n  if (byName == null) {\n    return false;\n  }\n  return byName.containsKey(name);\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a small boolean method named hasOperation that uses the provided OperationSignature (arg0) to fetch the inner map from the operations field, and then checks if the given operation name (arg1) exists in that inner map. Use a loc0 local variable for the inner map to mirror the common naming pattern.",
+    "output": "public boolean hasOperation ( final OperationSignature arg0 , final String arg1 ) {\n    final Map<String, OperationStats> loc0 = operations.get( arg0 );\n    if ( loc0 == null ) {\n        return false;\n    }\n    return loc0.containsKey( arg1 );\n}"
+}

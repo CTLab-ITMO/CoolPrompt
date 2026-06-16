@@ -1,0 +1,4 @@
+{
+    "reasoning": "Interpreting the input as a request to generate a C-style comment block that documents the given tokens. I will format a multi-line block comment that lists the provided items in a readable way.",
+    "output": "/*\n this function returns the documentation in c-style comment format .\n concode_field_sep String LINE_SEPARATOR\n concode_field_sep void setDocs\n concode_elem_sep int appendComment\n concode_elem_sep boolean hasDocs\n concode_elem_sep String getComments\n concode_elem_sep String getComments\n concode_elem_sep String defaultFor\n*/"
+}

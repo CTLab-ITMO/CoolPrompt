@@ -1,0 +1,4 @@
+{
+    "reasoning": "The given function lacks a docstring. A concise, clear docstring should describe the function\u2019s purpose, its parameters, side effects (database updates and commit), and any dependencies (e.g., DAG_IDS defined in the module, and using settings.Session()). This helps future readers understand that the function updates the paused state for all DAGs whose IDs are in DAG_IDS and commits the change.",
+    "output": "\"\"\"Set the paused state for a set of DAGs.\n\nThis function uses a SQLAlchemy session to update the is_paused flag on DagModel rows\nwhose dag_id is in the global DAG_IDS collection. It logs each modification and commits\nthe transaction.\n\nParameters:\n    is_paused (bool): The desired paused state to apply to the targeted DAGs.\n\nNotes:\n    - DAG_IDS must be defined in the module scope and contain the DAG IDs to update.\n    - This function relies on settings.Session() to obtain a database session.\n\"\"\""
+}

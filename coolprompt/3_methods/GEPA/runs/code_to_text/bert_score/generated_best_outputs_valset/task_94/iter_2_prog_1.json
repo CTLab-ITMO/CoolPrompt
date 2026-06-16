@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated a structured docstring describing function behavior, parameters, return value, and potential exception.",
+    "output": "Get a document by its identifier from the database.\n\nArguments:\n * document_id (str): The identifier of the document to retrieve.\n * database_name (str): Optional database name. If not set (``None``, default), the configured database name is used.\n * collection_name (str): Optional collection name. If not set (``None``, default), the configured collection name is used.\n\nReturns:\n * The retrieved document item, or ``None`` if an HTTP failure occurs.\n\nRaises:\n * AirflowBadRequest: If document_id is None."
+}

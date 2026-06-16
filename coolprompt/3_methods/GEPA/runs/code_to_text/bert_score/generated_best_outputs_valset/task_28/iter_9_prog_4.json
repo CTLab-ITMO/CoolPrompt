@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a gold-target style documentation block for the given function. The function has no explicit parameters, retrieves AWS credentials from a Snowflake connection's extras when present, and returns them as a pair. There is a potential NameError if credentials are not defined due to missing data.",
+    "output": "Return AWS credentials from the configured Snowflake connection.\nArguments:\n\nReturns:\n    Tuple[str, str]: AWS access key id and AWS secret access key retrieved from the Snowflake connection extras, if present.\n\nRaises:\n    NameError: if aws_access_key_id or aws_secret_access_key are not defined due to missing credentials."
+}

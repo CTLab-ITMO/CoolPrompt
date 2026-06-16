@@ -1,0 +1,4 @@
+{
+    "reasoning": "To achieve an average speed of 4 mph for 12 miles, total time must be 3 hours. After 2 hours spent on 6 miles, 6 miles remain; to complete in 1 more hour, speed must be 6 mph.",
+    "output": "6"
+}

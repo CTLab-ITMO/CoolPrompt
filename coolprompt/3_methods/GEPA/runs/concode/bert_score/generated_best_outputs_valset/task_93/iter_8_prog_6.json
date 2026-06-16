@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a no-argument Java-like function that uses the same loc0\u2013loc3 variable pattern and reflects the operation described by the input by constructing and printing a string that combines the tokens \"toString\" and \"getErrorMsg\" mentioned in the input.",
+    "output": "void function ( ) {\n    String loc0 = \"toString\";\n    String loc1 = \"getErrorMsg\";\n    String loc2 = loc0 + \" \" + loc1;\n    String loc3 = loc2;\n    System.out.println(loc3);\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a concise, gold-target style docstring for the given method, including a one-line imperative summary, an Arguments section describing the method parameter (self), and a Returns section indicating the function returns None and prints output. No code is modified.",
+    "output": "Prints a summary of performance statistics for task instances across the configured DAG IDs and reports any unfinished tasks.\n\nArguments:\n    self (object): the instance on which the method is invoked.\n\nReturns:\n    None: prints performance data and warnings to stdout."
+}

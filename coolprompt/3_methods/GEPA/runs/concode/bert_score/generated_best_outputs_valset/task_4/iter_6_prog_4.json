@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a simple no-argument Java-like function that reflects the described sequence of identifiers in the input by declaring and initializing the variables denom, num, isOne, and then using loc0 to hold a result from getScaled(num) and a boolean equals comparing loc0 with getNum(). This mirrors the pattern of the listed items: denom, num, isOne, getScaled, equals, getNum, in a small, deterministic block.",
+    "output": "void function ( ) {\n    int denom = 3;\n    int num = 4;\n    boolean isOne = (denom == 1);\n    int loc0 = getScaled(num);\n    boolean equals = (loc0 == getNum());\n}"
+}

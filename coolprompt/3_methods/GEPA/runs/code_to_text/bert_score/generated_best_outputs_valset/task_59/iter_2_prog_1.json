@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Extract the numeric error code from an exception using a regular expression.\n\nArguments:\n * self (object): the instance of the class.\n * e (BaseException): the exception from which to extract a numeric error code.\n\nReturns: int: the parsed error code if parsing succeeds; otherwise the original exception."
+}

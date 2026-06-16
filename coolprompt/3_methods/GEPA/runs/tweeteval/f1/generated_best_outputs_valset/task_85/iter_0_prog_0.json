@@ -1,0 +1,4 @@
+{
+    "reasoning": "The sentence has a subject-verb agreement issue: with two subjects \"@user and @user\" the correct form uses the plural verb \"were.\" In a not-only/but construction, the auxiliary should be repeated: \"Not only were ..., but they also ...\" Also, refine phrasing for natural flow by using \"surrounding this movie\" and include \"they\" before \"made\" for clarity.",
+    "output": "Not only were @user and @user responsible for the unnecessary outrage surrounding this movie, but they also made the director @user look bad."
+}

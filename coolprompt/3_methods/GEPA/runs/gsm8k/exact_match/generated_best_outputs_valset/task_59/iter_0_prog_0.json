@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute the raspberries from clusters: 6 \u00d7 20 = 120. Add the scattered 67, total = 120 + 67 = 187.",
+    "output": "187"
+}

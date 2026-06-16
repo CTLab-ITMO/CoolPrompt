@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will extract the field names and their types from the input and present them as a clean, readable list of fields with corresponding types.",
+    "output": "- long serialVersionUID\n- String isSystemDerived\n- String isActive\n- BigDecimal predecessorId\n- String srcFileName\n- BigDecimal successorId\n- BigDecimal feedId\n- String checksum\n- String transmissionDatasetId\n- String comments\n- String inactivationReasonType\n- String isFormatValid\n- long dataUnitId\n- Timestamp receiptDate\n- String srcUniqueFileName\n- Timestamp createdDate\n- Long dataSetId\n- BigDecimal fileSize\n- String destFileName\n- String loadedInCats\n- String checksumType\n- Timestamp modifiedDate\n- BigDecimal runId\n- String isPrepopulated\n- String isBulk\n- String isUpdate\n- String receiptDateType\n- String status"
+}

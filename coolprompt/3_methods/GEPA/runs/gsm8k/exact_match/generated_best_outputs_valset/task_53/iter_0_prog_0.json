@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute Thursday revenue: 6 truck tires at $60 plus 4 car tires at $40 \u2192 6\u00d760 + 4\u00d740 = 360 + 160 = 520. Friday revenue: 12 car tires at $40 \u2192 12\u00d740 = 480. The higher revenue day is Thursday, difference = 520 \u2212 480 = 40.",
+    "output": "$40"
+}

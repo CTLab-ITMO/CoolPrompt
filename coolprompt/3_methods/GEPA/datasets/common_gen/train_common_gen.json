@@ -1,0 +1,204 @@
+{
+  "examples": [
+    {
+      "input": "['ski', 'mountain', 'skier']",
+      "target": "Skier skis down the mountain"
+    },
+    {
+      "input": "['ski', 'mountain', 'skier']",
+      "target": "A skier is skiing down a mountain."
+    },
+    {
+      "input": "['ski', 'mountain', 'skier']",
+      "target": "Three skiers are skiing on a snowy mountain."
+    },
+    {
+      "input": "['wag', 'tail', 'dog']",
+      "target": "The dog is wagging his tail."
+    },
+    {
+      "input": "['wag', 'tail', 'dog']",
+      "target": "A dog wags his tail at the boy."
+    },
+    {
+      "input": "['wag', 'tail', 'dog']",
+      "target": "a dog wags its tail with its heart"
+    },
+    {
+      "input": "['lake', 'paddle', 'canoe']",
+      "target": "woman paddling canoe on a lake"
+    },
+    {
+      "input": "['lake', 'paddle', 'canoe']",
+      "target": "paddle an open canoe along lake ."
+    },
+    {
+      "input": "['lake', 'paddle', 'canoe']",
+      "target": "a man paddles his canoe on the lake."
+    },
+    {
+      "input": "['station', 'train', 'pull']",
+      "target": "a train pulls into station"
+    },
+    {
+      "input": "['station', 'train', 'pull']",
+      "target": "train pulling in to station ."
+    },
+    {
+      "input": "['station', 'train', 'pull']",
+      "target": "the train pulling into station"
+    },
+    {
+      "input": "['hay', 'eat', 'horse']",
+      "target": "A horse is eating hay."
+    },
+    {
+      "input": "['hay', 'eat', 'horse']",
+      "target": "The horses are eating hay."
+    },
+    {
+      "input": "['hay', 'eat', 'horse']",
+      "target": "A horse eats hay in the barn"
+    },
+    {
+      "input": "['fan', 'match', 'watch']",
+      "target": "watch a match with fans"
+    },
+    {
+      "input": "['fan', 'match', 'watch']",
+      "target": "the fans watch the match"
+    },
+    {
+      "input": "['fan', 'match', 'watch']",
+      "target": "a fan watches during the match"
+    },
+    {
+      "input": "['mountain', 'surround', 'lake']",
+      "target": "a lake surrounded by mountains ."
+    },
+    {
+      "input": "['mountain', 'surround', 'lake']",
+      "target": "lake from the surrounding mountains"
+    },
+    {
+      "input": "['mountain', 'surround', 'lake']",
+      "target": "one of the mountain ranges that surrounds lake ."
+    },
+    {
+      "input": "['lay', 'rug', 'dog']",
+      "target": "A dog laying on a rug."
+    },
+    {
+      "input": "['lay', 'rug', 'dog']",
+      "target": "The dogs laid down on the rug"
+    },
+    {
+      "input": "['lay', 'rug', 'dog']",
+      "target": "Brown dog chews on bone while laying on the rug."
+    },
+    {
+      "input": "['painting', 'wall', 'hang']",
+      "target": "hanging a painting on a wall at home"
+    },
+    {
+      "input": "['painting', 'wall', 'hang']",
+      "target": "paintings of horses hang on the walls ."
+    },
+    {
+      "input": "['painting', 'wall', 'hang']",
+      "target": "There is only one painting hanging on the wall."
+    },
+    {
+      "input": "['food', 'carry', 'tray']",
+      "target": "boy carries a tray of food ."
+    },
+    {
+      "input": "['food', 'carry', 'tray']",
+      "target": "people carrying food on trays"
+    },
+    {
+      "input": "['food', 'carry', 'tray']",
+      "target": "The woman is carrying two trays of food."
+    },
+    {
+      "input": "['match', 'stadium', 'watch']",
+      "target": "soccer fans watches a league match in a stadium"
+    },
+    {
+      "input": "['match', 'stadium', 'watch']",
+      "target": "A stadium full of people watching a tennis match."
+    },
+    {
+      "input": "['match', 'stadium', 'watch']",
+      "target": "supporters watch the match from a hill outside the stadium"
+    },
+    {
+      "input": "['paw', 'lick', 'cat']",
+      "target": "A cat licks his paws."
+    },
+    {
+      "input": "['paw', 'lick', 'cat']",
+      "target": "A cat is licking its paw"
+    },
+    {
+      "input": "['paw', 'lick', 'cat']",
+      "target": "the cat licks the pad of his front paw"
+    },
+    {
+      "input": "['room', 'tile', 'wall']",
+      "target": "a bath room with a toilet and tiled walls"
+    },
+    {
+      "input": "['room', 'tile', 'wall']",
+      "target": "Three men tile a wall in a large empty room"
+    },
+    {
+      "input": "['room', 'tile', 'wall']",
+      "target": "A wall mounted urinal in a checker tiled rest room."
+    },
+    {
+      "input": "['lake', 'shore', 'canoe']",
+      "target": "canoe on a shore of lake ."
+    },
+    {
+      "input": "['lake', 'shore', 'canoe']",
+      "target": "canoe on shore with rainbow across the lake"
+    },
+    {
+      "input": "['lake', 'shore', 'canoe']",
+      "target": "Several canoes parked in the grass on the shore of a lake "
+    },
+    {
+      "input": "['mountain', 'skier', 'way']",
+      "target": "A skier on his way to the mountain."
+    },
+    {
+      "input": "['mountain', 'skier', 'way']",
+      "target": "skiers make their way down the mountain"
+    },
+    {
+      "input": "['mountain', 'skier', 'way']",
+      "target": "A skier making her way down a snowy mountain."
+    },
+    {
+      "input": "['boat', 'lake', 'drive']",
+      "target": "driving boat on a lake"
+    },
+    {
+      "input": "['boat', 'lake', 'drive']",
+      "target": "a boat is being driven through a lake"
+    },
+    {
+      "input": "['boat', 'lake', 'drive']",
+      "target": "A fisherman drives his boat on the lake"
+    },
+    {
+      "input": "['grass', 'horse', 'eat']",
+      "target": "A horse is eating grass."
+    },
+    {
+      "input": "['grass', 'horse', 'eat']",
+      "target": "The horses are eating grass."
+    }
+  ]
+}

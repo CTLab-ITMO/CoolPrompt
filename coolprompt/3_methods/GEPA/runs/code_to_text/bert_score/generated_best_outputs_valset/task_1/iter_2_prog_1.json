@@ -1,0 +1,4 @@
+{
+    "reasoning": "[omitted]",
+    "output": "\"\"\"\nDownload a DailyMotion video from the given URL.\n\nArguments:\n * url (str): The DailyMotion URL to download.\n * output_dir (str): Directory to save the downloaded file. If not set (``'.'``, default), the current directory is used.\n * merge (bool): Whether to merge downloaded parts into a single file. If not set (``True``, default), multiple parts are merged.\n * info_only (bool): If True, only print information about the video without downloading. If not set (``False``, default), the video will be downloaded.\n * kwargs (dict): Additional keyword arguments accepted by the downloader (not used directly by this function).\n\"\"\""
+}

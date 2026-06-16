@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Delete the connection from the database if it exists.\n\nArguments:\n * session (Session): SQLAlchemy session used to query and delete the Connection with conn_id equal to self.db_conn_id. If not set (``None``, default), a valid session must be supplied by the caller."
+}

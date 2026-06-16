@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Patch a Cloud Function and wait for the update to complete.\n\nArguments:\n * name (str): The full resource name of the Cloud Function to patch (e.g., \"projects/{project}/locations/{location}/functions/{function}\").\n * body (dict): The request body containing the updated fields for the Cloud Function.\n * update_mask (Sequence[str]): The list of field names to update. This will be joined with a comma to form the updateMask parameter for the patch request.\n\nRaises:\n * :class:`Exception`: If the patch request fails or the subsequent operation does not complete successfully."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Seattle = 20. Charleston = 4 \u00d7 Seattle = 80. Toulouse = 2 \u00d7 Charleston = 160. Total = 20 + 80 + 160 = 260.",
+    "output": "260"
+}

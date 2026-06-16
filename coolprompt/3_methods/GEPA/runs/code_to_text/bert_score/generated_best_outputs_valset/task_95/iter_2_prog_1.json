@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Get documents by executing an SQL query against a collection.\n\nArguments:\n * sql_string (str): SQL query string to execute. If not set (``None``, default), an AirflowBadRequest is raised.\n * database_name (str): The database name to query. If not set (``None``, default), the default database name derived from the object is used.\n * collection_name (str): The collection name to query. If not set (``None``, default), the default collection is used.\n * partition_key (str): The partition key to use when querying. If not set (``None``, default), no partition key is used.\n\nReturns:\n - list: The documents retrieved as a list, or ``None`` if an HTTP error occurred.\n\nRaises:\n - :class:`AirflowBadRequest`: If ``sql_string`` is ``None``."
+}

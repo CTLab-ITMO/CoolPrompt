@@ -1,0 +1,4 @@
+{
+    "reasoning": "A brief calculation: Total units = 15 floors \u00d7 8 units/floor = 120. 3/4 of 120 occupied = 90. Therefore unoccupied = 120 \u2212 90 = 30.",
+    "output": "30"
+}

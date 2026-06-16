@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a compact, deterministic Java-like function that declares a few local variables (Date, Long, String, List<TestResultDetailsDTO>), performs simple assertions to reflect a reg-test style, and uses fully-qualified types to avoid import requirements. The function signature follows the exact required format and spacing.",
+    "output": "```java\nvoid function ( ) {\n    java.util.Date loc0 = new java.util.Date(1596240000000L);\n    Long loc1 = 12345L;\n    String loc2 = \"createdBy\";\n    java.util.List<TestResultDetailsDTO> loc3 = new java.util.ArrayList<TestResultDetailsDTO>();\n    org.junit.Assert.assertEquals(1596240000000L, loc0.getTime());\n    org.junit.Assert.assertEquals(12345L, loc1.longValue());\n    org.junit.Assert.assertEquals(\"createdBy\", loc2);\n    org.junit.Assert.assertNotNull(loc3);\n}\n```"
+}

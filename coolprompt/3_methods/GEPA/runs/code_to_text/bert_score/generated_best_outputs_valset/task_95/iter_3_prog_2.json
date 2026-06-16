@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generated a concise, docstring-style API documentation for get_documents, detailing input validation, query construction, remote retrieval, result return semantics, and exception behavior.",
+    "output": "Execute the given SQL query against the configured collection and return the resulting documents.\n\nArguments:\n    sql_string (str): The SQL query string to execute. Cannot be None; a None value raises AirflowBadRequest.\n    database_name (str, optional): The target database name. If omitted, defaults are resolved via internal helpers.\n    collection_name (str, optional): The target collection name. If omitted, defaults are resolved via internal helpers.\n    partition_key (str, optional): An optional partition key passed to the query operation.\n\nReturns:\n    list or None: The list of documents returned by the query, or None if an HTTPFailure occurs during retrieval.\n\nRaises:\n    AirflowBadRequest: If sql_string is None."
+}

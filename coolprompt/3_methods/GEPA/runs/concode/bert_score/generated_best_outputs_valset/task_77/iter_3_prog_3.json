@@ -1,0 +1,4 @@
+{
+    "reasoning": "Create a compact Java-like function that uses several provided setters/getters. It declares four locals named loc0..loc3 and calls setMaxValue, incrementCurValue, getCurValue, setShowProgress, isShowProgress, getCurrentMessage, setCurrentMessage, and getPercentComplete to reflect the described members.",
+    "output": "void function ( ) {\n    int loc0 = 0;\n    setMaxValue(100);\n    incrementCurValue();\n    loc0 = getCurValue();\n    setShowProgress(true);\n    boolean loc1 = isShowProgress();\n    String loc2 = getCurrentMessage();\n    setCurrentMessage(\"Updated\");\n    double loc3 = getPercentComplete();\n}"
+}

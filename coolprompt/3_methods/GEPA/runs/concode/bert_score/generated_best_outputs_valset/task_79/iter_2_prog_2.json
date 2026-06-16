@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "return nodetest.pass(documentTraversal, nodeTypes, rootNode, acceptNode, getDocumentTraversal(), acceptNodeType);"
+}

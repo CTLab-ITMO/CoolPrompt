@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total base cost: 5 \u00d7 150 = 750. Each unit has 2% interest: 0.02 \u00d7 150 = 3 per unit; for 5 units: 5 \u00d7 3 = 15. Grand total = 750 + 15 = 765. Over 3 months, monthly payment = 765 \u00f7 3 = 255.",
+    "output": "She will pay $255 per month for 3 months."
+}

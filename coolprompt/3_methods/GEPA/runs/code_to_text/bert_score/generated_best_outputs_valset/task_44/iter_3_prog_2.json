@@ -1,0 +1,4 @@
+{
+    "reasoning": "Concise documentation generation: provide a one-line purpose plus a formal Arguments/Returns/Raises block describing parameters, return value, and possible exceptions.",
+    "output": "Create a database in the specified project and instance, then wait for the operation to finish.\n\nArguments:\n    instance (str): The name of the instance in which to create the database.\n    body (dict): The request body describing the database resource to create.\n    project_id (str, optional): The Google Cloud project ID. If omitted, uses the client's default configuration.\n\nReturns:\n    None: The method performs the creation and blocks until the long-running operation completes; no value is returned.\n\nRaises:\n    googleapiclient.errors.HttpError: If the underlying API request fails."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Blue fiber requires 2 bolts. White fiber is half of that, so 1 bolt. Total = 2 + 1 = 3 bolts.",
+    "output": "3 bolts"
+}

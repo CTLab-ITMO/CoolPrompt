@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a minimal, deterministic Java-like function that reflects a test-style setup using the locX naming pattern. The function defines loc0 as \"EXAMPLE\" and loc1 as a Long array with two literals (3500000L and -15957L), then assigns loc2 from loc1 and performs two assertEquals checks: one on the array length and one on the loc0 value. This mirrors the common test-style assertions without relying on external dependencies.",
+    "output": "```java\nvoid function ( ) {\n    String loc0 = \"EXAMPLE\";\n    Long[] loc1 = new Long[] { 3500000L, -15957L };\n    Long[] loc2 = loc1;\n    assertEquals(2, loc2.length);\n    assertEquals(\"EXAMPLE\", loc0);\n}\n```"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a compact Java-like function that mirrors the input by creating a simple sequence: select a default image format, pick a write compression quality and mode, reference a JPEG writer, apply compression settings, fetch image write parameters, and lookup a writer for the chosen format. I will use loc0..loc6 as locals to reflect the common pattern, and call the specific methods mentioned (setWriteCompressionMode, setWriteCompressionQuality, getImageWriteParameters, lookupImageWriterForFormat, and write) to illustrate the operation described.",
+    "output": "```java\nvoid function ( ) {\n  String loc0 = DEFAULT_IMAGE_FORMAT;\n  float loc1 = 0.92f;\n  int loc3 = 1;\n\n  FSImageWriter loc4 = newJpegWriter;\n\n  loc4.setWriteCompressionMode(loc3);\n  loc4.setWriteCompressionQuality(loc1);\n\n  ImageWriteParam loc5 = getImageWriteParameters();\n  ImageWriter loc6 = lookupImageWriterForFormat(loc0);\n  loc6.write(null, null);\n}\n```"
+}

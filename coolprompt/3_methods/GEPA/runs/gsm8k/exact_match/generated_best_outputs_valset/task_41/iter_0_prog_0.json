@@ -1,0 +1,4 @@
+{
+    "reasoning": "With gemstone, throw distance = 3 \u00d7 400 ft = 1200 ft. The dragon\u2019s flames reach 1000 ft, so the maximum distance Polly can stand from the dragon and still reach it is 1200 ft. Outside the flames, that distance is 1200 \u2212 1000 = 200 ft.",
+    "output": "200 feet"
+}

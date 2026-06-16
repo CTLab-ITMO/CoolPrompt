@@ -1,0 +1,4 @@
+{
+    "reasoning": "Gemstone extends range: 400 \u00d7 3 = 1200. Maximum distance from dragon while still hitting = 1200. Outside flame reach = 1200 \u2212 1000 = 200.",
+    "output": "200"
+}

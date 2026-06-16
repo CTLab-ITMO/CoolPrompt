@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input lists a set of fields and methods for a JPEG writer convenience API. I will present a concise, readable restatement of those components without implementing details.",
+    "output": "- Convenience method for initializing a writer for the JPEG image format.\n- Fields:\n  - String imageFormat\n  - float writeCompressionQuality\n  - String writeCompressionType\n  - int writeCompressionMode\n  - String DEFAULT_IMAGE_FORMAT\n- Methods:\n  - void setWriteCompressionMode\n  - void setWriteCompressionType\n  - void setWriteCompressionQuality\n  - void write\n  - void write\n  - ImageWriteParam getImageWriteParameters\n  - ImageWriter lookupImageWriterForFormat"
+}

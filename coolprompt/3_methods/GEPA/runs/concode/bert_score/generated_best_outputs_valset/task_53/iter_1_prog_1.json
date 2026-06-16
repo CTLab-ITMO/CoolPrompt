@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will output a single Java-like function using the required signature and a small, deterministic block of statements. It will declare and initialize loc0, loc1, loc2, loc3 as the primary locals, and also declare a few additional variables to reflect the listed field/method tokens in a minimal, self-contained way.",
+    "output": "void function ( ) {\n  long loc0 = 0L;\n  int loc1 = 0;\n  int loc2 = 0;\n  double loc3 = 0.0;\n\n  String TIME_PATTERN = \"\";\n  int offsetHours = 0;\n  Date toDate = null;\n  String toISO8601 = \"\";\n  int offsetMinutes = 0;\n  int minutes = 0;\n  int hour = 0;\n  double seconds = 0.0;\n  long getMilliseconds = 0L;\n  int getMinutes = 0;\n  double getSeconds = 0.0;\n  int hashCode = 0;\n  boolean equals = false;\n  int getOffsetMinutes = 0;\n  int getHour = 0;\n  String toString = \"\";\n}"
+}

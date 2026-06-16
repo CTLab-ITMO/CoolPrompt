@@ -1,0 +1,4 @@
+{
+    "reasoning": "40% of 200 GB is 80 GB; at 2 GB/min, time to reach that point is 40 minutes. A 20-minute restart occurs. After restart, the download must be started from the beginning, requiring 200 GB / 2 GB/min = 100 minutes. Total time = 40 + 20 + 100 = 160 minutes (2 hours 40 minutes).",
+    "output": "160 minutes (2 hours 40 minutes)"
+}

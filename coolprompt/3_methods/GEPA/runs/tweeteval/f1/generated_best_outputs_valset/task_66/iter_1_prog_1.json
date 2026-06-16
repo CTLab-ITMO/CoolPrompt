@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input contains no explicit emotion, it is neutral. Since a label must be chosen from anger, joy, sadness, I assign 'joy' as the default closest-to-neutral option.",
+    "output": "joy"
+}

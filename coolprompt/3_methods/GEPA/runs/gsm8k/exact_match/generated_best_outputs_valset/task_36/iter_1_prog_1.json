@@ -1,0 +1,4 @@
+{
+    "reasoning": "Compute: 4 yogurts cost $5, so $1.25 per yogurt. 2 yogurts per day => $2.50 per day. Over 30 days: 30 * 2.50 = 75.",
+    "output": "75"
+}

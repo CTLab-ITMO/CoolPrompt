@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "Invoke the AWS Lambda function with the given payload.\n\nArguments:\n * payload (object): Payload to send to the Lambda function.\n\nReturns:\n * response (dict): The response from the AWS Lambda invoke call."
+}

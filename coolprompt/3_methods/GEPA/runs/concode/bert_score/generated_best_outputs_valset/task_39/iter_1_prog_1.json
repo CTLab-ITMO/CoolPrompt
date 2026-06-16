@@ -1,0 +1,4 @@
+{
+    "reasoning": "We implement a void function that constructs a List<T> named loc0 and adds o1 and o2 to it to reflect \"return a list containing o1 and o2\", using the loc0 naming convention.",
+    "output": "```java\nvoid function ( ) {\n    List<T> loc0 = new ArrayList<>();\n    loc0.add(o1);\n    loc0.add(o2);\n}\n```"
+}

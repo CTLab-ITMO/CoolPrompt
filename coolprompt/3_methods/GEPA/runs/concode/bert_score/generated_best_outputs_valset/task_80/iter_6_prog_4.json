@@ -1,0 +1,4 @@
+{
+    "reasoning": "Implement a simple cache-get-or-create function for BlockStoreContext using the CACHED_CONTEXTS map. It returns the existing context if present, otherwise creates a new BlockStoreContext with the given master address, stores it in the cache, and returns it. The style follows the loc0 naming convention.",
+    "output": "```java\nBlockStoreContext acquireBlockStoreContext ( final InetSocketAddress masterAddress ) {\n    BlockStoreContext loc0 = CACHED_CONTEXTS.get( masterAddress );\n    if ( loc0 != null ) {\n        return loc0;\n    }\n    loc0 = new BlockStoreContext( masterAddress );\n    CACHED_CONTEXTS.put( masterAddress, loc0 );\n    return loc0;\n}\n```"
+}

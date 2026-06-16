@@ -1,0 +1,4 @@
+{
+    "reasoning": "I produced a small deterministic Java-like function that mirrors the described attributes by creating four local variables named loc0, loc1, loc2, and loc3. The function then performs simple string concatenations to simulate processing of the \"failedAttributeName\" and related fields without introducing extra locals or methods, staying faithful to the requested single-function format.",
+    "output": "``` \nvoid function ( ) {\n    String loc0 = \"failedAttributeName\";\n    String loc1 = \"srcFileName\";\n    String loc2 = \"errorMsg\";\n    long loc3 = 0L;\n    loc0 = loc0 + \":\" + loc1;\n    loc2 = loc2 + \":\" + loc0;\n}\n```"
+}

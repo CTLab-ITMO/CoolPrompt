@@ -1,0 +1,1216 @@
+{
+  "dataset": "mediqa",
+  "metric": "bert_score",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "bert_score"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.843857581615448,
+      0.842509142756462,
+      0.8345915478467941,
+      0.843726521730423,
+      0.8422973072528839
+    ],
+    "val_subscores": [
+      {
+        "0": 0.8250505328178406,
+        "1": 0.8333107233047485,
+        "2": 0.8307526111602783,
+        "3": 0.8132970333099365,
+        "4": 0.8188429474830627,
+        "5": 0.8215727210044861,
+        "6": 0.9040953516960144,
+        "7": 0.8297716379165649,
+        "8": 0.8982313275337219,
+        "9": 0.8413016200065613,
+        "10": 0.8714838624000549,
+        "11": 0.9860051870346069,
+        "12": 0.8404144048690796,
+        "13": 0.8730823993682861,
+        "14": 0.8322548866271973,
+        "15": 0.8285497426986694,
+        "16": 0.8638677597045898,
+        "17": 0.8545249104499817,
+        "18": 0.8324973583221436,
+        "19": 0.8217822313308716,
+        "20": 0.8351190686225891,
+        "21": 0.8072203993797302,
+        "22": 0.8262438774108887,
+        "23": 0.8225209712982178,
+        "24": 0.8144973516464233,
+        "25": 0.8168445825576782,
+        "26": 0.8819121718406677,
+        "27": 0.894189178943634,
+        "28": 0.8759577870368958,
+        "29": 0.8375155329704285,
+        "30": 0.8398805856704712,
+        "31": 0.8434067368507385,
+        "32": 0.8527279496192932,
+        "33": 0.8513338565826416,
+        "34": 0.8732753992080688,
+        "35": 0.8574315309524536,
+        "36": 0.8402204513549805,
+        "37": 0.8364628553390503,
+        "38": 0.8500716090202332,
+        "39": 0.8435326218605042,
+        "40": 0.8401911854743958,
+        "41": 0.8279949426651001,
+        "42": 0.864075243473053,
+        "43": 0.8260243535041809,
+        "44": 0.8554233908653259,
+        "45": 0.8337732553482056,
+        "46": 0.8497208952903748,
+        "47": 0.8776403665542603,
+        "48": 0.811730146408081,
+        "49": 0.7953752279281616,
+        "50": 0.7931400537490845,
+        "51": 0.8010554313659668,
+        "52": 0.8089576959609985,
+        "53": 0.8303713202476501,
+        "54": 0.8318787217140198,
+        "55": 0.8352665901184082,
+        "56": 0.8635974526405334,
+        "57": 0.8797073364257812,
+        "58": 0.8064320683479309,
+        "59": 0.863314688205719,
+        "60": 0.8657411932945251,
+        "61": 0.8593593835830688,
+        "62": 0.8179600238800049,
+        "63": 0.8390790224075317,
+        "64": 0.8590859770774841,
+        "65": 0.7852718830108643,
+        "66": 0.8376981616020203,
+        "67": 0.8887040019035339,
+        "68": 0.8381132483482361,
+        "69": 0.8172851800918579,
+        "70": 0.8299360871315002,
+        "71": 0.8266773223876953,
+        "72": 0.8630807995796204,
+        "73": 0.8353995084762573,
+        "74": 0.869804859161377,
+        "75": 0.8844873905181885,
+        "76": 0.8584932684898376,
+        "77": 0.8685889840126038,
+        "78": 0.8722231388092041,
+        "79": 0.8777785301208496,
+        "80": 0.7931244969367981,
+        "81": 0.8033720254898071,
+        "82": 0.8496719598770142,
+        "83": 0.8318787217140198,
+        "84": 0.8034768104553223,
+        "85": 0.8466818332672119,
+        "86": 0.8069891929626465,
+        "87": 0.8242058753967285,
+        "88": 0.8208630681037903,
+        "89": 0.8169583082199097,
+        "90": 0.8436983823776245,
+        "91": 0.8377654552459717,
+        "92": 0.8162180185317993,
+        "93": 0.8827835917472839,
+        "94": 0.8637210726737976,
+        "95": 0.8975294828414917,
+        "96": 0.8526561260223389,
+        "97": 0.9032247066497803,
+        "98": 0.849126935005188,
+        "99": 0.8303200006484985
+      },
+      {
+        "0": 0.8450582027435303,
+        "1": 0.8391937017440796,
+        "2": 0.8455831408500671,
+        "3": 0.8291030526161194,
+        "4": 0.8571463823318481,
+        "5": 0.8458234071731567,
+        "6": 0.863937258720398,
+        "7": 0.8256708979606628,
+        "8": 0.8553917407989502,
+        "9": 0.8378502726554871,
+        "10": 0.852535605430603,
+        "11": 0.8601579666137695,
+        "12": 0.835640549659729,
+        "13": 0.8541184067726135,
+        "14": 0.8553420901298523,
+        "15": 0.826332151889801,
+        "16": 0.8588107824325562,
+        "17": 0.8551710247993469,
+        "18": 0.8402376174926758,
+        "19": 0.8300906419754028,
+        "20": 0.8454046845436096,
+        "21": 0.8237901329994202,
+        "22": 0.8396753072738647,
+        "23": 0.8393915891647339,
+        "24": 0.8237819671630859,
+        "25": 0.8321388959884644,
+        "26": 0.8674500584602356,
+        "27": 0.8435419797897339,
+        "28": 0.8626210689544678,
+        "29": 0.8440014719963074,
+        "30": 0.8249427676200867,
+        "31": 0.8383405208587646,
+        "32": 0.8585711717605591,
+        "33": 0.8469314575195312,
+        "34": 0.8393914103507996,
+        "35": 0.8520628213882446,
+        "36": 0.8407366871833801,
+        "37": 0.8409231901168823,
+        "38": 0.8376729488372803,
+        "39": 0.8394730687141418,
+        "40": 0.857490599155426,
+        "41": 0.8496527075767517,
+        "42": 0.8665832877159119,
+        "43": 0.8340620994567871,
+        "44": 0.8468639850616455,
+        "45": 0.8423357009887695,
+        "46": 0.830207884311676,
+        "47": 0.8546549677848816,
+        "48": 0.8316149711608887,
+        "49": 0.8295499086380005,
+        "50": 0.82319575548172,
+        "51": 0.8120755553245544,
+        "52": 0.8296468257904053,
+        "53": 0.8506181836128235,
+        "54": 0.8501369953155518,
+        "55": 0.8275848031044006,
+        "56": 0.8430165648460388,
+        "57": 0.859472930431366,
+        "58": 0.8361653089523315,
+        "59": 0.8727537393569946,
+        "60": 0.8621992468833923,
+        "61": 0.8548776507377625,
+        "62": 0.8516485691070557,
+        "63": 0.8534711003303528,
+        "64": 0.8379067182540894,
+        "65": 0.789497435092926,
+        "66": 0.852224588394165,
+        "67": 0.8580282926559448,
+        "68": 0.8355962038040161,
+        "69": 0.8277104496955872,
+        "70": 0.8585547804832458,
+        "71": 0.8303134441375732,
+        "72": 0.8403066396713257,
+        "73": 0.8500810265541077,
+        "74": 0.8364003300666809,
+        "75": 0.828484296798706,
+        "76": 0.8376240134239197,
+        "77": 0.8357239365577698,
+        "78": 0.8490987420082092,
+        "79": 0.8556777834892273,
+        "80": 0.8016468286514282,
+        "81": 0.8297451734542847,
+        "82": 0.850858211517334,
+        "83": 0.8559466600418091,
+        "84": 0.824693500995636,
+        "85": 0.8536860942840576,
+        "86": 0.8283367156982422,
+        "87": 0.8327295184135437,
+        "88": 0.8434711694717407,
+        "89": 0.8381679654121399,
+        "90": 0.8519171476364136,
+        "91": 0.8497371673583984,
+        "92": 0.8537132143974304,
+        "93": 0.8387355804443359,
+        "94": 0.8329168558120728,
+        "95": 0.8363005518913269,
+        "96": 0.8410822153091431,
+        "97": 0.8330467939376831,
+        "98": 0.859011709690094,
+        "99": 0.8480250835418701
+      },
+      {
+        "0": 0.8267425298690796,
+        "1": 0.8497220277786255,
+        "2": 0.8475706577301025,
+        "3": 0.8239957690238953,
+        "4": 0.8446211814880371,
+        "5": 0.8360002040863037,
+        "6": 0.8439706563949585,
+        "7": 0.8316272497177124,
+        "8": 0.8628680109977722,
+        "9": 0.8375447988510132,
+        "10": 0.8394038677215576,
+        "11": 0.8548340201377869,
+        "12": 0.827557384967804,
+        "13": 0.8527921438217163,
+        "14": 0.8472811579704285,
+        "15": 0.8303516507148743,
+        "16": 0.8488112688064575,
+        "17": 0.850318193435669,
+        "18": 0.835469663143158,
+        "19": 0.8269681930541992,
+        "20": 0.8363274335861206,
+        "21": 0.8131474852561951,
+        "22": 0.8476309776306152,
+        "23": 0.8394700288772583,
+        "24": 0.8269758820533752,
+        "25": 0.8198396563529968,
+        "26": 0.8321864008903503,
+        "27": 0.8362249732017517,
+        "28": 0.8266453742980957,
+        "29": 0.8141395449638367,
+        "30": 0.8288732171058655,
+        "31": 0.8352391123771667,
+        "32": 0.8467680811882019,
+        "33": 0.8145080804824829,
+        "34": 0.8375434279441833,
+        "35": 0.8387452363967896,
+        "36": 0.8378687500953674,
+        "37": 0.8461129069328308,
+        "38": 0.8429305553436279,
+        "39": 0.8372483253479004,
+        "40": 0.8210468292236328,
+        "41": 0.8470974564552307,
+        "42": 0.8629374504089355,
+        "43": 0.8300936222076416,
+        "44": 0.8425421714782715,
+        "45": 0.8421878218650818,
+        "46": 0.8075627684593201,
+        "47": 0.861968457698822,
+        "48": 0.8090227246284485,
+        "49": 0.8044424057006836,
+        "50": 0.7999638915061951,
+        "51": 0.8033558130264282,
+        "52": 0.814387321472168,
+        "53": 0.8258222341537476,
+        "54": 0.8468893766403198,
+        "55": 0.8027850389480591,
+        "56": 0.8145006895065308,
+        "57": 0.8537775278091431,
+        "58": 0.8245777487754822,
+        "59": 0.8559713363647461,
+        "60": 0.8586084842681885,
+        "61": 0.8576458096504211,
+        "62": 0.8363103270530701,
+        "63": 0.8544176816940308,
+        "64": 0.826211154460907,
+        "65": 0.7848377227783203,
+        "66": 0.8466113805770874,
+        "67": 0.8636617064476013,
+        "68": 0.8298720717430115,
+        "69": 0.8305619359016418,
+        "70": 0.8540184497833252,
+        "71": 0.8177764415740967,
+        "72": 0.8309590220451355,
+        "73": 0.8398672938346863,
+        "74": 0.8334421515464783,
+        "75": 0.8267270922660828,
+        "76": 0.8290830850601196,
+        "77": 0.833219587802887,
+        "78": 0.8343344330787659,
+        "79": 0.8448265790939331,
+        "80": 0.8019307255744934,
+        "81": 0.8176071047782898,
+        "82": 0.8485800623893738,
+        "83": 0.8468893766403198,
+        "84": 0.8101010322570801,
+        "85": 0.8353513479232788,
+        "86": 0.810736358165741,
+        "87": 0.836763858795166,
+        "88": 0.8338162899017334,
+        "89": 0.8297587633132935,
+        "90": 0.8549495339393616,
+        "91": 0.8462424278259277,
+        "92": 0.8422297835350037,
+        "93": 0.8340888619422913,
+        "94": 0.8204817175865173,
+        "95": 0.8385916352272034,
+        "96": 0.8348586559295654,
+        "97": 0.8502700328826904,
+        "98": 0.8461986184120178,
+        "99": 0.8389074206352234
+      },
+      {
+        "0": 0.8533416390419006,
+        "1": 0.8463129997253418,
+        "2": 0.8470492959022522,
+        "3": 0.8336946368217468,
+        "4": 0.8603830933570862,
+        "5": 0.8396575450897217,
+        "6": 0.8542714715003967,
+        "7": 0.8436211943626404,
+        "8": 0.8569003939628601,
+        "9": 0.8414587378501892,
+        "10": 0.8391834497451782,
+        "11": 0.8478409051895142,
+        "12": 0.8323102593421936,
+        "13": 0.8594694137573242,
+        "14": 0.8686449527740479,
+        "15": 0.8380300402641296,
+        "16": 0.8518673777580261,
+        "17": 0.847474992275238,
+        "18": 0.845053493976593,
+        "19": 0.828771710395813,
+        "20": 0.8515083193778992,
+        "21": 0.8125628232955933,
+        "22": 0.8396835923194885,
+        "23": 0.8468303084373474,
+        "24": 0.8234217166900635,
+        "25": 0.839081883430481,
+        "26": 0.8553295731544495,
+        "27": 0.8352479934692383,
+        "28": 0.8552899360656738,
+        "29": 0.8387662172317505,
+        "30": 0.8465192317962646,
+        "31": 0.84998619556427,
+        "32": 0.8544726371765137,
+        "33": 0.838476836681366,
+        "34": 0.8342831134796143,
+        "35": 0.8622984886169434,
+        "36": 0.8506657481193542,
+        "37": 0.8437858819961548,
+        "38": 0.8330695629119873,
+        "39": 0.8592296242713928,
+        "40": 0.8435387015342712,
+        "41": 0.8603280186653137,
+        "42": 0.8720117211341858,
+        "43": 0.8341110348701477,
+        "44": 0.8479223847389221,
+        "45": 0.8448973298072815,
+        "46": 0.8274635672569275,
+        "47": 0.8587464690208435,
+        "48": 0.8394526839256287,
+        "49": 0.8337164521217346,
+        "50": 0.8186696171760559,
+        "51": 0.8189592361450195,
+        "52": 0.835871160030365,
+        "53": 0.8295161128044128,
+        "54": 0.8419157862663269,
+        "55": 0.8368810415267944,
+        "56": 0.843133807182312,
+        "57": 0.8244932293891907,
+        "58": 0.8322176337242126,
+        "59": 0.8876398205757141,
+        "60": 0.8640952706336975,
+        "61": 0.8578093647956848,
+        "62": 0.8580450415611267,
+        "63": 0.8466871380805969,
+        "64": 0.8438488841056824,
+        "65": 0.7918542623519897,
+        "66": 0.8506205677986145,
+        "67": 0.8658364415168762,
+        "68": 0.8437362909317017,
+        "69": 0.8258153200149536,
+        "70": 0.851384699344635,
+        "71": 0.8296006917953491,
+        "72": 0.8498378396034241,
+        "73": 0.8604218363761902,
+        "74": 0.8461889624595642,
+        "75": 0.8191812038421631,
+        "76": 0.8506935238838196,
+        "77": 0.8349024057388306,
+        "78": 0.8558736443519592,
+        "79": 0.8533859252929688,
+        "80": 0.8138896822929382,
+        "81": 0.8518628478050232,
+        "82": 0.8430050015449524,
+        "83": 0.8572995066642761,
+        "84": 0.8256654739379883,
+        "85": 0.8299533128738403,
+        "86": 0.824998676776886,
+        "87": 0.840616762638092,
+        "88": 0.8351954221725464,
+        "89": 0.8429747223854065,
+        "90": 0.8660791516304016,
+        "91": 0.847780168056488,
+        "92": 0.8576939702033997,
+        "93": 0.8541469573974609,
+        "94": 0.8452782034873962,
+        "95": 0.8424609303474426,
+        "96": 0.8228874206542969,
+        "97": 0.839536190032959,
+        "98": 0.8455379605293274,
+        "99": 0.8486374020576477
+      },
+      {
+        "0": 0.8409131169319153,
+        "1": 0.8514630794525146,
+        "2": 0.8882179260253906,
+        "3": 0.8458611369132996,
+        "4": 0.8524343371391296,
+        "5": 0.8568342924118042,
+        "6": 0.8498961329460144,
+        "7": 0.8728468418121338,
+        "8": 0.8999689817428589,
+        "9": 0.8445811867713928,
+        "10": 0.8446552157402039,
+        "11": 0.8376911878585815,
+        "12": 0.8499094247817993,
+        "13": 0.8455117344856262,
+        "14": 0.8453660607337952,
+        "15": 0.8538464903831482,
+        "16": 0.84425288438797,
+        "17": 0.8736295700073242,
+        "18": 0.8596702814102173,
+        "19": 0.8423752784729004,
+        "20": 0.835739016532898,
+        "21": 0.8397483825683594,
+        "22": 0.8562017679214478,
+        "23": 0.8394268155097961,
+        "24": 0.8435264825820923,
+        "25": 0.8289926052093506,
+        "26": 0.8453635573387146,
+        "27": 0.8362239003181458,
+        "28": 0.855166494846344,
+        "29": 0.8321903944015503,
+        "30": 0.8769893646240234,
+        "31": 0.8225598931312561,
+        "32": 0.8849689364433289,
+        "33": 0.8249199390411377,
+        "34": 0.8270681500434875,
+        "35": 0.8245612978935242,
+        "36": 0.8422443866729736,
+        "37": 0.8172091245651245,
+        "38": 0.8521785140037537,
+        "39": 0.8210034370422363,
+        "40": 0.8220988512039185,
+        "41": 0.8438743352890015,
+        "42": 0.8370313048362732,
+        "43": 0.8577093482017517,
+        "44": 0.8651400208473206,
+        "45": 0.8555266261100769,
+        "46": 0.8435434699058533,
+        "47": 0.8653362393379211,
+        "48": 0.8308500051498413,
+        "49": 0.8211231231689453,
+        "50": 0.8239705562591553,
+        "51": 0.8191052675247192,
+        "52": 0.8211424350738525,
+        "53": 0.8171285390853882,
+        "54": 0.8365017175674438,
+        "55": 0.8597930073738098,
+        "56": 0.8659587502479553,
+        "57": 0.8241260647773743,
+        "58": 0.8532373309135437,
+        "59": 0.8526875376701355,
+        "60": 0.862571656703949,
+        "61": 0.8514508605003357,
+        "62": 0.8362796306610107,
+        "63": 0.8151859641075134,
+        "64": 0.8035226464271545,
+        "65": 0.78676438331604,
+        "66": 0.8236554861068726,
+        "67": 0.8275769948959351,
+        "68": 0.8615469336509705,
+        "69": 0.8047243356704712,
+        "70": 0.8336816430091858,
+        "71": 0.8421115279197693,
+        "72": 0.8836607336997986,
+        "73": 0.8541902899742126,
+        "74": 0.873508632183075,
+        "75": 0.8578218817710876,
+        "76": 0.8448862433433533,
+        "77": 0.8557530045509338,
+        "78": 0.8506808876991272,
+        "79": 0.861333429813385,
+        "80": 0.8321465253829956,
+        "81": 0.8373416066169739,
+        "82": 0.8190909028053284,
+        "83": 0.8365017175674438,
+        "84": 0.8252618908882141,
+        "85": 0.8162519931793213,
+        "86": 0.8310419917106628,
+        "87": 0.8175130486488342,
+        "88": 0.8332379460334778,
+        "89": 0.8318451046943665,
+        "90": 0.8370271921157837,
+        "91": 0.8291922807693481,
+        "92": 0.819118320941925,
+        "93": 0.8716556429862976,
+        "94": 0.8361335396766663,
+        "95": 0.8495696783065796,
+        "96": 0.8309494853019714,
+        "97": 0.8745874762535095,
+        "98": 0.8189600706100464,
+        "99": 0.8293049931526184
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary in a fixed gold-target style: one core sentence, 5 short bullets covering cause, symptoms, management, caveats, and next steps, then a closing disclaimer.',\n    output='Preventing atherosclerosis mainly means reducing risk factors through lifestyle changes and, when needed, medications.\\n\\n- Damage to the inner lining of arteries from high blood pressure, high cholesterol, smoking, diabetes, or inflammation starts the process.\\n- In early stages there are usually no symptoms; as arteries narrow, you may notice chest pain with effort, leg pain when you walk, or signs of a stroke.\\n- Standard management usually starts with lifestyle changes: a heart-healthy diet, regular exercise, and not smoking; medicines such as statins to lower LDL cholesterol, drugs to control blood pressure, and diabetes management can help.\\n- Important caveats: risk varies by person, and some people have stronger genetic risk or diabetes that require closer follow-up or specialist care.\\n- Practical next step: see a clinician for risk assessment, get lipid and blood pressure tests, and start or adjust lifestyle changes and medications as advised.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "1": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"Assessing inheritance risk for atherosclerosis; it's not a single-gene condition, so provide a concise risk statement.\",\n    output='The condition is not inherited as a simple Mendelian pattern and is influenced by multiple genes and lifestyle factors. Offspring risk is usually low, but increases with a family history of high cholesterol or familial hyperlipidemia; genetic counseling can provide a precise risk estimate.'\n)"
+        ]
+      ],
+      "2": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input is about preventing atherosclerosis (not a single-gene genetic condition), so provide a concise, prevention-focused answer in 1–3 plain sentences.',\n    output='Atherosclerosis isn’t inherited in a simple Mendelian way; family history can raise risk, but most factors are modifiable. To reduce risk, follow a heart-healthy diet, stay physically active, maintain a healthy weight, avoid smoking, and manage blood pressure, cholesterol, and blood sugar as advised by your doctor. If you have a strong family history, discuss personalized prevention and screening with a clinician.'\n)"
+        ]
+      ],
+      "3": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user asked about inheritance and recurrence risk for atherosclerosis, so I’ll provide a concise answer focusing on genetic risk. Atherosclerosis is multifactorial and not caused by a single gene, so the inheritance pattern isn’t Mendelian. The risk to offspring depends on family history and multiple genetic and environmental factors; counseling can help clarify exact figures.',\n    output='The condition is multifactorial and not inherited in a single-gene pattern from a parent. Offspring risk is increased if there is a family history of early heart disease, but the exact risk depends on many genes and lifestyle factors; genetic counseling can help determine the specific risk.'\n)"
+        ]
+      ],
+      "4": [
+        [
+          3,
+          "Prediction(\n    reasoning=\"I'll create a concise, patient-friendly summary in the fixed gold-target style: one core point, five short bullets (cause, implications, management, caveats, next steps), followed by a brief closing disclaimer.\",\n    output='Core point: Prevention focuses on controlling risk factors to slow or prevent plaque buildup in arteries.\\n\\n- Main cause or mechanism: Artery walls are damaged by smoking, high cholesterol, high blood pressure, and diabetes, which lets plaque form.\\n- Typical clinical features or implications: Most people have no early symptoms; when arteries narrow, you may get chest pain, leg pain, or signs of a stroke.\\n- Standard management or treatment options: Heart-healthy lifestyle changes are key: eat a healthy diet, be physically active, maintain a healthy weight, and quit smoking.\\n- Important caveats, variability, or situations requiring specialist care: Some risk factors can’t be changed; age and family history still influence risk, so ongoing medical care is important to monitor cholesterol, blood pressure, and sugar.\\n- Practical next step: See a clinician to assess your risk, get screened, and start a personalized prevention plan.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "5": [
+        [
+          4,
+          "Prediction(\n    reasoning='Core question: inheritance and recurrence risk for atherosclerosis. Atherosclerosis is multifactorial with no single inheritance pattern. Offspring risk depends on family history; if familial hypercholesterolemia (an inherited lipid disorder) is present, risk can be as high as 50% per child; otherwise, risk is not a fixed percentage and is influenced by lifestyle and other factors.',\n    output='Not inherited in a simple pattern; atherosclerosis is multifactorial with genetic and lifestyle factors. Offspring risk is generally increased only with a family history of premature heart disease or an inherited lipid disorder such as familial hypercholesterolemia; for FH, each child has about a 50% chance of inheriting it.'\n)"
+        ]
+      ],
+      "6": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will extract and present the prevention recommendations for neonatal conjunctivitis from the provided text as concise bullet points.',\n    output=\"- Pregnant women should receive treatment for sexually transmitted infections (such as gonorrhea and chlamydia) to prevent newborn conjunctivitis caused by these infections.\\n- Prophylactic eye drops (eye drops with antibiotics) are placed in all infants' eyes in the delivery room right after birth to help prevent many infections; most states have laws requiring this treatment.\\n- If the mother has active herpes sores at the time of delivery, a Cesarean section (C-section) is recommended to prevent serious illness in the baby.\"\n)"
+        ]
+      ],
+      "7": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user asked for prevention tips for vernal conjunctivitis; this is not a genetic question, so provide a concise, prevention-focused answer in 1–3 plain-language sentences.',\n    output='Vernal conjunctivitis is an allergic condition, so prevention focuses on reducing triggers and avoiding eye rubbing. To lessen flares, stay in a cooler environment or use air conditioning, avoid rubbing the eyes, and follow your doctor’s plan for preventive eye drops if prescribed (such as antihistamines or mast cell stabilizers).'\n)"
+        ]
+      ],
+      "8": [
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning intentionally omitted.',\n    output='Practice good hygiene to prevent conjunctivitis: wash hands often, avoid touching or rubbing the eyes, and do not share towels, pillowcases, eye makeup, or contact lenses. If you wear contacts, follow proper cleaning and replacement routines and avoid wearing lenses when you have symptoms. For suspected infectious conjunctivitis, limit close contact and seek medical advice if symptoms persist beyond 3–4 days or worsen.'\n)"
+        ]
+      ],
+      "9": [
+        [
+          4,
+          "Prediction(\n    reasoning='Not a genetic condition; the user asked about prevention. I will frame the answer in inheritance terms (not typically inherited) with a brief note.',\n    output='The condition is not inherited through a standard genetic pattern and is not typically inherited from a parent. Offspring risk is generally low, though perinatal infection risk from maternal infections can affect the baby and is not a genetic recurrence.'\n)"
+        ]
+      ],
+      "10": [
+        [
+          0,
+          "Prediction(\n    reasoning='The user asked about preventing diabetes. The provided content explicitly states that Prevention for Type 1 diabetes: “Type 1 diabetes cannot be prevented. There is no screening test for type 1 diabetes in people who have no symptoms.” I will deliver a concise answer reflecting that and add brief guidance on managing Type 1 diabetes to prevent complications.',\n    output='Prevention\\n- Type 1 diabetes cannot be prevented. There is no proven way to prevent it or screen for it in people without symptoms.\\n\\nIf you or someone has Type 1 diabetes\\n- Manage with lifelong insulin therapy as prescribed.\\n- Regularly monitor blood glucose, and follow meal and activity plans.\\n- Have routine medical care to prevent or detect complications (eye, kidney, heart, nerves).\\n- Take care of feet and skin, check blood pressure and cholesterol, and maintain dental and overall health.\\n- Learn to recognize and treat low (hypoglycemia) and high (hyperglycemia) blood sugar.\\n- Seek prompt medical attention for symptoms of ketoacidosis or other serious problems.'\n)"
+        ]
+      ],
+      "11": [
+        [
+          0,
+          "Prediction(\n    reasoning='Provide a concise summary of the prevention guidance given in the input, emphasizing type 2 prevention, note that type 1 cannot currently be prevented, and keep the wording aligned with the source.',\n    output=\"Prevention: Keeping an ideal body weight and an active lifestyle may prevent or delay the start of type 2 diabetes. If you're overweight, losing just 5% of your body weight can reduce your risk. Some medicines can also be used to delay or prevent the start of type 2 diabetes. At this time, type 1 diabetes cannot be prevented. But there is promising research that shows type 1 diabetes may be delayed in some high risk people.\"\n)"
+        ]
+      ],
+      "12": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user’s input concerns diabetes prevention, but I will provide a concise inheritance/risk-focused answer per the guideline, noting that diabetes does not follow a simple inheritance pattern.',\n    output='The condition is not inherited in a simple Mendelian pattern and may involve multiple genes and lifestyle factors. Offspring risk is increased if a parent has diabetes, but there is no fixed percentage; for precise figures, genetic counseling is recommended.'\n)"
+        ]
+      ],
+      "13": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will summarize actionable guidance from the provided diabetes overview, distinguishing between type 1 and type 2. Type 1 currently has no known way to prevent it. For type 2, prevention is possible through weight management, healthy eating, physical activity, and not smoking. I’ll include the key numbers and recommendations mentioned (e.g., 7% weight loss reduces risk, importance of healthy habits, and the role of prediabetes management).',\n    output='- Type 1 diabetes: There is no known way to prevent type 1 diabetes currently. Researchers are studying prevention strategies, but none are proven at this time.\\n\\n- Type 2 diabetes: Yes, you can reduce your risk by adopting healthy lifestyle habits. Key prevention steps include:\\n  - Maintain a healthy weight. Weight loss through healthy eating and increased physical activity improves how your body uses insulin and glucose.\\n  - Lose weight to reduce risk. Losing 7% of your body weight (14 pounds if you weigh 200 pounds) can lower your risk for type 2 diabetes by more than half.\\n  - Eat healthier. Follow a healthy eating pattern and limit foods that raise blood sugar; emphasize balanced meals.\\n  - Be physically active. Increase daily activity and incorporate regular movement to help prevent diabetes.\\n  - Don’t smoke. Quitting smoking can help you control blood sugar and reduce related health risks.\\n  - Screen for risk. If you’re overweight or have other risk factors, talk to your doctor about diabetes testing; you may be advised to get tested.\\n  - If you have prediabetes: Get your blood glucose checked every year, and take steps to return blood glucose to normal levels. Weight loss and physical activity are effective strategies.\\n  - Consider known prevention programs. Studies like the Diabetes Prevention Program show that weight loss and increased activity can prevent progression to diabetes.\\n\\n- Additional notes:\\n  - People with risk factors should discuss prevention with their doctor and may benefit from a diabetes risk assessment.\\n  - If you have diabetes and want to have a baby, plan ahead with your doctor to manage blood sugar during pregnancy.'\n)"
+        ]
+      ],
+      "14": [
+        [
+          3,
+          "Prediction(\n    reasoning='Brief plan: present a concise, gold-target style summary on preventing type 2 diabetes with a single core point, 5 short bullets (cause, risk, prevention, caveat, next steps), and a closing disclaimer; in plain language.',\n    output='You can reduce your risk of type 2 diabetes with healthy weight, diet, and regular activity.\\n\\n- Main cause: insulin resistance from excess weight and inactivity.\\n- Key risk factors: being overweight, older age, family history, and high blood pressure; many people have no early symptoms.\\n- Prevention strategies: aim for a healthy weight; eat a balanced, high-fiber diet and stay physically active.\\n- Special cases: some high-risk individuals may be advised to take medicines to delay diabetes.\\n- Practical next step: talk with your doctor about your risk, get screened if indicated, and start or adjust prevention steps now.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "15": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user asked about preventing diabetes (not genetic inheritance). Provide a concise, prevention-focused answer in plain language, limited to 1–3 sentences.',\n    output='To reduce the risk of type 2 diabetes, aim for a healthy weight, regular physical activity (about 150 minutes per week), and a balanced, fiber-rich diet while limiting added sugars and refined carbs. If you have prediabetes or a strong family history, lifestyle changes can substantially lower your risk, and your healthcare provider can tailor a plan for you. Also avoid smoking and manage blood pressure and cholesterol to help prevent diabetes-related complications.'\n)"
+        ]
+      ],
+      "16": [
+        [
+          0,
+          "Prediction(\n    reasoning='Provide concise, evidence-based prevention steps focused on smoking cessation, reducing secondhand exposure, minimizing radon and occupational risks, adopting a healthy lifestyle, and discussing screening for high-risk individuals. Emphasize that quit-smoking dramatically lowers risk and that no method guarantees prevention.',\n    output='Key ways to reduce the risk of lung cancer:\\n\\n- Quit smoking and avoid smoking altogether. This is the most effective way to prevent lung cancer. If you currently smoke, seek help from healthcare providers, quitlines, or medications to quit. Your risk begins to decline after quitting, though it can take years to approach that of a never-smoker.\\n- Avoid exposure to secondhand smoke. Ensure your home, workplace, and cars are smoke-free.\\n- Check your home for radon. Radon exposure increases lung cancer risk. Test the air in your home and mitigate if levels are elevated.\\n- Limit occupational and environmental exposures. If you work with asbestos, diesel exhaust, certain chemicals, or other carcinogens, follow safety guidelines, use protective equipment, and discuss risk with your employer and healthcare provider.\\n- Maintain a healthy lifestyle. A balanced diet rich in fruits and vegetables, regular physical activity, maintaining a healthy weight, and limiting alcohol can support overall cancer prevention and general health.\\n- Be aware of screening if you’re high risk. If you have a long history of heavy smoking or other risk factors, talk with your doctor about the potential benefits and risks of low-dose CT screening for lung cancer.\\n- Avoid environmental pollutants when possible. Minimize exposure to high-pollution areas and take steps to reduce indoor air pollution.\\n\\nIf you smoke or have risk factors, consult your healthcare provider about quitting resources and whether you should pursue lung cancer screening.'\n)"
+        ]
+      ],
+      "17": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user asked about prevention of lung cancer; provide a concise prevention-focused answer (1–3 sentences) covering major risk-reduction steps without clinical detail.',\n    output='The most effective prevention is not to smoke and to avoid exposure to secondhand smoke. Limit occupational carcinogens (such as asbestos and diesel exhaust) and have your home tested for radon. If you have higher risk due to past smoking or exposures, discuss personalized risk reduction and any appropriate screening with a health professional.'\n)"
+        ]
+      ],
+      "18": [
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning omitted per policy; provide final answer focusing on inheritance and recurrence risk.',\n    output='Schizophrenia is a complex, multifactorial condition and is not inherited in a simple single-gene pattern from a parent. Offspring risk is increased compared with the general population (roughly around 10% if a parent is affected). Because the recurrence risk depends on the underlying mechanism, genetic testing and counseling are recommended to determine the exact risk.'\n)"
+        ]
+      ],
+      "19": [
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a brief, inheritance-focused answer in 1–3 sentences, noting schizophrenia is multifactorial and recurrence risk depends on family history; do not give prevention guidance.',\n    output='The condition is inherited as a complex, multifactorial trait and is not typically inherited in a simple parent-to-child pattern. Offspring risk is increased if a parent has schizophrenia, but the exact risk depends on family history; genetic counseling is recommended to determine the precise risk.'\n)"
+        ]
+      ],
+      "20": [
+        [
+          3,
+          "Prediction(\n    reasoning='Generate a concise, patient-friendly summary on schizophrenia prevention in a fixed gold-target style: one core point, 5 brief bullets (cause, features, management, caveats, next steps including inheritance note), and a closing disclaimer.',\n    output='There is no proven way to prevent schizophrenia.\\n\\n- Causes involve genes and brain chemistry; there is no simple way to prevent it.\\n- Symptoms can include hallucinations, delusions, and disorganized thinking, and these can affect work, school, and relationships.\\n- Antipsychotic medicines are central to treatment; they help control symptoms. Therapy and social support help daily functioning.\\n- Symptoms and needs vary; stopping medicines raises relapse risk; many people require ongoing treatment.\\n- Practical next step: seek evaluation if symptoms appear; most cases are not inherited, but risk is higher with a family history.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "21": [
+        [
+          4,
+          "Prediction(\n    reasoning='Concise, inheritance-focused response prepared; not revealing step-by-step reasoning.',\n    output='The heart attack is not inherited in a simple Mendelian pattern; risk is mainly influenced by lifestyle and medical factors, though certain inherited conditions (e.g., familial hypercholesterolemia) can raise risk. Offspring risk is generally low unless a parent has a known genetic lipid disorder, in which case genetic counseling can help determine the exact risk.'\n)"
+        ]
+      ],
+      "22": [
+        [
+          4,
+          "Prediction(\n    reasoning='Not disclosing internal reasoning; providing a concise, general guidance on heart attack treatment.',\n    output='Emergency care: a heart attack is a medical emergency—call 911 or your local emergency number immediately. In the hospital, treatment aims to restore blood flow quickly (for example, angioplasty with a stent or clot-busting therapy) and may include aspirin and other heart medications; timing to reperfusion significantly affects outcomes. After stabilization, ongoing medications and lifestyle changes help reduce the risk of another event; exact care depends on the damage and medical history.'\n)"
+        ]
+      ],
+      "23": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly heart attack treatment summary in the gold-style format: one core point, 5 focused bullets (cause, symptoms, management, caveats, next steps), then the closing disclaimer.',\n    output='Core point: Rapid emergency care and reperfusion are essential to limit heart damage during a heart attack.\\n\\n- Main cause or mechanism: A blocked coronary artery from a ruptured plaque reduces blood flow to part of the heart.\\n\\n- Typical clinical features or implications: Chest pressure or pain that may spread to the neck, jaw, or arm. You may also have shortness of breath, sweating, nausea, or lightheadedness.\\n\\n- Standard management or treatment options: Call emergency services immediately. In the hospital, you may receive aspirin if advised, clot-busting or antiplatelet medications, and pain relief; doctors may restore blood flow quickly with angioplasty (stent) or bypass surgery as needed.\\n\\n- Important caveats, variability, or situations requiring specialist care: Symptoms vary; some people have mild or no chest pain; the exact treatment depends on timing and your overall condition; specialized care may be needed.\\n\\n- Practical next step: If you suspect a heart attack, call emergency services now and follow instructions; do not drive yourself unless there is no other option.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "24": [
+        [
+          4,
+          "Prediction(\n    reasoning='[omitted]',\n    output='The content is about heart attack, which is not inherited as a simple pattern. Your risk is influenced by multiple factors including family history, lifestyle, and potential genetic conditions, and there isn’t a single recurrence-risk figure for heart attacks in general. If a hereditary condition such as familial hypercholesterolemia is present in the family, genetic counseling can provide precise risk estimates.'\n)"
+        ]
+      ],
+      "25": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly topic summary about autoimmune blood disorders in the requested fixed format.',\n    output=\"Core point:\\nAutoimmune blood disorders are conditions where the immune system mistakenly attacks the body's own blood cells and tissues, leading to a range of symptoms and health problems.\\n\\n- Main cause or mechanism: The immune system makes antibodies that target healthy tissue; genetics and environment can influence risk.\\n- Inheritance or risk: Most cases are not inherited, but a family history can raise risk.\\n- Typical clinical features or implications: Symptoms vary, but fatigue, fever, and pale skin from anemia are common; joint pain or skin changes may occur.\\n- Standard management or treatment options: Treatment depends on the specific disease, but often includes medicines to calm or modulate the immune system (like corticosteroids and other immunosuppressants) and supportive care.\\n- Important caveats, variability, or specialist care: Some conditions need specialist care (rheumatology, hematology, endocrinology) and can have flare-ups; responses to treatment vary.\\n- Practical next step: See a clinician if you have persistent fatigue, unexplained symptoms, or new signs of anemia or organ involvement.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\"\n)"
+        ]
+      ],
+      "26": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will provide a concise summary of the known causes based on the provided content: the exact cause is unknown, with multiple contributing factors including biological brain differences, genetics, and environmental triggers such as stress or substance use; risk factors include family history and substance use.',\n    output='- The exact cause of bipolar disorder is unknown.\\n- It likely results from a combination of factors:\\n  - Biological differences: physical changes in the brain may be involved.\\n  - Genetics: family history increases risk; researchers are exploring specific genes.\\n  - Environmental triggers: periods of high stress or traumatic events can act as triggers.\\n  - Substance use: drug or alcohol abuse can contribute.\\n- Risk factors include:\\n  - Having a first-degree relative with bipolar disorder\\n  - Experiencing periods of high stress or trauma\\n  - Drug or alcohol abuse'\n)"
+        ]
+      ],
+      "27": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will provide a concise summary of the causes as described, noting that the exact cause is unknown and listing the contributing factors.',\n    output='- The exact cause of bipolar disorder is unknown.\\n- Biological differences: physical changes in the brain may be involved.\\n- Genetics: bipolar disorder tends to run in families; genes may contribute.\\n- Risk factors: having a first-degree relative with bipolar disorder, experiencing periods of high stress, and drug or alcohol abuse.'\n)"
+        ]
+      ],
+      "28": [
+        [
+          0,
+          "Prediction(\n    reasoning='The user asked for known causes of bipolar disorder. The provided text indicates the exact cause is unknown but highlights two main factors under \"Causes\": biological differences (brain changes) and genetics (family history). It also notes risk factors such as high stress and drug/alcohol abuse. I’ll present these succinctly as the core causes and contributing factors.',\n    output='- The exact cause of bipolar disorder is unknown.\\n- It is thought to result from a combination of factors:\\n  - Biological differences: physical changes in the brain that may affect mood regulation.\\n  - Genetics: a family history of bipolar disorder increases risk, suggesting a genetic component.\\n- Contributing factors (risk factors) that may trigger or worsen onset or episodes:\\n  - Periods of high stress or traumatic events\\n  - Drug or alcohol abuse\\n\\nNote: Bipolar disorder is a complex condition, and no single cause explains all cases.'\n)"
+        ]
+      ],
+      "29": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary of what pancreatic enzymes are, their role in digestion, common issues, and practical steps.',\n    output='Pancreatic enzymes are digestive enzymes made by the pancreas that help break down fats, proteins, and carbohydrates.\\n\\n- They include amylase (carbs), lipase (fats), and proteases like trypsin (proteins); they are released into the small intestine after meals and activated there.\\n- If the pancreas doesn’t make enough enzymes (exocrine pancreatic insufficiency), you may have greasy stools, weight loss, and nutrient deficiencies.\\n- When needed, doctors prescribe pancreatic enzyme replacement therapy (PERT) taken with meals and snacks; dosage is tailored to the meal size.\\n- In certain conditions (e.g., pancreatitis), enzyme levels in blood may be elevated, and imaging or specialist evaluation may be used to guide care; treatment depends on the underlying issue.\\n- Pancreatic cysts are a separate issue; some cysts are monitored or may require surgery, while enzyme therapy is for digestion problems.\\n- If you have persistent digestive symptoms (weight loss, oily stools, abdominal pain), talk to your clinician; seek urgent care for severe pain, vomiting, or signs of internal bleeding.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "30": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user asked for a basic definition of pancreatic enzymes (not a genetic inheritance question). Provide a concise, plain-language description of what pancreatic enzymes are and their role in digestion.',\n    output='Pancreatic enzymes are digestive enzymes produced by the pancreas. They include lipase (fats), amylase (starches), and proteases like trypsin (proteins); they are released into the small intestine to help digest food.'\n)"
+        ]
+      ],
+      "31": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary in a fixed gold-style format: one core point, 5 short bullets covering mechanism, signs, management, caveats, and next steps, then a closing disclaimer.',\n    output='Core point: Pancreatic enzymes are digestive enzymes made by the pancreas to help your gut break down fats, proteins, and carbohydrates.\\n\\n- Main mechanism: The pancreas releases three main enzymes—lipase for fats, proteases for proteins, and amylase for carbohydrates—into the small intestine to aid digestion.\\n- Typical features: If enzymes are low, you may have trouble digesting foods, leading to weight loss, greasy pale stools, gas, and abdominal discomfort.\\n- Management options: Pancreatic enzyme replacement therapy (PERT) is commonly used, taken with meals to improve digestion; dosing is adjusted by your doctor.\\n- Cautions: Dosing is individualized and symptoms may persist if the underlying issue isn’t treated; some people may have side effects or need specialist care.\\n- Practical next step: If you have ongoing digestion problems or oily stools, discuss testing for enzyme deficiency and possible PERT with your clinician.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "32": [
+        [
+          4,
+          "Prediction(\n    reasoning='Core question: define pancreatic enzymes and summarize their role. Provide a concise, 2–3 sentence description of what they are, the main types, and how they function in digestion.',\n    output='Pancreatic enzymes are digestive enzymes produced by the exocrine pancreas and released into the small intestine as pancreatic juice to help digest food. The main enzymes are lipase (fat digestion), amylase (carbohydrate digestion), and proteases such as trypsin and chymotrypsin (protein digestion); they are secreted mostly as inactive precursors and activated in the intestine. The pancreas also releases bicarbonate to neutralize stomach acid and optimize enzyme function.'\n)"
+        ]
+      ],
+      "33": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"You're asking for a concise explanation of pancreatic enzymes. I’ll define what they are, list the main enzymes, describe where and how they work, and note a common clinical context (enzyme insufficiency).\",\n    output='Pancreatic enzymes are digestive enzymes produced by the pancreas and released into the small intestine to help break down the foods you eat. The main pancreatic enzymes are:\\n\\n- Amylase — digests carbohydrates (starch) into simple sugars.\\n- Lipase — digests fats into fatty acids and glycerol.\\n- Proteases (including trypsin and chymotrypsin) — digest proteins into smaller peptides and amino acids.\\n\\nThese enzymes are secreted in an inactive form (zymogens) and activated in the small intestine (for example, trypsinogen is activated to trypsin, which then activates other proteases). The enzymes travel with a bicarbonate-rich fluid that helps neutralize stomach acid so digestion proceeds efficiently in the duodenum.\\n\\nCommon clinical note: some people have pancreatic exocrine insufficiency, where the pancreas doesn’t produce enough enzymes, leading to poor digestion. In such cases, pancreatic enzyme replacement therapy can be prescribed to aid digestion.'\n)"
+        ]
+      ],
+      "34": [
+        [
+          0,
+          "Prediction(\n    reasoning='Pancreatic enzymes are digestive enzymes produced by the pancreas. The main types include amylase (carbohydrates), lipase (fats), and proteases such as trypsin and chymotrypsin (proteins). They are released into the small intestine (duodenum) via the pancreatic duct to aid digestion.',\n    output='Pancreatic enzymes are the digestive enzymes produced by the pancreas that help break down food in the small intestine. The main types are amylase (for carbohydrates), lipase (for fats), and proteases such as trypsin and chymotrypsin (for proteins). They are released into the small intestine through the pancreatic duct and work with bicarbonate to digest carbohydrates, fats, and proteins.'\n)"
+        ]
+      ],
+      "35": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will present a concise, patient-friendly summary in gold-target style: one core point, 5 brief bullets covering mechanism, symptoms, treatment, caveats, and next steps, then the closing disclaimer.',\n    output='Core point: Bulimia nervosa usually involves repeating cycles of binge eating followed by efforts to compensate and prevent weight gain.\\n\\n- Main mechanism: Regular binge eating with a strong urge to control weight.\\n- Common symptoms: Preoccupation with body shape and fear of weight gain.\\n- More symptoms: Eating unusually large amounts in a short period and feeling out of control.\\n- Purging or compensatory behaviors: Forcing vomiting, laxatives, or excessive exercise to avoid weight gain.\\n- Practical next step: If you have these symptoms, talk to a healthcare provider or mental health professional; seek urgent care if symptoms are severe.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "36": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary in a fixed gold-target style: one core point, 5 bullets covering mechanism, typical features, health implications, treatment approaches, and practical next steps, followed by the closing disclaimer.',\n    output='Common bulimia symptoms include binge eating followed by compensatory behaviors to prevent weight gain.\\n\\n- Main mechanism: Binge eating with a loss of control often leads to purging or other methods to prevent weight gain.\\n- Typical features: Binge eating and feelings of being unable to stop; these behaviors are often done in private and can bring guilt or shame.\\n- Purging and related behaviors: Purging may involve vomiting, laxatives, diuretics, or excessive exercise.\\n- Weight and health aspects: Weight can be normal, overweight, or underweight; health problems can occur even if weight seems normal.\\n- Treatment and care: Management commonly includes therapy (often cognitive-behavioral), nutrition counseling, and medical monitoring; treatment plans vary and may include medications in some cases.\\n\\n- Practical next step: see a clinician or eating-disorder specialist for evaluation and help; seek urgent care if there are severe symptoms such as dehydration, chest pain, fainting, or trouble breathing.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "37": [
+        [
+          2,
+          "Prediction(\n    reasoning='Provide a concise, patient-friendly gold-target style summary focused on common symptoms and practical next steps for bulimia.',\n    output='Bulimia nervosa involves repeated binge eating followed by efforts to prevent weight gain, and many people with it may have a normal weight.\\n\\n- Cause or mechanism (brief): It is due to a combination of psychological, biological, and social factors; no single cause fits everyone.\\n- Typical clinical features: Binge eating episodes often happen in secret with a sense of lost control; compensatory behaviors include vomiting, laxatives, excessive exercise, or enemas; concern about weight is common even if weight is normal; visible signs may include dental enamel wear, swollen cheeks, calluses on the knuckles, or frequent bathroom trips after meals.\\n- Standard management or treatment options: First-line care usually involves talk therapy (often cognitive-behavioral therapy) plus nutritional counseling; medications that treat depression (SSRIs, such as fluoxetine) may help, especially if mood symptoms are present; support groups can help, and more severe cases may need medical or psychiatric care.\\n- Important caveats or special situations: Relapse is common; bulimia can cause medical problems like electrolyte imbalances, dehydration, dental issues, and esophageal or stomach problems; symptoms can be subtle since many people look normal in weight.\\n- Practical next step: See a clinician or eating-disorder specialist for evaluation and treatment planning; seek urgent care if you have severe vomiting, chest pain, fainting, or dehydration.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "38": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will provide a concise, direct summary of common bulimia symptoms in 1–3 sentences.',\n    output='Common bulimia symptoms include a persistent preoccupation with body weight and shape, recurrent binge-eating followed by compensatory behaviors such as self-induced vomiting, laxative or diuretic misuse, or excessive exercise, and efforts to hide eating patterns. You may also notice dental problems, a sore throat, swollen salivary glands, electrolyte or dehydration issues, irregular or absent periods, and mood changes like anxiety or depression.'\n)"
+        ]
+      ],
+      "39": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will present a concise, patient-friendly topic summary in the requested fixed gold-target format: one core sentence, six short bullets covering mechanism, features, management, caveats, and next steps; include a note on inheritance; finish with the standard disclaimer.',\n    output='Bulimia nervosa is an eating disorder defined by recurrent binge eating followed by purging to prevent weight gain.\\n- Binge eating episodes with a sense of loss of control.\\n- Purging behaviors include vomiting, laxatives, enemas, or excessive exercise to prevent weight gain.\\n- Weight is often normal, but people may feel overweight and guilty about eating.\\n- Visible signs may include dental enamel erosion, dry mouth, throat irritation, and swollen cheeks.\\n- Management typically includes psychotherapy, nutritional counseling, and sometimes medications such as SSRIs.\\n- Relapse can occur; most cases are not inherited; see a clinician for evaluation and discuss treatment options.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "40": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary of treatments for Klinefelter syndrome, with a core point, short factual bullets, a practical next step, and a closing note.',\n    output='Treatments for Klinefelter syndrome focus on managing symptoms and supporting development; there is no cure for the chromosome change.\\n\\n- Testosterone replacement therapy is the main treatment to help puberty changes, muscle growth, and bone health; it does not enlarge the testicles or fix infertility.\\n- Gynecomastia (excess breast tissue) can be removed by a plastic surgeon if desired.\\n- Speech, physical therapy, and educational support help with language, movement, learning, and school performance.\\n- Fertility options: most men have little or no sperm; some with tiny amounts may have sperm retrieved and used with ICSI, but many rely on donor sperm. discuss with a fertility specialist.\\n- Psychological counseling can help with puberty, self-esteem, and coping with infertility and social changes.\\n- Practical next step: consult an endocrinologist and/or reproductive medicine specialist to plan treatment and discuss fertility goals.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "41": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will deliver a concise, patient-friendly summary in the requested gold-style format: one core sentence, 5 bullets (mechanism, features, testosterone therapy, fertility/monitoring, caveats and next steps), then the closing disclaimer.',\n    output='Core point: Treatment for Klinefelter syndrome focuses on managing testosterone deficiency, fertility concerns, and health risks with coordinated medical care.\\n\\n- Cause/ mechanism: An extra X chromosome (XXY) leads to lower testosterone production and testicular changes.\\n- Typical implications: Infertility is common; most men have reduced or no sperm. Some people may have low energy, less body hair, and changes in muscle strength or bone health.\\n- Standard management: Testosterone replacement therapy is commonly used to improve energy, mood, muscle mass, and bone health.\\n- Fertility options and follow-up: For some, assisted reproduction with retrieved sperm and in vitro fertilization may help; ongoing follow-up with an endocrinologist is important.\\n- Caveats and next steps: Features can vary (mosaic XXY may be milder); most cases are not inherited and arise from random chromosomal changes; see a clinician to tailor care (endocrinologist, fertility specialist, or genetic counselor as appropriate).\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "42": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will present a concise, patient-friendly topic summary in the requested gold-target style: one core point, 5 bullets covering cause, features, management, caveats, and next steps, followed by a closing disclaimer.',\n    output='A nonfunctioning gallbladder usually causes pain and indigestion after meals because it isn’t releasing bile properly.\\n\\n- Main cause: The gallbladder isn’t emptying bile normally.\\n- Typical features: Pain in the upper belly after meals, especially after fatty foods; bloating and nausea may occur.\\n- Standard management: Diet changes (low-fat diet) to reduce symptoms; your clinician may discuss medicines.\\n- Important caveats: Symptoms can resemble other digestive problems; not everyone needs surgery.\\n- Practical next step: See a clinician for evaluation; seek urgent care if you have severe pain, fever, or yellowing of the skin.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "43": [
+        [
+          4,
+          "Prediction(\n    reasoning='I will provide a concise inheritance-focused answer (1–3 sentences) addressing how childhood obesity relates to inheritance and recurrence risk.',\n    output='Childhood obesity is multifactorial and not inherited in a simple Mendelian way; genetics and environment both contribute. Offspring risk is increased if a parent is overweight or obese, but there is no single exact percentage and the risk varies by family. If precise figures are needed, genetic counseling can help interpret family risk.'\n)"
+        ]
+      ],
+      "44": [
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning not shown; final answer focuses on inheritance pattern and recurrence risk.',\n    output='Childhood obesity is not inherited in a simple single-gene pattern; it results from many genes interacting with environmental factors. Offspring risk is generally increased if a parent is overweight or obese, but precise risk varies by family history and genetics, so genetic counseling can help determine the exact risk.'\n)"
+        ]
+      ],
+      "45": [
+        [
+          4,
+          "Prediction(\n    reasoning='The input isn’t a single-gene condition; provide a concise inheritance/risk statement suitable for a general audience.',\n    output='Childhood obesity is not inherited in a simple Mendelian pattern; it is multifactorial, involving genetic predisposition plus environmental factors. Offspring risk is increased if a parent is overweight or obese, but the exact risk varies and is best estimated with genetic counseling.'\n)"
+        ]
+      ],
+      "46": [
+        [
+          0,
+          "Prediction(\n    reasoning='Summary of the main causes of childhood obesity based on the provided material, focusing on factors that apply to children (calorie balance, activity, biology, environment, and health factors).',\n    output='- Energy imbalance: taking in more calories than the child uses, including high-calorie foods and beverages.\\n- Limited physical activity and sedentary behavior: not getting enough exercise; increased time spent in sedentary activities (e.g., screen time, desk-based routines).\\n- Biological and genetic factors: family history and how a child’s body regulates weight; some children may have a metabolism or weight-regulation system that makes weight harder to manage.\\n- Learned eating habits and environment: eating patterns formed in childhood can influence weight later; a home and daily routine that make overeating or easy access to unhealthy foods more likely, and limited time or resources for healthy meals.\\n- Sleep and stress factors: stress, anxiety, mood, and inadequate sleep can affect appetite and weight gain.\\n- Medical conditions and medications: certain medical problems (e.g., hypothyroidism) or medications can contribute to weight gain in children.'\n)"
+        ]
+      ],
+      "47": [
+        [
+          0,
+          "Prediction(\n    reasoning='From the provided text, the primary causes of childhood obesity are described as lifestyle factors (insufficient physical activity combined with excessive caloric intake). It also notes that genetic and hormonal factors can contribute, including changes in digestive hormones that affect fullness signals. Additionally, the text lists several risk factors (diet, inactivity, family factors, psychological factors, socioeconomic factors) that can increase a child’s likelihood of becoming overweight or obese, often acting in combination.',\n    output='- Primary cause: lifestyle factors — too little physical activity and too many calories from food and drinks.\\n- Genetic and hormonal factors: genetics can predispose, and hormonal changes (e.g., digestive hormones affecting fullness) can play a role.\\n- Additional contributing factors (risk factors) that increase likelihood:\\n  - Diet: regularly eating high-calorie foods, frequent sugar-sweetened drinks\\n  - Lack of exercise and excessive sedentary time (TV, video games)\\n  - Family factors: overweight family members and home environment that encourages high-calorie foods and limited activity\\n  - Psychological factors: stress, emotional eating, depression\\n  - Socioeconomic factors: limited access to healthy foods and safe places to exercise\\n\\nThese factors often interact to contribute to obesity in childhood.'\n)"
+        ]
+      ],
+      "48": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary of the causes of pulmonary hypertension in the requested fixed gold-target style.',\n    output='Core point: Pulmonary hypertension has many causes and is classified into five groups; while it cannot be cured, treatment can relieve symptoms and slow progression.\\n\\n- Main cause or mechanism: PH starts when the pulmonary arteries become inflamed or damaged and narrow or stiffen, raising the pressure the heart must pump against.\\n- Typical clinical features or implications: Common signs include shortness of breath with activity, fatigue, chest pain, and a racing heartbeat.\\n- Standard management or treatment options (with inheritance note): Treatment depends on the type; common medicines help relax lung vessels and may slow progression. Other options include diuretics, oxygen, and, in some cases, procedures or transplant. Inheritance: most cases are not inherited; some PAH is inherited.\\n- Important caveats, variability, or specialist care: Many PH cases (groups 2–5) come from another disease like heart or lung disease or clots; diagnosing PH often requires specialized tests and addressing the underlying condition.\\n- Practical next step: If you have symptoms or risk factors, see a clinician who specializes in PH (often a cardiologist or pulmonologist) for evaluation; seek urgent care if you have chest pain, fainting, or severe shortness of breath.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "49": [
+        [
+          3,
+          "Prediction(\n    reasoning='I prepared a concise, patient-friendly summary of the causes of pulmonary hypertension in the requested gold-target style.',\n    output='Core point: Pulmonary hypertension is caused by conditions that narrow, stiffen, or block the lung arteries, raising pressure in the pulmonary circulation.\\n\\n- Five main groups exist: idiopathic/heritable PAH and drug/toxin–related, left‑heart disease, lung disease, chronic blood clots, and other related conditions.\\n- Common features or implications: shortness of breath with activity, fatigue, chest pressure or fainting, and signs of right‑side heart strain such as swelling.\\n- Standard management options: treat any underlying cause when possible; medications to lower pressure and improve flow (vasodilators, endothelin receptor blockers, PDE-5 inhibitors, and prostacyclin therapies); plus oxygen and diuretics as needed.\\n- Important caveats: not all forms respond to treatment; some cases progress despite therapy; pregnancy is high risk; some patients may need specialized centers or procedures such as lung transplantation.\\n- Practical next step: see a clinician, preferably a pulmonary hypertension or cardiology specialist, for an evaluation to determine cause and appropriate treatment.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "50": [
+        [
+          4,
+          "Prediction(\n    reasoning='Identify core question (inheritance/risk for a genetic form of pulmonary hypertension) and provide a concise inheritance pattern with recurrence risk in 1–3 sentences.',\n    output='The condition can be hereditary as an autosomal dominant form called heritable pulmonary arterial hypertension and may be inherited from a parent. Offspring risk is up to 50% to inherit the pathogenic mutation, but the overall risk of developing PAH among mutation carriers is lower due to incomplete penetrance (roughly 10–20%).'\n)"
+        ]
+      ],
+      "51": [
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a concise, inheritance-focused answer tailored to pulmonary hypertension with a hereditary component, using autosomal dominant inheritance with incomplete penetrance and noting the need for genetic counseling for precise risk.',\n    output='The condition is inherited as autosomal dominant with incomplete penetrance and may be inherited from a parent. Offspring risk is up to 50% for inheriting the mutation, but disease risk among carriers is lower due to incomplete penetrance. For precise risk, genetic testing and counseling are recommended.'\n)"
+        ]
+      ],
+      "52": [
+        [
+          3,
+          "Prediction(\n    reasoning='Providing a concise, patient-friendly summary in the requested fixed format.',\n    output='Core point: Pulmonary hypertension is high blood pressure in the lung arteries caused by many conditions that narrow, block, or damage those vessels or put strain on the heart.\\n\\n- Main mechanism: The small lung arteries become narrowed or blocked, raising pressure in the lungs and making the right heart work harder.\\n- Typical symptoms: Breathlessness with activity, fatigue, dizziness, chest pain, and sometimes leg swelling.\\n- Standard management: Treat underlying conditions; use medicines to open lung vessels; oxygen therapy and, if indicated, blood thinners; in severe cases, lung or heart-lung transplant may be considered.\\n- Important caveats: Diagnosis and treatment responses vary; many cases require care at a specialized pulmonary hypertension center.\\n- Inheritance/risk: Most cases are not inherited, but a minority are familial due to genetic mutations.\\n- Practical next step: See a clinician if you have ongoing shortness of breath, chest pain, or leg swelling; seek urgent care for severe or rapidly worsening symptoms.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "53": [
+        [
+          1,
+          "Prediction(\n    reasoning='Provide a concise, patient-friendly summary of the causes of pulmonary hypertension with a core point, a few bullet points covering groups and key ideas, and a practical next step.',\n    output=\"Core point: Pulmonary hypertension has several causes and is classified into five groups based on what's driving it.\\n\\n- Group 1 PAH: can be inherited or occur without a known cause, and may be linked to drugs/toxins or conditions like connective tissue disease, HIV, liver disease, congenital heart disease, sickle cell disease, or schistosomiasis.\\n- Group 2: due to left heart disease (e.g., mitral valve problems or long-standing high blood pressure); this is the most common overall cause.\\n- Group 3: related to lung diseases (like COPD or interstitial lung disease) or sleep apnea; oxygen therapy may help if needed.\\n- Group 4: caused by blood clots in the lungs or clotting disorders; treatment often includes blood thinners and sometimes procedures to remove clots.\\n- Group 5: caused by other conditions (e.g., thyroid disease, sarcoidosis, tumors pressing on pulmonary arteries) or unclear causes; treatment targets the underlying issue.\\n\\n- Practical next step: talk with a clinician or pulmonary hypertension specialist to identify the specific group and underlying cause, as treatment depends on the type. Seek urgent care if you have severe chest pain or sudden symptoms.\\n\\nClosing: This information is general; individual risk and decisions depend on your situation and should be discussed with a qualified professional.\"\n)"
+        ]
+      ],
+      "54": [
+        [
+          1,
+          "Prediction(\n    reasoning='Concise, patient-friendly summary produced based on the provided content.',\n    output='Pulmonary hypertension is high pressure in the arteries of the lungs, which makes the right side of the heart work harder. It can be idiopathic (unknown cause) or caused by another condition.\\n\\n- Main causes and mechanism: Narrowing or stiffening of the small lung arteries; can be due to autoimmune diseases (like scleroderma or rheumatoid arthritis), congenital heart defects, blood clots in the lungs, heart or valve problems, HIV, long-term low oxygen, chronic lung disease, or certain medicines.\\n- Common symptoms: Shortness of breath with activity, fatigue, faster heart rate, leg swelling, chest pain or pressure, dizziness or fainting, and blue tint to lips/skin in more advanced cases.\\n- How it’s diagnosed: Physical exam, echocardiogram, and usually right-heart catheterization to measure pressures; other tests may include chest imaging, blood tests, lung function tests, and sleep studies.\\n- Treatment approach: There is no cure; treatment focuses on the underlying cause and relieving symptoms. Options include medications (oral, IV, or inhaled), blood thinners in some cases, supplemental oxygen, and lifestyle changes. Lung or heart-lung transplant may be considered if other treatments don’t help.\\n- Important caveats: IPAH (idiopathic) is more common in women; prognosis varies by cause and severity; diagnosis can take time; referral to a specialist center is often important; avoid pregnancy and high-altitude environments.\\n- Practical next step: See a clinician, ideally a cardiologist or pulmonary hypertension specialist, for evaluation and management; seek urgent care if you have chest pain or severe shortness of breath.\\n\\nThis information is general; individual risk and decisions depend on your situation and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "55": [
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning not shown.',\n    output='Two main causes are advanced tooth decay (cavities) and gum disease; both can lead to tooth loss if not treated. Cavities arise from plaque and acids that erode enamel, while gum disease damages the supporting tissues around teeth. Additional factors include injury, severe tooth wear, and low saliva from medications or illnesses; these can increase the risk of tooth loss.'\n)"
+        ]
+      ],
+      "56": [
+        [
+          4,
+          "Prediction(\n    reasoning='Provide a concise answer listing main non-genetic causes of tooth loss; no steps or internal reasoning.',\n    output='Main causes of tooth loss are advanced tooth decay (cavities) and periodontal (gum) disease. Tooth loss can also occur after trauma or injury to a tooth, or when infection leads to extraction; poor oral hygiene and lack of access to care increase risk.'\n)"
+        ]
+      ],
+      "57": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will pull the risk factors for type 2 diabetes from the provided text and present them as a concise bullet list for clarity.',\n    output='- Being over 45 years of age\\n- Being overweight or obese\\n- Having a first-degree relative (a parent, brother, or sister) with diabetes\\n- Belonging to certain racial/ethnic groups: African American, American Indian or Alaska Native, Asian American or Pacific Islander, or Hispanic American/Latino\\n- Having gestational diabetes, or giving birth to a baby weighing more than 9 pounds\\n- Having high blood pressure (≥140/90 mmHg)\\n- Having abnormal cholesterol levels — HDL cholesterol 35 mg/dL or lower, or triglycerides 250 mg/dL or higher\\n- Being inactive or exercising fewer than three times a week\\n- Having polycystic ovary syndrome (PCOS) (women only)\\n- On previous testing, having prediabetes (A1C 5.7%–6.4%), impaired glucose tolerance (IGT), or impaired fasting glucose (IFG)\\n- History of cardiovascular disease'\n)"
+        ]
+      ],
+      "58": [
+        [
+          4,
+          "Prediction(\n    reasoning='Reasoning not disclosed per policy.',\n    output='The condition is multifactorial and not inherited in a simple Mendelian pattern. Offspring risk is increased if a parent or sibling has type 2 diabetes, but the exact risk depends on family history and lifestyle.'\n)"
+        ]
+      ],
+      "59": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will present a concise, patient-friendly summary in the fixed gold-target style: one clear core point, 6 short bullets covering mechanism and risk factors, then a closing disclaimer.',\n    output='Type 2 diabetes risk increases with weight and several other factors, but lifestyle changes can reduce your risk.\\n\\n- Main mechanism: insulin resistance—your body doesn’t use insulin well, so blood sugar stays higher.\\n- Being overweight or obese is a major risk factor.\\n- Age 45 or older and/or having a first-degree relative with diabetes increases risk.\\n- Certain racial/ethnic backgrounds have higher risk (e.g., African American, American Indian/Alaska Native, Asian American or Pacific Islander, Hispanic/Latino).\\n- Gestational diabetes or delivering a baby weighing more than 9 pounds increases risk.\\n- Other risk factors include high blood pressure, abnormal cholesterol, physical inactivity, PCOS, and prediabetes; genetics can also play a role.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "60": [
+        [
+          0,
+          "Prediction(\n    reasoning='From the given article, the risk factors for Type 2 diabetes include overweight/obesity, excess abdominal fat, low physical activity, poor diet, family history/genetics, and older age. These are stated directly as factors that increase the chance of developing the disease.',\n    output='- Overweight or obesity\\n- Excess body fat around the waist (abdominal obesity)\\n- Low activity level / sedentary lifestyle\\n- Poor diet\\n- Family history and genetics\\n- Older age'\n)"
+        ]
+      ],
+      "61": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will extract the risk factors for type 2 diabetes from the provided text and present them as a concise bulleted list.',\n    output='- Weight: Being overweight is a primary risk factor; the more fatty tissue you have, the more resistant your cells become to insulin.\\n- Fat distribution: Abdominal (central) fat increases risk more than fat stored in hips and thighs.\\n- Inactivity: Physical inactivity raises risk; regular activity helps control weight and improves insulin sensitivity.\\n- Family history: Higher risk if a parent or sibling has type 2 diabetes.\\n- Race/ethnicity: Blacks, Hispanics, American Indians, and Asian-Americans have higher risk than whites.\\n- Age: Risk increases with age, especially after 45; risk is also rising among children and younger adults with obesity.\\n- Prediabetes: Having prediabetes increases the likelihood of progressing to type 2 diabetes.\\n- Gestational diabetes: History of gestational diabetes increases risk; giving birth to a baby weighing more than 9 pounds also increases risk.\\n- Polycystic ovarian syndrome: PCOS increases risk in women.'\n)"
+        ]
+      ],
+      "62": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will present a concise, patient-friendly risk-factor summary in five parts: one core sentence, five bullets covering mechanism, implications, management, caveats, and a practical next step, followed by the closing disclaimer.',\n    output='Core point: The main risk factors for type 2 diabetes include overweight/obesity, physical inactivity, age, family history, and certain health conditions.\\n\\n- Main mechanism: Excess body fat can cause insulin resistance, so the body uses insulin less effectively.\\n- Typical implications: Older age increases risk; certain ethnic backgrounds and a history of gestational diabetes or PCOS also raise risk.\\n- Standard management: The key to lowering risk is lifestyle changes—weight loss, healthy eating, and regular physical activity; managing related conditions like high blood pressure or cholesterol can help too.\\n- Important caveats: Not everyone with risk factors develops diabetes; some factors (age, genetics) can’t be changed.\\n- Practical next step: Talk with your clinician about your risk and consider screening if you have risk factors.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "63": [
+        [
+          2,
+          "Prediction(\n    reasoning='I’ll provide a concise, patient-friendly gold-target summary of cystic fibrosis symptoms and key management.',\n    output='Cystic fibrosis is a genetic condition that causes thick, sticky mucus in the lungs and digestive system, leading to breathing problems and trouble absorbing nutrients.\\n\\n- Cause and inheritance: CFTR gene mutations cause salt and water balance problems in cells; this makes mucus thick. It is usually inherited in an autosomal recessive pattern (both parents carry a mutation; about 25% risk for a child to be affected).\\n- Respiratory symptoms: persistent coughing with thick mucus, wheezing or shortness of breath, and frequent lung infections. Some people may have nasal congestion or polyps.\\n- Digestive and nutritional signs: poor weight gain or growth, greasy or foul-smelling stools, abdominal discomfort, and sometimes intestinal blockages in newborns.\\n- Standard treatments: airway clearance techniques to loosen mucus; inhaled meds (bronchodilators, mucus-thinners); antibiotics for infections; pancreatic enzyme supplements with meals; fat-soluble vitamins and nutrition support; CFTR modulators (for specific mutations) like ivacaftor; lung transplant in severe cases.\\n- Important caveats and next steps: disease severity varies widely; symptoms can begin in infancy or later. Testing includes sweat testing and genetic tests; care is best at a specialized CF center. Urgent care if you have severe breathing difficulties. Consider genetic counseling for family planning.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "64": [
+        [
+          0,
+          "Prediction(\n    reasoning='Summarize the symptoms of cystic fibrosis from the provided text, grouping them into newborn, digestive/bowel, respiratory/sinus, and later-life signs, and present as concise bullet points.',\n    output='- Symptoms in newborns:\\n  - Delayed growth and failure to gain weight normally\\n  - No bowel movements in the first 24 to 48 hours of life\\n  - Salty-tasting skin\\n- Digestive and bowel symptoms:\\n  - Belly pain from severe constipation\\n  - Increased gas, bloating, or a distended abdomen\\n  - Nausea and loss of appetite\\n  - Stools that are pale or clay-colored, foul-smelling, contain mucus, or float\\n  - Weight loss\\n- Respiratory and sinus symptoms:\\n  - Coughing or increased mucus in the sinuses or lungs\\n  - Fatigue\\n  - Nasal congestion caused by nasal polyps\\n  - Repeated episodes of pneumonia\\n  - Sinus pain or pressure from infection or polyps\\n  - Clubbed fingers\\n- Symptoms later in life:\\n  - Infertility (in men)\\n  - Repeated inflammation of the pancreas (pancreatitis)'\n)"
+        ]
+      ],
+      "65": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary of common cystic fibrosis symptoms in the fixed gold-style format, with plain language and a brief closing note.',\n    output='Core point: Cystic fibrosis usually shows thick mucus mainly in the lungs and digestion system due to CFTR gene mutations.\\n\\n- Mechanism: CFTR gene mutations cause thick, sticky mucus that can clog airways and digestive ducts.\\n- Lung symptoms: persistent cough, frequent chest infections, wheezing or shortness of breath.\\n- Digestive symptoms: poor weight gain or growth, greasy stools, and trouble absorbing nutrients.\\n- Other notes and inheritance: some people have salty-tasting skin or sinus problems. CF is usually inherited in an autosomal recessive pattern (two defective genes, often from carrier parents).\\n- Management: treatment focuses on clearing mucus and supporting digestion—airway clearance techniques, inhaled medicines, pancreatic enzyme replacement, and good nutrition.\\n- Practical next step: if CF is suspected, see a clinician for testing such as a sweat test and genetic testing.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "66": [
+        [
+          1,
+          "Prediction(\n    reasoning='Brief, direct summary of CF symptoms in patient-friendly language.',\n    output='Cystic fibrosis commonly causes lung and digestive symptoms due to thick, sticky mucus.\\n\\n- Main cause: a defective CFTR gene makes mucus thick and sticky in lungs, pancreas, and other organs.\\n- Lung signs: persistent cough with thick mucus, wheezing, shortness of breath, and frequent lung infections.\\n- Digestive signs: poor weight gain or growth, greasy, foul-smelling stools, and trouble absorbing fats and vitamins (meals may need enzymes); may have bowel blockages like meconium ileus in newborns.\\n- Other features: salty-tasting skin; nasal polyps; infertility in most men.\\n- What to do and typical care: seek evaluation at a CF center; airway clearance to loosen mucus; inhaled medicines; pancreatic enzyme supplements with meals; a high-calorie, high-salt diet with fat-soluble vitamins; antibiotics for infections; some patients may benefit from CFTR modulator drugs; seek urgent care if breathing is severely worsened.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "67": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will extract the symptoms listed in the provided text about prostate cancer and present them as a concise bullet list, noting that early prostate cancer may not cause symptoms and that these symptoms can also be due to non-cancer conditions like an enlarged prostate.',\n    output='- A need to urinate frequently, especially at night\\n- Difficulty starting urination or holding back urine\\n- Inability to urinate\\n- Weak or interrupted flow of urine\\n- Painful or burning urination\\n- Difficulty in having an erection\\n- Painful ejaculation\\n- Blood in urine or semen\\n- Pain or stiffness in the lower back, hips, or upper thighs\\n\\nNote: These symptoms may be caused by conditions other than cancer, such as enlargement of the prostate; a doctor should evaluate if you have them.'\n)"
+        ]
+      ],
+      "68": [
+        [
+          4,
+          "Prediction(\n    reasoning='User asked for symptoms of prostate cancer. Provide a concise, 1–3 sentence answer focused on common symptoms and note that early disease can be asymptomatic; keep plain language without medical instructions.',\n    output='Early prostate cancer usually causes no symptoms. If symptoms occur, they can include more frequent urination (especially at night), difficulty starting or stopping urination, weak or interrupted urine flow, painful or burning urination, blood in urine or semen, painful ejaculation, erectile problems, and pain or stiffness in the lower back, hips, or upper thighs; these symptoms can also be due to non-cancer conditions like an enlarged prostate.'\n)"
+        ]
+      ],
+      "69": [
+        [
+          2,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary of vitamin E capsule uses in a fixed, gold-target style, focusing on when they are used (deficiency treatment), common contexts like AVED, and practical steps and safety.',\n    output='Vitamin E capsules are mainly used to prevent or treat vitamin E deficiency.\\n\\n- Cause or mechanism: Vitamin E is an antioxidant; deficiency happens when the body cannot absorb or use Vitamin E from the diet (examples include fat-malabsorption or genetic disorders like AVED/TTPA mutations). Capsules deliver the active Vitamin E (alpha-tocopherol).\\n\\n- Typical clinical features or implications: Deficiency can cause movement problems (ataxia), numbness or tingling (peripheral neuropathy), and sometimes eye issues such as retinitis pigmentosa in AVED. Symptoms often begin in childhood for AVED and may worsen over time.\\n\\n- Standard management or treatment options: Treatment usually involves Vitamin E supplementation under medical supervision; in AVED or similar conditions, high-dose Vitamin E can help slow progression and manage symptoms. Address underlying causes of fat absorption problems as well. Regular follow-up is important.\\n\\n- Important caveats or special situations: Response varies by individual and cause; taking very high doses long-term can cause side effects and may interact with certain medicines (e.g., anticoagulants). Vitamin E is not proven to prevent heart disease or cancer in healthy people. Do not exceed advised doses without a clinician’s guidance.\\n\\n- Practical next step: If you suspect a deficiency or AVED, consult a clinician (e.g., a genetic/metabolic specialist) to determine if Vitamin E supplementation is appropriate, the right dose, and how to monitor for safety.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "70": [
+        [
+          1,
+          "Prediction(\n    reasoning='Concise, patient-friendly summary focusing on uses of vitamin E capsules for deficiency and AVED.',\n    output='Vitamin E capsules are used mainly to treat and prevent vitamin E deficiency, including AVED, and may help protect nerves and vision if started early.\\n\\n- Mechanism: vitamin E acts as an antioxidant; deficiency can affect nerves and eyes.\\n- Who may need them: people with AVED or other causes of vitamin E deficiency from fat malabsorption or poor intake.\\n- Treatment approach: lifelong high-dose vitamin E supplementation under medical supervision; early treatment can reverse some symptoms and slow progression after symptoms begin.\\n- Important caveats: vitamin E is fat-soluble; very high doses can increase bleeding risk and interact with certain medications; not a proven cure for other conditions; diagnosis often needs genetic testing.\\n- Practical next steps: see a clinician or genetic counselor if AVED is suspected; have vitamin E levels checked and discuss long-term supplementation with a doctor.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "71": [
+        [
+          4,
+          "Prediction(\n    reasoning='The user asked about causes of headaches, not inheritance. I’ll give a brief note on genetic relevance and recurrence risk without medical guidance.',\n    output='Headaches have many causes, most not due to inherited conditions. Some headache disorders, such as certain familial migraine forms, show genetic susceptibility and can run in families; the exact recurrence risk depends on the specific condition. For precise figures, genetic counseling for a diagnosed hereditary headache syndrome is recommended.'\n)"
+        ]
+      ],
+      "72": [
+        [
+          4,
+          "Prediction(\n    reasoning=\"I can't share internal step-by-step reasoning, but here is a concise answer focusing on causes.\",\n    output='Headaches in children are commonly caused by illness or infections (cold, flu, ear or sinus infections), head trauma, and emotional factors such as stress or anxiety. They can also run in families (genetic predisposition) and be triggered by certain foods and drinks (nitrates in processed meats, MSG, and caffeine). Rarely, headaches may indicate a brain problem; seek medical care if headaches are persistent or are accompanied by other worrisome signs.'\n)"
+        ]
+      ],
+      "73": [
+        [
+          3,
+          "Prediction(\n    reasoning='Summarizing rebound headaches from the provided material into a concise, patient-friendly format.',\n    output='Core point: Rebound headaches are headaches caused by regular, long-term use of headache medications.\\n\\n- Mechanism: Regular use of acute headache medicines can make headaches come back and persist as the meds wear off.\\n- Features: They tend to occur daily or nearly daily, often waking you in the early morning; they may improve with pain relief but then recur. Nausea, irritability, and trouble concentrating can also occur.\\n- Management: The main approach is to stop or taper the offending medication, guided by a clinician. Bridge therapies (like certain nonprescription meds or other treatments) may help during withdrawal.\\n- Caveats: Some drugs (especially opioids or sedatives with butalbital) carry higher rebound risk and may require careful planning or supervised care.\\n- Next steps: See a clinician to plan a safe withdrawal and a long-term headache-management plan, including safer preventive options if needed.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "74": [
+        [
+          4,
+          "Prediction(\n    reasoning='I can’t share my internal chain-of-thought, but here is a concise answer.',\n    output='Headaches have several causes, the most common being tension-type headaches from muscle tension and stress, and migraines that can be triggered by sleep loss, caffeine withdrawal, certain foods, or hormonal changes. Other types include cluster headaches, sinus headaches, and headaches from overusing pain medicines (rebound headaches).'\n)"
+        ]
+      ],
+      "75": [
+        [
+          0,
+          "Prediction(\n    reasoning='I’ll summarize the causes of sex headaches as described in the provided content: sexual activity leading to orgasm can trigger headaches; there are primary headaches without an underlying condition; and sudden-onset headaches may indicate serious underlying issues (aneurysm, AV malformation, dissection, stroke, coronary artery disease, certain medications, infections). I’ll present these clearly in bullet points and include the noted risk factors briefly.',\n    output='Causes of sex headaches:\\n\\n- Any sexual activity that leads to orgasm can trigger sex headaches.\\n- Abrupt-onset and slow-to-build sex headaches can be primary headache disorders not associated with any underlying condition.\\n- Sex headaches that come on suddenly are more likely to be associated with underlying problems, such as:\\n  - A widening or bubble in the wall of an artery inside your head (intracranial aneurysm)\\n  - An abnormal connection between arteries and veins in the brain (arteriovenous malformation) that bleeds into the surrounding fluid\\n  - Bleeding into the wall of an artery leading to the brain (dissection)\\n  - Stroke\\n  - Coronary artery disease\\n  - Use of some medications, such as birth control pills\\n  - Inflammation from certain infections\\n\\nNotes:\\n- If the headache begins abruptly, is accompanied by loss of consciousness, vomiting, a stiff neck, other neurological symptoms, or severe pain lasting more than 24 hours, it is more likely to be due to an underlying cause.\\n- Risk factors mentioned for sex headaches include being male and a history of migraines (these increase susceptibility).'\n)"
+        ]
+      ],
+      "76": [
+        [
+          0,
+          "Prediction(\n    reasoning='I\\'ll extract and summarize the \"Causes\" section from the provided text into concise bullet points describing the main factors that can cause headaches in children.',\n    output='Causes of headaches in children (summary):\\n- Illness and infection: common colds, flu, ear and sinus infections; more serious infections like meningitis or encephalitis can cause headaches but usually come with other symptoms.\\n- Head trauma: bumps or blows to the head; most are minor, but seek medical attention if the fall or impact was hard or if pain worsens.\\n- Emotional factors: stress and anxiety; depression can be associated with headaches.\\n- Genetic predisposition: headaches, especially migraines, tend to run in families.\\n- Certain foods and beverages: nitrates in cured meats (e.g., bacon, bologna, hot dogs), MSG; too much caffeine (in soda, chocolate, coffee, tea) can trigger headaches.\\n- Problems in the brain: rare causes such as brain tumor, abscess, or bleeding; usually accompanied by other symptoms like visual changes, dizziness, or lack of coordination.'\n)"
+        ]
+      ],
+      "77": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I can't share my detailed internal reasoning, but here is a concise summary of the causes of headaches based on common types and serious conditions from the provided content.\",\n    output='- Tension headaches: caused by tight muscles in the shoulders, neck, scalp, and jaw; may be related to stress, depression, anxiety, head/neck injury, or poor posture; pain tends to be on both sides, dull or squeezing like a band.\\n\\n- Migraines: involve severe throbbing pain, often with aura; may be triggered by foods (chocolate, certain cheeses, MSG), caffeine withdrawal, lack of sleep, and alcohol; pain may be unilateral or bilateral and worsens with movement.\\n\\n- Rebound (medication overuse) headaches: headaches that persist or recur due to overuse of pain medicines (more than 3 days a week).\\n\\n- Cluster headaches: sharp, very painful headaches occurring daily in clusters for months; each attack lasts less than an hour and tends to occur at the same times each day.\\n\\n- Sinus headaches: pain in the front of the head and face due to swelling in sinus passages; worse when bending forward or on waking; may accompany infections like cold or flu.\\n\\n- Headache due to temporal arteritis (giant cell arteritis): swollen, inflamed arteries supplying parts of the head, temples, and neck.\\n\\n- Other/rare causes (may indicate serious conditions): subarachnoid hemorrhage; very high blood pressure; brain infections (meningitis, encephalitis) or brain abscess; brain tumor; hydrocephalus (buildup of fluid in the skull); pseudotumor cerebri (increased intracranial pressure without tumor); carbon monoxide poisoning; sleep apnea; vascular problems (arteriovenous malformation AVM, brain aneurysm, stroke).\\n\\n- Important note: while most headaches are not due to serious illness, certain red-flag signs require urgent medical evaluation.'\n)"
+        ]
+      ],
+      "78": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I'll summarize the causes of headaches as described in the provided content: the primary headache types (migraine and tension-type headaches), the concept that sinus headaches are often not due to sinus infection, and related risk factors mentioned (history, family history, hormonal changes). This keeps to the information given without adding outside details.\",\n    output='- Migraine headaches\\n- Tension-type headaches\\n- Sinus headaches (often not caused by a sinus infection; commonly due to migraines or other headache types)\\n- Sinusitis (sinus infection) — a possible but less common or accurate cause for many headaches\\n- Risk factors and contributors: personal history of migraines or headaches, family history of migraines or headaches, hormonal changes related to headaches'\n)"
+        ]
+      ],
+      "79": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will summarize the causes of headaches as described in the provided text, focusing on spinal headaches since the content centers on that condition. The main cause is leakage of cerebrospinal fluid (CSF) through a puncture in the dura mater, typically after spinal procedures, with a note that inadvertent puncture during epidural anesthesia can also cause it.',\n    output='- Leakage of cerebrospinal fluid (CSF) through a puncture hole in the dura mater (the tough membrane around the spinal cord), usually after a spinal tap (lumbar puncture) or spinal anesthesia.\\n- If the dura is unintentionally punctured during epidural anesthesia, a spinal headache can also occur.'\n)"
+        ]
+      ],
+      "80": [
+        [
+          4,
+          "Prediction(\n    reasoning='Identify core question (inheritance/risk for a genetic form of pulmonary hypertension) and provide a concise inheritance pattern with recurrence risk in 1–3 sentences.',\n    output='The condition can be hereditary as an autosomal dominant form called heritable pulmonary arterial hypertension and may be inherited from a parent. Offspring risk is up to 50% to inherit the pathogenic mutation, but the overall risk of developing PAH among mutation carriers is lower due to incomplete penetrance (roughly 10–20%).'\n)"
+        ]
+      ],
+      "81": [
+        [
+          3,
+          "Prediction(\n    reasoning='Plan: produce a concise, patient-friendly PH causes summary in fixed format with a single core point, 5 short bullets (covering cause, features, treatment, caveats, and next steps), then a brief disclaimer.',\n    output='Pulmonary hypertension has multiple causes and is classified into five groups, with left heart disease and lung disease being the most common drivers.\\n- PH arises when the pulmonary arteries narrow, stiffen, or become blocked, making it harder for blood to flow and raising pressure in the lungs.\\n- Symptoms often include shortness of breath with activity, fatigue, chest pain, and a racing heartbeat.\\n- Treatments vary by type but commonly include medicines to relax blood vessels, oxygen therapy, and diuretics; some patients may need procedures or transplant.\\n- The specific PH type and underlying cause determine care; some forms require specialized PH centers, and some PAH forms are inherited while others are not.\\n- Practical next step: see a clinician for a full evaluation; seek urgent care for severe chest pain, fainting, or sudden worsening.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "82": [
+        [
+          1,
+          "Prediction(\n    reasoning='Concise, patient-friendly summary of pulmonary hypertension causes and management.',\n    output='Pulmonary hypertension is high pressure in the lung arteries and can have many causes.\\n\\n- Mechanism: Small lung arteries narrow or stiff, raising resistance and forcing the right side of the heart to work harder.\\n- Common causes/associations: Idiopathic or familial forms; lung diseases (like COPD or fibrosis); heart valve problems or heart failure; chronic blood clots; autoimmune diseases; HIV; certain medicines.\\n- Typical symptoms: Shortness of breath with activity, fatigue, leg swelling, chest pain or lightheadedness.\\n- Treatments: Treat the underlying cause when possible; medicines to widen blood vessels (oral, IV, or inhaled); oxygen therapy; blood thinners if indicated; manage sleep apnea; in some cases, lung or heart-lung transplant.\\n- Next steps and cautions: Prognosis varies by cause; requires specialist care. Avoid pregnancy in many cases and follow with a pulmonary hypertension or cardiology team. Seek urgent care if chest pain or severe shortness of breath occurs.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "83": [
+        [
+          3,
+          "Prediction(\n    reasoning='Providing a concise, patient-friendly summary in the requested fixed format.',\n    output='Core point: Pulmonary hypertension is high blood pressure in the lung arteries caused by many conditions that narrow, block, or damage those vessels or put strain on the heart.\\n\\n- Main mechanism: The small lung arteries become narrowed or blocked, raising pressure in the lungs and making the right heart work harder.\\n- Typical symptoms: Breathlessness with activity, fatigue, dizziness, chest pain, and sometimes leg swelling.\\n- Standard management: Treat underlying conditions; use medicines to open lung vessels; oxygen therapy and, if indicated, blood thinners; in severe cases, lung or heart-lung transplant may be considered.\\n- Important caveats: Diagnosis and treatment responses vary; many cases require care at a specialized pulmonary hypertension center.\\n- Inheritance/risk: Most cases are not inherited, but a minority are familial due to genetic mutations.\\n- Practical next step: See a clinician if you have ongoing shortness of breath, chest pain, or leg swelling; seek urgent care for severe or rapidly worsening symptoms.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "84": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will convert the user-provided information into a concise, patient-friendly topic summary focused on the causes of pulmonary hypertension, using a single core point, 6 short bullets (covering the five cause groups, inheritance note, and the need for specialist care), and a closing disclaimer.',\n    output='Core point: Pulmonary hypertension is high pressure in the lung arteries caused by five main groups of underlying problems.\\n\\n- Five main cause groups explain most cases, and treatment aims to address the underlying problem when possible.\\n\\n- Group 1: Idiopathic or genetic forms; some are inherited, but most cases are not, and some are linked to certain medicines or toxins.\\n\\n- Group 2: Left-sided heart disease, such as valve problems or heart failure.\\n\\n- Group 3: Lung diseases (e.g., COPD or fibrosis), sleep apnea, or living at high altitude.\\n\\n- Group 4: Chronic blood clots in the lungs.\\n\\n- Group 5: Other conditions with unclear causes, such as certain blood disorders, sarcoidosis, metabolic disorders, or tumors. Diagnosis and classification typically require specialist care; if you have symptoms like shortness of breath, see a clinician.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "85": [
+        [
+          1,
+          "Prediction(\n    reasoning='Provide a concise, patient-friendly summary of the causes of pulmonary hypertension with a core point, a few bullet points covering groups and key ideas, and a practical next step.',\n    output=\"Core point: Pulmonary hypertension has several causes and is classified into five groups based on what's driving it.\\n\\n- Group 1 PAH: can be inherited or occur without a known cause, and may be linked to drugs/toxins or conditions like connective tissue disease, HIV, liver disease, congenital heart disease, sickle cell disease, or schistosomiasis.\\n- Group 2: due to left heart disease (e.g., mitral valve problems or long-standing high blood pressure); this is the most common overall cause.\\n- Group 3: related to lung diseases (like COPD or interstitial lung disease) or sleep apnea; oxygen therapy may help if needed.\\n- Group 4: caused by blood clots in the lungs or clotting disorders; treatment often includes blood thinners and sometimes procedures to remove clots.\\n- Group 5: caused by other conditions (e.g., thyroid disease, sarcoidosis, tumors pressing on pulmonary arteries) or unclear causes; treatment targets the underlying issue.\\n\\n- Practical next step: talk with a clinician or pulmonary hypertension specialist to identify the specific group and underlying cause, as treatment depends on the type. Seek urgent care if you have severe chest pain or sudden symptoms.\\n\\nClosing: This information is general; individual risk and decisions depend on your situation and should be discussed with a qualified professional.\"\n)"
+        ]
+      ],
+      "86": [
+        [
+          4,
+          "Prediction(\n    reasoning='Identify core question (inheritance/risk for a genetic form of pulmonary hypertension) and provide a concise inheritance pattern with recurrence risk in 1–3 sentences.',\n    output='The condition can be hereditary as an autosomal dominant form called heritable pulmonary arterial hypertension and may be inherited from a parent. Offspring risk is up to 50% to inherit the pathogenic mutation, but the overall risk of developing PAH among mutation carriers is lower due to incomplete penetrance (roughly 10–20%).'\n)"
+        ]
+      ],
+      "87": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will produce a concise, patient-friendly summary in the requested fixed format, focusing on blood tests for celiac disease with clear core point, bullets, and a closing disclaimer.',\n    output='Blood tests help screen for celiac disease by detecting specific antibodies, and a positive result is usually confirmed with a small intestinal biopsy.\\n\\n- Main cause or mechanism: The immune system makes antibodies to gluten; common tests look for anti-tTG (tTG-IgA) and anti-endomysial antibodies (EMA).\\n- Typical features or implications: A positive antibody test suggests celiac disease, but symptoms vary and some people have no symptoms.\\n- Standard management or treatment options: If antibody tests are positive, doctors typically confirm with a duodenal biopsy via upper endoscopy; if confirmed, treatment is lifelong gluten-free diet, with possible vitamin/mineral supplements.\\n- Important caveats, variability, or specialist care (and inheritance): Do not start a gluten-free diet before testing, as it can mask the disease; IgA deficiency can affect antibody results, so alternative tests may be used; most people with celiac have HLA-DQ2 or DQ8 genes, but having the genes does not guarantee disease.\\n- Practical next step: Discuss results with your clinician and, if positive, plan the endoscopy/biopsy with a gastroenterologist.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "88": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will provide a concise patient-focused summary of the blood tests used to evaluate celiac disease.',\n    output='Celiac disease is usually investigated with antibody blood tests, often confirmed by a biopsy if positive.\\n\\n- Antibody tests: the main screen is tTG-IgA; EMA antibodies are also very specific. A total IgA test checks for IgA deficiency, which can affect results.\\n\\n- If you have IgA deficiency or borderline results: IgG-based tests are used, such as DGP-IgG or tTG-IgG.\\n\\n- Genetic testing: HLA-DQ2 or HLA-DQ8 can support ruling out disease; most people with celiac have one of these genes, but having them does not prove it.\\n\\n- Confirmation: If antibody tests suggest celiac disease, an upper GI endoscopy with a small intestinal biopsy is usually done to confirm damage to the lining.\\n\\n- Special case: Dermatitis herpetiformis (skin) is diagnosed with a skin biopsy showing IgA; gluten-free diet helps the skin and intestine.\\n\\n- Important note: Do not start a gluten-free diet before testing, unless advised by your clinician, as it can affect results.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "89": [
+        [
+          3,
+          "Prediction(\n    reasoning='I can’t share my internal reasoning, but I’ll provide a concise, patient-friendly summary focused on blood tests for celiac disease in the requested format.',\n    output='Core point\\nIgA anti-tTG is the main blood test to screen for celiac disease, and confirmation usually needs a small intestine biopsy (genetic testing can support but doesn’t diagnose).\\n\\n- Main mechanism/tests: Autoantibodies to tissue transglutaminase (tTG) are measured; tTG-IgA is the standard screen, and total IgA is checked to rule out IgA deficiency.\\n- Typical clinical implications: A positive screen suggests celiac disease, but a biopsy is usually needed to confirm.\\n- Important caveats: If you have IgA deficiency, the tTG-IgA test can be falsely negative; doctors may use IgG-based tests in that case.\\n- Inheritance/genetic context: Most people with celiac have HLA-DQ2 or DQ8 genes, but these genes alone don’t diagnose the disease.\\n- Testing timing: You should continue eating gluten during testing; stopping gluten beforehand can hide the disease.\\n- Practical next step: If blood tests are suggestive, see a clinician (often a gastroenterologist) for confirmation and diet guidance.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "90": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will present a concise, patient-friendly summary in the requested fixed format: one core point, 5 short bullets covering mechanism, tests, genetics, confirmation, and practical steps, followed by a closing disclaimer.',\n    output='Core point: Diagnosis is usually confirmed with gluten-related antibody blood tests, followed by an intestinal biopsy to confirm damage when gluten is eaten.\\n\\n- Main mechanism: Blood tests look for gluten-related antibodies and your genetic risk.\\n- Key serology tests: tTG-IgA (most common) and EMA (very specific). Total IgA is checked to avoid misreading if you have IgA deficiency.\\n- Genetics: HLA-DQ2 or HLA-DQ8 testing helps rule out celiac; having these genes does not guarantee you will develop it.\\n- Confirmation: If serology is positive, doctors usually do an endoscopy with biopsy to confirm small-intestine damage.\\n- Caveats and next steps: You should still eat gluten before testing; stopping gluten can make tests falsely normal. If tests suggest celiac disease or you have symptoms, see a clinician (often a gastroenterologist) for evaluation and possible endoscopy.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "91": [
+        [
+          1,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary of the main and less common causes of hypoglycemia, plus practical steps for immediate management and when to seek care.',\n    output='Hypoglycemia is a blood sugar drop, usually from too much diabetes medicine or not eating enough, but many other causes exist.\\n\\n- Main cause/mechanism: too much insulin or diabetes meds, or not eating enough after taking them (and sometimes more exercise).\\n\\n- Other common causes (in people without diabetes): drinking a lot of alcohol, liver or kidney disease, long periods without eating (starvation), tumors that make too much insulin (insulinoma) or other hormone disorders.\\n\\n- After-meal cases: reactive or postprandial hypoglycemia can occur when your body releases too much insulin after eating, sometimes after stomach surgery.\\n\\n- Symptoms to watch: shakiness, sweating, hunger, irritability; in more severe cases, confusion, seizures, or loss of consciousness.\\n\\n- Immediate management and next steps: start with 15–20 g of fast-acting carbs (glucose tablet, juice, regular soda) and recheck in 15 minutes; repeat if still below 70 mg/dL, then eat a snack to stabilize. If you can’t swallow or symptoms are severe, use glucagon or IV glucose as directed by a clinician. See a doctor to identify the underlying cause and adjust treatment if needed.\\n\\n- Important caveat: non-diabetic causes are less common; persistent or recurrent episodes require medical evaluation; consult a clinician to determine the exact cause and appropriate treatment.\\n\\n- Practical next step: if you have diabetes, discuss with your healthcare provider about adjusting meds; if you don’t have diabetes and have recurrent symptoms, seek medical evaluation promptly; seek urgent care if there is severe symptoms or unconsciousness.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "92": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will provide a concise, patient-friendly summary focused on congenital hyperinsulinism as a cause of hypoglycemia, in the fixed gold-style format with a single core point, clear bullets, a brief caveat, and a practical next step.',\n    output='Congenital hyperinsulinism is a rare inherited condition in which pancreatic beta cells release too much insulin, causing low blood sugar in newborns and young children.\\n\\n- Main cause/mechanism: Mutations in genes that control insulin release make beta cells secrete insulin even when blood sugar is low.\\n- Typical clinical features or implications: Infants may be lethargic, irritable, or feed poorly during lows. Severe lows can cause seizures or brain injury.\\n- Standard management or treatment options: Regular feeding and close glucose monitoring; diazoxide is commonly used to reduce insulin release; some cases need other medicines or targeted surgery for focal disease.\\n- Important caveats, variability, or situations requiring specialist care: The condition varies in severity and inheritance; forms can be autosomal recessive or autosomal dominant, and many cases arise from new mutations; genetic testing helps guide care.\\n- Practical next step: seek medical evaluation for suspected CHI in a baby with frequent or unexplained hypoglycemia; urgent care if seizures or severe symptoms occur.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "93": [
+        [
+          0,
+          "Prediction(\n    reasoning='I will provide a concise summary of the causes, noting that the exact cause is unknown and that multiple factors are involved, including biology, genetics, and environmental triggers, as described in standard medical sources.',\n    output='The exact cause of bipolar disorder is unknown, but most experts believe it results from a combination of factors rather than a single cause. Key contributors may include:\\n- Biological differences: physical changes or differences in the brain that may affect mood regulation.\\n- Genetics: bipolar disorder tends to run in families; having a first-degree relative increases risk, and researchers are studying specific genes that might be involved.\\n- Environmental factors: life stress, traumatic events, and substance abuse can trigger or worsen episodes in people who are predisposed.\\n- Interaction of factors: the relative influence of biology, genes, and environment can vary from person to person.\\n\\nIt’s not caused by personal weakness or upbringing, though stress and other factors can influence when and how mood episodes occur. If you’re concerned about bipolar disorder, consult a healthcare professional for evaluation and guidance.'\n)"
+        ]
+      ],
+      "94": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I'll provide a concise summary reflecting the commonly cited factors: the exact cause is unknown, and bipolar disorder is thought to result from a combination of biological, genetic, and environmental factors. I’ll keep it brief and aligned with typical medical sources.\",\n    output='The exact cause of bipolar disorder is unknown. Most experts believe it results from a combination of factors rather than a single cause. Key factors may include:\\n- Biological differences: physical changes in the brain, with unclear significance.\\n- Genetics: bipolar disorder runs in families; having a first‑degree relative increases risk, and several genes may contribute.\\n- Environmental factors and life events: periods of high stress or traumatic experiences can trigger episodes in people who are predisposed.\\n- Substance use: drugs or alcohol can trigger or worsen episodes.\\n\\nThese factors likely interact to influence when and how the disorder develops. It most commonly begins in adolescence or early adulthood. If you’re worried about symptoms, talk to a healthcare professional.'\n)"
+        ]
+      ],
+      "95": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I will provide a concise summary of the causes as described in the input: there isn't a single known cause; bipolar disorder is thought to result from multiple factors, including biological differences in the brain and genetic predisposition, with risk factors such as stress and substance use.\",\n    output='- The exact cause of bipolar disorder is unknown.\\n- Several factors may be involved:\\n  - Biological differences: People with bipolar disorder may have physical changes in their brains; the significance of these changes is still uncertain.\\n  - Genetics: Bipolar disorder is more common in people who have a first-degree relative with the condition; researchers are seeking specific genes involved.\\n- Risk factors include:\\n  - Having a first-degree relative with bipolar disorder\\n  - Periods of high stress (e.g., the death of a loved one or other traumatic events)\\n  - Drug or alcohol abuse'\n)"
+        ]
+      ],
+      "96": [
+        [
+          0,
+          "Prediction(\n    reasoning='Fungal pneumonia results from infection of the lungs by a fungus. The answer should briefly explain the cause (inhaled fungal pathogens), name common fungal culprits, and note that risk is higher in people with weakened immune systems or certain environmental exposures.',\n    output='Fungal pneumonia is caused by infection of the lungs with a fungus. Fungi reach the lungs when their spores are inhaled from the environment. Common fungal causes include:\\n- Histoplasma capsulatum (histoplasmosis)\\n- Coccidioides species (coccidioidomycosis, often in the southwestern U.S.)\\n- Cryptococcus neoformans ( Cryptococcosis)\\n- Pneumocystis jiroveci (Pneumocystis pneumonia or PJP), which is considered fungal and is a common cause in people with weakened immune systems (e.g., HIV/AIDS)\\n\\nMost exposures to these fungi do not cause illness, but infection can occur in people with weakened immune systems or with significant environmental exposure. Symptoms and treatment depend on the specific organism and the patient’s health.'\n)"
+        ]
+      ],
+      "97": [
+        [
+          0,
+          "Prediction(\n    reasoning='I can’t share my step-by-step internal reasoning, but here is a concise answer to the question based on the provided information: fungal pneumonia is caused by certain environmental fungi, with a few main culprits and specific exposure contexts. I’ll list the fungi and note typical risk factors.',\n    output='Fungal pneumonia is caused by inhaling fungi from the environment. The main fungi that can cause pneumonia in the United States are:\\n- Coccidioides species (coccidioidomycosis): found in the soil of Southern California and the desert Southwest.\\n- Histoplasma capsulatum (histoplasmosis): found in the Ohio and Mississippi River Valleys.\\n- Cryptococcus species: found throughout the United States in bird droppings and soil contaminated with bird droppings.\\n- Pneumocystis jiroveci (Pneumocystis pneumonia, PCP): often considered fungal pneumonia; not treated with the usual antifungal medicines and is most common in people with HIV/AIDS, cancer, organ transplants, or other immune system suppression.\\n\\nNotes:\\n- Most people exposed to these fungi don’t get sick, but some do and require treatment.\\n- Serious fungal infections are most common in people with weakened immune systems.'\n)"
+        ]
+      ],
+      "98": [
+        [
+          1,
+          "Prediction(\n    reasoning='Provide a concise, patient-friendly summary of chronic kidney disease signs, causes, and management based on the given content.',\n    output='Chronic kidney disease is a gradual loss of kidney function that often has few early signs.\\n\\n- Cause and mechanism: Mostly due to long-term problems like diabetes and high blood pressure that damage the kidneys over months or years.\\n- Common signs and implications: When symptoms do appear, they may include nausea, fatigue, swelling, changes in urination, sleep problems, or blurred thinking; however, signs are often nonspecific and may not show until damage is advanced.\\n- Standard management: Control underlying conditions (blood pressure, blood sugar), follow a kidney-friendly diet (often lower salt and sometimes reduced protein), and treat complications (diuretics for swelling, statins for cholesterol, possible anemia treatment, and bone-supportive meds). Regular kidney function monitoring is important.\\n- When progression happens: CKD can progress to end-stage kidney disease, which may require dialysis or a kidney transplant in some people.\\n- Practical next step: See a clinician if you have risk factors or signs; ask about urine and blood tests to check kidney function and discuss a plan with a specialist or dietitian.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ],
+      "99": [
+        [
+          3,
+          "Prediction(\n    reasoning='I will convert the provided PKD information into a concise, patient-friendly gold-style summary: one core point, 5 bullets covering inheritance, features, management, variability, and next steps, followed by a brief closing disclaimer.',\n    output='Polycystic kidney disease (PKD) is a genetic condition where many fluid-filled cysts grow mainly in the kidneys, which can enlarge the kidneys and raise the risk of kidney problems.\\n\\n- Inheritance/cause: Most cases are autosomal dominant, so an affected parent can pass it to about 50% of children.\\n\\n- Common features: High blood pressure is common; kidneys may enlarge and cause abdominal fullness or pain; blood in the urine or urinary infections can occur.\\n\\n- Standard management: Control blood pressure with medications (ACE inhibitors or ARBs) and a healthy lifestyle; treat infections promptly and manage pain as needed; in advanced disease, dialysis or kidney transplant may be required.\\n\\n- Variability and caveats: Severity varies widely; some people have mild disease, others develop kidney failure; liver cysts and a risk of brain aneurysm can occur in some families; pregnancy requires special monitoring.\\n\\n- Practical next steps: If you have a family history or symptoms, talk with a clinician about PKD screening and genetic counseling.\\n\\nThis information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.'\n)"
+        ]
+      ]
+    },
+    "best_idx": 0,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\nYour task is to produce a concise, target-style answer that matches the gold targets shown in the examples. For any medical topic provided, respond with a brief, patient-friendly summary that conveys the essential facts without extraneous detail. Structure your reply as follows:\\n\\n1) Start with a single, core statement that captures the key point (e.g., inheritance risk, typical prognosis, or primary treatment approach).\\n\\n2) Then give 3–6 short bulleted points with crisp, factual information. Use simple language and avoid medical jargon when possible. Include:\\n   - The main cause or mechanism (briefly).\\n   - A couple of typical clinical features or implications (e.g., common symptoms, risks, or testing cues).\\n   - Standard management or treatment options (prioritize the most common or important ones).\\n   - Any important caveats or situations (e.g., variability, need for specialist care, or when prognosis differs).\\n   - A clear, practical next step (e.g., consult a genetic counselor, see a clinician, or seek urgent care if symptoms are severe).\\n\\n3) End with a brief closing note:\\n   - This information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\\n\\n4) Do not include reasoning steps, longer analyses, or citations. Aim for brevity that mirrors the target examples (very concise and to the point).\\n\\n5) If the user presents an urgent safety issue (e.g., active bleeding, thoughts of self-harm), include immediate safety guidance and encourage seeking urgent care.\\n\\nFollow this format consistently to align with the gold-target style, length, and content.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\nGoal\\nProduce a concise, patient-friendly summary of a medical/genetic topic in a fixed, gold-target style that is brief, accurate, and easy to understand.\\n\\nFormat (exact structure)\\n1) Start with a single, core statement that captures the key point (e.g., inheritance risk, typical prognosis, or primary treatment approach).\\n2) 3–6 short bullet points, each with crisp, factual information in plain language. Include:\\n   - Cause or mechanism (brief).\\n   - Typical clinical features or implications (e.g., common symptoms, risks, or testing cues).\\n   - Standard management or treatment options (prioritize the most common or important ones).\\n   - Important caveats or special situations (e.g., variability, need for specialist care, or when prognosis differs).\\n   - A practical next step (e.g., see a clinician, consult a genetic counselor, or seek urgent care if symptoms are severe).\\n3) End with a brief closing note:\\n   - This information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\\n4) Do not include reasoning steps, long analyses, or citations. Aim for the brief, to-the-point style shown in the gold targets.\\n5) If the user presents an urgent safety issue (e.g., active bleeding, thoughts of self-harm), provide immediate safety guidance and urge urgent care.\\n\\nStyle and accuracy guidelines\\n- Use patient-friendly language; avoid or briefly explain medical jargon.\\n- For genetic/inheritance topics, clearly state when cases are de novo vs inherited and include an appropriate practical next step (e.g., genetic counseling).\\n- Reflect variability and uncertainty where applicable; avoid overgeneralization.\\n- If a risk percentage is relevant, provide it with a clear context (e.g., “risk depends on specific genetic change”).\\n- Do not include extra sections beyond the specified core statement, bullets, and closing note.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\nGoal\\nProduce concise, patient-friendly medical topic summaries in a fixed, gold-target–style format. The response should be short, direct, and easy to scan, mirroring the tone and structure of the provided gold examples.\\n\\nFormat and content requirements\\n1) Core point (one sentence)\\n- Start with a single, central statement that captures the key takeaway (e.g., typical prognosis, whether a condition can be cured, or the primary treatment approach).\\n\\n2) Key bullets (3–6 bullets)\\n- Use simple, non-technical language. Each bullet should be brief (one to two short sentences).\\n- Order the bullets to cover:\\n  - Main cause or mechanism (brief, one line).\\n  - Typical clinical features or implications (2–3 concise items).\\n  - Standard management or treatment options (prioritize the most common or important ones).\\n  - Important caveats, variability, or situations requiring specialist care (brief note).\\n  - Practical next step (e.g., see a clinician, consult a genetic counselor, seek urgent care if symptoms are severe).\\n- If the topic involves inheritance or risk, include a tiny, simple line stating the general inheritance pattern in plain terms (e.g., “most cases are not inherited; many arise from new mutations” or “X-linked pattern, often affecting males,” as appropriate). Keep it brief and understandable.\\n\\n3) Closing disclaimer\\n- End with: \"This information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\"\\n\\n4) Urgent safety issues\\n- If the user’s message indicates an urgent safety concern (e.g., active bleeding, severe symptoms, thoughts of self-harm), begin with immediate safety guidance and urge urgent care, then present the standard core point and bullets.\\n\\nStyle and constraints\\n- Do not reveal reasoning steps, long analyses, or citations.\\n- Keep to the brief target style and length; mimic the tone of the gold targets (clear, direct, patient-friendly).\\n- Avoid medical jargon; define any essential term briefly.\\n- Ensure consistency: one core sentence, followed by 3–6 tightly focused bullets, then a brief closing note.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\n- Goal: For every input about a genetic condition, produce a concise, target-style answer that directly addresses inheritance and recurrence risk, matching the succinct, high-level tone of the gold targets. Do not provide comprehensive medical guidance unless asked.\\n\\n- Task steps:\\n  1) Identify the core question (e.g., “can this condition be inherited?” or “what is the recurrence risk?”).\\n  2) State the inheritance pattern briefly (autosomal dominant/recessive, X-linked, imprinting, mitochondrial, etc.) and whether the condition can be inherited from a parent.\\n  3) Provide a short, plain-language risk statement tailored to family history. Use simple terms: “increased risk,” “usually low risk,” or give a standard figure when well-established (for example, “up to 50%” in some inherited patterns). If most cases are de novo, say the risk is “generally low” and emphasize genetic counseling for precise figures.\\n  4) Limit the answer to 1–3 sentences. Do not include symptoms, diagnosis, prognosis, or treatment content unless the user explicitly requests it.\\n  5) If the inheritance is complex (imprinting, mosaicism, multiple mechanisms), add a brief caution: “recurrence risk depends on the mechanism; genetic testing and counseling are recommended to determine the exact risk.”\\n  6) Do not reveal chain-of-thought or internal reasoning; provide only the final answer.\\n\\n- Style and tone:\\n  - Use plain, neutral, factual language.\\n  - Be direct and avoid extraneous detail or background information.\\n  - When appropriate, phrase responses as: “The condition is inherited as [pattern] and may be [inherited/ not typically inherited] from a parent. Offspring risk is [risk statement].”\\n\\n- Optional: If the user asks for sources, you may offer brief pointers to reputable resources, but keep the primary answer concise.\\n\\n- Quality checks:\\n  - Ensure responses are brief and focused on inheritance/risk.\\n  - Align with the style and brevity of the gold target outputs.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.843857581615448
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\nYour task is to produce a concise, target-style answer that matches the gold targets shown in the examples. For any medical topic provided, respond with a brief, patient-friendly summary that conveys the essential facts without extraneous detail. Structure your reply as follows:\\n\\n1) Start with a single, core statement that captures the key point (e.g., inheritance risk, typical prognosis, or primary treatment approach).\\n\\n2) Then give 3–6 short bulleted points with crisp, factual information. Use simple language and avoid medical jargon when possible. Include:\\n   - The main cause or mechanism (briefly).\\n   - A couple of typical clinical features or implications (e.g., common symptoms, risks, or testing cues).\\n   - Standard management or treatment options (prioritize the most common or important ones).\\n   - Any important caveats or situations (e.g., variability, need for specialist care, or when prognosis differs).\\n   - A clear, practical next step (e.g., consult a genetic counselor, see a clinician, or seek urgent care if symptoms are severe).\\n\\n3) End with a brief closing note:\\n   - This information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\\n\\n4) Do not include reasoning steps, longer analyses, or citations. Aim for brevity that mirrors the target examples (very concise and to the point).\\n\\n5) If the user presents an urgent safety issue (e.g., active bleeding, thoughts of self-harm), include immediate safety guidance and encourage seeking urgent care.\\n\\nFollow this format consistently to align with the gold-target style, length, and content.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.842509142756462
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\nGoal\\nProduce a concise, patient-friendly summary of a medical/genetic topic in a fixed, gold-target style that is brief, accurate, and easy to understand.\\n\\nFormat (exact structure)\\n1) Start with a single, core statement that captures the key point (e.g., inheritance risk, typical prognosis, or primary treatment approach).\\n2) 3–6 short bullet points, each with crisp, factual information in plain language. Include:\\n   - Cause or mechanism (brief).\\n   - Typical clinical features or implications (e.g., common symptoms, risks, or testing cues).\\n   - Standard management or treatment options (prioritize the most common or important ones).\\n   - Important caveats or special situations (e.g., variability, need for specialist care, or when prognosis differs).\\n   - A practical next step (e.g., see a clinician, consult a genetic counselor, or seek urgent care if symptoms are severe).\\n3) End with a brief closing note:\\n   - This information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\\n4) Do not include reasoning steps, long analyses, or citations. Aim for the brief, to-the-point style shown in the gold targets.\\n5) If the user presents an urgent safety issue (e.g., active bleeding, thoughts of self-harm), provide immediate safety guidance and urge urgent care.\\n\\nStyle and accuracy guidelines\\n- Use patient-friendly language; avoid or briefly explain medical jargon.\\n- For genetic/inheritance topics, clearly state when cases are de novo vs inherited and include an appropriate practical next step (e.g., genetic counseling).\\n- Reflect variability and uncertainty where applicable; avoid overgeneralization.\\n- If a risk percentage is relevant, provide it with a clear context (e.g., “risk depends on specific genetic change”).\\n- Do not include extra sections beyond the specified core statement, bullets, and closing note.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8345915478467941
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\nGoal\\nProduce concise, patient-friendly medical topic summaries in a fixed, gold-target–style format. The response should be short, direct, and easy to scan, mirroring the tone and structure of the provided gold examples.\\n\\nFormat and content requirements\\n1) Core point (one sentence)\\n- Start with a single, central statement that captures the key takeaway (e.g., typical prognosis, whether a condition can be cured, or the primary treatment approach).\\n\\n2) Key bullets (3–6 bullets)\\n- Use simple, non-technical language. Each bullet should be brief (one to two short sentences).\\n- Order the bullets to cover:\\n  - Main cause or mechanism (brief, one line).\\n  - Typical clinical features or implications (2–3 concise items).\\n  - Standard management or treatment options (prioritize the most common or important ones).\\n  - Important caveats, variability, or situations requiring specialist care (brief note).\\n  - Practical next step (e.g., see a clinician, consult a genetic counselor, seek urgent care if symptoms are severe).\\n- If the topic involves inheritance or risk, include a tiny, simple line stating the general inheritance pattern in plain terms (e.g., “most cases are not inherited; many arise from new mutations” or “X-linked pattern, often affecting males,” as appropriate). Keep it brief and understandable.\\n\\n3) Closing disclaimer\\n- End with: \"This information is general; individual risk and decisions depend on specific circumstances and should be discussed with a qualified professional.\"\\n\\n4) Urgent safety issues\\n- If the user’s message indicates an urgent safety concern (e.g., active bleeding, severe symptoms, thoughts of self-harm), begin with immediate safety guidance and urge urgent care, then present the standard core point and bullets.\\n\\nStyle and constraints\\n- Do not reveal reasoning steps, long analyses, or citations.\\n- Keep to the brief target style and length; mimic the tone of the gold targets (clear, direct, patient-friendly).\\n- Avoid medical jargon; define any essential term briefly.\\n- Ensure consistency: one core sentence, followed by 3–6 tightly focused bullets, then a brief closing note.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.843726521730423
+      },
+      {
+        "iteration": 4,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='New instruction for the assistant:\\n\\n- Goal: For every input about a genetic condition, produce a concise, target-style answer that directly addresses inheritance and recurrence risk, matching the succinct, high-level tone of the gold targets. Do not provide comprehensive medical guidance unless asked.\\n\\n- Task steps:\\n  1) Identify the core question (e.g., “can this condition be inherited?” or “what is the recurrence risk?”).\\n  2) State the inheritance pattern briefly (autosomal dominant/recessive, X-linked, imprinting, mitochondrial, etc.) and whether the condition can be inherited from a parent.\\n  3) Provide a short, plain-language risk statement tailored to family history. Use simple terms: “increased risk,” “usually low risk,” or give a standard figure when well-established (for example, “up to 50%” in some inherited patterns). If most cases are de novo, say the risk is “generally low” and emphasize genetic counseling for precise figures.\\n  4) Limit the answer to 1–3 sentences. Do not include symptoms, diagnosis, prognosis, or treatment content unless the user explicitly requests it.\\n  5) If the inheritance is complex (imprinting, mosaicism, multiple mechanisms), add a brief caution: “recurrence risk depends on the mechanism; genetic testing and counseling are recommended to determine the exact risk.”\\n  6) Do not reveal chain-of-thought or internal reasoning; provide only the final answer.\\n\\n- Style and tone:\\n  - Use plain, neutral, factual language.\\n  - Be direct and avoid extraneous detail or background information.\\n  - When appropriate, phrase responses as: “The condition is inherited as [pattern] and may be [inherited/ not typically inherited] from a parent. Offspring risk is [risk statement].”\\n\\n- Optional: If the user asks for sources, you may offer brief pointers to reputable resources, but keep the primary answer concise.\\n\\n- Quality checks:\\n  - Ensure responses are brief and focused on inheritance/risk.\\n  - Align with the style and brevity of the gold target outputs.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.8422973072528839
+      }
+    ]
+  },
+  "final_prompt": "Given an input, produce the correct target output for the task.",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "bert_score"
+}

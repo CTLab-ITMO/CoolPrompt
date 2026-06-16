@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a minimal, deterministic no-argument function that uses the key types surfaced in the input (String, URI[], Map<String,String>, Document) and follows the loc0\u2013loc3 naming convention observed in the gold targets. The body simply declares four local variables with those types and representative initializations to reflect a small sequence of operations without external dependencies.",
+    "output": "```java\nvoid function ( ) {\n  final String loc0 = \"srini_string\";\n  final URI[] loc1 = new URI[0];\n  final Map<String,String> loc2 = new java.util.HashMap<String,String>();\n  final Document loc3 = null;\n}\n```"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "public List<AttributeStatementProvider> getAttributeStatementProviders() {\n    return attributeStatementProviders;\n}"
+}

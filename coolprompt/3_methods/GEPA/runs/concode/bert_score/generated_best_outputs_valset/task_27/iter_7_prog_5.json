@@ -1,0 +1,4 @@
+{
+    "reasoning": "A minimal deterministic function stub that aligns with the described operation by simulating a lookup path for a ProjectModel using loc0..loc3 locals, without performing any real I/O or state changes.",
+    "output": "void function ( ) {\n  String loc0 = null;\n  List<ProjectModel> loc1 = null;\n  Map<String,ProjectModel> loc2 = null;\n  ProjectModel loc3 = null;\n  if (loc2 != null) {\n    loc3 = loc2.get(loc0);\n  }\n}"
+}

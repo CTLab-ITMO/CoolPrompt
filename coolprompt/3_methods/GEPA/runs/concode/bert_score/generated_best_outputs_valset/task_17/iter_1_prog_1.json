@@ -1,0 +1,4 @@
+{
+    "reasoning": "The input tokens describe enabling/disabling GPS, using a Context, rebooting, and retrieving GPS status. I generate a small self-contained Java-like function that toggles an enable flag, declares a Context, calls reboot, then reads GPS status via a getGPS() method, and asserts that GPS is enabled. This mirrors the expected local variable naming (loc0, loc1), standard Java-like types (Context, boolean), and a simple assert pattern observed in the gold targets.",
+    "output": "void function ( ) {\n  boolean loc0 = true;\n  Context context = null;\n  reboot();\n  boolean loc1 = getGPS();\n  assertEquals(true, loc1);\n}"
+}

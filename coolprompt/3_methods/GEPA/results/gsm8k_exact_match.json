@@ -1,0 +1,2167 @@
+{
+  "dataset": "gsm8k",
+  "metric": "exact_match",
+  "model": "openai/gpt-5-nano",
+  "temperature": 1.0,
+  "task": "generation",
+  "splits": {
+    "train": 50,
+    "val": 100,
+    "test": 300
+  },
+  "hyperparameters": {
+    "population_size": 10,
+    "num_iterations": 5,
+    "reflection_minibatch_size": 10,
+    "max_full_evals": 5,
+    "candidate_selection_strategy": "pareto",
+    "skip_perfect_score": true,
+    "use_merge": true,
+    "max_merge_invocations": 5,
+    "perfect_score": 1.0,
+    "failure_score": 0.0,
+    "num_threads": 8,
+    "seed": 0,
+    "metric": "exact_match"
+  },
+  "initial_prompt": "Given an input, produce the correct target output for the task.",
+  "initial_program_state": {
+    "predict": {
+      "traces": [],
+      "train": [],
+      "demos": [],
+      "signature": {
+        "instructions": "Given an input, produce the correct target output for the task.",
+        "fields": [
+          {
+            "prefix": "Input:",
+            "description": "Task input text."
+          },
+          {
+            "prefix": "Reasoning:",
+            "description": "${reasoning}"
+          },
+          {
+            "prefix": "Output:",
+            "description": "The generated answer / target text."
+          }
+        ]
+      },
+      "lm": null
+    }
+  },
+  "optimization_trace": {
+    "val_aggregate_scores": [
+      0.69,
+      0.98,
+      0.96,
+      0.98
+    ],
+    "val_subscores": [
+      {
+        "0": 1.0,
+        "1": 0.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 0.0,
+        "8": 0.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 1.0,
+        "12": 1.0,
+        "13": 0.0,
+        "14": 1.0,
+        "15": 1.0,
+        "16": 0.0,
+        "17": 1.0,
+        "18": 0.0,
+        "19": 0.0,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0,
+        "23": 0.0,
+        "24": 0.0,
+        "25": 1.0,
+        "26": 1.0,
+        "27": 0.0,
+        "28": 1.0,
+        "29": 1.0,
+        "30": 1.0,
+        "31": 1.0,
+        "32": 0.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 0.0,
+        "37": 1.0,
+        "38": 0.0,
+        "39": 0.0,
+        "40": 1.0,
+        "41": 0.0,
+        "42": 1.0,
+        "43": 0.0,
+        "44": 0.0,
+        "45": 0.0,
+        "46": 1.0,
+        "47": 1.0,
+        "48": 1.0,
+        "49": 1.0,
+        "50": 0.0,
+        "51": 0.0,
+        "52": 1.0,
+        "53": 1.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 1.0,
+        "57": 1.0,
+        "58": 0.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 0.0,
+        "63": 1.0,
+        "64": 0.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 0.0,
+        "71": 1.0,
+        "72": 1.0,
+        "73": 0.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 1.0,
+        "77": 0.0,
+        "78": 1.0,
+        "79": 1.0,
+        "80": 0.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 1.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 0.0,
+        "88": 1.0,
+        "89": 1.0,
+        "90": 0.0,
+        "91": 1.0,
+        "92": 1.0,
+        "93": 0.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 0.0,
+        "97": 1.0,
+        "98": 1.0,
+        "99": 1.0
+      },
+      {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 1.0,
+        "12": 1.0,
+        "13": 1.0,
+        "14": 1.0,
+        "15": 1.0,
+        "16": 1.0,
+        "17": 1.0,
+        "18": 1.0,
+        "19": 1.0,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0,
+        "23": 1.0,
+        "24": 1.0,
+        "25": 1.0,
+        "26": 1.0,
+        "27": 1.0,
+        "28": 1.0,
+        "29": 1.0,
+        "30": 1.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 1.0,
+        "37": 1.0,
+        "38": 1.0,
+        "39": 1.0,
+        "40": 1.0,
+        "41": 1.0,
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0,
+        "47": 1.0,
+        "48": 1.0,
+        "49": 1.0,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 1.0,
+        "53": 1.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 1.0,
+        "57": 1.0,
+        "58": 1.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 0.0,
+        "63": 1.0,
+        "64": 0.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 1.0,
+        "71": 1.0,
+        "72": 1.0,
+        "73": 1.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 1.0,
+        "77": 1.0,
+        "78": 1.0,
+        "79": 1.0,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 1.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 1.0,
+        "88": 1.0,
+        "89": 1.0,
+        "90": 1.0,
+        "91": 1.0,
+        "92": 1.0,
+        "93": 1.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 1.0,
+        "97": 1.0,
+        "98": 1.0,
+        "99": 1.0
+      },
+      {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 0.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 1.0,
+        "12": 1.0,
+        "13": 1.0,
+        "14": 1.0,
+        "15": 1.0,
+        "16": 1.0,
+        "17": 1.0,
+        "18": 1.0,
+        "19": 1.0,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0,
+        "23": 1.0,
+        "24": 1.0,
+        "25": 0.0,
+        "26": 1.0,
+        "27": 1.0,
+        "28": 1.0,
+        "29": 1.0,
+        "30": 1.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 1.0,
+        "37": 1.0,
+        "38": 1.0,
+        "39": 1.0,
+        "40": 1.0,
+        "41": 1.0,
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0,
+        "47": 1.0,
+        "48": 1.0,
+        "49": 1.0,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 1.0,
+        "53": 1.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 1.0,
+        "57": 1.0,
+        "58": 1.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 0.0,
+        "63": 1.0,
+        "64": 1.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 1.0,
+        "71": 1.0,
+        "72": 1.0,
+        "73": 1.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 1.0,
+        "77": 1.0,
+        "78": 1.0,
+        "79": 1.0,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 1.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 1.0,
+        "88": 1.0,
+        "89": 1.0,
+        "90": 1.0,
+        "91": 1.0,
+        "92": 1.0,
+        "93": 0.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 1.0,
+        "97": 1.0,
+        "98": 1.0,
+        "99": 1.0
+      },
+      {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0,
+        "6": 1.0,
+        "7": 1.0,
+        "8": 1.0,
+        "9": 1.0,
+        "10": 1.0,
+        "11": 1.0,
+        "12": 1.0,
+        "13": 1.0,
+        "14": 1.0,
+        "15": 1.0,
+        "16": 1.0,
+        "17": 1.0,
+        "18": 1.0,
+        "19": 1.0,
+        "20": 1.0,
+        "21": 1.0,
+        "22": 1.0,
+        "23": 1.0,
+        "24": 1.0,
+        "25": 1.0,
+        "26": 1.0,
+        "27": 1.0,
+        "28": 1.0,
+        "29": 1.0,
+        "30": 1.0,
+        "31": 1.0,
+        "32": 1.0,
+        "33": 1.0,
+        "34": 1.0,
+        "35": 1.0,
+        "36": 1.0,
+        "37": 1.0,
+        "38": 1.0,
+        "39": 1.0,
+        "40": 1.0,
+        "41": 1.0,
+        "42": 1.0,
+        "43": 1.0,
+        "44": 1.0,
+        "45": 1.0,
+        "46": 1.0,
+        "47": 1.0,
+        "48": 1.0,
+        "49": 1.0,
+        "50": 1.0,
+        "51": 1.0,
+        "52": 1.0,
+        "53": 1.0,
+        "54": 1.0,
+        "55": 1.0,
+        "56": 1.0,
+        "57": 1.0,
+        "58": 1.0,
+        "59": 1.0,
+        "60": 1.0,
+        "61": 1.0,
+        "62": 0.0,
+        "63": 1.0,
+        "64": 1.0,
+        "65": 1.0,
+        "66": 1.0,
+        "67": 1.0,
+        "68": 1.0,
+        "69": 1.0,
+        "70": 1.0,
+        "71": 1.0,
+        "72": 1.0,
+        "73": 1.0,
+        "74": 1.0,
+        "75": 1.0,
+        "76": 1.0,
+        "77": 1.0,
+        "78": 1.0,
+        "79": 1.0,
+        "80": 1.0,
+        "81": 1.0,
+        "82": 1.0,
+        "83": 1.0,
+        "84": 1.0,
+        "85": 1.0,
+        "86": 1.0,
+        "87": 1.0,
+        "88": 1.0,
+        "89": 1.0,
+        "90": 1.0,
+        "91": 1.0,
+        "92": 1.0,
+        "93": 0.0,
+        "94": 1.0,
+        "95": 1.0,
+        "96": 1.0,
+        "97": 1.0,
+        "98": 1.0,
+        "99": 1.0
+      }
+    ],
+    "best_outputs_valset": {
+      "0": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total eggs = 16. Eggs used for breakfast = 3; eggs used for muffins = 4; remaining eggs = 16 - (3 + 4) = 9. Price = $2 per egg, so earnings = 9 * 2 = $18.',\n    output='18'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total eggs: 16. Used for breakfast: 3. Used for muffins: 4. Eggs left to sell: 16 - 3 - 4 = 9. Revenue: 9 × 2 = 18.',\n    output='18'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Given 16 eggs per day. She eats 3 for breakfast and uses 4 for muffins, leaving 16 - 3 - 4 = 9 eggs to sell. At $2 per egg, revenue = 9 * 2 = 18 dollars.',\n    output='18'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Eggs left to sell: 16 - (3 + 4) = 9. Revenue = 9 * 2 = 18.',\n    output='18'\n)"
+        ]
+      ],
+      "1": [
+        [
+          1,
+          "Prediction(\n    reasoning='Blue bolts = 2; white bolts = half of blue = 1; total = 2 + 1 = 3.',\n    output='3'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Blue bolts = 2. White bolts = half of blue = 1. Total bolts = 2 + 1 = 3.',\n    output='3'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Blue bolts: 2. White bolts: half of blue = 1. Total = 2 + 1 = 3.',\n    output='3'\n)"
+        ]
+      ],
+      "2": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total cost = 80,000 + 50,000 = 130,000. A 150% increase on the original 80,000 yields a new value of 80,000 × (1 + 1.5) = 200,000. Profit = 200,000 − 130,000 = 70,000.',\n    output='$70,000'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total cost = 80000 + 50000 = 130000. The repairs increase the house value by 150% of the original value, i.e., 1.5 × 80000 = 120000, so new value = 80000 + 120000 = 200000. Profit = final value - total cost = 200000 - 130000 = 70000.',\n    output='70000'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Final value = 80,000 + 1.5*80,000 = 200,000; total cost = 80,000 + 50,000 = 130,000; profit = 200,000 - 130,000 = 70,000',\n    output='70000'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Original price = 80000. A 150% increase means new value = 80000 + 1.5*80000 = 200000. Total costs = 80000 + 50000 = 130000. Profit = 200000 - 130000 = 70000.',\n    output='70000'\n)"
+        ]
+      ],
+      "3": [
+        [
+          0,
+          "Prediction(\n    reasoning='There are 3 sprints per session and 3 sessions per week, so total sprints = 3 × 3 = 9. Each sprint is 60 meters, so total distance = 9 × 60 = 540 meters.',\n    output='540'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compute total sprints: 3 sprints per session × 3 sessions = 9 sprints. Multiply by 60 meters per sprint: 9 × 60 = 540.',\n    output='540'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='There are 3 sprints per session and 3 sessions per week, so 3 × 3 = 9 sprints per week. Each sprint is 60 meters, so total distance = 9 × 60 = 540 meters.',\n    output='540'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='3 sprints per session × 3 sessions per week × 60 meters per sprint = 540 meters',\n    output='540'\n)"
+        ]
+      ],
+      "4": [
+        [
+          0,
+          "Prediction(\n    reasoning='To find final meal: total daily cups = 20 chickens * 3 cups per chicken = 60 cups. Given morning 15 and afternoon 25, subtotal = 40. Final meal cups = 60 - 40 = 20.',\n    output='20'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Each chicken gets 3 cups per day across three meals, so total daily feed for 20 chickens = 20 × 3 = 60 cups. Morning = 15 cups, afternoon = 25 cups, so final meal = 60 − (15 + 25) = 20 cups.',\n    output='20'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total daily feed for 20 chickens is 20 × 3 = 60 cups. Morning and afternoon sums: 15 + 25 = 40 cups. Remaining for final meal = 60 − 40 = 20 cups.',\n    output='20'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total daily feed = 20 × 3 = 60 cups. Remaining after morning (15) and afternoon (25) = 60 − (15 + 25) = 20 cups.',\n    output='20'\n)"
+        ]
+      ],
+      "5": [
+        [
+          0,
+          "Prediction(\n    reasoning='First glass costs $5. Every second glass costs 60% of the price, i.e., $3. So glasses alternate: 5, 3, 5, 3, ..., for 16 glasses. There are 8 of each: total = 8×5 + 8×3 = 40 + 24 = $64.',\n    output='$64'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='reasoning withheld',\n    output='64'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Prices alternate: 1st at $5, 2nd at 60% of $5 = $3, and this pattern repeats for 16 glasses. Total = 8×5 + 8×3 = 64.',\n    output='64'\n)"
+        ]
+      ],
+      "6": [
+        [
+          0,
+          "Prediction(\n    reasoning='Seattle = 20. Charleston = 4 × Seattle = 80. Toulouse = 2 × Charleston = 160. Total = 20 + 80 + 160 = 260.',\n    output='260'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='260'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Seattle = 20. Charleston = 4 × 20 = 80. Toulouse = 2 × 80 = 160. Total = 20 + 80 + 160 = 260.',\n    output='260'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Seattle has 20 sheep. Charleston has 4 times Seattle = 4 × 20 = 80. Toulouse has twice Charleston = 2 × 80 = 160. Total = 20 + 80 + 160 = 260.',\n    output='260'\n)"
+        ]
+      ],
+      "7": [
+        [
+          1,
+          "Prediction(\n    reasoning='Total file size: 200 GB. 40% progress means 80 GB downloaded. At 2 GB/min that takes 80/2 = 40 minutes. A 20-minute restart follows. After restart, download restarts from 0, so you must download 200 GB again, which takes 200/2 = 100 minutes. Total time = 40 + 20 + 100 = 160 minutes.',\n    output='160'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='To reach 40% of 200 GB at 2 GB/min takes 40 minutes (0.4*200/2 = 40). Then a 20-minute restart occurs. After restart, the whole 200 GB must be downloaded again at 2 GB/min, which takes 100 minutes. Total time = 40 + 20 + 100 = 160 minutes.',\n    output='160'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='First 40% downloaded before restart: 0.4*200 = 80 GB at 2 GB/min -> 40 min. 20-minute downtime. Then restart from beginning and download 200 GB at 2 GB/min -> 100 min. Total = 40 + 20 + 100 = 160 minutes.',\n    output='160'\n)"
+        ]
+      ],
+      "8": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='45'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='John travels outward 3h at 60 mph = 180 miles away. On the way back, over 4 hours: 2 hours stopped, 0.5h at 30 mph = 15 miles, 1.5h at 80 mph = 120 miles. Total distance closed = 135 miles. Remaining distance = 180 - 135 = 45 miles.',\n    output='45'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Initial leg: 3 hours × 60 mph = 180 miles away from home. On the return trip, time distribution: 2 hours stopped (0 miles), 0.5 hours at 30 mph (15 miles), and the remaining 1.5 hours at 80 mph (120 miles). Total distance covered toward home on return: 0 + 15 + 120 = 135 miles. Remaining distance from home: 180 − 135 = 45 miles.',\n    output='45'\n)"
+        ]
+      ],
+      "9": [
+        [
+          0,
+          "Prediction(\n    reasoning='Regular pay for 40 hours: 40 × 10 = 400. Overtime rate: 1.2 × 10 = 12 per hour. Overtime hours: 45 − 40 = 5. Overtime pay: 5 × 12 = 60. Total earnings: 400 + 60 = 460.',\n    output='$460'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='460'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Regular pay: 40 × 10 = 400. Overtime hours: 5 × (1.2 × 10 = 12) = 60. Total earnings: 400 + 60 = 460.',\n    output='460'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='First 40 hours at regular rate: 40 × 10 = 400. Overtime hours: 5 hours at 1.2 × 10 = 12 per hour; 5 × 12 = 60. Total earnings = 400 + 60 = 460.',\n    output='460'\n)"
+        ]
+      ],
+      "10": [
+        [
+          0,
+          "Prediction(\n    reasoning='Month 2 = 3 × 60 = 180; Month 3 = 70% of 180 = 126; Total = 60 + 180 + 126 = 366.',\n    output='366'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='concise answer without steps',\n    output='366'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Calculation steps omitted.',\n    output='366'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='60 in first month; second = 3×60 = 180; third = 70% of 180 = 126; total = 60 + 180 + 126 = 366.',\n    output='366'\n)"
+        ]
+      ],
+      "11": [
+        [
+          0,
+          "Prediction(\n    reasoning='Donuts: 3 dozen × $68 per dozen = $204. Cupcakes: 2 dozen × $80 per dozen = $160. Cheesecakes: 6 dozen × $55 per dozen = $330. Total cost = $204 + $160 + $330 = $694.',\n    output='$694'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Calculated by multiplying each quantity (in dozens) by its price per dozen and summing the results.',\n    output='694'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Compute each item: donuts 3 dozen × 68 per dozen = 204; cupcakes 2 dozen × 80 per dozen = 160; cheesecakes 6 dozen × 55 per dozen = 330; sum = 204 + 160 + 330.',\n    output='694'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Compute each category: donuts: 3 dozen at 68 per dozen → 3×68 = 204. Mini cupcakes: 2 dozen at 80 per dozen → 2×80 = 160. Mini cheesecakes: 6 dozen at 55 per dozen → 6×55 = 330. Sum: 204 + 160 + 330 = 694.',\n    output='694'\n)"
+        ]
+      ],
+      "12": [
+        [
+          0,
+          "Prediction(\n    reasoning='Net annual profit = 7 lemons * $1.5 = $10.50; minus $3 for watering = $7.50 per year. Initial cost is $90. Payback period is 90 / 7.50 = 12 years to break even; thus positive earnings begin in year 13.',\n    output='13'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Initial plant cost: 90. Annual revenue from lemons: 7 × 1.5 = 10.5. Annual cost to water/feed: 3. Net per year: 10.5 − 3 = 7.5. After n years, total net = −90 + 7.5n. Solve −90 + 7.5n > 0 → n > 12. First full year with positive net is 13.',\n    output='13'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"Yearly lemons revenue: 7 × 1.5 = 10.5. Net per year after watering/feed: 10.5 − 3 = 7.5. Initial planting cost: 90. Break-even when 7.5n > 90. 90/7.5 = 12, so after 12 years it's exactly break-even; the next year is positive. Therefore the tree starts earning money after 13 years.\",\n    output='13'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Net annual profit after costs = 7 lemons * $1.50 - $3 = $7.50. After n years, cumulative profit is 7.50 n. To exceed the initial $90 investment: 7.50 n > 90, so n > 12. Smallest integer n = 13.',\n    output='13'\n)"
+        ]
+      ],
+      "13": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='18'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='omitted',\n    output='18'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='18'\n)"
+        ]
+      ],
+      "14": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute contemporary = 20% of 20 = 4. Remaining students = 16. Jazz = 25% of remaining = 4. Hip-hop = 16 − 4 = 12. Hip-hop percentage = 12/20 = 60%.',\n    output='60%'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='60'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='60'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Contemporary: 20% of 20 = 4. Remaining: 16. Jazz: 25% of remaining = 4. Remaining: 12. Hip-hop: 12 of 20 = 60% of the total.',\n    output='60'\n)"
+        ]
+      ],
+      "15": [
+        [
+          0,
+          "Prediction(\n    reasoning='Jewelry plan profit: 5,000 × 2.5% = 125. Electronics plan profit: 8,000 × 1.2% = 96. Since 125 > 96, the jewelry plan provides the higher profit. Maximum profit: $125.',\n    output='$125'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compute profits: jewelry: 5000 × 0.025 = 125; gadgets: 8000 × 0.012 = 96. The maximum profit is 125 from choosing jewelry.',\n    output='125'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='125'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Jewelry profit: 5000 × 0.025 = 125; Electronics profit: 8000 × 0.012 = 96; since 125 > 96, maximum profit = 125.',\n    output='125'\n)"
+        ]
+      ],
+      "16": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='230'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='230'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Each train travels 80 miles on the first day and 150 miles on the second day, so total distance per train is 80 + 150 = 230 miles.',\n    output='230'\n)"
+        ]
+      ],
+      "17": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute weekly earnings: teacher = 35 hours * $20 = $700; coach = 15 hours * $30 = $450; total per week = $1,150. Over 50 weeks: $1,150 * 50 = $57,500.',\n    output='$57,500'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total annual earnings = (teacher rate × weekly hours × weeks) + (coach rate × weekly hours × weeks) = 20×35×50 + 30×15×50 = 35000 + 22500 = 57500.',\n    output='57500'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='57500'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Annual teacher: 50 × 35 × 20 = 35000. Annual coach: 50 × 15 × 30 = 22500. Total = 35000 + 22500 = 57500.',\n    output='57500'\n)"
+        ]
+      ],
+      "18": [
+        [
+          1,
+          "Prediction(\n    reasoning='28 days × 3 eggs/day = 84 eggs; 84 ÷ 12 = 7',\n    output='7'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Compute total eggs: 3 eggs/day for 4 weeks (28 days) → 3×28 = 84 eggs. 84 eggs = 84/12 = 7 dozens.',\n    output='7'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='First, total days in 4 weeks: 4 × 7 = 28 days. Each day uses 3 eggs, so total eggs = 3 × 28 = 84 eggs. There are 12 eggs per dozen, so dozens = 84 ÷ 12 = 7.',\n    output='7'\n)"
+        ]
+      ],
+      "19": [
+        [
+          1,
+          "Prediction(\n    reasoning='To achieve an average speed of 4 mph for 12 miles, total time must be 3 hours. After 2 hours spent on 6 miles, 6 miles remain; to complete in 1 more hour, speed must be 6 mph.',\n    output='6'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Target total time = 12 / 4 = 3 hours. After 2 hours, she has covered 6 miles, leaving 6 miles. To finish in 3 hours total, the remaining 6 miles must be done in 1 hour, requiring 6 mph.',\n    output='6'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='To achieve an average of 4 mph over 12 miles, total time must be 3 hours. After 2 hours for the first 6 miles, 1 hour remains to finish the 6 remaining miles, so 6 mph is required for the final segment.',\n    output='6'\n)"
+        ]
+      ],
+      "20": [
+        [
+          0,
+          "Prediction(\n    reasoning='- Orange: 10 L with 2/3 water => water = 20/3 L; non-water = 10/3 L.\\n- Pineapple: 15 L with 3/5 water => water = 9 L; non-water = 6 L.\\n- Spill 1 L of orange reduces orange to 9 L; water and non-water decrease proportionally: water becomes 20/3 - 2/3 = 6 L; non-water becomes 10/3 - 1/3 = 3 L.\\n- After spill: orange contributes 9 L (6 L water, 3 L other), pineapple contributes 15 L (9 L water, 6 L other).\\n- Total water in the 24 L remaining = 6 L + 9 L = 15 L.',\n    output='15'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='15'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Final water content is computed by accounting for water proportion in orange and pineapple, adjusting for spill, then summing water from both drinks.',\n    output='15'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Compute water content in orange and pineapple, account for spill from orange, then add to pineapple and sum water in the 24 L mixture.',\n    output='15'\n)"
+        ]
+      ],
+      "21": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Ages: Samantha is 31, so Raymond (6 years older) is 37 now. Raymond had his son at age 23, so the son's current age is 37 - 23 = 14. Therefore, the son was born 14 years ago.\",\n    output='14'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Raymond is 6 years older than Samantha and Samantha is 31, so Raymond is 37. Raymond had a son at age 23, so the birth occurred 37 − 23 = 14 years ago.',\n    output='14'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='14'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Raymond is 6 years older than Samantha. Samantha is 31, so Raymond is 37. Raymond had a son at 23, so the son is currently 37 − 23 = 14 years old. Therefore, the son was born 14 years ago.',\n    output='14'\n)"
+        ]
+      ],
+      "22": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute: 3 customers × 1 DVD = 3; 2 customers × 2 DVDs = 4; 3 customers × 0 DVDs = 0; total = 3 + 4 + 0 = 7.',\n    output='7'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compute: 3 customers × 1 DVD = 3; 2 customers × 2 DVDs = 4; 3 customers × 0 DVDs = 0; total = 3 + 4 + 0 = 7.',\n    output='7'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='7'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='3*1 + 2*2 + 3*0 = 7',\n    output='7'\n)"
+        ]
+      ],
+      "23": [
+        [
+          1,
+          "Prediction(\n    reasoning='From 1:00 PM to 5:00 PM is 4 hours. The candle melts 2 centimeters per hour. Total melt = 4 × 2 = 8 centimeters.',\n    output='8'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='8'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The candle melts 2 centimeters per hour. From 1:00 PM to 5:00 PM is 4 hours. Total melting = 2 * 4 = 8 centimeters.',\n    output='8'\n)"
+        ]
+      ],
+      "24": [
+        [
+          1,
+          "Prediction(\n    reasoning='Original price = sale price / (1 - discount) = 19.50 / 0.75 = 26.',\n    output='26'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='26'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let P be the original price. 0.75P = 19.50, so P = 19.50 / 0.75 = 26.',\n    output='26'\n)"
+        ]
+      ],
+      "25": [
+        [
+          0,
+          "Prediction(\n    reasoning='Non-pizza items total: 12 + (5×3) + (4×1.5) = 12 + 15 + 6 = 33. Remaining for pizza: 50 − 33 = 17. Each pizza box costs 8.50, so 17 ÷ 8.50 = 2.',\n    output='2'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='2'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Fixed items cost: 12 + (5×3) + (4×1.5) = 12 + 15 + 6 = 33. Remaining: 50 − 33 = 17. Each pizza box costs 8.50, so number of boxes = 17 ÷ 8.50 = 2',\n    output='2'\n)"
+        ]
+      ],
+      "26": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute total by multiplying each item price by 3 and summing: 3×16.50 + 3×22.50 + 3×42 = 49.50 + 67.50 + 126.00 = 243.00.',\n    output='$243'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='I cannot share step-by-step reasoning, but the total is 243.',\n    output='243'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Calculation performed.',\n    output='243'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='243'\n)"
+        ]
+      ],
+      "27": [
+        [
+          1,
+          "Prediction(\n    reasoning='60 ÷ 15 = 4 cartons; 4 × $4 = 16.',\n    output='16'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='60/15 = 4 cartons; 4 × 4 = 16.',\n    output='16'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Cynthia needs 60 servings. Each carton has 15 servings, so 60/15 = 4 cartons. At $4.00 per carton, total cost = 4 * 4 = 16.',\n    output='16'\n)"
+        ]
+      ],
+      "28": [
+        [
+          0,
+          "Prediction(\n    reasoning='Second stop occurs at 45 miles (60 - 15). Distance between stops = 45 - 20 = 25 miles.',\n    output='25'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='25'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='25'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Second stop at 60-15=45 miles; distance between stops = 45-20 = 25 miles.',\n    output='25'\n)"
+        ]
+      ],
+      "29": [
+        [
+          0,
+          "Prediction(\n    reasoning='To solve, compute the total cost of the two heel pairs: 33 + (2 × 33) = 33 + 66 = 99. They cost five dollars less than the boots, so boots = 99 + 5 = 104 dollars.',\n    output='104'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Let boots price be B. One pair of heels costs 33 and the other costs twice as much, so 66. The two pairs together cost 99. They cost five dollars less than the boots, so B = 99 + 5 = 104.',\n    output='104'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='concise answer.',\n    output='104'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let boots price be B dollars. The two heel prices are 33 and twice as much, 66. Their sum is 33 + 66 = 99. The problem states the heels together cost five dollars less than the boots, so 99 = B − 5. Therefore B = 99 + 5 = 104.',\n    output='104'\n)"
+        ]
+      ],
+      "30": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Let Darrell = 7x and Allen = 11x. Their total age: 7x + 11x = 18x = 162, so x = 9. Allen's current age = 11x = 99. Ten years from now: 99 + 10 = 109.\",\n    output='109'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"Let Darrell = 7x and Allen = 11x. Their total is 18x = 162, so x = 9. Allen's current age = 11x = 99. Ten years from now: 99 + 10 = 109.\",\n    output='109'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"We set Darrell = 7x and Allen = 11x, with total 18x = 162, so x = 9. Allen's current age = 11x = 99. In 10 years, Allen will be 99 + 10 = 109.\",\n    output='109'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"Let Darrell = 7x and Allen = 11x. 7x + 11x = 18x = 162, so x = 9. Allen's current age = 11x = 99. In 10 years: 99 + 10 = 109.\",\n    output='109'\n)"
+        ]
+      ],
+      "31": [
+        [
+          0,
+          "Prediction(\n    reasoning='First guess = 80. Second guess = half of the first plus 20 = 40 + 20 = 60. Third guess = 25% more than the first = 0.25*80 + 80 = 100. Average = (80 + 60 + 100) / 3 = 240 / 3 = 80.',\n    output='80'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Second guess: half of 80 is 40, plus 20 equals 60. Third guess: 25% more than 80 is 80 + 20 = 100. Average of 80, 60, 100 = (80+60+100)/3 = 240/3 = 80.',\n    output='80'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='First = 80. Second = half of first (40) plus 20 = 60. Third = 25% more than first (80 + 20) = 100. Average = (80 + 60 + 100) / 3 = 80.',\n    output='80'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Guesses: 80; 60; 100. Average = (80+60+100)/3 = 80.',\n    output='80'\n)"
+        ]
+      ],
+      "32": [
+        [
+          1,
+          "Prediction(\n    reasoning='Compute daily hours: 10 × 0.5 = 5 hours per day. Multiply by 7 days: 5 × 7 = 35 hours per week.',\n    output='35'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total daily hours = 10 * 0.5 = 5. Weekly hours = 5 * 7 = 35.',\n    output='35'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='10 dogs × 0.5 hours/day = 5 hours/day. 5 hours/day × 7 days = 35 hours/week.',\n    output='35'\n)"
+        ]
+      ],
+      "33": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let G be gold and S be silver. G = S + 30 and G + S = 110. Substituting: (S + 30) + S = 110 → 2S = 80 → S = 40, so G = S + 30 = 70. Gretchen has 70 gold coins.',\n    output='70'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='70'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Let G be gold, S be silver. G = S + 30 and G + S = 110. Substituting gives (S+30) + S = 110 -> 2S = 80 -> S = 40, hence G = 70.',\n    output='70'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='G+S=110 and G=S+30. Substitute: (S+30)+S=110 → 2S=80 → S=40, G=70.',\n    output='70'\n)"
+        ]
+      ],
+      "34": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"Let Raymond = 40. Half of Raymond's jewels = 20. Aaron has 5 more than that: 20 + 5 = 25. Siobhan has 2 fewer than Aaron: 25 − 2 = 23.\",\n    output='23'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Let R = 40. Aaron = 0.5*R + 5 = 0.5*40 + 5 = 25. Siobhan = Aaron - 2 = 25 - 2 = 23.',\n    output='23'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='23'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"Let Raymond's jewels be R = 40. Half of Raymond's jewels = 20. Aaron has 5 more than half, so Aaron = 20 + 5 = 25. Siobhan has 2 fewer than Aaron, so Siobhan = 25 - 2 = 23.\",\n    output='23'\n)"
+        ]
+      ],
+      "35": [
+        [
+          0,
+          "Prediction(\n    reasoning='First 20 minutes: 4 points. Second 20 minutes: 25% more than 4 is 4 × 1.25 = 5. Total points = 4 + 5 = 9.',\n    output='9'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='9'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='9'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='First 20 minutes: 4 points. Second 20 minutes: 25% more than 4 = 4 × 1.25 = 5. Total = 4 + 5 = 9.',\n    output='9'\n)"
+        ]
+      ],
+      "36": [
+        [
+          1,
+          "Prediction(\n    reasoning='Compute: 4 yogurts cost $5, so $1.25 per yogurt. 2 yogurts per day => $2.50 per day. Over 30 days: 30 * 2.50 = 75.',\n    output='75'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='60 yogurts total; price per yogurt = 5/4; total cost = 60*(5/4) = 75.',\n    output='75'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total yogurts = 2 × 30 = 60. Price per yogurt = 5/4 = 1.25. Total cost = 60 × 1.25 = 75.',\n    output='75'\n)"
+        ]
+      ],
+      "37": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let s be the number of lego sets sold. Revenue from selling s sets is 15s. He spent 160 on 8 games and had 5 left, so total revenue is 160 + 5 = 165. Solve 15s = 165 → s = 11. Remaining sets = 13 − 11 = 2.',\n    output='2'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Let S be the number of lego sets sold. Money from sale = 15S. Spent on 8 games = 8×20 = 160. After buying games he has 5 left: 15S - 160 = 5, so 15S = 165, S = 11. He started with 13 lego sets, so remaining sets = 13 - 11 = 2.',\n    output='2'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='//',\n    output='2'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let r be lego sets left. Sold = 13 - r. Revenue = 15(13 - r). After buying 8 games for 160, money left = 5: 15(13 - r) - 160 = 5. So 15(13 - r) = 165 -> 13 - r = 11 -> r = 2.',\n    output='2'\n)"
+        ]
+      ],
+      "38": [
+        [
+          1,
+          "Prediction(\n    reasoning='Total time = 3 + 1.5 + 1.5 = 6 hours; speed = 60 ÷ 6 = 10.',\n    output='10'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"I can't provide step-by-step reasoning, but the result comes from total time = 3 + 1.5 + 1.5 = 6 hours and speed = 60 / 6 = 10.\",\n    output='10'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total distance = 60 miles. He runs 3 hours the first day and half as much the other two days: 3 + 1.5 + 1.5 = 6 hours total. Speed = distance/time = 60 / 6 = 10 miles per hour.',\n    output='10'\n)"
+        ]
+      ],
+      "39": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='18'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Walk speed w mph; skip speed = 2w = 3 so w = 1.5 mph; run speed = 4w = 6 mph. In 6 hours, 2 hours running and 4 hours walking. Distance = 2*6 + 4*1.5 = 12 + 6 = 18 miles.',\n    output='18'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Compute speeds: skip = 3 mph, run = 4×walking and run = 2×skip => run = 6 mph, walking = run/4 = 1.5 mph. Time: running = 6×(1/3) = 2 h, walking = 6×(2/3) = 4 h. Distances: running 6×2 = 12 miles, walking 1.5×4 = 6 miles. Total = 18 miles.',\n    output='18'\n)"
+        ]
+      ],
+      "40": [
+        [
+          0,
+          "Prediction(\n    reasoning='Interpreting \"two times older\" as \"two times as old\" (double). Suzy = 1 year. Ben = 2 × Suzy = 2 years. Brandon = 4 × Ben = 8 years.',\n    output='8'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"Suzy = 1. Ben's iPhone is 2 times older than Suzy's, so Ben = 2 × 1 = 2. Brandon's iPhone is 4 times Ben's, so Brandon = 4 × 2 = 8.\",\n    output='8'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='8'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let Suzy be 1 year old. Ben is 2 × Suzy = 2 years old. Brandon is 4 × Ben = 8 years old.',\n    output='8'\n)"
+        ]
+      ],
+      "41": [
+        [
+          1,
+          "Prediction(\n    reasoning='Gemstone extends range: 400 × 3 = 1200. Maximum distance from dragon while still hitting = 1200. Outside flame reach = 1200 − 1000 = 200.',\n    output='200'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='3 × 400 = 1200; dragon reach = 1000; difference = 1200 − 1000 = 200.',\n    output='200'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='With gemstone, throw distance = 3 × 400 = 1200. If she stands d beyond 1000 ft, she must satisfy 1000 + d ≤ 1200, so d ≤ 200. Maximum is 200.',\n    output='200'\n)"
+        ]
+      ],
+      "42": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total pieces initially = 5 pies × 8 pieces each = 40 pieces. Remaining pieces = 14. Taken pieces = 40 − 14 = 26.',\n    output='26'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total pieces = 5 × 8 = 40. Remaining = 14. Taken = 40 − 14 = 26.',\n    output='26'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total pieces: 5×8=40. Subtract remaining 14 to get taken: 40−14=26.',\n    output='26'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='26'\n)"
+        ]
+      ],
+      "43": [
+        [
+          1,
+          "Prediction(\n    reasoning='Calories per bag = 5 × 250 = 1250 cal for 300 g. Calories per gram = 1250/300 ≈ 4.1667 cal/g. Remaining calories = 200. Grams allowed = 200 / (1250/300) = 200 × 300 / 1250 = 48 g.',\n    output='48'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Remaining calories: 200. 60 g per 250 cal, so 200 cal corresponds to 200*(60/250)=48 g.',\n    output='48'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Remaining calories: 200. One serving = 60 g. Max servings = 0.8. Grams allowed = 0.8 × 60 = 48.',\n    output='48'\n)"
+        ]
+      ],
+      "44": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='20'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total candles: 20. With 10 candles per pound, require 2 pounds of beeswax. Cost for 1 pound with wicks = $10, so cost = 2 × $10 = $20. Revenue from 20 candles at $2 each = 20 × $2 = $40. Net profit = $40 − $20 = $20.',\n    output='20'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Two pounds of beeswax are needed to make 20 candles (10 candles per pound). Revenue = 20 × 2 = 40. Supplies cost = 2 × 10 = 20. Net profit = 40 − 20 = 20.',\n    output='20'\n)"
+        ]
+      ],
+      "45": [
+        [
+          1,
+          "Prediction(\n    reasoning='Monday = 5 articles. Tuesday = 5 × (1 + 2/5) = 7 articles. Wednesday = 2 × 7 = 14 articles. Total articles = 5 + 7 + 14 = 26. Each article takes 4 hours, so total hours = 26 × 4 = 104.',\n    output='104'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Monday: 5 articles. Tuesday: 5 * (1 + 2/5) = 7 articles. Wednesday: 2 * 7 = 14 articles. Total articles = 5 + 7 + 14 = 26. Hours per article = 4. Total hours = 26 * 4 = 104.',\n    output='104'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='104'\n)"
+        ]
+      ],
+      "46": [
+        [
+          0,
+          "Prediction(\n    reasoning='To account for notes: initial 80, plus purchase x equals notes spent on cups (220) plus notes left (23). So 80 + x = 220 + 23 = 243, hence x = 243 - 80 = 163.',\n    output='163'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='80 + N - 220 = 23, so N = 163.',\n    output='163'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Let N be the number of post-it notes in the package. She started with 80, bought N, used 220, and had 23 left: 80 + N - 220 = 23 ⇒ N = 163.',\n    output='163'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let P be the number of notes in the package. Total notes available = 80 + P. After using 220 at work, and having 23 remaining: 80 + P - 220 = 23, so P = 163.',\n    output='163'\n)"
+        ]
+      ],
+      "47": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I can't share detailed step-by-step reasoning, but here's a concise answer: Blue ties: $200 spent at $40 each → 5 blue ties. Red ties: twice as many → 10 red ties. Red price is 50% more than blue ($40 → $60). Red spending: 10 × $60 = $600. Blue spending: $200. Total spent on ties: $800.\",\n    output='$800'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='800'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Blue ties purchased: 200/40 = 5. Red ties: 2*5 = 10. Blue price = 40; red price = 40*1.5 = 60. Red cost = 10*60 = 600. Total = 200 + 600 = 800.',\n    output='800'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Blue ties: price 40, spend 200 => 5 blue ties. Red ties cost 50% more => 60 per tie. He buys twice as many red as blue => 10 red ties. Red spending 10*60 = 600. Total = 200 + 600 = 800.',\n    output='800'\n)"
+        ]
+      ],
+      "48": [
+        [
+          0,
+          "Prediction(\n    reasoning='Convert 4 feet to inches (4 ft × 12 in/ft = 48 in). Then divide by the piece length (48 in ÷ 6 in = 8).',\n    output='8'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='The wire length is 4 feet = 48 inches. Each piece is 6 inches, so 48 / 6 = 8 pieces.',\n    output='8'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='4 feet = 48 inches; 48 ÷ 6 = 8',\n    output='8'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='4 feet = 48 inches; 48 ÷ 6 = 8',\n    output='8'\n)"
+        ]
+      ],
+      "49": [
+        [
+          0,
+          "Prediction(\n    reasoning='A brief calculation: Total units = 15 floors × 8 units/floor = 120. 3/4 of 120 occupied = 90. Therefore unoccupied = 120 − 90 = 30.',\n    output='30'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total units = 15 * 8 = 120. Occupied units = (3/4) * 120 = 90. Unoccupied units = 120 - 90 = 30.',\n    output='30'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='omitted',\n    output='30'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total units = 15 × 8 = 120; occupied = 3/4 × 120 = 90; unoccupied = 120 − 90 = 30.',\n    output='30'\n)"
+        ]
+      ],
+      "50": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='294'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='294'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Weekly revenue: 252*7=1764 eggs; 1764/12=147 dozen; 147*2=294.',\n    output='294'\n)"
+        ]
+      ],
+      "51": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but the final answer is 5.\",\n    output='5'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='calculation steps omitted',\n    output='5'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='5'\n)"
+        ]
+      ],
+      "52": [
+        [
+          0,
+          "Prediction(\n    reasoning='30 comics weigh 30 × 1/4 = 7.5 lb. Need to remove 15 lb total, so remaining weight to remove is 15 − 7.5 = 7.5 lb. Each toy weighs 1/2 lb, so number of toys = 7.5 ÷ 0.5 = 15.',\n    output='15'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compute weight removed by comics: 30 × 1/4 = 7.5 pounds. Remaining weight to remove: 15 − 7.5 = 7.5 pounds. Each toy weighs 1/2 pound, so number of toys = 7.5 ÷ 0.5 = 15.',\n    output='15'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='15'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total removal target = 15 lb. 30 comics weigh 30*(1/4)=7.5 lb, leaving 7.5 lb to remove. Each toy weighs 1/2 lb, so number of toys = 7.5 / 0.5 = 15.',\n    output='15'\n)"
+        ]
+      ],
+      "53": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute Thursday revenue: 6 truck tires at $60 plus 4 car tires at $40 → 6×60 + 4×40 = 360 + 160 = 520. Friday revenue: 12 car tires at $40 → 12×40 = 480. The higher revenue day is Thursday, difference = 520 − 480 = 40.',\n    output='$40'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='40'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Compute revenue on Thursday: 6*60 + 4*40 = 360 + 160 = 520. On Friday: 12*40 = 480. Difference = 520 - 480 = 40.',\n    output='40'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Compute revenue for Thursday: 6*60 + 4*40 = 520. Friday: 12*40 = 480. Difference = 40; higher revenue on Thursday.',\n    output='40'\n)"
+        ]
+      ],
+      "54": [
+        [
+          0,
+          "Prediction(\n    reasoning='Adopted kittens: 7. Patchy has thrice that number: 3 × 7 = 21. Trixie has 12. New kittens from both cats: 21 + 12 = 33. Total kittens now: 7 (adopted) + 33 = 40.',\n    output='40'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total now = 7 + 3×7 + 12 = 40',\n    output='40'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='redacted',\n    output='40'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Patchy has 3×7=21 kittens, Trixie has 12, and adding the 7 shelter kittens gives 7+21+12=40.',\n    output='40'\n)"
+        ]
+      ],
+      "55": [
+        [
+          0,
+          "Prediction(\n    reasoning='Remaining lollipops: 30 - 2 = 28. Each bag contains 2 lollipops, so 28 ÷ 2 = 14 bags.',\n    output='14'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Starting with 30 lollipops, Jean eats 2, leaving 28. Each bag holds 2, so 28 ÷ 2 = 14 bags.',\n    output='14'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Remaining lollipops = 30 - 2 = 28. Each bag holds 2 lollipops, so number of bags = 28 ÷ 2 = 14.',\n    output='14'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='14'\n)"
+        ]
+      ],
+      "56": [
+        [
+          0,
+          "Prediction(\n    reasoning='Each trip costs ticket $7 plus popcorn $7 = $14. With $42, the number of trips is 42 ÷ 14 = 3. So he can go 3 times.',\n    output='3'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't reveal step-by-step reasoning, but each movie outing costs 14 dollars. 42 dollars divided by 14 dollars per outing equals 3 outings.\",\n    output='3'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='3'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='per-movie cost = 14; number of visits = 42 ÷ 14 = 3',\n    output='3'\n)"
+        ]
+      ],
+      "57": [
+        [
+          0,
+          "Prediction(\n    reasoning='Bridge capacity 5000 minus empty truck weight 3755 gives available for boxes: 1245 pounds. Each box weighs 15 pounds, so maximum number of boxes is floor(1245 / 15) = 83. Since 83 × 15 = 1245, it uses all remaining capacity.',\n    output='83'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Bridge capacity 5000 - truck weight 3755 = 1245 lb remaining. Each box weighs 15 lb, so maximum boxes = floor(1245 / 15) = 83. 15×83 = 1245 exactly, so full use.',\n    output='83'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='83'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Bridge capacity: 5000 - 3755 = 1245 pounds available for boxes. Each box weighs 15 pounds, so 1245 / 15 = 83; thus maximum boxes is 83.',\n    output='83'\n)"
+        ]
+      ],
+      "58": [
+        [
+          1,
+          "Prediction(\n    reasoning='omitted',\n    output='57'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Compute 25% of 40 = 10; add to 40 to get 50; add 3 delivery fee to get 53; add 4 tip to get 57.',\n    output='57'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Compute 25% of 40 = 10; add to 40 -> 50; add 3 delivery -> 53; add 4 tip -> 57.',\n    output='57'\n)"
+        ]
+      ],
+      "59": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute the raspberries from clusters: 6 × 20 = 120. Add the scattered 67, total = 120 + 67 = 187.',\n    output='187'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='187'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Compute total raspberries as 6*20 + 67.',\n    output='187'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='6 clusters × 20 fruit each = 120 from clusters; plus 67 individual fruit = 120 + 67 = 187',\n    output='187'\n)"
+        ]
+      ],
+      "60": [
+        [
+          0,
+          "Prediction(\n    reasoning='Assuming the categories are disjoint: 20% of 25 is 5 unripe; plus 1 bad and 2 sour gives 1 + 5 + 2 = 8 non-good; hence good oranges = 25 - 8 = 17.',\n    output='17'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total oranges: 25. Unripe = 20% of 25 = 5. Bad = 1. Sour = 2. Good = 25 - (1 + 5 + 2) = 17.',\n    output='17'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='The problem specifies disjoint categories: bad (1), unripe (20% of 25 = 5), sour (2), and the rest are good. So good = 25 − (1 + 5 + 2) = 17.',\n    output='17'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total 25; unripe = 20% of 25 = 5; subtract bad (1) and sour (2) from total alongside unripe: good = 25 - (1 + 5 + 2) = 17.',\n    output='17'\n)"
+        ]
+      ],
+      "61": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total cost before insurance: 500 + 800 = 1,300. Insurance is 10% of 1,300 = 130. Total paid = 1,300 + 130 = 1,430.',\n    output='$1,430'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but the total cost is 500 + 800 = 1300; insurance = 10% of 1300 = 130; total = 1300 + 130 = 1430.\",\n    output='1430'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total cost equals material (500) plus construction (800) plus 10% of that sum for insurance: 500+800=1300; 10% of 1300=130; total=1300+130=1430.',\n    output='1430'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='500 + 800 = 1300; 10% of 1300 = 130; total = 1430.',\n    output='1430'\n)"
+        ]
+      ],
+      "62": [
+        [
+          0,
+          "Prediction(\n    reasoning='At 40 years the pension value is $50,000/year. For years beyond 20, she accrues 5% of the final pension value per year. From year 21 to 30 is 10 years, so entitlement = 10 × 5% = 50% of the final value. Therefore annual pension at 30 years = 0.50 × $50,000 = $25,000/year.',\n    output='$25,000/year'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='75000'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='After year 20, the pension increases by 5% of the base value (50,000) each year: 0.05 × 50,000 = 2,500 per year. From year 21 to year 30 is 10 years, adding 10 × 2,500 = 25,000 to the base 50,000 results in 75,000 per year.',\n    output='75000'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='After 20 years, the pension increases by 5% of its value per year. From year 21 to year 30 is 10 years, so total increase is 10 × 5% = 50% over the base pension. The base pension after 40 years is 50,000, so 50,000 × 1.50 = 75,000.',\n    output='75000'\n)"
+        ]
+      ],
+      "63": [
+        [
+          0,
+          "Prediction(\n    reasoning='Compute total for the year: First half (6 months) at $140/month = 6 * 140 = 840. Second half (6 months) at 10% less = 140 * 0.90 = 126/month; 6 * 126 = 756. Grand total = 840 + 756 = 1596.',\n    output='$1596'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='First half: six months at 140 → 6 × 140 = 840. Second half: six months at 10% less → price per month = 140 × 0.9 = 126; 6 × 126 = 756. Total = 840 + 756 = 1596.',\n    output='1596'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total for six months at 140 plus six months at 90% of 140.',\n    output='1596'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='First half: 6 months × 140 = 840. Second half: 6 months × (140 × 0.9) = 6 × 126 = 756. Total = 840 + 756 = 1596.',\n    output='1596'\n)"
+        ]
+      ],
+      "64": [
+        [
+          2,
+          "Prediction(\n    reasoning='Miles per gallon = 100 / 4 = 25. Range on a full tank = 12 × 25 = 300.',\n    output='300'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total miles per gallon = 100 miles / 4 gallons = 25 mpg. Full tank distance = 12 gallons * 25 mpg = 300 miles.',\n    output='300'\n)"
+        ]
+      ],
+      "65": [
+        [
+          0,
+          "Prediction(\n    reasoning='Each session includes 2 hours of TV plus half as long for reading, which is 1 hour. So per session = 2 + 1 = 3 hours.\\nHe does this 3 times per week, so weekly hours = 3 × 3 = 9 hours.\\nOver 4 weeks, total hours = 9 × 4 = 36 hours.',\n    output='36'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total hours computed: one 3-hour cycle; 3 cycles per week → 9 hours per week; 4 weeks → 36 hours.',\n    output='36'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='36'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Compute per cycle: TV 2 hours; reading half as long => 1 hour; total per cycle 3 hours. 3 cycles per week -> 9 hours/week. Over 4 weeks: 9*4 = 36 hours.',\n    output='36'\n)"
+        ]
+      ],
+      "66": [
+        [
+          0,
+          "Prediction(\n    reasoning='Each school has 2 teams of 5 players = 10 players. Plus 2 coaches (one per team) = 12 people per school. With 4 schools: 4 × 12 = 48 total.',\n    output='48'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Each school adds 10 players and 2 coaches (5 girls + 5 boys = 10 players; 2 coaches). So per school = 12 people. For 4 schools: 4 × 12 = 48.',\n    output='48'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total people = 4 schools × (2 teams per school × (5 players + 1 coach)) = 4 × (2 × 6) = 4 × 12 = 48.',\n    output='48'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='The total people = 4 schools * (2 teams * 5 players per team + 2 coaches) = 4 * (10 + 2) = 4 * 12 = 48.',\n    output='48'\n)"
+        ]
+      ],
+      "67": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let diamonds D = 175. Rubies R = D - 35 = 140. Emeralds E = 2R = 280. Total gems T = D + R + E = 175 + 140 + 280 = 595.',\n    output='595'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Calculation steps omitted.',\n    output='595'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='595'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let D = 175. Rubies R = D - 35 = 140. Emeralds E = 2R = 280. Total gems = D + R + E = 175 + 140 + 280 = 595.',\n    output='595'\n)"
+        ]
+      ],
+      "68": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let number of girls = 60. Boys = 2 * 60 = 120. Total students = 60 + 120 = 180. With 5 students per teacher, teachers = 180 ÷ 5 = 36.',\n    output='36'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='36'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='36'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Girls = 60; boys = 2×60 = 120; total students = 180; with 5 students per teacher, teachers = 180/5 = 36.',\n    output='36'\n)"
+        ]
+      ],
+      "69": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let the starting amount be x. The 8 weeks of $5 allowance totals 8 × 5 = 40. So x + 40 = 100, hence x = 60.',\n    output='60'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='60'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Let initial amount be x. After 8 weeks, x + 8*5 = 100, so x = 100 - 40 = 60.',\n    output='60'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"Let x be Bailey's starting amount. After 8 weeks of $5 per week, total is x + 8×5 = x + 40. This equals 100, so x = 60.\",\n    output='60'\n)"
+        ]
+      ],
+      "70": [
+        [
+          1,
+          "Prediction(\n    reasoning='To compute weekly revenue: Weekdays: 5 days × 5 classes/day = 25 classes; Saturday: 8 classes; total classes = 33. Each class has 15 students at $15 per student, so revenue per class = 15 × 15 = 225. Total weekly revenue = 33 × 225 = 7425.',\n    output='7425'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total classes = 5 weekdays * 5 + 8 = 33; revenue per class = 15 students * $15 = $225; total = 33 * 225 = 7425.',\n    output='7425'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='final answer only',\n    output='7425'\n)"
+        ]
+      ],
+      "71": [
+        [
+          0,
+          "Prediction(\n    reasoning='First recipe has 20 instructions. The second has twice as many, i.e., 40. Total instructions to read = 20 + 40 = 60.',\n    output='60'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='First dish instructions: 20. Second dish instructions: twice the first = 40. Total = 20 + 40 = 60.',\n    output='60'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='60'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='First recipe: 20 instructions. Second has 2×20 = 40. Total for two dishes: 20 + 40 = 60.',\n    output='60'\n)"
+        ]
+      ],
+      "72": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total money = (43 brownies × $3) + (23 cheesecakes × $4) = 129 + 92 = $221.',\n    output='$221'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compute total revenue: 3 * 43 + 4 * 23.',\n    output='221'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='221'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='221'\n)"
+        ]
+      ],
+      "73": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='255'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='255'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total cost = 5×150 + 2% of (5×150); monthly payment = total/3',\n    output='255'\n)"
+        ]
+      ],
+      "74": [
+        [
+          0,
+          "Prediction(\n    reasoning='Rounding prices to the nearest dollar: marigolds $3, petunias $2, begonias $2. Revenue: 12×3 + 9×2 + 17×2 = 36 + 18 + 34 = 88. So he makes $88.',\n    output='$88'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Round each price to the nearest dollar and multiply by the quantities, then sum: 12×3 + 9×2 + 17×2.',\n    output='88'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Prices rounded to nearest dollar and multiplied by quantities; total = 12*3 + 9*2 + 17*2.',\n    output='88'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Prices rounded to nearest dollar: marigolds 3, petunias 2, begonias 2. Total revenue = 12*3 + 9*2 + 17*2 = 36 + 18 + 34 = 88.',\n    output='88'\n)"
+        ]
+      ],
+      "75": [
+        [
+          0,
+          "Prediction(\n    reasoning='Top level = 16. Each lower level has twice the square footage of the level above, so the four levels from top to bottom are: 16, 32, 64, 128. The average is (16 + 32 + 64 + 128) / 4 = 240 / 4 = 60.',\n    output='60'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Top level is 16 and each level halves going downward, so bottom level = 16 × 2 × 2 × 2 = 128. Levels: 128, 64, 32, 16. Average = (128 + 64 + 32 + 16) / 4 = 60.',\n    output='60'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Top level 16; each level below is twice the level above, giving levels 128, 64, 32, 16. Average = (128+64+32+16)/4 = 60.',\n    output='60'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Top level is 16; each level below has twice the square footage, so the levels are 16, 32, 64, 128. The average is (16+32+64+128)/4 = 60.',\n    output='60'\n)"
+        ]
+      ],
+      "76": [
+        [
+          0,
+          "Prediction(\n    reasoning='First year has 365 days. 180 days at 1 cup/day = 180 cups. Remaining 185 days at 2 cups/day = 370 cups. Total cups in first year = 180 + 370 = 550 cups. Each bag has 110 cups, so bags needed = 550 / 110 = 5 bags.',\n    output='5'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='180 days at 1 cup = 180 cups; remaining 185 days at 2 cups = 370 cups; total 550 cups; 550 ÷ 110 = 5 bags.',\n    output='5'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total cups in first year: 180 days at 1 cup = 180; 185 days at 2 cups = 370; total 550 cups; 550 ÷ 110 = 5 bags.',\n    output='5'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='5'\n)"
+        ]
+      ],
+      "77": [
+        [
+          1,
+          "Prediction(\n    reasoning='R = S/2, D = S/4 with S = 400; difference = 100.',\n    output='100'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning=\"Let D be David's amount. S = 4D, R = 0.5S. With S = 400, D = 100 and R = 200. Difference = |R - D| = 100.\",\n    output='100'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"Let D be David's pounds. Sarah's amount S = 4D. Raymond's amount R = (1/2)S = 2D. Given Sarah does 400 pounds: S = 400, so 4D = 400 => D = 100. Then R = 2D = 200. The difference between Raymond and David is R - D = 200 - 100 = 100.\",\n    output='100'\n)"
+        ]
+      ],
+      "78": [
+        [
+          0,
+          "Prediction(\n    reasoning='Cheaper price per flower is the 2-for-$1 pack (0.50 per flower) vs 3-for-$2.50 (≈$0.833 per flower). For 18 flowers, buy nine 2-packs: 9 × $1 = $9. If using only 3-packs: 6 × $2.50 = $15. Savings = $15 − $9 = $6.',\n    output='$6'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compare unit prices: 3-for-$2.50 is $2.50/3 ≈ $0.8333 per flower; 2-for-$1 is $1/2 = $0.50 per flower, so the better price is the 2-for-$1 option. For 18 flowers, use 9 packs of 2 → $9. The 3-for-$2.50 option would use 6 packs → $15. Savings = $15 − $9 = $6.',\n    output='6'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='To compute savings: price per flower → 3-pack $2.50 = 0.833..., 2-pack $1 = 0.5. Better price is $0.50/flower. 18 flowers cost 9 at the better price (9 packs of 2), and 15 at the 3-for-$2.50 price (6 packs of 3). Savings = 15 − 9 = 6.',\n    output='6'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Cheaper price per flower is 2 for $1 (0.50) vs 3 for $2.50 (0.833...). For 18 flowers, 9 packs x $1 = $9. The 3-for-$2.50 option would cost 6 packs x $2.50 = $15. Savings = 15 - 9 = 6.',\n    output='6'\n)"
+        ]
+      ],
+      "79": [
+        [
+          0,
+          "Prediction(\n    reasoning='Discount is 30% of $100 = $30; final cost = $100 - $30 = $70.',\n    output='$70'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='30% of 100 is 30; 100 - 30 = 70.',\n    output='70'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Discount of 30% applied to the $100 grooming charge.',\n    output='70'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='30% of 100 is 30; 100 - 30 = 70.',\n    output='70'\n)"
+        ]
+      ],
+      "80": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='10'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total water = 24 liters. Each girl gets 1/6 of 24 = 4 liters; two girls = 8 liters. Boy takes 6 liters. Water left = 24 - (8 + 6) = 10 liters.',\n    output='10'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Each girl gets 24*(1/6)=4 liters; two girls: 8 liters. Remaining: 24-8=16 liters. Boy takes 6 liters: 16-6=10 liters left.',\n    output='10'\n)"
+        ]
+      ],
+      "81": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total stickers after additions: 10 + 21 + 23 = 54. Subtract 9 given to sister and 28 used for the card: 54 - 9 - 28 = 17.',\n    output='17'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='17'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='omitted',\n    output='17'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total = 10 + 21 + 23 - 9 - 28 = 17',\n    output='17'\n)"
+        ]
+      ],
+      "82": [
+        [
+          0,
+          "Prediction(\n    reasoning='Grace weighs 125. 4 times Grace = 4 × 125 = 500. Alex weighs 500 − 2 = 498. Combined weight = 125 + 498 = 623.',\n    output='623'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning=\"Alex weighs 2 pounds less than 4 times Grace's weight. 4×125=500; 500-2=498; 125+498=623.\",\n    output='623'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Grace = 125; Alex weighs 4 times Grace minus 2: 4*125 - 2 = 500 - 2 = 498; combined = 125 + 498 = 623.',\n    output='623'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let Grace = 125. Alex = 4×Grace − 2 = 500 − 2 = 498. Combined = 125 + 498 = 623.',\n    output='623'\n)"
+        ]
+      ],
+      "83": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total roses = 3 × 25 = 75; total thorns = 75 × 8 = 600.',\n    output='600'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Total roses = 3 × 25 = 75. Total thorns = 75 × 8 = 600.',\n    output='600'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='600'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Three bushes × twenty-five roses per bush × eight thorns per rose → 3 × 25 × 8 = 600',\n    output='600'\n)"
+        ]
+      ],
+      "84": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let L be losses. Wins = L + 8. Total games: L + (L + 8) = 22. So 2L + 8 = 22 -> 2L = 14 -> L = 7. Wins = 7 + 8 = 15.',\n    output='15'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Let w be wins and l be losses. w + l = 22 and w = l + 8. Substituting: (l + 8) + l = 22 => 2l = 14 => l = 7, w = 15.',\n    output='15'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='15'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let W be wins and L be losses. W + L = 22 and W = L + 8. Substituting: (L + 8) + L = 22 => 2L = 14 => L = 7, W = 15.',\n    output='15'\n)"
+        ]
+      ],
+      "85": [
+        [
+          0,
+          "Prediction(\n    reasoning='The time span from age 23 to 34 is 34 - 23 = 11 years. At 4 vacations per year, total quilt blocks = 11 × 4 = 44.',\n    output='44'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Compute total blocks as (34 - 23) × 4.',\n    output='44'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='I cannot share step-by-step reasoning.',\n    output='44'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Age difference: 34 - 23 = 11 years. Four vacations per year → 11 * 4 = 44 blocks.',\n    output='44'\n)"
+        ]
+      ],
+      "86": [
+        [
+          0,
+          "Prediction(\n    reasoning='First alarm: 4 rings. Second alarm: three times as long as the first → 3 × 4 = 12 rings. Third alarm: half as long as the second → 1/2 × 12 = 6 rings. Total rings = 4 + 12 + 6 = 22.',\n    output='22'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='First time = 4. Second time = 3 × 4 = 12. Third time = 1/2 × 12 = 6. Sum = 4 + 12 + 6 = 22.',\n    output='22'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='First time: 4 rings. Second time: three times as many as the first → 3×4 = 12. Third time: half of the second → 12×1/2 = 6. Total = 4 + 12 + 6 = 22.',\n    output='22'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Let the duration be proportional to the number of rings. First time: 4 rings. Second time duration = 3 × first, so rings = 3×4 = 12. Third time duration = 1/2 of second, so rings = 1/2×12 = 6. Total rings = 4 + 12 + 6 = 22.',\n    output='22'\n)"
+        ]
+      ],
+      "87": [
+        [
+          1,
+          "Prediction(\n    reasoning='Initial monthly salary = 600. The policy increase = 10% of initial salary = 0.10 × 600 = 60 per year. After 3 more years, total raise = 3 × 60 = 180. New monthly salary = 600 + 180 = 780. Annual salary = 780 × 12 = 9360.',\n    output='9360'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='9360'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='final answer only; no steps provided.',\n    output='9360'\n)"
+        ]
+      ],
+      "88": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let Harald = h. Marilyn = 10h. Combined copies: h + 10h = 11h = 88,000. Solve for h: h = 88,000 / 11 = 8,000.',\n    output='8000'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Let Harald = h, Marilyn = 10h. Total = 11h = 88000, so h = 88000/11 = 8000.',\n    output='8000'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Let Harald = h; Marilyn = 10h; total = 11h = 88000; h = 8000.',\n    output='8000'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"Let Harald's copies = h. Marilyn's copies = 10h. Total = 11h = 88000, so h = 8000.\",\n    output='8000'\n)"
+        ]
+      ],
+      "89": [
+        [
+          0,
+          "Prediction(\n    reasoning=\"I can't share step-by-step reasoning, but the calculation is: 16 guests × 0.75 = 12 bags; 12 bags × $2 = $24.\",\n    output='$24'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Multiply invited by 0.75 to get bags, then multiply by 2 to get total cost.',\n    output='24'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='16 invited friends × 0.75 = 12 bags needed. 12 bags × 2 = 24.',\n    output='24'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Number of attendees expected = 16 guests × (1 - 1/4) = 16 × 3/4 = 12 bags. Cost = 12 bags × $2 = 24.',\n    output='24'\n)"
+        ]
+      ],
+      "90": [
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='225'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total = 20×10 + 5×(10/2) = 200 + 25 = 225.',\n    output='225'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='',\n    output='225'\n)"
+        ]
+      ],
+      "91": [
+        [
+          0,
+          "Prediction(\n    reasoning='Cindy = 4. Marcia = Cindy + 2 = 6. Jan = 3 × Marcia = 18. Total = 4 + 6 + 18 = 28.',\n    output='28'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='Cindy = 4; Marcia = 4 + 2 = 6; Jan = 3 × 6 = 18; total = 4 + 6 + 18 = 28.',\n    output='28'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='28'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Cindy has 4 pets. Marcia has 2 more than Cindy → 6. Jan has 3 times Marcia → 18. Total = 4 + 6 + 18 = 28.',\n    output='28'\n)"
+        ]
+      ],
+      "92": [
+        [
+          0,
+          "Prediction(\n    reasoning='From James = 10 and “James is 1 year younger than Corey,” Corey = James + 1 = 11. Amy = Corey - 2 = 9. Since Amy = Jackson + 5, Jackson = Amy - 5 = 4.',\n    output='4'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='4'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Final answer: 4',\n    output='4'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning=\"Let Jackson's age be x. Amy is x+5. Amy is 2 years younger than Corey, so Corey = x+7. James is 10 and is 1 year younger than Corey, so Corey = 11. Therefore x+7 = 11, giving x = 4.\",\n    output='4'\n)"
+        ]
+      ],
+      "93": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Original Gerald time = Lee time + 2 = 38 + 2 = 40. With a 10% speed increase, Gerald's time becomes 0.9 × 40 = 36.\",\n    output='36'\n)"
+        ]
+      ],
+      "94": [
+        [
+          0,
+          "Prediction(\n    reasoning='Let dogs = 60. Cats are two per dog, so cats = 2 * 60 = 120. Combined dogs + cats = 60 + 120 = 180. Rabbits = 180 - 12 = 168. Total pets = 60 + 120 + 168 = 348.',\n    output='348'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='',\n    output='348'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Let D = 60. With two cats per dog, C = 2D = 120. Rabbits R = (D + C) - 12 = 180 - 12 = 168. Total pets = D + C + R = 60 + 120 + 168 = 348.',\n    output='348'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Dogs = 60. Cats = 2 per dog ⇒ 120. Combined = 60+120 = 180. Rabbits = 180 − 12 = 168. Total = 60+120+168 = 348.',\n    output='348'\n)"
+        ]
+      ],
+      "95": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total students = 200. Boys = (2/5)*200 = 80, so girls = 200 - 80 = 120. Girls in girl scout = (2/3)*120 = 80. Therefore, girls not in girl scout = 120 - 80 = 40.',\n    output='40'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='[not provided]',\n    output='40'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Boys = 200*(2/5)=80; girls = 200-80=120; girls in girl scout = 120*(2/3)=80; not in girl scout = 120-80=40.',\n    output='40'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Girls = 200 - 200*(2/5) = 120; in scout = 120*(2/3) = 80; not in scout = 120 - 80 = 40.',\n    output='40'\n)"
+        ]
+      ],
+      "96": [
+        [
+          1,
+          "Prediction(\n    reasoning=\"Compute James's sleep: (2/3)*9 = 6; Harry minus James = 9 - 6 = 3\",\n    output='3'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='James = (2/3) × 9 = 6; Harry - James = 9 − 6 = 3.',\n    output='3'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Harry slept 9 hours. James slept 2/3 of that: 9*(2/3)=6 hours. The difference is 9-6=3 hours.',\n    output='3'\n)"
+        ]
+      ],
+      "97": [
+        [
+          0,
+          "Prediction(\n    reasoning='Each 16 oz can yields 8 oz of sauce after cooking (volume halves). To make 32 oz, she used 4 cans (4 × 8 = 32). Each can has 3 tomatoes, so 4 cans × 3 tomatoes = 12 tomatoes.',\n    output='12'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='To get 32 oz of sauce, the tomatoes before cooking must be 64 oz (they lose half volume). Each 16 oz can is 3 tomatoes, so 64/16 = 4 cans; 4 × 3 = 12 tomatoes.',\n    output='12'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='We need to account for volume loss: initial volume is twice the final volume. Final sauce is 32 oz, so initial tomato volume = 64 oz. Each 16 oz can used provides 64/16 = 4 cans. Each can has 3 tomatoes, so total tomatoes = 4 * 3 = 12.',\n    output='12'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='64 ounces of tomatoes were used before cooking because 32 ounces remained after losing half. 64/16 = 4 cans, and each can has 3 tomatoes, so 4*3 = 12.',\n    output='12'\n)"
+        ]
+      ],
+      "98": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total cars originally: 30. 5 exit, so 25 remain to drive through the jam. 20 drive through in the remaining 15 minutes, leaving 25 - 20 = 5 cars that drove through in the first 15 minutes.',\n    output='5'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='There are 30 cars total, 5 exit, so 25 go through the jam. In the second interval, 20 go through, leaving 5 that must have gone through in the first interval.',\n    output='5'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='',\n    output='5'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total cars that drive through = 30 − 5 exit = 25; first 15 minutes cars = 25 − 20 = 5',\n    output='5'\n)"
+        ]
+      ],
+      "99": [
+        [
+          0,
+          "Prediction(\n    reasoning='Total on ledges: 2 × 40 = 80. Add 18 new plants: 80 + 18 = 98. She will give 1 plant from each ledge, i.e., 40 plants. Remaining: 98 − 40 = 58.',\n    output='58'\n)"
+        ],
+        [
+          1,
+          "Prediction(\n    reasoning='I cannot share detailed reasoning, but the final numeric answer is derived from adding 18 to 80 (2 per ledge for 40 ledges) and subtracting 40 given away: 58.',\n    output='58'\n)"
+        ],
+        [
+          2,
+          "Prediction(\n    reasoning='Total plants: 40 ledges × 2 = 80; add 18 = 98; give away 40; remaining 58.',\n    output='58'\n)"
+        ],
+        [
+          3,
+          "Prediction(\n    reasoning='Total plants = 2 per ledge × 40 ledges = 80; add 18 new = 98; give away 1 per ledge × 40 = 40; remaining = 98 − 40 = 58.',\n    output='58'\n)"
+        ]
+      ]
+    },
+    "best_idx": 1,
+    "candidates": [
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nOutput requirements:\\n- Return exactly one numeric value (an integer or a decimal). Do not include any units, currency symbols, words, punctuation (except for a possible decimal point), or explanatory text.\\n- Do not provide reasoning steps, intermediate calculations, or extra commentary. Do not prepend or append anything to the number.\\n\\nInterpretation rules:\\n- If the problem contains multiple stages or rounds (e.g., two batches), compute each stage and combine according to how the problem describes them. Unless the language says there is overlap, assume no overlap between stages.\\n- Treat percentages as percent of the relevant quantity (e.g., 25% → 0.25 × quantity).\\n- Prefer exact results. If a non-integer result is mathematically required, provide the exact decimal representation without rounding when feasible.\\n\\nExamples of acceptable outputs:\\n- 400\\n- 85\\n- 99\\n- 16\\n- 36\\n\\nExamples of unacceptable outputs:\\n- 400 bananas\\n- $400\\n- The answer is 400.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nOutput rules\\n- Return exactly one numeric value (integer or finite decimal) and nothing else.\\n- Do not include units, currency symbols, words, or explanatory text.\\n- Do not prepend or append anything to the number.\\n- Do not reveal reasoning steps or intermediate calculations.\\n\\nProblem handling guidelines\\n- If the problem contains multiple stages or rounds, compute each stage in the order described and combine them as stated. Assume stages do not overlap unless the problem says otherwise.\\n- Percentages are interpreted as a percentage of the relevant quantity (e.g., 25% → 0.25 × quantity).\\n- When quantities involve different units (e.g., hours and minutes, dollars and cents), convert to a common unit before combining. The final answer should reflect a single consistent quantity corresponding to what the problem asks for.\\n- If a problem involves rates (per hour, per item, etc.), multiply the rate by the appropriate quantity (time, number of items) before proceeding with further calculations.\\n- Prefer exact results. If a non-integer result is mathematically required and can be represented as a finite decimal, provide that exact finite decimal. Avoid unnecessary rounding. Do not output repeating decimals or fractions.\\n\\nExamples of acceptable outputs\\n- 400\\n- 85\\n- 99\\n- 16\\n- 36\\n\\nExamples of unacceptable outputs\\n- 400 bananas\\n- $400\\n- The answer is 400.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+      "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nHow to respond\\n- Output exactly one numeric value. Do not include any words, units, currency symbols, or punctuation other than a possible decimal point.\\n- If the result is an integer, output it without a decimal point (e.g., 36, not 36.0).\\n- If the result is a terminating decimal, output the exact decimal (e.g., 12.5).\\n- If the result is a non-terminating decimal, output a decimal approximation with up to 6 digits after the decimal point (e.g., 4.166667). Do not round beyond six decimals.\\n- Do not provide explanations, steps, or intermediate calculations.\\n\\nInterpretation and rules\\n- Treat the problem as a single task. If it describes multiple stages or batches (e.g., two groups, two time periods), compute each stage separately from the quantities given and then combine exactly as described. Do not assume overlap unless the language states it or clearly implies it.\\n- Percentages are to be interpreted as percent of the relevant quantity described in the sentence (e.g., 25% → 0.25 × that quantity). When a percentage applies to a quantity that has already been modified by a previous sentence, use the updated value as the base.\\n- Phrases like “twice as many,” “three times,” “per,” “each,” “shared equally,” and “divided among” map to multiplication or division as appropriate by the usual mathematical reading.\\n- When comparisons are stated (e.g., “more than,” “less than”), perform the arithmetic accordingly.\\n- If a problem yields a negative result, output the negative number (the instruction requires a numeric answer; negative results are mathematically valid for many word problems).\\n\\nEdge considerations\\n- If the problem is ambiguous about interpretation, choose the simplest consistent interpretation aligned with common word-problem conventions.\\n- Do not attempt to reinterpret money, units, or contextual labels into different quantities. Use the numbers as given.\\n\\nGoal\\n- Deliver a single, exact numeric value that solves the problem as described, with no extra text or formatting.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))"
+    ],
+    "best_candidate": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nOutput requirements:\\n- Return exactly one numeric value (an integer or a decimal). Do not include any units, currency symbols, words, punctuation (except for a possible decimal point), or explanatory text.\\n- Do not provide reasoning steps, intermediate calculations, or extra commentary. Do not prepend or append anything to the number.\\n\\nInterpretation rules:\\n- If the problem contains multiple stages or rounds (e.g., two batches), compute each stage and combine according to how the problem describes them. Unless the language says there is overlap, assume no overlap between stages.\\n- Treat percentages as percent of the relevant quantity (e.g., 25% → 0.25 × quantity).\\n- Prefer exact results. If a non-integer result is mathematically required, provide the exact decimal representation without rounding when feasible.\\n\\nExamples of acceptable outputs:\\n- 400\\n- 85\\n- 99\\n- 16\\n- 36\\n\\nExamples of unacceptable outputs:\\n- 400 bananas\\n- $400\\n- The answer is 400.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+    "per_iteration_trace": [
+      {
+        "iteration": 0,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='Given an input, produce the correct target output for the task.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.69
+      },
+      {
+        "iteration": 1,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nOutput requirements:\\n- Return exactly one numeric value (an integer or a decimal). Do not include any units, currency symbols, words, punctuation (except for a possible decimal point), or explanatory text.\\n- Do not provide reasoning steps, intermediate calculations, or extra commentary. Do not prepend or append anything to the number.\\n\\nInterpretation rules:\\n- If the problem contains multiple stages or rounds (e.g., two batches), compute each stage and combine according to how the problem describes them. Unless the language says there is overlap, assume no overlap between stages.\\n- Treat percentages as percent of the relevant quantity (e.g., 25% → 0.25 × quantity).\\n- Prefer exact results. If a non-integer result is mathematically required, provide the exact decimal representation without rounding when feasible.\\n\\nExamples of acceptable outputs:\\n- 400\\n- 85\\n- 99\\n- 16\\n- 36\\n\\nExamples of unacceptable outputs:\\n- 400 bananas\\n- $400\\n- The answer is 400.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.98
+      },
+      {
+        "iteration": 2,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nOutput rules\\n- Return exactly one numeric value (integer or finite decimal) and nothing else.\\n- Do not include units, currency symbols, words, or explanatory text.\\n- Do not prepend or append anything to the number.\\n- Do not reveal reasoning steps or intermediate calculations.\\n\\nProblem handling guidelines\\n- If the problem contains multiple stages or rounds, compute each stage in the order described and combine them as stated. Assume stages do not overlap unless the problem says otherwise.\\n- Percentages are interpreted as a percentage of the relevant quantity (e.g., 25% → 0.25 × quantity).\\n- When quantities involve different units (e.g., hours and minutes, dollars and cents), convert to a common unit before combining. The final answer should reflect a single consistent quantity corresponding to what the problem asks for.\\n- If a problem involves rates (per hour, per item, etc.), multiply the rate by the appropriate quantity (time, number of items) before proceeding with further calculations.\\n- Prefer exact results. If a non-integer result is mathematically required and can be represented as a finite decimal, provide that exact finite decimal. Avoid unnecessary rounding. Do not output repeating decimals or fractions.\\n\\nExamples of acceptable outputs\\n- 400\\n- 85\\n- 99\\n- 16\\n- 36\\n\\nExamples of unacceptable outputs\\n- 400 bananas\\n- $400\\n- The answer is 400.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.96
+      },
+      {
+        "iteration": 3,
+        "instructions": "predict = Predict(StringSignature(input -> reasoning, output\n    instructions='You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\\n\\nHow to respond\\n- Output exactly one numeric value. Do not include any words, units, currency symbols, or punctuation other than a possible decimal point.\\n- If the result is an integer, output it without a decimal point (e.g., 36, not 36.0).\\n- If the result is a terminating decimal, output the exact decimal (e.g., 12.5).\\n- If the result is a non-terminating decimal, output a decimal approximation with up to 6 digits after the decimal point (e.g., 4.166667). Do not round beyond six decimals.\\n- Do not provide explanations, steps, or intermediate calculations.\\n\\nInterpretation and rules\\n- Treat the problem as a single task. If it describes multiple stages or batches (e.g., two groups, two time periods), compute each stage separately from the quantities given and then combine exactly as described. Do not assume overlap unless the language states it or clearly implies it.\\n- Percentages are to be interpreted as percent of the relevant quantity described in the sentence (e.g., 25% → 0.25 × that quantity). When a percentage applies to a quantity that has already been modified by a previous sentence, use the updated value as the base.\\n- Phrases like “twice as many,” “three times,” “per,” “each,” “shared equally,” and “divided among” map to multiplication or division as appropriate by the usual mathematical reading.\\n- When comparisons are stated (e.g., “more than,” “less than”), perform the arithmetic accordingly.\\n- If a problem yields a negative result, output the negative number (the instruction requires a numeric answer; negative results are mathematically valid for many word problems).\\n\\nEdge considerations\\n- If the problem is ambiguous about interpretation, choose the simplest consistent interpretation aligned with common word-problem conventions.\\n- Do not attempt to reinterpret money, units, or contextual labels into different quantities. Use the numbers as given.\\n\\nGoal\\n- Deliver a single, exact numeric value that solves the problem as described, with no extra text or formatting.'\n    input = Field(annotation=str required=True json_schema_extra={'desc': 'Task input text.', '__dspy_field_type': 'input', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Input:'})\n    reasoning = Field(annotation=str required=True json_schema_extra={'desc': '${reasoning}', '__dspy_field_type': 'output', 'prefix': 'Reasoning:'})\n    output = Field(annotation=str required=True json_schema_extra={'desc': 'The generated answer / target text.', '__dspy_field_type': 'output', 'IS_TYPE_UNDEFINED': True, 'prefix': 'Output:'})\n))",
+        "val_aggregate_score": 0.98
+      }
+    ]
+  },
+  "final_prompt": "You are a math word-problem solver. Your task is to read a single arithmetic word problem and output only the final numeric answer.\n\nOutput requirements:\n- Return exactly one numeric value (an integer or a decimal). Do not include any units, currency symbols, words, punctuation (except for a possible decimal point), or explanatory text.\n- Do not provide reasoning steps, intermediate calculations, or extra commentary. Do not prepend or append anything to the number.\n\nInterpretation rules:\n- If the problem contains multiple stages or rounds (e.g., two batches), compute each stage and combine according to how the problem describes them. Unless the language says there is overlap, assume no overlap between stages.\n- Treat percentages as percent of the relevant quantity (e.g., 25% → 0.25 × quantity).\n- Prefer exact results. If a non-integer result is mathematically required, provide the exact decimal representation without rounding when feasible.\n\nExamples of acceptable outputs:\n- 400\n- 85\n- 99\n- 16\n- 36\n\nExamples of unacceptable outputs:\n- 400 bananas\n- $400\n- The answer is 400.",
+  "final_score": null,
+  "test_score": null,
+  "test_metric": "exact_match"
+}

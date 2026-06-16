@@ -1,0 +1,4 @@
+{
+    "reasoning": "The function patches a database via an API call and then waits for the resulting long-running operation to complete. A descriptive docstring clarifies its purpose, parameters, and return value.",
+    "output": "\"\"\"\nPatch a database's metadata using a patch operation and wait for completion.\n\nThis method patches a database (identified by project_id, instance, and database)\nwith the provided body payload. It executes the patch request using the configured\nretry policy, retrieves the long-running operation name from the response, and\nblocks until the operation completes by polling.\n\nParameters:\n- instance (str): The instance ID containing the database.\n- database (str): The database name to patch.\n- body (dict): Patch payload describing fields to update.\n- project_id (str, optional): Google Cloud project ID. If omitted, a default project\n  from the client/config is used.\n\nReturns:\nNone\n\"\"\""
+}

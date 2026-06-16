@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will produce a single Java-like function with signature including three final parameters and statements that perform two seeks on the provided stream and asserts that the position matches the expected values using loc0 and loc1.",
+    "output": "void testBufferedBlockInStream_seek_long ( final TestBufferedBlockInStream mTestStream , final long mBlockSize , final long mBufferSize ) {\n  final long loc0 = mBlockSize;\n  mTestStream.seek( loc0 );\n  assertEquals( loc0, mTestStream.getPosition() );\n  final long loc1 = mBufferSize;\n  mTestStream.seek( loc1 );\n  assertEquals( loc1, mTestStream.getPosition() );\n}"
+}

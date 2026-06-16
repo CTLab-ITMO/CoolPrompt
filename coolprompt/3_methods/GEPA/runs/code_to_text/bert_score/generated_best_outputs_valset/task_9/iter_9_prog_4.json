@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will generate a concise, gold-target style docBlock describing the function ckplayer_get_info_by_xml. It involves parsing an XML string to extract video information and returning a dictionary. I'll provide a single-line imperative summary followed by an Arguments, Returns, and (if applicable) Raises sections, matching the signature exactly and keeping the tone concise and present-tense.",
+    "output": "Parse the CKPlayer XML input and return a dictionary of video information.\n\nArguments:\n    ckinfo (str): XML content representing the CKPlayer data to parse.\n\nReturns:\n    video_dict (dict): Mapping with keys 'title' (str), 'links' (list[str]), 'size' (int), and 'flashvars' (str).\n\nRaises:\n    xml.etree.ElementTree.ParseError: if the input XML is malformed.\n    KeyError: if expected fields are missing from the parsed structure.\n    IndexError: if expected list elements are missing."
+}

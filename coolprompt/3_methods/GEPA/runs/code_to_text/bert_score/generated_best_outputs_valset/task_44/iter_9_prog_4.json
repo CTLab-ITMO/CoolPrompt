@@ -1,0 +1,4 @@
+{
+    "reasoning": "I created a concise, docstring-style documentation block describing the function's behavior, parameters, and return value based on the given signature and body. No explicit exceptions were identifiable to document under Raises.",
+    "output": "Create a database in the specified instance and project.\nArguments:\n    instance (object): identifier or reference to the instance where the database will be created.\n    body (dict): request body describing the database to create.\n    project_id (str): optional project ID to scope the operation.\nReturns:\n    None (NoneType): no return value."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "We will implement a compact, deterministic test-like function that mirrors a round-trip parse of a time string using a TimeIntervalParser and asserts the four components (hour, minute, second, millisecond) using loc-style locals (loc0, loc1, loc2). The function uses three locals and a fixed input \"12:34:56.7\" to reflect time-with-one-decimal test variants such as testParseTimeWithOneDecimal.",
+    "output": "void function ( ) {\n    String loc0 = \"12:34:56.7\";\n    TimeIntervalParser loc2 = new TimeIntervalParser();\n    Long[] loc1 = loc2.parse(loc0);\n\n    assertEquals(12L, loc1[0].longValue());\n    assertEquals(34L, loc1[1].longValue());\n    assertEquals(56L, loc1[2].longValue());\n    assertEquals(7L, loc1[3].longValue());\n}"
+}

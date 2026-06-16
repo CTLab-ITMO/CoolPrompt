@@ -1,0 +1,4 @@
+{
+    "reasoning": "Provide a concise, docstring-style description of the function's behavior without modifying the code, including its inputs, return type, and possible errors.",
+    "output": "Extracts all text content from <url> elements that are children of <durl> nodes within the given XML string and returns them as a list of strings.\n\nArguments:\n    xml_data (str): The XML data string to parse, expected to contain <durl> elements with nested <url> elements.\n\nReturns:\n    list[str]: The list of URL strings extracted from the XML.\n\nRaises:\n    ExpatError: If the input XML is not well-formed.\n    IndexError: If a <durl> element does not contain any <url> child."
+}

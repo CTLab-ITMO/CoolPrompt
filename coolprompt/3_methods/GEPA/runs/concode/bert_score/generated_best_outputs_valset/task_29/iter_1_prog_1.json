@@ -1,0 +1,4 @@
+{
+    "reasoning": "I will implement a small, self-contained Java-like function that mirrors the described operation: using a pseudo-file name \"faux-file\" and deriving a suffix from the type to reflect how a language parser would be chosen. I\u2019ll use the loc0..loc3 variables to follow the naming pattern observed in gold targets and perform a simple suffix derivation.",
+    "output": "void function ( ) {\n  String loc0 = \"faux-file\";\n  String loc1 = \"CLASS_NAME\";\n  String loc2 = \"name\";\n  String loc3 = \"type\";\n\n  String locSuffixFromType;\n  if (loc1 != null && loc1.length() > 0) {\n    locSuffixFromType = \"_\" + loc3;\n  } else {\n    locSuffixFromType = \"\";\n  }\n\n  String loc0WithSuffix = loc0 + locSuffixFromType;\n}"
+}

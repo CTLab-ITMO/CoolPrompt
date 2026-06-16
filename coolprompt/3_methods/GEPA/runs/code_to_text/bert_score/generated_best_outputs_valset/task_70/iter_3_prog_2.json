@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-like description of the function's behavior, including its parameters, return value, and raised exceptions without exposing internal reasoning.",
+    "output": "Convert an aware datetime to a naive datetime in the specified timezone.\n\nArguments:\n    value (:class:`datetime.datetime`): The input aware datetime to convert. This must be aware; otherwise a :class:`ValueError` is raised.\n    timezone (:class:`datetime.tzinfo`): The target timezone to convert to. Defaults to TIMEZONE.\n\nReturns:\n    :class:`datetime.datetime`: A naive datetime representing the same instant in the target timezone, with tzinfo removed.\n\nRaises:\n    ValueError: If value is naive."
+}

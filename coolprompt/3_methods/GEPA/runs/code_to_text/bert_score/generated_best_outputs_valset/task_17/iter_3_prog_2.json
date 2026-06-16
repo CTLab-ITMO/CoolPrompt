@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a concise, docstring-style description of the function's behavior, inputs, and return value without modifying the code.",
+    "output": "Return the first value of a given query parameter from a URL, or None if unavailable.\n\nArguments:\n    url (str): The URL string to parse.\n    param (str): The name of the query parameter to retrieve from the URL's query string.\n\nReturns:\n    str or None: The first value associated with the provided query parameter as a string, or None if the parameter is missing or an error occurs."
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a minimal Java-like function that reflects the input structure by introducing local variables named loc0..loc3 for the fields and performing a small sequence: call addDownload with normalizeId and addComplete, log the JSON length, and conditionally log the STOP_DOWNLOAD_DELETE_FILES value.",
+    "output": "void function ( ) {\n  String loc0 = m_escapedJson;\n  FileMapper loc1 = m_fileMapper;\n  Logger loc2 = m_log;\n  int loc3 = STOP_DOWNLOAD_DELETE_FILES;\n  JLibTorrent loc4 = m_libTorrent;\n  addDownload(normalizeId, addComplete);\n  int len = loc0 != null ? loc0.length() : 0;\n  loc2.info(\"json length: \" + len);\n  if (loc3 > 0) {\n    loc2.info(\"stop flag: \" + loc3);\n  }\n}"
+}

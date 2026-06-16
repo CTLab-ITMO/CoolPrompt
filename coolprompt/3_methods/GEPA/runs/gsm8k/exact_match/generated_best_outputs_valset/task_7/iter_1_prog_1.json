@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total file size: 200 GB. 40% progress means 80 GB downloaded. At 2 GB/min that takes 80/2 = 40 minutes. A 20-minute restart follows. After restart, download restarts from 0, so you must download 200 GB again, which takes 200/2 = 100 minutes. Total time = 40 + 20 + 100 = 160 minutes.",
+    "output": "160"
+}

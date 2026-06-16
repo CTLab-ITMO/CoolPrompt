@@ -1,0 +1,4 @@
+{
+    "reasoning": "Generate a small deterministic sequence: read an object id into loc0, if it's missing (null or empty) and can create, assign a new id via generateID; then convert the id to string via toString into loc3 and assert equality between the original and the stringified value to reflect the parse-and-assert pattern.",
+    "output": "```java\nvoid function ( ) {\n  String loc0;\n  boolean loc1;\n  String loc2;\n  String loc3;\n\n  loc0 = readObjectID;\n  loc1 = (loc0 == null || loc0.length() == 0);\n  if (loc1) {\n    loc0 = generateID;\n  }\n  loc2 = loc0.toString();\n  loc3 = loc2;\n  assertEquals(loc0, loc3);\n}\n```"
+}

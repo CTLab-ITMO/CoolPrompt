@@ -1,0 +1,4 @@
+{
+    "reasoning": "Produce a minimal method signature for bindAndStart with ServerConnectionEventHandler onNewConnection.",
+    "output": "void bindAndStart(ServerConnectionEventHandler onNewConnection) { }"
+}

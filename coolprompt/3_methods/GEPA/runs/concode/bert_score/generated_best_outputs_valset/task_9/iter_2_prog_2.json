@@ -1,0 +1,4 @@
+{
+    "reasoning": "",
+    "output": "TransferManager mManager;\nString BUCKET_NAME;\nString KEY;\nS3ADirectOutputStream mStream;\nvoid close() {}"
+}

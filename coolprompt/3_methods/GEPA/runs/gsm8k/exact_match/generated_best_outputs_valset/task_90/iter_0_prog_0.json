@@ -1,0 +1,4 @@
+{
+    "reasoning": "Total consumption = adults + children.\nAdult: 20 \u00d7 10 = 200 pounds.\nChild: half of adult = 5 pounds; 5 children \u21d2 5 \u00d7 5 = 25 pounds.\nTotal needed = 200 + 25 = 225 pounds.",
+    "output": "225 pounds"
+}

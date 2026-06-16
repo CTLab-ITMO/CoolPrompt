@@ -1,0 +1,4 @@
+{
+    "reasoning": "We interpret the description as implementing a function that concatenates the values of all direct text and CDATA children of a given Node. The implementation iterates over direct children and appends values of TEXT_NODE and CDATA_SECTION_NODE.",
+    "output": "public static String mergeDirectTextAndCData(Node node) {\n    StringBuilder sb = new StringBuilder();\n    for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {\n        short type = child.getNodeType();\n        if (type == Node.TEXT_NODE || type == Node.CDATA_SECTION_NODE) {\n            sb.append(child.getNodeValue());\n        }\n    }\n    return sb.toString();\n}"
+}

@@ -1,0 +1,4 @@
+{
+    "reasoning": "Each school has 2 teams of 5 players = 10 players. Plus 2 coaches (one per team) = 12 people per school. With 4 schools: 4 \u00d7 12 = 48 total.",
+    "output": "48"
+}
