@@ -7,7 +7,7 @@ import pytest
 from demo_service.methods import METHODS, coerce_method_params
 from demo_service.runner import run_comparison, run_single_optimization
 from demo_service.schemas import CompareRequest, OptimizationRequest
-from demo_service.settings import DemoSettings
+from demo_service.settings import DemoSettings, OPENROUTER_BASE_URL
 
 
 class _FakeTuner:
@@ -36,6 +36,32 @@ def _fake_tuner_factory(request, settings):
 
 def _settings() -> DemoSettings:
     return DemoSettings(allow_mock=False, force_mock=False)
+
+
+def test_openrouter_key_defaults_to_openrouter_base_url(monkeypatch):
+    monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+    monkeypatch.delenv("OPENAI_API_BASE", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-or-v1-test")
+
+    settings = DemoSettings()
+
+    assert settings.has_openai_key is True
+    assert settings.openai_api_key == "sk-or-v1-test"
+    assert settings.openai_base_url == OPENROUTER_BASE_URL
+
+
+def test_openrouter_api_key_is_accepted_without_openai_key(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+    monkeypatch.delenv("OPENAI_API_BASE", raising=False)
+    monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-v1-test")
+
+    settings = DemoSettings()
+
+    assert settings.has_openai_key is True
+    assert settings.openai_api_key == "sk-or-v1-test"
+    assert settings.openai_base_url == OPENROUTER_BASE_URL
 
 
 def test_rider_ui_params_reach_prompt_tuner_kwargs(monkeypatch):

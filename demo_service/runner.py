@@ -39,6 +39,8 @@ def default_tuner_factory(
         "temperature": request.model_temperature,
         "max_tokens": request.model_max_tokens,
     }
+    if settings.openai_api_key:
+        model_kwargs["api_key"] = settings.openai_api_key
     if settings.openai_base_url:
         model_kwargs["base_url"] = settings.openai_base_url
 
