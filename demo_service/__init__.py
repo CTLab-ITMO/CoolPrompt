@@ -1,0 +1,1 @@
+"""CoolPrompt Interface Demo service."""

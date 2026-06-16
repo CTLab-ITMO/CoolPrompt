@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CoolPrompt Interface Demo</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar" aria-label="Optimization controls">
+        <div class="brand">
+          <div class="logo-frame">
+            <img src="/static/logo_dark.png" alt="" />
+          </div>
+          <div>
+            <h1>CoolPrompt Interface Demo</h1>
+            <p id="runtimeStatus">Loading runtime...</p>
+          </div>
+        </div>
+
+        <button id="runButton" class="primary" type="button">Run optimization</button>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Prompt</span>
+            <div class="segmented" role="group" aria-label="Task type">
+              <button class="segment active" data-task="generation" type="button">Generation</button>
+              <button class="segment" data-task="classification" type="button">Classification</button>
+            </div>
+          </div>
+          <textarea id="startPrompt" rows="7" spellcheck="false"></textarea>
+          <div class="quick-row">
+            <button type="button" class="ghost" data-example="support">Support classifier</button>
+            <button type="button" class="ghost" data-example="summary">Summary</button>
+            <button type="button" class="ghost" data-example="translation">Translation</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Method</span>
+            <label class="toggle">
+              <input id="compareMode" type="checkbox" />
+              <span>Compare</span>
+            </label>
+          </div>
+          <select id="methodSelect"></select>
+          <div id="compareMethods" class="method-grid hidden"></div>
+          <div id="methodHint" class="hint"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Evaluation</span>
+          </div>
+          <div class="field-grid">
+            <label>
+              Metric
+              <select id="metricSelect"></select>
+            </label>
+            <label>
+              Validation split
+              <input id="validationSize" type="number" min="0" max="1" step="0.05" value="0.34" />
+            </label>
+            <label>
+              Batch size
+              <input id="batchSize" type="number" min="1" max="64" value="4" />
+            </label>
+            <label>
+              Synthetic samples
+              <input id="generateSamples" type="number" min="2" max="50" value="6" />
+            </label>
+          </div>
+          <label class="wide-label">
+            Problem description
+            <textarea id="problemDescription" rows="3" spellcheck="false"></textarea>
+          </label>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Dataset</span>
+            <button id="addRow" type="button" class="icon-btn" title="Add row">+</button>
+          </div>
+          <div id="datasetRows" class="dataset-rows"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Hyperparameters</span>
+          </div>
+          <div id="paramsPanel" class="field-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">
+            <span>Model</span>
+          </div>
+          <div class="field-grid">
+            <label>
+              Model
+              <input id="modelName" type="text" placeholder="gpt-4o-mini" />
+            </label>
+            <label>
+              Temperature
+              <input id="modelTemperature" type="number" min="0" max="2" step="0.05" value="0.2" />
+            </label>
+            <label>
+              Max tokens
+              <input id="modelMaxTokens" type="number" min="128" max="16000" value="2000" />
+            </label>
+          </div>
+          <label class="toggle mock-toggle">
+            <input id="mockMode" type="checkbox" />
+            <span>Mock run</span>
+          </label>
+        </section>
+
+      </aside>
+
+      <section class="workspace" aria-live="polite">
+        <div class="topbar">
+          <div>
+            <h2>Result</h2>
+            <p id="jobLine">Ready</p>
+          </div>
+          <div class="status-pill" id="statusPill">idle</div>
+        </div>
+
+        <div id="comparison" class="comparison hidden"></div>
+
+        <div class="result-grid">
+          <article class="result-panel">
+            <header>
+              <span>Initial prompt</span>
+              <button type="button" class="copy" data-copy="initialPrompt">Copy</button>
+            </header>
+            <pre id="initialPrompt"></pre>
+          </article>
+          <article class="result-panel accent">
+            <header>
+              <span>Optimized prompt</span>
+              <button type="button" class="copy" data-copy="finalPrompt">Copy</button>
+            </header>
+            <pre id="finalPrompt"></pre>
+          </article>
+        </div>
+
+        <div class="metric-strip">
+          <div>
+            <span>Initial</span>
+            <strong id="initMetric">--</strong>
+          </div>
+          <div>
+            <span>Final</span>
+            <strong id="finalMetric">--</strong>
+          </div>
+          <div>
+            <span>Delta</span>
+            <strong id="deltaMetric">--</strong>
+          </div>
+          <div>
+            <span>Elapsed</span>
+            <strong id="elapsedMetric">--</strong>
+          </div>
+        </div>
+
+        <article class="trace">
+          <h3>Run details</h3>
+          <pre id="runDetails">{}</pre>
+        </article>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
