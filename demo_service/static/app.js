@@ -89,7 +89,7 @@ const taskMetricDefaults = {
   classification: "f1",
   generation: "rouge",
 };
-const modelFallbackOptions = ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "gpt-4.1-nano"];
+const modelFallbackOptions = ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1-nano"];
 const progressSteps = [
   { id: "queued", label: "Очередь" },
   { id: "preparing", label: "Подготовка" },

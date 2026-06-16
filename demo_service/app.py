@@ -39,9 +39,9 @@ def _model_options() -> list[dict[str, str]]:
     if "openrouter" in base_url:
         return [
             {"value": "openai/gpt-4o-mini", "label": "OpenAI GPT-4o mini"},
-            {"value": "openai/gpt-4o", "label": "OpenAI GPT-4o"},
             {"value": "google/gemini-2.5-flash", "label": "Gemini 2.5 Flash"},
-            {"value": "anthropic/claude-3.5-haiku", "label": "Claude 3.5 Haiku"},
+            {"value": "deepseek/deepseek-chat-v3-0324", "label": "DeepSeek Chat v3"},
+            {"value": "qwen/qwen-2.5-72b-instruct", "label": "Qwen 2.5 72B Instruct"},
         ]
     return [
         {"value": "gpt-4o-mini", "label": "gpt-4o-mini"},
