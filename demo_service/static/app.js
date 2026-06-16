@@ -7,47 +7,47 @@ const state = {
 const examples = {
   support: {
     task: "classification",
-    prompt: "Classify each customer support request by intent.",
-    description: "Classify support messages into one of the known labels.",
+    prompt: "Определи категорию обращения клиента.",
+    description: "Нужно классифицировать обращения по заранее известным меткам.",
     metric: "f1",
     rows: [
-      ["My refund still has not arrived.", "billing"],
-      ["The app crashes when I open settings.", "technical"],
-      ["Can I change the delivery address?", "shipping"],
-      ["I was charged twice for the same order.", "billing"],
-      ["The login code never arrives.", "technical"],
-      ["Where is my package now?", "shipping"],
+      ["Деньги за возврат всё ещё не пришли.", "оплата"],
+      ["Приложение вылетает при открытии настроек.", "техника"],
+      ["Можно изменить адрес доставки?", "доставка"],
+      ["С меня дважды списали деньги за один заказ.", "оплата"],
+      ["Код для входа не приходит.", "техника"],
+      ["Где сейчас моя посылка?", "доставка"],
     ],
   },
-  summary: {
+  support_reply: {
     task: "generation",
-    prompt: "Summarize the text in one concise paragraph.",
-    description: "Produce a factual one-paragraph summary that preserves the main claim.",
+    prompt: "Составь короткий, вежливый и полезный ответ клиенту.",
+    description: "Нужно получить ответ поддержки: спокойный тон, конкретный следующий шаг, без лишней воды.",
     metric: "rouge",
     rows: [
       [
-        "CoolPrompt lets teams compare prompt optimization methods from a single interface.",
-        "CoolPrompt provides one interface for comparing prompt optimization methods.",
+        "Клиент пишет, что оплатил заказ, но статус до сих пор не изменился.",
+        "Здравствуйте! Проверим оплату и статус заказа. Пришлите, пожалуйста, номер заказа или чек, чтобы мы быстрее нашли платёж.",
       ],
       [
-        "The library supports data-driven optimization when examples and targets are available.",
-        "The library can optimize prompts using datasets with expected targets.",
+        "Клиент просит перенести доставку на другой день.",
+        "Здравствуйте! Да, дату доставки можно изменить. Напишите удобный день и интервал, а мы проверим доступные варианты.",
       ],
       [
-        "A Railway demo makes the system available without local installation.",
-        "Railway deployment lets users try the system without installing it locally.",
+        "Клиент сообщает, что приложение не открывается после обновления.",
+        "Здравствуйте! Попробуйте перезапустить приложение и очистить кэш. Если ошибка повторится, пришлите модель устройства и скриншот.",
       ],
     ],
   },
-  translation: {
+  qa: {
     task: "generation",
-    prompt: "Translate the text into polished Russian while preserving terminology.",
-    description: "Translate English source text into natural Russian and keep technical terms consistent.",
-    metric: "meteor",
+    prompt: "Ответь на вопрос строго по контексту. Если ответа нет, напиши: нет данных.",
+    description: "Нужно извлекать короткий точный ответ из контекста без домыслов.",
+    metric: "em",
     rows: [
-      ["The model returned a structured response.", "Модель вернула структурированный ответ."],
-      ["The pipeline validates every prompt candidate.", "Пайплайн проверяет каждого кандидата промпта."],
-      ["The user can compare optimization methods.", "Пользователь может сравнивать методы оптимизации."],
+      ["Контекст: Заказ 4821 был оплачен 12 июня и передан в доставку 13 июня. Вопрос: когда заказ передали в доставку?", "13 июня"],
+      ["Контекст: Возврат средств занимает до 10 рабочих дней после подтверждения заявки. Вопрос: сколько занимает возврат?", "до 10 рабочих дней"],
+      ["Контекст: Подписку можно отменить в разделе «Профиль» → «Платежи». Вопрос: где отменить подписку?", "в разделе «Профиль» → «Платежи»"],
     ],
   },
 };
@@ -74,10 +74,10 @@ async function loadConfig() {
   state.config = config;
   state.methods = methods;
   $("runtimeStatus").textContent = config.hasOpenAIKey
-    ? `${config.defaultModel} ready`
+    ? `Модель: ${config.defaultModel}`
     : config.forceMock
-      ? "Mock mode"
-      : "OPENAI_API_KEY is missing";
+      ? "Режим: тестовый"
+      : "Нет OPENAI_API_KEY";
   $("modelName").placeholder = config.defaultModel;
   $("mockMode").checked = Boolean(config.forceMock);
   $("mockMode").disabled = !config.allowMock && !config.forceMock;
@@ -91,7 +91,7 @@ function renderMethods() {
   state.methods.forEach((method) => {
     const option = document.createElement("option");
     option.value = method.id;
-    option.textContent = `${method.label}${method.legacy ? " · legacy" : ""}`;
+    option.textContent = `${method.label}${method.legacy ? " · устаревший" : ""}`;
     select.appendChild(option);
   });
   select.value = "rider";
@@ -128,7 +128,7 @@ function renderParams() {
   const panel = $("paramsPanel");
   panel.innerHTML = "";
   if (!method || method.params.length === 0) {
-    panel.innerHTML = `<div class="hint">No method-specific parameters.</div>`;
+    panel.innerHTML = `<div class="hint">У метода нет отдельных параметров.</div>`;
     return;
   }
   method.params.forEach((param) => {
@@ -136,7 +136,7 @@ function renderParams() {
     label.dataset.param = param.name;
     let input = "";
     if (param.type === "bool") {
-      input = `<select data-param-input="${param.name}"><option value="false">False</option><option value="true">True</option></select>`;
+      input = `<select data-param-input="${param.name}"><option value="false">Нет</option><option value="true">Да</option></select>`;
     } else {
       const step = param.type === "float" ? (param.step || 0.01) : 1;
       input = `<input data-param-input="${param.name}" type="number" min="${param.min ?? ""}" max="${param.max ?? ""}" step="${step}" value="${param.default ?? ""}" />`;
@@ -165,9 +165,9 @@ function addDatasetRow(input = "", target = "") {
   const row = document.createElement("div");
   row.className = "dataset-row";
   row.innerHTML = `
-    <input class="dataset-input" type="text" placeholder="Input example" value="${escapeHtml(input)}" />
-    <input class="dataset-target" type="text" placeholder="Target / label" value="${escapeHtml(target)}" />
-    <button type="button" class="icon-btn remove-row" title="Remove row">×</button>
+    <input class="dataset-input" type="text" placeholder="Входной пример" value="${escapeHtml(input)}" />
+    <input class="dataset-target" type="text" placeholder="Эталон / метка" value="${escapeHtml(target)}" />
+    <button type="button" class="icon-btn remove-row" title="Удалить строку">×</button>
   `;
   row.querySelector(".remove-row").addEventListener("click", () => row.remove());
   $("datasetRows").appendChild(row);
@@ -262,7 +262,7 @@ async function createJob() {
   }
 
   setBusy(true);
-  setStatus("queued", "Job queued");
+  setStatus("queued", "Задача поставлена в очередь");
   const response = await fetch("/api/jobs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -279,14 +279,14 @@ async function createJob() {
 async function pollJob(jobId) {
   const response = await fetch(`/api/jobs/${jobId}`);
   const job = await response.json();
-  setStatus(job.status, `Job ${job.job_id.slice(0, 8)} · ${job.status}`);
+  setStatus(job.status, `Задача ${job.job_id.slice(0, 8)} · ${statusText(job.status)}`);
   if (job.status === "queued" || job.status === "running") {
     window.setTimeout(() => pollJob(jobId), 1200);
     return;
   }
   setBusy(false);
   if (job.status === "failed") {
-    $("runDetails").textContent = job.error || "Unknown error";
+    $("runDetails").textContent = job.error || "Неизвестная ошибка";
     return;
   }
   renderResult(job.result);
@@ -294,13 +294,23 @@ async function pollJob(jobId) {
 
 function setBusy(busy) {
   $("runButton").disabled = busy;
-  $("runButton").textContent = busy ? "Running..." : "Run optimization";
+  $("runButton").textContent = busy ? "Оптимизация..." : "Запустить оптимизацию";
 }
 
 function setStatus(status, line) {
-  $("statusPill").textContent = status;
+  $("statusPill").textContent = statusText(status);
   $("statusPill").className = `status-pill ${status}`;
   $("jobLine").textContent = line;
+}
+
+function statusText(status) {
+  return {
+    idle: "готово",
+    queued: "в очереди",
+    running: "в работе",
+    completed: "готово",
+    failed: "ошибка",
+  }[status] || status;
 }
 
 function renderResult(result) {
@@ -336,7 +346,7 @@ function renderComparison(results) {
       const isBest = (item.final_metric || 0) === best;
       return `
         <div class="comparison-row">
-          <strong>${label}${isBest ? " · best" : ""}</strong>
+          <strong>${label}${isBest ? " · лучший" : ""}</strong>
           <div class="scorebar"><span style="width:${width}%"></span></div>
           <span>${fmtMetric(item.final_metric)}</span>
         </div>
@@ -374,12 +384,12 @@ $("addRow").addEventListener("click", () => addDatasetRow());
 $("runButton").addEventListener("click", () => {
   createJob().catch((error) => {
     setBusy(false);
-    setStatus("failed", "Request failed");
+    setStatus("failed", "Запрос не выполнен");
     $("runDetails").textContent = String(error);
   });
 });
 
 loadConfig().catch((error) => {
-  $("runtimeStatus").textContent = "Config failed";
+  $("runtimeStatus").textContent = "Ошибка конфигурации";
   $("runDetails").textContent = String(error);
 });

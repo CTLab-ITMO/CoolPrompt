@@ -1,48 +1,50 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CoolPrompt Interface Demo</title>
+    <title>CoolPrompt Demo</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <main class="shell">
-      <aside class="sidebar" aria-label="Optimization controls">
-        <div class="brand">
-          <div class="logo-frame">
-            <img src="/static/logo_dark.png" alt="" />
+      <aside class="sidebar" aria-label="Панель оптимизации">
+        <div class="sidebar-sticky">
+          <div class="brand">
+            <div class="logo-frame">
+              <img src="/static/logo_dark.png" alt="" />
+            </div>
+            <div>
+              <h1>CoolPrompt Demo</h1>
+              <p id="runtimeStatus">Загрузка сервиса...</p>
+            </div>
           </div>
-          <div>
-            <h1>CoolPrompt Interface Demo</h1>
-            <p id="runtimeStatus">Loading runtime...</p>
-          </div>
-        </div>
 
-        <button id="runButton" class="primary" type="button">Run optimization</button>
+          <button id="runButton" class="primary" type="button">Запустить оптимизацию</button>
+        </div>
 
         <section class="panel">
           <div class="panel-title">
-            <span>Prompt</span>
-            <div class="segmented" role="group" aria-label="Task type">
-              <button class="segment active" data-task="generation" type="button">Generation</button>
-              <button class="segment" data-task="classification" type="button">Classification</button>
+            <span>Промпт</span>
+            <div class="segmented" role="group" aria-label="Тип задачи">
+              <button class="segment active" data-task="generation" type="button">Генерация</button>
+              <button class="segment" data-task="classification" type="button">Классификация</button>
             </div>
           </div>
           <textarea id="startPrompt" rows="7" spellcheck="false"></textarea>
           <div class="quick-row">
-            <button type="button" class="ghost" data-example="support">Support classifier</button>
-            <button type="button" class="ghost" data-example="summary">Summary</button>
-            <button type="button" class="ghost" data-example="translation">Translation</button>
+            <button type="button" class="ghost" data-example="support">Классификация обращений</button>
+            <button type="button" class="ghost" data-example="support_reply">Ответ клиенту</button>
+            <button type="button" class="ghost" data-example="qa">Точный ответ</button>
           </div>
         </section>
 
         <section class="panel">
           <div class="panel-title">
-            <span>Method</span>
+            <span>Метод</span>
             <label class="toggle">
               <input id="compareMode" type="checkbox" />
-              <span>Compare</span>
+              <span>Сравнить</span>
             </label>
           </div>
           <select id="methodSelect"></select>
@@ -52,68 +54,68 @@
 
         <section class="panel">
           <div class="panel-title">
-            <span>Evaluation</span>
+            <span>Оценка</span>
           </div>
           <div class="field-grid">
             <label>
-              Metric
+              Метрика
               <select id="metricSelect"></select>
             </label>
             <label>
-              Validation split
+              Доля валидации
               <input id="validationSize" type="number" min="0" max="1" step="0.05" value="0.34" />
             </label>
             <label>
-              Batch size
+              Размер батча
               <input id="batchSize" type="number" min="1" max="64" value="4" />
             </label>
             <label>
-              Synthetic samples
+              Синтетические примеры
               <input id="generateSamples" type="number" min="2" max="50" value="6" />
             </label>
           </div>
           <label class="wide-label">
-            Problem description
+            Описание задачи
             <textarea id="problemDescription" rows="3" spellcheck="false"></textarea>
           </label>
         </section>
 
         <section class="panel">
           <div class="panel-title">
-            <span>Dataset</span>
-            <button id="addRow" type="button" class="icon-btn" title="Add row">+</button>
+            <span>Данные</span>
+            <button id="addRow" type="button" class="icon-btn" title="Добавить строку">+</button>
           </div>
           <div id="datasetRows" class="dataset-rows"></div>
         </section>
 
         <section class="panel">
           <div class="panel-title">
-            <span>Hyperparameters</span>
+            <span>Гиперпараметры</span>
           </div>
           <div id="paramsPanel" class="field-grid"></div>
         </section>
 
         <section class="panel">
           <div class="panel-title">
-            <span>Model</span>
+            <span>Модель</span>
           </div>
           <div class="field-grid">
             <label>
-              Model
+              Модель
               <input id="modelName" type="text" placeholder="gpt-4o-mini" />
             </label>
             <label>
-              Temperature
+              Температура
               <input id="modelTemperature" type="number" min="0" max="2" step="0.05" value="0.2" />
             </label>
             <label>
-              Max tokens
+              Лимит токенов
               <input id="modelMaxTokens" type="number" min="128" max="16000" value="2000" />
             </label>
           </div>
           <label class="toggle mock-toggle">
             <input id="mockMode" type="checkbox" />
-            <span>Mock run</span>
+            <span>Тестовый запуск</span>
           </label>
         </section>
 
@@ -122,10 +124,10 @@
       <section class="workspace" aria-live="polite">
         <div class="topbar">
           <div>
-            <h2>Result</h2>
-            <p id="jobLine">Ready</p>
+            <h2>Результат</h2>
+            <p id="jobLine">Готово</p>
           </div>
-          <div class="status-pill" id="statusPill">idle</div>
+          <div class="status-pill" id="statusPill">готово</div>
         </div>
 
         <div id="comparison" class="comparison hidden"></div>
@@ -133,15 +135,15 @@
         <div class="result-grid">
           <article class="result-panel">
             <header>
-              <span>Initial prompt</span>
-              <button type="button" class="copy" data-copy="initialPrompt">Copy</button>
+              <span>Исходный промпт</span>
+              <button type="button" class="copy" data-copy="initialPrompt">Копировать</button>
             </header>
             <pre id="initialPrompt"></pre>
           </article>
           <article class="result-panel accent">
             <header>
-              <span>Optimized prompt</span>
-              <button type="button" class="copy" data-copy="finalPrompt">Copy</button>
+              <span>Оптимизированный промпт</span>
+              <button type="button" class="copy" data-copy="finalPrompt">Копировать</button>
             </header>
             <pre id="finalPrompt"></pre>
           </article>
@@ -149,25 +151,25 @@
 
         <div class="metric-strip">
           <div>
-            <span>Initial</span>
+            <span>Было</span>
             <strong id="initMetric">--</strong>
           </div>
           <div>
-            <span>Final</span>
+            <span>Стало</span>
             <strong id="finalMetric">--</strong>
           </div>
           <div>
-            <span>Delta</span>
+            <span>Прирост</span>
             <strong id="deltaMetric">--</strong>
           </div>
           <div>
-            <span>Elapsed</span>
+            <span>Время</span>
             <strong id="elapsedMetric">--</strong>
           </div>
         </div>
 
         <article class="trace">
-          <h3>Run details</h3>
+          <h3>Детали запуска</h3>
           <pre id="runDetails">{}</pre>
         </article>
       </section>
