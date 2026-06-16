@@ -1,0 +1,129 @@
+================== Population 40 ==================
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First unit:
+
+EvolutionUnit(
+    T='Modify the following instruction creatively, giving some advice on how to solve it:',
+    M=' **Problem:** A farmer has 100 acres of land. He plants corn on 40% of the land, soybeans on 30% of the land, and wheat onthe rest of the land. How many acres of wheat does he plant?\n\n**Solution:** \n\n**Step 1: Find the number of acres of land
+planted with corn and soybeans.** \n\n- 40% of 100 acres = 40 acres of corn\n- 30% of 100 acres = 30 acres of soybeans\n\n**Step
+2: Subtract the number of acres',
+    P=' planted with corn and soybeans from the total number of acres to find the number of acres planted with wheat.** \n\n- 100acres - 40 acres - 30 acres = 30 acres of wheat\n\n**Final Answer:** The farmer plants 30 acres of wheat.',
+    fitness=0.8999999999999999,
+    history=[]
+)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Second unit:
+
+EvolutionUnit(
+    T='Just change this instruction to make it more fun, think WELL outside the box:',
+    M=' To solve the problem, follow the order of operations:\n\n1. Perform any calculations within parentheses.\n2. Multiply anddivide from left to right.\n3. Add and subtract from left to right.\n\nIn this case, the order of operations would be:\n\n1. 789
++ 345 = 1134\n2. 1134 - 234 = 890\n\nTherefore, the answer to the problem is 890.',
+    P=' 3x + 5 = 11\n3x = 11 - 5\n3x = 6\nx = 6/3\nx = 2',
+    fitness=0.7999999999999999,
+    history=[]
+)
+MUTATING: T='Just change this instruction to make it more fun, think WELL outside the box:' M=' To solve the problem, follow the
+order of operations:\n\n1. Perform any calculations within parentheses.\n2. Multiply and divide from left to right.\n3. Add and
+subtract from left to right.\n\nIn this case, the order of operations would be:\n\n1. 789 + 345 = 1134\n2. 1134 - 234 =
+890\n\nTherefore, the answer to the problem is 890.' P=' 3x + 5 = 11\n3x = 11 - 5\n3x = 6\nx = 6/3\nx = 2'
+fitness=0.7999999999999999 history=[] with lineage_based_mutation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First unit:
+
+EvolutionUnit(
+    T='Just change this instruction to make it more fun, think WELL outside the box:',
+    M=' 123 + 456 = 579\n\nThis problem does not involve any physical constraints.',
+    P=' 1. 1/2\n2. 1/2\n3. 2\n4. 2\n5. 2\n6. 2\n7. 2\n8. 2\n9. 2\n10. 2\n11. 2\n12. 2\n13. 2\n14. 2\n15. 2\n16. 2\n17. 2\n18.
+2\n19. 12\n20. 12\n21. 12\n22.',
+    fitness=0.30000000000000004,
+    history=[]
+)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Second unit:
+
+EvolutionUnit(
+    T='Modify the following instruction creatively, giving some advice on how to solve it:',
+    M=' User errors are the most common cause of computer problems. There are several potential risks and drawbacks to each of
+the solutions to this problem. \n\n**Potential risks and drawbacks of user training:**\n\n* **Cost:** User training can be
+expensive, especially if it is provided by a third-party company.\n* **Time:** User training can take a significant amount of
+time, especially if it is comprehensive.\n* **Effectiveness:** User training may not be effective if users do not retain the
+information they are taught.\n* **Resistance to change:** Users may be resistant to changing their habits and may not be willing
+to learn new ways',
+    P='',
+    fitness=0.4,
+    history=[]
+)
+MUTATING: T='Just change this instruction to make it more fun, think WELL outside the box:' M=' 123 + 456 = 579\n\nThis problem
+does not involve any physical constraints.' P=' 1. 1/2\n2. 1/2\n3. 2\n4. 2\n5. 2\n6. 2\n7. 2\n8. 2\n9. 2\n10. 2\n11. 2\n12.
+2\n13. 2\n14. 2\n15. 2\n16. 2\n17. 2\n18. 2\n19. 12\n20. 12\n21. 12\n22.' fitness=0.30000000000000004 history=[] with
+lineage_based_mutation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First unit:
+
+EvolutionUnit(
+    T='Just change this instruction to make it more fun, think WELL outside the box:',
+    M=' The model was unable to answer the question because the user did not provide enough information or the information was
+incorrect.  Please review the question and try again.',
+    P=' Give me the correct examples of his workings out. \n\nAdvice: When multiplying a number by a decimal, you can move the
+decimal point in the multiplier to the right by the same number of places as there are decimal places in the multiplicand. For
+example, 5 x $1.50 can be rewritten as 5 x $1.50 = 5 x 150/100 = $7.50.\n\nWhen adding or subtracting decimals, you need to line
+up the decimal points. For example, $7.50 + $7.50 = $15.0',
+    fitness=0.8999999999999999,
+    history=[]
+)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Second unit:
+
+EvolutionUnit(
+    T='Just change this instruction to make it more fun, think WELL outside the box:',
+    M=' **How to Solve a Math Word Problem**\n\n1. Read the problem carefully and identify the question being asked.\n2. Identifythe relevant information in the problem.\n3. Determine what mathematical operations need to be performed to solve the
+problem.\n4. Perform the operations in the correct order.\n5. Check your answer to make sure it makes sense in the context of theproblem.\n\n**Example**: \n\nProblem: There are 12 apples in a basket. If 3 apples are eaten, how many apples are left in the
+basket? \n\nStep-by-step solution:\n\n1. Read the',
+    P=' 12 - 3 = 9 apples left in the basket.',
+    fitness=0.7,
+    history=[]
+)
+MUTATING: T='Just change this instruction to make it more fun, think WELL outside the box:' M=' **How to Solve a Math Word
+Problem**\n\n1. Read the problem carefully and identify the question being asked.\n2. Identify the relevant information in the
+problem.\n3. Determine what mathematical operations need to be performed to solve the problem.\n4. Perform the operations in the
+correct order.\n5. Check your answer to make sure it makes sense in the context of the problem.\n\n**Example**: \n\nProblem:
+There are 12 apples in a basket. If 3 apples are eaten, how many apples are left in the basket? \n\nStep-by-step solution:\n\n1.
+Read the' P=' 12 - 3 = 9 apples left in the basket.' fitness=0.7 history=[] with zero_order_prompt_gen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+First unit:
+
+EvolutionUnit(
+    T='Modify the following instruction creatively, giving some advice on how to solve it:',
+    M=' There was no math word problem provided. Please provide a math word problem and I will solve it for you.',
+    P='100',
+    fitness=0.4,
+    history=[]
+)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Second unit:
+
+EvolutionUnit(
+    T='Modify the following instruction creatively, giving some advice on how to solve it:',
+    M=' User errors are the most common cause of computer problems. There are several potential risks and drawbacks to each of
+the solutions to this problem. \n\n**Potential risks and drawbacks of user training:**\n\n* **Cost:** User training can be
+expensive, especially if it is provided by a third-party company.\n* **Time:** User training can take a significant amount of
+time, especially if it is comprehensive.\n* **Effectiveness:** User training may not be effective if users do not retain the
+information they are taught.\n* **Resistance to change:** Users may be resistant to changing their habits and may not be willing
+to learn new ways',
+    P=' Linda owns a store. She sells jeans at 11 dollars each and tees at 8 dollars each. If she sold 7 tees and 4 jeans in a
+day, how much money, in dollars, did she have at the end of the day? \n\nThe advice was: \n1.  Multiply the number of tees sold
+by the price of each tee to find the total cost of the tees. \n2. Multiply the number of jeans sold by the price of each jean to
+find the total cost of the jeans. \n3. Add the total cost of the tees and the total cost of the jeans',
+    fitness=0.30000000000000004,
+    history=[]
+)
+MUTATING: T='Modify the following instruction creatively, giving some advice on how to solve it:' M=' User errors are the most
+common cause of computer problems. There are several potential risks and drawbacks to each of the solutions to this problem.
+\n\n**Potential risks and drawbacks of user training:**\n\n* **Cost:** User training can be expensive, especially if it is
+provided by a third-party company.\n* **Time:** User training can take a significant amount of time, especially if it is
+comprehensive.\n* **Effectiveness:** User training may not be effective if users do not retain the information they are
+taught.\n* **Resistance to change:** Users may be resistant to changing their habits and may not be willing to learn new ways'
+P=' Linda owns a store. She sells jeans at 11 dollars each and tees at 8 dollars each. If she sold 7 tees and 4 jeans in a day,
+how much money, in dollars, did she have at the end of the day? \n\nThe advice was: \n1.  Multiply the number of tees sold by theprice of each tee to find the total cost of the tees. \n2. Multiply the number of jeans sold by the price of each jean to find
+the total cost of the jeans. \n3. Add the total cost of the tees and the total cost of the jeans' fitness=0.30000000000000004
+history=[] with working_out_task_promp

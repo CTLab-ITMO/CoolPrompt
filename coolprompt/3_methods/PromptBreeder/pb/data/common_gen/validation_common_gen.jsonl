@@ -1,0 +1,100 @@
+{"input": "['field', 'look', 'stand']", "target": "The player stood in the field looking at the batter."}
+{"input": "['field', 'look', 'stand']", "target": "The coach stands along the field, looking at the goalkeeper."}
+{"input": "['field', 'look', 'stand']", "target": "I stood and looked across the field, peacefully."}
+{"input": "['field', 'look', 'stand']", "target": "Someone stands, looking around the empty field."}
+{"input": "['kid', 'room', 'dance']", "target": "The silly kid loves to dance in her room."}
+{"input": "['kid', 'room', 'dance']", "target": "the dance kid  room is full of kids"}
+{"input": "['kid', 'room', 'dance']", "target": "A kid is dancing in the room."}
+{"input": "['kid', 'room', 'dance']", "target": "A group of kids are dancing around a living room."}
+{"input": "['cat', 'pet', 'couch']", "target": "A pet cat likes to sleep on a couch."}
+{"input": "['cat', 'pet', 'couch']", "target": "My pet cat love to sleep on the couch."}
+{"input": "['cat', 'pet', 'couch']", "target": "The woman pet the cat that was sat on the couch."}
+{"input": "['cat', 'pet', 'couch']", "target": "actor petting long haired gray cat on couch"}
+{"input": "['climb', 'building', 'side']", "target": "The mouse climbed the side of the building."}
+{"input": "['climb', 'building', 'side']", "target": "I climbed the side of the building."}
+{"input": "['climb', 'building', 'side']", "target": "A girl climbs up the side of a building."}
+{"input": "['climb', 'building', 'side']", "target": "ivy climbs the side of a building ."}
+{"input": "['climb', 'wall', 'talk']", "target": "The woman thats talking teaches her students how to climb the wall."}
+{"input": "['climb', 'wall', 'talk']", "target": "The person climbed up the wall to talk to the man."}
+{"input": "['climb', 'wall', 'talk']", "target": "The man talked about how to climb walls."}
+{"input": "['climb', 'wall', 'talk']", "target": "A man is talking in front of a climbing wall."}
+{"input": "['drive', 'snow', 'car']", "target": "The car drove through the snow."}
+{"input": "['drive', 'snow', 'car']", "target": "The woman couldn't drive her car in the snow."}
+{"input": "['drive', 'snow', 'car']", "target": "The car drove threw the snow."}
+{"input": "['drive', 'snow', 'car']", "target": "driving a car in snow"}
+{"input": "['talk', 'wear', 'phone']", "target": "The boy wants to wear earpods as he talks on his phone."}
+{"input": "['talk', 'wear', 'phone']", "target": "I continued to talk on phone while wearing my shoes."}
+{"input": "['talk', 'wear', 'phone']", "target": "A man wearing glasses talking on a phone"}
+{"input": "['hockey', 'rink', 'team']", "target": "The team practiced hockey at the outdoor rink."}
+{"input": "['hockey', 'rink', 'team']", "target": "The team plays hockey on the rink."}
+{"input": "['hockey', 'rink', 'team']", "target": "The hockey team practiced in the ice rink."}
+{"input": "['hockey', 'rink', 'team']", "target": "Two teams are playing hockey in a hockey rink."}
+{"input": "['ocean', 'surfer', 'surf']", "target": "the ocean is where surfers go to surf"}
+{"input": "['ocean', 'surfer', 'surf']", "target": "The boy went to the ocean to surf and after awhile became a full blown surfer."}
+{"input": "['ocean', 'surfer', 'surf']", "target": "A surfer surfing in the ocean."}
+{"input": "['stair', 'jump', 'flight']", "target": "A boy jumps up a flight of stairs taking two at a time."}
+{"input": "['stair', 'jump', 'flight']", "target": "The boys jump down the flight of stairs."}
+{"input": "['stair', 'jump', 'flight']", "target": "A lady had to jump up the stairs so she wouldnt miss her flight."}
+{"input": "['stair', 'jump', 'flight']", "target": "A dog jumps down a flight of stairs."}
+{"input": "['band', 'music', 'instrument']", "target": "The school band played their instruments in unison rendering a sweet music."}
+{"input": "['band', 'music', 'instrument']", "target": "Bands use instruments to make music."}
+{"input": "['band', 'music', 'instrument']", "target": "The band brought their instruments so they could play music."}
+{"input": "['band', 'music', 'instrument']", "target": "A band playing some music with their instruments."}
+{"input": "['sit', 'talk', 'circle']", "target": "The students sit in a circle as the teacher talks."}
+{"input": "['sit', 'talk', 'circle']", "target": "We sat in a circle and talked."}
+{"input": "['sit', 'talk', 'circle']", "target": "We sat in a circle and talked."}
+{"input": "['sit', 'talk', 'circle']", "target": "Four young males sitting in a circle talking."}
+{"input": "['eye', 'move', 'look']", "target": "I quickly moved back, while still looking into the eyes of the stranger."}
+{"input": "['eye', 'move', 'look']", "target": "My eye moves around looking for the bird."}
+{"input": "['eye', 'move', 'look']", "target": "The eyes move to look around."}
+{"input": "['eye', 'move', 'look']", "target": "A woman looks at the camera and moves her eyes individually."}
+{"input": "['look', 'watch', 'window']", "target": "He looked at his watch and then out of the window."}
+{"input": "['look', 'watch', 'window']", "target": "The young girl looks out the window to watch the snow fall."}
+{"input": "['look', 'watch', 'window']", "target": "The cat was looking out the window watching the people."}
+{"input": "['look', 'watch', 'window']", "target": "Two people looking out the window watching radars."}
+{"input": "['athlete', 'prepare', 'run']", "target": "The athlete performs stretches as they prepare to run."}
+{"input": "['athlete', 'prepare', 'run']", "target": "The athlete prepares to run the race."}
+{"input": "['athlete', 'prepare', 'run']", "target": "The athlete is preparing to run the 1000 metre track race."}
+{"input": "['athlete', 'prepare', 'run']", "target": "An athlete prepare to run."}
+{"input": "['walk', 'wear', 'gear']", "target": "The hiker bought new gear to wear for the walk to the waterfall."}
+{"input": "['walk', 'wear', 'gear']", "target": "The hiker has lots of gear to wear while walking."}
+{"input": "['walk', 'wear', 'gear']", "target": "A man wears a backpack with hiking gear as he walks to the trail."}
+{"input": "['walk', 'wear', 'gear']", "target": "A person wearing gear walking in the snow."}
+{"input": "['stage', 'give', 'speech']", "target": "The man on stage is giving a speech."}
+{"input": "['stage', 'give', 'speech']", "target": "The mayor is giving a speech on the stage."}
+{"input": "['stage', 'give', 'speech']", "target": "The man gave a speech on the stage."}
+{"input": "['stage', 'give', 'speech']", "target": "A man on a stage giving a speech."}
+{"input": "['soap', 'rub', 'hand']", "target": "A man rubs his hands with soap after using the bathrooom."}
+{"input": "['soap', 'rub', 'hand']", "target": "I will now rub the soap on my dirty hand."}
+{"input": "['soap', 'rub', 'hand']", "target": "Rub the soap in your hand."}
+{"input": "['soap', 'rub', 'hand']", "target": "The person uses soap to rub vigorously the hands."}
+{"input": "['hand', 'front', 'wave']", "target": "A girl waved her hand in front of the man."}
+{"input": "['hand', 'front', 'wave']", "target": "front hand always used to bet the wave"}
+{"input": "['hand', 'front', 'wave']", "target": "The men in front waved hands."}
+{"input": "['hand', 'front', 'wave']", "target": "kids waving hands in front of a cake ."}
+{"input": "['mow', 'yard', 'lawn']", "target": "David had to mow the lawn by 12:00pm, and there are a yard to finish."}
+{"input": "['mow', 'yard', 'lawn']", "target": "The man is mowing the lawn in a yard."}
+{"input": "['create', 'pottery', 'wheel']", "target": "Create pottery with a wheel and clay."}
+{"input": "['create', 'pottery', 'wheel']", "target": "I create pottery on a wheel."}
+{"input": "['create', 'pottery', 'wheel']", "target": "A pottery wheel can be used to create bowls."}
+{"input": "['create', 'pottery', 'wheel']", "target": "A man is using a wheel to create pottery."}
+{"input": "['hold', 'sofa', 'sit']", "target": "The sofa will sit in the living room and will hold visitors who visit."}
+{"input": "['hold', 'sofa', 'sit']", "target": "Sit on the sofa and hold a pose."}
+{"input": "['hold', 'sofa', 'sit']", "target": "A man holds a remote control while sitting on a sofa."}
+{"input": "['hold', 'sofa', 'sit']", "target": "A man sitting on a sofa holding a baby."}
+{"input": "['hold', 'sit', 'newspaper']", "target": "the man sat down holding the newspaper."}
+{"input": "['hold', 'sit', 'newspaper']", "target": "The man was holding a newspaper as he sat in a chair."}
+{"input": "['hold', 'sit', 'newspaper']", "target": "The man held a newspaper while looking for a place to sit."}
+{"input": "['hold', 'sit', 'newspaper']", "target": "A man sitting on a bus is holding a newspaper."}
+{"input": "['sit', 'look', 'hair']", "target": "The girl sits as she looks in the mirror while styling her hair."}
+{"input": "['sit', 'look', 'hair']", "target": "When you sit in front of the mirror you can look at your hair."}
+{"input": "['sit', 'look', 'hair']", "target": "hair look sit on the top"}
+{"input": "['sit', 'look', 'hair']", "target": "A girl with hair sits at a table looking around."}
+{"input": "['mountain', 'climb', 'equipment']", "target": "use the equipment to climb the mountain"}
+{"input": "['mountain', 'climb', 'equipment']", "target": "The man uses climbing equipment to scale the mountain."}
+{"input": "['mountain', 'climb', 'equipment']", "target": "Got to have the right equipment to climb the mountain."}
+{"input": "['mountain', 'climb', 'equipment']", "target": "A man without equipment is climbing a mountain."}
+{"input": "['space', 'stare', 'sit']", "target": "The kid wanted to sit in the empty space and stare at the wall."}
+{"input": "['space', 'stare', 'sit']", "target": "I sit on the ground and stare off into space."}
+{"input": "['space', 'stare', 'sit']", "target": "The boy went to sit by the window at night to stare outside into space."}
+{"input": "['space', 'stare', 'sit']", "target": "Someone sits staring miserably into space."}

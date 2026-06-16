@@ -1,0 +1,12 @@
+manual	Before we dive into the answer,	0.916289039850235
+manual	The answer is after the proof.	0.9142888772487641
+manual	First,	0.9141513919830322
+manual	Let’s solve this problem by splitting it into steps.	0.9136635982990264
+manual	Let's unravel this mathematical challenge gradually.	0.9121993815898896
+manual	We'll methodically work through this problem together.	0.911417498588562
+manual	Let’s think like a detective step by step.	0.9101645421981811
+manual	Let's systematically dissect this math task.	0.9100299382209778
+manual	We'll tackle this math task one piece at a time.	0.9086201894283295
+manual	Let’s be realistic and think step by step.	0.9076609075069427
+best score: 0.916289039850235
+average score: 0.9118485364913941

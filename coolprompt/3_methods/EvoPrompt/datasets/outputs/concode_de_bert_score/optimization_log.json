@@ -1,0 +1,1198 @@
+{
+  "config": {
+    "dataset": "concode",
+    "task": null,
+    "seed": 5,
+    "batch_size": 16,
+    "max_new_tokens": 128,
+    "output": "outputs/concode_de_bert_score",
+    "sample_num": 50,
+    "test_sample_num": 100,
+    "metric": "bert_score",
+    "budget": 5,
+    "popsize": 10,
+    "evo_mode": "de",
+    "donor_random": false,
+    "sel_mode": "wheel",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "openai_api_key": null,
+    "openai_base_url": null,
+    "llm_type": "turbo",
+    "initial": "cot",
+    "initial_mode": "topk",
+    "ratio": 0,
+    "para_mode": null,
+    "template": "v1",
+    "client": false,
+    "cot_cache_path": "outputs/concode_de_bert_score/cot_cache.json",
+    "desc_cache_path": "outputs/concode_de_bert_score/desc_cache.json",
+    "mode": null,
+    "setting": "default",
+    "ga_mode": "topk",
+    "ckpt_pop": null,
+    "demon": 0,
+    "content": "",
+    "results_json": "outputs/concode_de_bert_score/optimization_log.json"
+  },
+  "dataset": "concode",
+  "metric": "bert_score",
+  "initial": [
+    {
+      "prompt": "The answer is after the proof.",
+      "mark": "manual",
+      "score": 0.8214714133739471
+    },
+    {
+      "prompt": "Let’s think about this logically.",
+      "mark": "manual",
+      "score": 0.8194357419013977
+    },
+    {
+      "prompt": "We'll thoughtfully progress through this task step by step.",
+      "mark": "manual",
+      "score": 0.8193479883670807
+    },
+    {
+      "prompt": "Let's think step by step.",
+      "mark": "manual",
+      "score": 0.8190874838829041
+    },
+    {
+      "prompt": "We'll methodically work through this problem together.",
+      "mark": "manual",
+      "score": 0.8185120260715485
+    },
+    {
+      "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+      "mark": "manual",
+      "score": 0.8181327188014984
+    },
+    {
+      "prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+      "mark": "manual",
+      "score": 0.8165723180770874
+    },
+    {
+      "prompt": "We'll solve this by analyzing each part of the problem.",
+      "mark": "manual",
+      "score": 0.8164312362670898
+    },
+    {
+      "prompt": "Let’s be realistic and think step by step.",
+      "mark": "manual",
+      "score": 0.8157082116603851
+    },
+    {
+      "prompt": "Before we dive into the answer,",
+      "mark": "manual",
+      "score": 0.8151734006404877
+    }
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "best_score": 0.8214714133739471,
+      "avg_score": 0.8183129030466081,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8214714133739471,
+          "parents": [
+            "Let's think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Convert the conclusion that follows the proof into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8096929812431335,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8214714133739471,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8194357419013977,
+          "parents": [
+            "Let's think step by step.",
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let’s think about this logically: Consider the steps one by one. We will systematically tackle the problem as a team. The answer is after the proof.",
+          "child_score": 0.8167037677764892,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8194357419013977,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8193479883670807,
+          "parents": [
+            "The answer is after the proof.",
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Convert the plan to carefully solve this problem as a team into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8154779231548309,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step.",
+          "selected_score": 0.8193479883670807,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8190874838829041,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let's think step by step: First, before presenting the solution, we'll tackle this mathematical reasoning task step by step. The answer is after the proof.",
+          "child_score": 0.8142585170269012,
+          "selected_prompt": "Let's think step by step.",
+          "selected_score": 0.8190874838829041,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8185120260715485,
+          "parents": [
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let’s be realistic and think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "The answer is after the proof. Let’s work this out in a careful, step-by-step manner to ensure accuracy.",
+          "child_score": 0.8141263842582702,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8185120260715485,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8181327188014984,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s be realistic and think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time: We'll tackle this by examining each component of the problem, and let's stay practical and work through it one step at a time; the answer is after the proof.",
+          "child_score": 0.8135883033275604,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8181327188014984,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.8165723180770874,
+          "parents": [
+            "The answer is after the proof.",
+            "Let’s be realistic and think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "child_score": 0.8198288094997406,
+          "selected_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "selected_score": 0.8198288094997406,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8164312362670898,
+          "parents": [
+            "Let's think step by step.",
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem. We'll consider the steps one by one as we shall methodically tackle this problem together.",
+          "child_score": 0.8120178616046906,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8164312362670898,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8157082116603851,
+          "parents": [
+            "Let’s think about this logically.",
+            "Before we dive into the answer,",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Before we get to the solution, let’s consider this rationally, and let’s be realistic and think step by step.",
+          "child_score": 0.8153598976135253,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8157082116603851,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8151734006404877,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll carefully analyze this problem together. The answer is after the proof.",
+          "child_score": 0.8127129065990448,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8151734006404877,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8214714133739471,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8194357419013977,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step.",
+          "score": 0.8193479883670807,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's think step by step.",
+          "score": 0.8190874838829041,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8185120260715485,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8181327188014984,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "score": 0.8198288094997406,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8164312362670898,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8157082116603851,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8151734006404877,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "The answer is after the proof.",
+        "score": 0.8214714133739471
+      }
+    },
+    {
+      "step": 1,
+      "best_score": 0.8214714133739471,
+      "avg_score": 0.818347673535347,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8214714133739471,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "We'll solve this by analyzing each part of the problem.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "child_score": 0.810652152299881,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8214714133739471,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8194357419013977,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let’s think about this logically: Before we explore the solution, we'll carefully work through this problem step by step. The answer is after the proof.",
+          "child_score": 0.8138557124137878,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8194357419013977,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8193479883670807,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let's think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll thoughtfully progress through this task step by step, ensuring that the conclusion is after the demonstration.",
+          "child_score": 0.81513503074646,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step.",
+          "selected_score": 0.8193479883670807,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8190874838829041,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s be realistic and think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let's think step by step: We'll tackle this by breaking it down one step at a time. The answer is after the proof.",
+          "child_score": 0.8151329052448273,
+          "selected_prompt": "Let's think step by step.",
+          "selected_score": 0.8190874838829041,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8185120260715485,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "We'll thoughtfully progress through this task step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll methodically work through this problem together. The outcome comes after the demonstration; we will carefully progress through this task step by step.",
+          "child_score": 0.8183067142963409,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8185120260715485,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8181327188014984,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Before we dive into the answer,",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time by breaking down the problem into parts, and before we start solving, present the answer after the proof in simpler terms so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8120041692256927,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8181327188014984,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.8198288094997406,
+          "parents": [
+            "Let's think step by step.",
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer. Let's walk through the steps one by one. We'll carefully work through the problem together. The answer is after the proof.",
+          "child_score": 0.8156006801128387,
+          "selected_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "selected_score": 0.8198288094997406,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8164312362670898,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "We'll thoughtfully progress through this task step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem: The outcome follows the demonstration in a careful, step-by-step manner to ensure we reach the correct result.",
+          "child_score": 0.8127243256568909,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8164312362670898,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8157082116603851,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll solve this by analyzing each part of the problem.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Transform the provided text into easier language after the demonstration, making it accessible for non-native English speakers to understand.",
+          "child_score": 0.8093738520145416,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8157082116603851,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8151734006404877,
+          "parents": [
+            "The answer is after the proof.",
+            "We'll solve this by analyzing each part of the problem.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "child_score": 0.8155211055278778,
+          "selected_prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "selected_score": 0.8155211055278778,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8214714133739471,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8194357419013977,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step.",
+          "score": 0.8193479883670807,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's think step by step.",
+          "score": 0.8190874838829041,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8185120260715485,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8181327188014984,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "score": 0.8198288094997406,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8164312362670898,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8157082116603851,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "score": 0.8155211055278778,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "The answer is after the proof.",
+        "score": 0.8214714133739471
+      }
+    },
+    {
+      "step": 2,
+      "best_score": 0.8214714133739471,
+      "avg_score": 0.8184513647556304,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8214714133739471,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Before we dive into the answer, the solution will appear after the demonstration.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Convert the sentence \"We'll tackle this mathematical reasoning challenge step by step, before we reveal the solution after the demonstration.\" into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.7816816890239715,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8214714133739471,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8194357419013977,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let's think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let’s think about this logically. The outcome comes after the demonstration. Please walk through the steps to ensure the correct result.",
+          "child_score": 0.8174511575698853,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8194357419013977,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8193479883670807,
+          "parents": [
+            "Before we dive into the answer, the solution will appear after the demonstration.",
+            "The answer is after the proof.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll thoughtfully progress through this task step by step: Prior to giving the answer is after the demonstration.",
+          "child_score": 0.8178848505020142,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step.",
+          "selected_score": 0.8193479883670807,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8190874838829041,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll tackle this by dissecting each component of the issue, and we'll approach this math reasoning task step by step.",
+          "child_score": 0.817160313129425,
+          "selected_prompt": "Let's think step by step.",
+          "selected_score": 0.8190874838829041,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8185120260715485,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll methodically work through this problem together: The conclusion is after the demonstration. Rewrite it in simpler terms to ensure it is understandable for non-native English speakers.",
+          "child_score": 0.8118259012699127,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8185120260715485,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8181327188014984,
+          "parents": [
+            "Before we dive into the answer, the solution will appear after the demonstration.",
+            "The answer is after the proof.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend: Prior to examining, the conclusion will appear after the proof.",
+          "child_score": 0.814523208141327,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8181327188014984,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.8198288094997406,
+          "parents": [
+            "We'll thoughtfully progress through this task step by step.",
+            "Before we dive into the answer, the solution will appear after the demonstration.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll methodically progress through this task step by step; before presenting the answer, the demonstration will occur. The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "child_score": 0.8150202119350434,
+          "selected_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "selected_score": 0.8198288094997406,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8164312362670898,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let's think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "child_score": 0.8174681484699249,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "selected_score": 0.8174681484699249,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8157082116603851,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll solve this by analyzing each part of the problem.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: We should analyze this task by breaking it into parts.",
+          "child_score": 0.8133922100067139,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8157082116603851,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "old_score": 0.8155211055278778,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "We'll solve this by analyzing each part of the problem.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Before we dive into the answer, the solution will appear after the demonstration. Let's stay practical and analyze the steps.",
+          "child_score": 0.8135093939304352,
+          "selected_prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "selected_score": 0.8155211055278778,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8214714133739471,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8194357419013977,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step.",
+          "score": 0.8193479883670807,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's think step by step.",
+          "score": 0.8190874838829041,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8185120260715485,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8181327188014984,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "score": 0.8198288094997406,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "score": 0.8174681484699249,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8157082116603851,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "score": 0.8155211055278778,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "The answer is after the proof.",
+        "score": 0.8214714133739471
+      }
+    },
+    {
+      "step": 3,
+      "best_score": 0.8219425654411316,
+      "avg_score": 0.818909406900406,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8214714133739471,
+          "parents": [
+            "Let's think step by step.",
+            "Let’s think about this logically.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We should consider one step at a time. The answer is after the proof.",
+          "child_score": 0.8108378624916077,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8214714133739471,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8194357419013977,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We’ll systematically examine this problem together after the proof to think about this logically.",
+          "child_score": 0.8103777337074279,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8194357419013977,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8193479883670807,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll think through this task in a practical, step-by-step way.",
+          "child_score": 0.8097656548023224,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step.",
+          "selected_score": 0.8193479883670807,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8190874838829041,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let’s be realistic and think step by step.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "Let's think step by step: The outcome shows up after the demonstration. Let’s figure this out step by step to ensure the correct answer.",
+          "child_score": 0.812430989742279,
+          "selected_prompt": "Let's think step by step.",
+          "selected_score": 0.8190874838829041,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8185120260715485,
+          "parents": [
+            "The answer is after the proof.",
+            "Before we dive into the answer, the solution will appear after the demonstration.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll methodically work through this problem together. The result is after the theorem.",
+          "child_score": 0.8118332707881928,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8185120260715485,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8181327188014984,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Before we dive into the answer, the solution will appear after the demonstration.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+          "child_score": 0.8194378983974456,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+          "selected_score": 0.8194378983974456,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.8198288094997406,
+          "parents": [
+            "The answer is after the proof.",
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof."
+          ],
+          "child_prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "child_score": 0.8219425654411316,
+          "selected_prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "selected_score": 0.8219425654411316,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "old_score": 0.8174681484699249,
+          "parents": [
+            "The result is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let’s be realistic and think step by step.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration. The outcome comes after the demonstration. Let’s work this out in a step-by-step manner to ensure accuracy.",
+          "child_score": 0.8139987170696259,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "selected_score": 0.8174681484699249,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8157082116603851,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll methodically work through this problem together.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step while tackling this math problem jointly, to ensure we have the right answer.",
+          "child_score": 0.8149062597751617,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8157082116603851,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Before we dive into the answer, the solution will appear after the demonstration.",
+          "old_score": 0.8155211055278778,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let's think step by step.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+          "child_score": 0.8166825914382935,
+          "selected_prompt": "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+          "selected_score": 0.8166825914382935,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8214714133739471,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8194357419013977,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step.",
+          "score": 0.8193479883670807,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's think step by step.",
+          "score": 0.8190874838829041,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8185120260715485,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+          "score": 0.8194378983974456,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "score": 0.8219425654411316,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "score": 0.8174681484699249,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8157082116603851,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+          "score": 0.8166825914382935,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+        "score": 0.8219425654411316
+      }
+    },
+    {
+      "step": 4,
+      "best_score": 0.8219425654411316,
+      "avg_score": 0.8189296400547029,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8214714133739471,
+          "parents": [
+            "Let’s think about this logically.",
+            "Let's think step by step.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "The answer is after the proof: The solution is after the demonstration. Let's consider this systematically. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "child_score": 0.8197286009788514,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8214714133739471,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8194357419013977,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Let’s think about this logically: The solution is after the demonstration. Let's be practical and think through the steps to be sure we have the right answer.",
+          "child_score": 0.8164129209518433,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8194357419013977,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8193479883670807,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "We'll thoughtfully progress through this task step by step, and the answer comes after the demonstration, with the explanation made clear for non-native English speakers to understand.",
+          "child_score": 0.8171669685840607,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step.",
+          "selected_score": 0.8193479883670807,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8190874838829041,
+          "parents": [
+            "The answer is after the proof.",
+            "Let’s think about this logically.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Let's think step by step. The solution follows the demonstration. We should consider this in a rational way to be sure we have the right answer.",
+          "child_score": 0.8192898154258728,
+          "selected_prompt": "Let's think step by step. The solution follows the demonstration. We should consider this in a rational way to be sure we have the right answer.",
+          "selected_score": 0.8192898154258728,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8185120260715485,
+          "parents": [
+            "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+            "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "First, we'll outline how we plan to approach the solution. The answer will be revealed after the demonstration. Let's go through each step to ensure we obtain the correct answer. We'll methodically work through this problem together to help non-native English speakers understand the process.",
+          "child_score": 0.8180486607551575,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8185120260715485,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+          "old_score": 0.8194378983974456,
+          "parents": [
+            "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+            "We'll thoughtfully progress through this task step by step.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time. The conclusion will come after the example. We will examine this step by step to ensure accuracy.",
+          "child_score": 0.8180701982975006,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+          "selected_score": 0.8194378983974456,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.8219425654411316,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Break this down step by step to ensure you have the right answer, and the solution will be shown after the demonstration.",
+          "child_score": 0.8139121782779694,
+          "selected_prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "selected_score": 0.8219425654411316,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "old_score": 0.8174681484699249,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's think step by step.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration. Let’s break this down step by step to ensure we have the right answer.",
+          "child_score": 0.8156606674194335,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "selected_score": 0.8174681484699249,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8157082116603851,
+          "parents": [
+            "Let's think step by step.",
+            "The answer is after the proof.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step. The answer comes after the proof. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "child_score": 0.8141925764083863,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8157082116603851,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+          "old_score": 0.8166825914382935,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically.",
+            "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll methodically tackle this problem as a team. The solution will appear after the demonstration. Let’s reason this out step by step to ensure we have the right answer.",
+          "child_score": 0.8155284786224365,
+          "selected_prompt": "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+          "selected_score": 0.8166825914382935,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8214714133739471,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8194357419013977,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step.",
+          "score": 0.8193479883670807,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's think step by step. The solution follows the demonstration. We should consider this in a rational way to be sure we have the right answer.",
+          "score": 0.8192898154258728,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8185120260715485,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+          "score": 0.8194378983974456,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+          "score": 0.8219425654411316,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem: The solution comes after the demonstration.",
+          "score": 0.8174681484699249,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8157082116603851,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer, the solution will appear after the demonstration. The solution is after the demonstration. Let's break this down step by step to be sure we have the right answer.",
+          "score": 0.8166825914382935,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+        "score": 0.8219425654411316
+      }
+    }
+  ],
+  "final": {
+    "dataset": "concode",
+    "metric": "bert_score",
+    "best_prompt": "The answer is after the proof.",
+    "dev_score": 0.8214714133739471,
+    "test_score": 0.8143743342161178,
+    "top_candidates": [
+      {
+        "prompt": "The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.",
+        "mark": "evoluted",
+        "dev_score": 0.8219425654411316,
+        "test_score": 0.8089667487144471
+      },
+      {
+        "prompt": "The answer is after the proof.",
+        "mark": "manual",
+        "dev_score": 0.8214714133739471,
+        "test_score": 0.8143743342161178
+      },
+      {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.",
+        "mark": "evoluted",
+        "dev_score": 0.8194378983974456,
+        "test_score": 0.8055644762516022
+      },
+      {
+        "prompt": "Let’s think about this logically.",
+        "mark": "manual",
+        "dev_score": 0.8194357419013977,
+        "test_score": 0.8071907329559326
+      },
+      {
+        "prompt": "We'll thoughtfully progress through this task step by step.",
+        "mark": "manual",
+        "dev_score": 0.8193479883670807,
+        "test_score": 0.8136813300848007
+      }
+    ]
+  }
+}

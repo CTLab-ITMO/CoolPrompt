@@ -1,0 +1,5 @@
+evoluted	The solution is after the demonstration. Let’s work this out in a step by step way to be sure we have the right answer.	0.8219425654411316	0.8089667487144471
+manual	The answer is after the proof.	0.8214714133739471	0.8143743342161178
+evoluted	We'll take this mathematical reasoning challenge one step at a time. The solution will appear after the demonstration.	0.8194378983974456	0.8055644762516022
+manual	Let’s think about this logically.	0.8194357419013977	0.8071907329559326
+manual	We'll thoughtfully progress through this task step by step.	0.8193479883670807	0.8136813300848007

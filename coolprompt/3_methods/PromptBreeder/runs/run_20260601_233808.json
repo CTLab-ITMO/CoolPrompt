@@ -1,0 +1,650 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-06-01T23:38:08.315199+00:00",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "dataset": "xsum",
+    "metric": "bert_score",
+    "problem_description": "Summarize the following news article in a single concise sentence that captures its main point.",
+    "num_mutation_prompts": 2,
+    "num_thinking_styles": 5,
+    "num_evals": 50,
+    "num_generations": 5,
+    "population_size": 10
+  },
+  "initial_population": [
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I devise an experiment to help solve that problem?",
+      "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+      "fitness": 0.791562237739563,
+      "history": [],
+      "unit_index": 0
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+      "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+      "fitness": 0.7904116094112398,
+      "history": [],
+      "unit_index": 1
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I measure progress on this problem?",
+      "P": "INSTRUCTION MUTANT = You are given a news article. Your task is to distill it into a single, standalone sentence that captures its main point. To track your progress as you work, follow this approach: (a) identify the article’s central claim and the 2–3 core facts, (b) draft three one-sentence summaries, (c) choose the most precise version that would make sense without reading the article, (d) ensure the sentence is neutral, concise, and free of opinion or fluff, (e) deliver exactly one sentence plus a brief justification of why it represents the main point and a self-assessed progress score (e.g., \"Progress: 2/3\").",
+      "fitness": 0.7565790331363677,
+      "history": [],
+      "unit_index": 2
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How can I simplify the problem so that it is easier to solve?",
+      "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+      "fitness": 0.7887339878082277,
+      "history": [],
+      "unit_index": 3
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "INSTRUCTION MUTANT = \nTwo-step task: first, surface and list the hidden assumptions behind the prompt \"Summarize the following news article in a single concise sentence that captures its main point.\" Explicitly state premises like there being one central thesis, that a main point can be captured in one sentence, and that the article’s essence is stable across readers. second, execute the task by writing a single, precise sentence that communicates the article’s main point. Solving tips: read for the article’s thesis and strongest claim; separate facts from interpretation; distill to the central idea without adding new information; use neutral, precise language; keep to one sentence; and if the article has multiple themes, indicate the overarching point and, if helpful, note any major caveats or context.",
+      "fitness": 0.6987159276008607,
+      "history": [],
+      "unit_index": 4
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "How could I devise an experiment to help solve that problem?",
+      "P": "Here are playful, out-of-the-box versions you can drop in after \"INSTRUCTION MUTANT =\":\n\n- Distill the article into one sentence that could hang on a movie poster—epic vibe, crystal main point, immediate wow.\n- Write a one-sentence summary that sounds like a chorus in a catchy song, but preserves the article’s core point.\n- Create a one-sentence teaser that would work as a bold billboard slogan, capturing the main point in a flash.\n- Summarize in one sentence as if you’re presenting a riddle—the answer is the article’s main point—one crisp line.\n- Condense to one sentence that ends with a single perfect emoji that nails the takeaway.\n- Deliver a one-sentence summary that could pass for a hot take on a talk show, zippy but accurate.\n- Produce a one-sentence caption that would fit on a meme, delivering the main point with a punchline.\n- Frame the main point as a one-sentence future-pable—a micro prophecy about the article’s impact.\n\nIf you want, I can tailor these to a specific tone (formal, humorous, dramatic, minimalist, etc.).",
+      "fitness": 0.6932330930233006,
+      "history": [],
+      "unit_index": 5
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+      "P": "INSTRUCTION MUTANT = Do a rapid, playful problem-solving blitz: brainstorm at least six wildly different ways to distill the article into its core point, then apply each method in sequence to produce a single, crisp sentence that captures the main point; finally declare which method produced the tightest summary and why.",
+      "fitness": 0.6751073789596559,
+      "history": [],
+      "unit_index": 6
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "How could I measure progress on this problem?",
+      "P": "INSTRUCTION MUTANT = Distill the news article into a single, razor-sharp sentence that captures its main point, then transform that sentence into a wildly playful voice (movie-trailer hype, pirate shanty, sci‑fi briefing, or fortune-cookie zinger) while preserving the facts and without adding new information.",
+      "fitness": 0.7385661399364472,
+      "history": [],
+      "unit_index": 7
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "How can I simplify the problem so that it is easier to solve?",
+      "P": "INSTRUCTION MUTANT = Channel your inner headline bard and distill the article into a single, punchy sentence that nails the main point—fun, fast, and crystal-clear.",
+      "fitness": 0.783463547229767,
+      "history": [],
+      "unit_index": 8
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "Key assumptions underlying this request:\n- The user wants a fun, highly creative rewrite of the instruction while preserving the core task (one-sentence summary of a news article).\n- The output should be clearly labeled as an INSTRUCTION MUTANT.\n- The mutated instruction should still require summarizing the article in a single concise sentence, but with playful constraints or twists to make it feel novel.\n- You may provide multiple alternative mutants to choose from, not a single rigid rewrite.\n\nHere are some WELL-outside-the-box INSTRUCTION MUTANT options:\n\n- INSTRUCTION MUTANT = Summarize the following news article in one punchy sentence that reads like a movie trailer logline: grab the main point, spark curiosity, and hint at stakes, all in under 20 words.\n\n- INSTRUCTION MUTANT = Turn the article’s core message into one sentence that also acts as a riddle; the sentence should reveal the main point only when read aloud with a wink.\n\n- INSTRUCTION MUTANT = Deliver the article’s essence as a fortune-cookie one-liner: short, memorable, and pointed at the main point, no more than 15 words.\n\n- INSTRUCTION MUTANT = Write one sentence that could headline a bold newspaper splash, then add a subtle twist that exposes the article’s central claim—everything in one line.\n\n- INSTRUCTION MUTANT = Channel a time-traveling journalist’s voice in one sentence: report the main point clearly, but with a playful, future-flavored flourish.\n\n- INSTRUCTION MUTANT = Provide a single-sentence micro-story whose plot resolves around the article’s main point, ensuring the punchline is the sentence itself.\n\n- INSTRUCTION MUTANT = Summarize in exactly one sentence, using a vivid visual metaphor to convey the main point; keep it concise and impactful.\n\n- INSTRUCTION MUTANT = Tell the article’s core message in one sentence that would fit as a tweet from a quirky newsroom editor—sharp, witty, and to the point.\n\nIf you’d like, I can tailor these to a specific article or tone (serious, whimsical, dystopian, techy, etc.).",
+      "fitness": 0.6406121659278868,
+      "history": [],
+      "unit_index": 9
+    }
+  ],
+  "generations": [
+    {
+      "generation": 1,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+          "fitness": 0.788968336582184,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+          "fitness": 0.7831340897083284,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "I can write the one-sentence summary, but I need the article text (paste it here or share a link). In the meantime, here’s a practical way to break the task into smaller parts:\n\nHow to break the problem into manageable steps\n- Step 1: Clarify the goal. You want one concise sentence that captures the article’s main point.\n- Step 2: Skim for the gist. Read the headline and lede to identify the core claim.\n- Step 3: Identify the essentials. Note: who, what, when, where, why, and how; and the main outcome or takeaway.\n- Step 4: Distinguish fact from opinion. If it’s an opinion piece, identify the thesis; if it’s news, focus on the reported event and its significance.\n- Step 5: Isolate the main point. Ask: What is the single idea the article is trying to convey?\n- Step 6: Draft candidates. Write 2–4 short sentences that could serve as the summary.\n- Step 7: Choose and refine. Pick the strongest sentence, then tighten for brevity and clarity; remove filler words and avoid hype.\n- Step 8: Verify accuracy. Ensure the summary reflects the article’s claims without misrepresentation.\n- Step 9: Optional polishing. If helpful, prepare a shorter version (e.g., under 20 words) and a slightly longer variant for context.\n\nOne-sentence summary template (you can adapt)\n- “In [location], [actor] [action], resulting in [outcome], as [evidence or significance].”\n- Or: “The article reports that [topic] [core claim], highlighting [implication].”\n\nExample (for illustration, not the actual article)\n- Article gist: A city council approved a new green-energy plan to cut emissions by 40% by 2030.\n- One-sentence summary: “A city council approved a green-energy plan aimed at cutting emissions by 40% by 2030.”\n\nIf you share the article text, I’ll produce a precise single-sentence summary right away.",
+          "P": "INSTRUCTION MUTANT = You are given a news article. Your task is to distill it into a single, standalone sentence that captures its main point. To track your progress as you work, follow this approach: (a) identify the article’s central claim and the 2–3 core facts, (b) draft three one-sentence summaries, (c) choose the most precise version that would make sense without reading the article, (d) ensure the sentence is neutral, concise, and free of opinion or fluff, (e) deliver exactly one sentence plus a brief justification of why it represents the main point and a self-assessed progress score (e.g., \"Progress: 2/3\").",
+          "fitness": 0.7591451418399813,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+          "fitness": 0.7880247390270232,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Please share the news article text (or a link or its key points). I will then produce a single, neutral sentence (12–20 words) capturing the central claim, without revealing reasoning.",
+          "fitness": 0.7789803850650786,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "Here are playful, out-of-the-box versions you can drop in after \"INSTRUCTION MUTANT =\":\n\n- Distill the article into one sentence that could hang on a movie poster—epic vibe, crystal main point, immediate wow.\n- Write a one-sentence summary that sounds like a chorus in a catchy song, but preserves the article’s core point.\n- Create a one-sentence teaser that would work as a bold billboard slogan, capturing the main point in a flash.\n- Summarize in one sentence as if you’re presenting a riddle—the answer is the article’s main point—one crisp line.\n- Condense to one sentence that ends with a single perfect emoji that nails the takeaway.\n- Deliver a one-sentence summary that could pass for a hot take on a talk show, zippy but accurate.\n- Produce a one-sentence caption that would fit on a meme, delivering the main point with a punchline.\n- Frame the main point as a one-sentence future-pable—a micro prophecy about the article’s impact.\n\nIf you want, I can tailor these to a specific tone (formal, humorous, dramatic, minimalist, etc.).",
+          "fitness": 0.6949938285350798,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I don’t see the article text yet. Please paste the article content, share a link, or upload the image, and I’ll produce a single concise sentence capturing the main point, while explicitly applying reflective thinking to check biases and ensure a neutral, accurate summary.",
+          "P": "INSTRUCTION MUTANT = Do a rapid, playful problem-solving blitz: brainstorm at least six wildly different ways to distill the article into its core point, then apply each method in sequence to produce a single, crisp sentence that captures the main point; finally declare which method produced the tightest summary and why.",
+          "fitness": 0.6750584220886231,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary plus improved, actionable versions you can use.\n\nSummary\n- Turn “how could I measure progress on this problem?” into a plan that defines clear success criteria, concrete milestones, measurable metrics, data sources, and a regular review process.\n\nImproved instruction options\n\n1) Short, actionable version\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify how you’ll collect data and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version\n- Clarify the problem and what “done” looks like (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading and/or trailing indicators) and set targets (quantitative when possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you will collect and record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to a specific problem you have and suggest concrete metrics and milestones. Example domains I can adapt to: learning a topic, a coding project, research work, or product design.",
+          "P": "Nice work. These are solid, actionable formats. Here’s a ready-to-use package: a quick-start cheat sheet, a detailed step-by-step example, and a fill-in-the-blank template you can drop into projects. If you want, tell me your specific problem and I’ll tailor one of these straight away.\n\n1) Short, actionable version (ready to hand to a team)\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify data sources and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version (use for bigger efforts)\n- Clarify the problem and what “done” means (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading/trailing) and set targets (quantitative if possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you’ll collect/record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nExample: tailorable to a coding project (build a small REST API in Python)\n1) Short version applied\n- Success: A fully functional CRUD REST API for tasks with basic tests and docs.\n- Milestones: (a) project scaffold, (b) endpoints for create/read/update/delete, (c) unit tests, (d) basic docs and runbook, (e) deployment.\n- Metrics and targets: API coverage 100% endpoints; test coverage ≥ 80%; deployable in 4 weeks.\n- Data sources: Git commits, unit test results, code review notes, deployment logs.\n- Review cadence: weekly check-in; daily commits/CI status.\n- If lagging: re-prioritize endpoints, add 1–2 days of focused work, or scope down non-essential features.\n\n2) Detailed step-by-step version filled out\n- Problem and success criteria:\n  - Problem: Create a small CRUD API to manage tasks.\n  - Done means: API accepts create/read/update/delete operations, passes unit tests, has lightweight docs, and is deployable.\n- Decompose into stages:\n  - Stage 1: Project scaffold and dependencies.\n  - Stage 2: Implement CRUD endpoints (POST /tasks, GET /tasks, GET /tasks/{id}, PUT /tasks/{id}, DELETE /tasks/{id}).\n  - Stage 3: Write unit tests (cover handlers, data layer, error cases).\n  - Stage 4: Basic docs and runbook.\n  - Stage 5: Deploy to a staging environment.\n- Metrics and targets (per stage):\n  - Stage 1: Baseline repo; dependencies pinned; target: repository ready within 2 days.\n  - Stage 2: Endpoints implemented; target: all endpoints implemented by day 7; code reviewed.\n  - Stage 3: Tests written; target: at least 80% test coverage; all tests passing.\n  - Stage 4: Docs and runbook; target: documentation present and concise.\n  - Stage 5: Deployment; target: staging URL up, CI/CD passes.\n- Baseline and target state:\n  - Baseline: no API yet; currently 0 endpoints.\n  - Target: a working API with tests and docs.\n- Data sources and collection:\n  - Git commits, CI test results, code review comments, deployment logs.\n- Progress plan:\n  - Dashboard or checklist listing stages, owners, due dates, and completion status.\n- Review cadence:\n  - Weekly review; additional daily stand-ups if sprinting.\n- Actions if metrics lag:\n  - If test coverage < 80%, pause new feature work; write missing tests first.\n  - If deployment failing, triage CI errors and fix core blockers.\n- Risks and mitigations:\n  - Risk: scope creep; mitigation: lock endpoints in backlog and enforce a change-control, small-increment policy.\n  - Risk: flaky tests; mitigation: stabilize test environment and add retries where appropriate.\n\n3) Tailored to your problem (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to your exact problem and propose concrete metrics, milestones, and data sources. Tell me:\n- The domain (e.g., learning a topic, coding project, research task, product design).\n- Approximate timeline (weeks/months).\n- Any constraints (team size, data availability, deadlines).\n- Your preferred review cadence (weekly, biweekly, etc.).\n\nNote on the “INSTRUCTION MUTANT” line: I can also do a style prompt like distilling a news article into a sharp sentence and giving it a playful voice, but I’ll need the actual text to transform. Paste the article (or a paragraph) if you want me to apply that style.",
+          "fitness": 0.6494529271125793,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Channel your inner headline bard and distill the article into a single, punchy sentence that nails the main point—fun, fast, and crystal-clear.",
+          "fitness": 0.7759841549396517,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "The instruction was: Write a single-sentence news lead summarizing the provided input, focusing on Pope Francis’ call for the Church in Cuba to have “the freedom and the means” to pursue its mission, stated on his first visit to Cuba.",
+          "fitness": 0.7408319616317748,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+        "fitness": 0.788968336582184
+      }
+    },
+    {
+      "generation": 2,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+          "fitness": 0.7882108402252196,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+          "fitness": 0.7837461507320403,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "I can write the one-sentence summary, but I need the article text (paste it here or share a link). In the meantime, here’s a practical way to break the task into smaller parts:\n\nHow to break the problem into manageable steps\n- Step 1: Clarify the goal. You want one concise sentence that captures the article’s main point.\n- Step 2: Skim for the gist. Read the headline and lede to identify the core claim.\n- Step 3: Identify the essentials. Note: who, what, when, where, why, and how; and the main outcome or takeaway.\n- Step 4: Distinguish fact from opinion. If it’s an opinion piece, identify the thesis; if it’s news, focus on the reported event and its significance.\n- Step 5: Isolate the main point. Ask: What is the single idea the article is trying to convey?\n- Step 6: Draft candidates. Write 2–4 short sentences that could serve as the summary.\n- Step 7: Choose and refine. Pick the strongest sentence, then tighten for brevity and clarity; remove filler words and avoid hype.\n- Step 8: Verify accuracy. Ensure the summary reflects the article’s claims without misrepresentation.\n- Step 9: Optional polishing. If helpful, prepare a shorter version (e.g., under 20 words) and a slightly longer variant for context.\n\nOne-sentence summary template (you can adapt)\n- “In [location], [actor] [action], resulting in [outcome], as [evidence or significance].”\n- Or: “The article reports that [topic] [core claim], highlighting [implication].”\n\nExample (for illustration, not the actual article)\n- Article gist: A city council approved a new green-energy plan to cut emissions by 40% by 2030.\n- One-sentence summary: “A city council approved a green-energy plan aimed at cutting emissions by 40% by 2030.”\n\nIf you share the article text, I’ll produce a precise single-sentence summary right away.",
+          "P": "INSTRUCTION MUTANT = You are given a news article. Your task is to distill it into a single, standalone sentence that captures its main point. To track your progress as you work, follow this approach: (a) identify the article’s central claim and the 2–3 core facts, (b) draft three one-sentence summaries, (c) choose the most precise version that would make sense without reading the article, (d) ensure the sentence is neutral, concise, and free of opinion or fluff, (e) deliver exactly one sentence plus a brief justification of why it represents the main point and a self-assessed progress score (e.g., \"Progress: 2/3\").",
+          "fitness": 0.7552209699153901,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+          "fitness": 0.7869283628463744,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Please share the news article text (or a link or its key points). I will then produce a single, neutral sentence (12–20 words) capturing the central claim, without revealing reasoning.",
+          "fitness": 0.7702701938152314,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "",
+          "fitness": 0.7319075775146483,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I don’t see the article text yet. Please paste the article content, share a link, or upload the image, and I’ll produce a single concise sentence capturing the main point, while explicitly applying reflective thinking to check biases and ensure a neutral, accurate summary.",
+          "P": "- Ranking (ascending quality): 1) and 2) are tied.\n- Reason: The two instruction mutants are identical in wording, so they have equal quality.\n\nIf you want to create a distinguishable ranking, consider varying one with stricter constraints (e.g., require citation, specify avoiding hedging, or add a test case) to measure differences in clarity or usefulness.",
+          "fitness": 0.7295980036258697,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary plus improved, actionable versions you can use.\n\nSummary\n- Turn “how could I measure progress on this problem?” into a plan that defines clear success criteria, concrete milestones, measurable metrics, data sources, and a regular review process.\n\nImproved instruction options\n\n1) Short, actionable version\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify how you’ll collect data and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version\n- Clarify the problem and what “done” looks like (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading and/or trailing indicators) and set targets (quantitative when possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you will collect and record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to a specific problem you have and suggest concrete metrics and milestones. Example domains I can adapt to: learning a topic, a coding project, research work, or product design.",
+          "P": "",
+          "fitness": 0.7351879179477692,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary and a few improved versions you can use depending on the context.\n\nSummary\n- The aim is to make a problem easier to solve by reducing complexity: focus on the core goal, remove nonessential parts, and break the problem into smaller, solvable pieces.\n\nImproved instruction versions\n\n1) Quick, direct version\n- Break the problem into smaller parts, remove nonessential constraints, solve the simplest version first, and iteratively handle more complexity.\n\n2) Step-by-step method\n- State the problem in one clear sentence.\n- Identify the core objective and key constraints.\n- Remove or relax noncritical elements.\n- Decompose the problem into 2–4 independent subproblems.\n- Solve the simplest subproblem first and validate the solution.\n- Incrementally tackle more complex parts, ensuring each step works before proceeding.\n\n3) AI-friendly / prompt version\n- Restate the goal concisely, list all constraints, and explicitly separate essential from nonessential aspects. Break the problem into smaller modules, solve the simplest module first, and iteratively refine the remaining modules while validating outcomes at each step. Provide a minimal viable solution before adding enhancements.\n\n4) Domain-specific (example: programming)\n- Refactor the problem into a small, testable module. Define input/output contracts, create a minimal reproducible scenario, implement and test the simplest version, then progressively add features while checking for regressions.\n\nExample of an improved prompt\n- “Explain the problem in one sentence, identify the core objective and constraints, remove nonessential elements, split the problem into 2–4 subproblems, solve the simplest subproblem first, and then iteratively address the others. Provide a minimal viable solution first, then outline how to extend it.”\n\nWould you like a version tailored to a specific field (e.g., math, software engineering, design) or a more concise one-liner?",
+          "P": "Great idea. I can tailor it to a field or give you a crisp one-liner. Here are ready-to-use options you can drop in.\n\nGeneral punchy one-liner (field-agnostic)\n- Break the problem into small parts, drop nonessential constraints, solve the simplest subproblem first, validate at each step, then progressively tackle the rest.\n\nField-tailored prompts you can drop in\n\n1) Math / proof context\n- Restate the claim in one sentence. Identify the core objective and essential constraints. Remove noncritical assumptions. Decompose into 2–4 lemmas. Prove the base case, then extend to the general case with clear verifications at each step. Provide a minimal, verifiable solution first, then generalize.\n\n2) Software engineering\n- Refactor the task into a small, testable module with a clear input/output contract. Create a minimal reproducible scenario and implement the simplest version. Validate with tests and debugging. Then incrementally add features, running regression checks after each change.\n\n3) Design (product/UI)\n- State the core user goal in one sentence. Distill to essential features, prune noncritical elements, prototype a simple layout, and test with quick feedback. Iterate by adding features one at a time, ensuring each change preserves usability and meets the goal.\n\n4) Data science / ML\n- Define the target metric and constraints. Isolate core features, build a baseline model, and validate performance. Incrementally add features and models, using cross-validation and checks to prevent overfitting. Roll back if a change degrades the baseline.\n\n5) Research / general problem-solving\n- Clarify the objective and constraints in one sentence. Separate essential factors from optional ones. Break into 2–4 experimental analyses or steps. Start with the simplest, validate results, then layer in complexity with ongoing checks.\n\nHow would you like to tailor it further?\n- Tell me the field, the audience, and the desired length or tone (concise, formal, practitioner-friendly, etc.), and I’ll craft a version precisely for you. If you want a single ultra-concise line for slides or a caption, I can provide that too.",
+          "fitness": 0.6907972776889801,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Ascending order of quality (tie):\n\n1. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\n2. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\nNote: They are identical, so their quality is the same. If you want a differentiated ranking, consider introducing a small variation (e.g., different wordings, constraints, or emphasis).",
+          "fitness": 0.7876141071319582,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+        "fitness": 0.7882108402252196
+      }
+    },
+    {
+      "generation": 3,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+          "fitness": 0.7877886116504669,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+          "fitness": 0.783640112876892,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "I can write the one-sentence summary, but I need the article text (paste it here or share a link). In the meantime, here’s a practical way to break the task into smaller parts:\n\nHow to break the problem into manageable steps\n- Step 1: Clarify the goal. You want one concise sentence that captures the article’s main point.\n- Step 2: Skim for the gist. Read the headline and lede to identify the core claim.\n- Step 3: Identify the essentials. Note: who, what, when, where, why, and how; and the main outcome or takeaway.\n- Step 4: Distinguish fact from opinion. If it’s an opinion piece, identify the thesis; if it’s news, focus on the reported event and its significance.\n- Step 5: Isolate the main point. Ask: What is the single idea the article is trying to convey?\n- Step 6: Draft candidates. Write 2–4 short sentences that could serve as the summary.\n- Step 7: Choose and refine. Pick the strongest sentence, then tighten for brevity and clarity; remove filler words and avoid hype.\n- Step 8: Verify accuracy. Ensure the summary reflects the article’s claims without misrepresentation.\n- Step 9: Optional polishing. If helpful, prepare a shorter version (e.g., under 20 words) and a slightly longer variant for context.\n\nOne-sentence summary template (you can adapt)\n- “In [location], [actor] [action], resulting in [outcome], as [evidence or significance].”\n- Or: “The article reports that [topic] [core claim], highlighting [implication].”\n\nExample (for illustration, not the actual article)\n- Article gist: A city council approved a new green-energy plan to cut emissions by 40% by 2030.\n- One-sentence summary: “A city council approved a green-energy plan aimed at cutting emissions by 40% by 2030.”\n\nIf you share the article text, I’ll produce a precise single-sentence summary right away.",
+          "P": "The instruction was: Provide a one-sentence, neutral news-style summary of the input text, capturing the main event, location, and outcome.",
+          "fitness": 0.7773789978027343,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+          "fitness": 0.7889328622817993,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "They are identical in content and constraints, so their quality is tied. Any order is fine (e.g., 1 = 2 = 3).",
+          "fitness": 0.7181236028671265,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "",
+          "fitness": 0.7332904410362245,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I don’t see the article text yet. Please paste the article content, share a link, or upload the image, and I’ll produce a single concise sentence capturing the main point, while explicitly applying reflective thinking to check biases and ensure a neutral, accurate summary.",
+          "P": "Ranking: 1 = 2 = 3 (tie)\n\nRationale: All three instruction mutants are identical in content and quality—they clearly instruct a single, neutral 12–20 word summary focused on the main takeaway, and to avoid revealing internal reasoning. No variant edges out the others. If you want differentiation, you could introduce small tweaks (e.g., length flexibility, handling ambiguity).",
+          "fitness": 0.7775868880748749,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary plus improved, actionable versions you can use.\n\nSummary\n- Turn “how could I measure progress on this problem?” into a plan that defines clear success criteria, concrete milestones, measurable metrics, data sources, and a regular review process.\n\nImproved instruction options\n\n1) Short, actionable version\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify how you’ll collect data and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version\n- Clarify the problem and what “done” looks like (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading and/or trailing indicators) and set targets (quantitative when possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you will collect and record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to a specific problem you have and suggest concrete metrics and milestones. Example domains I can adapt to: learning a topic, a coding project, research work, or product design.",
+          "P": "The instruction was: Create a concise, one-sentence, news-style lede that summarizes the provided article (i.e., state the main development about the Balmoral Show, such as its opening with thousands attending).",
+          "fitness": 0.7831115090847013,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a tighter, field-agnostic package you can reuse, plus ready-to-use variants. If you want, I can tailor any version to a specific field (math, software engineering, design, data science, etc.) or provide an even shorter one-liner.\n\nUltra-compact (one-liner)\n- Break the problem into 2–4 small modules around the core objective, drop nonessential constraints, solve the simplest module first, validate as you go, deliver a minimal viable solution, then extend step by step.\n\nQuick, direct version\n- Break the problem into parts.\n- Remove nonessential constraints.\n- Solve the simplest version first.\n- Incrementally handle more complexity, validating at each step.\n\nStep-by-step method\n1) State the problem in one clear sentence.\n2) Identify the core objective and key constraints.\n3) Remove or relax noncritical elements.\n4) Decompose the problem into 2–4 independent subproblems.\n5) Solve the simplest subproblem first and validate the solution.\n6) Incrementally tackle the remaining parts, ensuring each step works before proceeding.\n\nAI-friendly / prompt version\n- Restate the goal concisely.\n- List and separate essential vs. nonessential constraints.\n- Decompose the problem into modules; solve the simplest module first.\n- Iteratively refine the remaining modules, validating outcomes at each step.\n- Provide a minimal viable solution first, then add enhancements.\n\nDomain-specific (example: programming)\n- Refactor the problem into small, testable modules with clear input/output contracts.\n- Create a minimal reproducible scenario, implement and test the simplest version.\n- Progressively add features, using regression testing to guard against backslides.\n\nExample of an improved prompt (polished)\n- “Explain the problem in one sentence, identify the core objective and constraints, remove nonessential elements, split the problem into 2–4 subproblems, solve the simplest subproblem first, and then iteratively address the others. Provide a minimal viable solution first, then outline how to extend it.”\n\nWould you like a version tailored to a specific field (math, software engineering, design, data science) or a more concise one-liner?",
+          "P": "Nice. I can tailor this for a specific field or audience. Here are ready-to-use field-tailored variants you can drop in right away. If you share the exact field, audience, and preferred length/tone, I’ll tailor one precisely.\n\nGeneral punchy one-liner (field-agnostic)\n- Break the problem into small parts, drop nonessential constraints, solve the simplest subproblem first, validate at each step, then progressively tackle the rest.\n\nField-tailored prompts you can drop in\n\n1) Math / proof context\n- Restate the claim in one sentence. Identify the core objective and essential constraints. Remove noncritical assumptions. Decompose into 2–4 lemmas. Prove the base case, then extend to the general case with clear verifications at each step. Provide a minimal, verifiable solution first, then generalize.\n\n2) Software engineering\n- Refactor the task into a small, testable module with a clear input/output contract. Create a minimal reproducible scenario and implement the simplest version. Validate with tests and debugging. Then incrementally add features, running regression checks after each change.\n\n3) Design (product/UI)\n- State the core user goal in one sentence. Distill to essential features, prune noncritical elements, prototype a simple layout, and test with quick feedback. Iterate by adding features one at a time, ensuring each change preserves usability and meets the goal.\n\n4) Data science / ML\n- Define the target metric and constraints. Isolate core features, build a baseline model, and validate performance. Incrementally add features and models, using cross-validation and checks to prevent overfitting. Roll back if a change degrades the baseline.\n\n5) Research / general problem-solving\n- Clarify the objective and constraints in one sentence. Separate essential factors from optional ones. Break into 2–4 experimental analyses or steps. Start with the simplest, validate results, then layer in complexity with ongoing checks.\n\nExtra options you might want\n- Ultra-short caption for slides: “Restate the goal, drop nonessential constraints, solve the simplest subproblem, validate, then extend.”\n- Formal version: “Restate the objective succinctly; identify essential vs. optional constraints; decompose into 2–4 subproblems; solve the simplest first with verification; iteratively refine the others with regression checks.”\n- Practitioner-friendly version: “Restate the goal, cut noncritical bits, tackle the easiest piece first, test as you go, then add the rest.”\n\nWhat would you like next?\n- Tell me the field, the audience (e.g., engineers, managers, students), and the desired length or tone (concise, formal, practitioner-friendly, slide-friendly), and I’ll tailor a version precisely for you.\n- If you want a single ultra-concise line for slides or a caption, I can provide that too.",
+          "fitness": 0.6886532199382781,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Ascending order of quality (tie):\n\n1. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\n2. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\nNote: They are identical, so their quality is the same. If you want a differentiated ranking, consider introducing a small variation (e.g., different wordings, constraints, or emphasis).",
+          "fitness": 0.7856671524047849,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 3,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How can I simplify the problem so that it is easier to solve?",
+        "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+        "fitness": 0.7889328622817993
+      }
+    },
+    {
+      "generation": 4,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+          "fitness": 0.791331876516342,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+          "fitness": 0.7859103846549989,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Here’s a concise summary of the original instruction, followed by a polished, improved version you can use.\n\nA) Summary of the original instruction\n- The user wants a one-sentence summary of an article and asks for the article text to proceed. In the meantime, they provide a step-by-step method to break the task into smaller parts, plus templates and an example to guide the process.\n\nB) Improved instruction (clear, actionable version)\n\nWhat you’ll provide\n- You can paste the article text here or share a link. Once I have the text, I’ll produce a precise single-sentence summary.\n\nStep-by-step method to produce a one-sentence summary\n1. Clarify the goal\n   - Aim for one concise sentence that captures the article’s main point or claim.\n2. Skim for the gist\n   - Read the headline and lede to identify the core claim or development.\n3. Extract essentials\n   - Note the main elements: who, what, when, where, why, how, and the primary outcome or takeaway.\n4. Distinguish fact from opinion\n   - If it’s an opinion piece, identify the thesis. If it’s news, emphasize the event and its significance.\n5. Isolate the main point\n   - Determine the single idea the article is trying to convey.\n6. Draft candidate sentences\n   - Write 2–4 concise candidate summaries.\n7. Select and refine\n   - Choose the strongest candidate and tighten for brevity and clarity; remove filler and avoid hype.\n8. Verify accuracy\n   - Ensure the summary accurately reflects the article’s claims without distortion.\n9. Optional polishing\n   - Provide a shorter version (e.g., under 20 words) and a slightly longer variant for context, if helpful.\n\nOne-sentence summary templates (adapt as needed)\n- “In [location], [actor] [action], resulting in [outcome], with [evidence or significance].”\n- Or: “The article reports that [topic] [core claim], highlighting [implication].”\n\nIllustrative example (for illustration only)\n- Article gist: A city council approved a green-energy plan to cut emissions by 40% by 2030.\n- One-sentence summary: “A city council approved a green-energy plan aimed at cutting emissions by 40% by 2030.”\n\nWhat I’ll deliver\n- A precise, single-sentence summary that faithfully reflects the article’s claims.\n- If you’d like, I can also provide an ultra-brief version (under 12–15 words) and a slightly longer variant for context.\n\nNext step\n- Paste the article text here or share a link, and I’ll generate the one-sentence summary right away.",
+          "P": "Great — I can do that. Please paste the article text here or share a link.\n\nWhat I’ll deliver\n- A precise, neutral one-sentence summary in news-style that captures the main event, location, and outcome.\n- If you’d like, I can also provide:\n  - A shorter ultra-brief version (under 15 words).\n  - A slightly longer variant for additional context.\n\nHow I’ll proceed\n- Identify the core event, the location, and the outcome.\n- Draft 2–4 candidate sentences.\n- Select the strongest, tighten for brevity and clarity, and verify accuracy.\n\nOptional: tell me if you want a specific tone (AP-style, formal, concise) or any constraints.",
+          "fitness": 0.7548363304138181,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+          "fitness": 0.7906250238418578,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Ascending order of quality: 1, 2, 3, 4.\n\nReason: 1–3 are essentially identical; 4 adds more comprehensive guidance (solver tips, present-tense requirement, wider criteria), making it the highest quality.",
+          "fitness": 0.7201105511188507,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I’m happy to do that. Please paste the article text or share a link to it. Once I have it, I will deliver:\n\n- A single concise sentence that captures the main point.\n- A bullet list of the key assumptions underlying the problem as discussed (explicitly stated or implied).\n- Optional short notes on any limitations or uncertainties.\n\nCommon types of assumptions I’ll look for include: data sources and representativeness; causal or correlational claims; scope and generalizability; time horizon and future projections; model or method choices; baseline conditions; policy or behavioral assumptions; and potential confounding factors or omitted variables.",
+          "P": "",
+          "fitness": 0.7350845909118653,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the article text or share a link, and I’ll respond with a single concise sentence capturing the main point, after a brief reflective check on biases and assumptions.",
+          "P": "Ranking: 1 = 2 = 3 (tie)\n\nRationale: All three instruction mutants are identical in content and quality—they clearly instruct a single, neutral 12–20 word summary focused on the main takeaway, and to avoid revealing internal reasoning. No variant edges out the others. If you want differentiation, you could introduce small tweaks (e.g., length flexibility, handling ambiguity).",
+          "fitness": 0.7790758717060087,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary plus improved, actionable versions you can use.\n\nSummary\n- Turn “how could I measure progress on this problem?” into a plan that defines clear success criteria, concrete milestones, measurable metrics, data sources, and a regular review process.\n\nImproved instruction options\n\n1) Short, actionable version\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify how you’ll collect data and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version\n- Clarify the problem and what “done” looks like (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading and/or trailing indicators) and set targets (quantitative when possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you will collect and record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to a specific problem you have and suggest concrete metrics and milestones. Example domains I can adapt to: learning a topic, a coding project, research work, or product design.",
+          "P": "The instruction was: Create a concise, one-sentence, news-style lede that summarizes the provided article (i.e., state the main development about the Balmoral Show, such as its opening with thousands attending).",
+          "fitness": 0.7823516309261324,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a tighter, field-agnostic package you can reuse, plus ready-to-use variants. If you want, I can tailor any version to a specific field (math, software engineering, design, data science, etc.) or provide an even shorter one-liner.\n\nUltra-compact (one-liner)\n- Break the problem into 2–4 small modules around the core objective, drop nonessential constraints, solve the simplest module first, validate as you go, deliver a minimal viable solution, then extend step by step.\n\nQuick, direct version\n- Break the problem into parts.\n- Remove nonessential constraints.\n- Solve the simplest version first.\n- Incrementally handle more complexity, validating at each step.\n\nStep-by-step method\n1) State the problem in one clear sentence.\n2) Identify the core objective and key constraints.\n3) Remove or relax noncritical elements.\n4) Decompose the problem into 2–4 independent subproblems.\n5) Solve the simplest subproblem first and validate the solution.\n6) Incrementally tackle the remaining parts, ensuring each step works before proceeding.\n\nAI-friendly / prompt version\n- Restate the goal concisely.\n- List and separate essential vs. nonessential constraints.\n- Decompose the problem into modules; solve the simplest module first.\n- Iteratively refine the remaining modules, validating outcomes at each step.\n- Provide a minimal viable solution first, then add enhancements.\n\nDomain-specific (example: programming)\n- Refactor the problem into small, testable modules with clear input/output contracts.\n- Create a minimal reproducible scenario, implement and test the simplest version.\n- Progressively add features, using regression testing to guard against backslides.\n\nExample of an improved prompt (polished)\n- “Explain the problem in one sentence, identify the core objective and constraints, remove nonessential elements, split the problem into 2–4 subproblems, solve the simplest subproblem first, and then iteratively address the others. Provide a minimal viable solution first, then outline how to extend it.”\n\nWould you like a version tailored to a specific field (math, software engineering, design, data science) or a more concise one-liner?",
+          "P": "Recommended ascending order (lowest to highest quality): 1 → 2 → 3 (tie) → 4.\n\nRationale: 1–3 are identical and basic; 4 adds more robust, explicit guidance (present tense, significance, stand-alone, avoid opinion), making it the strongest.",
+          "fitness": 0.70541956782341,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Ascending order of quality (tie):\n\n1. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\n2. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\nNote: They are identical, so their quality is the same. If you want a differentiated ranking, consider introducing a small variation (e.g., different wordings, constraints, or emphasis).",
+          "fitness": 0.7844375693798064,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+        "fitness": 0.791331876516342
+      }
+    },
+    {
+      "generation": 5,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+          "fitness": 0.7893280482292174,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+          "fitness": 0.78750656247139,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Here’s a concise summary of the original instruction, followed by a polished, improved version you can use.\n\nA) Summary of the original instruction\n- The user wants a one-sentence summary of an article and asks for the article text to proceed. In the meantime, they provide a step-by-step method to break the task into smaller parts, plus templates and an example to guide the process.\n\nB) Improved instruction (clear, actionable version)\n\nWhat you’ll provide\n- You can paste the article text here or share a link. Once I have the text, I’ll produce a precise single-sentence summary.\n\nStep-by-step method to produce a one-sentence summary\n1. Clarify the goal\n   - Aim for one concise sentence that captures the article’s main point or claim.\n2. Skim for the gist\n   - Read the headline and lede to identify the core claim or development.\n3. Extract essentials\n   - Note the main elements: who, what, when, where, why, how, and the primary outcome or takeaway.\n4. Distinguish fact from opinion\n   - If it’s an opinion piece, identify the thesis. If it’s news, emphasize the event and its significance.\n5. Isolate the main point\n   - Determine the single idea the article is trying to convey.\n6. Draft candidate sentences\n   - Write 2–4 concise candidate summaries.\n7. Select and refine\n   - Choose the strongest candidate and tighten for brevity and clarity; remove filler and avoid hype.\n8. Verify accuracy\n   - Ensure the summary accurately reflects the article’s claims without distortion.\n9. Optional polishing\n   - Provide a shorter version (e.g., under 20 words) and a slightly longer variant for context, if helpful.\n\nOne-sentence summary templates (adapt as needed)\n- “In [location], [actor] [action], resulting in [outcome], with [evidence or significance].”\n- Or: “The article reports that [topic] [core claim], highlighting [implication].”\n\nIllustrative example (for illustration only)\n- Article gist: A city council approved a green-energy plan to cut emissions by 40% by 2030.\n- One-sentence summary: “A city council approved a green-energy plan aimed at cutting emissions by 40% by 2030.”\n\nWhat I’ll deliver\n- A precise, single-sentence summary that faithfully reflects the article’s claims.\n- If you’d like, I can also provide an ultra-brief version (under 12–15 words) and a slightly longer variant for context.\n\nNext step\n- Paste the article text here or share a link, and I’ll generate the one-sentence summary right away.",
+          "P": "Ascending order of quality:\n- 1, 2, 3, 5 (tie for lowest)\n- 4 (highest)",
+          "fitness": 0.5727959907054901,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+          "fitness": 0.789566135406494,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Summarize the input text into one concise, headline-style sentence that conveys the match result and its significance.",
+          "fitness": 0.7785397768020629,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I’m happy to do that. Please paste the article text or share a link to it. Once I have it, I will deliver:\n\n- A single concise sentence that captures the main point.\n- A bullet list of the key assumptions underlying the problem as discussed (explicitly stated or implied).\n- Optional short notes on any limitations or uncertainties.\n\nCommon types of assumptions I’ll look for include: data sources and representativeness; causal or correlational claims; scope and generalizability; time horizon and future projections; model or method choices; baseline conditions; policy or behavioral assumptions; and potential confounding factors or omitted variables.",
+          "P": "Here’s my take, from lowest to highest quality based on how reliably they elicit a single, neutral, 12–20 word central claim sentence:\n\n- Lowest quality (tie): 1, 2, 3, 5\n  Why: They are practically identical and mainly restate the basic instruction without explicit guidance on tense, stand-alone phrasing, or pruning extraneous content. This can lead to more variation in output.\n\n- Highest quality: 4\n  Why: It adds explicit, actionable tips (skim headline/lede, identify central claim, extract key who/what/why), requires present tense, instructs discarding nonessential details, quotes, and numbers unless crucial, and ensures the sentence stands alone and is neutral. These guardrails typically produce more consistent, clean outputs.\n\nOptional improvement if you want a single best prompt:\n- Merge the strong tips from 4 with the concise structure of 1/2/3/5. Example:\n  \"Summarize the given news article in one concise, present-tense sentence (12–20 words) that states the main claim and its significance, discarding nonessential details, quotes, and numbers unless crucial; output only that sentence in a neutral tone.\"\n\nIf you’d like, I can rank them again assuming a different criterion (e.g., brevity, strictness, or emphasis on neutral tone) or draft a combined prompt you can use.",
+          "fitness": 0.7828509116172793,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the article text or share a link, and I’ll respond with a single concise sentence capturing the main point, after a brief reflective check on biases and assumptions.",
+          "P": "Please paste the article text or share a link. I will then provide a single concise sentence (12–20 words) capturing the main point, plus a brief, high-level note on potential biases and assumptions (without exposing internal reasoning). If you have three instruction variants to rank, share them and I’ll rank them 1, 2, or 3 (tie allowed).",
+          "fitness": 0.7307414770126345,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary plus improved, actionable versions you can use.\n\nSummary\n- Turn “how could I measure progress on this problem?” into a plan that defines clear success criteria, concrete milestones, measurable metrics, data sources, and a regular review process.\n\nImproved instruction options\n\n1) Short, actionable version\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify how you’ll collect data and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version\n- Clarify the problem and what “done” looks like (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading and/or trailing indicators) and set targets (quantitative when possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you will collect and record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to a specific problem you have and suggest concrete metrics and milestones. Example domains I can adapt to: learning a topic, a coding project, research work, or product design.",
+          "P": "The instruction was: Create a concise, one-sentence, news-style lede that summarizes the provided article (i.e., state the main development about the Balmoral Show, such as its opening with thousands attending).",
+          "fitness": 0.7854084610939027,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a tighter, field-agnostic package you can reuse, plus ready-to-use variants. If you want, I can tailor any version to a specific field (math, software engineering, design, data science, etc.) or provide an even shorter one-liner.\n\nUltra-compact (one-liner)\n- Break the problem into 2–4 small modules around the core objective, drop nonessential constraints, solve the simplest module first, validate as you go, deliver a minimal viable solution, then extend step by step.\n\nQuick, direct version\n- Break the problem into parts.\n- Remove nonessential constraints.\n- Solve the simplest version first.\n- Incrementally handle more complexity, validating at each step.\n\nStep-by-step method\n1) State the problem in one clear sentence.\n2) Identify the core objective and key constraints.\n3) Remove or relax noncritical elements.\n4) Decompose the problem into 2–4 independent subproblems.\n5) Solve the simplest subproblem first and validate the solution.\n6) Incrementally tackle the remaining parts, ensuring each step works before proceeding.\n\nAI-friendly / prompt version\n- Restate the goal concisely.\n- List and separate essential vs. nonessential constraints.\n- Decompose the problem into modules; solve the simplest module first.\n- Iteratively refine the remaining modules, validating outcomes at each step.\n- Provide a minimal viable solution first, then add enhancements.\n\nDomain-specific (example: programming)\n- Refactor the problem into small, testable modules with clear input/output contracts.\n- Create a minimal reproducible scenario, implement and test the simplest version.\n- Progressively add features, using regression testing to guard against backslides.\n\nExample of an improved prompt (polished)\n- “Explain the problem in one sentence, identify the core objective and constraints, remove nonessential elements, split the problem into 2–4 subproblems, solve the simplest subproblem first, and then iteratively address the others. Provide a minimal viable solution first, then outline how to extend it.”\n\nWould you like a version tailored to a specific field (math, software engineering, design, data science) or a more concise one-liner?",
+          "P": "Nice idea. I can tailor these to a specific field. Which field would you like: math, software engineering, design, data science (or another)? I can also give you a shorter one-liner right away.\n\nIn the meantime, here are field-tailored four-tier versions (matching your 1–4 quality levels) for math, software engineering, design, and data science.\n\nMath\n- Ultra-compact (one-liner)\n  Break the proof into 2–4 lemmas around the main claim, drop nonessential hypotheses, prove the simplest lemma first, verify base cases, then assemble the full proof; present a minimal viable argument first, then extend.\n- Quick, direct version\n  1) Break the theorem into parts.\n  2) Drop noncritical assumptions.\n  3) Prove the simplest lemma first.\n  4) Prove remaining lemmas, then combine into the theorem; verify edge cases.\n- Step-by-step method\n  1) State the proposition in one sentence.\n  2) Identify the core claim and essential hypotheses.\n  3) Relax noncritical assumptions.\n  4) Decompose into 2–4 lemmas.\n  5) Prove the simplest lemma and check base cases.\n  6) Prove remaining lemmas; assemble the proof; validate with examples or counterexamples.\n- AI-friendly / prompt version\n  - Restate the goal concisely.\n  - Separate essential vs. nonessential assumptions.\n  - Decompose into lemmas; solve the simplest one first.\n  - Iteratively refine remaining lemmas; provide a minimal proof first, then extensions.\n\nSoftware Engineering\n- Ultra-compact (one-liner)\n  Break the feature into 2–4 modules with clear I/O, drop nonessential requirements, implement the simplest working module first with tests, validate step-by-step, deliver an MVP and then extend.\n- Quick, direct version\n  1) Break the feature into parts.\n  2) Remove nonessential constraints.\n  3) Implement the simplest version first.\n  4) Incrementally add complexity with tests and validation.\n- Step-by-step method\n  1) State the feature in one sentence.\n  2) Define core inputs/outputs and critical constraints.\n  3) Eliminate noncritical requirements.\n  4) Split into 2–4 independent modules.\n  5) Implement and test the simplest module first.\n  6) Integrate remaining modules, validating at each step.\n- AI-friendly / prompt version\n  - Restate goal succinctly.\n  - List essential vs. nonessential constraints.\n  - Decompose into modules; solve the simplest module first.\n  - Iteratively refine remaining modules with testing; deliver MVP first, then enhancements.\n\nDesign\n- Ultra-compact (one-liner)\n  Break the design task into 2–4 components (needs, flows, visuals, accessibility), drop nonessential aesthetic constraints, prototype the simplest viable solution, test with users, then iterate to a robust design.\n- Quick, direct version\n  1) Break the design problem into parts.\n  2) Eliminate nonessential constraints.\n  3) Prototype the simplest viable solution.\n  4) Validate with users and iterate.\n- Step-by-step method\n  1) State the design goal in one sentence.\n  2) Identify core user needs, flows, and constraints.\n  3) De-scope noncritical aesthetics.\n  4) Decompose into 2–4 modules (e.g., user experience, layout, accessibility, visuals).\n  5) Build and test the simplest module.\n  6) Iterate on remaining parts with feedback.\n- AI-friendly / prompt version\n  - Restate goal.\n  - Separate essential vs. nonessential constraints.\n  - Decompose into modules; solve the simplest module first.\n  - Iterate on the rest with user feedback; deliver a minimal viable design first, then improvements.\n\nData Science\n- Ultra-compact (one-liner)\n  Break the problem into 2–4 stages (data collection/cleaning, feature engineering, model, evaluation), drop nonessential requirements, implement a minimal baseline, validate, then extend.\n- Quick, direct version\n  1) Break the problem into parts.\n  2) Remove nonessential constraints.\n  3) Implement a simple baseline model.\n  4) Validate and iterate with more features/complexity.\n- Step-by-step method\n  1) State the objective in one sentence.\n  2) Identify core data, features, model, and evaluation metric.\n  3) Relax noncritical constraints (e.g., data size, compute).\n  4) Split into 2–4 subproblems (data prep, feature engineering, model, evaluation).\n  5) Build the simplest baseline model and validate.\n  6) Stage improvements (better features, models) with validation at each step.\n- AI-friendly / prompt version\n  - Restate goal.\n  - Separate essential vs. nonessential data/constraints.\n  - Decompose into modules; solve the simplest module first.\n  - Iteratively refine remaining modules with evaluation on holdout data; deliver baseline first, then enhancements.\n\nConcise one-liner (field-agnostic, ready-to-use)\n- Break the problem into 2–4 modules around the core objective, drop nonessential constraints, solve the simplest module first, validate as you go, deliver an MVP, then extend step by step.\n\nIf you want, I can:\n- Produce a single field’s complete four-tier set in a compact cheat-sheet format.\n- Tailor any version to a specific audience (e.g., engineers vs. executives).\n- Give you an even shorter one-liner variant (e.g., 1–2 lines) for quick prompts.\n\nTell me the field you want (or a specific audience), and I’ll tailor and deliver a ready-to-use set.",
+          "fitness": 0.6820695662498473,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "Ascending order of quality (tie):\n\n1. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\n2. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\nNote: They are identical, so their quality is the same. If you want a differentiated ranking, consider introducing a small variation (e.g., different wordings, constraints, or emphasis).",
+          "fitness": 0.7895265114307399,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 3,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How can I simplify the problem so that it is easier to solve?",
+        "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+        "fitness": 0.789566135406494
+      }
+    }
+  ],
+  "final_population": [
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I devise an experiment to help solve that problem?",
+      "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+      "fitness": 0.7893280482292174,
+      "history": [],
+      "unit_index": 0
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+      "P": "INSTRUCTION MUTANT = \"Summarize the following news article in a single concise sentence that captures its main point. Creative solving tips: skim for the article’s thesis; isolate the core claim and its significance; draft 2–3 candidate one-sentence summaries; select the most precise and comprehensive; prune filler, adjectives, and nonessential details; ensure the sentence is self-contained and uses neutral language; verify that it would convey the gist to a reader who hasn’t seen the article; if helpful, aim for a simple formula like 'The article reports that [core claim], [context/why it matters].' Do not reveal step-by-step reasoning; provide only the final sentence (and, if required, a brief justification).\"",
+      "fitness": 0.78750656247139,
+      "history": [],
+      "unit_index": 1
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "Here’s a concise summary of the original instruction, followed by a polished, improved version you can use.\n\nA) Summary of the original instruction\n- The user wants a one-sentence summary of an article and asks for the article text to proceed. In the meantime, they provide a step-by-step method to break the task into smaller parts, plus templates and an example to guide the process.\n\nB) Improved instruction (clear, actionable version)\n\nWhat you’ll provide\n- You can paste the article text here or share a link. Once I have the text, I’ll produce a precise single-sentence summary.\n\nStep-by-step method to produce a one-sentence summary\n1. Clarify the goal\n   - Aim for one concise sentence that captures the article’s main point or claim.\n2. Skim for the gist\n   - Read the headline and lede to identify the core claim or development.\n3. Extract essentials\n   - Note the main elements: who, what, when, where, why, how, and the primary outcome or takeaway.\n4. Distinguish fact from opinion\n   - If it’s an opinion piece, identify the thesis. If it’s news, emphasize the event and its significance.\n5. Isolate the main point\n   - Determine the single idea the article is trying to convey.\n6. Draft candidate sentences\n   - Write 2–4 concise candidate summaries.\n7. Select and refine\n   - Choose the strongest candidate and tighten for brevity and clarity; remove filler and avoid hype.\n8. Verify accuracy\n   - Ensure the summary accurately reflects the article’s claims without distortion.\n9. Optional polishing\n   - Provide a shorter version (e.g., under 20 words) and a slightly longer variant for context, if helpful.\n\nOne-sentence summary templates (adapt as needed)\n- “In [location], [actor] [action], resulting in [outcome], with [evidence or significance].”\n- Or: “The article reports that [topic] [core claim], highlighting [implication].”\n\nIllustrative example (for illustration only)\n- Article gist: A city council approved a green-energy plan to cut emissions by 40% by 2030.\n- One-sentence summary: “A city council approved a green-energy plan aimed at cutting emissions by 40% by 2030.”\n\nWhat I’ll deliver\n- A precise, single-sentence summary that faithfully reflects the article’s claims.\n- If you’d like, I can also provide an ultra-brief version (under 12–15 words) and a slightly longer variant for context.\n\nNext step\n- Paste the article text here or share a link, and I’ll generate the one-sentence summary right away.",
+      "P": "Ascending order of quality:\n- 1, 2, 3, 5 (tie for lowest)\n- 4 (highest)",
+      "fitness": 0.5727959907054901,
+      "history": [],
+      "unit_index": 2
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How can I simplify the problem so that it is easier to solve?",
+      "P": "INSTRUCTION MUTANT = Summarize the provided news article in one concise sentence that captures its main point. Solver’s tips: skim the headline and lede to identify the central claim, extract the key who/what/why, then craft a single clear sentence in present tense that states the main point and its significance; discard nonessential details, quotes, and numbers unless crucial; ensure the sentence can stand alone and does not reflect personal opinion.",
+      "fitness": 0.789566135406494,
+      "history": [],
+      "unit_index": 3
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "Summarize the input text into one concise, headline-style sentence that conveys the match result and its significance.",
+      "fitness": 0.7785397768020629,
+      "history": [],
+      "unit_index": 4
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "I’m happy to do that. Please paste the article text or share a link to it. Once I have it, I will deliver:\n\n- A single concise sentence that captures the main point.\n- A bullet list of the key assumptions underlying the problem as discussed (explicitly stated or implied).\n- Optional short notes on any limitations or uncertainties.\n\nCommon types of assumptions I’ll look for include: data sources and representativeness; causal or correlational claims; scope and generalizability; time horizon and future projections; model or method choices; baseline conditions; policy or behavioral assumptions; and potential confounding factors or omitted variables.",
+      "P": "Here’s my take, from lowest to highest quality based on how reliably they elicit a single, neutral, 12–20 word central claim sentence:\n\n- Lowest quality (tie): 1, 2, 3, 5\n  Why: They are practically identical and mainly restate the basic instruction without explicit guidance on tense, stand-alone phrasing, or pruning extraneous content. This can lead to more variation in output.\n\n- Highest quality: 4\n  Why: It adds explicit, actionable tips (skim headline/lede, identify central claim, extract key who/what/why), requires present tense, instructs discarding nonessential details, quotes, and numbers unless crucial, and ensures the sentence stands alone and is neutral. These guardrails typically produce more consistent, clean outputs.\n\nOptional improvement if you want a single best prompt:\n- Merge the strong tips from 4 with the concise structure of 1/2/3/5. Example:\n  \"Summarize the given news article in one concise, present-tense sentence (12–20 words) that states the main claim and its significance, discarding nonessential details, quotes, and numbers unless crucial; output only that sentence in a neutral tone.\"\n\nIf you’d like, I can rank them again assuming a different criterion (e.g., brevity, strictness, or emphasis on neutral tone) or draft a combined prompt you can use.",
+      "fitness": 0.7828509116172793,
+      "history": [],
+      "unit_index": 5
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Please paste the article text or share a link, and I’ll respond with a single concise sentence capturing the main point, after a brief reflective check on biases and assumptions.",
+      "P": "Please paste the article text or share a link. I will then provide a single concise sentence (12–20 words) capturing the main point, plus a brief, high-level note on potential biases and assumptions (without exposing internal reasoning). If you have three instruction variants to rank, share them and I’ll rank them 1, 2, or 3 (tie allowed).",
+      "fitness": 0.7307414770126345,
+      "history": [],
+      "unit_index": 6
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Here’s a concise summary plus improved, actionable versions you can use.\n\nSummary\n- Turn “how could I measure progress on this problem?” into a plan that defines clear success criteria, concrete milestones, measurable metrics, data sources, and a regular review process.\n\nImproved instruction options\n\n1) Short, actionable version\n- Define what success looks like for this problem.\n- Break the work into measurable milestones.\n- Choose concrete metrics and targets.\n- Specify how you’ll collect data and how often you’ll review progress.\n- Decide what you’ll adjust if progress stalls.\n\n2) Detailed step-by-step version\n- Clarify the problem and what “done” looks like (success criteria).\n- Decompose the problem into stages or tasks.\n- For each stage, select metrics (leading and/or trailing indicators) and set targets (quantitative when possible).\n- Establish the current baseline and the target state.\n- Decide data sources and how you will collect and record measurements.\n- Create a simple progress plan (dashboard, checklist, or burndown).\n- Set a regular review cadence (e.g., weekly) and define actions if metrics lag (adjust plan, add resources, re-scope).\n- Document risk indicators and mitigation strategies.\n\n3) Reusable template (fill-in-the-blank)\n- Problem statement:\n- Overall success criteria:\n- Key milestones and deadlines:\n- Metrics (definition, data source, target, current value):\n- Data collection plan:\n- Progress review cadence:\n- Decision rules (when to adjust plan, escalate, or pivot):\n\nIf you’d like, I can tailor one of these to a specific problem you have and suggest concrete metrics and milestones. Example domains I can adapt to: learning a topic, a coding project, research work, or product design.",
+      "P": "The instruction was: Create a concise, one-sentence, news-style lede that summarizes the provided article (i.e., state the main development about the Balmoral Show, such as its opening with thousands attending).",
+      "fitness": 0.7854084610939027,
+      "history": [],
+      "unit_index": 7
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Here’s a tighter, field-agnostic package you can reuse, plus ready-to-use variants. If you want, I can tailor any version to a specific field (math, software engineering, design, data science, etc.) or provide an even shorter one-liner.\n\nUltra-compact (one-liner)\n- Break the problem into 2–4 small modules around the core objective, drop nonessential constraints, solve the simplest module first, validate as you go, deliver a minimal viable solution, then extend step by step.\n\nQuick, direct version\n- Break the problem into parts.\n- Remove nonessential constraints.\n- Solve the simplest version first.\n- Incrementally handle more complexity, validating at each step.\n\nStep-by-step method\n1) State the problem in one clear sentence.\n2) Identify the core objective and key constraints.\n3) Remove or relax noncritical elements.\n4) Decompose the problem into 2–4 independent subproblems.\n5) Solve the simplest subproblem first and validate the solution.\n6) Incrementally tackle the remaining parts, ensuring each step works before proceeding.\n\nAI-friendly / prompt version\n- Restate the goal concisely.\n- List and separate essential vs. nonessential constraints.\n- Decompose the problem into modules; solve the simplest module first.\n- Iteratively refine the remaining modules, validating outcomes at each step.\n- Provide a minimal viable solution first, then add enhancements.\n\nDomain-specific (example: programming)\n- Refactor the problem into small, testable modules with clear input/output contracts.\n- Create a minimal reproducible scenario, implement and test the simplest version.\n- Progressively add features, using regression testing to guard against backslides.\n\nExample of an improved prompt (polished)\n- “Explain the problem in one sentence, identify the core objective and constraints, remove nonessential elements, split the problem into 2–4 subproblems, solve the simplest subproblem first, and then iteratively address the others. Provide a minimal viable solution first, then outline how to extend it.”\n\nWould you like a version tailored to a specific field (math, software engineering, design, data science) or a more concise one-liner?",
+      "P": "Nice idea. I can tailor these to a specific field. Which field would you like: math, software engineering, design, data science (or another)? I can also give you a shorter one-liner right away.\n\nIn the meantime, here are field-tailored four-tier versions (matching your 1–4 quality levels) for math, software engineering, design, and data science.\n\nMath\n- Ultra-compact (one-liner)\n  Break the proof into 2–4 lemmas around the main claim, drop nonessential hypotheses, prove the simplest lemma first, verify base cases, then assemble the full proof; present a minimal viable argument first, then extend.\n- Quick, direct version\n  1) Break the theorem into parts.\n  2) Drop noncritical assumptions.\n  3) Prove the simplest lemma first.\n  4) Prove remaining lemmas, then combine into the theorem; verify edge cases.\n- Step-by-step method\n  1) State the proposition in one sentence.\n  2) Identify the core claim and essential hypotheses.\n  3) Relax noncritical assumptions.\n  4) Decompose into 2–4 lemmas.\n  5) Prove the simplest lemma and check base cases.\n  6) Prove remaining lemmas; assemble the proof; validate with examples or counterexamples.\n- AI-friendly / prompt version\n  - Restate the goal concisely.\n  - Separate essential vs. nonessential assumptions.\n  - Decompose into lemmas; solve the simplest one first.\n  - Iteratively refine remaining lemmas; provide a minimal proof first, then extensions.\n\nSoftware Engineering\n- Ultra-compact (one-liner)\n  Break the feature into 2–4 modules with clear I/O, drop nonessential requirements, implement the simplest working module first with tests, validate step-by-step, deliver an MVP and then extend.\n- Quick, direct version\n  1) Break the feature into parts.\n  2) Remove nonessential constraints.\n  3) Implement the simplest version first.\n  4) Incrementally add complexity with tests and validation.\n- Step-by-step method\n  1) State the feature in one sentence.\n  2) Define core inputs/outputs and critical constraints.\n  3) Eliminate noncritical requirements.\n  4) Split into 2–4 independent modules.\n  5) Implement and test the simplest module first.\n  6) Integrate remaining modules, validating at each step.\n- AI-friendly / prompt version\n  - Restate goal succinctly.\n  - List essential vs. nonessential constraints.\n  - Decompose into modules; solve the simplest module first.\n  - Iteratively refine remaining modules with testing; deliver MVP first, then enhancements.\n\nDesign\n- Ultra-compact (one-liner)\n  Break the design task into 2–4 components (needs, flows, visuals, accessibility), drop nonessential aesthetic constraints, prototype the simplest viable solution, test with users, then iterate to a robust design.\n- Quick, direct version\n  1) Break the design problem into parts.\n  2) Eliminate nonessential constraints.\n  3) Prototype the simplest viable solution.\n  4) Validate with users and iterate.\n- Step-by-step method\n  1) State the design goal in one sentence.\n  2) Identify core user needs, flows, and constraints.\n  3) De-scope noncritical aesthetics.\n  4) Decompose into 2–4 modules (e.g., user experience, layout, accessibility, visuals).\n  5) Build and test the simplest module.\n  6) Iterate on remaining parts with feedback.\n- AI-friendly / prompt version\n  - Restate goal.\n  - Separate essential vs. nonessential constraints.\n  - Decompose into modules; solve the simplest module first.\n  - Iterate on the rest with user feedback; deliver a minimal viable design first, then improvements.\n\nData Science\n- Ultra-compact (one-liner)\n  Break the problem into 2–4 stages (data collection/cleaning, feature engineering, model, evaluation), drop nonessential requirements, implement a minimal baseline, validate, then extend.\n- Quick, direct version\n  1) Break the problem into parts.\n  2) Remove nonessential constraints.\n  3) Implement a simple baseline model.\n  4) Validate and iterate with more features/complexity.\n- Step-by-step method\n  1) State the objective in one sentence.\n  2) Identify core data, features, model, and evaluation metric.\n  3) Relax noncritical constraints (e.g., data size, compute).\n  4) Split into 2–4 subproblems (data prep, feature engineering, model, evaluation).\n  5) Build the simplest baseline model and validate.\n  6) Stage improvements (better features, models) with validation at each step.\n- AI-friendly / prompt version\n  - Restate goal.\n  - Separate essential vs. nonessential data/constraints.\n  - Decompose into modules; solve the simplest module first.\n  - Iteratively refine remaining modules with evaluation on holdout data; deliver baseline first, then enhancements.\n\nConcise one-liner (field-agnostic, ready-to-use)\n- Break the problem into 2–4 modules around the core objective, drop nonessential constraints, solve the simplest module first, validate as you go, deliver an MVP, then extend step by step.\n\nIf you want, I can:\n- Produce a single field’s complete four-tier set in a compact cheat-sheet format.\n- Tailor any version to a specific audience (e.g., engineers vs. executives).\n- Give you an even shorter one-liner variant (e.g., 1–2 lines) for quick prompts.\n\nTell me the field you want (or a specific audience), and I’ll tailor and deliver a ready-to-use set.",
+      "fitness": 0.6820695662498473,
+      "history": [],
+      "unit_index": 8
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "Ascending order of quality (tie):\n\n1. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\n2. INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"\n\nNote: They are identical, so their quality is the same. If you want a differentiated ranking, consider introducing a small variation (e.g., different wordings, constraints, or emphasis).",
+      "fitness": 0.7895265114307399,
+      "history": [],
+      "unit_index": 9
+    }
+  ],
+  "final_best_prompt": {
+    "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+    "M": "How could I devise an experiment to help solve that problem?",
+    "P": "INSTRUCTION MUTANT =\n\"Compose a single, concise sentence that captures the central claim of the given news article. Solve it by: quickly identifying the thesis, selecting the key consequence or takeaway, and crafting a neutral, plain-language sentence of roughly 12–20 words. If multiple points compete, anchor the sentence on the main takeaway and its impact rather than minutiae. Do not reveal your internal reasoning—only output the final sentence.\"",
+    "fitness": 0.791562237739563,
+    "found_at_generation": 0,
+    "dataset": "xsum",
+    "metric": "bert_score"
+  }
+}

@@ -1,0 +1,12 @@
+manual	Let’s think about this logically.	0.8706355118751525
+manual	Let’s think like a detective step by step.	0.8702240574359894
+evoluted	We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.	0.8697415912151336
+evoluted	Let’s consider the case systematically. The answer is after the proof.	0.8696716344356537
+evoluted	Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.	0.8693840324878692
+manual	Let’s be realistic and think step by step.	0.8692777478694915
+evoluted	We'll take this mathematical reasoning challenge one step at a time: The solution appears after the demonstration; let’s investigate this as detectives would by examining each component of the problem, and let’s think about this logically.	0.8689655768871307
+manual	Let's break this problem down step by step.	0.8688172554969787
+evoluted	We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.	0.8687377095222473
+manual	We'll methodically work through this problem together.	0.8685318279266357
+best score: 0.8706355118751525
+average score: 0.8693986945152284

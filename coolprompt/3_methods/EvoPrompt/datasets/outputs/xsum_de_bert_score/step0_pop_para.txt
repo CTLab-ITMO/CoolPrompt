@@ -1,0 +1,12 @@
+manual	Let’s think about this logically.	0.8706355118751525
+manual	Let’s think like a detective step by step.	0.8702240574359894
+manual	Let’s be realistic and think step by step.	0.8692777478694915
+manual	The answer is after the proof.	0.8692057418823242
+manual	Let's think step by step.	0.8691631293296814
+manual	Let's break this problem down step by step.	0.8688172554969787
+manual	Let's meticulously examine each aspect of this problem.	0.8687276124954224
+manual	We'll methodically work through this problem together.	0.8685318279266357
+manual	We'll take this mathematical reasoning challenge one step at a time.	0.8684940099716186
+manual	We'll solve this by analyzing each part of the problem.	0.868447208404541
+best score: 0.8706355118751525
+average score: 0.8691524102687836

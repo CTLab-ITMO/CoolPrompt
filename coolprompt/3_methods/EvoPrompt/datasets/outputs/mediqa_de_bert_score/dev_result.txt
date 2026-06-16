@@ -1,0 +1,12 @@
+evoluted	Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.	0.8842085444927216
+evoluted	Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.	0.8841204285621643
+evoluted	Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.	0.8836426222324372
+manual	Let’s think like a detective step by step.	0.8835270953178406
+evoluted	Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.	0.8834085750579834
+evoluted	Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.	0.8831796503067016
+manual	We'll solve this by analyzing each part of the problem.	0.8826878833770752
+evoluted	Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.	0.8826848208904267
+evoluted	We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.	0.8815402698516845
+evoluted	Let’s think about this logically: Let’s analyze clues step by step like a detective, transforming the supplied text into simpler wording while keeping the meaning, making it accessible for non-native English speakers.	0.8804197573661804
+best score: 0.8842085444927216
+average score: 0.8829419647455217

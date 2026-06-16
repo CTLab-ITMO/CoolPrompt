@@ -1,0 +1,1204 @@
+{
+  "examples": [
+    {
+      "input": "I think #Saudis are responsible for most of the #islamic #terror in the world. Both with their #Wahhabism and by financing terrorists …",
+      "target": "anger"
+    },
+    {
+      "input": "🔝 #love #instagood #photooftheday @user #photoeveryday #cute #picture #beautiful #followme #happy #follow #fashion #pic #picoftheday",
+      "target": "joy"
+    },
+    {
+      "input": "Of course I've got a horrible cold and am breaking out 2 days before grad 👍🏼👍🏼👍🏼👍🏼👍🏼",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user You are a man after God's heart and I am proud that you are my president.  #BlessedAndGrateful #awesomeness",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user if I catch you making tea with water boiled up to 100 degrees, there will be dire consequences",
+      "target": "anger"
+    },
+    {
+      "input": "@user Wise you mean? 😅",
+      "target": "joy"
+    },
+    {
+      "input": "@user big revenge guy",
+      "target": "anger"
+    },
+    {
+      "input": "Remain attached to God during your happiness and during your sadness.",
+      "target": "optimism"
+    },
+    {
+      "input": "@user Jen, awful funny how the tide has turned on this show! I am elated and amused! Goes from love fest to oh we have collusion!",
+      "target": "joy"
+    },
+    {
+      "input": "Odd watching #Antifa extremists going full spectrum to become Fascists\\n\\n#Violence #Hate #angry #Clueless #YOUTH in mom's #basement come out",
+      "target": "anger"
+    },
+    {
+      "input": "#Work not to",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user I'm fuming that you're fuming 🙄 #fuming",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user @user I bet he needed to take an anime break and drink a Zima after all the furious typing.",
+      "target": "anger"
+    },
+    {
+      "input": "@user Exhausting for us. Imagine being so tightly wrapped that you're writing these 'think pieces' at such a furious rate. #medicated",
+      "target": "anger"
+    },
+    {
+      "input": "Haven't been on a holiday abroad in two years how depressing is that btw☹️",
+      "target": "sadness"
+    },
+    {
+      "input": "sardonyx expresses herself through supporting the team with your incredible yo-yo skills and depression okay",
+      "target": "sadness"
+    },
+    {
+      "input": "@user OMG poor you! It happened to me last summer. I saw my under skin 😰",
+      "target": "sadness"
+    },
+    {
+      "input": "The patients were increasingly protected during heart attacks, chains have encouraged smoke, anger and hundreds of new hospitals.",
+      "target": "joy"
+    },
+    {
+      "input": "@user you look shook! #afraid #shook #impeach #youaregoingdown",
+      "target": "anger"
+    },
+    {
+      "input": "Just added a copy of CANDIDE to my local Little Free Library &amp; a guy grabbed it literally 5 seconds later #optimism #BestOfAllPossibleWorlds",
+      "target": "optimism"
+    },
+    {
+      "input": "I feel so intimidated talking to chicken now that I know how pretty she is",
+      "target": "joy"
+    },
+    {
+      "input": "@user (c) grew with resentment for herself and the world around her.\\n\\nHer spine tingled as she heard the incessant clicking of a (c)",
+      "target": "anger"
+    },
+    {
+      "input": "@user are we in for Lemar even though wenger was very coy about him in his press conference",
+      "target": "joy"
+    },
+    {
+      "input": "My mother-in-law, in a fit of #rage, referred to someone as a 'yo-yo'.\\n#yoyo #motherinlaw #amirite #fitofrage",
+      "target": "anger"
+    },
+    {
+      "input": "@user Maybe don't nom so many raging dicks, Donny!  Jeez, it's like teaching a baby to fly a jet!",
+      "target": "anger"
+    },
+    {
+      "input": "You know your (numerous)meds have kicked in when you find stupid things highly amusing #BPDproblems #KeepTalkingMH  #mentalhealth",
+      "target": "joy"
+    },
+    {
+      "input": "@user believe it! you can start your temper tantrum now/",
+      "target": "anger"
+    },
+    {
+      "input": "@user Really?? Because music analyzes your screenshots with my microscope too??? I didn't think so #offended",
+      "target": "anger"
+    },
+    {
+      "input": "#LT a mom let her kid pay for the bus. The kid dropped the coins. I'm boiling in rage. My face may be straight bu my eyes say IMGONNAKILLYA",
+      "target": "anger"
+    },
+    {
+      "input": "Don't grieve over things so badly..",
+      "target": "sadness"
+    },
+    {
+      "input": "@user ballroom dancing class tomorrow, any advice for a first timer?",
+      "target": "joy"
+    },
+    {
+      "input": "you begin to irritate me, primitive",
+      "target": "anger"
+    },
+    {
+      "input": "@user It's been a little Twitter saga lately. The tea thing is horrific, plus they never have fresh milk to put in it.",
+      "target": "anger"
+    },
+    {
+      "input": "Just #snorted #laughing @user #outtakes @user @user #hilarious Best duo ever! @user",
+      "target": "joy"
+    },
+    {
+      "input": "They say ur a prdct of ur surroundings. A bit intimidated by the crazy amazing ppl I met @ @user @user @user @user",
+      "target": "joy"
+    },
+    {
+      "input": "Three more shifts then I start the next part of my tutorship in response #enjoyingthelastfewdays #excited #nervous #newchallanges",
+      "target": "joy"
+    },
+    {
+      "input": "This nightmare is nearly over gang gang gang",
+      "target": "optimism"
+    },
+    {
+      "input": "@user It's an evening for lying around doing feck all. Looks like an October evening down here #miserable",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Goddess, that poor girl 🙁",
+      "target": "sadness"
+    },
+    {
+      "input": "i haven't had to speak maltese in over two years and now have relatives calling me about the trip and it's terrible 🙃",
+      "target": "anger"
+    },
+    {
+      "input": "@user i know 😰",
+      "target": "sadness"
+    },
+    {
+      "input": "Cold sores are the worst. The second you smile or laugh, it's over. Blood everywhere",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Ganguly chose? It is Kohli's provocation which compelled Dada to pick that pretentious fuck.",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user She is Right shld burn them alive 😡 it's even more better if they burn you with ur brothers 😠",
+      "target": "anger"
+    },
+    {
+      "input": "#unforgiveness lives in the #dark",
+      "target": "sadness"
+    },
+    {
+      "input": "@user shocked as well. but bc I cheer for another club in the swiss league…",
+      "target": "optimism"
+    },
+    {
+      "input": "@user They give awful service and you haven't got back to my complaint yet. Can you guess the airline? #dontflyBA #annoyed",
+      "target": "anger"
+    },
+    {
+      "input": "@user So are you saying there's a good chance that two teams might *gasp* finish last? One in the East and one in the West? #offended",
+      "target": "anger"
+    },
+    {
+      "input": "We're in the bathroom and you perch on the sink,\\nI begin to infatuate, exasperate, resuscitate.",
+      "target": "anger"
+    },
+    {
+      "input": "Scared to leave the routine but excited to break out the mould 😖 #scared #confused #happy #undecided #excited",
+      "target": "joy"
+    },
+    {
+      "input": "Whatever you want to do, if you want to be #great at it, you have to #love it and be able to make sacrifices for it. #Quotes for you",
+      "target": "optimism"
+    },
+    {
+      "input": "That became obvious with the Morata saga. The fucking bitter old cunt turned down 70m for that sideman.",
+      "target": "anger"
+    },
+    {
+      "input": "Signs of Incipient Faggotry are the arsehole quivering and puckering.",
+      "target": "anger"
+    },
+    {
+      "input": "i'm nervous",
+      "target": "sadness"
+    },
+    {
+      "input": "'If you try to get rid of #fear and #anger without knowing their meaning, they will grow stronger and return.' \\n― Deepak Chopra",
+      "target": "anger"
+    },
+    {
+      "input": "@user im sorry i voted jeans &lt;/3 u look banging who tf needs food anyway when ur a student existential dread feeds us",
+      "target": "joy"
+    },
+    {
+      "input": "Hey @user would it be safe to assume that this is the most disappointing #madden in years in your opinion?",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user Yes it is. I especially love the ramble chat love when they go off topic for like ten minutes. #awesomeness",
+      "target": "joy"
+    },
+    {
+      "input": "this weather = my mood ☔ #miserable",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Why do you send me a sales email suggesting that I am procrastinating 'asking out Derek from accounts'?  I am male.",
+      "target": "anger"
+    },
+    {
+      "input": "@user let that sink in",
+      "target": "sadness"
+    },
+    {
+      "input": "She doesn't know how to smile! So be it! #pissed 😏😒😠😡😤👀👄👊👎🙍💔",
+      "target": "anger"
+    },
+    {
+      "input": "Humble yourself in the sight of the LORD. If we have died in Christ, then how can we be offended? A dead person cannot feel anything, right?",
+      "target": "optimism"
+    },
+    {
+      "input": "Chiropractor time  #crackle #pop #chiropractor",
+      "target": "joy"
+    },
+    {
+      "input": "u can get an oreo shake at burger king",
+      "target": "joy"
+    },
+    {
+      "input": "It takes a smoke detector 4 months to stop beeping if you were wondering how #lazy I am. #lol #funny #Comedy #laughs #CrackMeUp #hilarious",
+      "target": "joy"
+    },
+    {
+      "input": "@user Sir, what about 2G, 3G, 4G, Coalgate, scams Parliament Attack, Mumbai terror attacks despite intelligence input.",
+      "target": "anger"
+    },
+    {
+      "input": "watching that video and realizing that I've gotten uglier #depressed",
+      "target": "sadness"
+    },
+    {
+      "input": "fuckfuckfuck my hands are shaking",
+      "target": "anger"
+    },
+    {
+      "input": "dark lucha truly is the best",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user yeah you have not been the perfect patient like I was #dread",
+      "target": "anger"
+    },
+    {
+      "input": "I'm so sick of that 'I'm done w. My ex na we're never getting back together' crap so You can get back together in like a month 😂",
+      "target": "anger"
+    },
+    {
+      "input": "Come on blues #StateOfOrigin #Origin  #NSWBlues #nsw",
+      "target": "optimism"
+    },
+    {
+      "input": "@user Happy birthday cuzzo many blessing🙌🏾💪🏾🇳🇬💯#KeepGrinding #blessed",
+      "target": "joy"
+    },
+    {
+      "input": "@user don't #worry, froggy\\nit will SOON be TIME for #FROGFEARFRIDAY!",
+      "target": "optimism"
+    },
+    {
+      "input": "I'm legit in the worst mood ever. #annoyed #irritated",
+      "target": "anger"
+    },
+    {
+      "input": "I think that Nuclear weapon and Cyber weapon are big threats, but I think that the bigger threat is Scalar weapon ...\\n#scalar #threat",
+      "target": "anger"
+    },
+    {
+      "input": "Watching #ScottishOpenHeroChallenge from last night... Smoke, flames, tense sound effects and lively commentary.. #boring #dull #shite 🙈",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user @user watching the #totalsolareclipse on ur channels right now #amazing what's happening in the #usa",
+      "target": "joy"
+    },
+    {
+      "input": "faint glimpse of the circling stars. Presently, as I went on, still gaining velocity, the palpitation of night and day merged into one",
+      "target": "joy"
+    },
+    {
+      "input": "@user You made me laugh today when you told a caller to turn up the volume, that you weren't doing the #MarvinGaye thing #levity",
+      "target": "joy"
+    },
+    {
+      "input": "'look at your face in a mirror... You are so fat and dark... You can't have lunch with us' #kids #meangirls #rude #insult",
+      "target": "anger"
+    },
+    {
+      "input": "I'm so angry",
+      "target": "anger"
+    },
+    {
+      "input": "my name is sara, im 20 years old and i cant believe boiling an onion is making me cry",
+      "target": "sadness"
+    },
+    {
+      "input": "Looking for good news today...not finding any on Twitter. Bummer. 😢 #depressing #badnews",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Jerrrrrr a woman is been stabbed in the face and now guys r arguing about her ass being real or not hehehee",
+      "target": "anger"
+    },
+    {
+      "input": "AJ ends up being a terrible character, but no one in his family ever actually speaks to him. He witnesses so much and just gets sent away.",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Like you said, its all propaganda against #Israel. Palestinian adults and their Govt are full of #hatred. So sad to see",
+      "target": "sadness"
+    },
+    {
+      "input": "I hung up on my manager last night 😭",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Bro no you don't you'll be so dissapointed in me 😂 il let you read it next time you're down here tho 💁",
+      "target": "sadness"
+    },
+    {
+      "input": "@user keep your head clear an focused. Do not let T intimidate you or use your children to silence you! Hate when a man does that!",
+      "target": "anger"
+    },
+    {
+      "input": "If your only response to this current political crap show is 'but Hillary!!' Or 'but Obama!!' you need to start looking for a new argument.",
+      "target": "anger"
+    },
+    {
+      "input": "@user Although I have a nice vulva, I choose not to intimidate other women with it.",
+      "target": "optimism"
+    },
+    {
+      "input": "every time i think abt hobi crying i start crying",
+      "target": "sadness"
+    },
+    {
+      "input": "Don't justify Terrorism as communal hatred. #AmarnathTerrorAttack is sheer Act of cowardice. Let's unite together against terrorism. Luv all",
+      "target": "optimism"
+    },
+    {
+      "input": "God bless him in Hong Kong! #ex",
+      "target": "joy"
+    },
+    {
+      "input": "@user The best of make up horror story...",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user Naming India Lynchistan is not provocation terror is a provication even when terror has no religion.",
+      "target": "anger"
+    },
+    {
+      "input": "@user Why don't you try nominating qualified people; B.DeVos, T.Pruitt, R.Perry,etc...really? They are terrible!",
+      "target": "anger"
+    },
+    {
+      "input": "#GameOfThones how can you top that next week #heartbreaking",
+      "target": "sadness"
+    },
+    {
+      "input": "John 14:27\\nLet not your heart be troubled, neither let it be afraid. #peace #afraid",
+      "target": "joy"
+    },
+    {
+      "input": "@user At least smile a little holy crap Twiggy.",
+      "target": "anger"
+    },
+    {
+      "input": "we will send video to proper agency ,state workers harass the public to fuel the ego of Scott Arniel  and trial court what the bleep #bully",
+      "target": "anger"
+    },
+    {
+      "input": "@user Your majority is 635 members of the public- believe me you have offended rather more than 635 voters!",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user no it was a selfie of him from seven months  ago look at the top left of the snap people",
+      "target": "joy"
+    },
+    {
+      "input": "Do you ever just get so excited that you're trying to sleep &amp; just can't even close you eyes😁like I really need this catnap but #excitement",
+      "target": "joy"
+    },
+    {
+      "input": "Fools! Little did you know that getting angry and trusting your instincts by walking right into my trap was a mistake!",
+      "target": "anger"
+    },
+    {
+      "input": "Just know USA, all Canadians don't agree with what Khadr's settlement and his unwillingness to take responsibility for his actions. #outrage",
+      "target": "anger"
+    },
+    {
+      "input": "feeling like a grim reaper all day hehehe\\n9 days pa 🎩✉️",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Ha, sadly not: just the undying respect of your peers, I'm afraid...",
+      "target": "sadness"
+    },
+    {
+      "input": "Look at this little guy! He is connecting to his magical self.😇\\nWhat do you do to keep life magical?🌈 @user #magical  #be",
+      "target": "joy"
+    },
+    {
+      "input": "@user The GOP controls the Senate. Blaming the Dems seems #sad.",
+      "target": "sadness"
+    },
+    {
+      "input": "Life is too short to hide your feelings. Don't be afraid to say what you feel.",
+      "target": "optimism"
+    },
+    {
+      "input": "#Sleep is my #drug. My bed is my dealer. My #alarm is the #cops. #School is the #jail. #TeamFollowBack",
+      "target": "joy"
+    },
+    {
+      "input": "@user Oh no, jumper on again, has it turned colder? 😟 Have a terrific day🙋🏼🌸🌼🌻💕💕",
+      "target": "joy"
+    },
+    {
+      "input": "and every time i cry hard, fear blankets me",
+      "target": "sadness"
+    },
+    {
+      "input": "the thing about living near campus during the summer is that it's a ghost town but now everyone is back and im #annoyed",
+      "target": "anger"
+    },
+    {
+      "input": "get u a goofy shorty w/ a big heart &amp; a anger problem..",
+      "target": "anger"
+    },
+    {
+      "input": "@user sad day Danny 😓you have been and still are a true Leeds rhino you have been brilliant at the club I will miss you",
+      "target": "sadness"
+    },
+    {
+      "input": "The one most important thing we forget. That we need to denounce terrorism, not stoke communalism  #AmarnathTerrorAttack",
+      "target": "anger"
+    },
+    {
+      "input": "I fw @user he don't hesitate to speak his mind",
+      "target": "optimism"
+    },
+    {
+      "input": "@user Ah that's a neat idea, will check that out - might makes me more depressed about my slowness tho 🤣",
+      "target": "sadness"
+    },
+    {
+      "input": "Negative self-talk in #depression can extend to sleep, with catastrophic thinking about the impact of poor sleep fueling insomnia.",
+      "target": "sadness"
+    },
+    {
+      "input": "Mentally suffered #iwanttodie #worthless #lifewithoutcolor  #pain #suicidal",
+      "target": "sadness"
+    },
+    {
+      "input": "So exhausted I could cry 😭",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user @user You need a new tactic post-Trump/Brexit. Hurling that insult around no longer works I'm afraid.",
+      "target": "anger"
+    },
+    {
+      "input": "#Thoughtoftheday: 'Perpetual optimism is a force multiplier.' - Colin Powell #quote #optimism #positivity",
+      "target": "optimism"
+    },
+    {
+      "input": "Part of #danielhive #insecure i got you",
+      "target": "sadness"
+    },
+    {
+      "input": "If I were my own republic, I would declare war on patchouli incense.",
+      "target": "anger"
+    },
+    {
+      "input": "So, if you have a really tiny penis, get help, but please don't try to compensate on the road  #bigcar #tinypenis #roadrage",
+      "target": "anger"
+    },
+    {
+      "input": "'Florian Picasso - Final Call' is raging at ShoutDRIVE!",
+      "target": "anger"
+    },
+    {
+      "input": "He is holding her so close, wrapped his hands around her shoulder, she is holding them and they're both smiling. I'm still living. ☺️",
+      "target": "joy"
+    },
+    {
+      "input": "So apparently one of your bus drivers has a grudge against me @user I was passed while waiting for it to stop. Real service there..",
+      "target": "anger"
+    },
+    {
+      "input": "#YummyMummiesAU Are you serious! Breastfeeding should be illegal?! You breathing our air should be illegal, dumbass! #stupid",
+      "target": "anger"
+    },
+    {
+      "input": "No offense to the girl next to me but dousing yourself with cheap cologne won't hide your rank smell",
+      "target": "anger"
+    },
+    {
+      "input": "this one lady literally parked next to me and scared the shit out of me 🙃",
+      "target": "anger"
+    },
+    {
+      "input": "Things that rage me: when I hear a man ask a woman if she thinks her skirt/dress is too short\\n\\n😨😵😠😡😤 #shame #rage #Feminism #feminist",
+      "target": "anger"
+    },
+    {
+      "input": "Catching up on Greys, almost couldn't make it through two episodes because of how sad the storyline was. Two best/worst eps for me.",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Support Qld and you'd never be #angry",
+      "target": "anger"
+    },
+    {
+      "input": "The stupidest and weirdest thing people do. And what's more stupid than that? They upload it online. Oh my god. But good for laughter ah. 🤣🤣",
+      "target": "joy"
+    },
+    {
+      "input": "oh how i just love love love glee doing billy joel's numbers!!!!",
+      "target": "joy"
+    },
+    {
+      "input": "Wonder how many times connor says fuck in press conference #lost count",
+      "target": "anger"
+    },
+    {
+      "input": "Every day I dread doing an 8 hour shift in retail 🙂",
+      "target": "sadness"
+    },
+    {
+      "input": "Psalm 2:12 Kiss the Son, lest He be angry, And you perish in the way, When His wrath is kindled but a little.",
+      "target": "anger"
+    },
+    {
+      "input": "So excited for the final 10 eps of @user So happy @user is back and @user returns, as well as @user 😄❤",
+      "target": "joy"
+    },
+    {
+      "input": "that moment when you feel meaningless and just feeling like you cant do anything right =*( #foreveralone",
+      "target": "sadness"
+    },
+    {
+      "input": "One of those days. #Mentalhealth #Anxiety #agoraphobia #panic #depression #OCD",
+      "target": "sadness"
+    },
+    {
+      "input": "My neck still hurting though... 😥",
+      "target": "sadness"
+    },
+    {
+      "input": "@user I know it bothers me that u worry my love@zae200012 😢😢",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user oh, that too! 🤣",
+      "target": "joy"
+    },
+    {
+      "input": "on the upside i saw a corgi puppy on the tube today. my shining light in the dark.",
+      "target": "joy"
+    },
+    {
+      "input": "When you miss a call from @user #devastated 😭 I'm trying not to #cry 😭",
+      "target": "sadness"
+    },
+    {
+      "input": "Be fuming if Sunderland sign Murphy like. He was crap when we first signed him and he's still crap now",
+      "target": "anger"
+    },
+    {
+      "input": "The use of violence, threat of violence and intimidation just tag zany pf. Very good at it.",
+      "target": "anger"
+    },
+    {
+      "input": "@user Think it lost its heart after the second version. Third was disappointing and haven't played the fourth yet",
+      "target": "sadness"
+    },
+    {
+      "input": "@user This is goin to be as good as rocky vs hogan #terrible #ohnowhatisyoudoingbaby",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user Hope to come #yay Do u have central accom list plse? (Lone gal trying to avoid taxis 😉) 🏰 #History #joy",
+      "target": "joy"
+    },
+    {
+      "input": "Codes? Lyft codes? We got em! Use: OATH #Great deals are here for you now  #LOVEISLOVE",
+      "target": "joy"
+    },
+    {
+      "input": "I'm sorry. Im much more interested in the #BachelorInParadise rose ceremony than whatever @user has. #seriously",
+      "target": "sadness"
+    },
+    {
+      "input": "Prepare to suffer the sting of Ghost Rider's power! Prepare to know the true meaning of hell!",
+      "target": "anger"
+    },
+    {
+      "input": "#AmarnathTerrorAttack @user @user cn u plz ans wt u r afrd of or wt stpng u to end #terrorism wn whol #India is stndng wth u",
+      "target": "sadness"
+    },
+    {
+      "input": "@user i'm very happy glad or whatever the feelings i'm not into dramas",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user You. Sir are a alarmist unsubstantiated facts. And a idiot",
+      "target": "anger"
+    },
+    {
+      "input": "@user @user it is indeed time 4 you 2 create the Ghost Filter 👻 please🙏🏾#CanWeGetAGhostFilter ???  #snapchat #ghostfilter #retweet",
+      "target": "optimism"
+    },
+    {
+      "input": "Thousands of pickled dunder-headed anthracites ! #furious",
+      "target": "anger"
+    },
+    {
+      "input": "Usually the things you are most #afraid of are the most #worthwhile. #FACT #TeamFollowBack #rocktheretweet",
+      "target": "optimism"
+    },
+    {
+      "input": "@user no air working in the 1sr carriage of the 18:03 from Victoria to Bognor. #boiling #southernfail",
+      "target": "anger"
+    },
+    {
+      "input": "@user awe feels or que :,(",
+      "target": "sadness"
+    },
+    {
+      "input": "To be really knowledgeable and really petty is such a delight to behold.",
+      "target": "joy"
+    },
+    {
+      "input": "An #angry #person may lose his/her objectivity, empathy, prudence or thoughtfulness and may cause harm to others.",
+      "target": "anger"
+    },
+    {
+      "input": "Said it once and I'll probably say it again, anything more depressing than making your sandwiches for work the next day #cry",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Please, please do something about her! Where's Kayleigh, Jack, Jeff? Ugh. #awful #doctor?",
+      "target": "anger"
+    },
+    {
+      "input": "They are burning not Muslims Economy,\\nThey are burning the Economy of Sri-Lanka",
+      "target": "anger"
+    },
+    {
+      "input": "Why  o they call it a happy mea. if it tastes like a whole lot like depression.",
+      "target": "sadness"
+    },
+    {
+      "input": "Johnny doesn't seem like the suicidal type #suspicion #tcmparty",
+      "target": "sadness"
+    },
+    {
+      "input": "Wow that last chick was a bit intense, poor Freddie was a bit unnerved lol #NinjaWarriorAU",
+      "target": "joy"
+    },
+    {
+      "input": "If I see one more Lakshmi EX enrage, I'm kill someone.",
+      "target": "anger"
+    },
+    {
+      "input": "filled with sophisticated glum",
+      "target": "sadness"
+    },
+    {
+      "input": "lonely is not being alone, it's the feeling that no one cares. #alone #depressed #anxiety",
+      "target": "sadness"
+    },
+    {
+      "input": "or just blame the gloomy weather",
+      "target": "sadness"
+    },
+    {
+      "input": "I dreamt that my dog, Snoopy, came back to life. Man I miss that dog 🙁",
+      "target": "sadness"
+    },
+    {
+      "input": "But DAMN the sight of them getting scared af makes me feeel SOOO BAD! Which they should feel afraid cause if their mom don't come n it them",
+      "target": "sadness"
+    },
+    {
+      "input": "@user after you said an apple pie isn't naughty I really want Chris or  @user to say 'but a cream pie is' #naughymind #rage",
+      "target": "anger"
+    },
+    {
+      "input": "Sometimes in #life ....\\nSee the #statement itself #sounds so #temporary\\nNothing is permanent isn't it?\\nSo #never #worry let it go &amp; #moveon",
+      "target": "optimism"
+    },
+    {
+      "input": "From the archives... Strikeforce Champ Ronda Rousey 301 #chirp #church #mayhemmiller #naked #rip #rondarousey #twitter",
+      "target": "sadness"
+    },
+    {
+      "input": "Tomorrow should be interesting if info is being released re away priority &amp; Canalside membership! #outrage #htafc",
+      "target": "anger"
+    },
+    {
+      "input": "@user i cant wait for the day you release the album so that i can finally unleash my fury \\n\\ni hate this long ass hiatus ok afshdkflckakdbwi",
+      "target": "anger"
+    },
+    {
+      "input": "@user yessss waiting for an epi is for the birds. it sucks. im waiting for walking dead new season😩",
+      "target": "anger"
+    },
+    {
+      "input": "#note8 #animated said pen. Amazing. Wife loves this one",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user It ruins my frigging night each night at 9pm. Mrs loves it, i've been early to bed for a month.",
+      "target": "anger"
+    },
+    {
+      "input": "Ugh @user really do have the worst customer service!!!!!!! #astounded",
+      "target": "anger"
+    },
+    {
+      "input": "I'm fuming I wanted Hamez",
+      "target": "anger"
+    },
+    {
+      "input": "My main concern are the children and his wife thats if she is still stuck with him and if she is, then she's strong af. Jeez 😟",
+      "target": "sadness"
+    },
+    {
+      "input": "@user omg.  Who is this nan Hayworth person and where did she come from? Send her back!#sad #bad",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Been there done that",
+      "target": "joy"
+    },
+    {
+      "input": "i want to ruffle jungkook's hair.... this is so sad",
+      "target": "sadness"
+    },
+    {
+      "input": "Don't be afraid to ask questions! He's real &amp; there's always a revelation.",
+      "target": "optimism"
+    },
+    {
+      "input": "@user Wow I've just spotted the cutest human being alive #blessed 😍",
+      "target": "joy"
+    },
+    {
+      "input": "I've seen the innocence leave your eyes. I still mourn this death.",
+      "target": "sadness"
+    },
+    {
+      "input": "@user I coloured my hair bright red AND had a dodgy fringe. #dreadful #nophotos #thankgoodness #betterblonde",
+      "target": "joy"
+    },
+    {
+      "input": "You couldn't mind me up more if you tried right now raging 🙃😠",
+      "target": "anger"
+    },
+    {
+      "input": "Robert called me to make sure I was awake for my night class",
+      "target": "joy"
+    },
+    {
+      "input": "@user Fuck off. Enough of this fake solidarity. #NotInMyName was a rabid #Hinduphobic campaign. Stop giving them legitimacy.",
+      "target": "anger"
+    },
+    {
+      "input": "@user #croydonparkhotel will be receiving a big complaint from me tomorrow #worseservice #rudestaff #furious",
+      "target": "anger"
+    },
+    {
+      "input": "I hate these crippling anxiety. :(",
+      "target": "sadness"
+    },
+    {
+      "input": "I finally got my drivers permit #yes #readytodrive #nervous #scared",
+      "target": "joy"
+    },
+    {
+      "input": "'....trying to work out how a band featuring Corin Tucker and Peter Buck (REM) could be so bad.' WAAHHHHH @user  #devastated",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user My shirt did not arrive today as promised, I even pre-ordered it in June, who do I make my complaint to ?",
+      "target": "anger"
+    },
+    {
+      "input": "@user aw, you make me smile, too.😉😘",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user Eng.R  u call a spade a spade if u were good lets all mourn but if you not pop a bottle and say good riddace",
+      "target": "sadness"
+    },
+    {
+      "input": "I should wear black &amp; mourn a lil'.",
+      "target": "sadness"
+    },
+    {
+      "input": "@user I've tried to get through 3 times today and waited 20 mins each time, what do I have to do to get through?!",
+      "target": "anger"
+    },
+    {
+      "input": "Getting up for work is so much harder when Charles doesn't have to 🙁",
+      "target": "sadness"
+    },
+    {
+      "input": "@user when you try to place an order on PLT website and it comes up with an error but still take money out of my account #fuming",
+      "target": "anger"
+    },
+    {
+      "input": "@user Looking at babies just makes me cross my legs and wince 😂",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user So what's wrong in burning the terrorists alive? If they kill you do you want biryanis and award in return",
+      "target": "anger"
+    },
+    {
+      "input": "had noodles for tea\\nyummmmmmy\\n#yum #yummy #ddlg #abdl #chgl #noodles",
+      "target": "joy"
+    },
+    {
+      "input": "The times when you need someone to lean on but sadly they are only there if they need you",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Id argue that sakura space is the best of the franchise and its not on your list. #dissapointed",
+      "target": "sadness"
+    },
+    {
+      "input": "@user because one of the main symptoms is restlessness and it could explain why he isn't able to sleep/might not want to",
+      "target": "sadness"
+    },
+    {
+      "input": "Wow ... I don't know who Jocelyn Alice is, but judging by her rendition of Oh Canada, I'll never buy any of her music #AllStarGame #awful",
+      "target": "anger"
+    },
+    {
+      "input": "@user is dani alves really going to go to PSG in your opinion #nervous",
+      "target": "sadness"
+    },
+    {
+      "input": "My heart is hurting because I had to pour my milk out because something was in it 😭",
+      "target": "sadness"
+    },
+    {
+      "input": "3. There is already a lot of resentment against the coal miner and union crowd among the liberals. They are seen as racist and as having",
+      "target": "anger"
+    },
+    {
+      "input": "So, basically, Donald Trump was so intimidated by Hillary Clinton that he sought foreign assistance (including cyberattacks) to 'win'?",
+      "target": "anger"
+    },
+    {
+      "input": "@user Have the most wonderful day Ian.",
+      "target": "joy"
+    },
+    {
+      "input": "Why is @user 'busted' bc he spoke w/Russian lawyer? He's a world bizman. Where was the outrage bc @user honeymooned there?",
+      "target": "anger"
+    },
+    {
+      "input": "Did they offend us and they want it to sound new?",
+      "target": "anger"
+    },
+    {
+      "input": "@user An outrage",
+      "target": "anger"
+    },
+    {
+      "input": "I've seen some get so discouraged in their old age becos they aren't physically able 2 do the things for God they used 2 do in their youth.",
+      "target": "sadness"
+    },
+    {
+      "input": "Holding a #grudge is like allowing someone to #live #rent #free in your #head #WednesdayWisdom #MotivationalQuotes",
+      "target": "optimism"
+    },
+    {
+      "input": "Looking up some phone prices online and it just saddens me even more 😧",
+      "target": "sadness"
+    },
+    {
+      "input": "QLD are like the All Blacks #relentless",
+      "target": "anger"
+    },
+    {
+      "input": "@user use the F word as much as you need to. People may start to listen. :)",
+      "target": "optimism"
+    },
+    {
+      "input": "@user It used to scare me too...  But it's better this way.",
+      "target": "optimism"
+    },
+    {
+      "input": "Another blow for students as the SU have shunned wildcats for fear they will offend Dr. Dre.",
+      "target": "sadness"
+    },
+    {
+      "input": "We get #upset when we are #overlooked for doing things for others, even small things. Imagine how #Jesus feels when he died for our sins.",
+      "target": "sadness"
+    },
+    {
+      "input": "Lying at the pool with John , ice cream , drinks, 29 degrees and listening to busted ✌🏼️ #bliss",
+      "target": "joy"
+    },
+    {
+      "input": "Morning Swindon!\\nIs there any chance you can cheer yourself up a bit?!! #bleak 😝",
+      "target": "sadness"
+    },
+    {
+      "input": "Words cannot describe the sheer pain of the blisters caused by these new sandals. I am this close to going barefoot all the way home #grim",
+      "target": "sadness"
+    },
+    {
+      "input": "@user @user Happy birthday Mom what a wonderful cake delivery youre blessed",
+      "target": "joy"
+    },
+    {
+      "input": "Have you ever spoke in tongues, don't be afraid.",
+      "target": "anger"
+    },
+    {
+      "input": "LibertySeeds: realDonaldTrump LizCrokin Great #start for #MAGA ...",
+      "target": "joy"
+    },
+    {
+      "input": "@user Really it was very sad and shame!!!",
+      "target": "sadness"
+    },
+    {
+      "input": "blood rage",
+      "target": "anger"
+    },
+    {
+      "input": "Feeling slightly apprehensive, but amazing after this weekend off😊",
+      "target": "joy"
+    },
+    {
+      "input": "Having a movie day with my favorite today 😄 god I love my lil goth bean.",
+      "target": "joy"
+    },
+    {
+      "input": "Quote of the day comes from Queen Cersei herself @user 'Power hungry people are fearful, otherwise why wouldn't you just chill?' 👏",
+      "target": "optimism"
+    },
+    {
+      "input": "@user @user It's what they'll be known for. Temper tantrums, obstruction, working against the American people.",
+      "target": "anger"
+    },
+    {
+      "input": "@user I think I will tomorrow. I ain't ready for all those feels though. 😥",
+      "target": "sadness"
+    },
+    {
+      "input": "@user Nope we don't have it. It's an #outrage",
+      "target": "anger"
+    },
+    {
+      "input": "Jordan is helping Arya hunt a moth, lifting her up to get it on the walls. it's super adorable. #kitten #boyfriend #adorable #hunting",
+      "target": "joy"
+    },
+    {
+      "input": "@user homyghad 😢",
+      "target": "sadness"
+    },
+    {
+      "input": "Daniel killing her ex doeee🍫🍫🍫😛 #insecure",
+      "target": "sadness"
+    },
+    {
+      "input": "Paul is such a fucking bully! Dam leave the poor guy alone. He went on #BB19 to play the game same as you SMDH pathetic #annoyed #worstvet",
+      "target": "anger"
+    },
+    {
+      "input": "I was so scared!.. I thought I lost another daughter tonight.  #grateful OTM❤",
+      "target": "joy"
+    },
+    {
+      "input": "@user Bullies, rudeness and littering all make me #mad!",
+      "target": "anger"
+    },
+    {
+      "input": "I'm blessed with a wonderful older sister I'm so happy",
+      "target": "joy"
+    },
+    {
+      "input": "@user Same as the bully in second grade. Classic.",
+      "target": "anger"
+    },
+    {
+      "input": "The number of ppl who took it the wrong way is not that alarming, but srsly why do u think lyt dat man oy 😊",
+      "target": "joy"
+    },
+    {
+      "input": "@user One of the twins was sleeping next to me. I tried to cover my laughter, but I shook so hard she woke up!",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user @user I confess I didn't watch last week. #bad Are you going to do an episode on accessibility?",
+      "target": "sadness"
+    },
+    {
+      "input": "bro im fuming right now how the fuck did we hand them over james for 45m, we probably paid for his plane ticket aswell so shameless",
+      "target": "anger"
+    },
+    {
+      "input": "Dirty Den returns, bursting forth from his grave to deliver a horrible vengeance.",
+      "target": "anger"
+    },
+    {
+      "input": "Over 9 hours, 6 trains and 7 stations only to be back where I started #nightmare",
+      "target": "anger"
+    },
+    {
+      "input": "Idk why tiff always have a 6:30 am alarm that rings everyday for",
+      "target": "anger"
+    },
+    {
+      "input": "You won't find #excuses if you seek #optimism. #realtalk",
+      "target": "optimism"
+    },
+    {
+      "input": "Does anybody mom annoy them just by talking and she probably not even trying to annoy you 😂",
+      "target": "anger"
+    },
+    {
+      "input": "@user well be offended then cause im speakin truths here 😜",
+      "target": "anger"
+    },
+    {
+      "input": "Well played radio station. Playing the song 'Total Eclipse of the Heart' at the start of the eclipse! #Eclipse #brilliant",
+      "target": "joy"
+    },
+    {
+      "input": "@user Sometimes our judiciary just leaves you breathless and speechless.",
+      "target": "anger"
+    },
+    {
+      "input": "Don't be discouraged.",
+      "target": "optimism"
+    },
+    {
+      "input": "@user @user Did you not film them when we equalised ? Hmm didn't think so #disappointing",
+      "target": "sadness"
+    },
+    {
+      "input": "What a raucous crowd today @user #GCSArtsPD17! How often does one hear applause and cheers at PD?! #excitement @user @user",
+      "target": "joy"
+    },
+    {
+      "input": "I'm actually very irritated 😡",
+      "target": "anger"
+    },
+    {
+      "input": "@user : We need more mutual #trust to increase #security &amp; fight #terrorism &amp; #radicalization in Europe #osce17AUT #Diplomacy140",
+      "target": "optimism"
+    },
+    {
+      "input": "I feel bad for people who don't understand my sarcasm. They think I'm mean, but really I'm hysterical &amp; they don't realize it. #sad #funny",
+      "target": "sadness"
+    },
+    {
+      "input": "Me: How much price for this poster of this sexy man? Sales Clerk: That's a mirror, sir.\\n #LaughOutLoud",
+      "target": "joy"
+    },
+    {
+      "input": "By the lack of cheers for cozart when he was announced, one would assume people don't know who the reds are. #cincysports #depressing",
+      "target": "sadness"
+    },
+    {
+      "input": "I hate the smell of cigarettes.. 😠",
+      "target": "anger"
+    },
+    {
+      "input": "You won't reach a #goal you hide in a drawer. Keep it in front of your face at all times.  #WednesdayWisdom",
+      "target": "optimism"
+    },
+    {
+      "input": "And now that Im having the other way around, i feel so upset and sad",
+      "target": "sadness"
+    },
+    {
+      "input": "I need a beer #irritated",
+      "target": "anger"
+    },
+    {
+      "input": "I cry whenever they call me mico chan 😭",
+      "target": "sadness"
+    },
+    {
+      "input": "yikes got my first job interview next week, haven't had one in years",
+      "target": "joy"
+    },
+    {
+      "input": "Time to get my dreads back I miss them 😩😩 #dread head #girlswithdreads",
+      "target": "sadness"
+    },
+    {
+      "input": "@user It's a bit sad really. You'd think that he/she/it had something better to do, wouldn't you?",
+      "target": "sadness"
+    },
+    {
+      "input": "@user haha Use separate sheet if necessary 😆",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user Don't insult donkeys",
+      "target": "anger"
+    },
+    {
+      "input": "You can be discouraged by failure or you can learn from it. -- Thomas J. Watson,#motivationalquote,#success",
+      "target": "optimism"
+    },
+    {
+      "input": "@user Unbelievable #arrogance to think you know better than #StephenHawking .",
+      "target": "anger"
+    },
+    {
+      "input": "I want a whole show of @user just reading emojis. #adorable #inners",
+      "target": "joy"
+    },
+    {
+      "input": "Attention seeker Chris Uhlmann highly aroused over the attention he drew to himself now enjoying some fists of fury time @user @user",
+      "target": "joy"
+    },
+    {
+      "input": "@user @user @user they need time to grieve.",
+      "target": "sadness"
+    },
+    {
+      "input": "New Lyft User? Use code to get credit: INVITES #Hey coupon clippers! #cheery #LyftNOW",
+      "target": "joy"
+    },
+    {
+      "input": "﻿Mummy came home and ordered pizza even though there's food in the fridge. I ain't fighting the hypocrisy this time #jalepenos #pine #chicken",
+      "target": "joy"
+    },
+    {
+      "input": "@user Don Jr lawyered up with the wrong folk. He aint so bright.",
+      "target": "sadness"
+    },
+    {
+      "input": "What can you say about @user #awestruck.....",
+      "target": "joy"
+    },
+    {
+      "input": "Day 1 tom 😱",
+      "target": "joy"
+    },
+    {
+      "input": "I can feel my skull shatter from the dull chatter\\nBrain spattered on the wall\\nGrey stains won't dissolve\\nNow I have to paint it all",
+      "target": "sadness"
+    }
+  ]
+}

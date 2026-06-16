@@ -1,0 +1,1198 @@
+{
+  "config": {
+    "dataset": "code_to_text",
+    "task": null,
+    "seed": 5,
+    "batch_size": 16,
+    "max_new_tokens": 128,
+    "output": "outputs/code_to_text_de_bert_score",
+    "sample_num": 50,
+    "test_sample_num": 100,
+    "metric": "bert_score",
+    "budget": 5,
+    "popsize": 10,
+    "evo_mode": "de",
+    "donor_random": false,
+    "sel_mode": "wheel",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "openai_api_key": null,
+    "openai_base_url": null,
+    "llm_type": "turbo",
+    "initial": "cot",
+    "initial_mode": "topk",
+    "ratio": 0,
+    "para_mode": null,
+    "template": "v1",
+    "client": false,
+    "cot_cache_path": "outputs/code_to_text_de_bert_score/cot_cache.json",
+    "desc_cache_path": "outputs/code_to_text_de_bert_score/desc_cache.json",
+    "mode": null,
+    "setting": "default",
+    "ga_mode": "topk",
+    "ckpt_pop": null,
+    "demon": 0,
+    "content": "",
+    "results_json": "outputs/code_to_text_de_bert_score/optimization_log.json"
+  },
+  "dataset": "code_to_text",
+  "metric": "bert_score",
+  "initial": [
+    {
+      "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+      "mark": "manual",
+      "score": 0.8146978080272674
+    },
+    {
+      "prompt": "Let's meticulously examine each aspect of this problem.",
+      "mark": "manual",
+      "score": 0.812862251996994
+    },
+    {
+      "prompt": "We'll tackle this math task one piece at a time.",
+      "mark": "manual",
+      "score": 0.8121664464473725
+    },
+    {
+      "prompt": "Let’s be realistic and think step by step.",
+      "mark": "manual",
+      "score": 0.8121507775783539
+    },
+    {
+      "prompt": "Before we dive into the answer,",
+      "mark": "manual",
+      "score": 0.8121277391910553
+    },
+    {
+      "prompt": "Let’s think",
+      "mark": "manual",
+      "score": 0.8113790428638459
+    },
+    {
+      "prompt": "Let's systematically dissect this math task.",
+      "mark": "manual",
+      "score": 0.8107496905326843
+    },
+    {
+      "prompt": "Let's approach this logically, step by step.",
+      "mark": "manual",
+      "score": 0.8103089344501495
+    },
+    {
+      "prompt": "We'll thoughtfully progress through this task step by step.",
+      "mark": "manual",
+      "score": 0.8101258862018585
+    },
+    {
+      "prompt": "Let’s think about this logically.",
+      "mark": "manual",
+      "score": 0.8099445116519928
+    }
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "best_score": 0.8146978080272674,
+      "avg_score": 0.81176687169075,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8146978080272674,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let’s think",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time and convert it into simpler language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8102107870578766,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8146978080272674,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.812862251996994,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem. Let's stay grounded and proceed step by step. Before we get to the answer, we'll take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8094012546539306,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.812862251996994,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.8121664464473725,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend: We'll tackle this mathematical reasoning challenge gradually, one step at a time.",
+          "child_score": 0.8108139169216156,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.8121664464473725,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8121507775783539,
+          "parents": [
+            "Let’s think about this logically.",
+            "Let’s think",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: We'll take this mathematical reasoning challenge one step at a time about this analytically.",
+          "child_score": 0.8094107127189636,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8121507775783539,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8121277391910553,
+          "parents": [
+            "Let's systematically dissect this math task.",
+            "We'll thoughtfully progress through this task step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll methodically examine the math problem one step at a time.",
+          "child_score": 0.8086639809608459,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8121277391910553,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8113790428638459,
+          "parents": [
+            "Let's approach this logically, step by step.",
+            "We'll thoughtfully progress through this task step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "We could tackle this analytical challenge one step at a time.",
+          "child_score": 0.8100945568084716,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8113790428638459,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.8107496905326843,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll thoughtfully progress through this task step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+          "child_score": 0.8109041798114777,
+          "selected_prompt": "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+          "selected_score": 0.8109041798114777,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's approach this logically, step by step.",
+          "old_score": 0.8103089344501495,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the sentence \"Before we get to the answer, we'll be practical and take this mathematical reasoning challenge one step at a time.\" into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8070636427402497,
+          "selected_prompt": "Let's approach this logically, step by step.",
+          "selected_score": 0.8103089344501495,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8101258862018585,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "child_score": 0.8111270248889924,
+          "selected_prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "selected_score": 0.8111270248889924,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8099445116519928,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s think about this logically: Let’s pause to map out the issue; we’ll take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8087781691551208,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8099445116519928,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8146978080272674,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.812862251996994,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.8121664464473725,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8121507775783539,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8121277391910553,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8113790428638459,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+          "score": 0.8109041798114777,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's approach this logically, step by step.",
+          "score": 0.8103089344501495,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "score": 0.8111270248889924,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8099445116519928,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+        "score": 0.8146978080272674
+      }
+    },
+    {
+      "step": 1,
+      "best_score": 0.8146978080272674,
+      "avg_score": 0.81186516559124,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8146978080272674,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's approach this logically, step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8115550148487091,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8146978080272674,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.812862251996994,
+          "parents": [
+            "Let’s think about this logically.",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8104211449623108,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.812862251996994,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.8121664464473725,
+          "parents": [
+            "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let us methodically analyze this math task as we work through the puzzle, one piece at a time.",
+          "child_score": 0.8092222487926484,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.8121664464473725,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8121507775783539,
+          "parents": [
+            "Let's approach this logically, step by step.",
+            "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Let us thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "child_score": 0.8103152596950531,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8121507775783539,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8121277391910553,
+          "parents": [
+            "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+            "We'll tackle this math task one piece at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll thoroughly break down this math problem one step at a time to solve this math puzzle.",
+          "child_score": 0.8086244249343872,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8121277391910553,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8113790428638459,
+          "parents": [
+            "Let's approach this logically, step by step.",
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s think: Let us consider this mathematical reasoning challenge gradually in simpler terms so non-native English speakers can understand.",
+          "child_score": 0.8101379013061524,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8113790428638459,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+          "old_score": 0.8109041798114777,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "child_score": 0.8118871188163758,
+          "selected_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "selected_score": 0.8118871188163758,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's approach this logically, step by step.",
+          "old_score": 0.8103089344501495,
+          "parents": [
+            "Let's systematically dissect this math task as we tackle this math puzzle step by step.",
+            "We'll tackle this math task one piece at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert this step-by-step math task into simpler English while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.809607127904892,
+          "selected_prompt": "Let's approach this logically, step by step.",
+          "selected_score": 0.8103089344501495,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "old_score": 0.8111270248889924,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let's approach this logically, step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Rewrite the provided text into easier language while maintaining the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.810436999797821,
+          "selected_prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "selected_score": 0.8111270248889924,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8099445116519928,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let's approach this logically, step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s think about this logically. We will tackle this math problem step by step.",
+          "child_score": 0.8077960288524628,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8099445116519928,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8146978080272674,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.812862251996994,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.8121664464473725,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8121507775783539,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8121277391910553,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8113790428638459,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "score": 0.8118871188163758,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's approach this logically, step by step.",
+          "score": 0.8103089344501495,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "score": 0.8111270248889924,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8099445116519928,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+        "score": 0.8146978080272674
+      }
+    },
+    {
+      "step": 2,
+      "best_score": 0.8146978080272674,
+      "avg_score": 0.8121625597476958,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8146978080272674,
+          "parents": [
+            "Let’s think",
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's analyze this mathematical reasoning challenge one step at a time, explained in clear, simple terms for non-native English speakers.",
+          "child_score": 0.8101060116291046,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8146978080272674,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.812862251996994,
+          "parents": [
+            "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem by being pragmatic and methodically analyzing the math challenge as we work through this puzzle incrementally, one step at a time.",
+          "child_score": 0.808438036441803,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.812862251996994,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.8121664464473725,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "We'll tackle this math task one piece at a time by approaching this mathematical reasoning challenge step by step.",
+          "child_score": 0.8086901617050171,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.8121664464473725,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8121507775783539,
+          "parents": [
+            "Let's approach this logically, step by step.",
+            "Let’s think",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert this carefully analyzed mathematical reasoning prompt into easier language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.810305312871933,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8121507775783539,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8121277391910553,
+          "parents": [
+            "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+            "Let’s think",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we dive into the answer, let's be pragmatic and methodically break down this math problem as we work through the puzzle step by step. We'll take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8085471653938293,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8121277391910553,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8113790428638459,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the new prompt into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8101307976245881,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8113790428638459,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "old_score": 0.8118871188163758,
+          "parents": [
+            "We'll tackle this math task one piece at a time.",
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "We will examine this mathematical reasoning challenge step by step in a practical, systematic way to tackle this math puzzle.",
+          "child_score": 0.8087525546550751,
+          "selected_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "selected_score": 0.8118871188163758,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's approach this logically, step by step.",
+          "old_score": 0.8103089344501495,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's approach this logically, step by step: Before we begin solving, let's be practical and reason step by step for this mathematical reasoning challenge.",
+          "child_score": 0.8081621408462525,
+          "selected_prompt": "Let's approach this logically, step by step.",
+          "selected_score": 0.8103089344501495,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+          "old_score": 0.8111270248889924,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let's approach this logically, step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8133306765556335,
+          "selected_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.8133306765556335,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8099445116519928,
+          "parents": [
+            "We'll thoroughly examine every component of the challenge one step at a time, thoughtfully progress through this task step by step.",
+            "Let's approach this logically, step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "child_score": 0.8107148015499115,
+          "selected_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "selected_score": 0.8107148015499115,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8146978080272674,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.812862251996994,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.8121664464473725,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8121507775783539,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8121277391910553,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8113790428638459,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "score": 0.8118871188163758,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's approach this logically, step by step.",
+          "score": 0.8103089344501495,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.8133306765556335,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "score": 0.8107148015499115,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+        "score": 0.8146978080272674
+      }
+    },
+    {
+      "step": 3,
+      "best_score": 0.8146978080272674,
+      "avg_score": 0.8121625597476958,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8146978080272674,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge and break it down into manageable parts, taking it one step at a time.",
+          "child_score": 0.8079416453838348,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8146978080272674,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.812862251996994,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we tackle the solution, we will approach this mathematical reasoning problem one step at a time. Let's meticulously examine each aspect of this problem and ensure the wording is simple, so it is easy for non-native English speakers to understand.",
+          "child_score": 0.8102184796333313,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.812862251996994,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.8121664464473725,
+          "parents": [
+            "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the thorough breakdown of the task into plainer terms without changing the meaning, so it's easier for ESL learners to understand.",
+          "child_score": 0.8089175951480866,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.8121664464473725,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8121507775783539,
+          "parents": [
+            "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+            "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step to convert the math problem into simpler language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8120706844329834,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8121507775783539,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8121277391910553,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we dive into the answer, we will tackle this math puzzle one stage at a time.",
+          "child_score": 0.8103320479393006,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8121277391910553,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8113790428638459,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s think: Before we tackle the solution, we'll take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8075646805763245,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8113790428638459,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "old_score": 0.8118871188163758,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Transform the instruction \"We'll approach this math puzzle gradually before we present the solution, one step at a time\" into simpler language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8117168176174164,
+          "selected_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "selected_score": 0.8118871188163758,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's approach this logically, step by step.",
+          "old_score": 0.8103089344501495,
+          "parents": [
+            "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+            "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's adopt a pragmatic method to analyze the mathematical task, translating the careful analysis of every facet into simpler words while preserving the meaning, so non-native English speakers can understand it more easily, and we'll take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8087609672546386,
+          "selected_prompt": "Let's approach this logically, step by step.",
+          "selected_score": 0.8103089344501495,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.8133306765556335,
+          "parents": [
+            "Let’s think",
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand: Before we jump to the solution, let us consider this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8112451040744781,
+          "selected_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.8133306765556335,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "old_score": 0.8107148015499115,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend: We'll take this Before we get started, Let’s be pragmatic and break it down step by step as we think about this logically, carefully analyzing every element of the challenge one stage at a time.",
+          "child_score": 0.8100769174098968,
+          "selected_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "selected_score": 0.8107148015499115,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8146978080272674,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.812862251996994,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.8121664464473725,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8121507775783539,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8121277391910553,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8113790428638459,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "score": 0.8118871188163758,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's approach this logically, step by step.",
+          "score": 0.8103089344501495,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.8133306765556335,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "score": 0.8107148015499115,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+        "score": 0.8146978080272674
+      }
+    },
+    {
+      "step": 4,
+      "best_score": 0.8146978080272674,
+      "avg_score": 0.8121625597476958,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8146978080272674,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the sentence \"Let's thoroughly review every facet of the issue and approach it in stages.\" into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.811157056093216,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8146978080272674,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.812862251996994,
+          "parents": [
+            "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem. Rephrase the careful analysis of every aspect of the task into plain language, keeping the meaning intact, and take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8087458610534668,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.812862251996994,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.8121664464473725,
+          "parents": [
+            "Let’s think",
+            "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's consider this mathematical reasoning challenge one piece at a time.",
+          "child_score": 0.8095968413352966,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.8121664464473725,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8121507775783539,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: We will tackle this math puzzle step by step.",
+          "child_score": 0.8118884718418121,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8121507775783539,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8121277391910553,
+          "parents": [
+            "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+            "Let's approach this logically, step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll tackle this logical reasoning task bit by bit.",
+          "child_score": 0.8106773710250854,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8121277391910553,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8113790428638459,
+          "parents": [
+            "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+            "We'll tackle this math task one piece at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the sentence \"We should ponder this methodically while we meticulously examine every component of the task, step by step.\" into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8095955860614776,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8113790428638459,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "old_score": 0.8118871188163758,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Before we tackle the solution, let's carefully study every facet of this problem, and let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "child_score": 0.8066929805278779,
+          "selected_prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "selected_score": 0.8118871188163758,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's approach this logically, step by step.",
+          "old_score": 0.8103089344501495,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let's tackle this mathematical reasoning challenge bit by bit and rewrite the problem into clearer, simpler sentences while preserving the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.8080859982967377,
+          "selected_prompt": "Let's approach this logically, step by step.",
+          "selected_score": 0.8103089344501495,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.8133306765556335,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Convert the practical plan in small increments into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8075002479553223,
+          "selected_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.8133306765556335,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "old_score": 0.8107148015499115,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time."
+          ],
+          "child_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time. Before we reach a conclusion, let’s carefully analyze every facet of this issue one step at a time.",
+          "child_score": 0.809876708984375,
+          "selected_prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "selected_score": 0.8107148015499115,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8146978080272674,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.812862251996994,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.8121664464473725,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8121507775783539,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8121277391910553,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8113790428638459,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's be practical and systematically dissect this math task as we tackle this math puzzle step by step.",
+          "score": 0.8118871188163758,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's approach this logically, step by step.",
+          "score": 0.8103089344501495,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.8133306765556335,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically as we carefully analyze every element of the challenge one stage at a time.",
+          "score": 0.8107148015499115,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+        "score": 0.8146978080272674
+      }
+    }
+  ],
+  "final": {
+    "dataset": "code_to_text",
+    "metric": "bert_score",
+    "best_prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+    "dev_score": 0.8133306765556335,
+    "test_score": 0.8236383837461472,
+    "top_candidates": [
+      {
+        "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+        "mark": "manual",
+        "dev_score": 0.8146978080272674,
+        "test_score": 0.8206960588693619
+      },
+      {
+        "prompt": "Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+        "mark": "evoluted",
+        "dev_score": 0.8133306765556335,
+        "test_score": 0.8236383837461472
+      },
+      {
+        "prompt": "Let's meticulously examine each aspect of this problem.",
+        "mark": "manual",
+        "dev_score": 0.812862251996994,
+        "test_score": 0.8203107118606567
+      },
+      {
+        "prompt": "We'll tackle this math task one piece at a time.",
+        "mark": "manual",
+        "dev_score": 0.8121664464473725,
+        "test_score": 0.8225052762031555
+      },
+      {
+        "prompt": "Let’s be realistic and think step by step.",
+        "mark": "manual",
+        "dev_score": 0.8121507775783539,
+        "test_score": 0.820728235244751
+      }
+    ]
+  }
+}

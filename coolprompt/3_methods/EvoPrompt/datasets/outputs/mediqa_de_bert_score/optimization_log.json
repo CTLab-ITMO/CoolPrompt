@@ -1,0 +1,1198 @@
+{
+  "config": {
+    "dataset": "mediqa",
+    "task": null,
+    "seed": 5,
+    "batch_size": 16,
+    "max_new_tokens": 128,
+    "output": "outputs/mediqa_de_bert_score",
+    "sample_num": 50,
+    "test_sample_num": 100,
+    "metric": "bert_score",
+    "budget": 5,
+    "popsize": 10,
+    "evo_mode": "de",
+    "donor_random": false,
+    "sel_mode": "wheel",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "openai_api_key": null,
+    "openai_base_url": null,
+    "llm_type": "turbo",
+    "initial": "cot",
+    "initial_mode": "topk",
+    "ratio": 0,
+    "para_mode": null,
+    "template": "v1",
+    "client": false,
+    "cot_cache_path": "outputs/mediqa_de_bert_score/cot_cache.json",
+    "desc_cache_path": "outputs/mediqa_de_bert_score/desc_cache.json",
+    "mode": null,
+    "setting": "default",
+    "ga_mode": "topk",
+    "ckpt_pop": null,
+    "demon": 0,
+    "content": "",
+    "results_json": "outputs/mediqa_de_bert_score/optimization_log.json"
+  },
+  "dataset": "mediqa",
+  "metric": "bert_score",
+  "initial": [
+    {
+      "prompt": "Let’s think like a detective step by step.",
+      "mark": "manual",
+      "score": 0.8835270953178406
+    },
+    {
+      "prompt": "We'll solve this by analyzing each part of the problem.",
+      "mark": "manual",
+      "score": 0.8826878833770752
+    },
+    {
+      "prompt": "Let’s think",
+      "mark": "manual",
+      "score": 0.8823488426208496
+    },
+    {
+      "prompt": "We'll methodically work through this problem together.",
+      "mark": "manual",
+      "score": 0.882302633523941
+    },
+    {
+      "prompt": "First,",
+      "mark": "manual",
+      "score": 0.881897611618042
+    },
+    {
+      "prompt": "The answer is after the proof.",
+      "mark": "manual",
+      "score": 0.88167600274086
+    },
+    {
+      "prompt": "Before we dive into the answer,",
+      "mark": "manual",
+      "score": 0.8813101816177368
+    },
+    {
+      "prompt": "Let’s think about this logically.",
+      "mark": "manual",
+      "score": 0.8811773538589478
+    },
+    {
+      "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+      "mark": "manual",
+      "score": 0.8809552669525147
+    },
+    {
+      "prompt": "We'll thoughtfully progress through this task step by step.",
+      "mark": "manual",
+      "score": 0.8808459436893463
+    }
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "best_score": 0.8835270953178406,
+      "avg_score": 0.8818728815317154,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8835270953178406,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "The answer is after the proof.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: We will carefully tackle this problem as a team, and the solution appears after the proof.",
+          "child_score": 0.8817555427551269,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8835270953178406,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8826878833770752,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "First,",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Convert the following prompt into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand: \"To start, let's carefully approach this problem together and think like a detective, step by step.\"",
+          "child_score": 0.8811669206619263,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8826878833770752,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8823488426208496,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "First,",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Let’s think: Transform the provided text into simpler language while preserving the meaning, so it can be understood by non-native English speakers.",
+          "child_score": 0.8817894268035888,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8823488426208496,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.882302633523941,
+          "parents": [
+            "We'll thoughtfully progress through this task step by step.",
+            "The answer is after the proof.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "We'll methodically work through this problem together, thinking like a detective as we systematically tackle the problem in small increments.",
+          "child_score": 0.8805743825435638,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.882302633523941,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "First,",
+          "old_score": 0.881897611618042,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "First, Let’s tackle this math puzzle as we begin step by step.",
+          "child_score": 0.8809022915363312,
+          "selected_prompt": "First,",
+          "selected_score": 0.881897611618042,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.88167600274086,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Let's approach this rationally step by step. The answer is after the proof.",
+          "child_score": 0.8810695636272431,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.88167600274086,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8813101816177368,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Before we dive into the answer, let's reason like investigators in small steps.",
+          "child_score": 0.8802334558963776,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8813101816177368,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8811773538589478,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "First,",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Let’s think about this logically: To begin, think like a detective step by step.",
+          "child_score": 0.8802849626541138,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8811773538589478,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8809552669525147,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "We'll thoughtfully progress through this task step by step.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time by examining every component of the challenge and progressing through the assignment step by step.",
+          "child_score": 0.8807278788089752,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8809552669525147,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8808459436893463,
+          "parents": [
+            "First,",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Initially, we'll approach this by examining each component of the problem. Let’s think like a detective step by step. We'll thoughtfully progress through this task step by step.",
+          "child_score": 0.8785871386528015,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step.",
+          "selected_score": 0.8808459436893463,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8835270953178406,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8826878833770752,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8823488426208496,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.882302633523941,
+          "mark": "manual"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.881897611618042,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.88167600274086,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8813101816177368,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8811773538589478,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8809552669525147,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step.",
+          "score": 0.8808459436893463,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think like a detective step by step.",
+        "score": 0.8835270953178406
+      }
+    },
+    {
+      "step": 1,
+      "best_score": 0.8840471112728119,
+      "avg_score": 0.8822459897994996,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8835270953178406,
+          "parents": [
+            "First,",
+            "Let’s think about this logically.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "To begin, let’s analyze this logically, like a detective step by step.",
+          "child_score": 0.883430655002594,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8835270953178406,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8826878833770752,
+          "parents": [
+            "We'll thoughtfully progress through this task step by step.",
+            "First,",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem, and we'll carefully work through this task step by step, like a detective.",
+          "child_score": 0.8795552027225494,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8826878833770752,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8823488426208496,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll methodically work through this problem together.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Prior to presenting the solution, we will carefully solve this challenge side by side, step by step.",
+          "child_score": 0.8816643130779266,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.8823488426208496,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.882302633523941,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Let’s think like a detective step by step as we methodically work through this problem together.",
+          "child_score": 0.8807141053676605,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.882302633523941,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "First,",
+          "old_score": 0.881897611618042,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s think",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "First, Let’s brainstorm like a detective step by step.",
+          "child_score": 0.8795572185516357,
+          "selected_prompt": "First,",
+          "selected_score": 0.881897611618042,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.88167600274086,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll thoughtfully progress through this task step by step.",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+          "child_score": 0.882410591840744,
+          "selected_prompt": "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+          "selected_score": 0.882410591840744,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8813101816177368,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "First,",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll systematically tackle this problem together. To begin, let’s think like a detective step by step.",
+          "child_score": 0.880615565776825,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.8813101816177368,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8811773538589478,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s think",
+            "Let’s think like a detective step by step."
+          ],
+          "child_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8840471112728119,
+          "selected_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8840471112728119,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8809552669525147,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time: We'll tackle this by examining every component of the issue, transforming the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.8808342385292053,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8809552669525147,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll thoughtfully progress through this task step by step.",
+          "old_score": 0.8808459436893463,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8809726798534393,
+          "selected_prompt": "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8809726798534393,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8835270953178406,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8826878833770752,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.8823488426208496,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.882302633523941,
+          "mark": "manual"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.881897611618042,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+          "score": 0.882410591840744,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.8813101816177368,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8840471112728119,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8809552669525147,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8809726798534393,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+        "score": 0.8840471112728119
+      }
+    },
+    {
+      "step": 2,
+      "best_score": 0.8840471112728119,
+      "avg_score": 0.8826693890094758,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8835270953178406,
+          "parents": [
+            "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+            "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: We will carefully advance through this task step by step: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8820596289634705,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8835270953178406,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8826878833770752,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem. First, before we reach the conclusion: Let’s think about this logically: We'll carefully tackle this challenge as a team, Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8825907051563263,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8826878833770752,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s think",
+          "old_score": 0.8823488426208496,
+          "parents": [
+            "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "child_score": 0.8836426222324372,
+          "selected_prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "selected_score": 0.8836426222324372,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.882302633523941,
+          "parents": [
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll methodically work through this problem together: Let’s approach this systematically, rewrite the given text into simpler language while keeping the meaning, so non-native speakers can understand it. We should review this carefully as we proceed through each step.",
+          "child_score": 0.8810079443454742,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.882302633523941,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "First,",
+          "old_score": 0.881897611618042,
+          "parents": [
+            "Before we dive into the answer,",
+            "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "First, The solution follows the proof: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8806341874599457,
+          "selected_prompt": "First,",
+          "selected_score": 0.881897611618042,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "The answer is after the proof: Let's consider this carefully as we progress through the task step by step.",
+          "old_score": 0.882410591840744,
+          "parents": [
+            "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "child_score": 0.8834085750579834,
+          "selected_prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "selected_score": 0.8834085750579834,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.8813101816177368,
+          "parents": [
+            "Let’s think",
+            "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "child_score": 0.8826848208904267,
+          "selected_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "selected_score": 0.8826848208904267,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "old_score": 0.8840471112728119,
+          "parents": [
+            "First,",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Firstly, let’s think about this logically: Rewrite the supplied text into easier language while preserving the meaning, making it accessible for non-native English speakers to understand.",
+          "child_score": 0.8802902925014496,
+          "selected_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8840471112728119,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8809552669525147,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll tackle this one step at a time by examining each component of the task and converting the given text into simpler language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8808751118183136,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8809552669525147,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll thoughtfully progress through this task step by step: Let’s analyze this as a detective would: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "old_score": 0.8809726798534393,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8815402698516845,
+          "selected_prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8815402698516845,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8835270953178406,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8826878833770752,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "score": 0.8836426222324372,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.882302633523941,
+          "mark": "manual"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.881897611618042,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "score": 0.8834085750579834,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "score": 0.8826848208904267,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8840471112728119,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8809552669525147,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8815402698516845,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+        "score": 0.8840471112728119
+      }
+    },
+    {
+      "step": 3,
+      "best_score": 0.8842085444927216,
+      "avg_score": 0.8826561853885652,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8835270953178406,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: We'll systematically break down the task as a team, transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.883306758403778,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8835270953178406,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8826878833770752,
+          "parents": [
+            "First,",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem: To begin, let’s think about this logically, transforming the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.88056609749794,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8826878833770752,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "old_score": 0.8836426222324372,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Let’s think: Let’s think like a detective step by step: Transform the difficult sentence into simpler words while maintaining the meaning, so non-native English speakers can understand.",
+          "child_score": 0.8823348605632781,
+          "selected_prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "selected_score": 0.8836426222324372,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.882302633523941,
+          "parents": [
+            "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers."
+          ],
+          "child_prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8842085444927216,
+          "selected_prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.8842085444927216,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "First,",
+          "old_score": 0.881897611618042,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+          "child_score": 0.8831796503067016,
+          "selected_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+          "selected_score": 0.8831796503067016,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "old_score": 0.8834085750579834,
+          "parents": [
+            "First,",
+            "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "To begin, we'll tackle this math reasoning task step by step: Rewrite the given text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8833161568641663,
+          "selected_prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "selected_score": 0.8834085750579834,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "old_score": 0.8826848208904267,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "First,",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Let’s analyze this as a detective would, one step at a time. To begin, Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8799003028869629,
+          "selected_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "selected_score": 0.8826848208904267,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "old_score": 0.8840471112728119,
+          "parents": [
+            "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.880353639125824,
+          "selected_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.880353639125824,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8809552669525147,
+          "parents": [
+            "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+            "First,",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Consider this step by step: Rewrite the provided text into plainer language without changing its meaning so non-native English speakers can understand it. We'll take this mathematical reasoning challenge one step at a time.",
+          "child_score": 0.8813287532329559,
+          "selected_prompt": "Consider this step by step: Rewrite the provided text into plainer language without changing its meaning so non-native English speakers can understand it. We'll take this mathematical reasoning challenge one step at a time.",
+          "selected_score": 0.8813287532329559,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "old_score": 0.8815402698516845,
+          "parents": [
+            "First,",
+            "We'll methodically work through this problem together.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "To begin with, we'll carefully approach this problem step by step, rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8812500619888306,
+          "selected_prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8815402698516845,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8835270953178406,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8826878833770752,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "score": 0.8836426222324372,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.8842085444927216,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+          "score": 0.8831796503067016,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "score": 0.8834085750579834,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "score": 0.8826848208904267,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "score": 0.880353639125824,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Consider this step by step: Rewrite the provided text into plainer language without changing its meaning so non-native English speakers can understand it. We'll take this mathematical reasoning challenge one step at a time.",
+          "score": 0.8813287532329559,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8815402698516845,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+        "score": 0.8842085444927216
+      }
+    },
+    {
+      "step": 4,
+      "best_score": 0.8842085444927216,
+      "avg_score": 0.8829419647455217,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8835270953178406,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "…",
+          "child_score": 0.8833517467975617,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8835270953178406,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.8826878833770752,
+          "parents": [
+            "Consider this step by step: Rewrite the provided text into plainer language without changing its meaning so non-native English speakers can understand it. We'll take this mathematical reasoning challenge one step at a time.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem, and rewrite the given text into clearer wording while keeping its meaning unchanged, so non-native English speakers can understand it.",
+          "child_score": 0.8780832636356354,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.8826878833770752,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "old_score": 0.8836426222324372,
+          "parents": [
+            "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+            "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think this through step by step: Transform the provided text into easier language without changing its meaning, so non-native English speakers can understand it.",
+          "child_score": 0.8834619736671447,
+          "selected_prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "selected_score": 0.8836426222324372,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.8842085444927216,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Rewrite the provided text by approaching it as investigators would, gradually, and by examining every component of the issue, while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8815487742424011,
+          "selected_prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.8842085444927216,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+          "old_score": 0.8831796503067016,
+          "parents": [
+            "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+            "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Analyze the provided text step by step as if solving a case, and rewrite it into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8820861685276031,
+          "selected_prompt": "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+          "selected_score": 0.8831796503067016,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "old_score": 0.8834085750579834,
+          "parents": [
+            "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+            "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s reason through this methodically: Transform the supplied text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8827942860126495,
+          "selected_prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "selected_score": 0.8834085750579834,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "old_score": 0.8826848208904267,
+          "parents": [
+            "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Before we dive into the answer, let’s analyze this as a detective would do: Rewrite the provided sentence into easier language while preserving its meaning for non-native English speakers.",
+          "child_score": 0.8821472251415252,
+          "selected_prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "selected_score": 0.8826848208904267,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s think about this logically: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers.",
+          "old_score": 0.880353639125824,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think about this logically: Let’s analyze clues step by step like a detective, transforming the supplied text into simpler wording while keeping the meaning, making it accessible for non-native English speakers.",
+          "child_score": 0.8804197573661804,
+          "selected_prompt": "Let’s think about this logically: Let’s analyze clues step by step like a detective, transforming the supplied text into simpler wording while keeping the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8804197573661804,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Consider this step by step: Rewrite the provided text into plainer language without changing its meaning so non-native English speakers can understand it. We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8813287532329559,
+          "parents": [
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+            "Let’s think like a detective step by step.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.",
+          "child_score": 0.8841204285621643,
+          "selected_prompt": "Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.",
+          "selected_score": 0.8841204285621643,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "old_score": 0.8815402698516845,
+          "parents": [
+            "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "We'll approach this mathematical reasoning problem progressively: Rewrite the difficult sentence into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8813995265960693,
+          "selected_prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "selected_score": 0.8815402698516845,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8835270953178406,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.8826878833770752,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+          "score": 0.8836426222324372,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.8842085444927216,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Make the sentence easier for people who do not speak English fluently to comprehend by analyzing like a detective in stages and paraphrasing the given text into plainer terms while preserving its meaning.",
+          "score": 0.8831796503067016,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+          "score": 0.8834085750579834,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Before we dive into the answer, Let’s analyze this as a detective would do: Rewrite the given text in simpler language while preserving its meaning for non-native English speakers.",
+          "score": 0.8826848208904267,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think about this logically: Let’s analyze clues step by step like a detective, transforming the supplied text into simpler wording while keeping the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8804197573661804,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.",
+          "score": 0.8841204285621643,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll approach this mathematical reasoning problem progressively: Transform the provided text into simpler language while preserving the meaning, making it accessible for non-native English speakers.",
+          "score": 0.8815402698516845,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+        "score": 0.8842085444927216
+      }
+    }
+  ],
+  "final": {
+    "dataset": "mediqa",
+    "metric": "bert_score",
+    "best_prompt": "Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.",
+    "dev_score": 0.8841204285621643,
+    "test_score": 0.8624034869670868,
+    "top_candidates": [
+      {
+        "prompt": "Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.",
+        "mark": "evoluted",
+        "dev_score": 0.8842085444927216,
+        "test_score": 0.861234403848648
+      },
+      {
+        "prompt": "Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.",
+        "mark": "evoluted",
+        "dev_score": 0.8841204285621643,
+        "test_score": 0.8624034869670868
+      },
+      {
+        "prompt": "Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.",
+        "mark": "evoluted",
+        "dev_score": 0.8836426222324372,
+        "test_score": 0.862135980129242
+      },
+      {
+        "prompt": "Let’s think like a detective step by step.",
+        "mark": "manual",
+        "dev_score": 0.8835270953178406,
+        "test_score": 0.8585031062364579
+      },
+      {
+        "prompt": "Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.",
+        "mark": "evoluted",
+        "dev_score": 0.8834085750579834,
+        "test_score": 0.860794495344162
+      }
+    ]
+  }
+}

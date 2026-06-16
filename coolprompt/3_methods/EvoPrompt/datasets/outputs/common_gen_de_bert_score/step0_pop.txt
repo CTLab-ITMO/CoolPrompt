@@ -1,0 +1,12 @@
+manual	Let's think step by step.	0.9295297563076019
+manual	Let's break this problem down step by step.	0.9285898578166961
+manual	We'll tackle this math task one piece at a time.	0.927438805103302
+manual	Let’s think	0.9268169569969177
+manual	Let’s be realistic and think step by step.	0.9261879742145538
+manual	Let’s think about this logically.	0.9261845028400422
+manual	Let's meticulously examine each aspect of this problem.	0.9259347200393677
+manual	Let’s work this out in a step by step way to be sure we have the right answer.	0.9257660710811615
+manual	Let's systematically dissect this math task.	0.9253507113456726
+evoluted	The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.	0.9308076190948487
+best score: 0.9308076190948487
+average score: 0.9272606974840164

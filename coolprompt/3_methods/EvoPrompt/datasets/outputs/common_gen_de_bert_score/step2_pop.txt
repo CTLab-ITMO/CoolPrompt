@@ -1,0 +1,12 @@
+evoluted	Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9342142045497894
+evoluted	Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.	0.9333817613124847
+evoluted	Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9360592007637024
+evoluted	Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.	0.9315179991722107
+evoluted	Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9310013103485107
+evoluted	Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9360592007637024
+evoluted	Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.	0.9323450469970703
+evoluted	Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9333803141117096
+evoluted	Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.	0.9300739073753357
+evoluted	The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.	0.9308076190948487
+best score: 0.9360592007637024
+average score: 0.9326171783208845

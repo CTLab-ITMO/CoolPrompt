@@ -1,0 +1,12 @@
+evoluted	Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9342142045497894
+evoluted	Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.	0.9333817613124847
+evoluted	We'll tackle this math task one piece at a time: Let's analyze carefully step by step: Transform the difficult sentence into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9301279950141906
+manual	Let’s think	0.9268169569969177
+manual	Let’s be realistic and think step by step.	0.9261879742145538
+evoluted	Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.	0.9308066630363464
+evoluted	Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9302906513214111
+evoluted	Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9290012907981873
+evoluted	Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.	0.9300739073753357
+evoluted	The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.	0.9308076190948487
+best score: 0.9342142045497894
+average score: 0.9301709023714066

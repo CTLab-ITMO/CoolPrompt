@@ -1,0 +1,1204 @@
+{
+  "examples": [
+    {
+      "input": "['head', 'ball', 'kick']",
+      "target": "I didn't mean to kick the ball into the goalie's head."
+    },
+    {
+      "input": "['head', 'ball', 'kick']",
+      "target": "The girl kicked the ball to try to get it into the goal, but instead it hit her friend's head."
+    },
+    {
+      "input": "['head', 'ball', 'kick']",
+      "target": "A player kicks a ball over a guy's head."
+    },
+    {
+      "input": "['stage', 'dancer', 'costume']",
+      "target": "The female dancer wears a pretty costume on the stage."
+    },
+    {
+      "input": "['stage', 'dancer', 'costume']",
+      "target": "A dancer wears a costume on stage."
+    },
+    {
+      "input": "['stage', 'dancer', 'costume']",
+      "target": "The dancer wears a costume when she performs on stage."
+    },
+    {
+      "input": "['stage', 'dancer', 'costume']",
+      "target": "Music plays while dancers in costume perform on stage."
+    },
+    {
+      "input": "['hand', 'pocket', 'stand']",
+      "target": "A girl was standing with her hands in her pocket."
+    },
+    {
+      "input": "['hand', 'pocket', 'stand']",
+      "target": "When I stand around, I have my hand in my pocket."
+    },
+    {
+      "input": "['hand', 'pocket', 'stand']",
+      "target": "The boy has his hands in his pocket as he stands at he bus stop."
+    },
+    {
+      "input": "['hand', 'pocket', 'stand']",
+      "target": "Standing, someone 's hand reaches into his pocket."
+    },
+    {
+      "input": "['sit', 'cat', 'floor']",
+      "target": "The cat is sitting on the floor."
+    },
+    {
+      "input": "['sit', 'cat', 'floor']",
+      "target": "The woman watched the cat sit on the floor."
+    },
+    {
+      "input": "['sit', 'cat', 'floor']",
+      "target": "A cat will like to sit on a warm floor."
+    },
+    {
+      "input": "['sit', 'cat', 'floor']",
+      "target": "a cat sits on the floor"
+    },
+    {
+      "input": "['sit', 'stretch', 'arm']",
+      "target": "A girl sat on the couch with her arms stretched towards the ceiling."
+    },
+    {
+      "input": "['sit', 'stretch', 'arm']",
+      "target": "The man is sitting and stretching his arm."
+    },
+    {
+      "input": "['sit', 'stretch', 'arm']",
+      "target": "She woke up sit and stretched her arms above her head."
+    },
+    {
+      "input": "['sit', 'stretch', 'arm']",
+      "target": "woman stretching her left arm sitting in the bed free photo"
+    },
+    {
+      "input": "['look', 'lie', 'bed']",
+      "target": "He looks at the clock while lying in bed."
+    },
+    {
+      "input": "['look', 'lie', 'bed']",
+      "target": "It was scary for the girl to lie on the bed without taking a look under it."
+    },
+    {
+      "input": "['look', 'lie', 'bed']",
+      "target": "Exhausted, she looks forward to lying down in bed for the night."
+    },
+    {
+      "input": "['look', 'lie', 'bed']",
+      "target": "good looking family lying on a bed"
+    },
+    {
+      "input": "['wall', 'watch', 'stand']",
+      "target": "a girl stands in front of the wall watching it"
+    },
+    {
+      "input": "['wall', 'watch', 'stand']",
+      "target": "People are standing by a wall watching them."
+    },
+    {
+      "input": "['eat', 'meal', 'prepare']",
+      "target": "A child eats a meal her mother prepares."
+    },
+    {
+      "input": "['eat', 'meal', 'prepare']",
+      "target": "The chef prepared a meal for the customer to eat."
+    },
+    {
+      "input": "['eat', 'meal', 'prepare']",
+      "target": "People preparing to eat a meal."
+    },
+    {
+      "input": "['bounce', 'time', 'ball']",
+      "target": "She is to bounce the ball a hundred times I 2 minutes."
+    },
+    {
+      "input": "['bounce', 'time', 'ball']",
+      "target": "It takes time to learn how to bounce a ball"
+    },
+    {
+      "input": "['bounce', 'time', 'ball']",
+      "target": "The ball bounces multiple times."
+    },
+    {
+      "input": "['bounce', 'time', 'ball']",
+      "target": "Someone bounces the ball in time to the banging."
+    },
+    {
+      "input": "['cut', 'style', 'hair']",
+      "target": "The sister cut some hair to style it for prom."
+    },
+    {
+      "input": "['cut', 'style', 'hair']",
+      "target": "The barber cut and styled the boy's hair."
+    },
+    {
+      "input": "['cut', 'style', 'hair']",
+      "target": "Woman getting her hair styled and cut."
+    },
+    {
+      "input": "['walk', 'street', 'leash']",
+      "target": "The children walk with their dog on a leash down the street."
+    },
+    {
+      "input": "['walk', 'street', 'leash']",
+      "target": "I grabbed the leash to walk my dog across the street."
+    },
+    {
+      "input": "['walk', 'street', 'leash']",
+      "target": "a man walks two dogs on leashes down the street"
+    },
+    {
+      "input": "['slide', 'pool', 'kid']",
+      "target": "A kid slides into the pool."
+    },
+    {
+      "input": "['slide', 'pool', 'kid']",
+      "target": "The kid slide in the pool"
+    },
+    {
+      "input": "['slide', 'pool', 'kid']",
+      "target": "The kid slid into the pool."
+    },
+    {
+      "input": "['slide', 'pool', 'kid']",
+      "target": "A kid is about to ride the slide into the pool."
+    },
+    {
+      "input": "['hand', 'stand', 'wash']",
+      "target": "wash your hand and stand by the wall"
+    },
+    {
+      "input": "['hand', 'stand', 'wash']",
+      "target": "The kitchen porter stands by the sink as he washes the dishes by hand."
+    },
+    {
+      "input": "['hand', 'stand', 'wash']",
+      "target": "The man had to stand in front of the sink to wash his hands"
+    },
+    {
+      "input": "['hand', 'stand', 'wash']",
+      "target": "The woman stands up and washes her hands."
+    },
+    {
+      "input": "['spray', 'wall', 'graffiti']",
+      "target": "The teenagers sprayed graffiti on the wall."
+    },
+    {
+      "input": "['spray', 'wall', 'graffiti']",
+      "target": "The boys spray graffiti on a wall."
+    },
+    {
+      "input": "['spray', 'wall', 'graffiti']",
+      "target": "graffiti sprayed on the wall"
+    },
+    {
+      "input": "['street', 'side', 'car']",
+      "target": "A car was parked on the side of the street."
+    },
+    {
+      "input": "['street', 'side', 'car']",
+      "target": "The car drove down the side street."
+    },
+    {
+      "input": "['street', 'side', 'car']",
+      "target": "A car is parked on a side street."
+    },
+    {
+      "input": "['street', 'side', 'car']",
+      "target": "cars parked both side od a street"
+    },
+    {
+      "input": "['walk', 'dog', 'ride']",
+      "target": "I took my dog for a ride to the park so we could walk."
+    },
+    {
+      "input": "['walk', 'dog', 'ride']",
+      "target": "A dog is playing while his owner is walking next to a woman riding a bike"
+    },
+    {
+      "input": "['walk', 'dog', 'ride']",
+      "target": "walk the dog like a ride at the park"
+    },
+    {
+      "input": "['walk', 'dog', 'ride']",
+      "target": "woman riding bike whilst walking the dog"
+    },
+    {
+      "input": "['ride', 'wood', 'trail']",
+      "target": "the woman rides through the woods on a trail."
+    },
+    {
+      "input": "['ride', 'wood', 'trail']",
+      "target": "The boy rides his bike down a trail filled with wood trees."
+    },
+    {
+      "input": "['ride', 'wood', 'trail']",
+      "target": "A boy rides his bike on a trail in the woods."
+    },
+    {
+      "input": "['ride', 'wood', 'trail']",
+      "target": "A mountain biker rides a trail through the woods."
+    },
+    {
+      "input": "['knife', 'wood', 'cut']",
+      "target": "The knife cut into the wood chopping board"
+    },
+    {
+      "input": "['knife', 'wood', 'cut']",
+      "target": "The cook uses a wood cutting board to cut the meat with her knife."
+    },
+    {
+      "input": "['knife', 'wood', 'cut']",
+      "target": "The man uses a knife to cut the wood."
+    },
+    {
+      "input": "['clip', 'hold', 'cat']",
+      "target": "The cat tried to hold my hand while I tried to clip my nails."
+    },
+    {
+      "input": "['clip', 'hold', 'cat']",
+      "target": "The owner held the cat in order to clip the cat's claws."
+    },
+    {
+      "input": "['clip', 'hold', 'cat']",
+      "target": "A man holds the cats paw and starts clipping its nails."
+    },
+    {
+      "input": "['swimmer', 'swim', 'lane']",
+      "target": "The swimmer can swim in his lane."
+    },
+    {
+      "input": "['swimmer', 'swim', 'lane']",
+      "target": "The swimmer was told to swim in his lane of the pool."
+    },
+    {
+      "input": "['swimmer', 'swim', 'lane']",
+      "target": "The swimmer was swimming in her own lane."
+    },
+    {
+      "input": "['swimmer', 'swim', 'lane']",
+      "target": "Three swimmers swim in their respective lanes."
+    },
+    {
+      "input": "['blow', 'blower', 'pile']",
+      "target": "I used a blower to blow the leaves into a pile."
+    },
+    {
+      "input": "['blow', 'blower', 'pile']",
+      "target": "The man used the blower to blow the leavss into a pile."
+    },
+    {
+      "input": "['blow', 'blower', 'pile']",
+      "target": "A man used his blower to blow a the leave in his yard into a pile."
+    },
+    {
+      "input": "['blow', 'blower', 'pile']",
+      "target": "A man with a leaf blower blows a large pile of leaves"
+    },
+    {
+      "input": "['wall', 'paint', 'stand']",
+      "target": "Do not stand too close the the wall, it was just painted."
+    },
+    {
+      "input": "['wall', 'paint', 'stand']",
+      "target": "painting a standing wall is hard"
+    },
+    {
+      "input": "['wall', 'paint', 'stand']",
+      "target": "Standing at the wall, Tom Sawyer took a brush and started to paint."
+    },
+    {
+      "input": "['wall', 'paint', 'stand']",
+      "target": "painting artist standing against a wall"
+    },
+    {
+      "input": "['fall', 'throw', 'ball']",
+      "target": "The man falls after he throws the ball."
+    },
+    {
+      "input": "['fall', 'throw', 'ball']",
+      "target": "throw the ball before you fall"
+    },
+    {
+      "input": "['fall', 'throw', 'ball']",
+      "target": "The boy threw the ball so high that it fell across the fence."
+    },
+    {
+      "input": "['fall', 'throw', 'ball']",
+      "target": "A person falls and throws the ball into the goal."
+    },
+    {
+      "input": "['stand', 'side', 'boat']",
+      "target": "The boy stands on the side of the boat in the morning."
+    },
+    {
+      "input": "['stand', 'side', 'boat']",
+      "target": "He could see as the man stood on the boat from the shore side."
+    },
+    {
+      "input": "['stand', 'side', 'boat']",
+      "target": "It's not safe to stand on the side of the boat while its moving."
+    },
+    {
+      "input": "['stand', 'side', 'boat']",
+      "target": "2 men standing by the side of a boat."
+    },
+    {
+      "input": "['fall', 'ground', 'jump']",
+      "target": "The girl may fall if she tries to jump to the ground."
+    },
+    {
+      "input": "['fall', 'ground', 'jump']",
+      "target": "A man jumping over a log falls to the ground."
+    },
+    {
+      "input": "['fall', 'ground', 'jump']",
+      "target": "Jump on the ground but don't fall."
+    },
+    {
+      "input": "['fall', 'ground', 'jump']",
+      "target": "A man jumps a ramp and falls to the ground."
+    },
+    {
+      "input": "['flip', 'mat', 'gymnast']",
+      "target": "A gymnast flips on a mat."
+    },
+    {
+      "input": "['flip', 'mat', 'gymnast']",
+      "target": "The gymnast did a flip on the mat."
+    },
+    {
+      "input": "['flip', 'mat', 'gymnast']",
+      "target": "The gymnast completed a successful flip on the mat."
+    },
+    {
+      "input": "['flip', 'mat', 'gymnast']",
+      "target": "A gymnast does several flips along a mat."
+    },
+    {
+      "input": "['pitcher', 'ball', 'pitch']",
+      "target": "The pitcher will pitch the ball."
+    },
+    {
+      "input": "['pitcher', 'ball', 'pitch']",
+      "target": "The pitcher holds the ball, waiting for the sign to pitch it."
+    },
+    {
+      "input": "['pitcher', 'ball', 'pitch']",
+      "target": "The pitcher will pitch the ball to the batter."
+    },
+    {
+      "input": "['pitcher', 'ball', 'pitch']",
+      "target": "The pitcher pitches the ball."
+    },
+    {
+      "input": "['ride', 'wheelie', 'pop']",
+      "target": "The boy pops a wheelie while riding his bike."
+    },
+    {
+      "input": "['ride', 'wheelie', 'pop']",
+      "target": "The bike popped a wheelie while the girl and boy were on the ride."
+    },
+    {
+      "input": "['ride', 'wheelie', 'pop']",
+      "target": "A motor cycle rider pops a wheelie while riding."
+    },
+    {
+      "input": "['music', 'street', 'listen']",
+      "target": "A woman stops to listen to a man playing music on a street corner."
+    },
+    {
+      "input": "['music', 'street', 'listen']",
+      "target": "a woman listens to music on the street"
+    },
+    {
+      "input": "['walk', 'grass', 'wear']",
+      "target": "The boy wears shoes while walking on the grass."
+    },
+    {
+      "input": "['walk', 'grass', 'wear']",
+      "target": "To walk on the grass he would wear wellies."
+    },
+    {
+      "input": "['walk', 'grass', 'wear']",
+      "target": "The boy does not wear dress shoes when walking on wet grass."
+    },
+    {
+      "input": "['walk', 'grass', 'wear']",
+      "target": "A girl walks on the grass wearing a coat."
+    },
+    {
+      "input": "['watch', 'hold', 'hand']",
+      "target": "A girl holds her hand out as the cat watches."
+    },
+    {
+      "input": "['watch', 'hold', 'hand']",
+      "target": "The girl watches the boy hold her hand."
+    },
+    {
+      "input": "['watch', 'hold', 'hand']",
+      "target": "The boy held his own hand and watched the bug crawl through his fingers."
+    },
+    {
+      "input": "['watch', 'hold', 'hand']",
+      "target": "People watch a couple hold hands."
+    },
+    {
+      "input": "['ball', 'hit', 'floor']",
+      "target": "The ball hit the floor."
+    },
+    {
+      "input": "['ball', 'hit', 'floor']",
+      "target": "A boy hits ball on the floor."
+    },
+    {
+      "input": "['ball', 'hit', 'floor']",
+      "target": "The girl hits the ball, and it bounces off the floor."
+    },
+    {
+      "input": "['ball', 'hit', 'floor']",
+      "target": "The ball hit the net and fall to the floor."
+    },
+    {
+      "input": "['kitchen', 'dough', 'roll']",
+      "target": "The woman went into the kitchen to roll out the dough for the biscuits."
+    },
+    {
+      "input": "['kitchen', 'dough', 'roll']",
+      "target": "The man rolls the dough in the kitchen."
+    },
+    {
+      "input": "['kitchen', 'dough', 'roll']",
+      "target": "The baker rolled the dough in the kitchen."
+    },
+    {
+      "input": "['kitchen', 'dough', 'roll']",
+      "target": "A man rolling dough in the kitchen "
+    },
+    {
+      "input": "['gun', 'head', 'point']",
+      "target": "The robber pointed the gun at the head of the bank manager."
+    },
+    {
+      "input": "['gun', 'head', 'point']",
+      "target": "The thief pointed a gun at a person's head."
+    },
+    {
+      "input": "['gun', 'head', 'point']",
+      "target": "A criminal points a gun at a victim's head."
+    },
+    {
+      "input": "['gun', 'head', 'point']",
+      "target": "A man pointed his own gun at his head."
+    },
+    {
+      "input": "['water', 'boat', 'dock']",
+      "target": "The boat in the water was docked near the pier."
+    },
+    {
+      "input": "['water', 'boat', 'dock']",
+      "target": "The boat was at a dock in the water."
+    },
+    {
+      "input": "['water', 'boat', 'dock']",
+      "target": "Dock the boat where the water is shallow."
+    },
+    {
+      "input": "['water', 'boat', 'dock']",
+      "target": "boat docked in the water"
+    },
+    {
+      "input": "['microphone', 'sing', 'stage']",
+      "target": "The woman holds turns on a microphone to sing on stage."
+    },
+    {
+      "input": "['microphone', 'sing', 'stage']",
+      "target": "A girl sings on stage using a microphone."
+    },
+    {
+      "input": "['microphone', 'sing', 'stage']",
+      "target": "The child held the microphone and sang on stage."
+    },
+    {
+      "input": "['microphone', 'sing', 'stage']",
+      "target": "a man sings into a microphone on stage."
+    },
+    {
+      "input": "['picture', 'stop', 'take']",
+      "target": "The man stopped to take a picture."
+    },
+    {
+      "input": "['picture', 'stop', 'take']",
+      "target": "While walking down a path, the man will stop and take a picture with his camera."
+    },
+    {
+      "input": "['picture', 'stop', 'take']",
+      "target": "A man stops and takes a picture of them."
+    },
+    {
+      "input": "['dress', 'instrument', 'costume']",
+      "target": "The marching band members dressed in costume and bore their instruments, ready to start."
+    },
+    {
+      "input": "['dress', 'instrument', 'costume']",
+      "target": "his costume consisted of a dress and a box resembling an instrument."
+    },
+    {
+      "input": "['dress', 'instrument', 'costume']",
+      "target": "There is a man dressed in pirate costume playing an instrument."
+    },
+    {
+      "input": "['kick', 'grass', 'run']",
+      "target": "The toddler had to kick the ball and run on the grass to first place."
+    },
+    {
+      "input": "['kick', 'grass', 'run']",
+      "target": "The boy kicked the ball through the grass and ran around the bases."
+    },
+    {
+      "input": "['kick', 'grass', 'run']",
+      "target": "A young boy kicks a ball as he runs through grass."
+    },
+    {
+      "input": "['game', 'score', 'player']",
+      "target": "In a soccer game players score goal"
+    },
+    {
+      "input": "['game', 'score', 'player']",
+      "target": "The player keeps track of his score during the game."
+    },
+    {
+      "input": "['game', 'score', 'player']",
+      "target": "The baseball player scored the game winning run."
+    },
+    {
+      "input": "['game', 'score', 'player']",
+      "target": "soccer players after scoring during the game"
+    },
+    {
+      "input": "['street', 'cross', 'watch']",
+      "target": "A girl kept watch when she crossed the street."
+    },
+    {
+      "input": "['street', 'cross', 'watch']",
+      "target": "A boy crosses the street while the mother watches"
+    },
+    {
+      "input": "['street', 'cross', 'watch']",
+      "target": "The man needs to watch the street in order to cross."
+    },
+    {
+      "input": "['street', 'cross', 'watch']",
+      "target": "A man watching a lady cross the street."
+    },
+    {
+      "input": "['sit', 'bed', 'foot']",
+      "target": "A boy sits on the foot of the bed every morning to stretch before leaving his room."
+    },
+    {
+      "input": "['sit', 'bed', 'foot']",
+      "target": "He sat at the foot of the bed."
+    },
+    {
+      "input": "['sit', 'bed', 'foot']",
+      "target": "bed  sit in the foot"
+    },
+    {
+      "input": "['sit', 'bed', 'foot']",
+      "target": "A woman sits at the foot of a bed."
+    },
+    {
+      "input": "['mouth', 'hold', 'close']",
+      "target": "The boy closed his eyes and held his mouth shut because there was a swarm of bugs."
+    },
+    {
+      "input": "['mouth', 'hold', 'close']",
+      "target": "The child held the food close to her mouth."
+    },
+    {
+      "input": "['mouth', 'hold', 'close']",
+      "target": "The woman was holding the apply close to her mouth."
+    },
+    {
+      "input": "['mouth', 'hold', 'close']",
+      "target": "A girl holds an animals mouth closed."
+    },
+    {
+      "input": "['climb', 'building', 'rope']",
+      "target": "This building is decaying, therefore the girl may need a rope to climb to the top."
+    },
+    {
+      "input": "['climb', 'building', 'rope']",
+      "target": "A superhero uses a rope to climb a building."
+    },
+    {
+      "input": "['climb', 'building', 'rope']",
+      "target": "The man tried to climb the outside of the building only using a rope"
+    },
+    {
+      "input": "['climb', 'building', 'rope']",
+      "target": "a woman with a rope climbing all over a building"
+    },
+    {
+      "input": "['headphone', 'wear', 'watch']",
+      "target": "when headphones meant to be worn not watched"
+    },
+    {
+      "input": "['headphone', 'wear', 'watch']",
+      "target": "A boy watches a man wearing headphones jog down the street."
+    },
+    {
+      "input": "['headphone', 'wear', 'watch']",
+      "target": "A person is watching a TV screen and wearing headphones."
+    },
+    {
+      "input": "['watch', 'student', 'class']",
+      "target": "The student is watching his peers in class."
+    },
+    {
+      "input": "['watch', 'student', 'class']",
+      "target": "The student class wants to watch a movie."
+    },
+    {
+      "input": "['watch', 'student', 'class']",
+      "target": "The student watched the teacher during class."
+    },
+    {
+      "input": "['watch', 'student', 'class']",
+      "target": "Students are watching the class."
+    },
+    {
+      "input": "['jump', 'house', 'trampoline']",
+      "target": "house jump trampoline is on the yard"
+    },
+    {
+      "input": "['jump', 'house', 'trampoline']",
+      "target": "Stacy's house has a trampoline we can jump on."
+    },
+    {
+      "input": "['jump', 'house', 'trampoline']",
+      "target": "My friends and I jumped on the trampoline outside of my house."
+    },
+    {
+      "input": "['jump', 'house', 'trampoline']",
+      "target": "Boy jumps on trampoline outside house."
+    },
+    {
+      "input": "['sock', 'put', 'foot']",
+      "target": "The boy put his foot into the sock."
+    },
+    {
+      "input": "['sock', 'put', 'foot']",
+      "target": "The old man put his foot in the sock."
+    },
+    {
+      "input": "['sock', 'put', 'foot']",
+      "target": "put your sock on the rigth foot for luck"
+    },
+    {
+      "input": "['sock', 'put', 'foot']",
+      "target": "The individual puts socks on his feet."
+    },
+    {
+      "input": "['spoon', 'cream', 'eat']",
+      "target": "The girl eats the cream with a spoon."
+    },
+    {
+      "input": "['spoon', 'cream', 'eat']",
+      "target": "A boy eats ice cream with a spoon"
+    },
+    {
+      "input": "['spoon', 'cream', 'eat']",
+      "target": "The girl eats ice cream with a spoon."
+    },
+    {
+      "input": "['spoon', 'cream', 'eat']",
+      "target": "A boy eats ice cream with a spoon."
+    },
+    {
+      "input": "['sail', 'day', 'boat']",
+      "target": "The boat sailed all day."
+    },
+    {
+      "input": "['sail', 'day', 'boat']",
+      "target": "The main took his boat out to sail during the day"
+    },
+    {
+      "input": "['sail', 'day', 'boat']",
+      "target": "The boat set sail that day."
+    },
+    {
+      "input": "['sail', 'day', 'boat']",
+      "target": "boats sailing on a calm day"
+    },
+    {
+      "input": "['class', 'take', 'part']",
+      "target": "The class took the stage to perform their part in the performance."
+    },
+    {
+      "input": "['class', 'take', 'part']",
+      "target": "The class is part of a bid test group that take place"
+    },
+    {
+      "input": "['class', 'take', 'part']",
+      "target": "The senior class had to take a part in the school play."
+    },
+    {
+      "input": "['class', 'take', 'part']",
+      "target": "young woman taking part in a class"
+    },
+    {
+      "input": "['bowl', 'spoon', 'mix']",
+      "target": "A woman mixes salad in a bowl with a spoon."
+    },
+    {
+      "input": "['bowl', 'spoon', 'mix']",
+      "target": "I use a spoon to mix milk in my cereal bowl"
+    },
+    {
+      "input": "['bowl', 'spoon', 'mix']",
+      "target": "The man mix hes bowl of cereal with a spoon."
+    },
+    {
+      "input": "['bowl', 'spoon', 'mix']",
+      "target": "female hands mixing salad in the bowl with a spoon ."
+    },
+    {
+      "input": "['knife', 'hand', 'hold']",
+      "target": "A kid is holding a knife in the wrong hand."
+    },
+    {
+      "input": "['knife', 'hand', 'hold']",
+      "target": "A woman holds a knife in her right hand to maintain a good grip."
+    },
+    {
+      "input": "['knife', 'hand', 'hold']",
+      "target": "The woman used her hand to hold the knife."
+    },
+    {
+      "input": "['knife', 'hand', 'hold']",
+      "target": "hand holding a bloody knife ."
+    },
+    {
+      "input": "['race', 'swimmer', 'lane']",
+      "target": "The swimmer races down their lane winning the heet."
+    },
+    {
+      "input": "['race', 'swimmer', 'lane']",
+      "target": "The swimmers got into their lanes to start the race."
+    },
+    {
+      "input": "['race', 'swimmer', 'lane']",
+      "target": "Female swimmers are getting ready in their lanes to race."
+    },
+    {
+      "input": "['sit', 'chair', 'give']",
+      "target": "Its polite to give your chair to an elderly lady so she can sit."
+    },
+    {
+      "input": "['sit', 'chair', 'give']",
+      "target": "Give her a chair to sit on please."
+    },
+    {
+      "input": "['sit', 'chair', 'give']",
+      "target": "The woman gave the old lady a chair so she could sit down."
+    },
+    {
+      "input": "['sit', 'chair', 'give']",
+      "target": "Women sitting in chairs giving a speech."
+    },
+    {
+      "input": "['birdie', 'racket', 'hit']",
+      "target": "In Badminton the goal is to hit the birdie with a racket without crossing the boundary lines."
+    },
+    {
+      "input": "['birdie', 'racket', 'hit']",
+      "target": "He hit the birdie with the racket."
+    },
+    {
+      "input": "['birdie', 'racket', 'hit']",
+      "target": "People hit the birdie with a racket in a game badminton."
+    },
+    {
+      "input": "['birdie', 'racket', 'hit']",
+      "target": "a toddler is trying to hit a birdie with his racket."
+    },
+    {
+      "input": "['tire', 'fix', 'bike']",
+      "target": "The teen had to fix his tire on the bike so he could ride it."
+    },
+    {
+      "input": "['tire', 'fix', 'bike']",
+      "target": "The man must fix the tire on the bike."
+    },
+    {
+      "input": "['tire', 'fix', 'bike']",
+      "target": "The woman was using a wrench to remove the tire and fix her bike."
+    },
+    {
+      "input": "['tire', 'fix', 'bike']",
+      "target": "A man is fixing the back tire of his bike."
+    },
+    {
+      "input": "['ear', 'pierce', 'needle']",
+      "target": "The beautician pierced the ear with the needle."
+    },
+    {
+      "input": "['ear', 'pierce', 'needle']",
+      "target": "The girl uses the needle to pierce her ear."
+    },
+    {
+      "input": "['ear', 'pierce', 'needle']",
+      "target": "They pierce ear with a needle"
+    },
+    {
+      "input": "['ear', 'pierce', 'needle']",
+      "target": "He inserts the needle, piercing his ear."
+    },
+    {
+      "input": "['gear', 'climb', 'wall']",
+      "target": "We put on our climbing gear hen we want to climb a wall."
+    },
+    {
+      "input": "['gear', 'climb', 'wall']",
+      "target": "The woman needed to wear climbing gear to climb the rock wall."
+    },
+    {
+      "input": "['gear', 'climb', 'wall']",
+      "target": "The man climbs the wall with his gear."
+    },
+    {
+      "input": "['gear', 'climb', 'wall']",
+      "target": "A child in safety gear is climbing up a wall."
+    },
+    {
+      "input": "['bike', 'music', 'ride']",
+      "target": "The boy listened to music on his bike ride."
+    },
+    {
+      "input": "['bike', 'music', 'ride']",
+      "target": "A man rides a bike and listens to music."
+    },
+    {
+      "input": "['dress', 'dance', 'perform']",
+      "target": "She bought a new dress for dance class ready to perform."
+    },
+    {
+      "input": "['dress', 'dance', 'perform']",
+      "target": "The woman who will perform a dance is wearing a red dress"
+    },
+    {
+      "input": "['dress', 'dance', 'perform']",
+      "target": "She has to pick out a dress before she performs her dance"
+    },
+    {
+      "input": "['dress', 'dance', 'perform']",
+      "target": "People in native dress performing a dance."
+    },
+    {
+      "input": "['cigarette', 'smoke', 'car']",
+      "target": "don't smoke cigarette in the car"
+    },
+    {
+      "input": "['cigarette', 'smoke', 'car']",
+      "target": "The woman smoked a cigarette inside the car"
+    },
+    {
+      "input": "['cigarette', 'smoke', 'car']",
+      "target": "smoking cigarettes in the car smells"
+    },
+    {
+      "input": "['cigarette', 'smoke', 'car']",
+      "target": "A man smokes a cigarette in his car."
+    },
+    {
+      "input": "['chest', 'fold', 'arm']",
+      "target": "In yoga, a lady folded her arms around her chest for a pose."
+    },
+    {
+      "input": "['chest', 'fold', 'arm']",
+      "target": "He folded his arms across his chest."
+    },
+    {
+      "input": "['chest', 'fold', 'arm']",
+      "target": "He folded his arms accross his chest."
+    },
+    {
+      "input": "['chest', 'fold', 'arm']",
+      "target": "His arms folded around his chest."
+    },
+    {
+      "input": "['top', 'walk', 'dog']",
+      "target": "The child will walk to the top of the hill with his dog."
+    },
+    {
+      "input": "['top', 'walk', 'dog']",
+      "target": "a dog is walking on the top of a hill"
+    },
+    {
+      "input": "['top', 'walk', 'dog']",
+      "target": "A dog stands on the top of the carpet before going for a walk"
+    },
+    {
+      "input": "['top', 'walk', 'dog']",
+      "target": "A black dog walking on top of a beach."
+    },
+    {
+      "input": "['bubble', 'blow', 'toy']",
+      "target": "The girl blew a bubble from her toy."
+    },
+    {
+      "input": "['bubble', 'blow', 'toy']",
+      "target": "A woman is blowing huge bubbles out of a toy."
+    },
+    {
+      "input": "['cut', 'friend', 'hair']",
+      "target": "The girl's mother wanted her friend to cut Macy's hair."
+    },
+    {
+      "input": "['cut', 'friend', 'hair']",
+      "target": "The girl cuts her friend's hair."
+    },
+    {
+      "input": "['cut', 'friend', 'hair']",
+      "target": "She cut her friend's hair."
+    },
+    {
+      "input": "['cut', 'friend', 'hair']",
+      "target": "Friends are getting their hair cut."
+    },
+    {
+      "input": "['help', 'dish', 'wash']",
+      "target": "The man helps to wash the dishes."
+    },
+    {
+      "input": "['help', 'dish', 'wash']",
+      "target": "A boy went to the kitchen to help his mother wash dishes."
+    },
+    {
+      "input": "['help', 'dish', 'wash']",
+      "target": "The boy helps his mother wash dishes."
+    },
+    {
+      "input": "['help', 'dish', 'wash']",
+      "target": "A lady is helping the man wash dishes."
+    },
+    {
+      "input": "['audience', 'give', 'speech']",
+      "target": "The man gives a speech to a large audience."
+    },
+    {
+      "input": "['audience', 'give', 'speech']",
+      "target": "I gave a speech to an audience full of children"
+    },
+    {
+      "input": "['audience', 'give', 'speech']",
+      "target": "The woman gave a speech to the audience."
+    },
+    {
+      "input": "['audience', 'give', 'speech']",
+      "target": "a man giving a speech in front of an audience"
+    },
+    {
+      "input": "['music', 'treadmill', 'run']",
+      "target": "A man runs on a treadmill while listening to upbeat music."
+    },
+    {
+      "input": "['music', 'treadmill', 'run']",
+      "target": "The girl plays music as she runs on the treadmill."
+    },
+    {
+      "input": "['music', 'treadmill', 'run']",
+      "target": "The girl likes to listen to music as she runs on the treadmill."
+    },
+    {
+      "input": "['music', 'treadmill', 'run']",
+      "target": "A man runs on a treadmill while listening to music."
+    },
+    {
+      "input": "['hold', 'stand', 'kitchen']",
+      "target": "A boy had to hold a kitchen stand when it broke."
+    },
+    {
+      "input": "['hold', 'stand', 'kitchen']",
+      "target": "A woman stands in the kitchen holding a mug."
+    },
+    {
+      "input": "['hold', 'stand', 'kitchen']",
+      "target": "Man standing in a kitchen holding a banana."
+    },
+    {
+      "input": "['air', 'ride', 'hand']",
+      "target": "The kids put their hands in the air while riding a roller coaster."
+    },
+    {
+      "input": "['air', 'ride', 'hand']",
+      "target": "On the ride, she sticks her hand out to feel the air."
+    },
+    {
+      "input": "['air', 'ride', 'hand']",
+      "target": "man riding bicycle with hands in the air"
+    },
+    {
+      "input": "['house', 'eat', 'dog']",
+      "target": "The dog eats food inside the house."
+    },
+    {
+      "input": "['house', 'eat', 'dog']",
+      "target": "The dog eats at the house."
+    },
+    {
+      "input": "['house', 'eat', 'dog']",
+      "target": "There is a dog inside of a house that is waiting in the kitchen for his owner to give him some food so he can eat."
+    },
+    {
+      "input": "['house', 'eat', 'dog']",
+      "target": "A dog eating food in its house."
+    },
+    {
+      "input": "['female', 'male', 'dance']",
+      "target": "dances female and male make a couple dancers"
+    },
+    {
+      "input": "['female', 'male', 'dance']",
+      "target": "The female and male dance the tango."
+    },
+    {
+      "input": "['female', 'male', 'dance']",
+      "target": "Two males and a female are dancing."
+    },
+    {
+      "input": "['use', 'comb', 'hair']",
+      "target": "I use a comb to fix my hair."
+    },
+    {
+      "input": "['use', 'comb', 'hair']",
+      "target": "A girl uses to comb her hair."
+    },
+    {
+      "input": "['use', 'comb', 'hair']",
+      "target": "I prefer to use the comb to detangle my hair."
+    },
+    {
+      "input": "['use', 'comb', 'hair']",
+      "target": "The females uses the comb on her hair."
+    },
+    {
+      "input": "['horse', 'wear', 'helmet']",
+      "target": "The rider had to wear a helmet before getting on the horse."
+    },
+    {
+      "input": "['horse', 'wear', 'helmet']",
+      "target": "The girl wears a helmet when riding a horse."
+    },
+    {
+      "input": "['horse', 'wear', 'helmet']",
+      "target": "The woman wears a helmet when riding her horse."
+    },
+    {
+      "input": "['horse', 'wear', 'helmet']",
+      "target": "A man wearing a helmet riding a horse."
+    },
+    {
+      "input": "['view', 'ocean', 'boat']",
+      "target": "There is a beautiful view of the ocean from a boat."
+    },
+    {
+      "input": "['view', 'ocean', 'boat']",
+      "target": "I view from the boat of the ocean was beautiful"
+    },
+    {
+      "input": "['view', 'ocean', 'boat']",
+      "target": "The view of the ocean on the tiny boat was amazing."
+    },
+    {
+      "input": "['view', 'ocean', 'boat']",
+      "target": "view of the ocean from a boat"
+    },
+    {
+      "input": "['hit', 'team', 'ball']",
+      "target": "Johnny hit the ball to score on the other team."
+    },
+    {
+      "input": "['hit', 'team', 'ball']",
+      "target": "A team fields a ball hit into the outfield."
+    },
+    {
+      "input": "['hit', 'team', 'ball']",
+      "target": "A baseball team hit the ball."
+    },
+    {
+      "input": "['hit', 'team', 'ball']",
+      "target": "catcher for sports team hits the ball"
+    },
+    {
+      "input": "['hand', 'hold', 'paper']",
+      "target": "The girl holds the paper with her hand."
+    },
+    {
+      "input": "['hand', 'hold', 'paper']",
+      "target": "I can hold paper in my hand."
+    },
+    {
+      "input": "['hand', 'hold', 'paper']",
+      "target": "hand holding a pencil on paper"
+    },
+    {
+      "input": "['pole', 'bar', 'vault']",
+      "target": "when you pole vault you launch over a bar."
+    },
+    {
+      "input": "['pole', 'bar', 'vault']",
+      "target": "The bar has a vault that was poled by people down a river."
+    },
+    {
+      "input": "['pole', 'bar', 'vault']",
+      "target": "The athlete used the pole to vault over the high bar."
+    },
+    {
+      "input": "['pole', 'bar', 'vault']",
+      "target": "They then pole vault over a bar."
+    },
+    {
+      "input": "['door', 'hand', 'open']",
+      "target": "The man reached out his hand to open the door"
+    },
+    {
+      "input": "['door', 'hand', 'open']",
+      "target": "The woman put out her hand to open the door."
+    },
+    {
+      "input": "['door', 'hand', 'open']",
+      "target": "hand of man opening a car door"
+    },
+    {
+      "input": "['wear', 'shirt', 'bed']",
+      "target": "I had to wear my shirt to bed."
+    },
+    {
+      "input": "['wear', 'shirt', 'bed']",
+      "target": "He got our of bed and went to the closet to wear his new shirt"
+    },
+    {
+      "input": "['wear', 'shirt', 'bed']",
+      "target": "A man getting ready for bed may wear a warm shirt for comfort."
+    },
+    {
+      "input": "['wear', 'shirt', 'bed']",
+      "target": "Boy is bouncing over the bed wearing a black t-shirt."
+    },
+    {
+      "input": "['makeup', 'apply', 'lady']",
+      "target": "The lady knew how to apply her makeup."
+    },
+    {
+      "input": "['makeup', 'apply', 'lady']",
+      "target": "A lady applies makeup for the dance."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+manual	Before we dive into the answer,	0.916289039850235	0.9058620232343674
+evoluted	The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.	0.914429965019226	0.9088132488727569
+manual	First,	0.9141513919830322	0.9182907551527023
+manual	Let’s solve this problem by splitting it into steps.	0.9136635982990264	0.9109932732582092
+evoluted	We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.	0.9126091933250428	0.9137556266784668

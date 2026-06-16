@@ -1,0 +1,12 @@
+evoluted	Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.	0.9342142045497894
+evoluted	Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.	0.9333817613124847
+evoluted	Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9310568797588349
+evoluted	Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.	0.9315179991722107
+evoluted	Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9310013103485107
+evoluted	Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9310568797588349
+evoluted	Transform the supplied content into plainer language while preserving the meaning, so it's easier for non-native English speakers to understand, and convert the difficult sentence into simpler words while preserving the meaning.	0.9342340648174285
+evoluted	Let’s work this out in a step by step way to be sure we have the right answer: Convert the supplied text into easier language while preserving the meaning, so it's accessible for non-native English speakers to understand.	0.9343229711055756
+evoluted	Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.	0.9310568797588349
+evoluted	Transform the provided material into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.	0.9312428545951843
+best score: 0.9356324303150177
+average score: 0.9329077851772309

@@ -1,0 +1,1198 @@
+{
+  "config": {
+    "dataset": "xsum",
+    "task": null,
+    "seed": 5,
+    "batch_size": 16,
+    "max_new_tokens": 128,
+    "output": "outputs/xsum_de_bert_score",
+    "sample_num": 50,
+    "test_sample_num": 100,
+    "metric": "bert_score",
+    "budget": 5,
+    "popsize": 10,
+    "evo_mode": "de",
+    "donor_random": false,
+    "sel_mode": "wheel",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "openai_api_key": null,
+    "openai_base_url": null,
+    "llm_type": "turbo",
+    "initial": "cot",
+    "initial_mode": "topk",
+    "ratio": 0,
+    "para_mode": null,
+    "template": "v1",
+    "client": false,
+    "cot_cache_path": "outputs/xsum_de_bert_score/cot_cache.json",
+    "desc_cache_path": "outputs/xsum_de_bert_score/desc_cache.json",
+    "mode": null,
+    "setting": "default",
+    "ga_mode": "topk",
+    "ckpt_pop": null,
+    "demon": 0,
+    "content": "",
+    "results_json": "outputs/xsum_de_bert_score/optimization_log.json"
+  },
+  "dataset": "xsum",
+  "metric": "bert_score",
+  "initial": [
+    {
+      "prompt": "Let’s think about this logically.",
+      "mark": "manual",
+      "score": 0.8706355118751525
+    },
+    {
+      "prompt": "Let’s think like a detective step by step.",
+      "mark": "manual",
+      "score": 0.8702240574359894
+    },
+    {
+      "prompt": "Let’s be realistic and think step by step.",
+      "mark": "manual",
+      "score": 0.8692777478694915
+    },
+    {
+      "prompt": "The answer is after the proof.",
+      "mark": "manual",
+      "score": 0.8692057418823242
+    },
+    {
+      "prompt": "Let's think step by step.",
+      "mark": "manual",
+      "score": 0.8691631293296814
+    },
+    {
+      "prompt": "Let's break this problem down step by step.",
+      "mark": "manual",
+      "score": 0.8688172554969787
+    },
+    {
+      "prompt": "Let's meticulously examine each aspect of this problem.",
+      "mark": "manual",
+      "score": 0.8687276124954224
+    },
+    {
+      "prompt": "We'll methodically work through this problem together.",
+      "mark": "manual",
+      "score": 0.8685318279266357
+    },
+    {
+      "prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+      "mark": "manual",
+      "score": 0.8684940099716186
+    },
+    {
+      "prompt": "We'll solve this by analyzing each part of the problem.",
+      "mark": "manual",
+      "score": 0.868447208404541
+    }
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "best_score": 0.8706355118751525,
+      "avg_score": 0.8691543799638749,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8706355118751525,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's break this problem down step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s think about this logically: Transform the given text into easier language while preserving the same meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8652430832386017,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8706355118751525,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8702240574359894,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s think like a detective step by step and consider the result that follows the proof, one step at a time.",
+          "child_score": 0.8687478077411651,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8702240574359894,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8692777478694915,
+          "parents": [
+            "Let’s think about this logically.",
+            "Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s think about this one step at a time and convert the sentence into simpler words so it’s easier for non-native English speakers to understand.",
+          "child_score": 0.8691997933387756,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8692777478694915,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8692057418823242,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let's break this problem down step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "The answer is after the proof. We could tackle this by breaking down the problem into its elements. Let’s think about this logically.",
+          "child_score": 0.8677726304531097,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8692057418823242,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8691631293296814,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's think step by step: We'll thoroughly examine this puzzle, and let’s think about this logically.",
+          "child_score": 0.8683161950111389,
+          "selected_prompt": "Let's think step by step.",
+          "selected_score": 0.8691631293296814,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.8688172554969787,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's break this task down step by step, taking the task with you systematically and thinking about it logically.",
+          "child_score": 0.8667123258113861,
+          "selected_prompt": "Let's break this problem down step by step.",
+          "selected_score": 0.8688172554969787,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.8687276124954224,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll take this mathematical reasoning challenge one step at a time.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem as we rewrite the given input text into simpler English sentences while preserving the same meaning, so it can be understood by non-native English speakers.",
+          "child_score": 0.8632830882072449,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.8687276124954224,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8685318279266357,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll methodically work through this problem together. Consider this: The result comes after the explanation, one step at a time.",
+          "child_score": 0.8671891748905182,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8685318279266357,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time.",
+          "old_score": 0.8684940099716186,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "child_score": 0.8685137069225312,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "selected_score": 0.8685137069225312,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.868447208404541,
+          "parents": [
+            "Let's think step by step.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem and think through each step like a scientist.",
+          "child_score": 0.8682885420322418,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.868447208404541,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8706355118751525,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8702240574359894,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8692777478694915,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8692057418823242,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's think step by step.",
+          "score": 0.8691631293296814,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's break this problem down step by step.",
+          "score": 0.8688172554969787,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.8687276124954224,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8685318279266357,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "score": 0.8685137069225312,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.868447208404541,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically.",
+        "score": 0.8706355118751525
+      }
+    },
+    {
+      "step": 1,
+      "best_score": 0.8706355118751525,
+      "avg_score": 0.8692122261524201,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8706355118751525,
+          "parents": [
+            "Let's think step by step.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s take this one step at a time and think about this logically.",
+          "child_score": 0.869988523721695,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8706355118751525,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8702240574359894,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: analyze the provided text by breaking down its components, think logically, and rewrite it in clear, simpler language while preserving the meaning.",
+          "child_score": 0.8626780319213867,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8702240574359894,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8692777478694915,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Let’s scrutinize each component of the problem in detail; the conclusion comes after the reasoning.",
+          "child_score": 0.8669209122657776,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8692777478694915,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8692057418823242,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "The answer is after the proof. We'll take this mathematical reasoning challenge one step at a time: Let’s analyze the problem piece by piece, using logical reasoning.",
+          "child_score": 0.8684017765522003,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8692057418823242,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.8691631293296814,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let’s be realistic and think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "child_score": 0.8697415912151336,
+          "selected_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "selected_score": 0.8697415912151336,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.8688172554969787,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's break this problem down step by step. We'll tackle this problem step by step with you. Let’s think about this logically.",
+          "child_score": 0.8663569951057434,
+          "selected_prompt": "Let's break this problem down step by step.",
+          "selected_score": 0.8688172554969787,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.8687276124954224,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem: The solution comes after the demonstration. Let’s think about this logically.",
+          "child_score": 0.8665185129642486,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.8687276124954224,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8685318279266357,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let’s be realistic and think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll methodically work through this problem together, thinking about this logically, and adopting a practical, step-by-step approach to make it accessible for non-native English speakers to understand.",
+          "child_score": 0.868448668718338,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8685318279266357,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "old_score": 0.8685137069225312,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s approach this like detectives, step by step, and we’ll carefully work through the problem together, by examining each component of the problem, and let’s think about this logically.",
+          "child_score": 0.8664632415771485,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "selected_score": 0.8685137069225312,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.868447208404541,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem. Let's analyze this step by step, and we will work through this task together.",
+          "child_score": 0.8679241728782654,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.868447208404541,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8706355118751525,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8702240574359894,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8692777478694915,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8692057418823242,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "score": 0.8697415912151336,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step.",
+          "score": 0.8688172554969787,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.8687276124954224,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8685318279266357,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "score": 0.8685137069225312,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.868447208404541,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically.",
+        "score": 0.8706355118751525
+      }
+    },
+    {
+      "step": 2,
+      "best_score": 0.8706355118751525,
+      "avg_score": 0.8692122261524201,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8706355118751525,
+          "parents": [
+            "Let's break this problem down step by step.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll break this problem into manageable steps. Let’s think about this logically.",
+          "child_score": 0.8675503730773926,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8706355118751525,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8702240574359894,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Convert the thoroughly analyzed sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8650762951374054,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8702240574359894,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8692777478694915,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's evaluate this by examining every component of the issue.",
+          "child_score": 0.8669827675819397,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8692777478694915,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8692057418823242,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let's break this problem down step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's think about this logically by systematically tackling this problem together as a team. The answer is after the proof.",
+          "child_score": 0.8686844646930695,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8692057418823242,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "old_score": 0.8697415912151336,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let's break this problem down step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Transform the problem by thoroughly analyzing it step by step, preserving the meaning so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8658045876026154,
+          "selected_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "selected_score": 0.8697415912151336,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.8688172554969787,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Break the problem down step by step by breaking it into parts and applying logical reasoning to reach a solution.",
+          "child_score": 0.867571656703949,
+          "selected_prompt": "Let's break this problem down step by step.",
+          "selected_score": 0.8688172554969787,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.8687276124954224,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We should analyze this task systematically by examining each aspect of the problem to make it easier for non-native English speakers to understand.",
+          "child_score": 0.8672057330608368,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.8687276124954224,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8685318279266357,
+          "parents": [
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll methodically work through this problem together. Let’s think about this logically: We should thoroughly examine every aspect of the issue, let’s keep it practical and divide the task into stages. Let’s reason through it step by step. The solution appears after the demonstration.",
+          "child_score": 0.8669471669197083,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8685318279266357,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "old_score": 0.8685137069225312,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Convert the prompt \"We should analyze this problem as investigators one step at a time.\" into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8684458422660828,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "selected_score": 0.8685137069225312,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.868447208404541,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem, approaching it like investigators would, gradually breaking the problem into parts, and reasoning it through carefully.",
+          "child_score": 0.8665502095222473,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem.",
+          "selected_score": 0.868447208404541,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8706355118751525,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8702240574359894,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8692777478694915,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8692057418823242,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "score": 0.8697415912151336,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step.",
+          "score": 0.8688172554969787,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.8687276124954224,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8685318279266357,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "score": 0.8685137069225312,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem.",
+          "score": 0.868447208404541,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically.",
+        "score": 0.8706355118751525
+      }
+    },
+    {
+      "step": 3,
+      "best_score": 0.8706355118751525,
+      "avg_score": 0.8693069182634355,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8706355118751525,
+          "parents": [
+            "The answer is after the proof.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "The solution comes after the demonstration; let’s think about this logically.",
+          "child_score": 0.8688256072998047,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8706355118751525,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8702240574359894,
+          "parents": [
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "Let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s think like a detective step by step and think about this rationally.",
+          "child_score": 0.8680884337425232,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8702240574359894,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8692777478694915,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Let’s tackle this math puzzle step by step: We’ll approach this mathematical reasoning task gradually, like detectives, checking each piece and thinking logically. The answer appears at the end of the proof.",
+          "child_score": 0.8666958701610565,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8692777478694915,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8692057418823242,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Transform the provided text into easier language while preserving the meaning, think about this logically, and remember: the answer is after the proof.",
+          "child_score": 0.8678570556640625,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.8692057418823242,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "old_score": 0.8697415912151336,
+          "parents": [
+            "Let’s think about this logically.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let’s approach this with logic: Rewrite the given input text into simpler English sentences while preserving the same meaning, so it can be understood by non-native English speakers. Let’s think step by step.",
+          "child_score": 0.8642910134792328,
+          "selected_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "selected_score": 0.8697415912151336,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.8688172554969787,
+          "parents": [
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "We'll solve this by analyzing each part of the problem.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We should thoroughly examine every aspect of the matter, let’s approach this practically by breaking the task into steps, and we will tackle this by examining each component of the problem to make it clearer for non-native English speakers.",
+          "child_score": 0.8675626194477082,
+          "selected_prompt": "Let's break this problem down step by step.",
+          "selected_score": 0.8688172554969787,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.8687276124954224,
+          "parents": [
+            "Let’s think about this logically.",
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+          "child_score": 0.8693840324878692,
+          "selected_prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+          "selected_score": 0.8693840324878692,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8685318279266357,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll methodically work through this problem together by carefully scrutinizing every facet of the problem one step at a time, investigating this as detectives would by examining each component of the problem, and let's think through it.",
+          "child_score": 0.8666825950145721,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8685318279266357,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "old_score": 0.8685137069225312,
+          "parents": [
+            "Let's break this problem down step by step.",
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time: break this difficult sentence down into simpler words while preserving the meaning, examine each component like detectives would, and think about this logically.",
+          "child_score": 0.8681475996971131,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "selected_score": 0.8685137069225312,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll solve this by analyzing each part of the problem.",
+          "old_score": 0.868447208404541,
+          "parents": [
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+          "child_score": 0.8687377095222473,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+          "selected_score": 0.8687377095222473,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8706355118751525,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8702240574359894,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8692777478694915,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.8692057418823242,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "score": 0.8697415912151336,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step.",
+          "score": 0.8688172554969787,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+          "score": 0.8693840324878692,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8685318279266357,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "score": 0.8685137069225312,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+          "score": 0.8687377095222473,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically.",
+        "score": 0.8706355118751525
+      }
+    },
+    {
+      "step": 4,
+      "best_score": 0.8706355118751525,
+      "avg_score": 0.8693986945152282,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.8706355118751525,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Convert the sentence \"Let’s think like a detective one step at a time; the solution follows the proof.\" into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8684317994117737,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.8706355118751525,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.8702240574359894,
+          "parents": [
+            "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: Let’s tackle this mathematical reasoning task, piece by piece, like detectives examining every part and thinking through it.",
+          "child_score": 0.866858845949173,
+          "selected_prompt": "Let’s think like a detective step by step.",
+          "selected_score": 0.8702240574359894,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.8692777478694915,
+          "parents": [
+            "Let's break this problem down step by step.",
+            "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.866269394159317,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.8692777478694915,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.8692057418823242,
+          "parents": [
+            "Let’s think about this logically.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let’s consider the case systematically. The answer is after the proof.",
+          "child_score": 0.8696716344356537,
+          "selected_prompt": "Let’s consider the case systematically. The answer is after the proof.",
+          "selected_score": 0.8696716344356537,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "old_score": 0.8697415912151336,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+            "We'll methodically work through this problem together.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Convert the lengthy, combined prompt into simpler English while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8661245334148407,
+          "selected_prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "selected_score": 0.8697415912151336,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.8688172554969787,
+          "parents": [
+            "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+            "Let’s be realistic and think step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Let's break this problem down step by step. Let’s break the provided text down by components, carefully review each detail, organize the work into phases, and examine it in stages to help non-native English speakers understand.",
+          "child_score": 0.8659847903251648,
+          "selected_prompt": "Let's break this problem down step by step.",
+          "selected_score": 0.8688172554969787,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+          "old_score": 0.8693840324878692,
+          "parents": [
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "Transform the provided prompt into simpler language while preserving its meaning: Let’s analyze every angle of the problem; let’s stay pragmatic and divide the task into stages; Let’s proceed one step at a time.",
+          "child_score": 0.8674981558322906,
+          "selected_prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+          "selected_score": 0.8693840324878692,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.8685318279266357,
+          "parents": [
+            "Let’s think about this logically.",
+            "The answer is after the proof.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll methodically work through this problem together by transforming the provided text into simpler language that preserves the meaning, making it easier for non-native English speakers to understand.",
+          "child_score": 0.8665170359611511,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.8685318279266357,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll take this mathematical reasoning challenge one step at a time: Let’s investigate this as detectives would, by examining each component of the problem, and let’s think about this logically.",
+          "old_score": 0.8685137069225312,
+          "parents": [
+            "The answer is after the proof.",
+            "Let’s think about this logically.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We'll take this mathematical reasoning challenge one step at a time: The solution appears after the demonstration; let’s investigate this as detectives would by examining each component of the problem, and let’s think about this logically.",
+          "child_score": 0.8689655768871307,
+          "selected_prompt": "We'll take this mathematical reasoning challenge one step at a time: The solution appears after the demonstration; let’s investigate this as detectives would by examining each component of the problem, and let’s think about this logically.",
+          "selected_score": 0.8689655768871307,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+          "old_score": 0.8687377095222473,
+          "parents": [
+            "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+            "Let’s think like a detective step by step.",
+            "Let’s think about this logically."
+          ],
+          "child_prompt": "We should analyze each part of the problem: carefully review every aspect, stay pragmatic with a structured plan, examine it step by step, and think about this logically so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8653465843200684,
+          "selected_prompt": "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+          "selected_score": 0.8687377095222473,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.8706355118751525,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step.",
+          "score": 0.8702240574359894,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.8692777478694915,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s consider the case systematically. The answer is after the proof.",
+          "score": 0.8696716344356537,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+          "score": 0.8697415912151336,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step.",
+          "score": 0.8688172554969787,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+          "score": 0.8693840324878692,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.8685318279266357,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll take this mathematical reasoning challenge one step at a time: The solution appears after the demonstration; let’s investigate this as detectives would by examining each component of the problem, and let’s think about this logically.",
+          "score": 0.8689655768871307,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll solve this by analyzing each part of the problem: we need to thoroughly examine every aspect of the problem, stay pragmatic and structure the task into steps, and analyze it step by step to make it easier for non-native English speakers to understand.",
+          "score": 0.8687377095222473,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think about this logically.",
+        "score": 0.8706355118751525
+      }
+    }
+  ],
+  "final": {
+    "dataset": "xsum",
+    "metric": "bert_score",
+    "best_prompt": "Let’s consider the case systematically. The answer is after the proof.",
+    "dev_score": 0.8696716344356537,
+    "test_score": 0.8696358424425125,
+    "top_candidates": [
+      {
+        "prompt": "Let’s think about this logically.",
+        "mark": "manual",
+        "dev_score": 0.8706355118751525,
+        "test_score": 0.8688040894269943
+      },
+      {
+        "prompt": "Let’s think like a detective step by step.",
+        "mark": "manual",
+        "dev_score": 0.8702240574359894,
+        "test_score": 0.8685439813137055
+      },
+      {
+        "prompt": "We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.",
+        "mark": "evoluted",
+        "dev_score": 0.8697415912151336,
+        "test_score": 0.868787277340889
+      },
+      {
+        "prompt": "Let’s consider the case systematically. The answer is after the proof.",
+        "mark": "evoluted",
+        "dev_score": 0.8696716344356537,
+        "test_score": 0.8696358424425125
+      },
+      {
+        "prompt": "Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.",
+        "mark": "evoluted",
+        "dev_score": 0.8693840324878692,
+        "test_score": 0.867378214597702
+      }
+    ]
+  }
+}

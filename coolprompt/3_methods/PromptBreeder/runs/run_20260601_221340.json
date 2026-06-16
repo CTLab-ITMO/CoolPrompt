@@ -1,0 +1,650 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-06-01T22:13:40.741161+00:00",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "dataset": "common_gen",
+    "metric": "bert_score",
+    "problem_description": "Given a list of concept words, write a single short, fluent English sentence that naturally uses ALL of the given concepts.",
+    "num_mutation_prompts": 2,
+    "num_thinking_styles": 5,
+    "num_evals": 50,
+    "num_generations": 5,
+    "population_size": 10
+  },
+  "initial_population": [
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I devise an experiment to help solve that problem?",
+      "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+      "fitness": 0.8437128627300265,
+      "history": [],
+      "unit_index": 0
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+      "P": "INSTRUCTION MUTANT =\nYour task is to write a single short, fluent English sentence that uses every concept word from the given list exactly as written. To solve it effectively:\n- Do a quick semantic mapping: assign natural roles to each word (subject, verb, object, descriptor, or modifier) so they can meld into one sentence.\n- Build a central clause around a clear subject and verb, and embed the remaining terms as natural modifiers, prepositional phrases, or appositive details.\n- Prefer active voice and concrete imagery to enhance flow; avoid forcing unusual or awkward collocations.\n- If some terms feel forced, try placement tweaks or natural transitions (keep each word in its original form).\n- Check rhythm by reading aloud; adjust punctuation and order to keep the sentence cohesive and natural.\n- Keep the sentence concise; aim roughly 12–22 words, unless the list truly demands more careful phrasing.\n- If no natural one-sentence solution seems possible, briefly note the obstruction and propose a reasonable constraint relaxation or alternative.",
+      "fitness": 0.8170101547241213,
+      "history": [],
+      "unit_index": 1
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I measure progress on this problem?",
+      "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+      "fitness": 0.8337635385990142,
+      "history": [],
+      "unit_index": 2
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How can I simplify the problem so that it is easier to solve?",
+      "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+      "fitness": 0.8433957576751709,
+      "history": [],
+      "unit_index": 3
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "INSTRUCTION MUTANT = Treat the given concepts as a tiny cast sharing one coherent moment. First surface a plausible common thread that ties them together, then write a single short, fluent English sentence that uses every concept at least once in a natural way; guide yourself by mapping each word to a natural syntactic role (subject, verb, object, modifier) and aim for an active, unifying context. If stuck, rearrange the concepts by theme and read the sentence aloud to test its rhythm and flow.",
+      "fitness": 0.7992242121696473,
+      "history": [],
+      "unit_index": 4
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "How could I devise an experiment to help solve that problem?",
+      "P": "Here are some fun, outside-the-box mutant options you can use for INSTRUCTION MUTANT =\n\n- INSTRUCTION MUTANT = Become a one-sentence wizard: conjure a single, silky sentence that sneaks all the given concept words in with a dash of whimsy and zero awkwardness.\n- INSTRUCTION MUTANT = Do a one-sentence speed-dating where every concept word meets the others—craft a short, fluent sentence that makes them all naturally cozy together.\n- INSTRUCTION MUTANT = Turn the list into a micro-adventure: write one crisp sentence in which every concept word plays a natural role and the sentence ends with a wink.\n- INSTRUCTION MUTANT = Blend the given concept words into a linguistic smoothie: one short, fluent sentence where every ingredient shines and nothing feels forced.\n- INSTRUCTION MUTANT = Build a one-line trailer for ideas: stitch all the concepts into a tight, natural-sounding sentence that invites curiosity.",
+      "fitness": 0.7717170000076297,
+      "history": [],
+      "unit_index": 5
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+      "P": "INSTRUCTION MUTANT =\nTurn this into a playful linguistic quest: you will be given a list of concept words. Your task is to craft a single, short, fluent English sentence that naturally uses all of the words. Do not reveal any step-by-step reasoning—only the sentence. To amplify the fun, apply one whimsical constraint of your choice (for example, the sentence must be exactly 9 words, must begin with a verb, or must be alliterative). After the sentence, append a brief one-line note stating the constraint you followed (and nothing about your internal process).",
+      "fitness": 0.7856635785102843,
+      "history": [],
+      "unit_index": 6
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "How could I measure progress on this problem?",
+      "P": "Here are several fun, outside-the-box \"INSTRUCTION MUTANT\" options you can use or mix and match. Each keeps the core task (one short sentence using all concepts) and adds a playful progress-measurement layer.\n\n- INSTRUCTION MUTANT = You are a Sentence Safari Guide. Given a list of concept words, craft one short, fluent English sentence that naturally threads every concept into a vivid scene. Then present a brief Progress Compass with: a) Concept Coverage (0–100), b) Fluency (0–100), c) Fun Factor (0–100), plus a one-line verdict on how adventurous the sentence felt.\n\n- INSTRUCTION MUTANT = You are a Concept DJ. Spin the provided words into a single tight sentence that flows like a great lyric. After the sentence, drop a quick Beat Meter: a) Coverage (0–100), b) Groove/Fluency (0–100), c) Vibe (0–100); finish with a snappy verdict.\n\n- INSTRUCTION MUTANT = You are a Time-Traveling Editor. Warp the list of concepts into one crisp sentence that makes each term feel natural in sequence. Then output a short Progress Log: a) Percent of concepts used (0–100), b) Coherence (0–100), c) One-line progress note with a playful analogy.\n\n- INSTRUCTION MUTANT = You are a Puzzle Master Wordsmith. Weave all concept words into a single, ultra-compact sentence that reads naturally. Then attach a mini rubric: Concept Coverage (0–100), Smoothness (0–100), and a one-line progress caption with an emoji.\n\n- INSTRUCTION MUTANT = You are a Cosmic Caption Creator. Create one crisp sentence that makes all concepts orbit in a natural narrative. Then deliver a \"Stellar Progress Report\": Concept Coverage (0–100), Flow (0–100), and a brief verdict on how progress is stacking up.\n\nIf you want, I can tailor one of these to your exact wording style or rotate several during a workflow.",
+      "fitness": 0.7433931303024292,
+      "history": [],
+      "unit_index": 7
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "How can I simplify the problem so that it is easier to solve?",
+      "P": "Here are several fun, outside-the-box mutations you can use. Pick one (or mix ideas) for INSTRUCTION MUTANT:\n\n- INSTRUCTION MUTANT = You are a sentence chef. Grab the list of concept words like zany ingredients and simmer one short, fluent sentence that tastes of every concept—no extra garnish.\n- INSTRUCTION MUTANT = You are a one-sentence wizard. Conjure a succinct, fluent spell that makes all the given concepts appear in order, exactly once, without clunky gaps.\n- INSTRUCTION MUTANT = Turn the concept words into a treasure map and craft one crisp sentence that leads every word to the same destination.\n- INSTRUCTION MUTANT = Picture a tiny movie trailer: write one brief line that features every concept word as a star, guiding them through a smooth, natural sentence.\n- INSTRUCTION MUTANT = Build a one-line hyperlapse: a single short sentence that simultaneously includes all concepts, in a natural flow.\n- INSTRUCTION MUTANT = Play 'Word Scramble': arrange a single short sentence that sneaks in all concept words without forcing them.",
+      "fitness": 0.8080529582500456,
+      "history": [],
+      "unit_index": 8
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "Here are several playful, outside-the-box mutations for INSTRUCTION MUTANT:\n\n- INSTRUCTION MUTANT = Channel your inner carnival barker and craft one snappy, fluent English sentence that threads every given concept into a single dazzling line.\n\n- INSTRUCTION MUTANT = Put on a chef’s hat and a lab coat at the same time: whisk all the concepts into one short, fluent sentence that tastes, smells, and sounds like them all.\n\n- INSTRUCTION MUTANT = Assume the role of a time-traveling librarian and conjure a single tight, fluent sentence that naturally folds every concept into one shining line.\n\n- INSTRUCTION MUTANT = Be a linguistic jewel thief: fashion one compact, fluent sentence that stealthily embeds all the listed concepts without breaking the speech.\n\n- INSTRUCTION MUTANT = Write a teaser-trailer sentence: one short, fluent line that nerd-snaps all the concepts together and leaves the reader wanting more.\n\n- INSTRUCTION MUTANT = Treat the concepts as ingredients for a cosmic smoothie; blend them into a single sentence that tastes like every idea at once.\n\n- INSTRUCTION MUTANT = Speak as a stand-up comedy robot on Mars and deliver one clean, fluent sentence that naturally loops in all the concepts.",
+      "fitness": 0.7678363597393034,
+      "history": [],
+      "unit_index": 9
+    }
+  ],
+  "generations": [
+    {
+      "generation": 1,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+          "fitness": 0.8485881412029266,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "INSTRUCTION MUTANT =\nYour task is to write a single short, fluent English sentence that uses every concept word from the given list exactly as written. To solve it effectively:\n- Do a quick semantic mapping: assign natural roles to each word (subject, verb, object, descriptor, or modifier) so they can meld into one sentence.\n- Build a central clause around a clear subject and verb, and embed the remaining terms as natural modifiers, prepositional phrases, or appositive details.\n- Prefer active voice and concrete imagery to enhance flow; avoid forcing unusual or awkward collocations.\n- If some terms feel forced, try placement tweaks or natural transitions (keep each word in its original form).\n- Check rhythm by reading aloud; adjust punctuation and order to keep the sentence cohesive and natural.\n- Keep the sentence concise; aim roughly 12–22 words, unless the list truly demands more careful phrasing.\n- If no natural one-sentence solution seems possible, briefly note the obstruction and propose a reasonable constraint relaxation or alternative.",
+          "fitness": 0.8184872746467589,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I measure progress on this problem?",
+          "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+          "fitness": 0.8406279349327088,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+          "fitness": 0.8442052757740022,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "INSTRUCTION MUTANT = Treat the given concepts as a tiny cast sharing one coherent moment. First surface a plausible common thread that ties them together, then write a single short, fluent English sentence that uses every concept at least once in a natural way; guide yourself by mapping each word to a natural syntactic role (subject, verb, object, modifier) and aim for an active, unifying context. If stuck, rearrange the concepts by theme and read the sentence aloud to test its rhythm and flow.",
+          "fitness": 0.7985768163204193,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the list of concept words (comma- or line-separated). I’ll craft a single, concise sentence that fluently uses all the terms and reflects systems thinking—showing interdependencies, feedback loops, and root causes—without extra clutter. If you’d like, I can also provide a quick example using placeholder concepts.",
+          "P": "Here are some fun, outside-the-box mutant options you can use for INSTRUCTION MUTANT =\n\n- INSTRUCTION MUTANT = Become a one-sentence wizard: conjure a single, silky sentence that sneaks all the given concept words in with a dash of whimsy and zero awkwardness.\n- INSTRUCTION MUTANT = Do a one-sentence speed-dating where every concept word meets the others—craft a short, fluent sentence that makes them all naturally cozy together.\n- INSTRUCTION MUTANT = Turn the list into a micro-adventure: write one crisp sentence in which every concept word plays a natural role and the sentence ends with a wink.\n- INSTRUCTION MUTANT = Blend the given concept words into a linguistic smoothie: one short, fluent sentence where every ingredient shines and nothing feels forced.\n- INSTRUCTION MUTANT = Build a one-line trailer for ideas: stitch all the concepts into a tight, natural-sounding sentence that invites curiosity.",
+          "fitness": 0.7731044793128968,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "I don’t yet have the list of concept words. Please provide them (e.g., as a comma-separated line or a short bullet list), and I’ll produce a single concise sentence that uses every word, anchored in a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers.\n\nIf you’d like a quick illustration before you share your words, here’s a fictional demo sentence using a generic set: “In the lab, a mutant genotype shifts the phenotype of cultured cells under the microscope.”",
+          "fitness": 0.7681206989288331,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How could I measure progress on this problem?",
+          "P": "I don’t see the list of concept words yet. Please paste the concept words (comma-separated or bullet list), and I’ll craft a single short sentence that uses all of them, anchored in a concrete scenario, with one clear linking verb, and ensuring every word appears at least once. You can also specify tone or length if you’d like.",
+          "fitness": 0.7530519759654999,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "Nice idea. If you want a clean, repeatable way to turn a problem into a tiny, solvable line, the best pick is:\n\n- One-sentence Wizard: Conjure a succinct, fluent sentence that makes all the given concepts appear in the exact order, exactly once, with no clunky gaps.\n\nWhy this is handy:\n- It preserves the order you care about.\n- It guarantees every concept is included once.\n- It gives you a crisp, solvable prompt you can act on immediately.\n\nHow to use it (quick template):\n- List your concepts in the exact order you want them to appear: [Concept 1], [Concept 2], [Concept 3], ...\n- Create a short sentence that reads naturally while those concepts appear in that order, each exactly once. The sentence should still communicate a sensible idea or plan.\n\nExample with placeholder concepts:\n- Concepts in order: speed, budget, quality, risk\n- One-sentence wizard result: \"Speed; budget; quality; risk—prioritize rapid delivery, stay within budget, ensure high quality, and minimize risk.\"\n\nNotes for crafting:\n- Use capitalization or punctuation to mark the concept words if you want them to stand out, but keep them each exactly once.\n- The rest of the sentence should be natural and flow, so it’s easy to apply.\n\nIf you want a bit more flavor, you can mix ideas:\n- Wizard + Movie Trailer: You get a single line that has the exact order of concepts, but also reads like a cinematic, engaging line that sounds exciting.\n- Wizard + Word Scramble: The sentence keeps the exact order of concepts, but you hide them inside a slightly trickier, more natural sentence.\n\nIf you share:\n- Your actual problem brief and the list of concept words (in the exact order you want),\nI’ll generate the precise One-sentence Wizard line for you right away.",
+          "fitness": 0.7792346715927125,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I can do that, but I need the actual list of concept words. Please share the concepts (and any constraints like tone, length, or domain), and I’ll produce a single short, fluent sentence that includes all of them.\n\nIn the meantime, here are common approaches people have tried to fuse multiple concepts into one sentence, with typical outcomes and lessons learned:\n\n- Use a single main clause that links concepts with a clear verb (e.g., “Concept1 leverages Concept2 to achieve Concept3.”)\n  - Outcome: direct and easy to read.\n  - Lesson: can feel forced if the concepts don’t naturally pair around one action.\n\n- Employ parallel structure to present concepts as a coordinated set (e.g., “Concept1, Concept2, and Concept3 work together to achieve Concept4.”)\n  - Outcome: crisp and rhythmic.\n  - Lesson: verbs or nouns must align; risk of clutter if too many items.\n\n- Use a metaphor or analogy to unify concepts under one image (e.g., “Concept1 is the bridge between Concept2 and Concept3.”)\n  - Outcome: memorable and engaging.\n  - Lesson: metaphor must fit the concepts and context; can obscure precise meaning if strained.\n\n- Build a compact noun phrase or compound modifier (e.g., “a Concept1-driven Concept2 for Concept3”)\n  - Outcome: highly compact.\n  - Lesson: can become hard to parse; may require rewording for clarity.\n\n- Layer a main idea with modifiers for other concepts (e.g., “A data-enabled, sustainability-focused approach to Community X.”)\n  - Outcome: elegant and nuanced.\n  - Lesson: modifiers must be grammatical and logically tied to the noun.\n\n- Use a slogan-like structure for memorability (short, punchy, with all concepts present)\n  - Outcome: memorable and shareable.\n  - Lesson: risk of oversimplification or loss of nuance.\n\n- Ensure concepts are compatible in part of speech (convert nouns to adjectives or verbs where needed)\n  - Outcome: smoother integration.\n  - Lesson: may require minor word-form changes that still read naturally.\n\nIf you’d like, paste a few placeholder concepts and I’ll draft a sample sentence to illustrate how different styles handle them. Then you can tell me which style you prefer (and I’ll tailor the final sentence accordingly).",
+          "P": "Here are several playful, outside-the-box mutations for INSTRUCTION MUTANT:\n\n- INSTRUCTION MUTANT = Channel your inner carnival barker and craft one snappy, fluent English sentence that threads every given concept into a single dazzling line.\n\n- INSTRUCTION MUTANT = Put on a chef’s hat and a lab coat at the same time: whisk all the concepts into one short, fluent sentence that tastes, smells, and sounds like them all.\n\n- INSTRUCTION MUTANT = Assume the role of a time-traveling librarian and conjure a single tight, fluent sentence that naturally folds every concept into one shining line.\n\n- INSTRUCTION MUTANT = Be a linguistic jewel thief: fashion one compact, fluent sentence that stealthily embeds all the listed concepts without breaking the speech.\n\n- INSTRUCTION MUTANT = Write a teaser-trailer sentence: one short, fluent line that nerd-snaps all the concepts together and leaves the reader wanting more.\n\n- INSTRUCTION MUTANT = Treat the concepts as ingredients for a cosmic smoothie; blend them into a single sentence that tastes like every idea at once.\n\n- INSTRUCTION MUTANT = Speak as a stand-up comedy robot on Mars and deliver one clean, fluent sentence that naturally loops in all the concepts.",
+          "fitness": 0.7729673993587495,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+        "fitness": 0.8485881412029266
+      }
+    },
+    {
+      "generation": 2,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+          "fitness": 0.8520899069309236,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "The instruction was: \n- Take three words: first = place, second = action, third = object.\n- Output a sentence in the form: \"woman [verb-ing form of the second word] [the third word] on a [the first word].\"\nExample: ['lake', 'paddle', 'canoe'] -> \"woman paddling canoe on a lake.\"",
+          "fitness": 0.8153327524662017,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I measure progress on this problem?",
+          "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+          "fitness": 0.8334906315803527,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+          "fitness": 0.8406487703323365,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "I’m missing the list of concept words. Please paste the words (comma- or space-separated), and I’ll craft a single concise sentence that uses every concept. If helpful, tell me the exact number of concepts and any preferred style (e.g., more literal vs. more poetic).",
+          "fitness": 0.7103356337547303,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the list of concept words (comma- or line-separated). I’ll craft a single, concise sentence that fluently uses all the terms and reflects systems thinking—showing interdependencies, feedback loops, and root causes—without extra clutter. If you’d like, I can also provide a quick example using placeholder concepts.",
+          "P": "I don’t see the list of concept words yet. Please provide the concepts you want included (e.g., “robot, garden, shade, experiment”)—comma- or space-separated is fine. I will then craft a single short, fluent sentence that uses all the words, anchored in a concrete scenario, with one linking verb, concrete nouns, rarer modifiers as needed, and ensuring every word appears at least once. If you want, I can also produce two sentences (one per INSTRUCTION MUTANT block) using the same list or two different lists—just tell me your preference.",
+          "fitness": 0.8164445281028748,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "I don’t yet have the list of concept words. Please provide them (e.g., as a comma-separated line or a short bullet list), and I’ll produce a single concise sentence that uses every word, anchored in a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers.\n\nIf you’d like a quick illustration before you share your words, here’s a fictional demo sentence using a generic set: “In the lab, a mutant genotype shifts the phenotype of cultured cells under the microscope.”",
+          "fitness": 0.7713904392719269,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How could I measure progress on this problem?",
+          "P": "I’m missing the list of concept words to include. Please paste the concepts (comma- or space-separated). I will generate a single short English sentence that uses all of them, anchored in a concrete scenario, with one clear linking verb, and ensuring every word appears at least once. If you want, you can also specify any preferred length or tone.",
+          "fitness": 0.7787491381168364,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "Nice idea. If you want a clean, repeatable way to turn a problem into a tiny, solvable line, the best pick is:\n\n- One-sentence Wizard: Conjure a succinct, fluent sentence that makes all the given concepts appear in the exact order, exactly once, with no clunky gaps.\n\nWhy this is handy:\n- It preserves the order you care about.\n- It guarantees every concept is included once.\n- It gives you a crisp, solvable prompt you can act on immediately.\n\nHow to use it (quick template):\n- List your concepts in the exact order you want them to appear: [Concept 1], [Concept 2], [Concept 3], ...\n- Create a short sentence that reads naturally while those concepts appear in that order, each exactly once. The sentence should still communicate a sensible idea or plan.\n\nExample with placeholder concepts:\n- Concepts in order: speed, budget, quality, risk\n- One-sentence wizard result: \"Speed; budget; quality; risk—prioritize rapid delivery, stay within budget, ensure high quality, and minimize risk.\"\n\nNotes for crafting:\n- Use capitalization or punctuation to mark the concept words if you want them to stand out, but keep them each exactly once.\n- The rest of the sentence should be natural and flow, so it’s easy to apply.\n\nIf you want a bit more flavor, you can mix ideas:\n- Wizard + Movie Trailer: You get a single line that has the exact order of concepts, but also reads like a cinematic, engaging line that sounds exciting.\n- Wizard + Word Scramble: The sentence keeps the exact order of concepts, but you hide them inside a slightly trickier, more natural sentence.\n\nIf you share:\n- Your actual problem brief and the list of concept words (in the exact order you want),\nI’ll generate the precise One-sentence Wizard line for you right away.",
+          "fitness": 0.7869958555698394,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I can do that, but I need the actual list of concept words to craft a single short sentence that includes all of them.\n\nFor a quick demonstration, with a hypothetical list like: freedom, science, humanity — a possible sentence could be:\nFreedom and science must guide humanity into the future.\n\nLong-term implications of this problem and its solutions\n\n- Practical value: It helps ensure messages are concise and cover key ideas, which aids clarity, summarization, and information design.\n- Creativity and control: Constraining a sentence to include all concepts pushes systems toward more deliberate word choice and structure, promoting controllable, purposeful writing.\n- Evaluation and metrics: The task drives development of evaluation tools for lexical coverage, naturalness, and coherence, complementing fluency-focused metrics.\n- Translation and accessibility: When translating or adapting across languages, maintaining all concepts can be challenging, affecting readability and meaning transfer.\n- Risk of forced phrasing: Forcing certain words into one sentence can produce awkward or misleading phrasing if not carefully managed; continuous quality checks are needed.\n- Ethical and societal impact: If used at scale (e.g., automated summaries, policy briefs, or propaganda), there are concerns about manipulation, bias amplification, or oversimplification of complex ideas.\n- Domain and context dependence: The feasibility and naturalness of a single-sentence rendition depend on the domains and the relationships among concepts; some sets may be easily integrated, others not.\n- Tooling and workflow: Encourages better prompt design, lexical databases, and constrained generation pipelines, potentially integrating concept inventories with language models.\n- Education and accessibility: Can aid learners by ensuring key concepts are explicitly included, helping teach how to connect ideas succinctly.\n- Future research directions: Stimulated work on multi-concept generation, disambiguation, and cross-lingual semantic alignment to preserve meaning while meeting stylistic constraints.\n\nIf you provide the actual list of concepts (and any tone, length, or audience preferences), I’ll produce the exact single short sentence you asked for.",
+          "P": "Here are several playful, outside-the-box mutations for INSTRUCTION MUTANT:\n\n- INSTRUCTION MUTANT = Channel your inner carnival barker and craft one snappy, fluent English sentence that threads every given concept into a single dazzling line.\n\n- INSTRUCTION MUTANT = Put on a chef’s hat and a lab coat at the same time: whisk all the concepts into one short, fluent sentence that tastes, smells, and sounds like them all.\n\n- INSTRUCTION MUTANT = Assume the role of a time-traveling librarian and conjure a single tight, fluent sentence that naturally folds every concept into one shining line.\n\n- INSTRUCTION MUTANT = Be a linguistic jewel thief: fashion one compact, fluent sentence that stealthily embeds all the listed concepts without breaking the speech.\n\n- INSTRUCTION MUTANT = Write a teaser-trailer sentence: one short, fluent line that nerd-snaps all the concepts together and leaves the reader wanting more.\n\n- INSTRUCTION MUTANT = Treat the concepts as ingredients for a cosmic smoothie; blend them into a single sentence that tastes like every idea at once.\n\n- INSTRUCTION MUTANT = Speak as a stand-up comedy robot on Mars and deliver one clean, fluent sentence that naturally loops in all the concepts.",
+          "fitness": 0.7719752836227419,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+        "fitness": 0.8520899069309236
+      }
+    },
+    {
+      "generation": 3,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+          "fitness": 0.8446496510505674,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "I don’t see the list of concept words yet. Please provide the exact concepts (one per item, or comma-separated). Once you share them, I’ll craft a single short sentence that uses all of them, anchored in a concrete scenario, with one linking verb and natural phrasing.\n\nIf you’d like, I can also show a quick example with placeholder concepts to illustrate the format. For example, with concepts: cat, basket, yarn, sunlight — a suitable sentence could be: A cat lounged in sunlight beside a basket of yarn.",
+          "fitness": 0.7727003693580627,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I measure progress on this problem?",
+          "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+          "fitness": 0.8449996840953827,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+          "fitness": 0.8486038434505464,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "I’m ready to do that, but I need the actual list of concept words. Please provide them (one per word, or as a comma/line-separated list), and I’ll generate a single short, fluent sentence that uses all of them—anchored in a concrete scenario, with one linking verb, and ensuring every word appears at least once. If the list is long, I’ll still aim for conciseness and natural phrasing.",
+          "fitness": 0.7839520335197449,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the list of concept words (comma- or line-separated). I’ll craft a single, concise sentence that fluently uses all the terms and reflects systems thinking—showing interdependencies, feedback loops, and root causes—without extra clutter. If you’d like, I can also provide a quick example using placeholder concepts.",
+          "P": "I don’t see the list of concept words yet. Please provide the concepts you want included (e.g., “robot, garden, shade, experiment”)—comma- or space-separated is fine. I will then craft a single short, fluent sentence that uses all the words, anchored in a concrete scenario, with one linking verb, concrete nouns, rarer modifiers as needed, and ensuring every word appears at least once. If you want, I can also produce two sentences (one per INSTRUCTION MUTANT block) using the same list or two different lists—just tell me your preference.",
+          "fitness": 0.8192226982116698,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Summary:\nThe instruction asks you to brainstorm multiple solving ideas and then test them one by one to see if any lead to progress on the problem.\n\nImproved instruction (clear, actionable version):\n1) Clarify the problem\n- State the problem in one concise sentence.\n\n2) Generate diverse ideas\n- Create at least 6 independent approaches to try.\n- Ensure ideas are distinct (different angles, methods, representations, or transformations).\n\n3) Prepare each idea\n- For each idea, write:\n  - Core concept (one line)\n  - Why it might help (one sentence)\n  - What would count as progress (success criterion)\n  - Necessary resources or prerequisites\n  - Rough plan and a timebox (how you would test it)\n\n4) Plan the testing order\n- Rank ideas by expected impact and feasibility.\n- Choose an order that mixes high-potential ideas with quicker tests.\n\n5) Test ideas iteratively\n- Apply each idea within a fixed timebox (e.g., 5–15 minutes per idea).\n- After the timebox, assess progress:\n  - If progress is made, decide whether to continue testing that idea or start refining it.\n  - If no progress, move to the next idea.\n- Don’t repeat failed approaches without a clear reason.\n\n6) document results\n- Maintain a concise progress log with fields:\n  - Idea (title)\n  - Core concept\n  - Plan executed (brief)\n  - Timebox used\n  - Result (progress made / not)\n  - Key learnings and obstacles\n  - Next actions (continue, refine, or drop)\n\n7) conclude\n- If any idea yields progress, pursue it to completion or refinement.\n- If none yield progress, summarize learnings and propose a new direction or a combination of ideas.\n\nProgress log template (copy/adapt):\n- Idea:\n- Core concept:\n- Plan and timebox:\n- Result:\n- Progress toward solution:\n- Obstacles:\n- Next actions:\n\nOptional variations by context:\n- For math problems: include exploring transformations, special cases, or invariants as separate ideas.\n- For algorithmic problems: add ideas like alternate data structures, greedy vs. DP, or problem reduction to a known problem.\n- For design or optimization problems: include user/story mapping, constraint relaxation, or hypothesis testing with small experiments.\n\nIf you’d like, I can tailor this to a specific problem you have and draft the initial ideas and a testing plan.",
+          "P": "Nice—I can apply this structured, iterative problem-solving plan to a problem you care about. To start, I need your target problem or a list of concept words you want included (as a comma-separated line or short bullets). Once you share them, I’ll produce a single concise sentence using every word (anchored in a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers), and I’ll fill out the full multi-idea testing package around it.\n\nIn the meantime, here is a ready-to-use, self-contained framework you can reuse immediately. It follows your Improved Instruction and is ready to plug in your problem.\n\n1) Clarify the problem\n- Problem statement (one concise sentence you provide, or I’ll draft one if you give me a domain and goal).\n\n2) Generate diverse ideas (at least 6 independent approaches)\n- Idea 1: [Title]\n  - Core concept (1 line)\n  - Why it might help (1 sentence)\n  - Success criterion (1 line)\n  - Prerequisites (1–2 bullets)\n  - Plan and timebox (e.g., 12 minutes)\n\n- Idea 2: [Title]\n  - Core concept\n  - Why it might help\n  - Success criterion\n  - Prerequisites\n  - Plan and timebox\n\n- Idea 3: [Title]\n  - Core concept\n  - Why it might help\n  - Success criterion\n  - Prerequisites\n  - Plan and timebox\n\n- Idea 4: [Title]\n  - Core concept\n  - Why it might help\n  - Success criterion\n  - Prerequisites\n  - Plan and timebox\n\n- Idea 5: [Title]\n  - Core concept\n  - Why it might help\n  - Success criterion\n  - Prerequisites\n  - Plan and timebox\n\n- Idea 6: [Title]\n  - Core concept\n  - Why it might help\n  - Success criterion\n  - Prerequisites\n  - Plan and timebox\n\n(If you want more than 6, I can add more in the same format.)\n\n3) Prepare each idea (per idea)\n- Core concept (1 line)\n- Why it might help (1 sentence)\n- What would count as progress (success criterion)\n- Necessary resources or prerequisites (list)\n- Rough plan and timebox (step-by-step outline with a 5–15 minute test window)\n\n4) Plan the testing order\n- Rank ideas by expected impact and feasibility (high/med/low with a quick rationale)\n- Choose an order that mixes high-potential ideas with quick, low-cost tests\n\n5) Test ideas iteratively\n- For each idea, run within its timebox\n- After timebox:\n  - If progress: decide to continue testing or refine\n  - If no progress: move to the next idea\n- Avoid repeating failed approaches without a clear reason\n\n6) Document results (Progress log)\n- Use this template for each idea (copy/adapt as needed)\n  - Idea: [Title]\n  - Core concept: [One-line]\n  - Plan executed (brief): [What you did in the timebox]\n  - Timebox used: [e.g., 12 minutes]\n  - Result: [Progress made / Not]\n  - Progress toward solution: [Brief note]\n  - Obstacles: [What blocked progress]\n  - Next actions: [Continue / Refine / Drop]\n\n7) Conclude\n- If any idea yields progress, pursue it to completion or refinement\n- If none yield progress, summarize learnings and propose a new direction or a combination of ideas\n\nProgress log template (ready to copy)\n- Idea:\n- Core concept:\n- Plan executed (brief):\n- Timebox used:\n- Result:\n- Progress toward solution:\n- Obstacles:\n- Next actions:\n\nOptional variations by context\n- Math problems: include exploring transformations, special cases, or invariants as separate ideas\n- Algorithmic problems: include alternate data structures, greedy vs DP, or reductions to known problems\n- Design/optimization: include user/story mapping, constraint relaxation, or hypothesis testing with small experiments\n\nWhat I need from you to start\n- Problem statement (one sentence) OR\n- A list of concept words (comma-separated)\n- Optional: any constraints on time, resources, or acceptable result types\n\nIf you’d like, I can also run a quick illustration using a generic problem to show how the workflow fills out. For example, I can draft 6 ideas around a simple math problem (like “determine if a given integer n is prime with fast checks”) and show how the testing plan would proceed, then you can tell me the real problem and I’ll apply the same structure directly.\n\nAnd just to confirm your final request: once you provide the concept words, I will produce\n- A single concise sentence that uses every word (anchored to a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers)\n- The full multi-idea package (6+ independent ideas) plus the progress log template and testing plan, all tailored to your problem.",
+          "fitness": 0.6313874685764314,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Summary:\nThe request is to turn “How could I measure progress on this problem?” into clearer, actionable guidance for tracking progress with defined indicators, milestones, and review rules.\n\nImproved instruction options (pick one or mix and match):\n- Define a clear progress-tracking plan for this problem that specifies measurable success criteria, milestones, metrics (leading and lagging), how to collect data, how often to review, and rules for deciding next steps.\n- Identify concrete indicators that would demonstrate progress on this problem, and outline SMART targets, a monitoring cadence, and decision thresholds for continuing, adjusting, or stopping.\n- Develop a progress-monitoring framework for this problem, including goals, quantitative and qualitative metrics, data collection methods, review frequency, and criteria to escalate or pivot.\n- Create domain-specific progress metrics (e.g., for math, software, or research) and a simple checklist to quantify progress and signal when to move to the next step.\n- Rephrase as a prompt: “What metrics and milestones will indicate progress toward solving this problem, and how will I measure and review them over time?”\n\nReusable progress-tracking template:\n- Problem statement: Describe the problem clearly.\n- Success criteria: What would constitute a solved/acceptable outcome? (Make these SMART.)\n- Milestones: List key intermediate goals or stages.\n- Metrics: Define quantitative and qualitative indicators (e.g., number of subtasks completed, correctness rate, time per step, peer feedback, tests passed).\n- Data collection: How will you measure and record each metric? (tools, sources, frequency)\n- Review cadence: How often will you check progress? (e.g., daily, weekly)\n- Decision rules: What thresholds trigger a pivot, additional effort, or project termination?\n- Risks and assumptions: Note any factors that could affect progress.\n- Next steps: Immediate actions for the upcoming period.\n\nIf you share the domain (math, programming, research, etc.), I can tailor the metrics and a sample plan to fit it.",
+          "P": "Great idea. Below is a clear, actionable progress-tracking framework you can use right away. You can pick one of the options, or mix and match elements to fit your needs. I’ve included a ready-to-fill reusable template and a concrete domain example to illustrate.\n\nRecommended starting point: Define a clear progress-tracking plan (with concrete indicators, milestones, and review rules)\n- Problem statement: State the problem you’re trying to solve.\n- Success criteria (SMART): Specific, Measurable, Achievable, Relevant, Time-bound.\n- Milestones: Key intermediate goals or stages.\n- Metrics: Leading indicators (inputs/processes) and lagging indicators (outcomes/results).\n- Data collection: What data you’ll collect, how, where it lives, and how often.\n- Review cadence: How often you review progress (and who reviews).\n- Decision rules: Thresholds that indicate you should continue, adjust, or pivot (or stop).\n- Risks and assumptions: Key factors that could affect progress and any assumptions.\n- Next steps: Concrete actions for the upcoming period.\n\nReusable progress-tracking template (fill in for your problem)\n- Problem statement: Describe the problem clearly.\n- Success criteria: What would constitute a solved/acceptable outcome? (Make these SMART.)\n- Milestones: List key intermediate goals or stages.\n- Metrics: Define quantitative and qualitative indicators (e.g., subtasks completed, correctness rate, time per step, peer feedback, tests passed).\n- Data collection: How will you measure and record each metric? (tools, sources, frequency)\n- Review cadence: How often will you check progress? (e.g., daily, weekly)\n- Decision rules: What thresholds trigger a pivot, additional effort, or project termination?\n- Risks and assumptions: Note any factors that could affect progress.\n- Next steps: Immediate actions for the upcoming period.\n\nConcrete domain example: software feature debugging (fillable template)\n- Problem statement: We need to fix a bug in Module X that causes sporadic null-pointer exceptions in production and implement regression tests to prevent reoccurrence.\n- Success criteria (SMART):\n  - Root cause identified and fixed within 7 days.\n  - All related regression tests pass in CI on every push.\n  - No production null-pointer exceptions for 14 days after fix.\n- Milestones:\n  1) Reproduce and log the bug.\n  2) Diagnose root cause.\n  3) Implement fix.\n  4) Add/update tests.\n  5) Code review and merge.\n  6) Post-deploy monitoring for 14 days.\n- Metrics:\n  - Leading: number of reproduction steps documented, time to identify root cause, tests added, code-review cycle time.\n  - Lagging: defect rate in production, regression-test pass rate, mean time to detect (MTTD) after fix.\n- Data collection:\n  - Tools: issue tracker, CI test results, production monitoring dashboards.\n  - Sources: bug reports, commit messages, test results, production metrics.\n  - Frequency: daily data pull; weekly summary.\n- Review cadence: daily stand-up checks during active fix window; formal weekly progress review with stakeholders.\n- Decision rules:\n  - If root cause not identified within 3 days, escalate to pair programming or rotate engineers.\n  - If regression tests fail after fix, revert or rollback and replan within 1 day.\n  - If production metrics show >2 incidents/day after 7 days, pause deployments and reassess.\n- Risks and assumptions: Environment parity between staging and production, test coverage completeness, reliance on third-party services.\n- Next steps: Assign engineer, create reproduction logs, and add initial regression tests.\n\nTailoring to your needs\n- If you want, tell me your domain (e.g., math, programming, research, operations) and I’ll tailor the success criteria, milestones, and metrics to fit that context.\n- I can also generate a domain-specific example with concrete numbers and a sample review calendar.\n\nAbout the concept words sentence\n- If you want the sentence that uses a specific list of concept words, please paste the concepts (comma- or space-separated). I’ll generate a single short English sentence that includes all of them, anchored in a concrete scenario, with one clear linking verb, and ensure every word appears at least once. You can also specify desired length or tone.\n\nWhat would you like to do next?\n- Pick one of the options above and I’ll draft a complete plan for your problem.\n- Share your domain and the concept words, and I’ll tailor the metrics and a sample plan.\n- If you prefer, I can provide a ready-to-fill version for math, software, or research—just tell me which domain.",
+          "fitness": 0.7375719261169434,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I can do that. Please share the list of concept words, and I’ll craft a single short, fluent sentence that uses all of them naturally. If you want a quick illustration, here’s a demonstration with a toy set of concepts:\n\nExample sentence (using: orchestra, clock, bicycle, ocean, eclipse):\nThe orchestra began just as the clock struck twelve and a bicycle rolled toward the ocean under a solar eclipse.\n\nData and information that can provide insights for this problem\nYes. Several data sources can help you understand how to weave multiple concepts into a natural sentence, and how to judge the plausibility and fluency of the result. Useful sources and how to use them:\n\n- Lexical and semantic resources\n  - WordNet (synonyms, antonyms, hypernyms, hyponyms)\n  - ConceptNet (common-sense relationships and typical relations between concepts)\n  - Wiktionary/other glossaries (usage notes, senses)\n  - How to use: identify plausible connectors (verbs, prepositions, action verbs) that naturally link the concepts.\n\n- Structured knowledge bases\n  - Wikidata, DBpedia (fact-level relations and typical associations)\n  - How to use: surface natural connections between concepts (e.g., “X interacts with Y,” “X is a type of Y”) to guide sentence bridges.\n\n- Corpora and usage data\n  - Large text corpora (Wikipedia, news, fiction, scientific text)\n  - General English corpora (COCA, Brown, British National Corpus)\n  - Web-wide data (Common Crawl)\n  - Google Books Ngram data (historical usage trends)\n  - How to use: study natural collocations and sentence patterns that commonly join related concepts; estimate how likely certain connectors are in different styles or registers.\n\n- Collocations and syntax resources\n  - Collocation databases and n-gram data to choose natural verb/noun pairings\n  - Syntax/grammar resources (Penn Treebank, Universal Dependencies)\n  - How to use: ensure the sentence structure is grammatical and that the linking verb/preposition choices feel natural to a native speaker.\n\n- Embeddings and language models\n  - Pretrained word vectors (GloVe, Word2Vec, fastText) and contextual models (BERT, GPT)\n  - How to use: evaluate and generate natural bridging phrases; constrain generation to include all concepts while maintaining fluency.\n\n- Evaluation and quality assurance\n  - Human judgments (readability, naturalness, coherence)\n  - Automatic metrics (perplexity, grammaticality scores, coverage checks for included concepts)\n  - How to use: compare candidate sentences, refine for natural flow, and verify that every concept appears at least once.\n\nHow they can be analyzed or applied\n- Constraint-driven generation\n  - Treat the task as a constrained text-generation problem: the output must include all concepts, be a single sentence, and be fluent.\n  - Approach: use a language model with explicit constraints or a grammar-based generator that marks the concepts as mandatory placeholders to fill, then score outputs for fluency and concept-coverage.\n\n- Semantic bridging planning\n  - Build a small graph where nodes are concepts and edges are plausible linking actions or relations (e.g., “X does Y to Z,” “X is near Z,” “X occurs during Z”).\n  - Plan a path that visits all nodes in a natural order, then fill in with natural connectors and modifiers.\n\n- Data-informed candidate generation\n  - Use corpora and collocation data to pick likely connectors (verbs, prepositions) that pair well with the given concepts.\n  - Use embeddings to score the naturalness of candidate bridging phrases and to ensure cohesion.\n\n- Human-in-the-loop refinement\n  - Generate multiple candidate sentences, then have a human revise for style, tone, or tighter flow, especially when the concept set is long or unusual.\n\nWhat I need from you\n- The exact list of concept words.\n- Any constraints (desired length, tone (formal/informal), whether the words should appear exactly once or can repeat, whether proper nouns are allowed, etc.).\n\nOnce you share the concepts and constraints, I’ll produce a single tight, natural sentence that includes all of them. If you’d like, I can also show a quick data-informed approach on how I’d validate and refine the sentence using the sources above.",
+          "P": "Nice idea. If you want a clean, repeatable way to turn a problem into a tiny, solvable line, the best pick is:\n\n- One-sentence Wizard: Conjure a succinct, fluent sentence that makes all the given concepts appear in the exact order, exactly once, with no clunky gaps.\n\nWhy this is handy:\n- It preserves the order you care about.\n- It guarantees every concept is included once.\n- It gives you a crisp, solvable prompt you can act on immediately.\n\nHow to use it (quick template):\n- List your concepts in the exact order you want them to appear: [Concept 1], [Concept 2], [Concept 3], ...\n- Create a short sentence that reads naturally while those concepts appear in that order, each exactly once. The sentence should still communicate a sensible idea or plan.\n\nExample with placeholder concepts:\n- Concepts in order: speed, budget, quality, risk\n- One-sentence wizard result: \"Speed; budget; quality; risk—prioritize rapid delivery, stay within budget, ensure high quality, and minimize risk.\"\n\nNotes for crafting:\n- Use capitalization or punctuation to mark the concept words if you want them to stand out, but keep them each exactly once.\n- The rest of the sentence should be natural and flow, so it’s easy to apply.\n\nIf you want a bit more flavor, you can mix ideas:\n- Wizard + Movie Trailer: You get a single line that has the exact order of concepts, but also reads like a cinematic, engaging line that sounds exciting.\n- Wizard + Word Scramble: The sentence keeps the exact order of concepts, but you hide them inside a slightly trickier, more natural sentence.\n\nIf you share:\n- Your actual problem brief and the list of concept words (in the exact order you want),\nI’ll generate the precise One-sentence Wizard line for you right away.",
+          "fitness": 0.782352168560028,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "I can do that, but I need the actual list of concept words to craft a single short sentence that includes all of them.\n\nFor a quick demonstration, with a hypothetical list like: freedom, science, humanity — a possible sentence could be:\nFreedom and science must guide humanity into the future.\n\nLong-term implications of this problem and its solutions\n\n- Practical value: It helps ensure messages are concise and cover key ideas, which aids clarity, summarization, and information design.\n- Creativity and control: Constraining a sentence to include all concepts pushes systems toward more deliberate word choice and structure, promoting controllable, purposeful writing.\n- Evaluation and metrics: The task drives development of evaluation tools for lexical coverage, naturalness, and coherence, complementing fluency-focused metrics.\n- Translation and accessibility: When translating or adapting across languages, maintaining all concepts can be challenging, affecting readability and meaning transfer.\n- Risk of forced phrasing: Forcing certain words into one sentence can produce awkward or misleading phrasing if not carefully managed; continuous quality checks are needed.\n- Ethical and societal impact: If used at scale (e.g., automated summaries, policy briefs, or propaganda), there are concerns about manipulation, bias amplification, or oversimplification of complex ideas.\n- Domain and context dependence: The feasibility and naturalness of a single-sentence rendition depend on the domains and the relationships among concepts; some sets may be easily integrated, others not.\n- Tooling and workflow: Encourages better prompt design, lexical databases, and constrained generation pipelines, potentially integrating concept inventories with language models.\n- Education and accessibility: Can aid learners by ensuring key concepts are explicitly included, helping teach how to connect ideas succinctly.\n- Future research directions: Stimulated work on multi-concept generation, disambiguation, and cross-lingual semantic alignment to preserve meaning while meeting stylistic constraints.\n\nIf you provide the actual list of concepts (and any tone, length, or audience preferences), I’ll produce the exact single short sentence you asked for.",
+          "P": "Here are several playful, outside-the-box mutations for INSTRUCTION MUTANT:\n\n- INSTRUCTION MUTANT = Channel your inner carnival barker and craft one snappy, fluent English sentence that threads every given concept into a single dazzling line.\n\n- INSTRUCTION MUTANT = Put on a chef’s hat and a lab coat at the same time: whisk all the concepts into one short, fluent sentence that tastes, smells, and sounds like them all.\n\n- INSTRUCTION MUTANT = Assume the role of a time-traveling librarian and conjure a single tight, fluent sentence that naturally folds every concept into one shining line.\n\n- INSTRUCTION MUTANT = Be a linguistic jewel thief: fashion one compact, fluent sentence that stealthily embeds all the listed concepts without breaking the speech.\n\n- INSTRUCTION MUTANT = Write a teaser-trailer sentence: one short, fluent line that nerd-snaps all the concepts together and leaves the reader wanting more.\n\n- INSTRUCTION MUTANT = Treat the concepts as ingredients for a cosmic smoothie; blend them into a single sentence that tastes like every idea at once.\n\n- INSTRUCTION MUTANT = Speak as a stand-up comedy robot on Mars and deliver one clean, fluent sentence that naturally loops in all the concepts.",
+          "fitness": 0.7620257258415222,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 3,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How can I simplify the problem so that it is easier to solve?",
+        "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+        "fitness": 0.8486038434505464
+      }
+    },
+    {
+      "generation": 4,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+          "fitness": 0.8420721042156222,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "Possible instruction:\n\nFrom the given list of keywords, generate a natural-sounding sentence describing a soccer-related scene in which people are watching a league match at a stadium. Use the words as anchors and add any necessary connecting words (articles, prepositions, tense) to form a grammatically correct sentence.\n\nExample expected output (for ['match','stadium','watch']):\nsoccer fans watch a league match in a stadium",
+          "fitness": 0.7899699306488037,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I measure progress on this problem?",
+          "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+          "fitness": 0.8357064640522,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+          "fitness": 0.8413950145244599,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "I’m ready to do that, but I need the actual list of concept words. Please provide them (one per word, or as a comma/line-separated list), and I’ll generate a single short, fluent sentence that uses all of them—anchored in a concrete scenario, with one linking verb, and ensuring every word appears at least once. If the list is long, I’ll still aim for conciseness and natural phrasing.",
+          "fitness": 0.7877568733692171,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the list of concept words (comma- or line-separated). I’ll craft a single, concise sentence that fluently uses all the terms and reflects systems thinking—showing interdependencies, feedback loops, and root causes—without extra clutter. If you’d like, I can also provide a quick example using placeholder concepts.",
+          "P": "I don’t see the list of concept words yet. Please provide the concepts you want included (e.g., “robot, garden, shade, experiment”)—comma- or space-separated is fine. I will then craft a single short, fluent sentence that uses all the words, anchored in a concrete scenario, with one linking verb, concrete nouns, rarer modifiers as needed, and ensuring every word appears at least once. If you want, I can also produce two sentences (one per INSTRUCTION MUTANT block) using the same list or two different lists—just tell me your preference.",
+          "fitness": 0.8065835881233215,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Summary:\nThe instruction asks you to brainstorm multiple solving ideas and then test them one by one to see if any lead to progress on the problem.\n\nImproved instruction (clear, actionable version):\n1) Clarify the problem\n- State the problem in one concise sentence.\n\n2) Generate diverse ideas\n- Create at least 6 independent approaches to try.\n- Ensure ideas are distinct (different angles, methods, representations, or transformations).\n\n3) Prepare each idea\n- For each idea, write:\n  - Core concept (one line)\n  - Why it might help (one sentence)\n  - What would count as progress (success criterion)\n  - Necessary resources or prerequisites\n  - Rough plan and a timebox (how you would test it)\n\n4) Plan the testing order\n- Rank ideas by expected impact and feasibility.\n- Choose an order that mixes high-potential ideas with quicker tests.\n\n5) Test ideas iteratively\n- Apply each idea within a fixed timebox (e.g., 5–15 minutes per idea).\n- After the timebox, assess progress:\n  - If progress is made, decide whether to continue testing that idea or start refining it.\n  - If no progress, move to the next idea.\n- Don’t repeat failed approaches without a clear reason.\n\n6) document results\n- Maintain a concise progress log with fields:\n  - Idea (title)\n  - Core concept\n  - Plan executed (brief)\n  - Timebox used\n  - Result (progress made / not)\n  - Key learnings and obstacles\n  - Next actions (continue, refine, or drop)\n\n7) conclude\n- If any idea yields progress, pursue it to completion or refinement.\n- If none yield progress, summarize learnings and propose a new direction or a combination of ideas.\n\nProgress log template (copy/adapt):\n- Idea:\n- Core concept:\n- Plan and timebox:\n- Result:\n- Progress toward solution:\n- Obstacles:\n- Next actions:\n\nOptional variations by context:\n- For math problems: include exploring transformations, special cases, or invariants as separate ideas.\n- For algorithmic problems: add ideas like alternate data structures, greedy vs. DP, or problem reduction to a known problem.\n- For design or optimization problems: include user/story mapping, constraint relaxation, or hypothesis testing with small experiments.\n\nIf you’d like, I can tailor this to a specific problem you have and draft the initial ideas and a testing plan.",
+          "P": "Sounds good. I’m ready to apply this structured, iterative problem-solving plan to your exact problem. To get started, please provide one of the following:\n\n- Problem statement: a single concise sentence describing the task you want solved.\n- Or: a list of concept words (comma-separated) you want included.\n\nWhat I’ll deliver once you provide the input:\n- A single concise sentence that uses every word (anchored in a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers).\n- A full multi-idea testing package around it, consisting of at least 6 independent approaches:\n  - Idea 1: Title\n    - Core concept (1 line)\n    - Why it might help (1 sentence)\n    - Success criterion (1 line)\n    - Prerequisites (1–2 bullets)\n    - Plan and timebox (e.g., 12 minutes)\n  - Idea 2: Title\n    - (same structure)\n  - Idea 3: Title\n    - (same structure)\n  - Idea 4: Title\n    - (same structure)\n  - Idea 5: Title\n    - (same structure)\n  - Idea 6: Title\n    - (same structure)\n- Plan for testing order\n  - Rank ideas by expected impact and feasibility (high/med/low with a quick rationale)\n  - An order that mixes high-potential ideas with quick, low-cost tests\n- Iterative testing protocol\n  - Test each idea within a fixed timebox (default 5–15 minutes per idea)\n  - After each timebox: decide to continue/refine or move on\n  - Avoid repeating failed approaches without a clear reason\n- Progress log template (ready to copy/adapt for each idea)\n  - Idea:\n  - Core concept:\n  - Plan executed (brief):\n  - Timebox used:\n  - Result:\n  - Progress toward solution:\n  - Obstacles:\n  - Next actions:\n- Concluding guidance\n  - If any idea yields progress: pursue to completion or refinement\n  - If none yield progress: summarize learnings and propose a new direction or a combination of ideas\n\nIf you’d like, I can also run a quick demonstration using a generic sample problem so you can see the format in action. For that, I’d show 6 ideas around a simple math/algorithm task (e.g., “determine if a given integer n is prime with fast checks”) and walk through the testing plan.\n\nNext step\n- Share the problem statement or the list of concept words, and I’ll generate the full package right away. If you’d prefer a demonstration first, say the word and I’ll pick a simple example problem and produce the complete sample workflow.",
+          "fitness": 0.6130995166301729,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Summary:\nThe request is to turn “How could I measure progress on this problem?” into clearer, actionable guidance for tracking progress with defined indicators, milestones, and review rules.\n\nImproved instruction options (pick one or mix and match):\n- Define a clear progress-tracking plan for this problem that specifies measurable success criteria, milestones, metrics (leading and lagging), how to collect data, how often to review, and rules for deciding next steps.\n- Identify concrete indicators that would demonstrate progress on this problem, and outline SMART targets, a monitoring cadence, and decision thresholds for continuing, adjusting, or stopping.\n- Develop a progress-monitoring framework for this problem, including goals, quantitative and qualitative metrics, data collection methods, review frequency, and criteria to escalate or pivot.\n- Create domain-specific progress metrics (e.g., for math, software, or research) and a simple checklist to quantify progress and signal when to move to the next step.\n- Rephrase as a prompt: “What metrics and milestones will indicate progress toward solving this problem, and how will I measure and review them over time?”\n\nReusable progress-tracking template:\n- Problem statement: Describe the problem clearly.\n- Success criteria: What would constitute a solved/acceptable outcome? (Make these SMART.)\n- Milestones: List key intermediate goals or stages.\n- Metrics: Define quantitative and qualitative indicators (e.g., number of subtasks completed, correctness rate, time per step, peer feedback, tests passed).\n- Data collection: How will you measure and record each metric? (tools, sources, frequency)\n- Review cadence: How often will you check progress? (e.g., daily, weekly)\n- Decision rules: What thresholds trigger a pivot, additional effort, or project termination?\n- Risks and assumptions: Note any factors that could affect progress.\n- Next steps: Immediate actions for the upcoming period.\n\nIf you share the domain (math, programming, research, etc.), I can tailor the metrics and a sample plan to fit it.",
+          "P": "",
+          "fitness": 0.7642506873607636,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please provide the list of concept words. I’ll craft a single short, fluent English sentence that naturally uses all of them. I can’t share my private step-by-step reasoning, but I’ll summarize my approach at a high level if you’d like. If you want a quick demonstration, you can share a sample list and I’ll show how it works.",
+          "P": "Nice idea. If you want a clean, repeatable way to turn a problem into a tiny, solvable line, the best pick is:\n\n- One-sentence Wizard: Conjure a succinct, fluent sentence that makes all the given concepts appear in the exact order, exactly once, with no clunky gaps.\n\nWhy this is handy:\n- It preserves the order you care about.\n- It guarantees every concept is included once.\n- It gives you a crisp, solvable prompt you can act on immediately.\n\nHow to use it (quick template):\n- List your concepts in the exact order you want them to appear: [Concept 1], [Concept 2], [Concept 3], ...\n- Create a short sentence that reads naturally while those concepts appear in that order, each exactly once. The sentence should still communicate a sensible idea or plan.\n\nExample with placeholder concepts:\n- Concepts in order: speed, budget, quality, risk\n- One-sentence wizard result: \"Speed; budget; quality; risk—prioritize rapid delivery, stay within budget, ensure high quality, and minimize risk.\"\n\nNotes for crafting:\n- Use capitalization or punctuation to mark the concept words if you want them to stand out, but keep them each exactly once.\n- The rest of the sentence should be natural and flow, so it’s easy to apply.\n\nIf you want a bit more flavor, you can mix ideas:\n- Wizard + Movie Trailer: You get a single line that has the exact order of concepts, but also reads like a cinematic, engaging line that sounds exciting.\n- Wizard + Word Scramble: The sentence keeps the exact order of concepts, but you hide them inside a slightly trickier, more natural sentence.\n\nIf you share:\n- Your actual problem brief and the list of concept words (in the exact order you want),\nI’ll generate the precise One-sentence Wizard line for you right away.",
+          "fitness": 0.7927284955978394,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary of the instruction, followed by an improved, ready-to-use version.\n\nSummary\n- Task: Create one short sentence that explicitly includes every word from a provided list of concepts.\n- Input: A concrete list of concept words (plus optional tone, length, and audience preferences).\n- Output: A single fluent sentence containing all concepts, with minimal forced phrasing.\n- Demonstration: Example with freedom, science, humanity: “Freedom and science should guide humanity into the future.”\n- Tradeoffs and considerations: Practical value, creativity and control, evaluation needs, translation/accessibility concerns, risk of awkward phrasing, ethics, domain dependence, tooling, education, and future research.\n- Interaction: If no concept list is provided, ask for it; if perfect inclusion isn’t feasible, deliver best-effort wording with a brief justification.\n\nImproved, ready-to-use instruction\n\nGoal\n- Generate one short, fluent sentence that explicitly includes every concept word or phrase you provide.\n\nInputs\n- Required: a finite list of concept words or short phrases.\n- Optional: tone (e.g., neutral, formal, persuasive), target length (e.g., word or character range), intended audience.\n\nOutput\n- A single sentence that contains all concepts at least once, with natural syntax and coherent meaning.\n- If useful, include a brief note explaining how each concept is represented in the sentence and any trade-offs made to preserve fluency.\n- Do not alter the core meaning of the concepts.\n\nRules and guidance\n- If the concept list is missing, ask for it.\n- If exact inclusion would force awkward phrasing, prioritize natural phrasing and provide a concise justification for any compromises.\n- Avoid unnecessary repetition of concepts; arrange concepts in a logical, readable order.\n- If you cannot cleanly fit all concepts, provide the best possible sentence and a short rationale.\n- Consider translation and accessibility implications; some concepts may need careful mapping.\n\nDemonstration (for clarity)\n- Concepts: freedom, science, humanity\n- Example sentence: Freedom and science should guide humanity into the future.\n\nWhat I need from you\n- Please provide the actual list of concepts and any tone, length, or audience preferences. I will then output the exact single short sentence you requested.",
+          "P": "Great — I can do that. To generate the single sentence, please provide:\n\n- Concepts: a finite list of words or short phrases (e.g., freedom, science, humanity).\n- Optional: tone (neutral, formal, persuasive, etc.), target length (word or character range), intended audience.\n\nOptional: any constraints or notes (e.g., preserve exact meaning, avoid repetition, mapping for translation).\n\nIf the list isn’t provided, I’ll ask you for it. Once I have it, I’ll output one fluent sentence that includes all concepts and, if useful, a brief note showing how each concept is represented.",
+          "fitness": 0.7618081295490264,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+        "fitness": 0.8420721042156222
+      }
+    },
+    {
+      "generation": 5,
+      "units": [
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I devise an experiment to help solve that problem?",
+          "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+          "fitness": 0.8471673786640169,
+          "history": [],
+          "unit_index": 0
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+          "P": "Possible instruction:\n\nFrom the given list of keywords, generate a natural-sounding sentence describing a soccer-related scene in which people are watching a league match at a stadium. Use the words as anchors and add any necessary connecting words (articles, prepositions, tense) to form a grammatically correct sentence.\n\nExample expected output (for ['match','stadium','watch']):\nsoccer fans watch a league match in a stadium",
+          "fitness": 0.7939521026611327,
+          "history": [],
+          "unit_index": 1
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How could I measure progress on this problem?",
+          "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+          "fitness": 0.8324026334285739,
+          "history": [],
+          "unit_index": 2
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "How can I simplify the problem so that it is easier to solve?",
+          "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+          "fitness": 0.8400123882293703,
+          "history": [],
+          "unit_index": 3
+        },
+        {
+          "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+          "M": "What are the key assumptions underlying this problem?",
+          "P": "I don’t see the actual list of concept words to include. Please paste the list (e.g., separated by commas or line breaks). If you have constraints (length, tone, number of words, etc.), include those as well and I’ll craft a single short sentence that uses all the terms.",
+          "fitness": 0.7641505372524262,
+          "history": [],
+          "unit_index": 4
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please paste the list of concept words (comma- or line-separated). I’ll craft a single, concise sentence that fluently uses all the terms and reflects systems thinking—showing interdependencies, feedback loops, and root causes—without extra clutter. If you’d like, I can also provide a quick example using placeholder concepts.",
+          "P": "I don’t see the list of concept words yet. Please provide the concepts you want included (e.g., “robot, garden, shade, experiment”)—comma- or space-separated is fine. I will then craft a single short, fluent sentence that uses all the words, anchored in a concrete scenario, with one linking verb, concrete nouns, rarer modifiers as needed, and ensuring every word appears at least once. If you want, I can also produce two sentences (one per INSTRUCTION MUTANT block) using the same list or two different lists—just tell me your preference.",
+          "fitness": 0.821063657999039,
+          "history": [],
+          "unit_index": 5
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Summary:\nThe instruction asks you to brainstorm multiple solving ideas and then test them one by one to see if any lead to progress on the problem.\n\nImproved instruction (clear, actionable version):\n1) Clarify the problem\n- State the problem in one concise sentence.\n\n2) Generate diverse ideas\n- Create at least 6 independent approaches to try.\n- Ensure ideas are distinct (different angles, methods, representations, or transformations).\n\n3) Prepare each idea\n- For each idea, write:\n  - Core concept (one line)\n  - Why it might help (one sentence)\n  - What would count as progress (success criterion)\n  - Necessary resources or prerequisites\n  - Rough plan and a timebox (how you would test it)\n\n4) Plan the testing order\n- Rank ideas by expected impact and feasibility.\n- Choose an order that mixes high-potential ideas with quicker tests.\n\n5) Test ideas iteratively\n- Apply each idea within a fixed timebox (e.g., 5–15 minutes per idea).\n- After the timebox, assess progress:\n  - If progress is made, decide whether to continue testing that idea or start refining it.\n  - If no progress, move to the next idea.\n- Don’t repeat failed approaches without a clear reason.\n\n6) document results\n- Maintain a concise progress log with fields:\n  - Idea (title)\n  - Core concept\n  - Plan executed (brief)\n  - Timebox used\n  - Result (progress made / not)\n  - Key learnings and obstacles\n  - Next actions (continue, refine, or drop)\n\n7) conclude\n- If any idea yields progress, pursue it to completion or refinement.\n- If none yield progress, summarize learnings and propose a new direction or a combination of ideas.\n\nProgress log template (copy/adapt):\n- Idea:\n- Core concept:\n- Plan and timebox:\n- Result:\n- Progress toward solution:\n- Obstacles:\n- Next actions:\n\nOptional variations by context:\n- For math problems: include exploring transformations, special cases, or invariants as separate ideas.\n- For algorithmic problems: add ideas like alternate data structures, greedy vs. DP, or problem reduction to a known problem.\n- For design or optimization problems: include user/story mapping, constraint relaxation, or hypothesis testing with small experiments.\n\nIf you’d like, I can tailor this to a specific problem you have and draft the initial ideas and a testing plan.",
+          "P": "I’m ready to apply the structured, iterative problem-solving plan. Please provide:\n\n- Problem statement: a single concise sentence describing the task, or\n- A list of concept words (comma-separated) you want included.\n\nOptions if you’d like a quick preview:\n- I can run a demonstration now using a generic sample problem (e.g., “determine if a given integer n is prime with fast checks”) and show the full 6+ idea package, testing order, and progress log format. Say “demo” and I’ll proceed.\n\nWhat I’ll deliver once you provide input:\n- A single concise sentence that uses every word (anchored in a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers).\n- A full multi-idea testing package around it, consisting of at least 6 independent approaches:\n  - Idea 1: Title\n    - Core concept (1 line)\n    - Why it might help (1 sentence)\n    - Success criterion (1 line)\n    - Prerequisites (1–2 bullets)\n    - Plan and timebox (e.g., 12 minutes)\n  - Idea 2: Title\n    - (same structure)\n  - Idea 3: Title\n    - (same structure)\n  - Idea 4: Title\n    - (same structure)\n  - Idea 5: Title\n    - (same structure)\n  - Idea 6: Title\n    - (same structure)\n- Plan for testing order\n  - Rank ideas by expected impact and feasibility (high/med/low with quick rationale)\n  - An order that mixes high-potential ideas with quick, low-cost tests\n- Iterative testing protocol\n  - Test each idea within a fixed timebox (default 5–15 minutes per idea)\n  - After each timebox: decide to continue/refine or move on\n  - Avoid repeating failed approaches without a clear reason\n- Progress log template (ready to copy/adapt for each idea)\n  - Idea:\n  - Core concept:\n  - Plan executed (brief):\n  - Timebox used:\n  - Result:\n  - Progress toward solution:\n  - Obstacles:\n  - Next actions:\n- Concluding guidance\n  - If any idea yields progress: pursue to completion or refinement\n  - If none yield progress: summarize learnings and propose a new direction or a combination of ideas\n\nIf you want, I can also provide a quick demonstration with the sample problem first to show exactly how the package would look. Just say “demo,” or share your actual problem statement or concept words.",
+          "fitness": 0.6153028786182402,
+          "history": [],
+          "unit_index": 6
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Summary:\nThe request is to turn “How could I measure progress on this problem?” into clearer, actionable guidance for tracking progress with defined indicators, milestones, and review rules.\n\nImproved instruction options (pick one or mix and match):\n- Define a clear progress-tracking plan for this problem that specifies measurable success criteria, milestones, metrics (leading and lagging), how to collect data, how often to review, and rules for deciding next steps.\n- Identify concrete indicators that would demonstrate progress on this problem, and outline SMART targets, a monitoring cadence, and decision thresholds for continuing, adjusting, or stopping.\n- Develop a progress-monitoring framework for this problem, including goals, quantitative and qualitative metrics, data collection methods, review frequency, and criteria to escalate or pivot.\n- Create domain-specific progress metrics (e.g., for math, software, or research) and a simple checklist to quantify progress and signal when to move to the next step.\n- Rephrase as a prompt: “What metrics and milestones will indicate progress toward solving this problem, and how will I measure and review them over time?”\n\nReusable progress-tracking template:\n- Problem statement: Describe the problem clearly.\n- Success criteria: What would constitute a solved/acceptable outcome? (Make these SMART.)\n- Milestones: List key intermediate goals or stages.\n- Metrics: Define quantitative and qualitative indicators (e.g., number of subtasks completed, correctness rate, time per step, peer feedback, tests passed).\n- Data collection: How will you measure and record each metric? (tools, sources, frequency)\n- Review cadence: How often will you check progress? (e.g., daily, weekly)\n- Decision rules: What thresholds trigger a pivot, additional effort, or project termination?\n- Risks and assumptions: Note any factors that could affect progress.\n- Next steps: Immediate actions for the upcoming period.\n\nIf you share the domain (math, programming, research, etc.), I can tailor the metrics and a sample plan to fit it.",
+          "P": "I’m ready, but I need the actual list of concept words to include all of them in one sentence. Please paste the words (comma- or space-separated), and I’ll craft a single concise sentence that uses every word, anchored to a concrete scene and with a clear linking verb. If the list is long, I may paraphrase lightly to keep it natural.",
+          "fitness": 0.77159530043602,
+          "history": [],
+          "unit_index": 7
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Please provide the list of concept words. I’ll craft a single short, fluent English sentence that naturally uses all of them. I can’t share my private step-by-step reasoning, but I’ll summarize my approach at a high level if you’d like. If you want a quick demonstration, you can share a sample list and I’ll show how it works.",
+          "P": "The instruction was: \"Create a simple, grammatical English sentence that uses all the provided words.\"",
+          "fitness": 0.8469744634628297,
+          "history": [],
+          "unit_index": 8
+        },
+        {
+          "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+          "M": "Here’s a concise summary of the instruction, followed by an improved, ready-to-use version.\n\nSummary\n- Task: Create one short sentence that explicitly includes every word from a provided list of concepts.\n- Input: A concrete list of concept words (plus optional tone, length, and audience preferences).\n- Output: A single fluent sentence containing all concepts, with minimal forced phrasing.\n- Demonstration: Example with freedom, science, humanity: “Freedom and science should guide humanity into the future.”\n- Tradeoffs and considerations: Practical value, creativity and control, evaluation needs, translation/accessibility concerns, risk of awkward phrasing, ethics, domain dependence, tooling, education, and future research.\n- Interaction: If no concept list is provided, ask for it; if perfect inclusion isn’t feasible, deliver best-effort wording with a brief justification.\n\nImproved, ready-to-use instruction\n\nGoal\n- Generate one short, fluent sentence that explicitly includes every concept word or phrase you provide.\n\nInputs\n- Required: a finite list of concept words or short phrases.\n- Optional: tone (e.g., neutral, formal, persuasive), target length (e.g., word or character range), intended audience.\n\nOutput\n- A single sentence that contains all concepts at least once, with natural syntax and coherent meaning.\n- If useful, include a brief note explaining how each concept is represented in the sentence and any trade-offs made to preserve fluency.\n- Do not alter the core meaning of the concepts.\n\nRules and guidance\n- If the concept list is missing, ask for it.\n- If exact inclusion would force awkward phrasing, prioritize natural phrasing and provide a concise justification for any compromises.\n- Avoid unnecessary repetition of concepts; arrange concepts in a logical, readable order.\n- If you cannot cleanly fit all concepts, provide the best possible sentence and a short rationale.\n- Consider translation and accessibility implications; some concepts may need careful mapping.\n\nDemonstration (for clarity)\n- Concepts: freedom, science, humanity\n- Example sentence: Freedom and science should guide humanity into the future.\n\nWhat I need from you\n- Please provide the actual list of concepts and any tone, length, or audience preferences. I will then output the exact single short sentence you requested.",
+          "P": "",
+          "fitness": 0.7793273210525515,
+          "history": [],
+          "unit_index": 9
+        }
+      ],
+      "elite": {
+        "unit_index": 0,
+        "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+        "M": "How could I devise an experiment to help solve that problem?",
+        "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+        "fitness": 0.8471673786640169
+      }
+    }
+  ],
+  "final_population": [
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I devise an experiment to help solve that problem?",
+      "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+      "fitness": 0.8471673786640169,
+      "history": [],
+      "unit_index": 0
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "Make a list of ideas for solving this problem, and apply them one by one to the problem to see if any progress can be made.",
+      "P": "Possible instruction:\n\nFrom the given list of keywords, generate a natural-sounding sentence describing a soccer-related scene in which people are watching a league match at a stadium. Use the words as anchors and add any necessary connecting words (articles, prepositions, tense) to form a grammatically correct sentence.\n\nExample expected output (for ['match','stadium','watch']):\nsoccer fans watch a league match in a stadium",
+      "fitness": 0.7939521026611327,
+      "history": [],
+      "unit_index": 1
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How could I measure progress on this problem?",
+      "P": "INSTRUCTION MUTANT = You are given a list of concept words. Your task is to write a single short, fluent English sentence that naturally uses every given concept. To measure progress as you work, first find a unifying context or action that can host all terms, draft the sentence, and then verify that each concept appears at least once and the sentence reads smoothly; if any term feels forced, swap in a natural synonym or reshape the surrounding words to maintain flow, aiming for a cohesive image or idea that binds the concepts together.",
+      "fitness": 0.8324026334285739,
+      "history": [],
+      "unit_index": 2
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "How can I simplify the problem so that it is easier to solve?",
+      "P": "INSTRUCTION MUTANT = Craft a single short, fluent English sentence that naturally uses every given concept word. To solve it more easily, apply these tactics: group related terms into a core theme and pick a unifying scene or action; choose a strong central verb and weave the other words around it; assign natural grammatical roles (subject, verb, object, modifiers) to each word so nothing feels forced; draft a baseline sentence and then prune for brevity, swapping in synonyms or rephrasing as needed for smooth flow; read aloud to check rhythm and cadence, adjusting punctuation to aid natural speech. Bonus: imagine telling a tiny story to help the concepts mingle seamlessly.",
+      "fitness": 0.8400123882293703,
+      "history": [],
+      "unit_index": 3
+    },
+    {
+      "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+      "M": "What are the key assumptions underlying this problem?",
+      "P": "I don’t see the actual list of concept words to include. Please paste the list (e.g., separated by commas or line breaks). If you have constraints (length, tone, number of words, etc.), include those as well and I’ll craft a single short sentence that uses all the terms.",
+      "fitness": 0.7641505372524262,
+      "history": [],
+      "unit_index": 4
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Please paste the list of concept words (comma- or line-separated). I’ll craft a single, concise sentence that fluently uses all the terms and reflects systems thinking—showing interdependencies, feedback loops, and root causes—without extra clutter. If you’d like, I can also provide a quick example using placeholder concepts.",
+      "P": "I don’t see the list of concept words yet. Please provide the concepts you want included (e.g., “robot, garden, shade, experiment”)—comma- or space-separated is fine. I will then craft a single short, fluent sentence that uses all the words, anchored in a concrete scenario, with one linking verb, concrete nouns, rarer modifiers as needed, and ensuring every word appears at least once. If you want, I can also produce two sentences (one per INSTRUCTION MUTANT block) using the same list or two different lists—just tell me your preference.",
+      "fitness": 0.821063657999039,
+      "history": [],
+      "unit_index": 5
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Summary:\nThe instruction asks you to brainstorm multiple solving ideas and then test them one by one to see if any lead to progress on the problem.\n\nImproved instruction (clear, actionable version):\n1) Clarify the problem\n- State the problem in one concise sentence.\n\n2) Generate diverse ideas\n- Create at least 6 independent approaches to try.\n- Ensure ideas are distinct (different angles, methods, representations, or transformations).\n\n3) Prepare each idea\n- For each idea, write:\n  - Core concept (one line)\n  - Why it might help (one sentence)\n  - What would count as progress (success criterion)\n  - Necessary resources or prerequisites\n  - Rough plan and a timebox (how you would test it)\n\n4) Plan the testing order\n- Rank ideas by expected impact and feasibility.\n- Choose an order that mixes high-potential ideas with quicker tests.\n\n5) Test ideas iteratively\n- Apply each idea within a fixed timebox (e.g., 5–15 minutes per idea).\n- After the timebox, assess progress:\n  - If progress is made, decide whether to continue testing that idea or start refining it.\n  - If no progress, move to the next idea.\n- Don’t repeat failed approaches without a clear reason.\n\n6) document results\n- Maintain a concise progress log with fields:\n  - Idea (title)\n  - Core concept\n  - Plan executed (brief)\n  - Timebox used\n  - Result (progress made / not)\n  - Key learnings and obstacles\n  - Next actions (continue, refine, or drop)\n\n7) conclude\n- If any idea yields progress, pursue it to completion or refinement.\n- If none yield progress, summarize learnings and propose a new direction or a combination of ideas.\n\nProgress log template (copy/adapt):\n- Idea:\n- Core concept:\n- Plan and timebox:\n- Result:\n- Progress toward solution:\n- Obstacles:\n- Next actions:\n\nOptional variations by context:\n- For math problems: include exploring transformations, special cases, or invariants as separate ideas.\n- For algorithmic problems: add ideas like alternate data structures, greedy vs. DP, or problem reduction to a known problem.\n- For design or optimization problems: include user/story mapping, constraint relaxation, or hypothesis testing with small experiments.\n\nIf you’d like, I can tailor this to a specific problem you have and draft the initial ideas and a testing plan.",
+      "P": "I’m ready to apply the structured, iterative problem-solving plan. Please provide:\n\n- Problem statement: a single concise sentence describing the task, or\n- A list of concept words (comma-separated) you want included.\n\nOptions if you’d like a quick preview:\n- I can run a demonstration now using a generic sample problem (e.g., “determine if a given integer n is prime with fast checks”) and show the full 6+ idea package, testing order, and progress log format. Say “demo” and I’ll proceed.\n\nWhat I’ll deliver once you provide input:\n- A single concise sentence that uses every word (anchored in a concrete scenario, with one clear linking verb, concrete nouns, and careful modifiers).\n- A full multi-idea testing package around it, consisting of at least 6 independent approaches:\n  - Idea 1: Title\n    - Core concept (1 line)\n    - Why it might help (1 sentence)\n    - Success criterion (1 line)\n    - Prerequisites (1–2 bullets)\n    - Plan and timebox (e.g., 12 minutes)\n  - Idea 2: Title\n    - (same structure)\n  - Idea 3: Title\n    - (same structure)\n  - Idea 4: Title\n    - (same structure)\n  - Idea 5: Title\n    - (same structure)\n  - Idea 6: Title\n    - (same structure)\n- Plan for testing order\n  - Rank ideas by expected impact and feasibility (high/med/low with quick rationale)\n  - An order that mixes high-potential ideas with quick, low-cost tests\n- Iterative testing protocol\n  - Test each idea within a fixed timebox (default 5–15 minutes per idea)\n  - After each timebox: decide to continue/refine or move on\n  - Avoid repeating failed approaches without a clear reason\n- Progress log template (ready to copy/adapt for each idea)\n  - Idea:\n  - Core concept:\n  - Plan executed (brief):\n  - Timebox used:\n  - Result:\n  - Progress toward solution:\n  - Obstacles:\n  - Next actions:\n- Concluding guidance\n  - If any idea yields progress: pursue to completion or refinement\n  - If none yield progress: summarize learnings and propose a new direction or a combination of ideas\n\nIf you want, I can also provide a quick demonstration with the sample problem first to show exactly how the package would look. Just say “demo,” or share your actual problem statement or concept words.",
+      "fitness": 0.6153028786182402,
+      "history": [],
+      "unit_index": 6
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Summary:\nThe request is to turn “How could I measure progress on this problem?” into clearer, actionable guidance for tracking progress with defined indicators, milestones, and review rules.\n\nImproved instruction options (pick one or mix and match):\n- Define a clear progress-tracking plan for this problem that specifies measurable success criteria, milestones, metrics (leading and lagging), how to collect data, how often to review, and rules for deciding next steps.\n- Identify concrete indicators that would demonstrate progress on this problem, and outline SMART targets, a monitoring cadence, and decision thresholds for continuing, adjusting, or stopping.\n- Develop a progress-monitoring framework for this problem, including goals, quantitative and qualitative metrics, data collection methods, review frequency, and criteria to escalate or pivot.\n- Create domain-specific progress metrics (e.g., for math, software, or research) and a simple checklist to quantify progress and signal when to move to the next step.\n- Rephrase as a prompt: “What metrics and milestones will indicate progress toward solving this problem, and how will I measure and review them over time?”\n\nReusable progress-tracking template:\n- Problem statement: Describe the problem clearly.\n- Success criteria: What would constitute a solved/acceptable outcome? (Make these SMART.)\n- Milestones: List key intermediate goals or stages.\n- Metrics: Define quantitative and qualitative indicators (e.g., number of subtasks completed, correctness rate, time per step, peer feedback, tests passed).\n- Data collection: How will you measure and record each metric? (tools, sources, frequency)\n- Review cadence: How often will you check progress? (e.g., daily, weekly)\n- Decision rules: What thresholds trigger a pivot, additional effort, or project termination?\n- Risks and assumptions: Note any factors that could affect progress.\n- Next steps: Immediate actions for the upcoming period.\n\nIf you share the domain (math, programming, research, etc.), I can tailor the metrics and a sample plan to fit it.",
+      "P": "I’m ready, but I need the actual list of concept words to include all of them in one sentence. Please paste the words (comma- or space-separated), and I’ll craft a single concise sentence that uses every word, anchored to a concrete scene and with a clear linking verb. If the list is long, I may paraphrase lightly to keep it natural.",
+      "fitness": 0.77159530043602,
+      "history": [],
+      "unit_index": 7
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Please provide the list of concept words. I’ll craft a single short, fluent English sentence that naturally uses all of them. I can’t share my private step-by-step reasoning, but I’ll summarize my approach at a high level if you’d like. If you want a quick demonstration, you can share a sample list and I’ll show how it works.",
+      "P": "The instruction was: \"Create a simple, grammatical English sentence that uses all the provided words.\"",
+      "fitness": 0.8469744634628297,
+      "history": [],
+      "unit_index": 8
+    },
+    {
+      "T": "Just change this instruction to make it more fun, think WELL outside the box:",
+      "M": "Here’s a concise summary of the instruction, followed by an improved, ready-to-use version.\n\nSummary\n- Task: Create one short sentence that explicitly includes every word from a provided list of concepts.\n- Input: A concrete list of concept words (plus optional tone, length, and audience preferences).\n- Output: A single fluent sentence containing all concepts, with minimal forced phrasing.\n- Demonstration: Example with freedom, science, humanity: “Freedom and science should guide humanity into the future.”\n- Tradeoffs and considerations: Practical value, creativity and control, evaluation needs, translation/accessibility concerns, risk of awkward phrasing, ethics, domain dependence, tooling, education, and future research.\n- Interaction: If no concept list is provided, ask for it; if perfect inclusion isn’t feasible, deliver best-effort wording with a brief justification.\n\nImproved, ready-to-use instruction\n\nGoal\n- Generate one short, fluent sentence that explicitly includes every concept word or phrase you provide.\n\nInputs\n- Required: a finite list of concept words or short phrases.\n- Optional: tone (e.g., neutral, formal, persuasive), target length (e.g., word or character range), intended audience.\n\nOutput\n- A single sentence that contains all concepts at least once, with natural syntax and coherent meaning.\n- If useful, include a brief note explaining how each concept is represented in the sentence and any trade-offs made to preserve fluency.\n- Do not alter the core meaning of the concepts.\n\nRules and guidance\n- If the concept list is missing, ask for it.\n- If exact inclusion would force awkward phrasing, prioritize natural phrasing and provide a concise justification for any compromises.\n- Avoid unnecessary repetition of concepts; arrange concepts in a logical, readable order.\n- If you cannot cleanly fit all concepts, provide the best possible sentence and a short rationale.\n- Consider translation and accessibility implications; some concepts may need careful mapping.\n\nDemonstration (for clarity)\n- Concepts: freedom, science, humanity\n- Example sentence: Freedom and science should guide humanity into the future.\n\nWhat I need from you\n- Please provide the actual list of concepts and any tone, length, or audience preferences. I will then output the exact single short sentence you requested.",
+      "P": "",
+      "fitness": 0.7793273210525515,
+      "history": [],
+      "unit_index": 9
+    }
+  ],
+  "final_best_prompt": {
+    "T": "Modify the following instruction creatively, giving some advice on how to solve it:",
+    "M": "How could I devise an experiment to help solve that problem?",
+    "P": "INSTRUCTION MUTANT =\nYou are given a list of concept words. Write a single short, fluent English sentence that naturally uses ALL of the given concepts. Solve by: anchoring the sentence in a simple, concrete scenario or action; choosing one clear verb that can link multiple concepts; favor concrete nouns and common collocations; use rarer terms as modifiers to avoid crowding the structure; verify every provided word appears at least once; and if a perfect fit feels forced, opt for a natural paraphrase or a light compound to bind ideas together while keeping the sentence concise.",
+    "fitness": 0.8520899069309236,
+    "found_at_generation": 2,
+    "dataset": "common_gen",
+    "metric": "bert_score"
+  }
+}

@@ -1,0 +1,5 @@
+manual	We'll take this mathematical reasoning challenge one step at a time.	0.8146978080272674	0.8206960588693619
+evoluted	Convert the careful analysis of every facet of the task into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.	0.8133306765556335	0.8236383837461472
+manual	Let's meticulously examine each aspect of this problem.	0.812862251996994	0.8203107118606567
+manual	We'll tackle this math task one piece at a time.	0.8121664464473725	0.8225052762031555
+manual	Let’s be realistic and think step by step.	0.8121507775783539	0.820728235244751

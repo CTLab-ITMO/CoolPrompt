@@ -1,0 +1,5 @@
+manual	Let’s think about this logically.	0.8706355118751525	0.8688040894269943
+manual	Let’s think like a detective step by step.	0.8702240574359894	0.8685439813137055
+evoluted	We should carefully review each facet of the issue, let’s stay practical and break the task into steps. Let's think step by step.	0.8697415912151336	0.868787277340889
+evoluted	Let’s consider the case systematically. The answer is after the proof.	0.8696716344356537	0.8696358424425125
+evoluted	Transform the provided prompt into simpler language while preserving its meaning, so it's easier for non-native English speakers to understand: We should evaluate this logically. We should thoroughly examine each aspect of the issue, stay pragmatic, and break the task into steps. Let’s think step by step.	0.8693840324878692	0.867378214597702

@@ -1,0 +1,5 @@
+evoluted	Rewrite the provided text into plainer terms while preserving its meaning, so it's easier for non-native English speakers to understand.	0.8842085444927216	0.861234403848648
+evoluted	Make the given text easier to comprehend by rewriting it in simpler language while preserving its meaning, so it's accessible to non-native English speakers.	0.8841204285621643	0.8624034869670868
+evoluted	Let’s think: Let’s think like a detective step by step: Transform the provided text into easier language while preserving the meaning, so non-native English speakers can understand.	0.8836426222324372	0.862135980129242
+manual	Let’s think like a detective step by step.	0.8835270953178406	0.8585031062364579
+evoluted	Let’s reason through this methodically: Rewrite the given text in simpler language while preserving its meaning, so non-native English speakers can understand it.	0.8834085750579834	0.860794495344162

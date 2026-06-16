@@ -1,0 +1,12 @@
+manual	Before we dive into the answer,	0.916289039850235
+evoluted	The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.	0.914429965019226
+manual	First,	0.9141513919830322
+manual	Let’s solve this problem by splitting it into steps.	0.9136635982990264
+evoluted	We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.	0.9126091933250428
+evoluted	Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.	0.9125052440166473
+manual	Let's unravel this mathematical challenge gradually.	0.9121993815898896
+manual	We'll methodically work through this problem together.	0.911417498588562
+manual	Let's systematically dissect this math task.	0.9100299382209778
+evoluted	Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.	0.9072344470024108
+best score: 0.916289039850235
+average score: 0.912452969789505

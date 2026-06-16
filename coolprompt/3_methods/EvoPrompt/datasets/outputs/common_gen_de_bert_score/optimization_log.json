@@ -1,0 +1,1198 @@
+{
+  "config": {
+    "dataset": "common_gen",
+    "task": null,
+    "seed": 5,
+    "batch_size": 16,
+    "max_new_tokens": 128,
+    "output": "outputs/common_gen_de_bert_score",
+    "sample_num": 50,
+    "test_sample_num": 100,
+    "metric": "bert_score",
+    "budget": 5,
+    "popsize": 10,
+    "evo_mode": "de",
+    "donor_random": false,
+    "sel_mode": "wheel",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "openai_api_key": null,
+    "openai_base_url": null,
+    "llm_type": "turbo",
+    "initial": "cot",
+    "initial_mode": "topk",
+    "ratio": 0,
+    "para_mode": null,
+    "template": "v1",
+    "client": false,
+    "cot_cache_path": "outputs/common_gen_de_bert_score/cot_cache.json",
+    "desc_cache_path": "outputs/common_gen_de_bert_score/desc_cache.json",
+    "mode": null,
+    "setting": "default",
+    "ga_mode": "topk",
+    "ckpt_pop": null,
+    "demon": 0,
+    "content": "",
+    "results_json": "outputs/common_gen_de_bert_score/optimization_log.json"
+  },
+  "dataset": "common_gen",
+  "metric": "bert_score",
+  "initial": [
+    {
+      "prompt": "Let's think step by step.",
+      "mark": "manual",
+      "score": 0.9295297563076019
+    },
+    {
+      "prompt": "Let's break this problem down step by step.",
+      "mark": "manual",
+      "score": 0.9285898578166961
+    },
+    {
+      "prompt": "We'll tackle this math task one piece at a time.",
+      "mark": "manual",
+      "score": 0.927438805103302
+    },
+    {
+      "prompt": "Let’s think",
+      "mark": "manual",
+      "score": 0.9268169569969177
+    },
+    {
+      "prompt": "Let’s be realistic and think step by step.",
+      "mark": "manual",
+      "score": 0.9261879742145538
+    },
+    {
+      "prompt": "Let’s think about this logically.",
+      "mark": "manual",
+      "score": 0.9261845028400422
+    },
+    {
+      "prompt": "Let's meticulously examine each aspect of this problem.",
+      "mark": "manual",
+      "score": 0.9259347200393677
+    },
+    {
+      "prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+      "mark": "manual",
+      "score": 0.9257660710811615
+    },
+    {
+      "prompt": "Let's systematically dissect this math task.",
+      "mark": "manual",
+      "score": 0.9253507113456726
+    },
+    {
+      "prompt": "The answer is after the proof.",
+      "mark": "manual",
+      "score": 0.9252271592617035
+    }
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "best_score": 0.9308076190948487,
+      "avg_score": 0.9272606974840164,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.9295297563076019,
+          "parents": [
+            "Let’s think",
+            "Let’s think about this logically.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let's think step by step: Choose one of the following phrasings to begin your reasoning and proceed in a clear step-by-step manner—1) Let's consider step by step. 2) Let's reason step by step. 3) Let’s reflect step by step. 4) Let’s ponder step by step. 5) Let’s think about this rationally step by step. 6) Let’s think this through logically step by step. 7) Let’s approach this logically step by step. 8) Let’s consider it logically step by step. 9) Let’s reason this through logically step by step.",
+          "child_score": 0.9191172456741333,
+          "selected_prompt": "Let's think step by step.",
+          "selected_score": 0.9295297563076019,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.9285898578166961,
+          "parents": [
+            "Let’s think",
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Break this problem down step by step: rewrite the given sentence in simpler English while preserving its meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9282128238677978,
+          "selected_prompt": "Let's break this problem down step by step.",
+          "selected_score": 0.9285898578166961,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.927438805103302,
+          "parents": [
+            "Let's think step by step.",
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Rewrite the step-by-step instruction into simpler language so non-native English speakers can understand how to tackle this math task one piece at a time.",
+          "child_score": 0.8985738289356232,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.927438805103302,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s think",
+          "old_score": 0.9268169569969177,
+          "parents": [
+            "The answer is after the proof.",
+            "Let’s think about this logically.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let’s think: The solution follows the proof; let's consider this in a logical way, step by step.",
+          "child_score": 0.9225764846801758,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.9268169569969177,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.9261879742145538,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let's systematically dissect this math task.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step as we thoroughly analyze every detail of the provided prompt to make it clearer for non-native English speakers.",
+          "child_score": 0.9260462605953217,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.9261879742145538,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.9261845028400422,
+          "parents": [
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let's systematically dissect this math task.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let’s think about this logically and work this through incrementally on the math problem to ensure the correct result.",
+          "child_score": 0.9209565043449401,
+          "selected_prompt": "Let’s think about this logically.",
+          "selected_score": 0.9261845028400422,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.9259347200393677,
+          "parents": [
+            "Let's think step by step.",
+            "Let's systematically dissect this math task.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this math task, step by step.",
+          "child_score": 0.9237479758262634,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem.",
+          "selected_score": 0.9259347200393677,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.9257660710811615,
+          "parents": [
+            "Let’s think",
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Let’s brainstorm and think step by step.",
+          "child_score": 0.9255197882652283,
+          "selected_prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+          "selected_score": 0.9257660710811615,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9253507113456726,
+          "parents": [
+            "Let's break this problem down step by step.",
+            "The answer is after the proof.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "Let’s systematically dissect this math task: Let’s analyze this problem piece by piece, and the solution comes after the demonstration.",
+          "child_score": 0.9231037962436676,
+          "selected_prompt": "Let's systematically dissect this math task.",
+          "selected_score": 0.9253507113456726,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.9252271592617035,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let's break this problem down step by step.",
+            "Let's think step by step."
+          ],
+          "child_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "child_score": 0.9308076190948487,
+          "selected_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "selected_score": 0.9308076190948487,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let's think step by step.",
+          "score": 0.9295297563076019,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's break this problem down step by step.",
+          "score": 0.9285898578166961,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.927438805103302,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.9268169569969177,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.9261879742145538,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically.",
+          "score": 0.9261845028400422,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem.",
+          "score": 0.9259347200393677,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+          "score": 0.9257660710811615,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task.",
+          "score": 0.9253507113456726,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "score": 0.9308076190948487,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+        "score": 0.9308076190948487
+      }
+    },
+    {
+      "step": 1,
+      "best_score": 0.9342142045497894,
+      "avg_score": 0.9301709023714066,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let's think step by step.",
+          "old_score": 0.9295297563076019,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9342142045497894,
+          "selected_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9342142045497894,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's break this problem down step by step.",
+          "old_score": 0.9285898578166961,
+          "parents": [
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9333817613124847,
+          "selected_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9333817613124847,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.927438805103302,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "Let’s think",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "We'll tackle this math task one piece at a time: Let's analyze carefully step by step: Transform the difficult sentence into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9301279950141906,
+          "selected_prompt": "We'll tackle this math task one piece at a time: Let's analyze carefully step by step: Transform the difficult sentence into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9301279950141906,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s think",
+          "old_score": 0.9268169569969177,
+          "parents": [
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let's systematically dissect this math task.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think step by step: Solve the math problem in a methodical manner to ensure the correct solution.",
+          "child_score": 0.9227081251144409,
+          "selected_prompt": "Let’s think",
+          "selected_score": 0.9268169569969177,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.9261879742145538,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll tackle this math task one piece at a time.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Let's carefully analyze step by step: Transform the math problem into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9240728139877319,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.9261879742145538,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think about this logically.",
+          "old_score": 0.9261845028400422,
+          "parents": [
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+          "child_score": 0.9308066630363464,
+          "selected_prompt": "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+          "selected_score": 0.9308066630363464,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem.",
+          "old_score": 0.9259347200393677,
+          "parents": [
+            "Let’s think",
+            "Let’s be realistic and think step by step.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9302906513214111,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9302906513214111,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s work this out in a step by step way to be sure we have the right answer.",
+          "old_score": 0.9257660710811615,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem.",
+            "We'll tackle this math task one piece at a time.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9290012907981873,
+          "selected_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9290012907981873,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9253507113456726,
+          "parents": [
+            "Let's break this problem down step by step.",
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "child_score": 0.9300739073753357,
+          "selected_prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "selected_score": 0.9300739073753357,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "old_score": 0.9308076190948487,
+          "parents": [
+            "Let's think step by step.",
+            "Let’s work this out in a step by step way to be sure we have the right answer.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Let's think this through in small steps: Let’s work through this in a step-by-step manner to ensure we get the correct result. Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9239090430736542,
+          "selected_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "selected_score": 0.9308076190948487,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9342142045497894,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9333817613124847,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time: Let's analyze carefully step by step: Transform the difficult sentence into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9301279950141906,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think",
+          "score": 0.9268169569969177,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.9261879742145538,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+          "score": 0.9308066630363464,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9302906513214111,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9290012907981873,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "score": 0.9300739073753357,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "score": 0.9308076190948487,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+        "score": 0.9342142045497894
+      }
+    },
+    {
+      "step": 2,
+      "best_score": 0.9360592007637024,
+      "avg_score": 0.9326171783208845,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9342142045497894,
+          "parents": [
+            "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think step by step: Rewrite the provided text into basic language while keeping the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9323329222202301,
+          "selected_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9342142045497894,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9333817613124847,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s think",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's break this problem down step by step: Rewrite the given text in simpler language while preserving the meaning, so non-native English speakers can understand it.",
+          "child_score": 0.9327462685108184,
+          "selected_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9333817613124847,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 2,
+          "old_prompt": "We'll tackle this math task one piece at a time: Let's analyze carefully step by step: Transform the difficult sentence into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9301279950141906,
+          "parents": [
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9333904194831848,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9333904194831848,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s think",
+          "old_score": 0.9268169569969177,
+          "parents": [
+            "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "child_score": 0.9315179991722107,
+          "selected_prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "selected_score": 0.9315179991722107,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.9261879742145538,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9310013103485107,
+          "selected_prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9310013103485107,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Let’s think about this logically: Transform the difficult sentence into simpler language while preserving the meaning, so it’s accessible for non-native English speakers to understand.",
+          "old_score": 0.9308066630363464,
+          "parents": [
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9360592007637024,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9360592007637024,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9302906513214111,
+          "parents": [
+            "We'll tackle this math task one piece at a time: Let's analyze carefully step by step: Transform the difficult sentence into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "child_score": 0.9323450469970703,
+          "selected_prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "selected_score": 0.9323450469970703,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9290012907981873,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let’s think",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9333803141117096,
+          "selected_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9333803141117096,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "old_score": 0.9300739073753357,
+          "parents": [
+            "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s systematically dissect this math task: Let us analyze this problem gradually, convert the input text into easier wording while maintaining the meaning, so it's understandable for ESL learners.",
+          "child_score": 0.926984349489212,
+          "selected_prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "selected_score": 0.9300739073753357,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "old_score": 0.9308076190948487,
+          "parents": [
+            "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+            "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Let’s thoroughly break down the math task into clearer language to ensure we get the correct result: Transform the provided text into easier language while preserving the intended meaning, so it’s accessible for non-native English speakers to understand.",
+          "child_score": 0.9252327895164489,
+          "selected_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "selected_score": 0.9308076190948487,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9342142045497894,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9333817613124847,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9360592007637024,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "score": 0.9315179991722107,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9310013103485107,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9360592007637024,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "score": 0.9323450469970703,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9333803141117096,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "score": 0.9300739073753357,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "score": 0.9308076190948487,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+        "score": 0.9360592007637024
+      }
+    },
+    {
+      "step": 3,
+      "best_score": 0.9342142045497894,
+      "avg_score": 0.9323071088790893,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9342142045497894,
+          "parents": [
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's think step by step: Rewrite the provided text into easier language while preserving the same meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9326701462268829,
+          "selected_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9342142045497894,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9333817613124847,
+          "parents": [
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's break this problem down step by step: Convert the provided material into clearer language while keeping the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9308668291568756,
+          "selected_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9333817613124847,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9360592007637024,
+          "parents": [
+            "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9324733757972717,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9324733757972717,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "old_score": 0.9315179991722107,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+            "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Rewrite the supplied text in plain language while keeping the meaning, so non-native speakers can understand it.",
+          "child_score": 0.9293010520935059,
+          "selected_prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "selected_score": 0.9315179991722107,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9310013103485107,
+          "parents": [
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "We’ll break it down step by step: The solution comes after the demonstration. Keep it practical and proceed step by step. Convert the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9249871981143951,
+          "selected_prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9310013103485107,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9324733757972717,
+          "parents": [
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the provided text into clearer wording while maintaining the meaning, so it’s easier for non-native English speakers to understand.",
+          "child_score": 0.9284497678279877,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9324733757972717,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "old_score": 0.9323450469970703,
+          "parents": [
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Transform the supplied content into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9329300129413605,
+          "selected_prompt": "Transform the supplied content into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9329300129413605,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9333803141117096,
+          "parents": [
+            "Let's meticulously examine each aspect of this problem. Let's be practical and think stepwise: Transform the provided text into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+            "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the content you provided into easier language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9325147140026092,
+          "selected_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9333803141117096,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let's systematically dissect this math task: Let’s tackle this problem one step at a time, convert the given task into simpler wording while preserving the meaning, so it's accessible for ESL learners to understand.",
+          "old_score": 0.9300739073753357,
+          "parents": [
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's take a practical, step-by-step approach: Transform the provided material into easier wording while maintaining the meaning, so it's easier for ESL learners to understand.",
+          "child_score": 0.9308911156654358,
+          "selected_prompt": "Let's take a practical, step-by-step approach: Transform the provided material into easier wording while maintaining the meaning, so it's easier for ESL learners to understand.",
+          "selected_score": 0.9308911156654358,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "old_score": 0.9308076190948487,
+          "parents": [
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "The answer is after the proof. Let’s stay practical and think step by step: Let’s be practical and consider this step by step: Rewrite the supplied material into simpler wording while keeping the meaning, so it’s easier for non-native English speakers to understand.",
+          "child_score": 0.9262033677101136,
+          "selected_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "selected_score": 0.9308076190948487,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9342142045497894,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9333817613124847,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9324733757972717,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "score": 0.9315179991722107,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9310013103485107,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9324733757972717,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Transform the supplied content into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9329300129413605,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9333803141117096,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's take a practical, step-by-step approach: Transform the provided material into easier wording while maintaining the meaning, so it's easier for ESL learners to understand.",
+          "score": 0.9308911156654358,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "score": 0.9308076190948487,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+        "score": 0.9360592007637024
+      }
+    },
+    {
+      "step": 4,
+      "best_score": 0.9356324303150177,
+      "avg_score": 0.9329077851772309,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9342142045497894,
+          "parents": [
+            "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's think step by step: Analyze the issue and transform the given text into simpler language while preserving the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9310084021091461,
+          "selected_prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9342142045497894,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 1,
+          "old_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9333817613124847,
+          "parents": [
+            "Let's take a practical, step-by-step approach: Transform the provided material into easier wording while maintaining the meaning, so it's easier for ESL learners to understand.",
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let's break this problem down step by step: Rewrite the supplied sentence into plainer terms without losing the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9303735637664795,
+          "selected_prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9333817613124847,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 2,
+          "old_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9324733757972717,
+          "parents": [
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Transform the supplied content into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the provided content into easier language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9320981395244599,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9324733757972717,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "old_score": 0.9315179991722107,
+          "parents": [
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s think: Let’s work through this step by step to ensure we reach the correct answer: Rewrite the given text into clearer terms while keeping the meaning, so non-native English speakers can understand it.",
+          "child_score": 0.9282373404502868,
+          "selected_prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "selected_score": 0.9315179991722107,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9310013103485107,
+          "parents": [
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Convert the solution that comes after the demonstration into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9296236121654511,
+          "selected_prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9310013103485107,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 5,
+          "old_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9324733757972717,
+          "parents": [
+            "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9356324303150177,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9356324303150177,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Transform the supplied content into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "old_score": 0.9329300129413605,
+          "parents": [
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Transform the supplied content into plainer language while preserving the meaning, so it's easier for non-native English speakers to understand, and convert the difficult sentence into simpler words while preserving the meaning.",
+          "child_score": 0.9342340648174285,
+          "selected_prompt": "Transform the supplied content into plainer language while preserving the meaning, so it's easier for non-native English speakers to understand, and convert the difficult sentence into simpler words while preserving the meaning.",
+          "selected_score": 0.9342340648174285,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "old_score": 0.9333803141117096,
+          "parents": [
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Convert the supplied text into easier language while preserving the meaning, so it's accessible for non-native English speakers to understand.",
+          "child_score": 0.9343229711055756,
+          "selected_prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Convert the supplied text into easier language while preserving the meaning, so it's accessible for non-native English speakers to understand.",
+          "selected_score": 0.9343229711055756,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 8,
+          "old_prompt": "Let's take a practical, step-by-step approach: Transform the provided material into easier wording while maintaining the meaning, so it's easier for ESL learners to understand.",
+          "old_score": 0.9308911156654358,
+          "parents": [
+            "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+            "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9310568797588349,
+          "selected_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "selected_score": 0.9310568797588349,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "The answer is after the proof. Let’s stay practical and think step by step. Transform the provided text into easier language while maintaining the meaning, so it’s accessible for non-native English speakers to understand.",
+          "old_score": 0.9308076190948487,
+          "parents": [
+            "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+            "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+            "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand."
+          ],
+          "child_prompt": "Transform the provided material into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "child_score": 0.9312428545951843,
+          "selected_prompt": "Transform the provided material into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "selected_score": 0.9312428545951843,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9342142045497894,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9333817613124847,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9310568797588349,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+          "score": 0.9315179991722107,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step: Transform the supplied material into simpler wording while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9310013103485107,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9310568797588349,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Transform the supplied content into plainer language while preserving the meaning, so it's easier for non-native English speakers to understand, and convert the difficult sentence into simpler words while preserving the meaning.",
+          "score": 0.9342340648174285,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Convert the supplied text into easier language while preserving the meaning, so it's accessible for non-native English speakers to understand.",
+          "score": 0.9343229711055756,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "score": 0.9310568797588349,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Transform the provided material into easier language while maintaining the meaning, making it accessible for non-native English speakers to understand.",
+          "score": 0.9312428545951843,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+        "score": 0.9360592007637024
+      }
+    }
+  ],
+  "final": {
+    "dataset": "common_gen",
+    "metric": "bert_score",
+    "best_prompt": "Transform the supplied content into plainer language while preserving the meaning, so it's easier for non-native English speakers to understand, and convert the difficult sentence into simpler words while preserving the meaning.",
+    "dev_score": 0.9342340648174285,
+    "test_score": 0.9203981482982635,
+    "top_candidates": [
+      {
+        "prompt": "Let’s work this out in a step by step way to be sure we have the right answer: Convert the supplied text into easier language while preserving the meaning, so it's accessible for non-native English speakers to understand.",
+        "mark": "evoluted",
+        "dev_score": 0.9343229711055756,
+        "test_score": 0.9175234466791153
+      },
+      {
+        "prompt": "Transform the supplied content into plainer language while preserving the meaning, so it's easier for non-native English speakers to understand, and convert the difficult sentence into simpler words while preserving the meaning.",
+        "mark": "evoluted",
+        "dev_score": 0.9342340648174285,
+        "test_score": 0.9203981482982635
+      },
+      {
+        "prompt": "Let's think step by step: Transform the provided text into easier language while maintaining the meaning, so it's accessible for non-native English speakers to understand.",
+        "mark": "evoluted",
+        "dev_score": 0.9342142045497894,
+        "test_score": 0.9183906638622283
+      },
+      {
+        "prompt": "Let's break this problem down step by step: Rewrite the given text into simpler terms while preserving meaning, so it's accessible for non-native English speakers to understand.",
+        "mark": "evoluted",
+        "dev_score": 0.9333817613124847,
+        "test_score": 0.9183051300048828
+      },
+      {
+        "prompt": "Let’s think: Let’s tackle this step by step to ensure we reach the correct answer: Transform the given text into simpler language while keeping the meaning, so non-native speakers can understand it.",
+        "mark": "evoluted",
+        "dev_score": 0.9315179991722107,
+        "test_score": 0.9194004505872726
+      }
+    ]
+  }
+}

@@ -1,0 +1,1198 @@
+{
+  "config": {
+    "dataset": "squad_v2",
+    "task": null,
+    "seed": 5,
+    "batch_size": 16,
+    "max_new_tokens": 128,
+    "output": "outputs/squad_v2_de_bert_score",
+    "sample_num": 50,
+    "test_sample_num": 100,
+    "metric": "bert_score",
+    "budget": 5,
+    "popsize": 10,
+    "evo_mode": "de",
+    "donor_random": false,
+    "sel_mode": "wheel",
+    "model": "openai/gpt-5-nano",
+    "temperature": 1.0,
+    "openai_api_key": null,
+    "openai_base_url": null,
+    "llm_type": "turbo",
+    "initial": "cot",
+    "initial_mode": "topk",
+    "ratio": 0,
+    "para_mode": null,
+    "template": "v1",
+    "client": false,
+    "cot_cache_path": "outputs/squad_v2_de_bert_score/cot_cache.json",
+    "desc_cache_path": "outputs/squad_v2_de_bert_score/desc_cache.json",
+    "mode": null,
+    "setting": "default",
+    "ga_mode": "topk",
+    "ckpt_pop": null,
+    "demon": 0,
+    "content": "",
+    "results_json": "outputs/squad_v2_de_bert_score/optimization_log.json"
+  },
+  "dataset": "squad_v2",
+  "metric": "bert_score",
+  "initial": [
+    {
+      "prompt": "Before we dive into the answer,",
+      "mark": "manual",
+      "score": 0.916289039850235
+    },
+    {
+      "prompt": "The answer is after the proof.",
+      "mark": "manual",
+      "score": 0.9142888772487641
+    },
+    {
+      "prompt": "First,",
+      "mark": "manual",
+      "score": 0.9141513919830322
+    },
+    {
+      "prompt": "Let’s solve this problem by splitting it into steps.",
+      "mark": "manual",
+      "score": 0.9136635982990264
+    },
+    {
+      "prompt": "Let's unravel this mathematical challenge gradually.",
+      "mark": "manual",
+      "score": 0.9121993815898896
+    },
+    {
+      "prompt": "We'll methodically work through this problem together.",
+      "mark": "manual",
+      "score": 0.911417498588562
+    },
+    {
+      "prompt": "Let’s think like a detective step by step.",
+      "mark": "manual",
+      "score": 0.9101645421981811
+    },
+    {
+      "prompt": "Let's systematically dissect this math task.",
+      "mark": "manual",
+      "score": 0.9100299382209778
+    },
+    {
+      "prompt": "We'll tackle this math task one piece at a time.",
+      "mark": "manual",
+      "score": 0.9086201894283295
+    },
+    {
+      "prompt": "Let’s be realistic and think step by step.",
+      "mark": "manual",
+      "score": 0.9076609075069427
+    }
+  ],
+  "steps": [
+    {
+      "step": 0,
+      "best_score": 0.9170461332798004,
+      "avg_score": 0.912536695599556,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.916289039850235,
+          "parents": [
+            "Let’s solve this problem by splitting it into steps.",
+            "We'll methodically work through this problem together.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "We could tackle this problem by breaking it into steps before we dive into the answer, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9008522617816925,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.916289039850235,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.9142888772487641,
+          "parents": [
+            "Let’s solve this problem by splitting it into steps.",
+            "Let's unravel this mathematical challenge gradually.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "Before we dive into the answer, We’ll tackle this task by breaking it down into steps. The answer is after the proof.",
+          "child_score": 0.908190860748291,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.9142888772487641,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "First,",
+          "old_score": 0.9141513919830322,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's unravel this mathematical challenge gradually.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "First, let's unravel this mathematical challenge gradually.",
+          "child_score": 0.904400395154953,
+          "selected_prompt": "First,",
+          "selected_score": 0.9141513919830322,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s solve this problem by splitting it into steps.",
+          "old_score": 0.9136635982990264,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "We'll methodically work through this problem together.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "Before we dive into the answer, let's stay practical and break the problem into steps.",
+          "child_score": 0.9050362229347229,
+          "selected_prompt": "Let’s solve this problem by splitting it into steps.",
+          "selected_score": 0.9136635982990264,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's unravel this mathematical challenge gradually.",
+          "old_score": 0.9121993815898896,
+          "parents": [
+            "Let’s think like a detective step by step.",
+            "We'll tackle this math task one piece at a time.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "Let's unravel this mathematical challenge gradually: before we dive into the answer, analyze this math problem as an investigator, and tackle it piece by piece.",
+          "child_score": 0.9005104410648346,
+          "selected_prompt": "Let's unravel this mathematical challenge gradually.",
+          "selected_score": 0.9121993815898896,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.911417498588562,
+          "parents": [
+            "Let's systematically dissect this math task.",
+            "We'll tackle this math task one piece at a time.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "Before we dive into the answer, we'll methodically work through this problem together and carefully examine the math problem step by step.",
+          "child_score": 0.9067544984817505,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.911417498588562,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let’s think like a detective step by step.",
+          "old_score": 0.9101645421981811,
+          "parents": [
+            "Before we dive into the answer,",
+            "We'll tackle this math task one piece at a time.",
+            "Before we dive into the answer,"
+          ],
+          "child_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "child_score": 0.9170461332798004,
+          "selected_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "selected_score": 0.9170461332798004,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9100299382209778,
+          "parents": [
+            "Let’s solve this problem by splitting it into steps.",
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's systematically dissect this math task by thinking like a detective in stages: Before we reveal the solution, we will break this challenge into smaller parts.",
+          "child_score": 0.9001163494586945,
+          "selected_prompt": "Let's systematically dissect this math task.",
+          "selected_score": 0.9100299382209778,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.9086201894283295,
+          "parents": [
+            "The answer is after the proof.",
+            "Let’s be realistic and think step by step.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "We'll tackle this math task one piece at a time: The solution comes after the demonstration: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "child_score": 0.9049501717090607,
+          "selected_prompt": "We'll tackle this math task one piece at a time.",
+          "selected_score": 0.9086201894283295,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.9076609075069427,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "The answer is after the proof.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: simplify this math problem one step at a time, and break it into smaller parts before revealing the solution.",
+          "child_score": 0.9038294088840485,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.9076609075069427,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.916289039850235,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.9142888772487641,
+          "mark": "manual"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.9141513919830322,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s solve this problem by splitting it into steps.",
+          "score": 0.9136635982990264,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's unravel this mathematical challenge gradually.",
+          "score": 0.9121993815898896,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.911417498588562,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "score": 0.9170461332798004,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task.",
+          "score": 0.9100299382209778,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time.",
+          "score": 0.9086201894283295,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.9076609075069427,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+        "score": 0.9170461332798004
+      }
+    },
+    {
+      "step": 1,
+      "best_score": 0.916289039850235,
+      "avg_score": 0.9119544273614884,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.916289039850235,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "Let's systematically dissect this math task.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Before we dive into the answer, think like a detective and break this math problem into smaller parts step by step, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9054459190368652,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.916289039850235,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.9142888772487641,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "We should be practical and analyze it step by step: Before we reveal the solution, we will break this math problem into smaller parts. The answer is after the proof.",
+          "child_score": 0.9092730951309204,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.9142888772487641,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "First,",
+          "old_score": 0.9141513919830322,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "First, let’s approach this problem like a detective, in stages: Before giving the answer, we’ll break the problem into smaller parts.",
+          "child_score": 0.9031709408760071,
+          "selected_prompt": "First,",
+          "selected_score": 0.9141513919830322,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s solve this problem by splitting it into steps.",
+          "old_score": 0.9136635982990264,
+          "parents": [
+            "Let's systematically dissect this math task.",
+            "We'll tackle this math task one piece at a time.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s solve this problem by thinking like a detective and breaking it down into smaller parts step by step.",
+          "child_score": 0.9101809060573578,
+          "selected_prompt": "Let’s solve this problem by splitting it into steps.",
+          "selected_score": 0.9136635982990264,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's unravel this mathematical challenge gradually.",
+          "old_score": 0.9121993815898896,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "First,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's unravel this mathematical challenge gradually by approaching this math problem like a careful investigator, step by step: To begin, we will break this math problem into smaller parts.",
+          "child_score": 0.9094102478027344,
+          "selected_prompt": "Let's unravel this mathematical challenge gradually.",
+          "selected_score": 0.9121993815898896,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.911417498588562,
+          "parents": [
+            "Let's systematically dissect this math task.",
+            "Let’s be realistic and think step by step.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9034669172763824,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.911417498588562,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "old_score": 0.9170461332798004,
+          "parents": [
+            "Let’s solve this problem by splitting it into steps.",
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "child_score": 0.9072344470024108,
+          "selected_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "selected_score": 0.9072344470024108,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9100299382209778,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "First,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s systematically dissect this math task: Let's approach this like a detective, step by step: Before giving the answer, we'll split the math problem into smaller parts.",
+          "child_score": 0.9053748214244842,
+          "selected_prompt": "Let's systematically dissect this math task.",
+          "selected_score": 0.9100299382209778,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll tackle this math task one piece at a time.",
+          "old_score": 0.9086201894283295,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's systematically dissect this math task.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "child_score": 0.9126091933250428,
+          "selected_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "selected_score": 0.9126091933250428,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.9076609075069427,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's systematically dissect this math task.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: think like a detective and thoroughly analyze this math problem before revealing the final result.",
+          "child_score": 0.9061124801635743,
+          "selected_prompt": "Let’s be realistic and think step by step.",
+          "selected_score": 0.9076609075069427,
+          "selected_mark": "manual"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.916289039850235,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.9142888772487641,
+          "mark": "manual"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.9141513919830322,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s solve this problem by splitting it into steps.",
+          "score": 0.9136635982990264,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's unravel this mathematical challenge gradually.",
+          "score": 0.9121993815898896,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.911417498588562,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "score": 0.9072344470024108,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task.",
+          "score": 0.9100299382209778,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "score": 0.9126091933250428,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step.",
+          "score": 0.9076609075069427,
+          "mark": "manual"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+        "score": 0.9170461332798004
+      }
+    },
+    {
+      "step": 2,
+      "best_score": 0.916289039850235,
+      "avg_score": 0.9124388610124589,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.916289039850235,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let’s be realistic and think step by step.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Before we dive into the answer, we'll methodically tackle this task together step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "child_score": 0.9093087768554687,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.916289039850235,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.9142888772487641,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "The answer is after the proof: Let’s investigate the problem piece by piece, like a detective would: Prior to revealing the solution, we’ll decompose the problem into smaller steps.",
+          "child_score": 0.9087896692752838,
+          "selected_prompt": "The answer is after the proof.",
+          "selected_score": 0.9142888772487641,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 2,
+          "old_prompt": "First,",
+          "old_score": 0.9141513919830322,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Before we dive into the answer,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "First, Let’s stay practical and take it step by step: Before we jump into the solution, we will break this math problem into smaller parts.",
+          "child_score": 0.9068295347690583,
+          "selected_prompt": "First,",
+          "selected_score": 0.9141513919830322,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s solve this problem by splitting it into steps.",
+          "old_score": 0.9136635982990264,
+          "parents": [
+            "Let's systematically dissect this math task.",
+            "We'll methodically work through this problem together.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s solve this problem by splitting it into steps: We’ll carefully analyze this math problem as a team, step by step, breaking it into smaller parts.",
+          "child_score": 0.9076054084300995,
+          "selected_prompt": "Let’s solve this problem by splitting it into steps.",
+          "selected_score": 0.9136635982990264,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's unravel this mathematical challenge gradually.",
+          "old_score": 0.9121993815898896,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "We'll methodically work through this problem together.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's unravel this mathematical challenge gradually: Let's examine this problem like a detective, step by step; before solving, we should split the problem into smaller parts.",
+          "child_score": 0.8992017555236816,
+          "selected_prompt": "Let's unravel this mathematical challenge gradually.",
+          "selected_score": 0.9121993815898896,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.911417498588562,
+          "parents": [
+            "Let’s be realistic and think step by step.",
+            "Before we dive into the answer,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Convert the difficult sentence into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8970350062847138,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.911417498588562,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "old_score": 0.9072344470024108,
+          "parents": [
+            "First,",
+            "Let’s be realistic and think step by step.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Convert the modified prompt \"To begin with, let’s stay practical and plan carefully: Before we reveal the solution, we will break this math problem into smaller parts.\" into simpler language, preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8999366164207458,
+          "selected_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "selected_score": 0.9072344470024108,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9100299382209778,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's systematically dissect this math task by tackling the math problem one step at a time, breaking it into smaller parts.",
+          "child_score": 0.9027251255512238,
+          "selected_prompt": "Let's systematically dissect this math task.",
+          "selected_score": 0.9100299382209778,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "old_score": 0.9126091933250428,
+          "parents": [
+            "The answer is after the proof.",
+            "Let's systematically dissect this math task.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Transform the provided text into easier language while maintaining the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8948747074604034,
+          "selected_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "selected_score": 0.9126091933250428,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s be realistic and think step by step.",
+          "old_score": 0.9076609075069427,
+          "parents": [
+            "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+            "Let's systematically dissect this math task.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "child_score": 0.9125052440166473,
+          "selected_prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "selected_score": 0.9125052440166473,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.916289039850235,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof.",
+          "score": 0.9142888772487641,
+          "mark": "manual"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.9141513919830322,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s solve this problem by splitting it into steps.",
+          "score": 0.9136635982990264,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's unravel this mathematical challenge gradually.",
+          "score": 0.9121993815898896,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.911417498588562,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "score": 0.9072344470024108,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task.",
+          "score": 0.9100299382209778,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "score": 0.9126091933250428,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "score": 0.9125052440166473,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+        "score": 0.9170461332798004
+      }
+    },
+    {
+      "step": 3,
+      "best_score": 0.916289039850235,
+      "avg_score": 0.9124529697895051,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.916289039850235,
+          "parents": [
+            "Let’s solve this problem by splitting it into steps.",
+            "The answer is after the proof.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Before we dive into the Let’s tackle this problem by breaking it into smaller steps into simpler English sentences while preserving The final answer comes after the proof, so it can be understood by non-native English speakers.",
+          "child_score": 0.90058260679245,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.916289039850235,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "The answer is after the proof.",
+          "old_score": 0.9142888772487641,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "Before we dive into the answer,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+          "child_score": 0.914429965019226,
+          "selected_prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+          "selected_score": 0.914429965019226,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 2,
+          "old_prompt": "First,",
+          "old_score": 0.9141513919830322,
+          "parents": [
+            "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "First, We'll approach this math task piece by piece: The solution comes after the reasoning, and we'll split the problem into stages.",
+          "child_score": 0.9023169338703155,
+          "selected_prompt": "First,",
+          "selected_score": 0.9141513919830322,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s solve this problem by splitting it into steps.",
+          "old_score": 0.9136635982990264,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s solve this problem by splitting it into steps: Let’s analyze the problem like a detective, step by step; before showing the solution, we’ll decompose the math problem into smaller parts.",
+          "child_score": 0.9050007236003875,
+          "selected_prompt": "Let’s solve this problem by splitting it into steps.",
+          "selected_score": 0.9136635982990264,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's unravel this mathematical challenge gradually.",
+          "old_score": 0.9121993815898896,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's unravel this mathematical challenge gradually by approaching it as a detective, one step at a time, and presenting the solution only after breaking the problem into smaller parts.",
+          "child_score": 0.9082411539554596,
+          "selected_prompt": "Let's unravel this mathematical challenge gradually.",
+          "selected_score": 0.9121993815898896,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.911417498588562,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s think like a careful investigator, step by step: Before we reveal the solution, we will break down the math problem into smaller parts.",
+          "child_score": 0.9004926693439483,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.911417498588562,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "old_score": 0.9072344470024108,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: Prior to presenting the result, we will unpack this math problem gradually into smaller parts. Transform the provided text into easier language while maintaining the meaning.",
+          "child_score": 0.8982166242599487,
+          "selected_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "selected_score": 0.9072344470024108,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9100299382209778,
+          "parents": [
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's systematically dissect this math task by thinking like a detective, step by step: The solution will follow after we break the problem into smaller steps.",
+          "child_score": 0.908941674232483,
+          "selected_prompt": "Let's systematically dissect this math task.",
+          "selected_score": 0.9100299382209778,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "old_score": 0.9126091933250428,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this mathematical issue into smaller parts, thinking like a detective step by step, so the solution comes after the proof.",
+          "child_score": 0.8985285711288452,
+          "selected_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "selected_score": 0.9126091933250428,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "old_score": 0.9125052440166473,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Convert the difficult detective-style step-by-step prompt into simpler words while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.8958135044574738,
+          "selected_prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "selected_score": 0.9125052440166473,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.916289039850235,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+          "score": 0.914429965019226,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.9141513919830322,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s solve this problem by splitting it into steps.",
+          "score": 0.9136635982990264,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's unravel this mathematical challenge gradually.",
+          "score": 0.9121993815898896,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.911417498588562,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "score": 0.9072344470024108,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task.",
+          "score": 0.9100299382209778,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "score": 0.9126091933250428,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "score": 0.9125052440166473,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+        "score": 0.9170461332798004
+      }
+    },
+    {
+      "step": 4,
+      "best_score": 0.916289039850235,
+      "avg_score": 0.9124529697895051,
+      "events": [
+        {
+          "j": 0,
+          "old_prompt": "Before we dive into the answer,",
+          "old_score": 0.916289039850235,
+          "parents": [
+            "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Before we dive into the answer, let’s think like a detective piece by piece: Before we reveal the solution, we will split the math problem into bite-sized parts.",
+          "child_score": 0.9024221885204315,
+          "selected_prompt": "Before we dive into the answer,",
+          "selected_score": 0.916289039850235,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 1,
+          "old_prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+          "old_score": 0.914429965019226,
+          "parents": [
+            "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "The answer is after the proof: Let’s think like a detective piece by piece, and divide this math problem into manageable steps, so the explanation is easier for non-native English speakers to understand.",
+          "child_score": 0.910722769498825,
+          "selected_prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+          "selected_score": 0.914429965019226,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 2,
+          "old_prompt": "First,",
+          "old_score": 0.9141513919830322,
+          "parents": [
+            "We'll methodically work through this problem together.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "First, We'll carefully work through this problem as a team: Before revealing the solution, we'll divide this math problem into smaller parts.",
+          "child_score": 0.903647108078003,
+          "selected_prompt": "First,",
+          "selected_score": 0.9141513919830322,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 3,
+          "old_prompt": "Let’s solve this problem by splitting it into steps.",
+          "old_score": 0.9136635982990264,
+          "parents": [
+            "Before we dive into the answer,",
+            "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s solve this problem by splitting it into steps and explaining it in simpler English so non-native English speakers can understand.",
+          "child_score": 0.9050547075271607,
+          "selected_prompt": "Let’s solve this problem by splitting it into steps.",
+          "selected_score": 0.9136635982990264,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 4,
+          "old_prompt": "Let's unravel this mathematical challenge gradually.",
+          "old_score": 0.9121993815898896,
+          "parents": [
+            "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+            "Let's systematically dissect this math task.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let's unravel this mathematical challenge gradually: transform the carefully considered step-by-step instruction into easier language while preserving the meaning, so it's easier for non-native English speakers to understand.",
+          "child_score": 0.9088657140731812,
+          "selected_prompt": "Let's unravel this mathematical challenge gradually.",
+          "selected_score": 0.9121993815898896,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 5,
+          "old_prompt": "We'll methodically work through this problem together.",
+          "old_score": 0.911417498588562,
+          "parents": [
+            "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+            "First,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s stay practical and reason through each step: Before we reveal the solution, we will break this math problem into smaller parts. We'll methodically work through this problem together.",
+          "child_score": 0.9024997615814209,
+          "selected_prompt": "We'll methodically work through this problem together.",
+          "selected_score": 0.911417498588562,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 6,
+          "old_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "old_score": 0.9072344470024108,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: The solution comes after the proof, and we will slowly untangle this math problem into smaller chunks to help non-native English speakers understand it.",
+          "child_score": 0.9038479256629944,
+          "selected_prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "selected_score": 0.9072344470024108,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 7,
+          "old_prompt": "Let's systematically dissect this math task.",
+          "old_score": 0.9100299382209778,
+          "parents": [
+            "Before we dive into the answer,",
+            "Let’s solve this problem by splitting it into steps.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s think like a detective step by step: Before we reach the solution, we will dissect this math problem into smaller parts, and we will systematically dissect this math task to improve clarity.",
+          "child_score": 0.9050225496292115,
+          "selected_prompt": "Let's systematically dissect this math task.",
+          "selected_score": 0.9100299382209778,
+          "selected_mark": "manual"
+        },
+        {
+          "j": 8,
+          "old_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "old_score": 0.9126091933250428,
+          "parents": [
+            "Let’s solve this problem by splitting it into steps.",
+            "Before we dive into the answer,",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "We'll tackle this math task one piece at a time: As we begin to explain, we'll break this math problem into smaller parts; the solution comes after the proof.",
+          "child_score": 0.9037839043140411,
+          "selected_prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "selected_score": 0.9126091933250428,
+          "selected_mark": "evoluted"
+        },
+        {
+          "j": 9,
+          "old_prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "old_score": 0.9125052440166473,
+          "parents": [
+            "Let's unravel this mathematical challenge gradually.",
+            "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+            "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts."
+          ],
+          "child_prompt": "Let’s be realistic and think step by step: Let’s untangle this math challenge slowly: Before we reveal the solution, we will parse this math problem piece by piece, and we will gradually approach this math problem, and the answer will follow the reasoning.",
+          "child_score": 0.909007135629654,
+          "selected_prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "selected_score": 0.9125052440166473,
+          "selected_mark": "evoluted"
+        }
+      ],
+      "population": [
+        {
+          "prompt": "Before we dive into the answer,",
+          "score": 0.916289039850235,
+          "mark": "manual"
+        },
+        {
+          "prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+          "score": 0.914429965019226,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "First,",
+          "score": 0.9141513919830322,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s solve this problem by splitting it into steps.",
+          "score": 0.9136635982990264,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let's unravel this mathematical challenge gradually.",
+          "score": 0.9121993815898896,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll methodically work through this problem together.",
+          "score": 0.911417498588562,
+          "mark": "manual"
+        },
+        {
+          "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+          "score": 0.9072344470024108,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let's systematically dissect this math task.",
+          "score": 0.9100299382209778,
+          "mark": "manual"
+        },
+        {
+          "prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+          "score": 0.9126091933250428,
+          "mark": "evoluted"
+        },
+        {
+          "prompt": "Let’s be realistic and think step by step: Let’s think like a detective step by step: We will gradually approach this math problem, and the answer will follow the reasoning.",
+          "score": 0.9125052440166473,
+          "mark": "evoluted"
+        }
+      ],
+      "running_best": {
+        "prompt": "Let’s think like a detective step by step: Before we reveal the solution, we will break this math problem into smaller parts.",
+        "score": 0.9170461332798004
+      }
+    }
+  ],
+  "final": {
+    "dataset": "squad_v2",
+    "metric": "bert_score",
+    "best_prompt": "First,",
+    "dev_score": 0.9141513919830322,
+    "test_score": 0.9182907551527023,
+    "top_candidates": [
+      {
+        "prompt": "Before we dive into the answer,",
+        "mark": "manual",
+        "dev_score": 0.916289039850235,
+        "test_score": 0.9058620232343674
+      },
+      {
+        "prompt": "The answer is after the proof: Let's break down this math problem step by step and divide the problem into smaller parts, so the explanation is easier for non-native English speakers to understand.",
+        "mark": "evoluted",
+        "dev_score": 0.914429965019226,
+        "test_score": 0.9088132488727569
+      },
+      {
+        "prompt": "First,",
+        "mark": "manual",
+        "dev_score": 0.9141513919830322,
+        "test_score": 0.9182907551527023
+      },
+      {
+        "prompt": "Let’s solve this problem by splitting it into steps.",
+        "mark": "manual",
+        "dev_score": 0.9136635982990264,
+        "test_score": 0.9109932732582092
+      },
+      {
+        "prompt": "We'll tackle this math task one piece at a time: We'll methodically break down this math problem; the solution comes after the proof.",
+        "mark": "evoluted",
+        "dev_score": 0.9126091933250428,
+        "test_score": 0.9137556266784668
+      }
+    ]
+  }
+}
