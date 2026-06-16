@@ -210,6 +210,19 @@ function fmtMetric(value) {
   return Number(value).toFixed(4);
 }
 
+function fmtValue(value) {
+  if (value === null || value === undefined || value === "") return "--";
+  if (typeof value === "number") {
+    return Number.isInteger(value) ? String(value) : value.toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+  }
+  if (typeof value === "boolean") return value ? "Да" : "Нет";
+  return String(value);
+}
+
+function methodLabel(id) {
+  return methodById(id)?.label || id || "--";
+}
+
 function methodById(id) {
   return state.methods.find((method) => method.id === id);
 }
@@ -519,7 +532,7 @@ async function createJob() {
 async function pollJob(jobId) {
   const response = await fetch(`/api/jobs/${jobId}`);
   const job = await response.json();
-  setStatus(job.status, `Задача ${job.job_id.slice(0, 8)} · ${statusText(job.status)}`);
+  setStatus(job.status, jobLineText(job));
   renderProgress(job);
   renderLiveDetails(job);
   if (job.status === "queued" || job.status === "running") {
@@ -528,7 +541,7 @@ async function pollJob(jobId) {
   }
   setBusy(false);
   if (job.status === "failed") {
-    $("runDetails").textContent = job.error || "Неизвестная ошибка";
+    $("runDetails").innerHTML = renderErrorDetailsHtml(job.error || "Неизвестная ошибка");
     return;
   }
   renderResult(job.result);
@@ -570,6 +583,15 @@ function statusText(status) {
   }[status] || status;
 }
 
+function jobLineText(job) {
+  if (!job) return "Готово";
+  if (job.status === "queued") return "Запуск ожидает свободного исполнителя";
+  if (job.status === "running") return job.progress_message || "Оптимизация выполняется";
+  if (job.status === "completed") return "Оптимизация завершена";
+  if (job.status === "failed") return "Оптимизация завершилась с ошибкой";
+  return "Готово";
+}
+
 function renderProgress(job = null) {
   const stage = job?.progress_stage || "idle";
   const percent = Number(job?.progress_percent || 0);
@@ -605,18 +627,33 @@ function renderProgress(job = null) {
 
 function renderLiveDetails(job) {
   if (!job || !["queued", "running"].includes(job.status)) return;
-  $("runDetails").textContent = JSON.stringify(
-    {
-      job_id: job.job_id,
-      status: job.status,
-      stage: job.progress_stage,
-      progress_percent: job.progress_percent,
-      message: job.progress_message,
-      updated_at: new Date((job.updated_at || Date.now() / 1000) * 1000).toISOString(),
-    },
-    null,
-    2,
-  );
+  $("runDetails").innerHTML = renderLiveDetailsHtml(job);
+}
+
+function renderLiveDetailsHtml(job) {
+  const updatedAt = new Date((job.updated_at || Date.now() / 1000) * 1000).toLocaleTimeString("ru-RU");
+  return `
+    <div class="run-summary-grid">
+      <div class="run-summary-item"><span>Job ID</span><strong>${escapeHtml(job.job_id)}</strong></div>
+      <div class="run-summary-item"><span>Статус</span><strong>${escapeHtml(statusText(job.status))}</strong></div>
+      <div class="run-summary-item"><span>Стадия</span><strong>${escapeHtml(job.progress_stage || "--")}</strong></div>
+      <div class="run-summary-item"><span>Прогресс</span><strong>${escapeHtml(fmtValue(job.progress_percent))}%</strong></div>
+    </div>
+    <div class="detail-block">
+      <span>Текущее действие</span>
+      <p>${escapeHtml(job.progress_message || "--")}</p>
+    </div>
+    <div class="detail-muted">Обновлено: ${escapeHtml(updatedAt)}</div>
+  `;
+}
+
+function renderErrorDetailsHtml(message) {
+  return `
+    <div class="detail-block error-block">
+      <span>Ошибка запуска</span>
+      <p>${escapeHtml(message)}</p>
+    </div>
+  `;
 }
 
 function renderResult(result) {
@@ -637,7 +674,66 @@ function renderSingle(result) {
   $("finalMetric").textContent = fmtMetric(result.final_metric);
   $("deltaMetric").textContent = fmtMetric(result.metric_delta);
   $("elapsedMetric").textContent = `${Number(result.elapsed_seconds || 0).toFixed(1)}s`;
-  $("runDetails").textContent = JSON.stringify(result, null, 2);
+  $("runDetails").innerHTML = renderResultDetailsHtml(result);
+}
+
+function renderResultDetailsHtml(result) {
+  const delta = result.metric_delta ?? 0;
+  const deltaClass = delta > 0 ? "positive" : delta < 0 ? "negative" : "";
+  const params = Object.entries(result.method_params || {});
+  const dataInfo = [
+    ["Dataset", result.dataset_size],
+    ["Validation", result.validation_size],
+    ["Режим", result.used_mock ? "Тестовый" : "Реальный"],
+    ["Модель", result.model_name || "--"],
+  ];
+  return `
+    <div class="run-summary-grid">
+      <div class="run-summary-item"><span>Метод</span><strong>${escapeHtml(methodLabel(result.method))}</strong></div>
+      <div class="run-summary-item"><span>Модель</span><strong>${escapeHtml(result.model_name || "--")}</strong></div>
+      <div class="run-summary-item"><span>Режим</span><strong>${result.used_mock ? "Тестовый" : "Реальный"}</strong></div>
+      <div class="run-summary-item"><span>Время</span><strong>${Number(result.elapsed_seconds || 0).toFixed(1)}s</strong></div>
+    </div>
+    <div class="run-summary-grid compact">
+      <div class="run-summary-item"><span>Было</span><strong>${escapeHtml(fmtMetric(result.init_metric))}</strong></div>
+      <div class="run-summary-item"><span>Стало</span><strong>${escapeHtml(fmtMetric(result.final_metric))}</strong></div>
+      <div class="run-summary-item ${deltaClass}"><span>Прирост</span><strong>${escapeHtml(fmtMetric(result.metric_delta))}</strong></div>
+      <div class="run-summary-item"><span>Validation</span><strong>${escapeHtml(fmtValue(result.validation_size))}</strong></div>
+    </div>
+    <div class="detail-section">
+      <h4>Данные</h4>
+      <div class="detail-kv">
+        ${dataInfo.map(([label, value]) => `<span>${escapeHtml(label)}</span><strong>${escapeHtml(fmtValue(value))}</strong>`).join("")}
+      </div>
+    </div>
+    ${params.length ? `
+      <div class="detail-section">
+        <h4>Параметры метода</h4>
+        <div class="param-grid">
+          ${params.map(([key, value]) => `<div><span>${escapeHtml(key)}</span><strong>${escapeHtml(fmtValue(value))}</strong></div>`).join("")}
+        </div>
+      </div>
+    ` : ""}
+    ${result.synthetic_dataset?.length ? `
+      <div class="detail-section">
+        <h4>Синтетические данные</h4>
+        <div class="detail-text-list">
+          ${result.synthetic_dataset.map((item, index) => `<p><span>${index + 1}</span>${escapeHtml(item)}</p>`).join("")}
+        </div>
+      </div>
+    ` : ""}
+    <details class="technical-fields">
+      <summary>Служебные поля</summary>
+      <div class="detail-kv technical-kv">
+        <span>method</span><strong>${escapeHtml(fmtValue(result.method))}</strong>
+        <span>used_mock</span><strong>${escapeHtml(fmtValue(result.used_mock))}</strong>
+        <span>dataset_size</span><strong>${escapeHtml(fmtValue(result.dataset_size))}</strong>
+        <span>validation_size</span><strong>${escapeHtml(fmtValue(result.validation_size))}</strong>
+        <span>elapsed_seconds</span><strong>${escapeHtml(fmtValue(result.elapsed_seconds))}</strong>
+        <span>model_name</span><strong>${escapeHtml(fmtValue(result.model_name))}</strong>
+      </div>
+    </details>
+  `;
 }
 
 function renderComparison(results) {
@@ -709,11 +805,11 @@ $("runButton").addEventListener("click", () => {
       progress_message: "Запрос не выполнен",
       status: "failed",
     });
-    $("runDetails").textContent = String(error);
+    $("runDetails").innerHTML = renderErrorDetailsHtml(String(error));
   });
 });
 
 loadConfig().catch((error) => {
   $("runtimeStatus").textContent = "Ошибка конфигурации";
-  $("runDetails").textContent = String(error);
+  $("runDetails").innerHTML = renderErrorDetailsHtml(String(error));
 });
