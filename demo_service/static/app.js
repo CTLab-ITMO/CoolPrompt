@@ -7,16 +7,22 @@ const state = {
 const examples = {
   support: {
     task: "classification",
-    prompt: "Определи категорию обращения клиента.",
-    description: "Нужно классифицировать обращения по заранее известным меткам.",
+    prompt: "Определи тему обращения.",
+    description: "Нужно классифицировать реальные обращения поддержки строго в одну из меток: оплата, доставка, техника, аккаунт, возврат. В ответе должна быть только метка без пояснений.",
     metric: "f1",
     rows: [
-      ["Деньги за возврат всё ещё не пришли.", "оплата"],
-      ["Приложение вылетает при открытии настроек.", "техника"],
-      ["Можно изменить адрес доставки?", "доставка"],
-      ["С меня дважды списали деньги за один заказ.", "оплата"],
-      ["Код для входа не приходит.", "техника"],
-      ["Где сейчас моя посылка?", "доставка"],
+      ["С меня дважды списали деньги за один заказ, но в личном кабинете видна только одна покупка.", "оплата"],
+      ["После обновления приложение открывается и сразу закрывается на экране профиля.", "техника"],
+      ["Курьер не приехал в выбранный интервал, хочу понять новый срок доставки.", "доставка"],
+      ["Не могу войти: SMS-код не приходит уже третий раз подряд.", "аккаунт"],
+      ["Товар оказался поврежденным, хочу оформить возврат и получить деньги обратно.", "возврат"],
+      ["Оплата прошла, но заказ все еще висит как неоплаченный.", "оплата"],
+      ["Нужно поменять адрес, пока посылку еще не передали курьеру.", "доставка"],
+      ["На сайте бесконечно крутится загрузка при попытке открыть корзину.", "техника"],
+      ["Хочу удалить старый номер телефона из профиля и привязать новый.", "аккаунт"],
+      ["Я отправил товар назад неделю назад, но статус возврата не меняется.", "возврат"],
+      ["Промокод применился, но итоговая сумма в чеке не уменьшилась.", "оплата"],
+      ["В пункт выдачи пришел не тот размер, который я заказывал.", "возврат"],
     ],
   },
   support_reply: {
@@ -54,6 +60,10 @@ const examples = {
 
 const generationMetrics = ["bertscore", "rouge", "meteor", "bleu", "em", "llm_as_judge", "geval"];
 const classificationMetrics = ["f1", "accuracy"];
+const taskMetricDefaults = {
+  classification: "f1",
+  generation: "rouge",
+};
 const modelFallbackOptions = ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "gpt-4.1-nano"];
 const progressSteps = [
   { id: "queued", label: "Очередь" },
@@ -64,6 +74,110 @@ const progressSteps = [
   { id: "collecting", label: "Результат" },
   { id: "completed", label: "Готово" },
 ];
+
+const methodRuntimeDefaults = {
+  hyper_light: {
+    validationSize: 0.34,
+    batchSize: 4,
+    generateSamples: 6,
+    modelTemperature: 0.2,
+    modelMaxTokens: 2000,
+  },
+  hyper: {
+    validationSize: 0.34,
+    batchSize: 3,
+    generateSamples: 8,
+    modelTemperature: 0.25,
+    modelMaxTokens: 2500,
+  },
+  rider: {
+    validationSize: 0.4,
+    batchSize: 2,
+    generateSamples: 12,
+    modelTemperature: 0.25,
+    modelMaxTokens: 3000,
+  },
+  regps: {
+    validationSize: 0.34,
+    batchSize: 3,
+    generateSamples: 8,
+    modelTemperature: 0.35,
+    modelMaxTokens: 2500,
+  },
+  compress: {
+    validationSize: 0.34,
+    batchSize: 4,
+    generateSamples: 6,
+    modelTemperature: 0.1,
+    modelMaxTokens: 1600,
+  },
+  reflective: {
+    validationSize: 0.34,
+    batchSize: 3,
+    generateSamples: 8,
+    modelTemperature: 0.35,
+    modelMaxTokens: 2500,
+  },
+  distill: {
+    validationSize: 0.34,
+    batchSize: 3,
+    generateSamples: 8,
+    modelTemperature: 0.25,
+    modelMaxTokens: 2200,
+  },
+};
+
+const methodTaskOverrides = {
+  classification: {
+    hyper_light: {
+      validationSize: 0.4,
+      batchSize: 4,
+      modelTemperature: 0.15,
+      modelMaxTokens: 1800,
+    },
+    hyper: {
+      validationSize: 0.4,
+      batchSize: 3,
+      modelTemperature: 0.2,
+      modelMaxTokens: 2400,
+    },
+    rider: {
+      validationSize: 0.4,
+      batchSize: 2,
+      generateSamples: 12,
+      modelTemperature: 0.25,
+      modelMaxTokens: 3000,
+    },
+  },
+  generation: {
+    hyper_light: {
+      validationSize: 0.34,
+      batchSize: 2,
+      modelTemperature: 0.3,
+      modelMaxTokens: 3000,
+    },
+    hyper: {
+      validationSize: 0.34,
+      batchSize: 2,
+      generateSamples: 8,
+      modelTemperature: 0.35,
+      modelMaxTokens: 3500,
+    },
+    rider: {
+      validationSize: 0.34,
+      batchSize: 1,
+      generateSamples: 8,
+      modelTemperature: 0.35,
+      modelMaxTokens: 4000,
+    },
+    compress: {
+      validationSize: 0.34,
+      batchSize: 2,
+      modelTemperature: 0.1,
+      modelMaxTokens: 2200,
+    },
+  },
+};
 
 const $ = (id) => document.getElementById(id);
 
@@ -150,6 +264,7 @@ function renderMethods() {
     select.appendChild(option);
   });
   select.value = "hyper_light";
+  applyMethodRuntimeDefaults(select.value);
 
   const compare = $("compareMethods");
   compare.innerHTML = "";
@@ -164,6 +279,23 @@ function renderMethods() {
   renderMethodHint();
 }
 
+function setNumberValue(id, value) {
+  const input = $(id);
+  if (input) input.value = String(value);
+}
+
+function applyMethodRuntimeDefaults(methodId) {
+  const defaults = {
+    ...(methodRuntimeDefaults[methodId] || methodRuntimeDefaults.hyper_light),
+    ...(methodTaskOverrides[state.task]?.[methodId] || {}),
+  };
+  setNumberValue("validationSize", defaults.validationSize);
+  setNumberValue("batchSize", defaults.batchSize);
+  setNumberValue("generateSamples", defaults.generateSamples);
+  setNumberValue("modelTemperature", defaults.modelTemperature);
+  setNumberValue("modelMaxTokens", defaults.modelMaxTokens);
+}
+
 function renderMetricOptions() {
   const options = state.task === "classification" ? classificationMetrics : generationMetrics;
   const select = $("metricSelect");
@@ -175,7 +307,7 @@ function renderMetricOptions() {
     option.textContent = metric;
     select.appendChild(option);
   });
-  select.value = options.includes(current) ? current : options[0];
+  select.value = options.includes(current) ? current : taskMetricDefaults[state.task] || options[0];
 }
 
 function renderParams() {
@@ -213,12 +345,15 @@ function capitalizeFirst(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function setTask(task) {
+function setTask(task, options = {}) {
   state.task = task;
   document.querySelectorAll(".segment").forEach((button) => {
     button.classList.toggle("active", button.dataset.task === task);
   });
   renderMetricOptions();
+  if (options.applyDefaults !== false) {
+    applyMethodRuntimeDefaults($("methodSelect").value);
+  }
 }
 
 function addDatasetRow(input = "", target = "") {
@@ -244,12 +379,13 @@ function escapeHtml(text) {
 function setExample(name) {
   const example = examples[name];
   if (!example) return;
-  setTask(example.task);
+  setTask(example.task, { applyDefaults: false });
   $("startPrompt").value = example.prompt;
   $("problemDescription").value = example.description;
   $("metricSelect").value = example.metric;
   $("datasetRows").innerHTML = "";
   example.rows.forEach(([input, target]) => addDatasetRow(input, target));
+  applyMethodRuntimeDefaults($("methodSelect").value);
 }
 
 function collectDataset() {
@@ -517,6 +653,7 @@ document.querySelectorAll("[data-example]").forEach((button) => {
 });
 
 $("methodSelect").addEventListener("change", () => {
+  applyMethodRuntimeDefaults($("methodSelect").value);
   renderParams();
   renderMethodHint();
 });

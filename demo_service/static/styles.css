@@ -94,7 +94,7 @@ textarea {
 
 .brand {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
   padding: 2px 2px 12px;
 }
@@ -102,18 +102,18 @@ textarea {
 .logo-frame {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid rgba(57, 217, 255, 0.26);
+  width: 60px;
+  height: 60px;
+  border: 1px solid rgba(57, 217, 255, 0.18);
   border-radius: 8px;
-  background: linear-gradient(145deg, rgba(57, 217, 255, 0.14), rgba(78, 224, 144, 0.08));
+  background: rgba(57, 217, 255, 0.05);
 }
 
 .brand img {
-  width: 34px;
-  height: 34px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
-  border-radius: 5px;
+  border-radius: 7px;
 }
 
 h1,
