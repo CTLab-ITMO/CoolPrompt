@@ -35,7 +35,7 @@ METHODS: list[dict[str, Any]] = [
             {"name": "n_iterations", "label": "Итерации", "type": "int", "default": 2, "min": 1, "max": 10},
             {"name": "n_candidates", "label": "Кандидаты", "type": "int", "default": 2, "min": 1, "max": 8},
             {"name": "top_n_candidates", "label": "Шорт-лист", "type": "int", "default": 2, "min": 1, "max": 8},
-            {"name": "mini_batch_size", "label": "Мини-батч", "type": "int", "default": 4, "min": 1, "max": 64},
+            {"name": "mini_batch_size", "label": "Mini-batch", "type": "int", "default": 4, "min": 1, "max": 64},
             {"name": "k_samples", "label": "Ошибочные примеры", "type": "int", "default": 2, "min": 1, "max": 8},
             {"name": "random_seed", "label": "Seed", "type": "int", "default": 7, "min": 0, "max": 999999},
         ],

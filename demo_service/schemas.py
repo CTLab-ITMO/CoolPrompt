@@ -102,5 +102,8 @@ class JobStatus(BaseModel):
     status: Literal["queued", "running", "completed", "failed"]
     created_at: float
     updated_at: float
+    progress_stage: str = "queued"
+    progress_percent: int = Field(default=0, ge=0, le=100)
+    progress_message: str = "Ожидает запуска"
     error: str | None = None
     result: OptimizationResult | list[OptimizationResult] | None = None

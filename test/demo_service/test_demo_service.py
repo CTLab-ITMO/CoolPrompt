@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import time
+
 import pytest
 
 from demo_service.methods import METHODS, coerce_method_params
@@ -231,9 +233,13 @@ def test_app_job_api_mock_roundtrip(monkeypatch):
         status = client.get(f"/api/jobs/{job_id}").json()
         if status["status"] == "completed":
             break
+        time.sleep(0.1)
     else:
         raise AssertionError("Mock job did not complete")
 
     assert status["result"]["method"] == "rider"
     assert status["result"]["method_params"]["num_generations"] == 1
     assert status["result"]["method_params"]["population_size"] == 2
+    assert status["progress_stage"] == "completed"
+    assert status["progress_percent"] == 100
+    assert status["progress_message"] == "Оптимизация завершена"

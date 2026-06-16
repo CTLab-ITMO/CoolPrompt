@@ -9,7 +9,7 @@ from pathlib import Path
 from threading import Lock
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -31,6 +31,31 @@ app = FastAPI(title=settings.app_name, version="0.1.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
+def _model_options() -> list[dict[str, str]]:
+    base_url = (settings.openai_base_url or "").lower()
+    if "openrouter" in base_url:
+        return [
+            {"value": "gpt-4o-mini", "label": "gpt-4o-mini"},
+            {"value": "gpt-4o", "label": "gpt-4o"},
+            {"value": "google/gemini-2.5-flash", "label": "Gemini 2.5 Flash"},
+            {"value": "anthropic/claude-3.5-haiku", "label": "Claude 3.5 Haiku"},
+        ]
+    return [
+        {"value": "gpt-4o-mini", "label": "gpt-4o-mini"},
+        {"value": "gpt-4o", "label": "gpt-4o"},
+        {"value": "gpt-4.1-mini", "label": "gpt-4.1-mini"},
+        {"value": "gpt-4.1-nano", "label": "gpt-4.1-nano"},
+    ]
+
+
+@app.middleware("http")
+async def add_no_cache_headers(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-store, max-age=0"
+    return response
+
+
 def _store(job: JobStatus) -> None:
     with jobs_lock:
         jobs[job.job_id] = job
@@ -46,17 +71,40 @@ def _patch_job(job_id: str, **updates: Any) -> None:
 
 
 def _run_job(job_id: str, payload: JobCreateRequest) -> None:
-    _patch_job(job_id, status="running")
+    def progress(stage: str, percent: int, message: str) -> None:
+        _patch_job(
+            job_id,
+            status="running",
+            progress_stage=stage,
+            progress_percent=percent,
+            progress_message=message,
+        )
+
+    progress("preparing", 10, "Готовим запуск")
     try:
         if payload.mode == "single":
             assert payload.request is not None
-            result = run_single_optimization(payload.request, settings)
+            result = run_single_optimization(payload.request, settings, progress_callback=progress)
         else:
             assert payload.compare is not None
-            result = run_comparison(payload.compare, settings)
-        _patch_job(job_id, status="completed", result=result)
+            result = run_comparison(payload.compare, settings, progress_callback=progress)
+        _patch_job(
+            job_id,
+            status="completed",
+            progress_stage="completed",
+            progress_percent=100,
+            progress_message="Оптимизация завершена",
+            result=result,
+        )
     except Exception as exc:  # noqa: BLE001 - surfaced to UI as job error
-        _patch_job(job_id, status="failed", error=str(exc))
+        _patch_job(
+            job_id,
+            status="failed",
+            progress_stage="failed",
+            progress_percent=100,
+            progress_message="Оптимизация завершилась с ошибкой",
+            error=str(exc),
+        )
 
 
 @app.get("/")
@@ -64,6 +112,13 @@ def index() -> FileResponse:
     """Serve the one-page demo interface."""
 
     return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.head("/")
+def head_index() -> Response:
+    """Render probes the root URL with HEAD before declaring the service live."""
+
+    return Response(status_code=200)
 
 
 @app.get("/api/health")
@@ -84,6 +139,7 @@ def config() -> dict[str, Any]:
         "allowMock": settings.allow_mock,
         "forceMock": settings.force_mock,
         "maxCompareMethods": settings.max_compare_methods,
+        "modelOptions": _model_options(),
     }
 
 
@@ -112,6 +168,9 @@ def create_job(payload: JobCreateRequest) -> JobStatus:
         status="queued",
         created_at=time.time(),
         updated_at=time.time(),
+        progress_stage="queued",
+        progress_percent=5,
+        progress_message="Задача ожидает запуска",
     )
     _store(job)
     future: Future = executor.submit(_run_job, job.job_id, payload)

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoolPrompt Demo</title>
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260616-progress" />
   </head>
   <body>
     <main class="shell">
@@ -66,7 +66,7 @@
               <input id="validationSize" type="number" min="0" max="1" step="0.05" value="0.34" />
             </label>
             <label>
-              Размер батча
+              Batch size
               <input id="batchSize" type="number" min="1" max="64" value="4" />
             </label>
             <label>
@@ -102,7 +102,11 @@
           <div class="field-grid">
             <label>
               Модель
-              <input id="modelName" type="text" placeholder="gpt-4o-mini" />
+              <select id="modelSelect"></select>
+            </label>
+            <label id="customModelLabel" class="hidden">
+              Своя модель
+              <input id="modelName" type="text" placeholder="openai/gpt-4o-mini" />
             </label>
             <label>
               Температура
@@ -131,6 +135,20 @@
         </div>
 
         <div id="comparison" class="comparison hidden"></div>
+
+        <article id="progressCard" class="progress-card">
+          <div class="progress-head">
+            <div>
+              <h3>Ход выполнения</h3>
+              <p id="progressMessage">Задача ещё не запускалась</p>
+            </div>
+            <strong id="progressPercent">0%</strong>
+          </div>
+          <div class="progress-track">
+            <span id="progressBar"></span>
+          </div>
+          <div id="progressSteps" class="progress-steps"></div>
+        </article>
 
         <div class="result-grid">
           <article class="result-panel">
@@ -174,6 +192,6 @@
         </article>
       </section>
     </main>
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=20260616-progress"></script>
   </body>
 </html>

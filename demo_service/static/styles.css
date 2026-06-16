@@ -256,6 +256,17 @@ textarea {
   cursor: wait;
 }
 
+.sidebar.is-busy .panel {
+  opacity: 0.58;
+  filter: saturate(0.8);
+}
+
+.sidebar.is-busy .panel,
+.sidebar.is-busy .quick-row,
+.sidebar.is-busy .method-grid {
+  pointer-events: none;
+}
+
 .toggle {
   display: inline-flex;
   gap: 7px;
@@ -433,6 +444,117 @@ pre {
   margin-bottom: 16px;
 }
 
+.progress-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(7, 16, 26, 0.82);
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.progress-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.progress-head h3 {
+  margin-bottom: 4px;
+}
+
+.progress-head p {
+  color: var(--muted);
+}
+
+.progress-head strong {
+  color: var(--cyan);
+  font-size: 22px;
+}
+
+.progress-track {
+  height: 9px;
+  margin: 13px 0 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #233143;
+}
+
+.progress-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  transition: width 260ms ease;
+}
+
+.progress-steps {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.progress-step {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.progress-step span {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.progress-step strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.progress-step.done {
+  color: var(--green);
+}
+
+.progress-step.done span {
+  border-color: rgba(78, 224, 144, 0.65);
+  background: radial-gradient(circle, var(--green) 0 34%, rgba(78, 224, 144, 0.18) 38%);
+}
+
+.progress-step.active {
+  color: var(--cyan);
+}
+
+.progress-step.active span {
+  border-color: rgba(57, 217, 255, 0.75);
+  box-shadow: 0 0 0 5px rgba(57, 217, 255, 0.10);
+  animation: progressPulse 1.2s ease-in-out infinite;
+}
+
+.progress-step.failed {
+  color: var(--red);
+}
+
+.progress-step.failed span {
+  border-color: rgba(255, 107, 107, 0.75);
+  background: rgba(255, 107, 107, 0.25);
+}
+
+@keyframes progressPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
 .comparison-row {
   display: grid;
   grid-template-columns: 150px 1fr 90px;
@@ -475,7 +597,8 @@ pre {
   .field-grid,
   .method-grid,
   .metric-strip,
-  .dataset-row {
+  .dataset-row,
+  .progress-steps {
     grid-template-columns: 1fr;
   }
 }

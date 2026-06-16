@@ -11,6 +11,7 @@ from .settings import DemoSettings
 
 
 TunerFactory = Callable[[OptimizationRequest, DemoSettings], Any]
+ProgressCallback = Callable[[str, int, str], None]
 
 
 def default_tuner_factory(request: OptimizationRequest, settings: DemoSettings) -> PromptTuner:
@@ -60,6 +61,7 @@ def run_mock_optimization(request: OptimizationRequest, settings: DemoSettings) 
     """Deterministic local demo path used for tests and no-key demos."""
 
     started = time.perf_counter()
+    time.sleep(0.6)
     params = coerce_method_params(request.method, request.method_params)
     dataset_size = len(request.dataset or [])
     if dataset_size == 0:
@@ -108,10 +110,15 @@ def run_single_optimization(
     settings: DemoSettings,
     *,
     tuner_factory: TunerFactory = default_tuner_factory,
+    progress_callback: ProgressCallback | None = None,
 ) -> OptimizationResult:
     """Run a single CoolPrompt optimization and return serializable results."""
 
+    if progress_callback:
+        progress_callback("preparing", 15, "Проверяем параметры и данные")
     if _effective_mock(request, settings):
+        if progress_callback:
+            progress_callback("optimizing", 70, "Выполняем тестовую оптимизацию")
         return run_mock_optimization(request, settings)
     if not settings.has_openai_key:
         raise RuntimeError(
@@ -121,7 +128,11 @@ def run_single_optimization(
 
     started = time.perf_counter()
     params = coerce_method_params(request.method, request.method_params)
+    if progress_callback:
+        progress_callback("model", 30, "Подключаем модель и оптимизатор")
     tuner = tuner_factory(request, settings)
+    if progress_callback:
+        progress_callback("optimizing", 45, "Оптимизатор выполняет поиск промпта")
     final_prompt = tuner.run(
         start_prompt=request.start_prompt,
         task=request.task,
@@ -138,6 +149,8 @@ def run_single_optimization(
         return_final_prompt=True,
         **params,
     )
+    if progress_callback:
+        progress_callback("collecting", 88, "Собираем метрики и итоговый промпт")
     elapsed = time.perf_counter() - started
 
     dataset_size = _dataset_size(request, tuner)
@@ -168,6 +181,7 @@ def run_comparison(
     settings: DemoSettings,
     *,
     tuner_factory: TunerFactory = default_tuner_factory,
+    progress_callback: ProgressCallback | None = None,
 ) -> list[OptimizationResult]:
     """Run selected methods on the same input."""
 
@@ -179,7 +193,15 @@ def run_comparison(
         )
 
     results: list[OptimizationResult] = []
-    for method_id in methods:
+    total = len(methods)
+    for index, method_id in enumerate(methods, start=1):
+        if progress_callback:
+            base_percent = 10 + int((index - 1) / total * 75)
+            progress_callback(
+                "optimizing",
+                base_percent,
+                f"Сравниваем методы: {index}/{total} — {method_id}",
+            )
         method_request = request.base.model_copy(deep=True)
         method_request.method = method_id
         method_request.method_params = request.method_params_by_method.get(method_id, {})
@@ -188,6 +210,9 @@ def run_comparison(
                 method_request,
                 settings,
                 tuner_factory=tuner_factory,
+                progress_callback=progress_callback,
             )
         )
+    if progress_callback:
+        progress_callback("collecting", 90, "Собираем результаты сравнения")
     return results

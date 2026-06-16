@@ -54,6 +54,15 @@ const examples = {
 
 const generationMetrics = ["bertscore", "rouge", "meteor", "bleu", "em", "llm_as_judge", "geval"];
 const classificationMetrics = ["f1", "accuracy"];
+const modelFallbackOptions = ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "gpt-4.1-nano"];
+const progressSteps = [
+  { id: "queued", label: "Очередь" },
+  { id: "preparing", label: "Подготовка" },
+  { id: "model", label: "Модель" },
+  { id: "optimizing", label: "Оптимизация" },
+  { id: "collecting", label: "Результат" },
+  { id: "completed", label: "Готово" },
+];
 
 const $ = (id) => document.getElementById(id);
 
@@ -78,11 +87,40 @@ async function loadConfig() {
     : config.forceMock
       ? "Режим: тестовый"
       : "Нет OPENAI_API_KEY";
-  $("modelName").placeholder = config.defaultModel;
+  renderModelOptions(config);
   $("mockMode").checked = Boolean(config.forceMock);
   $("mockMode").disabled = !config.allowMock && !config.forceMock;
   renderMethods();
+  renderProgress();
   setExample("support");
+}
+
+function renderModelOptions(config) {
+  const select = $("modelSelect");
+  const options = (config.modelOptions || modelFallbackOptions.map((value) => ({ value, label: value })));
+  const values = new Set(options.map((item) => item.value));
+  if (config.defaultModel && !values.has(config.defaultModel)) {
+    options.unshift({ value: config.defaultModel, label: config.defaultModel });
+  }
+  select.innerHTML = "";
+  options.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.value;
+    option.textContent = item.label;
+    select.appendChild(option);
+  });
+  const custom = document.createElement("option");
+  custom.value = "__custom__";
+  custom.textContent = "Другая модель...";
+  select.appendChild(custom);
+  select.value = config.defaultModel || options[0]?.value || "gpt-4o-mini";
+  $("modelName").placeholder = config.defaultModel || "openai/gpt-4o-mini";
+  toggleCustomModel();
+}
+
+function toggleCustomModel() {
+  const isCustom = $("modelSelect").value === "__custom__";
+  $("customModelLabel").classList.toggle("hidden", !isCustom);
 }
 
 function renderMethods() {
@@ -223,6 +261,10 @@ function collectParams() {
 
 function buildBaseRequest() {
   const { dataset, target } = collectDataset();
+  const selectedModel = $("modelSelect").value;
+  const modelName = selectedModel === "__custom__"
+    ? $("modelName").value.trim() || null
+    : selectedModel;
   return {
     start_prompt: $("startPrompt").value.trim(),
     task: state.task,
@@ -235,7 +277,7 @@ function buildBaseRequest() {
     train_as_test: false,
     generate_num_samples: Number($("generateSamples").value),
     batch_size: Number($("batchSize").value),
-    model_name: $("modelName").value.trim() || null,
+    model_name: modelName,
     model_temperature: Number($("modelTemperature").value),
     model_max_tokens: Number($("modelMaxTokens").value),
     method_params: collectParams(),
@@ -246,6 +288,9 @@ function buildBaseRequest() {
 async function createJob() {
   const compareMode = $("compareMode").checked;
   const base = buildBaseRequest();
+  if (!base.mock && (!base.dataset || base.dataset.length < 2)) {
+    throw new Error("Для реального запуска добавьте минимум 2 строки данных или включите тестовый запуск.");
+  }
   let payload;
   if (compareMode) {
     const methods = [...document.querySelectorAll("#compareMethods input:checked")].map((input) => input.value);
@@ -263,6 +308,12 @@ async function createJob() {
 
   setBusy(true);
   setStatus("queued", "Задача поставлена в очередь");
+  renderProgress({
+    progress_stage: "queued",
+    progress_percent: 5,
+    progress_message: "Отправляем задачу на сервер",
+    status: "queued",
+  });
   const response = await fetch("/api/jobs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -273,6 +324,7 @@ async function createJob() {
     throw new Error(text);
   }
   const job = await response.json();
+  renderProgress(job);
   pollJob(job.job_id);
 }
 
@@ -280,6 +332,7 @@ async function pollJob(jobId) {
   const response = await fetch(`/api/jobs/${jobId}`);
   const job = await response.json();
   setStatus(job.status, `Задача ${job.job_id.slice(0, 8)} · ${statusText(job.status)}`);
+  renderProgress(job);
   if (job.status === "queued" || job.status === "running") {
     window.setTimeout(() => pollJob(jobId), 1200);
     return;
@@ -295,6 +348,21 @@ async function pollJob(jobId) {
 function setBusy(busy) {
   $("runButton").disabled = busy;
   $("runButton").textContent = busy ? "Оптимизация..." : "Запустить оптимизацию";
+  setControlsDisabled(busy);
+}
+
+function setControlsDisabled(disabled) {
+  document.querySelector(".sidebar").classList.toggle("is-busy", disabled);
+  document
+    .querySelectorAll(".sidebar input, .sidebar select, .sidebar textarea, .sidebar button")
+    .forEach((control) => {
+      control.disabled = disabled;
+    });
+  $("runButton").disabled = disabled;
+  if (!disabled) {
+    $("mockMode").disabled = !state.config.allowMock && !state.config.forceMock;
+    toggleCustomModel();
+  }
 }
 
 function setStatus(status, line) {
@@ -311,6 +379,37 @@ function statusText(status) {
     completed: "готово",
     failed: "ошибка",
   }[status] || status;
+}
+
+function renderProgress(job = null) {
+  const stage = job?.progress_stage || "idle";
+  const percent = Number(job?.progress_percent || 0);
+  const status = job?.status || "idle";
+  const rawIndex = progressSteps.findIndex((step) => step.id === stage);
+  const activeIndex = rawIndex >= 0 ? rawIndex : (status === "failed" ? progressSteps.length - 1 : -1);
+  $("progressMessage").textContent = job?.progress_message || "Задача ещё не запускалась";
+  $("progressPercent").textContent = `${Math.max(0, Math.min(100, percent))}%`;
+  $("progressBar").style.width = `${Math.max(0, Math.min(100, percent))}%`;
+  $("progressSteps").innerHTML = progressSteps
+    .map((step, index) => {
+      let cls = "pending";
+      if (status === "failed") {
+        cls = index <= activeIndex ? "failed" : "pending";
+      } else if (status === "completed" || step.id === "completed" && stage === "completed") {
+        cls = index <= progressSteps.length - 1 ? "done" : "pending";
+      } else if (index < activeIndex) {
+        cls = "done";
+      } else if (index === activeIndex) {
+        cls = "active";
+      }
+      return `
+        <div class="progress-step ${cls}">
+          <span></span>
+          <strong>${step.label}</strong>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function renderResult(result) {
@@ -379,12 +478,20 @@ $("compareMode").addEventListener("change", () => {
   $("compareMethods").classList.toggle("hidden", !$("compareMode").checked);
 });
 
+$("modelSelect").addEventListener("change", toggleCustomModel);
+
 $("addRow").addEventListener("click", () => addDatasetRow());
 
 $("runButton").addEventListener("click", () => {
   createJob().catch((error) => {
     setBusy(false);
     setStatus("failed", "Запрос не выполнен");
+    renderProgress({
+      progress_stage: "failed",
+      progress_percent: 100,
+      progress_message: "Запрос не выполнен",
+      status: "failed",
+    });
     $("runDetails").textContent = String(error);
   });
 });
