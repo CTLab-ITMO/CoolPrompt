@@ -68,7 +68,7 @@ def _build_tuner(
 
 
 def _effective_mock(request: OptimizationRequest, settings: DemoSettings) -> bool:
-    return settings.force_mock or (settings.allow_mock and request.mock)
+    return settings.allow_mock and request.mock
 
 
 def _dataset_size(request: OptimizationRequest, tuner: PromptTuner | None = None) -> int:
@@ -152,8 +152,7 @@ def run_single_optimization(
         return run_mock_optimization(request, settings)
     if not settings.has_openai_key:
         raise RuntimeError(
-            "OPENAI_API_KEY is not configured. Set it in Railway Variables or enable "
-            "COOLPROMPT_DEMO_MOCK=1 for a no-cost mock demo."
+            "OPENAI_API_KEY is not configured. Set it in Render or Railway environment variables."
         )
 
     started = time.perf_counter()

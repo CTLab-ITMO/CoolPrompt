@@ -236,8 +236,6 @@ async function loadConfig() {
   state.methods = methods;
   renderModelOptions(config);
   updateRuntimeStatus();
-  $("mockMode").checked = Boolean(config.forceMock);
-  $("mockMode").disabled = !config.allowMock && !config.forceMock;
   renderMethods();
   renderProgress();
   setExample("support");
@@ -282,9 +280,7 @@ function currentModelName() {
 
 function updateRuntimeStatus() {
   if (!state.config.hasOpenAIKey) {
-    $("runtimeStatus").textContent = state.config.forceMock
-      ? "Режим: тестовый"
-      : "Нет OPENAI_API_KEY";
+    $("runtimeStatus").textContent = "Нет API-ключа";
     return;
   }
   const model = currentModelName();
@@ -473,7 +469,7 @@ function buildBaseRequest() {
     model_temperature: Number($("modelTemperature").value),
     model_max_tokens: Number($("modelMaxTokens").value),
     method_params: collectParams(),
-    mock: $("mockMode").checked,
+    mock: false,
   };
 }
 
@@ -562,7 +558,6 @@ function setControlsDisabled(disabled) {
     });
   $("runButton").disabled = disabled;
   if (!disabled) {
-    $("mockMode").disabled = !state.config.allowMock && !state.config.forceMock;
     toggleCustomModel();
   }
 }

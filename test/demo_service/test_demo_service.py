@@ -223,13 +223,13 @@ def test_mock_optimization_without_openai_key():
 
 
 def test_app_job_api_mock_roundtrip(monkeypatch):
-    monkeypatch.setenv("COOLPROMPT_DEMO_MOCK", "1")
+    monkeypatch.setenv("COOLPROMPT_DEMO_ALLOW_MOCK", "1")
 
     from fastapi.testclient import TestClient
 
     from demo_service import app as app_module
 
-    app_module.settings = DemoSettings(force_mock=True)
+    app_module.settings = DemoSettings(allow_mock=True, force_mock=False)
     client = TestClient(app_module.app)
 
     response = client.post(

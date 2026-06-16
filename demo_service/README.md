@@ -18,13 +18,6 @@ set OPENAI_API_KEY=...
 python -m uvicorn demo_service.app:app --host 0.0.0.0 --port 8000
 ```
 
-For a no-cost UI smoke run:
-
-```bash
-set COOLPROMPT_DEMO_MOCK=1
-python -m uvicorn demo_service.app:app --host 0.0.0.0 --port 8000
-```
-
 Open `http://localhost:8000`.
 
 ## Railway
@@ -38,4 +31,6 @@ Useful optional variables:
 - `COOLPROMPT_DEMO_MODEL=gpt-4o-mini`
 - `COOLPROMPT_DEMO_WORKERS=2`
 - `COOLPROMPT_MAX_COMPARE_METHODS=4`
-- `COOLPROMPT_DEMO_MOCK=1` for a no-cost mock deployment
+
+The customer-facing demo is expected to run through a real model API. Do not
+enable mock mode for public deployments.

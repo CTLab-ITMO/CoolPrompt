@@ -311,10 +311,6 @@ textarea {
   width: auto;
 }
 
-.mock-toggle {
-  margin-top: 10px;
-}
-
 .field-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
