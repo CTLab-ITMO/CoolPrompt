@@ -82,12 +82,8 @@ async function loadConfig() {
   ]);
   state.config = config;
   state.methods = methods;
-  $("runtimeStatus").textContent = config.hasOpenAIKey
-    ? `Модель: ${config.defaultModel}`
-    : config.forceMock
-      ? "Режим: тестовый"
-      : "Нет OPENAI_API_KEY";
   renderModelOptions(config);
+  updateRuntimeStatus();
   $("mockMode").checked = Boolean(config.forceMock);
   $("mockMode").disabled = !config.allowMock && !config.forceMock;
   renderMethods();
@@ -121,6 +117,26 @@ function renderModelOptions(config) {
 function toggleCustomModel() {
   const isCustom = $("modelSelect").value === "__custom__";
   $("customModelLabel").classList.toggle("hidden", !isCustom);
+  updateRuntimeStatus();
+}
+
+function currentModelName() {
+  const selectedModel = $("modelSelect").value;
+  if (selectedModel === "__custom__") {
+    return $("modelName").value.trim();
+  }
+  return selectedModel;
+}
+
+function updateRuntimeStatus() {
+  if (!state.config.hasOpenAIKey) {
+    $("runtimeStatus").textContent = state.config.forceMock
+      ? "Режим: тестовый"
+      : "Нет OPENAI_API_KEY";
+    return;
+  }
+  const model = currentModelName();
+  $("runtimeStatus").textContent = model ? `Модель: ${model}` : "Модель: не выбрана";
 }
 
 function renderMethods() {
@@ -188,7 +204,12 @@ function renderParams() {
 
 function renderMethodHint() {
   const method = methodById($("methodSelect").value);
-  $("methodHint").textContent = method ? `${method.family}: ${method.description}` : "";
+  $("methodHint").textContent = method ? `${capitalizeFirst(method.family)}. ${method.description}` : "";
+}
+
+function capitalizeFirst(text) {
+  if (!text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
 function setTask(task) {
@@ -261,10 +282,7 @@ function collectParams() {
 
 function buildBaseRequest() {
   const { dataset, target } = collectDataset();
-  const selectedModel = $("modelSelect").value;
-  const modelName = selectedModel === "__custom__"
-    ? $("modelName").value.trim() || null
-    : selectedModel;
+  const modelName = currentModelName() || null;
   return {
     start_prompt: $("startPrompt").value.trim(),
     task: state.task,
@@ -479,6 +497,8 @@ $("compareMode").addEventListener("change", () => {
 });
 
 $("modelSelect").addEventListener("change", toggleCustomModel);
+
+$("modelName").addEventListener("input", updateRuntimeStatus);
 
 $("addRow").addEventListener("click", () => addDatasetRow());
 
