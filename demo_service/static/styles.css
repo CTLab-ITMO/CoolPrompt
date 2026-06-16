@@ -158,11 +158,11 @@ textarea {
 
 .brand img {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 64px;
+  height: 64px;
   object-fit: contain;
+  object-position: center;
   border-radius: 0;
-  transform: translateY(16px);
   filter: drop-shadow(0 0 9px rgba(57, 217, 255, 0.42));
 }
 
