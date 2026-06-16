@@ -477,11 +477,14 @@ async function createJob() {
   const compareMode = $("compareMode").checked;
   const base = buildBaseRequest();
   if (!base.mock && (!base.dataset || base.dataset.length < 2)) {
-    throw new Error("Для реального запуска добавьте минимум 2 строки данных или включите тестовый запуск.");
+    throw new Error("Для реального запуска добавьте минимум 2 строки данных.");
   }
   let payload;
   if (compareMode) {
     const methods = [...document.querySelectorAll("#compareMethods input:checked")].map((input) => input.value);
+    if (!methods.length) {
+      throw new Error("Выберите хотя бы один метод для сравнения.");
+    }
     payload = {
       mode: "compare",
       compare: {
@@ -583,6 +586,12 @@ function taskLabel(task) {
     classification: "Классификация",
     generation: "Генерация",
   }[task] || task || "--";
+}
+
+function methodCountLabel(count) {
+  if (count === 1) return "1 метод";
+  if (count >= 2 && count <= 4) return `${count} метода`;
+  return `${count} методов`;
 }
 
 function fmtRatio(value) {
@@ -758,26 +767,95 @@ function renderComparison(results) {
   box.classList.remove("hidden");
   const max = Math.max(...results.map((item) => item.final_metric || 0), 0.001);
   const best = Math.max(...results.map((item) => item.final_metric || 0), 0);
-  box.innerHTML = results
+  const methodColors = ["#39d9ff", "#4ee090", "#ffd166", "#ff8fb3", "#9d8cff", "#ff9f43", "#7bdff2"];
+  const rows = results
     .map((item) => {
       const width = Math.max(2, ((item.final_metric || 0) / max) * 100);
       const label = methodById(item.method)?.label || item.method;
       const isBest = (item.final_metric || 0) === best;
+      const color = methodColors[results.indexOf(item) % methodColors.length];
       return `
-        <div class="comparison-row">
-          <strong>${label}${isBest ? " · лучший" : ""}</strong>
+        <div class="comparison-row ${isBest ? "best" : ""}" style="--method-color:${color}">
+          <strong>${escapeHtml(label)}${isBest ? " · лучший" : ""}</strong>
           <div class="scorebar"><span style="width:${width}%"></span></div>
           <span>${fmtMetric(item.final_metric)}</span>
         </div>
       `;
     })
     .join("");
+  const promptCards = results
+    .map((item, index) => {
+      const label = methodById(item.method)?.label || item.method;
+      const isBest = (item.final_metric || 0) === best;
+      const promptId = `comparisonPrompt${index}`;
+      const color = methodColors[index % methodColors.length];
+      return `
+        <article class="comparison-prompt-card ${isBest ? "best" : ""}" style="--method-color:${color}">
+          <header>
+            <div>
+              <span>${isBest ? "Лучший результат" : "Метод"}</span>
+              <strong>${escapeHtml(label)}</strong>
+            </div>
+            <div class="comparison-prompt-actions">
+              <em>${escapeHtml(fmtMetric(item.final_metric))}</em>
+              <button type="button" class="copy" data-copy="${promptId}">Копировать</button>
+            </div>
+          </header>
+          <pre id="${promptId}">${escapeHtml(item.final_prompt || "")}</pre>
+        </article>
+      `;
+    })
+    .join("");
+  box.innerHTML = `
+    <div class="comparison-header">
+      <div>
+        <h3>Сравнение методов</h3>
+        <p>${methodCountLabel(results.length)} на одном наборе данных</p>
+      </div>
+      <span>${results.length > 1 ? "Лучший показан в основном результате" : "Результат выбранного метода"}</span>
+    </div>
+    <div class="comparison-list">${rows}</div>
+    <div class="comparison-prompts">${promptCards}</div>
+  `;
 }
 
-document.addEventListener("click", (event) => {
+async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+}
+
+function showCopyState(button, ok = true) {
+  const originalText = button.dataset.originalText || button.textContent;
+  button.dataset.originalText = originalText;
+  button.classList.remove("copied", "copy-error");
+  button.classList.add(ok ? "copied" : "copy-error");
+  button.textContent = ok ? "Скопировано" : "Не скопировано";
+  window.setTimeout(() => {
+    button.classList.remove("copied", "copy-error");
+    button.textContent = originalText;
+  }, 1400);
+}
+
+document.addEventListener("click", async (event) => {
   const copy = event.target.closest("[data-copy]");
   if (copy) {
-    navigator.clipboard.writeText($(copy.dataset.copy).textContent);
+    try {
+      await copyText($(copy.dataset.copy).textContent);
+      showCopyState(copy, true);
+    } catch {
+      showCopyState(copy, false);
+    }
   }
 });
 

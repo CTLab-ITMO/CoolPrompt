@@ -140,11 +140,10 @@ def test_compare_runs_each_selected_method_with_own_params(monkeypatch):
     )
 
     assert [item.method for item in results] == ["hyper_light", "rider"]
-    assert _FakeTuner.calls[0]["method"] == "hyper_light"
-    assert _FakeTuner.calls[0]["use_structured_output"] is True
-    assert _FakeTuner.calls[1]["method"] == "rider"
-    assert _FakeTuner.calls[1]["num_generations"] == 1
-    assert _FakeTuner.calls[1]["population_size"] == 2
+    calls = {call["method"]: call for call in _FakeTuner.calls}
+    assert calls["hyper_light"]["use_structured_output"] is True
+    assert calls["rider"]["num_generations"] == 1
+    assert calls["rider"]["population_size"] == 2
 
 
 @pytest.mark.parametrize("method_meta", METHODS, ids=lambda item: item["id"])

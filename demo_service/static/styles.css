@@ -132,20 +132,38 @@ textarea {
 }
 
 .logo-frame {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 60px;
-  height: 60px;
-  border: 1px solid rgba(57, 217, 255, 0.18);
+  flex: 0 0 auto;
+  width: 74px;
+  height: 74px;
+  overflow: hidden;
+  border: 1px solid rgba(57, 217, 255, 0.34);
   border-radius: 8px;
-  background: rgba(57, 217, 255, 0.05);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(57, 217, 255, 0.20), transparent 58%),
+    rgba(4, 14, 23, 0.82);
+  box-shadow: inset 0 0 0 1px rgba(78, 224, 144, 0.14), 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.logo-frame::before {
+  position: absolute;
+  inset: 5px;
+  content: "";
+  border: 1px solid rgba(57, 217, 255, 0.28);
+  border-radius: 6px;
+  pointer-events: none;
 }
 
 .brand img {
-  width: 52px;
-  height: 52px;
+  position: relative;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
-  border-radius: 7px;
+  border-radius: 0;
+  transform: translateY(16px);
+  filter: drop-shadow(0 0 9px rgba(57, 217, 255, 0.42));
 }
 
 h1,
@@ -257,6 +275,24 @@ textarea {
   border-radius: 6px;
   padding: 6px 9px;
   cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.copy {
+  min-width: 118px;
+}
+
+.copy.copied {
+  border-color: rgba(78, 224, 144, 0.78);
+  background: rgba(78, 224, 144, 0.18);
+  color: #dfffee;
+  transform: translateY(-1px);
+}
+
+.copy.copy-error {
+  border-color: rgba(255, 107, 107, 0.72);
+  background: rgba(255, 107, 107, 0.14);
+  color: #ffd6d6;
 }
 
 .icon-btn {
@@ -408,7 +444,15 @@ label {
   background: rgba(7, 16, 26, 0.82);
 }
 
+.result-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
 .result-panel header {
+  flex: 0 0 auto;
   padding: 12px;
   border-bottom: 1px solid var(--line);
   font-weight: 700;
@@ -426,9 +470,11 @@ pre {
 }
 
 .result-panel pre {
-  min-height: 290px;
+  height: clamp(260px, 36vh, 430px);
+  min-height: 0;
   padding: 14px;
   overflow: auto;
+  overscroll-behavior: contain;
 }
 
 .metric-strip {
@@ -578,9 +624,13 @@ pre {
 
 .comparison {
   display: grid;
-  gap: 8px;
-  padding: 12px;
+  gap: 14px;
+  padding: 14px;
   margin-bottom: 16px;
+  border-color: rgba(57, 217, 255, 0.24);
+  background:
+    linear-gradient(135deg, rgba(57, 217, 255, 0.055), rgba(78, 224, 144, 0.035)),
+    rgba(7, 16, 26, 0.82);
 }
 
 .progress-card {
@@ -726,19 +776,67 @@ pre {
   }
 }
 
+.comparison-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  padding-bottom: 2px;
+}
+
+.comparison-header h3 {
+  margin-bottom: 3px;
+}
+
+.comparison-header p,
+.comparison-header > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.comparison-list {
+  display: grid;
+  gap: 8px;
+}
+
 .comparison-row {
+  --method-color: var(--cyan);
+  position: relative;
   display: grid;
   grid-template-columns: 150px 1fr 90px;
   gap: 12px;
   align-items: center;
-  padding: 9px 10px;
-  border-radius: 6px;
-  background: rgba(21, 31, 44, 0.72);
+  padding: 10px 11px 10px 14px;
+  overflow: hidden;
+  border: 1px solid rgba(143, 162, 184, 0.14);
+  border-left: 3px solid var(--method-color);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--method-color) 14%, transparent), rgba(21, 31, 44, 0.68) 42%),
+    rgba(21, 31, 44, 0.72);
+}
+
+.comparison-row.best {
+  border-color: color-mix(in srgb, var(--method-color) 50%, var(--line));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--method-color) 16%, transparent);
+}
+
+.comparison-row strong {
+  overflow: hidden;
+  color: #f2f8ff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.comparison-row > span {
+  justify-self: end;
+  color: var(--method-color);
+  font-weight: 800;
 }
 
 .scorebar {
   height: 8px;
-  background: #233143;
+  background: rgba(35, 49, 67, 0.88);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -746,7 +844,74 @@ pre {
 .scorebar span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--cyan), var(--green));
+  background: linear-gradient(90deg, var(--method-color), color-mix(in srgb, var(--method-color) 35%, white));
+}
+
+.comparison-prompts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.comparison-prompt-card {
+  --method-color: var(--cyan);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--method-color) 26%, var(--line));
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--method-color) 9%, transparent), rgba(7, 16, 26, 0.82) 36%),
+    rgba(7, 16, 26, 0.88);
+}
+
+.comparison-prompt-card.best {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--method-color) 18%, transparent);
+}
+
+.comparison-prompt-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px;
+  border-bottom: 1px solid rgba(143, 162, 184, 0.14);
+}
+
+.comparison-prompt-card header span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.comparison-prompt-card header strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--method-color);
+  font-size: 14px;
+}
+
+.comparison-prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.comparison-prompt-actions em {
+  color: #f2f8ff;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.comparison-prompt-card pre {
+  height: clamp(190px, 28vh, 320px);
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: #dceaff;
+  font-size: 12px;
 }
 
 @media (max-width: 980px) {
@@ -765,13 +930,23 @@ pre {
     padding: 10px;
   }
 
+  .comparison-header,
+  .comparison-prompt-card header {
+    display: grid;
+  }
+
   .field-grid,
   .method-grid,
   .metric-strip,
   .dataset-row,
   .detail-row,
+  .comparison-row,
   .progress-steps {
     grid-template-columns: 1fr;
+  }
+
+  .comparison-row > span {
+    justify-self: start;
   }
 
   .progress-steps::before,

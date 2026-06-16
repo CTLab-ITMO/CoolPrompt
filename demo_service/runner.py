@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import inspect
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Callable
 
 from .methods import coerce_method_params
@@ -237,25 +238,37 @@ def run_comparison(
 
     results: list[OptimizationResult] = []
     total = len(methods)
-    for index, method_id in enumerate(methods, start=1):
-        if progress_callback:
-            base_percent = 10 + int((index - 1) / total * 75)
-            progress_callback(
-                "optimizing",
-                base_percent,
-                f"Сравниваем методы: {index}/{total} — {method_id}",
-            )
+    if progress_callback:
+        labels = ", ".join(method_id for method_id in methods)
+        progress_callback("optimizing", 30, f"Параллельно запускаем методы: {labels}")
+
+    def run_method(method_id: str) -> OptimizationResult:
         method_request = request.base.model_copy(deep=True)
         method_request.method = method_id
         method_request.method_params = request.method_params_by_method.get(method_id, {})
-        results.append(
-            run_single_optimization(
-                method_request,
-                settings,
-                tuner_factory=tuner_factory,
-                progress_callback=progress_callback,
-            )
+        return run_single_optimization(
+            method_request,
+            settings,
+            tuner_factory=tuner_factory,
+            progress_callback=None,
         )
+
+    by_method: dict[str, OptimizationResult] = {}
+    max_workers = max(1, min(total, settings.max_compare_methods))
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(run_method, method_id): method_id for method_id in methods}
+        for completed, future in enumerate(as_completed(futures), start=1):
+            method_id = futures[future]
+            by_method[method_id] = future.result()
+            if progress_callback:
+                percent = 30 + int(completed / total * 55)
+                progress_callback(
+                    "optimizing",
+                    percent,
+                    f"Сравнение методов: готово {completed}/{total} — {method_id}",
+                )
+
+    results = [by_method[method_id] for method_id in methods]
     if progress_callback:
         progress_callback("collecting", 90, "Собираем результаты сравнения")
     return results
