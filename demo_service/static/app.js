@@ -58,6 +58,7 @@ const modelFallbackOptions = ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "gpt-4.1-
 const progressSteps = [
   { id: "queued", label: "Очередь" },
   { id: "preparing", label: "Подготовка" },
+  { id: "loading", label: "Библиотека" },
   { id: "model", label: "Модель" },
   { id: "optimizing", label: "Оптимизация" },
   { id: "collecting", label: "Результат" },
@@ -148,7 +149,7 @@ function renderMethods() {
     option.textContent = `${method.label}${method.legacy ? " · устаревший" : ""}`;
     select.appendChild(option);
   });
-  select.value = "rider";
+  select.value = "hyper_light";
 
   const compare = $("compareMethods");
   compare.innerHTML = "";
@@ -332,6 +333,14 @@ async function createJob() {
     progress_message: "Отправляем задачу на сервер",
     status: "queued",
   });
+  renderLiveDetails({
+    job_id: "pending",
+    status: "queued",
+    progress_stage: "queued",
+    progress_percent: 5,
+    progress_message: "Отправляем задачу на сервер",
+    updated_at: Date.now() / 1000,
+  });
   const response = await fetch("/api/jobs", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -343,6 +352,7 @@ async function createJob() {
   }
   const job = await response.json();
   renderProgress(job);
+  renderLiveDetails(job);
   pollJob(job.job_id);
 }
 
@@ -351,6 +361,7 @@ async function pollJob(jobId) {
   const job = await response.json();
   setStatus(job.status, `Задача ${job.job_id.slice(0, 8)} · ${statusText(job.status)}`);
   renderProgress(job);
+  renderLiveDetails(job);
   if (job.status === "queued" || job.status === "running") {
     window.setTimeout(() => pollJob(jobId), 1200);
     return;
@@ -405,9 +416,11 @@ function renderProgress(job = null) {
   const status = job?.status || "idle";
   const rawIndex = progressSteps.findIndex((step) => step.id === stage);
   const activeIndex = rawIndex >= 0 ? rawIndex : (status === "failed" ? progressSteps.length - 1 : -1);
+  const stepFill = activeIndex <= 0 ? 0 : (activeIndex / (progressSteps.length - 1)) * 100;
   $("progressMessage").textContent = job?.progress_message || "Задача ещё не запускалась";
   $("progressPercent").textContent = `${Math.max(0, Math.min(100, percent))}%`;
-  $("progressBar").style.width = `${Math.max(0, Math.min(100, percent))}%`;
+  $("progressBar").style.width = `${Math.max(0, Math.min(100, stepFill))}%`;
+  $("progressSteps").style.setProperty("--step-fill-scale", String(Math.max(0, Math.min(1, stepFill / 100))));
   $("progressSteps").innerHTML = progressSteps
     .map((step, index) => {
       let cls = "pending";
@@ -428,6 +441,22 @@ function renderProgress(job = null) {
       `;
     })
     .join("");
+}
+
+function renderLiveDetails(job) {
+  if (!job || !["queued", "running"].includes(job.status)) return;
+  $("runDetails").textContent = JSON.stringify(
+    {
+      job_id: job.job_id,
+      status: job.status,
+      stage: job.progress_stage,
+      progress_percent: job.progress_percent,
+      message: job.progress_message,
+      updated_at: new Date((job.updated_at || Date.now() / 1000) * 1000).toISOString(),
+    },
+    null,
+    2,
+  );
 }
 
 function renderResult(result) {

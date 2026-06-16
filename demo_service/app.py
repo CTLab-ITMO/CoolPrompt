@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 import uuid
+import logging
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from threading import Lock
@@ -26,6 +27,8 @@ settings = get_settings()
 executor = ThreadPoolExecutor(max_workers=settings.max_workers)
 jobs: dict[str, JobStatus] = {}
 jobs_lock = Lock()
+logger = logging.getLogger("demo_service")
+logger.setLevel(logging.INFO)
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -64,6 +67,8 @@ def _store(job: JobStatus) -> None:
 def _patch_job(job_id: str, **updates: Any) -> None:
     with jobs_lock:
         job = jobs[job_id]
+        if job.status in {"completed", "failed"}:
+            return
         data = job.model_dump()
         data.update(updates)
         data["updated_at"] = time.time()
@@ -72,6 +77,7 @@ def _patch_job(job_id: str, **updates: Any) -> None:
 
 def _run_job(job_id: str, payload: JobCreateRequest) -> None:
     def progress(stage: str, percent: int, message: str) -> None:
+        logger.info("job=%s stage=%s percent=%s message=%s", job_id, stage, percent, message)
         _patch_job(
             job_id,
             status="running",
@@ -82,6 +88,7 @@ def _run_job(job_id: str, payload: JobCreateRequest) -> None:
 
     progress("preparing", 10, "Готовим запуск")
     try:
+        logger.info("job=%s mode=%s started", job_id, payload.mode)
         if payload.mode == "single":
             assert payload.request is not None
             result = run_single_optimization(payload.request, settings, progress_callback=progress)
@@ -96,7 +103,9 @@ def _run_job(job_id: str, payload: JobCreateRequest) -> None:
             progress_message="Оптимизация завершена",
             result=result,
         )
+        logger.info("job=%s completed", job_id)
     except Exception as exc:  # noqa: BLE001 - surfaced to UI as job error
+        logger.exception("job=%s failed", job_id)
         _patch_job(
             job_id,
             status="failed",
@@ -173,6 +182,17 @@ def create_job(payload: JobCreateRequest) -> JobStatus:
         progress_message="Задача ожидает запуска",
     )
     _store(job)
+    if payload.mode == "single" and payload.request is not None:
+        logger.info(
+            "job=%s queued mode=single method=%s model=%s mock=%s dataset_size=%s",
+            job.job_id,
+            payload.request.method,
+            payload.request.model_name or settings.model_name,
+            payload.request.mock or settings.force_mock,
+            len(payload.request.dataset or []),
+        )
+    else:
+        logger.info("job=%s queued mode=%s", job.job_id, payload.mode)
     future: Future = executor.submit(_run_job, job.job_id, payload)
     future.add_done_callback(lambda _: None)
     return job

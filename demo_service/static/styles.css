@@ -473,6 +473,7 @@ pre {
 }
 
 .progress-track {
+  display: none;
   height: 9px;
   margin: 13px 0 12px;
   overflow: hidden;
@@ -490,20 +491,51 @@ pre {
 }
 
 .progress-steps {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 14px;
+  --step-fill-scale: 0;
+}
+
+.progress-steps::before,
+.progress-steps::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: calc(100% / 14);
+  right: calc(100% / 14);
+  height: 3px;
+  border-radius: 999px;
+}
+
+.progress-steps::before {
+  background: #233143;
+}
+
+.progress-steps::after {
+  background: linear-gradient(90deg, var(--cyan), var(--green));
+  transform: scaleX(var(--step-fill-scale));
+  transform-origin: left center;
+  transition: transform 260ms ease;
 }
 
 .progress-step {
+  position: relative;
+  z-index: 1;
   display: grid;
+  justify-items: center;
   gap: 6px;
   min-width: 0;
   color: var(--muted);
   font-size: 12px;
+  text-align: center;
 }
 
 .progress-step span {
+  position: relative;
+  z-index: 1;
   width: 18px;
   height: 18px;
   border: 1px solid var(--line);
@@ -600,5 +632,10 @@ pre {
   .dataset-row,
   .progress-steps {
     grid-template-columns: 1fr;
+  }
+
+  .progress-steps::before,
+  .progress-steps::after {
+    display: none;
   }
 }

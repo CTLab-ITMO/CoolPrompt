@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import inspect
 import time
 from typing import Any, Callable
 
@@ -10,18 +11,26 @@ from .schemas import CompareRequest, OptimizationRequest, OptimizationResult
 from .settings import DemoSettings
 
 
-TunerFactory = Callable[[OptimizationRequest, DemoSettings], Any]
+TunerFactory = Callable[..., Any]
 ProgressCallback = Callable[[str, int, str], None]
 
 
-def default_tuner_factory(request: OptimizationRequest, settings: DemoSettings) -> PromptTuner:
+def default_tuner_factory(
+    request: OptimizationRequest,
+    settings: DemoSettings,
+    progress_callback: ProgressCallback | None = None,
+) -> PromptTuner:
     """Build a PromptTuner with an env-configured LangChain OpenAI model."""
 
     # Keep heavy CoolPrompt/metric/torch imports out of FastAPI startup.
     # Render's small instances must open the HTTP port before any optimizer job
     # pays the full ML import cost.
+    if progress_callback:
+        progress_callback("loading", 24, "Загружаем клиент модели")
     from langchain_openai import ChatOpenAI
 
+    if progress_callback:
+        progress_callback("loading", 30, "Загружаем библиотеку CoolPrompt")
     from coolprompt.assistant import PromptTuner
 
     model_name = request.model_name or settings.model_name
@@ -33,8 +42,27 @@ def default_tuner_factory(request: OptimizationRequest, settings: DemoSettings) 
     if settings.openai_base_url:
         model_kwargs["base_url"] = settings.openai_base_url
 
+    if progress_callback:
+        progress_callback("model", 36, "Подключаем модель")
     model = ChatOpenAI(**model_kwargs)
     return PromptTuner(target_model=model, system_model=model)
+
+
+def _build_tuner(
+    tuner_factory: TunerFactory,
+    request: OptimizationRequest,
+    settings: DemoSettings,
+    progress_callback: ProgressCallback | None,
+) -> Any:
+    """Call custom test factories without requiring the new progress argument."""
+
+    try:
+        signature = inspect.signature(tuner_factory)
+    except (TypeError, ValueError):
+        signature = None
+    if signature is not None and "progress_callback" in signature.parameters:
+        return tuner_factory(request, settings, progress_callback=progress_callback)
+    return tuner_factory(request, settings)
 
 
 def _effective_mock(request: OptimizationRequest, settings: DemoSettings) -> bool:
@@ -129,8 +157,8 @@ def run_single_optimization(
     started = time.perf_counter()
     params = coerce_method_params(request.method, request.method_params)
     if progress_callback:
-        progress_callback("model", 30, "Подключаем модель и оптимизатор")
-    tuner = tuner_factory(request, settings)
+        progress_callback("loading", 22, "Подготавливаем библиотеку оптимизации")
+    tuner = _build_tuner(tuner_factory, request, settings, progress_callback)
     if progress_callback:
         progress_callback("optimizing", 45, "Оптимизатор выполняет поиск промпта")
     final_prompt = tuner.run(
