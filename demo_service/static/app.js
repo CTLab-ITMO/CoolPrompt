@@ -578,6 +578,33 @@ function statusText(status) {
   }[status] || status;
 }
 
+function taskLabel(task) {
+  return {
+    classification: "Классификация",
+    generation: "Генерация",
+  }[task] || task || "--";
+}
+
+function fmtRatio(value) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+  return `${Math.round(Number(value) * 100)}%`;
+}
+
+function renderDetailList(fields) {
+  const rows = fields.filter(([, value]) => value !== null && value !== undefined && value !== "");
+  if (!rows.length) return "";
+  return `
+    <div class="detail-list">
+      ${rows.map(([label, value, tone]) => `
+        <div class="detail-row ${tone || ""}">
+          <span class="detail-key">${escapeHtml(label)}</span>
+          <strong class="detail-value">${escapeHtml(fmtValue(value))}</strong>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
 function jobLineText(job) {
   if (!job) return "Готово";
   if (job.status === "queued") return "Запуск ожидает свободного исполнителя";
@@ -628,11 +655,14 @@ function renderLiveDetails(job) {
 function renderLiveDetailsHtml(job) {
   const updatedAt = new Date((job.updated_at || Date.now() / 1000) * 1000).toLocaleTimeString("ru-RU");
   return `
-    <div class="run-summary-grid">
-      <div class="run-summary-item"><span>Job ID</span><strong>${escapeHtml(job.job_id)}</strong></div>
-      <div class="run-summary-item"><span>Статус</span><strong>${escapeHtml(statusText(job.status))}</strong></div>
-      <div class="run-summary-item"><span>Стадия</span><strong>${escapeHtml(job.progress_stage || "--")}</strong></div>
-      <div class="run-summary-item"><span>Прогресс</span><strong>${escapeHtml(fmtValue(job.progress_percent))}%</strong></div>
+    <div class="detail-section">
+      <h4>Запуск</h4>
+      ${renderDetailList([
+        ["Статус", statusText(job.status)],
+        ["Стадия", job.progress_stage || "--", "code-row"],
+        ["Прогресс", `${fmtValue(job.progress_percent)}%`],
+        ["Обновлено", updatedAt],
+      ])}
     </div>
     <div class="detail-block">
       <span>Текущее действие</span>
@@ -673,40 +703,28 @@ function renderSingle(result) {
 }
 
 function renderResultDetailsHtml(result) {
-  const delta = result.metric_delta ?? 0;
-  const deltaClass = delta > 0 ? "positive" : delta < 0 ? "negative" : "";
   const params = Object.entries(result.method_params || {});
-  const dataInfo = [
-    ["Dataset", result.dataset_size],
-    ["Validation", result.validation_size],
-    ["Режим", result.used_mock ? "Тестовый" : "Реальный"],
-    ["Модель", result.model_name || "--"],
+  const launchFields = [
+    ["Метод", methodLabel(result.method)],
+    ["Модель", result.model_name || "--", "code-row"],
+    ["Тип задачи", taskLabel(result.task)],
+    ["Метрика", result.metric || "--", "code-row"],
+    ["Примеров в наборе", result.dataset_size],
+    ["Примеров валидации", result.validation_size],
+    ["Доля валидации", fmtRatio(result.validation_ratio)],
+    ["Batch size", result.batch_size],
+    ["Температура", result.model_temperature],
+    ["Лимит токенов", result.model_max_tokens],
   ];
   return `
-    <div class="run-summary-grid">
-      <div class="run-summary-item"><span>Метод</span><strong>${escapeHtml(methodLabel(result.method))}</strong></div>
-      <div class="run-summary-item"><span>Модель</span><strong>${escapeHtml(result.model_name || "--")}</strong></div>
-      <div class="run-summary-item"><span>Режим</span><strong>${result.used_mock ? "Тестовый" : "Реальный"}</strong></div>
-      <div class="run-summary-item"><span>Время</span><strong>${Number(result.elapsed_seconds || 0).toFixed(1)}s</strong></div>
-    </div>
-    <div class="run-summary-grid compact">
-      <div class="run-summary-item"><span>Было</span><strong>${escapeHtml(fmtMetric(result.init_metric))}</strong></div>
-      <div class="run-summary-item"><span>Стало</span><strong>${escapeHtml(fmtMetric(result.final_metric))}</strong></div>
-      <div class="run-summary-item ${deltaClass}"><span>Прирост</span><strong>${escapeHtml(fmtMetric(result.metric_delta))}</strong></div>
-      <div class="run-summary-item"><span>Validation</span><strong>${escapeHtml(fmtValue(result.validation_size))}</strong></div>
-    </div>
     <div class="detail-section">
-      <h4>Данные</h4>
-      <div class="detail-kv">
-        ${dataInfo.map(([label, value]) => `<span>${escapeHtml(label)}</span><strong>${escapeHtml(fmtValue(value))}</strong>`).join("")}
-      </div>
+      <h4>Конфигурация запуска</h4>
+      ${renderDetailList(launchFields)}
     </div>
     ${params.length ? `
       <div class="detail-section">
         <h4>Параметры метода</h4>
-        <div class="param-grid">
-          ${params.map(([key, value]) => `<div><span>${escapeHtml(key)}</span><strong>${escapeHtml(fmtValue(value))}</strong></div>`).join("")}
-        </div>
+        ${renderDetailList(params.map(([key, value]) => [key, value, "code-row"]))}
       </div>
     ` : ""}
     ${result.synthetic_dataset?.length ? `
@@ -719,14 +737,18 @@ function renderResultDetailsHtml(result) {
     ` : ""}
     <details class="technical-fields">
       <summary>Служебные поля</summary>
-      <div class="detail-kv technical-kv">
-        <span>method</span><strong>${escapeHtml(fmtValue(result.method))}</strong>
-        <span>used_mock</span><strong>${escapeHtml(fmtValue(result.used_mock))}</strong>
-        <span>dataset_size</span><strong>${escapeHtml(fmtValue(result.dataset_size))}</strong>
-        <span>validation_size</span><strong>${escapeHtml(fmtValue(result.validation_size))}</strong>
-        <span>elapsed_seconds</span><strong>${escapeHtml(fmtValue(result.elapsed_seconds))}</strong>
-        <span>model_name</span><strong>${escapeHtml(fmtValue(result.model_name))}</strong>
-      </div>
+      ${renderDetailList([
+        ["method", result.method, "code-row"],
+        ["task", result.task, "code-row"],
+        ["metric", result.metric, "code-row"],
+        ["used_mock", result.used_mock, "code-row"],
+        ["dataset_size", result.dataset_size, "code-row"],
+        ["validation_size", result.validation_size, "code-row"],
+        ["validation_ratio", result.validation_ratio, "code-row"],
+        ["batch_size", result.batch_size, "code-row"],
+        ["elapsed_seconds", result.elapsed_seconds, "code-row"],
+        ["model_name", result.model_name, "code-row"],
+      ])}
     </details>
   `;
 }

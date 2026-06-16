@@ -81,14 +81,21 @@ class OptimizationResult(BaseModel):
     method: str
     initial_prompt: str
     final_prompt: str
+    task: TaskName | None = None
+    metric: str | None = None
     init_metric: float | None = None
     final_metric: float | None = None
     metric_delta: float | None = None
     dataset_size: int
     validation_size: int
+    validation_ratio: float | None = None
+    batch_size: int | None = None
+    generate_num_samples: int | None = None
     elapsed_seconds: float
     used_mock: bool = False
     model_name: str | None = None
+    model_temperature: float | None = None
+    model_max_tokens: int | None = None
     method_params: dict[str, Any] = Field(default_factory=dict)
     synthetic_dataset: list[str] | None = None
     synthetic_target: list[str | int] | None = None
