@@ -147,8 +147,6 @@ def config() -> dict[str, Any]:
         "hasOpenAIKey": settings.has_openai_key,
         "allowMock": settings.allow_mock,
         "forceMock": settings.force_mock,
-        "maxCompareMethods": settings.max_compare_methods,
-        "maxCompareWorkers": settings.max_compare_workers,
         "modelOptions": _model_options(),
     }
 

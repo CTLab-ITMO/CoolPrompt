@@ -437,8 +437,7 @@ label {
 }
 
 .result-panel,
-.trace,
-.comparison {
+.trace {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(7, 16, 26, 0.82);
@@ -622,17 +621,6 @@ pre {
   color: var(--muted);
 }
 
-.comparison {
-  display: grid;
-  gap: 14px;
-  padding: 14px;
-  margin-bottom: 16px;
-  border-color: rgba(57, 217, 255, 0.24);
-  background:
-    linear-gradient(135deg, rgba(57, 217, 255, 0.055), rgba(78, 224, 144, 0.035)),
-    rgba(7, 16, 26, 0.82);
-}
-
 .progress-card {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -776,250 +764,6 @@ pre {
   }
 }
 
-.comparison-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  align-items: flex-start;
-  padding-bottom: 2px;
-}
-
-.comparison-header h3 {
-  margin-bottom: 3px;
-}
-
-.comparison-header p,
-.comparison-header > span {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.comparison-list {
-  display: grid;
-  gap: 8px;
-}
-
-.comparison-row {
-  --method-color: var(--cyan);
-  position: relative;
-  display: grid;
-  grid-template-columns: 150px 1fr 90px;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 11px 10px 14px;
-  overflow: hidden;
-  border: 1px solid rgba(143, 162, 184, 0.14);
-  border-left: 3px solid var(--method-color);
-  border-radius: 8px;
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--method-color) 14%, transparent), rgba(21, 31, 44, 0.68) 42%),
-    rgba(21, 31, 44, 0.72);
-}
-
-.comparison-row.best {
-  border-color: color-mix(in srgb, var(--method-color) 50%, var(--line));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--method-color) 16%, transparent);
-}
-
-.comparison-row strong {
-  overflow: hidden;
-  color: #f2f8ff;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.comparison-row > span {
-  justify-self: end;
-  color: var(--method-color);
-  font-weight: 800;
-}
-
-.scorebar {
-  height: 8px;
-  background: rgba(35, 49, 67, 0.88);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.scorebar span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--method-color), color-mix(in srgb, var(--method-color) 35%, white));
-}
-
-.comparison-prompts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 12px;
-}
-
-.comparison-prompt-card {
-  --method-color: var(--cyan);
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--method-color) 26%, var(--line));
-  border-radius: 8px;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--method-color) 9%, transparent), rgba(7, 16, 26, 0.82) 36%),
-    rgba(7, 16, 26, 0.88);
-}
-
-.comparison-prompt-card.best {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--method-color) 18%, transparent);
-}
-
-.comparison-prompt-card header {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: flex-start;
-  padding: 11px;
-  border-bottom: 1px solid rgba(143, 162, 184, 0.14);
-}
-
-.comparison-prompt-card header span {
-  display: block;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.comparison-prompt-card header strong {
-  display: block;
-  margin-top: 3px;
-  color: var(--method-color);
-  font-size: 14px;
-}
-
-.comparison-prompt-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.comparison-prompt-actions em {
-  color: #f2f8ff;
-  font-style: normal;
-  font-weight: 800;
-}
-
-.comparison-prompt-card pre {
-  height: clamp(190px, 28vh, 320px);
-  margin: 0;
-  padding: 12px;
-  overflow: auto;
-  overscroll-behavior: contain;
-  color: #dceaff;
-  font-size: 12px;
-}
-
-.comparison-detail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 12px;
-}
-
-.comparison-detail-card {
-  --method-color: var(--cyan);
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--method-color) 28%, var(--line));
-  border-radius: 8px;
-  background:
-    linear-gradient(145deg, color-mix(in srgb, var(--method-color) 11%, transparent), rgba(8, 17, 29, 0.84) 48%),
-    rgba(8, 17, 29, 0.88);
-}
-
-.comparison-detail-card.best {
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--method-color) 20%, transparent);
-}
-
-.comparison-detail-card header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px;
-  border-bottom: 1px solid rgba(143, 162, 184, 0.14);
-}
-
-.comparison-detail-card header span {
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.comparison-detail-card header strong {
-  display: block;
-  margin-top: 3px;
-  color: var(--method-color);
-  font-size: 15px;
-}
-
-.comparison-detail-card header em {
-  color: #f2f8ff;
-  font-style: normal;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.comparison-detail-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  padding: 12px;
-}
-
-.comparison-detail-metrics div {
-  min-width: 0;
-  border: 1px solid rgba(143, 162, 184, 0.14);
-  border-radius: 7px;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.025);
-}
-
-.comparison-detail-metrics span {
-  display: block;
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.comparison-detail-metrics strong {
-  display: block;
-  margin-top: 4px;
-  color: var(--method-color);
-  font-size: 15px;
-  overflow-wrap: anywhere;
-  white-space: nowrap;
-}
-
-.comparison-detail-card .detail-list {
-  margin: 0 12px 12px;
-}
-
-.comparison-detail-card .detail-row {
-  grid-template-columns: minmax(120px, 0.46fr) minmax(0, 1fr);
-  gap: 10px;
-  padding: 8px 10px;
-}
-
-.comparison-method-params {
-  margin: 0 12px 12px;
-  border: 1px solid rgba(143, 162, 184, 0.14);
-  border-radius: 8px;
-  padding: 10px;
-  background: rgba(7, 16, 26, 0.48);
-}
-
-.comparison-method-params summary {
-  cursor: pointer;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.comparison-method-params .detail-list {
-  margin: 10px 0 0;
-}
-
 @media (max-width: 980px) {
   .shell,
   .result-grid {
@@ -1036,24 +780,13 @@ pre {
     padding: 10px;
   }
 
-  .comparison-header,
-  .comparison-prompt-card header {
-    display: grid;
-  }
-
   .field-grid,
   .method-grid,
   .metric-strip,
-  .comparison-detail-metrics,
   .dataset-row,
   .detail-row,
-  .comparison-row,
   .progress-steps {
     grid-template-columns: 1fr;
-  }
-
-  .comparison-row > span {
-    justify-self: start;
   }
 
   .progress-steps::before,

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoolPrompt Demo</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260617-compare-summary-2" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260617-single-only" />
   </head>
   <body>
     <main class="shell">
@@ -42,13 +42,8 @@
         <section class="panel">
           <div class="panel-title">
             <span>Метод</span>
-            <label class="toggle">
-              <input id="compareMode" type="checkbox" />
-              <span>Сравнить</span>
-            </label>
           </div>
           <select id="methodSelect"></select>
-          <div id="compareMethods" class="method-grid hidden"></div>
           <div id="methodHint" class="hint"></div>
         </section>
 
@@ -130,8 +125,6 @@
           <div class="status-pill" id="statusPill">готово</div>
         </div>
 
-        <div id="comparison" class="comparison hidden"></div>
-
         <article id="progressCard" class="progress-card">
           <div class="progress-head">
             <div>
@@ -188,6 +181,6 @@
         </article>
       </section>
     </main>
-    <script src="/static/app.js?v=20260617-compare-summary-2"></script>
+    <script src="/static/app.js?v=20260617-single-only"></script>
   </body>
 </html>

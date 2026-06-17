@@ -8,7 +8,7 @@ const state = {
 const examples = {
   support: {
     task: "classification",
-    prompt: "Определи тему обращения.",
+    prompt: "Разбери обращение.",
     description: "Нужно классифицировать реальные обращения поддержки строго в одну из меток: оплата, доставка, техника, аккаунт, возврат. В ответе должна быть только метка без пояснений.",
     metric: "f1",
     rows: [
@@ -90,7 +90,6 @@ const taskMetricDefaults = {
   generation: "rouge",
 };
 const modelFallbackOptions = ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1-nano"];
-const methodColors = ["#39d9ff", "#4ee090", "#ffd166", "#ff8fb3", "#9d8cff", "#ff9f43", "#7bdff2"];
 const progressSteps = [
   { id: "queued", label: "Очередь" },
   { id: "preparing", label: "Подготовка" },
@@ -212,23 +211,6 @@ function fmtMetric(value) {
   return Number(value).toFixed(4);
 }
 
-function fmtSignedMetric(value) {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
-  const number = Number(value);
-  return `${number >= 0 ? "+" : ""}${number.toFixed(4)}`;
-}
-
-function fmtMetricRange(values) {
-  const numbers = values
-    .filter((value) => value !== null && value !== undefined && !Number.isNaN(Number(value)))
-    .map(Number);
-  if (!numbers.length) return "--";
-  const min = Math.min(...numbers);
-  const max = Math.max(...numbers);
-  if (Math.abs(max - min) < 0.00005) return fmtMetric(min);
-  return `${fmtMetric(min)}-${fmtMetric(max)}`;
-}
-
 function fmtValue(value) {
   if (value === null || value === undefined || value === "") return "--";
   if (typeof value === "number") {
@@ -257,7 +239,7 @@ async function loadConfig() {
   updateRuntimeStatus();
   renderMethods();
   renderProgress();
-  setExample("support");
+  setExample("support_reply");
 }
 
 function renderModelOptions(config) {
@@ -318,24 +300,9 @@ function renderMethods() {
   select.value = "hyper_light";
   applyMethodRuntimeDefaults(select.value);
 
-  renderCompareMethods();
   renderMetricOptions();
   renderParams();
   renderMethodHint();
-}
-
-function renderCompareMethods() {
-  const compare = $("compareMethods");
-  compare.innerHTML = "";
-  state.methods.forEach((method) => {
-    const label = document.createElement("label");
-    label.className = "method-check";
-    label.innerHTML = `
-      <input type="checkbox" value="${method.id}" checked />
-      <span>${method.label}</span>
-    `;
-    compare.appendChild(label);
-  });
 }
 
 function setNumberValue(id, value) {
@@ -504,24 +471,7 @@ async function createJob() {
   if (!base.mock && (!base.dataset || base.dataset.length < 2)) {
     throw new Error("Для реального запуска добавьте минимум 2 строки данных.");
   }
-  const compareMode = $("compareMode").checked;
-  let payload;
-  if (compareMode) {
-    const methods = [...document.querySelectorAll("#compareMethods input:checked")].map((input) => input.value);
-    if (!methods.length) {
-      throw new Error("Выберите хотя бы один метод для сравнения.");
-    }
-    payload = {
-      mode: "compare",
-      compare: {
-        base,
-        methods,
-        method_params_by_method: { [base.method]: base.method_params },
-      },
-    };
-  } else {
-    payload = { mode: "single", request: base };
-  }
+  const payload = { mode: "single", request: base };
 
   setBusy(true);
   resetRunOutput();
@@ -579,14 +529,16 @@ async function pollJob(jobId) {
 
 function resetRunOutput() {
   state.activeJobId = null;
-  $("comparison").classList.add("hidden");
-  $("comparison").innerHTML = "";
   $("initialPrompt").textContent = "";
   $("finalPrompt").textContent = "";
   $("initMetric").textContent = "--";
   $("finalMetric").textContent = "--";
   $("deltaMetric").textContent = "--";
   $("elapsedMetric").textContent = "--";
+  $("initMetric").removeAttribute("title");
+  $("finalMetric").removeAttribute("title");
+  $("deltaMetric").removeAttribute("title");
+  $("elapsedMetric").removeAttribute("title");
   $("runDetails").innerHTML = "";
 }
 
@@ -630,12 +582,6 @@ function taskLabel(task) {
     classification: "Классификация",
     generation: "Генерация",
   }[task] || task || "--";
-}
-
-function methodCountLabel(count) {
-  if (count === 1) return "1 метод";
-  if (count >= 2 && count <= 4) return `${count} метода`;
-  return `${count} методов`;
 }
 
 function fmtRatio(value) {
@@ -735,14 +681,7 @@ function renderErrorDetailsHtml(message) {
 }
 
 function renderResult(result) {
-  if (Array.isArray(result)) {
-    renderComparison(result);
-    renderComparisonSummary(result);
-    return;
-  }
-  $("comparison").classList.add("hidden");
-  $("comparison").innerHTML = "";
-  renderSingle(result);
+  renderSingle(Array.isArray(result) ? (result[0] || {}) : (result || {}));
 }
 
 function renderSingle(result) {
@@ -753,35 +692,6 @@ function renderSingle(result) {
   $("deltaMetric").textContent = fmtMetric(result.metric_delta);
   $("elapsedMetric").textContent = `${Number(result.elapsed_seconds || 0).toFixed(1)}s`;
   $("runDetails").innerHTML = renderResultDetailsHtml(result);
-}
-
-function renderComparisonSummary(results) {
-  const safeResults = [...results];
-  const sorted = [...safeResults].sort((a, b) => (b.final_metric ?? -Infinity) - (a.final_metric ?? -Infinity));
-  const best = sorted[0] || {};
-  const totalElapsed = safeResults.reduce((sum, item) => sum + Number(item.elapsed_seconds || 0), 0);
-  const promptSummary = safeResults
-    .map((item) => {
-      const label = methodLabel(item.method);
-      const prompt = (item.final_prompt || "").trim();
-      return [
-        `${label} | metric ${fmtMetric(item.final_metric)} | delta ${fmtSignedMetric(item.metric_delta)}`,
-        prompt || "--",
-      ].join("\n");
-    })
-    .join("\n\n---\n\n");
-
-  $("initialPrompt").textContent = (safeResults[0]?.initial_prompt || "").trim();
-  $("finalPrompt").textContent = promptSummary.trim();
-  $("initMetric").textContent = fmtMetricRange(safeResults.map((item) => item.init_metric));
-  $("finalMetric").textContent = fmtMetric(best.final_metric);
-  $("deltaMetric").textContent = fmtSignedMetric(best.metric_delta);
-  $("elapsedMetric").textContent = `${totalElapsed.toFixed(1)}s`;
-  $("initMetric").title = "Диапазон стартовых метрик по выбранным методам";
-  $("finalMetric").title = `Лучший результат: ${methodLabel(best.method)}`;
-  $("deltaMetric").title = `Прирост лучшего метода: ${methodLabel(best.method)}`;
-  $("elapsedMetric").title = "Суммарное время выполнения всех методов";
-  $("runDetails").innerHTML = renderComparisonDetailsHtml(safeResults);
 }
 
 function renderResultDetailsHtml(result) {
@@ -832,125 +742,6 @@ function renderResultDetailsHtml(result) {
         ["model_name", result.model_name, "code-row"],
       ])}
     </details>
-  `;
-}
-
-function renderComparisonDetailsHtml(results) {
-  const best = Math.max(...results.map((item) => item.final_metric || 0), 0);
-  const cards = results
-    .map((item, index) => {
-      const color = methodColors[index % methodColors.length];
-      const label = methodLabel(item.method);
-      const isBest = (item.final_metric || 0) === best;
-      const params = Object.entries(item.method_params || {});
-      return `
-        <article class="comparison-detail-card ${isBest ? "best" : ""}" style="--method-color:${color}">
-          <header>
-            <div>
-              <span>${isBest ? "Лучший результат" : "Метод"}</span>
-              <strong>${escapeHtml(label)}</strong>
-            </div>
-            <em>${escapeHtml(fmtMetric(item.final_metric))}</em>
-          </header>
-          <div class="comparison-detail-metrics">
-            <div><span>Было</span><strong>${escapeHtml(fmtMetric(item.init_metric))}</strong></div>
-            <div><span>Стало</span><strong>${escapeHtml(fmtMetric(item.final_metric))}</strong></div>
-            <div><span>Прирост</span><strong>${escapeHtml(fmtSignedMetric(item.metric_delta))}</strong></div>
-            <div><span>Время</span><strong>${Number(item.elapsed_seconds || 0).toFixed(1)}s</strong></div>
-          </div>
-          ${renderDetailList([
-            ["Модель", item.model_name || "--", "code-row"],
-            ["Тип задачи", taskLabel(item.task)],
-            ["Метрика", item.metric || "--", "code-row"],
-            ["Примеров в наборе", item.dataset_size],
-            ["Примеров валидации", item.validation_size],
-            ["Доля валидации", fmtRatio(item.validation_ratio)],
-            ["Batch size", item.batch_size],
-            ["Синтетические примеры", item.generate_num_samples],
-            ["Температура", item.model_temperature],
-            ["Лимит токенов", item.model_max_tokens],
-          ])}
-          ${params.length ? `
-            <details class="comparison-method-params">
-              <summary>Параметры метода</summary>
-              ${renderDetailList(params.map(([key, value]) => [key, value, "code-row"]))}
-            </details>
-          ` : ""}
-        </article>
-      `;
-    })
-    .join("");
-
-  return `
-    <div class="detail-section">
-      <h4>Сводка сравнения</h4>
-      <div class="comparison-detail-grid">${cards}</div>
-    </div>
-    <details class="technical-fields">
-      <summary>Служебные поля</summary>
-      ${renderDetailList([
-        ["methods", results.map((item) => item.method).join(", "), "code-row"],
-        ["models", [...new Set(results.map((item) => item.model_name).filter(Boolean))].join(", "), "code-row"],
-        ["metrics", [...new Set(results.map((item) => item.metric).filter(Boolean))].join(", "), "code-row"],
-        ["dataset_size", results[0]?.dataset_size, "code-row"],
-      ])}
-    </details>
-  `;
-}
-
-function renderComparison(results) {
-  const box = $("comparison");
-  box.classList.remove("hidden");
-  const max = Math.max(...results.map((item) => item.final_metric || 0), 0.001);
-  const best = Math.max(...results.map((item) => item.final_metric || 0), 0);
-  const rows = results
-    .map((item) => {
-      const width = Math.max(2, ((item.final_metric || 0) / max) * 100);
-      const label = methodById(item.method)?.label || item.method;
-      const isBest = (item.final_metric || 0) === best;
-      const color = methodColors[results.indexOf(item) % methodColors.length];
-      return `
-        <div class="comparison-row ${isBest ? "best" : ""}" style="--method-color:${color}">
-          <strong>${escapeHtml(label)}${isBest ? " · лучший" : ""}</strong>
-          <div class="scorebar"><span style="width:${width}%"></span></div>
-          <span>${fmtMetric(item.final_metric)}</span>
-        </div>
-      `;
-    })
-    .join("");
-  const promptCards = results
-    .map((item, index) => {
-      const label = methodById(item.method)?.label || item.method;
-      const isBest = (item.final_metric || 0) === best;
-      const promptId = `comparisonPrompt${index}`;
-      const color = methodColors[index % methodColors.length];
-      return `
-        <article class="comparison-prompt-card ${isBest ? "best" : ""}" style="--method-color:${color}">
-          <header>
-            <div>
-              <span>${isBest ? "Лучший результат" : "Метод"}</span>
-              <strong>${escapeHtml(label)}</strong>
-            </div>
-            <div class="comparison-prompt-actions">
-              <em>${escapeHtml(fmtMetric(item.final_metric))}</em>
-              <button type="button" class="copy" data-copy="${promptId}">Копировать</button>
-            </div>
-          </header>
-          <pre id="${promptId}">${escapeHtml(item.final_prompt || "")}</pre>
-        </article>
-      `;
-    })
-    .join("");
-  box.innerHTML = `
-    <div class="comparison-header">
-      <div>
-        <h3>Сравнение методов</h3>
-        <p>${methodCountLabel(results.length)} на одном наборе данных</p>
-      </div>
-      <span>${results.length > 1 ? "Ниже сводка по каждому методу" : "Результат выбранного метода"}</span>
-    </div>
-    <div class="comparison-list">${rows}</div>
-    <div class="comparison-prompts">${promptCards}</div>
   `;
 }
 
@@ -1013,10 +804,6 @@ $("methodSelect").addEventListener("change", () => {
   applyMethodRuntimeDefaults($("methodSelect").value);
   renderParams();
   renderMethodHint();
-});
-
-$("compareMode").addEventListener("change", () => {
-  $("compareMethods").classList.toggle("hidden", !$("compareMode").checked);
 });
 
 $("modelSelect").addEventListener("change", toggleCustomModel);
