@@ -8,8 +8,8 @@ const state = {
 const examples = {
   support: {
     task: "classification",
-    prompt: "Разбери обращение.",
-    description: "Нужно классифицировать реальные обращения поддержки строго в одну из меток: оплата, доставка, техника, аккаунт, возврат. В ответе должна быть только метка без пояснений.",
+    prompt: "Разбери обращение и верни только метку внутри <ans>...</ans>.",
+    description: "Нужно классифицировать реальные обращения поддержки строго в одну из меток: оплата, доставка, техника, аккаунт, возврат. В ответе должна быть только метка внутри <ans>...</ans>, без пояснений.",
     metric: "f1",
     rows: [
       ["С меня дважды списали деньги за один заказ, но в личном кабинете видна только одна покупка.", "оплата"],
@@ -28,9 +28,9 @@ const examples = {
   },
   support_reply: {
     task: "generation",
-    prompt: "Ответь клиенту.",
-    description: "Нужно генерировать короткие ответы поддержки: признать проблему, дать конкретный следующий шаг, сохранить спокойный профессиональный тон и не обещать того, чего оператор не может гарантировать.",
-    metric: "rouge",
+    prompt: "Ответь. Формат: <ans>ответ</ans>.",
+    description: "Нужно генерировать короткие ответы поддержки: признать проблему, дать конкретный следующий шаг, сохранить спокойный профессиональный тон и не обещать того, чего оператор не может гарантировать. Итоговый ответ должен быть внутри <ans>...</ans>, без текста до или после тегов.",
+    metric: "llm_as_judge",
     rows: [
       [
         "Клиент пишет, что оплатил заказ, но статус до сих пор не изменился.",
@@ -64,8 +64,8 @@ const examples = {
   },
   qa: {
     task: "generation",
-    prompt: "Ответь на вопрос.",
-    description: "Нужно извлекать короткий точный ответ строго из контекста. Если в контексте нет ответа, нужно вернуть: нет данных.",
+    prompt: "Ответь на вопрос строго по контексту. Формат: <ans>краткий ответ</ans>.",
+    description: "Нужно извлекать короткий точный ответ строго из контекста. Если в контексте нет ответа, нужно вернуть: <ans>нет данных</ans>.",
     metric: "em",
     rows: [
       ["Контекст: Заказ 4821 был оплачен 12 июня и передан в доставку 13 июня. Вопрос: когда заказ передали в доставку?", "13 июня"],
@@ -83,11 +83,11 @@ const defaultExampleByTask = {
   generation: "support_reply",
 };
 
-const generationMetrics = ["bertscore", "rouge", "meteor", "bleu", "em", "llm_as_judge", "geval"];
+const generationMetrics = ["llm_as_judge", "rouge", "meteor", "bleu", "em", "bertscore", "geval"];
 const classificationMetrics = ["f1", "accuracy"];
 const taskMetricDefaults = {
   classification: "f1",
-  generation: "rouge",
+  generation: "llm_as_judge",
 };
 const modelFallbackOptions = ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1-nano"];
 const progressSteps = [
@@ -109,10 +109,10 @@ const methodRuntimeDefaults = {
     modelMaxTokens: 2000,
   },
   hyper: {
-    validationSize: 0.34,
-    batchSize: 2,
+    validationSize: 0.4,
+    batchSize: 1,
     generateSamples: 6,
-    modelTemperature: 0.2,
+    modelTemperature: 0.25,
     modelMaxTokens: 2200,
   },
   rider: {
@@ -162,7 +162,7 @@ const methodTaskOverrides = {
     },
     hyper: {
       validationSize: 0.4,
-      batchSize: 2,
+      batchSize: 1,
       modelTemperature: 0.2,
       modelMaxTokens: 2200,
     },
@@ -182,11 +182,11 @@ const methodTaskOverrides = {
       modelMaxTokens: 3000,
     },
     hyper: {
-      validationSize: 0.34,
-      batchSize: 2,
+      validationSize: 0.4,
+      batchSize: 1,
       generateSamples: 6,
       modelTemperature: 0.25,
-      modelMaxTokens: 2600,
+      modelMaxTokens: 2200,
     },
     rider: {
       validationSize: 0.34,

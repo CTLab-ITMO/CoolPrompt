@@ -63,7 +63,16 @@ def _demo_hyper_similarity_patch(request: OptimizationRequest, settings: DemoSet
 
 
 def _clean_prompt(text: Any) -> str:
-    return str(text or "").strip()
+    value = str(text or "").strip()
+    wrappers = (
+        ("<ans>", "</ans>"),
+        ("[PROMPT_START]", "[PROMPT_END]"),
+    )
+    lowered = value.lower()
+    for start, end in wrappers:
+        if lowered.startswith(start.lower()) and lowered.endswith(end.lower()):
+            return value[len(start) : -len(end)].strip()
+    return value
 
 
 def default_tuner_factory(

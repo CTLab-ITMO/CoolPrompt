@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoolPrompt Demo</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260617-single-only" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260617-hyper-sidebar" />
   </head>
   <body>
     <main class="shell">
@@ -23,96 +23,98 @@
           <button id="runButton" class="primary" type="button">Запустить оптимизацию</button>
         </div>
 
-        <section class="panel">
-          <div class="panel-title">
-            <span>Промпт</span>
-            <div class="segmented" role="group" aria-label="Тип задачи">
-              <button class="segment active" data-task="generation" type="button">Генерация</button>
-              <button class="segment" data-task="classification" type="button">Классификация</button>
+        <div class="sidebar-scroll">
+          <section class="panel">
+            <div class="panel-title">
+              <span>Промпт</span>
+              <div class="segmented" role="group" aria-label="Тип задачи">
+                <button class="segment active" data-task="generation" type="button">Генерация</button>
+                <button class="segment" data-task="classification" type="button">Классификация</button>
+              </div>
             </div>
-          </div>
-          <textarea id="startPrompt" rows="7" spellcheck="false"></textarea>
-          <div class="quick-row">
-            <button type="button" class="ghost" data-example="support">Классификация обращений</button>
-            <button type="button" class="ghost" data-example="support_reply">Ответ клиенту</button>
-            <button type="button" class="ghost" data-example="qa">Точный ответ</button>
-          </div>
-        </section>
+            <textarea id="startPrompt" rows="7" spellcheck="false"></textarea>
+            <div class="quick-row">
+              <button type="button" class="ghost" data-example="support">Классификация обращений</button>
+              <button type="button" class="ghost" data-example="support_reply">Ответ клиенту</button>
+              <button type="button" class="ghost" data-example="qa">Точный ответ</button>
+            </div>
+          </section>
 
-        <section class="panel">
-          <div class="panel-title">
-            <span>Метод</span>
-          </div>
-          <select id="methodSelect"></select>
-          <div id="methodHint" class="hint"></div>
-        </section>
+          <section class="panel">
+            <div class="panel-title">
+              <span>Метод</span>
+            </div>
+            <select id="methodSelect"></select>
+            <div id="methodHint" class="hint"></div>
+          </section>
 
-        <section class="panel">
-          <div class="panel-title">
-            <span>Оценка</span>
-          </div>
-          <div class="field-grid">
-            <label>
-              Метрика
-              <select id="metricSelect"></select>
+          <section class="panel">
+            <div class="panel-title">
+              <span>Оценка</span>
+            </div>
+            <div class="field-grid">
+              <label>
+                Метрика
+                <select id="metricSelect"></select>
+              </label>
+              <label>
+                Доля валидации
+                <input id="validationSize" type="number" min="0" max="1" step="0.05" value="0.34" />
+              </label>
+              <label>
+                Batch size
+                <input id="batchSize" type="number" min="1" max="64" value="4" />
+              </label>
+              <label>
+                Синтетические примеры
+                <input id="generateSamples" type="number" min="2" max="50" value="6" />
+              </label>
+            </div>
+            <label class="wide-label">
+              Описание задачи
+              <textarea id="problemDescription" rows="3" spellcheck="false"></textarea>
             </label>
-            <label>
-              Доля валидации
-              <input id="validationSize" type="number" min="0" max="1" step="0.05" value="0.34" />
-            </label>
-            <label>
-              Batch size
-              <input id="batchSize" type="number" min="1" max="64" value="4" />
-            </label>
-            <label>
-              Синтетические примеры
-              <input id="generateSamples" type="number" min="2" max="50" value="6" />
-            </label>
-          </div>
-          <label class="wide-label">
-            Описание задачи
-            <textarea id="problemDescription" rows="3" spellcheck="false"></textarea>
-          </label>
-        </section>
+          </section>
 
-        <section class="panel">
-          <div class="panel-title">
-            <span>Данные</span>
-            <button id="addRow" type="button" class="icon-btn" title="Добавить строку">+</button>
-          </div>
-          <div id="datasetRows" class="dataset-rows"></div>
-        </section>
+          <section class="panel">
+            <div class="panel-title">
+              <span>Данные</span>
+              <button id="addRow" type="button" class="icon-btn" title="Добавить строку">+</button>
+            </div>
+            <div id="datasetRows" class="dataset-rows"></div>
+          </section>
 
-        <section class="panel">
-          <div class="panel-title">
-            <span>Гиперпараметры</span>
-          </div>
-          <div id="paramsPanel" class="field-grid"></div>
-        </section>
+          <section class="panel">
+            <div class="panel-title">
+              <span>Гиперпараметры</span>
+            </div>
+            <div id="paramsPanel" class="field-grid"></div>
+          </section>
 
-        <section class="panel">
-          <div class="panel-title">
-            <span>Модель</span>
-          </div>
-          <div class="field-grid">
-            <label>
-              Модель
-              <select id="modelSelect"></select>
-            </label>
-            <label id="customModelLabel" class="hidden">
-              Своя модель
-              <input id="modelName" type="text" placeholder="openai/gpt-4o-mini" />
-            </label>
-            <label>
-              Температура
-              <input id="modelTemperature" type="number" min="0" max="2" step="0.05" value="0.2" />
-            </label>
-            <label>
-              Лимит токенов
-              <input id="modelMaxTokens" type="number" min="128" max="16000" value="2000" />
-            </label>
-          </div>
-        </section>
+          <section class="panel">
+            <div class="panel-title">
+              <span>Модель</span>
+            </div>
+            <div class="field-grid">
+              <label>
+                Модель
+                <select id="modelSelect"></select>
+              </label>
+              <label id="customModelLabel" class="hidden">
+                Своя модель
+                <input id="modelName" type="text" placeholder="openai/gpt-4o-mini" />
+              </label>
+              <label>
+                Температура
+                <input id="modelTemperature" type="number" min="0" max="2" step="0.05" value="0.2" />
+              </label>
+              <label>
+                Лимит токенов
+                <input id="modelMaxTokens" type="number" min="128" max="16000" value="2000" />
+              </label>
+            </div>
+          </section>
+        </div>
 
       </aside>
 
@@ -181,6 +183,6 @@
         </article>
       </section>
     </main>
-    <script src="/static/app.js?v=20260617-single-only"></script>
+    <script src="/static/app.js?v=20260617-hyper-sidebar"></script>
   </body>
 </html>

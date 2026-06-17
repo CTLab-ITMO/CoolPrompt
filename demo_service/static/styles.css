@@ -63,6 +63,7 @@ body {
 
 body::-webkit-scrollbar,
 .sidebar::-webkit-scrollbar,
+.sidebar-scroll::-webkit-scrollbar,
 pre::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -70,6 +71,7 @@ pre::-webkit-scrollbar {
 
 body::-webkit-scrollbar-thumb,
 .sidebar::-webkit-scrollbar-thumb,
+.sidebar-scroll::-webkit-scrollbar-thumb,
 pre::-webkit-scrollbar-thumb {
   background: #304359;
   border: 3px solid transparent;
@@ -101,21 +103,31 @@ textarea {
 
 .sidebar {
   border-radius: 8px;
-  padding: 14px;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
   max-height: calc(100vh - 32px);
 }
 
 .sidebar-sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 10;
-  padding-bottom: 2px;
-  margin: -14px -14px 10px;
+  flex: 0 0 auto;
   padding: 14px 14px 2px;
   background:
-    linear-gradient(180deg, rgba(17, 24, 34, 0.98) 0%, rgba(17, 24, 34, 0.95) 78%, rgba(17, 24, 34, 0) 100%);
+    linear-gradient(180deg, rgba(17, 24, 34, 0.99) 0%, rgba(17, 24, 34, 0.98) 100%);
   backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(143, 162, 184, 0.12);
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.18);
+}
+
+.sidebar-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 14px 14px;
+  overscroll-behavior: contain;
 }
 
 .workspace {
@@ -772,6 +784,11 @@ pre {
 
   .sidebar {
     max-height: none;
+    overflow: visible;
+  }
+
+  .sidebar-scroll {
+    overflow: visible;
   }
 }
 

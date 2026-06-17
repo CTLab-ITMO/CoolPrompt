@@ -5,7 +5,7 @@ import time
 import pytest
 
 from demo_service.methods import METHODS, coerce_method_params
-from demo_service.runner import run_comparison, run_single_optimization
+from demo_service.runner import _clean_prompt, run_comparison, run_single_optimization
 from demo_service.schemas import CompareRequest, OptimizationRequest
 from demo_service.settings import DemoSettings, OPENROUTER_BASE_URL
 
@@ -198,6 +198,12 @@ def test_method_param_coercion_clamps_and_filters():
     assert params["external_eval_weight"] == 1.0
     assert params["temperature"] == 0.35
     assert "unknown" not in params
+
+
+def test_clean_prompt_strips_outer_generation_wrappers():
+    assert _clean_prompt("  <ans>Final prompt text</ans>  ") == "Final prompt text"
+    assert _clean_prompt("[PROMPT_START]Final prompt text[PROMPT_END]") == "Final prompt text"
+    assert _clean_prompt("Use <ans>...</ans> in the answer") == "Use <ans>...</ans> in the answer"
 
 
 def test_mock_optimization_without_openai_key():
