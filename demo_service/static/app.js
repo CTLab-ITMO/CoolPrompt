@@ -90,6 +90,7 @@ const taskMetricDefaults = {
   generation: "rouge",
 };
 const modelFallbackOptions = ["gpt-4o-mini", "gpt-4.1-mini", "gpt-4.1-nano"];
+const methodColors = ["#39d9ff", "#4ee090", "#ffd166", "#ff8fb3", "#9d8cff", "#ff9f43", "#7bdff2"];
 const progressSteps = [
   { id: "queued", label: "Очередь" },
   { id: "preparing", label: "Подготовка" },
@@ -209,6 +210,23 @@ const $ = (id) => document.getElementById(id);
 function fmtMetric(value) {
   if (value === null || value === undefined || Number.isNaN(value)) return "--";
   return Number(value).toFixed(4);
+}
+
+function fmtSignedMetric(value) {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "--";
+  const number = Number(value);
+  return `${number >= 0 ? "+" : ""}${number.toFixed(4)}`;
+}
+
+function fmtMetricRange(values) {
+  const numbers = values
+    .filter((value) => value !== null && value !== undefined && !Number.isNaN(Number(value)))
+    .map(Number);
+  if (!numbers.length) return "--";
+  const min = Math.min(...numbers);
+  const max = Math.max(...numbers);
+  if (Math.abs(max - min) < 0.00005) return fmtMetric(min);
+  return `${fmtMetric(min)}-${fmtMetric(max)}`;
 }
 
 function fmtValue(value) {
@@ -719,8 +737,7 @@ function renderErrorDetailsHtml(message) {
 function renderResult(result) {
   if (Array.isArray(result)) {
     renderComparison(result);
-    const best = [...result].sort((a, b) => (b.final_metric ?? 0) - (a.final_metric ?? 0))[0];
-    renderSingle(best);
+    renderComparisonSummary(result);
     return;
   }
   $("comparison").classList.add("hidden");
@@ -736,6 +753,35 @@ function renderSingle(result) {
   $("deltaMetric").textContent = fmtMetric(result.metric_delta);
   $("elapsedMetric").textContent = `${Number(result.elapsed_seconds || 0).toFixed(1)}s`;
   $("runDetails").innerHTML = renderResultDetailsHtml(result);
+}
+
+function renderComparisonSummary(results) {
+  const safeResults = [...results];
+  const sorted = [...safeResults].sort((a, b) => (b.final_metric ?? -Infinity) - (a.final_metric ?? -Infinity));
+  const best = sorted[0] || {};
+  const totalElapsed = safeResults.reduce((sum, item) => sum + Number(item.elapsed_seconds || 0), 0);
+  const promptSummary = safeResults
+    .map((item) => {
+      const label = methodLabel(item.method);
+      const prompt = (item.final_prompt || "").trim();
+      return [
+        `${label} | metric ${fmtMetric(item.final_metric)} | delta ${fmtSignedMetric(item.metric_delta)}`,
+        prompt || "--",
+      ].join("\n");
+    })
+    .join("\n\n---\n\n");
+
+  $("initialPrompt").textContent = (safeResults[0]?.initial_prompt || "").trim();
+  $("finalPrompt").textContent = promptSummary.trim();
+  $("initMetric").textContent = fmtMetricRange(safeResults.map((item) => item.init_metric));
+  $("finalMetric").textContent = fmtMetric(best.final_metric);
+  $("deltaMetric").textContent = fmtSignedMetric(best.metric_delta);
+  $("elapsedMetric").textContent = `${totalElapsed.toFixed(1)}s`;
+  $("initMetric").title = "Диапазон стартовых метрик по выбранным методам";
+  $("finalMetric").title = `Лучший результат: ${methodLabel(best.method)}`;
+  $("deltaMetric").title = `Прирост лучшего метода: ${methodLabel(best.method)}`;
+  $("elapsedMetric").title = "Суммарное время выполнения всех методов";
+  $("runDetails").innerHTML = renderComparisonDetailsHtml(safeResults);
 }
 
 function renderResultDetailsHtml(result) {
@@ -789,12 +835,74 @@ function renderResultDetailsHtml(result) {
   `;
 }
 
+function renderComparisonDetailsHtml(results) {
+  const best = Math.max(...results.map((item) => item.final_metric || 0), 0);
+  const cards = results
+    .map((item, index) => {
+      const color = methodColors[index % methodColors.length];
+      const label = methodLabel(item.method);
+      const isBest = (item.final_metric || 0) === best;
+      const params = Object.entries(item.method_params || {});
+      return `
+        <article class="comparison-detail-card ${isBest ? "best" : ""}" style="--method-color:${color}">
+          <header>
+            <div>
+              <span>${isBest ? "Лучший результат" : "Метод"}</span>
+              <strong>${escapeHtml(label)}</strong>
+            </div>
+            <em>${escapeHtml(fmtMetric(item.final_metric))}</em>
+          </header>
+          <div class="comparison-detail-metrics">
+            <div><span>Было</span><strong>${escapeHtml(fmtMetric(item.init_metric))}</strong></div>
+            <div><span>Стало</span><strong>${escapeHtml(fmtMetric(item.final_metric))}</strong></div>
+            <div><span>Прирост</span><strong>${escapeHtml(fmtSignedMetric(item.metric_delta))}</strong></div>
+            <div><span>Время</span><strong>${Number(item.elapsed_seconds || 0).toFixed(1)}s</strong></div>
+          </div>
+          ${renderDetailList([
+            ["Модель", item.model_name || "--", "code-row"],
+            ["Тип задачи", taskLabel(item.task)],
+            ["Метрика", item.metric || "--", "code-row"],
+            ["Примеров в наборе", item.dataset_size],
+            ["Примеров валидации", item.validation_size],
+            ["Доля валидации", fmtRatio(item.validation_ratio)],
+            ["Batch size", item.batch_size],
+            ["Синтетические примеры", item.generate_num_samples],
+            ["Температура", item.model_temperature],
+            ["Лимит токенов", item.model_max_tokens],
+          ])}
+          ${params.length ? `
+            <details class="comparison-method-params">
+              <summary>Параметры метода</summary>
+              ${renderDetailList(params.map(([key, value]) => [key, value, "code-row"]))}
+            </details>
+          ` : ""}
+        </article>
+      `;
+    })
+    .join("");
+
+  return `
+    <div class="detail-section">
+      <h4>Сводка сравнения</h4>
+      <div class="comparison-detail-grid">${cards}</div>
+    </div>
+    <details class="technical-fields">
+      <summary>Служебные поля</summary>
+      ${renderDetailList([
+        ["methods", results.map((item) => item.method).join(", "), "code-row"],
+        ["models", [...new Set(results.map((item) => item.model_name).filter(Boolean))].join(", "), "code-row"],
+        ["metrics", [...new Set(results.map((item) => item.metric).filter(Boolean))].join(", "), "code-row"],
+        ["dataset_size", results[0]?.dataset_size, "code-row"],
+      ])}
+    </details>
+  `;
+}
+
 function renderComparison(results) {
   const box = $("comparison");
   box.classList.remove("hidden");
   const max = Math.max(...results.map((item) => item.final_metric || 0), 0.001);
   const best = Math.max(...results.map((item) => item.final_metric || 0), 0);
-  const methodColors = ["#39d9ff", "#4ee090", "#ffd166", "#ff8fb3", "#9d8cff", "#ff9f43", "#7bdff2"];
   const rows = results
     .map((item) => {
       const width = Math.max(2, ((item.final_metric || 0) / max) * 100);
@@ -839,7 +947,7 @@ function renderComparison(results) {
         <h3>Сравнение методов</h3>
         <p>${methodCountLabel(results.length)} на одном наборе данных</p>
       </div>
-      <span>${results.length > 1 ? "Лучший показан в основном результате" : "Результат выбранного метода"}</span>
+      <span>${results.length > 1 ? "Ниже сводка по каждому методу" : "Результат выбранного метода"}</span>
     </div>
     <div class="comparison-list">${rows}</div>
     <div class="comparison-prompts">${promptCards}</div>
