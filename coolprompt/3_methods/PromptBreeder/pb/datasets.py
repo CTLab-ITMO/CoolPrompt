@@ -19,14 +19,14 @@ from typing import Dict, List
 
 
 SUPPORTED_DATASETS: List[str] = [
-    # "squad_v2",
+    "squad_v2",
     "gsm8k",
-    # "common_gen",
-    # "xsum",
+    "common_gen",
+    "xsum",
     "tweeteval",
-    # "mediqa",
-    # "code_to_text",
-    # "concode",
+    "mediqa",
+    "code_to_text",
+    "concode",
 ]
 
 _DATA_DIR = os.path.join(os.path.dirname(__file__), "data")

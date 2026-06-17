@@ -110,12 +110,44 @@ def squad_f1(pred: str, gold: str) -> float:
 
 
 _NUM_RE = re.compile(r"-?\d+(?:\.\d+)?")
+# Number that follows an explicit "answer is" / "answer:" cue, if present.
+_ANSWER_CUE_RE = re.compile(
+    r"(?:answer|result|total)\s*(?:is|:|=)?\s*\$?\s*(-?\d[\d,]*(?:\.\d+)?)",
+    re.IGNORECASE,
+)
 
 
 def _extract_last_number(text: str) -> str | None:
     cleaned = text.replace(",", "")
     matches = _NUM_RE.findall(cleaned)
     return matches[-1] if matches else None
+
+
+def _extract_number_answer(text: str) -> str | None:
+    """Extract the numeric answer from free-form text.
+
+    Prefers a number that follows an explicit cue such as "The answer is 72",
+    otherwise falls back to the last number in the text. The result is
+    canonicalised to a plain number string (commas removed)."""
+    if not text:
+        return None
+    cue_matches = _ANSWER_CUE_RE.findall(text)
+    if cue_matches:
+        return cue_matches[-1].replace(",", "")
+    return _extract_last_number(text)
+
+
+def _canonical_number(value: str | None) -> str | None:
+    """Normalise a number string so that ``5``, ``5.0`` and ``05`` compare equal."""
+    if value is None:
+        return None
+    try:
+        f = float(value)
+    except (TypeError, ValueError):
+        return None
+    if f.is_integer():
+        return str(int(f))
+    return repr(f)
 
 
 def gsm8k_em(pred: str, gold: str) -> float:
@@ -127,6 +159,105 @@ def gsm8k_em(pred: str, gold: str) -> float:
         return 1.0 if float(p) == float(g) else 0.0
     except ValueError:
         return 0.0
+
+
+# Emotion labels used by the tweeteval (emotion) dataset.
+TWEETEVAL_LABELS = ["anger", "joy", "optimism", "sadness"]
+
+# Morphological variants / common synonyms that the model produces instead of
+# the exact canonical label. Each maps to one of ``TWEETEVAL_LABELS``. This is a
+# metric-side answer-normalisation step (the task uses accuracy), so it does not
+# change the EvoPrompt search; it only ensures free-form replies such as
+# "angry", "happy" or "optimistic" are scored against the right class.
+TWEETEVAL_SYNONYMS: Dict[str, str] = {
+    # anger
+    "anger": "anger", "angry": "anger", "angered": "anger", "mad": "anger",
+    "furious": "anger", "fury": "anger", "rage": "anger", "enraged": "anger",
+    "irritated": "anger", "annoyed": "anger", "outrage": "anger",
+    "outraged": "anger", "hostile": "anger", "hate": "anger", "hatred": "anger",
+    # joy
+    "joy": "joy", "joyful": "joy", "joyous": "joy", "happy": "joy",
+    "happiness": "joy", "glad": "joy", "delight": "joy", "delighted": "joy",
+    "cheerful": "joy", "excited": "joy", "excitement": "joy", "elated": "joy",
+    "pleased": "joy", "love": "joy", "amused": "joy",
+    # optimism
+    "optimism": "optimism", "optimistic": "optimism", "hope": "optimism",
+    "hopeful": "optimism", "positive": "optimism", "positivity": "optimism",
+    "confident": "optimism", "encouraged": "optimism", "encouraging": "optimism",
+    # sadness
+    "sadness": "sadness", "sad": "sadness", "sorrow": "sadness",
+    "unhappy": "sadness", "depressed": "sadness", "depression": "sadness",
+    "depressing": "sadness", "grief": "sadness", "miserable": "sadness",
+    "misery": "sadness", "gloomy": "sadness", "melancholy": "sadness",
+    "disappointed": "sadness", "down": "sadness",
+}
+
+# Canonical prefixes used as a last structured attempt before the raw fallback.
+_TWEETEVAL_PREFIXES = {
+    "anger": "anger", "angr": "anger",
+    "joy": "joy", "joyf": "joy",
+    "optimis": "optimism", "optimiz": "optimism",
+    "sad": "sadness",
+}
+
+
+def _extract_tweeteval_label(text: str) -> str:
+    """Return the canonical emotion label expressed in ``text``.
+
+    The model often answers with a full sentence ("This tweet expresses
+    optimism.") or a morphological variant / synonym ("angry", "happy",
+    "optimistic") instead of the bare gold label. We resolve, in order:
+
+    1. an exact canonical label (``anger``/``joy``/``optimism``/``sadness``);
+    2. a known synonym or inflected form mapped back to its canonical label;
+    3. a canonical prefix/stem match (e.g. ``optimistic`` -> ``optimism``);
+    4. the first alphabetic word as a last-resort fallback.
+    """
+    if not text:
+        return ""
+    lowered = text.lower()
+    words = re.findall(r"[a-z]+", lowered)
+
+    # 1. Exact canonical label, earliest occurrence wins.
+    best_label = ""
+    best_pos = len(lowered) + 1
+    for label in TWEETEVAL_LABELS:
+        m = re.search(rf"\b{re.escape(label)}\b", lowered)
+        if m is not None and m.start() < best_pos:
+            best_pos = m.start()
+            best_label = label
+    if best_label:
+        return best_label
+
+    # 2. Synonym / inflected form: first matching word in reading order.
+    for word in words:
+        canonical = TWEETEVAL_SYNONYMS.get(word)
+        if canonical:
+            return canonical
+
+    # 3. Canonical prefix / stem match.
+    for word in words:
+        for prefix, canonical in _TWEETEVAL_PREFIXES.items():
+            if word.startswith(prefix):
+                return canonical
+
+    # 4. Fall back to the first alphabetic word in the response.
+    return words[0] if words else ""
+
+
+def extract_answer(dataset: str, text: str) -> str:
+    """Dataset-aware extraction of the final answer from a model response.
+
+    For most datasets the raw text is returned unchanged. For ``gsm8k`` we
+    extract the numeric answer; for ``tweeteval`` we extract the emotion label.
+    This keeps each dataset on its configured metric while ensuring the metric
+    operates on comparable, cleaned answers rather than verbose free text."""
+    if dataset == "gsm8k":
+        num = _extract_number_answer(text)
+        return _canonical_number(num) or ""
+    if dataset == "tweeteval":
+        return _extract_tweeteval_label(text)
+    return text
 
 
 def exact_match(pred: str, gold: str) -> float:
@@ -344,12 +475,18 @@ def eval_dataset(dataset: str, cot_prompt: str, eval_data: List[Dict[str, str]],
                 logger.warning(f"LLM call failed, scoring 0: {exc}")
             response = ""
         gold = str(ex.get("target", ""))
-        score = float(_score(response, gold))
+        # Dataset-aware extraction so the metric compares clean answers, not
+        # the verbose free-form response (critical for gsm8k / tweeteval).
+        pred_ans = extract_answer(dataset, response)
+        gold_ans = extract_answer(dataset, gold)
+        score = float(_score(pred_ans, gold_ans))
         scores.append(score)
         if first and logger is not None:
             logger.info(f"[{dataset}|{metric_name}] sample prompt:\n{prompt}")
             logger.info(f"[{dataset}|{metric_name}] sample response: {response}")
-            logger.info(f"[{dataset}|{metric_name}] gold: {gold}")
+            logger.info(f"[{dataset}|{metric_name}] extracted pred: {pred_ans!r}")
+            logger.info(f"[{dataset}|{metric_name}] gold: {gold} "
+                        f"(extracted: {gold_ans!r})")
             logger.info(f"[{dataset}|{metric_name}] score: {score}")
             first = False
 
