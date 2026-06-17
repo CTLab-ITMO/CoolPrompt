@@ -62,6 +62,38 @@ const examples = {
       ],
     ],
   },
+  summary: {
+    task: "generation",
+    prompt: "Сократи текст. Формат: <ans>краткое резюме</ans>.",
+    description: "Нужно делать короткое деловое резюме текста в 1-2 предложениях: сохранять главные факты, не добавлять новых деталей, не терять числа, сроки и ограничения. Итог должен быть внутри <ans>...</ans>, без текста до или после тегов.",
+    metric: "llm_as_judge",
+    rows: [
+      [
+        "Клиент сообщил, что заказ был оплачен вчера вечером, но в личном кабинете до сих пор отображается статус «ожидает оплаты». Он приложил чек и просит не отменять заказ автоматически.",
+        "Клиент оплатил заказ, но статус оплаты не обновился. Нужно проверить платёж по чеку и предотвратить автоматическую отмену заказа.",
+      ],
+      [
+        "Команда поддержки заметила, что после последнего обновления часть пользователей не получает SMS-коды. Ошибка проявляется только у номеров одного оператора и уже передана технической группе.",
+        "После обновления у части пользователей одного оператора не приходят SMS-коды. Проблема передана технической группе.",
+      ],
+      [
+        "Поставщик предупредил, что партия товара задержится на два дня из-за проверки документов на складе. Менеджер должен предупредить клиентов, у которых доставка была назначена на пятницу.",
+        "Партия товара задерживается на два дня из-за проверки документов. Нужно предупредить клиентов с доставкой на пятницу.",
+      ],
+      [
+        "Пользователь просит вернуть деньги за повреждённый товар. Он уже отправил фотографии упаковки, но не указал номер заказа и предпочитаемый способ компенсации.",
+        "Пользователь просит возврат за повреждённый товар и отправил фото. Нужно запросить номер заказа и способ компенсации.",
+      ],
+      [
+        "В отчёте за неделю указано, что среднее время ответа поддержки сократилось с 18 до 11 минут, но доля повторных обращений выросла на 6 процентных пунктов из-за неполных инструкций.",
+        "Поддержка стала отвечать быстрее: 11 минут вместо 18. При этом повторные обращения выросли на 6 п.п. из-за неполных инструкций.",
+      ],
+      [
+        "Клиент хочет изменить адрес доставки, но заказ уже передан курьерской службе. По правилам адрес можно изменить только до передачи в доставку, поэтому оператор должен предложить перенаправление через службу доставки.",
+        "Клиент хочет изменить адрес после передачи заказа в доставку. По правилам нужно предложить перенаправление через курьерскую службу.",
+      ],
+    ],
+  },
   qa: {
     task: "generation",
     prompt: "Ответь на вопрос строго по контексту. Формат: <ans>краткий ответ</ans>.",
@@ -80,7 +112,7 @@ const examples = {
 
 const defaultExampleByTask = {
   classification: "support",
-  generation: "support_reply",
+  generation: "summary",
 };
 
 const generationMetrics = ["llm_as_judge", "rouge", "meteor", "bleu", "em", "bertscore", "geval"];
@@ -116,18 +148,18 @@ const methodRuntimeDefaults = {
     modelMaxTokens: 2200,
   },
   rider: {
-    validationSize: 0.4,
+    validationSize: 0.34,
     batchSize: 2,
-    generateSamples: 12,
+    generateSamples: 6,
     modelTemperature: 0.25,
-    modelMaxTokens: 3000,
+    modelMaxTokens: 2600,
   },
   regps: {
-    validationSize: 0.34,
-    batchSize: 3,
-    generateSamples: 8,
-    modelTemperature: 0.35,
-    modelMaxTokens: 2500,
+    validationSize: 0.25,
+    batchSize: 2,
+    generateSamples: 4,
+    modelTemperature: 0.3,
+    modelMaxTokens: 2200,
   },
   compress: {
     validationSize: 0.34,
@@ -167,11 +199,11 @@ const methodTaskOverrides = {
       modelMaxTokens: 2200,
     },
     rider: {
-      validationSize: 0.4,
+      validationSize: 0.34,
       batchSize: 2,
-      generateSamples: 12,
+      generateSamples: 6,
       modelTemperature: 0.25,
-      modelMaxTokens: 3000,
+      modelMaxTokens: 2600,
     },
   },
   generation: {
@@ -191,9 +223,9 @@ const methodTaskOverrides = {
     rider: {
       validationSize: 0.34,
       batchSize: 1,
-      generateSamples: 8,
-      modelTemperature: 0.35,
-      modelMaxTokens: 4000,
+      generateSamples: 6,
+      modelTemperature: 0.3,
+      modelMaxTokens: 3000,
     },
     compress: {
       validationSize: 0.34,
@@ -239,7 +271,7 @@ async function loadConfig() {
   updateRuntimeStatus();
   renderMethods();
   renderProgress();
-  setExample("support_reply");
+  setExample("summary");
 }
 
 function renderModelOptions(config) {
@@ -261,7 +293,7 @@ function renderModelOptions(config) {
   custom.textContent = "Другая модель...";
   select.appendChild(custom);
   select.value = config.defaultModel || options[0]?.value || "gpt-4o-mini";
-  $("modelName").placeholder = config.defaultModel || "openai/gpt-4o-mini";
+  $("modelName").placeholder = config.defaultModel || "provider/model-name";
   toggleCustomModel();
 }
 
@@ -719,6 +751,12 @@ function renderResultDetailsHtml(result) {
         ${renderDetailList(params.map(([key, value]) => [key, value, "code-row"]))}
       </div>
     ` : ""}
+    ${result.quality_guard ? `
+      <div class="detail-block guard-block">
+        <span>Защита качества</span>
+        <p>${escapeHtml(result.quality_guard)}</p>
+      </div>
+    ` : ""}
     ${result.synthetic_dataset?.length ? `
       <div class="detail-section">
         <h4>Синтетические данные</h4>
@@ -747,18 +785,28 @@ function renderResultDetailsHtml(result) {
 
 async function copyText(text) {
   if (navigator.clipboard?.writeText) {
-    await navigator.clipboard.writeText(text);
-    return;
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch {
+      // Fall back below: clipboard permissions can be blocked on local HTTP.
+    }
   }
   const textarea = document.createElement("textarea");
   textarea.value = text;
   textarea.setAttribute("readonly", "");
   textarea.style.position = "fixed";
   textarea.style.left = "-9999px";
+  textarea.style.top = "0";
   document.body.appendChild(textarea);
+  textarea.focus();
   textarea.select();
-  document.execCommand("copy");
+  textarea.setSelectionRange(0, textarea.value.length);
+  const copied = document.execCommand("copy");
   textarea.remove();
+  if (!copied) {
+    throw new Error("copy command failed");
+  }
 }
 
 function showCopyState(button, ok = true) {

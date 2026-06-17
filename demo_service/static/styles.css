@@ -561,6 +561,17 @@ pre {
   color: var(--red);
 }
 
+.guard-block {
+  border-color: rgba(255, 209, 102, 0.46);
+  background:
+    linear-gradient(135deg, rgba(255, 209, 102, 0.10), rgba(78, 224, 144, 0.07)),
+    rgba(8, 17, 29, 0.72);
+}
+
+.guard-block span {
+  color: var(--yellow);
+}
+
 .detail-list {
   border: 1px solid rgba(57, 217, 255, 0.12);
   border-left: 3px solid transparent;

@@ -27,7 +27,7 @@ Railway detects the root `Dockerfile` automatically. Required variable:
 
 Useful optional variables:
 
-- `COOLPROMPT_DEMO_MODEL=gpt-4o-mini`
+- `COOLPROMPT_DEMO_MODEL=google/gemini-2.5-flash`
 - `COOLPROMPT_DEMO_WORKERS=2`
 - `COOLPROMPT_DEMO_LIGHTWEIGHT_HYPER_MMR=true`
 

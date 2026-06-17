@@ -1,6 +1,7 @@
 import os
 import yaml
 from typing import List, Tuple, Any, Optional
+import re
 
 import numpy as np
 import statistics
@@ -156,6 +157,46 @@ class ReflectiveEvoluter:
             answer, self.PROMPT_TAGS, format_mismatch_label=""
         )
 
+    def _parse_initial_population_response(self, answer: str) -> list[str]:
+        """Parse paraphrased prompts robustly enough for non-OpenAI chat models."""
+
+        data = extract_json(answer)
+        if isinstance(data, dict) and isinstance(data.get("prompts"), list):
+            prompts = [str(item).strip() for item in data["prompts"] if str(item).strip()]
+            if prompts:
+                return prompts[: self.population_size]
+
+        tagged = extract_answer(answer, self.PROMPT_TAGS, format_mismatch_label="")
+        if isinstance(tagged, str) and tagged.strip():
+            return [tagged.strip()]
+
+        prompts: list[str] = []
+        for line in str(answer).splitlines():
+            cleaned = re.sub(r"^\s*(?:[-*]|\d+[.)])\s*", "", line).strip()
+            cleaned = cleaned.strip("`").strip()
+            if not cleaned or cleaned in {"{", "}", "[", "]"}:
+                continue
+            if cleaned.lower().startswith(("output json", "json", "prompts")):
+                continue
+            cleaned = cleaned.rstrip(",").strip()
+            cleaned = cleaned.strip("\"'")
+            if len(cleaned) >= 8:
+                prompts.append(cleaned)
+            if len(prompts) >= self.population_size:
+                break
+
+        if prompts:
+            logger.warning(
+                "Initial population JSON parsing failed; recovered %s prompt(s) from raw text.",
+                len(prompts),
+            )
+            return prompts
+
+        logger.warning(
+            "Initial population JSON parsing failed; falling back to the initial prompt."
+        )
+        return [self.initial_prompt or ""]
+
     def _init_pop(self) -> List[Prompt]:
         """Creates initial population of prompts.
 
@@ -184,7 +225,9 @@ class ReflectiveEvoluter:
             PROMPT=self.initial_prompt, NUM_PROMPTS=self.population_size
         )
         answer = self._llm_query([request])[0]
-        prompts = extract_json(answer)["prompts"]
+        prompts = self._parse_initial_population_response(answer)
+        while len(prompts) < self.population_size:
+            prompts.append(self.initial_prompt)
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]

@@ -7,7 +7,7 @@ import time
 from contextlib import contextmanager
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from difflib import SequenceMatcher
-from threading import Lock
+from threading import Event, Lock, Thread
 from typing import Any, Callable
 
 from .methods import coerce_method_params
@@ -18,6 +18,38 @@ from .settings import DemoSettings
 TunerFactory = Callable[..., Any]
 ProgressCallback = Callable[[str, int, str], None]
 _hyper_similarity_lock = Lock()
+
+
+@contextmanager
+def _optimization_heartbeat(progress_callback: ProgressCallback | None):
+    """Keep long optimizer calls visibly alive in the web UI."""
+
+    if progress_callback is None:
+        yield
+        return
+
+    stop = Event()
+    messages = [
+        "Генерируем кандидаты промпта",
+        "Оцениваем кандидаты на примерах",
+        "Сравниваем метрики и выбираем лучший вариант",
+        "Проверяем формат итогового промпта",
+    ]
+
+    def beat() -> None:
+        tick = 0
+        while not stop.wait(18):
+            percent = min(82, 48 + tick * 4)
+            progress_callback("optimizing", percent, messages[tick % len(messages)])
+            tick += 1
+
+    thread = Thread(target=beat, name="coolprompt-demo-progress", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop.set()
+        thread.join(timeout=1)
 
 
 class _LightweightPromptSimilarity:
@@ -229,36 +261,48 @@ def run_single_optimization(
     tuner = _build_tuner(tuner_factory, request, settings, progress_callback)
     if progress_callback:
         progress_callback("optimizing", 45, "Оптимизатор выполняет поиск промпта")
-    with _demo_hyper_similarity_patch(request, settings):
-        final_prompt = tuner.run(
-            start_prompt=request.start_prompt,
-            task=request.task,
-            dataset=request.dataset,
-            target=request.target,
-            method=request.method,
-            metric=request.metric,
-            problem_description=request.problem_description,
-            validation_size=request.validation_size,
-            train_as_test=request.train_as_test,
-            generate_num_samples=request.generate_num_samples,
-            batch_size=request.batch_size,
-            verbose=request.verbose,
-            return_final_prompt=True,
-            **params,
-        )
+    with _optimization_heartbeat(progress_callback):
+        with _demo_hyper_similarity_patch(request, settings):
+            final_prompt = tuner.run(
+                start_prompt=request.start_prompt,
+                task=request.task,
+                dataset=request.dataset,
+                target=request.target,
+                method=request.method,
+                metric=request.metric,
+                problem_description=request.problem_description,
+                validation_size=request.validation_size,
+                train_as_test=request.train_as_test,
+                generate_num_samples=request.generate_num_samples,
+                batch_size=request.batch_size,
+                verbose=request.verbose,
+                return_final_prompt=True,
+                **params,
+            )
     if progress_callback:
         progress_callback("collecting", 88, "Собираем метрики и итоговый промпт")
     elapsed = time.perf_counter() - started
 
     dataset_size = _dataset_size(request, tuner)
+    initial_prompt = _clean_prompt(tuner.init_prompt or request.start_prompt)
+    raw_final_prompt = _clean_prompt(final_prompt or tuner.final_prompt or "")
     init_metric = None if tuner.init_metric is None else float(tuner.init_metric)
     final_metric = None if tuner.final_metric is None else float(tuner.final_metric)
+    quality_guard = None
+    surfaced_final_prompt = raw_final_prompt
+    if not surfaced_final_prompt and initial_prompt:
+        surfaced_final_prompt = initial_prompt
+        quality_guard = "Метод не вернул финальный промпт; показан исходный промпт."
+    elif init_metric is not None and final_metric is not None and final_metric < init_metric:
+        quality_guard = "Финальный кандидат отличается от исходного, но на этой маленькой валидации его метрика ниже."
+    elif raw_final_prompt.strip() == initial_prompt.strip() and initial_prompt:
+        quality_guard = "Исходный промпт остался лучшим вариантом на этой валидации."
     delta = None if init_metric is None or final_metric is None else final_metric - init_metric
 
     return OptimizationResult(
         method=request.method,
-        initial_prompt=_clean_prompt(tuner.init_prompt or request.start_prompt),
-        final_prompt=_clean_prompt(final_prompt or tuner.final_prompt or ""),
+        initial_prompt=initial_prompt,
+        final_prompt=surfaced_final_prompt,
         task=request.task,
         metric=request.metric,
         init_metric=init_metric,
@@ -275,6 +319,7 @@ def run_single_optimization(
         model_temperature=request.model_temperature,
         model_max_tokens=request.model_max_tokens,
         method_params=params,
+        quality_guard=quality_guard,
         synthetic_dataset=list(tuner.synthetic_dataset) if tuner.synthetic_dataset is not None else None,
         synthetic_target=list(tuner.synthetic_target) if tuner.synthetic_target is not None else None,
     )

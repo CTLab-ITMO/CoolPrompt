@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoolPrompt Demo</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260617-hyper-sidebar" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260617-real-e2e-copy" />
   </head>
   <body>
     <main class="shell">
@@ -36,6 +36,7 @@
             <div class="quick-row">
               <button type="button" class="ghost" data-example="support">Классификация обращений</button>
               <button type="button" class="ghost" data-example="support_reply">Ответ клиенту</button>
+              <button type="button" class="ghost" data-example="summary">Краткое резюме</button>
               <button type="button" class="ghost" data-example="qa">Точный ответ</button>
             </div>
           </section>
@@ -102,7 +103,7 @@
               </label>
               <label id="customModelLabel" class="hidden">
                 Своя модель
-                <input id="modelName" type="text" placeholder="openai/gpt-4o-mini" />
+                <input id="modelName" type="text" placeholder="provider/model-name" />
               </label>
               <label>
                 Температура
@@ -183,6 +184,6 @@
         </article>
       </section>
     </main>
-    <script src="/static/app.js?v=20260617-hyper-sidebar"></script>
+    <script src="/static/app.js?v=20260617-real-e2e-copy"></script>
   </body>
 </html>

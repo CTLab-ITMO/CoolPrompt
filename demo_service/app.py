@@ -38,8 +38,8 @@ def _model_options() -> list[dict[str, str]]:
     base_url = (settings.openai_base_url or "").lower()
     if "openrouter" in base_url:
         return [
-            {"value": "openai/gpt-4o-mini", "label": "OpenAI GPT-4o mini"},
             {"value": "google/gemini-2.5-flash", "label": "Gemini 2.5 Flash"},
+            {"value": "openai/gpt-4o-mini", "label": "OpenAI GPT-4o mini"},
             {"value": "deepseek/deepseek-chat-v3-0324", "label": "DeepSeek Chat v3"},
             {"value": "qwen/qwen-2.5-72b-instruct", "label": "Qwen 2.5 72B Instruct"},
         ]

@@ -97,6 +97,7 @@ class OptimizationResult(BaseModel):
     model_temperature: float | None = None
     model_max_tokens: int | None = None
     method_params: dict[str, Any] = Field(default_factory=dict)
+    quality_guard: str | None = None
     synthetic_dataset: list[str] | None = None
     synthetic_target: list[str | int] | None = None
 
