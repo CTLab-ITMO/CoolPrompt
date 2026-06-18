@@ -51,27 +51,16 @@ class OptimizationRequest(BaseModel):
         return self
 
 
-class CompareRequest(BaseModel):
-    """Run several methods on the same input."""
-
-    base: OptimizationRequest
-    methods: list[str] = Field(min_length=1, max_length=7)
-    method_params_by_method: dict[str, dict[str, Any]] = Field(default_factory=dict)
-
-
 class JobCreateRequest(BaseModel):
-    """Create either a single optimization job or a comparison job."""
+    """Create a single optimization job."""
 
-    mode: Literal["single", "compare"] = "single"
+    mode: Literal["single"] = "single"
     request: OptimizationRequest | None = None
-    compare: CompareRequest | None = None
 
     @model_validator(mode="after")
     def validate_payload(self):
-        if self.mode == "single" and self.request is None:
+        if self.request is None:
             raise ValueError("request is required for single mode")
-        if self.mode == "compare" and self.compare is None:
-            raise ValueError("compare is required for compare mode")
         return self
 
 
@@ -106,7 +95,7 @@ class JobStatus(BaseModel):
     """In-memory job state."""
 
     job_id: str
-    mode: Literal["single", "compare"]
+    mode: Literal["single"]
     status: Literal["queued", "running", "completed", "failed"]
     created_at: float
     updated_at: float

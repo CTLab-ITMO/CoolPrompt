@@ -5,13 +5,12 @@ from __future__ import annotations
 import inspect
 import time
 from contextlib import contextmanager
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from difflib import SequenceMatcher
 from threading import Event, Lock, Thread
 from typing import Any, Callable
 
 from .methods import coerce_method_params
-from .schemas import CompareRequest, OptimizationRequest, OptimizationResult
+from .schemas import OptimizationRequest, OptimizationResult
 from .settings import DemoSettings
 
 
@@ -204,7 +203,7 @@ def run_mock_optimization(request: OptimizationRequest, settings: DemoSettings) 
         f"Optimized by {title}:\n"
         "1. State the task and expected output format explicitly.\n"
         "2. Use the provided examples as calibration signals.\n"
-        "3. Return only the final answer inside <ans>...</ans> tags."
+        "3. Return only the requested answer without service markup or extra commentary."
     ).strip()
     init_metric = 0.52 if request.task == "generation" else 0.58
     final_metric = min(0.99, init_metric + (0.12 if request.method == "rider" else 0.08))
@@ -294,7 +293,9 @@ def run_single_optimization(
         surfaced_final_prompt = initial_prompt
         quality_guard = "Метод не вернул финальный промпт; показан исходный промпт."
     elif init_metric is not None and final_metric is not None and final_metric < init_metric:
-        quality_guard = "Финальный кандидат отличается от исходного, но на этой маленькой валидации его метрика ниже."
+        surfaced_final_prompt = initial_prompt
+        final_metric = init_metric
+        quality_guard = "Финальный кандидат отклонён защитой качества: на этой валидации лучше остался исходный промпт."
     elif raw_final_prompt.strip() == initial_prompt.strip() and initial_prompt:
         quality_guard = "Исходный промпт остался лучшим вариантом на этой валидации."
     delta = None if init_metric is None or final_metric is None else final_metric - init_metric
@@ -323,57 +324,3 @@ def run_single_optimization(
         synthetic_dataset=list(tuner.synthetic_dataset) if tuner.synthetic_dataset is not None else None,
         synthetic_target=list(tuner.synthetic_target) if tuner.synthetic_target is not None else None,
     )
-
-
-def run_comparison(
-    request: CompareRequest,
-    settings: DemoSettings,
-    *,
-    tuner_factory: TunerFactory = default_tuner_factory,
-    progress_callback: ProgressCallback | None = None,
-) -> list[OptimizationResult]:
-    """Run selected methods on the same input."""
-
-    methods = list(dict.fromkeys(request.methods))
-    if len(methods) > settings.max_compare_methods:
-        raise ValueError(
-            f"Too many methods selected: {len(methods)}. "
-            f"Maximum is {settings.max_compare_methods}."
-        )
-
-    results: list[OptimizationResult] = []
-    total = len(methods)
-    if progress_callback:
-        labels = ", ".join(method_id for method_id in methods)
-        progress_callback("optimizing", 30, f"Параллельно запускаем методы: {labels}")
-
-    def run_method(method_id: str) -> OptimizationResult:
-        method_request = request.base.model_copy(deep=True)
-        method_request.method = method_id
-        method_request.method_params = request.method_params_by_method.get(method_id, {})
-        return run_single_optimization(
-            method_request,
-            settings,
-            tuner_factory=tuner_factory,
-            progress_callback=None,
-        )
-
-    by_method: dict[str, OptimizationResult] = {}
-    max_workers = max(1, min(total, settings.max_compare_methods, settings.max_compare_workers))
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = {pool.submit(run_method, method_id): method_id for method_id in methods}
-        for completed, future in enumerate(as_completed(futures), start=1):
-            method_id = futures[future]
-            by_method[method_id] = future.result()
-            if progress_callback:
-                percent = 30 + int(completed / total * 55)
-                progress_callback(
-                    "optimizing",
-                    percent,
-                    f"Сравнение методов: готово {completed}/{total} — {method_id}",
-                )
-
-    results = [by_method[method_id] for method_id in methods]
-    if progress_callback:
-        progress_callback("collecting", 90, "Собираем результаты сравнения")
-    return results

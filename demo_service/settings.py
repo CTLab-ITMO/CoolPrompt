@@ -56,9 +56,7 @@ class DemoSettings:
     openai_base_url: str | None = field(default_factory=_env_base_url)
     allow_mock: bool = _bool_env("COOLPROMPT_DEMO_ALLOW_MOCK", default=False)
     force_mock: bool = _bool_env("COOLPROMPT_DEMO_MOCK", default=False)
-    max_compare_methods: int = int(os.getenv("COOLPROMPT_MAX_COMPARE_METHODS", "4"))
     max_workers: int = int(os.getenv("COOLPROMPT_DEMO_WORKERS", "2"))
-    max_compare_workers: int = int(os.getenv("COOLPROMPT_COMPARE_WORKERS", "1"))
     request_timeout_seconds: int = int(os.getenv("COOLPROMPT_DEMO_TIMEOUT_SECONDS", "900"))
     lightweight_hyper_similarity: bool = _bool_env(
         "COOLPROMPT_DEMO_LIGHTWEIGHT_HYPER_MMR",

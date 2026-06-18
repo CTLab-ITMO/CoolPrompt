@@ -5,8 +5,8 @@ import time
 import pytest
 
 from demo_service.methods import METHODS, coerce_method_params
-from demo_service.runner import _clean_prompt, run_comparison, run_single_optimization
-from demo_service.schemas import CompareRequest, OptimizationRequest
+from demo_service.runner import _clean_prompt, run_single_optimization
+from demo_service.schemas import OptimizationRequest
 from demo_service.settings import DemoSettings, OPENROUTER_BASE_URL
 
 
@@ -113,37 +113,44 @@ def test_rider_ui_params_reach_prompt_tuner_kwargs(monkeypatch):
     assert result.metric_delta == 0.5
 
 
-def test_compare_runs_each_selected_method_with_own_params(monkeypatch):
+def test_quality_guard_surfaces_initial_prompt_when_candidate_is_worse(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test")
-    _FakeTuner.calls = []
-    base = OptimizationRequest(
-        start_prompt="Summarize text.",
-        task="generation",
+
+    class WorseTuner:
+        def __init__(self):
+            self.init_metric = None
+            self.final_metric = None
+            self.init_prompt = None
+            self.final_prompt = None
+            self.synthetic_dataset = None
+            self.synthetic_target = None
+
+        def run(self, **kwargs):
+            self.init_metric = 1.0
+            self.final_metric = 0.5
+            self.init_prompt = kwargs["start_prompt"]
+            self.final_prompt = "worse candidate"
+            return self.final_prompt
+
+    request = OptimizationRequest(
+        start_prompt="Classify support tickets.",
+        task="classification",
         method="hyper_light",
-        metric="rouge",
-        dataset=["a", "b", "c"],
-        target=["a1", "b1", "c1"],
-    )
-    request = CompareRequest(
-        base=base,
-        methods=["hyper_light", "rider"],
-        method_params_by_method={
-            "hyper_light": {"use_structured_output": True},
-            "rider": {"num_generations": 1, "population_size": 2},
-        },
+        metric="f1",
+        dataset=["refund", "crash"],
+        target=["billing", "technical"],
     )
 
-    results = run_comparison(
+    result = run_single_optimization(
         request,
         _settings(),
-        tuner_factory=_fake_tuner_factory,
+        tuner_factory=lambda request, settings: WorseTuner(),
     )
 
-    assert [item.method for item in results] == ["hyper_light", "rider"]
-    calls = {call["method"]: call for call in _FakeTuner.calls}
-    assert calls["hyper_light"]["use_structured_output"] is True
-    assert calls["rider"]["num_generations"] == 1
-    assert calls["rider"]["population_size"] == 2
+    assert result.final_prompt == "Classify support tickets."
+    assert result.final_metric == 1.0
+    assert result.metric_delta == 0.0
+    assert result.quality_guard
 
 
 @pytest.mark.parametrize("method_meta", METHODS, ids=lambda item: item["id"])

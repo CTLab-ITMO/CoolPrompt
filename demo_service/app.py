@@ -15,7 +15,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from .methods import METHOD_BY_ID, public_methods
-from .runner import run_comparison, run_single_optimization
+from .runner import run_single_optimization
 from .schemas import JobCreateRequest, JobStatus
 from .settings import get_settings
 
@@ -41,7 +41,6 @@ def _model_options() -> list[dict[str, str]]:
             {"value": "google/gemini-2.5-flash", "label": "Gemini 2.5 Flash"},
             {"value": "openai/gpt-4o-mini", "label": "OpenAI GPT-4o mini"},
             {"value": "deepseek/deepseek-chat-v3-0324", "label": "DeepSeek Chat v3"},
-            {"value": "qwen/qwen-2.5-72b-instruct", "label": "Qwen 2.5 72B Instruct"},
         ]
     return [
         {"value": "gpt-4o-mini", "label": "gpt-4o-mini"},
@@ -89,12 +88,8 @@ def _run_job(job_id: str, payload: JobCreateRequest) -> None:
     progress("preparing", 10, "Готовим запуск")
     try:
         logger.info("job=%s mode=%s started", job_id, payload.mode)
-        if payload.mode == "single":
-            assert payload.request is not None
-            result = run_single_optimization(payload.request, settings, progress_callback=progress)
-        else:
-            assert payload.compare is not None
-            result = run_comparison(payload.compare, settings, progress_callback=progress)
+        assert payload.request is not None
+        result = run_single_optimization(payload.request, settings, progress_callback=progress)
         _patch_job(
             job_id,
             status="completed",
@@ -160,15 +155,10 @@ def methods() -> list[dict[str, Any]]:
 
 @app.post("/api/jobs", response_model=JobStatus)
 def create_job(payload: JobCreateRequest) -> JobStatus:
-    """Create a background optimization or comparison job."""
+    """Create a background optimization job."""
 
-    if payload.mode == "single" and payload.request is not None:
-        if payload.request.method not in METHOD_BY_ID:
-            raise HTTPException(status_code=400, detail=f"Unknown method: {payload.request.method}")
-    if payload.mode == "compare" and payload.compare is not None:
-        unknown = [method for method in payload.compare.methods if method not in METHOD_BY_ID]
-        if unknown:
-            raise HTTPException(status_code=400, detail=f"Unknown method(s): {', '.join(unknown)}")
+    if payload.request is not None and payload.request.method not in METHOD_BY_ID:
+        raise HTTPException(status_code=400, detail=f"Unknown method: {payload.request.method}")
 
     job = JobStatus(
         job_id=uuid.uuid4().hex,
@@ -181,17 +171,15 @@ def create_job(payload: JobCreateRequest) -> JobStatus:
         progress_message="Задача ожидает запуска",
     )
     _store(job)
-    if payload.mode == "single" and payload.request is not None:
-        logger.info(
-            "job=%s queued mode=single method=%s model=%s mock=%s dataset_size=%s",
-            job.job_id,
-            payload.request.method,
-            payload.request.model_name or settings.model_name,
-            payload.request.mock or settings.force_mock,
-            len(payload.request.dataset or []),
-        )
-    else:
-        logger.info("job=%s queued mode=%s", job.job_id, payload.mode)
+    assert payload.request is not None
+    logger.info(
+        "job=%s queued mode=single method=%s model=%s mock=%s dataset_size=%s",
+        job.job_id,
+        payload.request.method,
+        payload.request.model_name or settings.model_name,
+        payload.request.mock or settings.force_mock,
+        len(payload.request.dataset or []),
+    )
     future: Future = executor.submit(_run_job, job.job_id, payload)
     future.add_done_callback(lambda _: None)
     return job

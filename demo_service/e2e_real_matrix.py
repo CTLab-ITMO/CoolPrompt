@@ -32,13 +32,13 @@ EXAMPLES: dict[str, Example] = {
     "support_reply": Example(
         name="support_reply",
         task="generation",
-        prompt="Ответь. Формат: <ans>ответ</ans>.",
+        prompt="Напиши короткий профессиональный ответ клиенту.",
         description=(
             "Нужно генерировать короткие ответы поддержки: признать проблему, "
             "дать конкретный следующий шаг, сохранить спокойный профессиональный "
             "тон и не обещать того, чего оператор не может гарантировать. "
-            "Итоговый ответ должен быть внутри <ans>...</ans>, без текста до "
-            "или после тегов."
+            "Итоговый ответ должен быть готовым сообщением без служебных пометок "
+            "и лишних пояснений."
         ),
         metric="llm_as_judge",
         rows=[
@@ -75,12 +75,12 @@ EXAMPLES: dict[str, Example] = {
     "summary": Example(
         name="summary",
         task="generation",
-        prompt="Сократи текст. Формат: <ans>краткое резюме</ans>.",
+        prompt="Сократи текст до короткого делового резюме.",
         description=(
             "Нужно делать короткое деловое резюме текста в 1-2 предложениях: "
             "сохранять главные факты, не добавлять новых деталей, не терять "
-            "числа, сроки и ограничения. Итог должен быть внутри <ans>...</ans>, "
-            "без текста до или после тегов."
+            "числа, сроки и ограничения. Итог должен быть готовым резюме без "
+            "служебных пометок и лишних пояснений."
         ),
         metric="llm_as_judge",
         rows=[
@@ -113,11 +113,11 @@ EXAMPLES: dict[str, Example] = {
     "support": Example(
         name="support",
         task="classification",
-        prompt="Разбери обращение и верни только метку внутри <ans>...</ans>.",
+        prompt="Разбери обращение клиента и верни только одну метку.",
         description=(
             "Нужно классифицировать реальные обращения поддержки строго в одну "
             "из меток: оплата, доставка, техника, аккаунт, возврат. В ответе "
-            "должна быть только метка внутри <ans>...</ans>, без пояснений."
+            "должна быть только метка без пояснений и дополнительного текста."
         ),
         metric="f1",
         rows=[
@@ -138,10 +138,10 @@ EXAMPLES: dict[str, Example] = {
     "qa": Example(
         name="qa",
         task="generation",
-        prompt="Ответь на вопрос строго по контексту. Формат: <ans>краткий ответ</ans>.",
+        prompt="Ответь на вопрос строго по контексту.",
         description=(
             "Нужно извлекать короткий точный ответ строго из контекста. Если "
-            "в контексте нет ответа, нужно вернуть: <ans>нет данных</ans>."
+            "в контексте нет ответа, нужно вернуть: нет данных."
         ),
         metric="em",
         rows=[
@@ -259,8 +259,8 @@ def validate_result(job: dict[str, Any]) -> list[str]:
     initial_prompt = (result.get("initial_prompt") or "").strip()
     if not final_prompt:
         errors.append("final_prompt is empty")
-    if final_prompt.lower().startswith("<ans>"):
-        errors.append("final_prompt still starts with <ans>")
+    if "<ans>" in final_prompt.lower() or "</ans>" in final_prompt.lower():
+        errors.append("final_prompt still contains <ans> service tags")
     if result.get("used_mock") is not False:
         errors.append(f"used_mock={result.get('used_mock')}")
     if result.get("init_metric") is None:
