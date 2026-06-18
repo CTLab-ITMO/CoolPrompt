@@ -5,7 +5,7 @@ import time
 import pytest
 
 from demo_service.methods import METHODS, coerce_method_params
-from demo_service.runner import _clean_prompt, run_single_optimization
+from demo_service.runner import _clean_prompt, _is_incomplete_prompt_response, run_single_optimization
 from demo_service.schemas import OptimizationRequest
 from demo_service.settings import DemoSettings, OPENROUTER_BASE_URL
 
@@ -210,7 +210,67 @@ def test_method_param_coercion_clamps_and_filters():
 def test_clean_prompt_strips_outer_generation_wrappers():
     assert _clean_prompt("  <ans>Final prompt text</ans>  ") == "Final prompt text"
     assert _clean_prompt("[PROMPT_START]Final prompt text[PROMPT_END]") == "Final prompt text"
+    assert _clean_prompt("<result_prompt>Final prompt text</result_prompt>") == "Final prompt text"
+    assert _clean_prompt("<final_prompt>Final prompt text</final_prompt>") == "Final prompt text"
+    assert _clean_prompt("Here is it:\n<result_prompt>Final prompt text</result_prompt>") == "Final prompt text"
+    assert _clean_prompt("```markdown\nFinal prompt text\n```") == "Final prompt text"
     assert _clean_prompt("Use <ans>...</ans> in the answer") == "Use <ans>...</ans> in the answer"
+
+
+def test_incomplete_prompt_response_is_detected():
+    raw = "<result_prompt>\n# Role\nВы эксперт.\n\n# Task context\nВаша задача - создать резюме на"
+
+    assert _is_incomplete_prompt_response(raw, _clean_prompt(raw)) is True
+    assert _is_incomplete_prompt_response(
+        "<result_prompt>Final prompt text</result_prompt>",
+        _clean_prompt("<result_prompt>Final prompt text</result_prompt>"),
+    ) is False
+
+
+def test_quality_guard_surfaces_initial_prompt_when_model_returns_incomplete_wrapper(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "test")
+
+    class IncompleteTuner:
+        def __init__(self):
+            self.init_metric = None
+            self.final_metric = None
+            self.init_prompt = None
+            self.final_prompt = None
+            self.synthetic_dataset = None
+            self.synthetic_target = None
+
+        def run(self, **kwargs):
+            self.init_metric = 0.8
+            self.final_metric = 0.9
+            self.init_prompt = kwargs["start_prompt"]
+            self.final_prompt = (
+                "<result_prompt>\n"
+                "# Role\n"
+                "Вы эксперт по деловой коммуникации.\n\n"
+                "# Task context\n"
+                "Ваша задача - создать краткое деловое резюме на"
+            )
+            return self.final_prompt
+
+    request = OptimizationRequest(
+        start_prompt="Сократи текст до короткого делового резюме.",
+        task="generation",
+        method="hyper_light",
+        metric="llm_as_judge",
+        dataset=["Длинное письмо клиента", "Отчет менеджера"],
+        target=["Короткое резюме", "Краткий итог"],
+    )
+
+    result = run_single_optimization(
+        request,
+        _settings(),
+        tuner_factory=lambda request, settings: IncompleteTuner(),
+    )
+
+    assert result.final_prompt == "Сократи текст до короткого делового резюме."
+    assert result.final_metric == result.init_metric
+    assert result.metric_delta == 0.0
+    assert result.quality_guard
 
 
 def test_mock_optimization_without_openai_key():

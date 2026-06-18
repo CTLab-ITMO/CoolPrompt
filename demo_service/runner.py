@@ -95,15 +95,103 @@ def _demo_hyper_similarity_patch(request: OptimizationRequest, settings: DemoSet
 
 def _clean_prompt(text: Any) -> str:
     value = str(text or "").strip()
+    if value.startswith("```"):
+        lines = value.splitlines()
+        if len(lines) >= 2 and lines[-1].strip() == "```":
+            return "\n".join(lines[1:-1]).strip()
+
     wrappers = (
         ("<ans>", "</ans>"),
         ("[PROMPT_START]", "[PROMPT_END]"),
+        ("<result_prompt>", "</result_prompt>"),
+        ("<prompt>", "</prompt>"),
+        ("<final_prompt>", "</final_prompt>"),
+        ("<optimized_prompt>", "</optimized_prompt>"),
     )
     lowered = value.lower()
     for start, end in wrappers:
         if lowered.startswith(start.lower()) and lowered.endswith(end.lower()):
             return value[len(start) : -len(end)].strip()
+
+    embedded_wrappers = (
+        ("[PROMPT_START]", "[PROMPT_END]"),
+        ("<result_prompt>", "</result_prompt>"),
+        ("<final_prompt>", "</final_prompt>"),
+        ("<optimized_prompt>", "</optimized_prompt>"),
+    )
+    for start, end in embedded_wrappers:
+        start_idx = lowered.find(start.lower())
+        end_idx = lowered.rfind(end.lower())
+        if start_idx >= 0 and end_idx > start_idx:
+            prefix = value[:start_idx].strip()
+            suffix = value[end_idx + len(end) :].strip()
+            if len(prefix) <= 120 and len(suffix) <= 120:
+                return value[start_idx + len(start) : end_idx].strip()
     return value
+
+
+def _is_incomplete_prompt_response(raw_text: Any, cleaned_text: str) -> bool:
+    """Detect malformed optimizer markup that should not be shown as final."""
+
+    raw = str(raw_text or "").strip()
+    lowered_raw = raw.lower()
+    lowered_cleaned = cleaned_text.lower()
+    paired_markers = (
+        ("<ans>", "</ans>"),
+        ("<result_prompt>", "</result_prompt>"),
+        ("<prompt>", "</prompt>"),
+        ("<final_prompt>", "</final_prompt>"),
+        ("<optimized_prompt>", "</optimized_prompt>"),
+        ("[prompt_start]", "[prompt_end]"),
+    )
+    for start, end in paired_markers:
+        has_start = start in lowered_raw
+        has_end = end in lowered_raw
+        if has_start != has_end:
+            return True
+
+    leftover_markers = (
+        "<result_prompt",
+        "</result_prompt>",
+        "<final_prompt",
+        "</final_prompt>",
+        "<optimized_prompt",
+        "</optimized_prompt>",
+        "[prompt_start]",
+        "[prompt_end]",
+    )
+    if any(marker in lowered_cleaned for marker in leftover_markers):
+        return True
+
+    tail = cleaned_text.strip().lower().rstrip("`*_")
+    if tail.count("```") % 2 == 1:
+        return True
+    last_line = tail.splitlines()[-1].strip() if tail else ""
+    if last_line.startswith(("#", "-", "*")) and len(last_line) <= 4:
+        return True
+    dangling_tails = (
+        " на",
+        " в",
+        " во",
+        " к",
+        " ко",
+        " с",
+        " со",
+        " от",
+        " для",
+        " по",
+        " о",
+        " об",
+        " and",
+        " or",
+        " to",
+        " for",
+        " of",
+        " in",
+        " on",
+        " with",
+    )
+    return bool(tail) and any(tail.endswith(item) for item in dangling_tails)
 
 
 def default_tuner_factory(
@@ -284,7 +372,8 @@ def run_single_optimization(
 
     dataset_size = _dataset_size(request, tuner)
     initial_prompt = _clean_prompt(tuner.init_prompt or request.start_prompt)
-    raw_final_prompt = _clean_prompt(final_prompt or tuner.final_prompt or "")
+    raw_final_response = final_prompt or tuner.final_prompt or ""
+    raw_final_prompt = _clean_prompt(raw_final_response)
     init_metric = None if tuner.init_metric is None else float(tuner.init_metric)
     final_metric = None if tuner.final_metric is None else float(tuner.final_metric)
     quality_guard = None
@@ -292,6 +381,11 @@ def run_single_optimization(
     if not surfaced_final_prompt and initial_prompt:
         surfaced_final_prompt = initial_prompt
         quality_guard = "Метод не вернул финальный промпт; показан исходный промпт."
+    elif _is_incomplete_prompt_response(raw_final_response, raw_final_prompt) and initial_prompt:
+        surfaced_final_prompt = initial_prompt
+        if final_metric is not None and init_metric is not None:
+            final_metric = init_metric
+        quality_guard = "Модель вернула незавершённый служебный ответ; показан исходный промпт."
     elif init_metric is not None and final_metric is not None and final_metric < init_metric:
         surfaced_final_prompt = initial_prompt
         final_metric = init_metric
