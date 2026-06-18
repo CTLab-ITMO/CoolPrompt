@@ -42,7 +42,7 @@ def _env_model_name() -> str:
     if configured:
         return configured
     if _looks_like_openrouter_key(_env_api_key()):
-        return "google/gemini-2.5-flash"
+        return "openai/gpt-4.1-mini"
     return "gpt-4o-mini"
 
 
