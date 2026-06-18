@@ -34,6 +34,26 @@ app = FastAPI(title=settings.app_name, version="0.1.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
+def _public_error_message(exc: Exception) -> str:
+    """Return a short customer-facing error instead of provider JSON dumps."""
+
+    message = str(exc)
+    lowered = message.lower()
+    if "content_filter" in lowered or "content management policy" in lowered:
+        return (
+            "Провайдер модели отклонил запрос своим фильтром безопасности. "
+            "Попробуйте Gemini 2.5 Flash или DeepSeek Chat v3, либо немного измените промпт."
+        )
+    if "unsupported_country_region_territory" in lowered or "request_forbidden" in lowered:
+        return (
+            "Провайдер модели недоступен из текущего региона. "
+            "Выберите Gemini 2.5 Flash или DeepSeek Chat v3."
+        )
+    if "invalid_api_key" in lowered or "incorrect api key" in lowered:
+        return "Ключ модели не принят провайдером. Проверьте переменные окружения сервиса."
+    return message[:600]
+
+
 def _model_options() -> list[dict[str, str]]:
     base_url = (settings.openai_base_url or "").lower()
     if "openrouter" in base_url:
@@ -107,7 +127,7 @@ def _run_job(job_id: str, payload: JobCreateRequest) -> None:
             progress_stage="failed",
             progress_percent=100,
             progress_message="Оптимизация завершилась с ошибкой",
-            error=str(exc),
+            error=_public_error_message(exc),
         )
 
 

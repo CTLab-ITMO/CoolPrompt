@@ -234,6 +234,22 @@ def test_mock_optimization_without_openai_key():
     assert "Optimized by RIDER" in result.final_prompt
 
 
+def test_provider_error_is_sanitized_for_demo_ui():
+    from demo_service.app import _public_error_message
+
+    raw = (
+        "Error code: 400 - {'error': {'message': 'The response was filtered due to "
+        "the prompt triggering Azure OpenAI content management policy', "
+        "'code': 'content_filter', 'metadata': {'raw': 'huge provider payload'}}}"
+    )
+
+    message = _public_error_message(RuntimeError(raw))
+
+    assert "фильтром безопасности" in message
+    assert "metadata" not in message
+    assert "Azure OpenAI" not in message
+
+
 def test_app_job_api_mock_roundtrip(monkeypatch):
     monkeypatch.setenv("COOLPROMPT_DEMO_ALLOW_MOCK", "1")
 
