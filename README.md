@@ -42,6 +42,13 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
 - **Evaluate costs** of optimization processes by a number of tokens/calls and a price.
 - **Automatic task detecting** for scenarios without explicit user-defined task specifications
 
+<p align="center">
+    <picture>
+    <source srcset="docs/images/coolprompt_2.png">
+    <img alt="CoolPrompt Scheme" width="100%" height="100%">
+    </picture>
+</p>
+
 ## APO methods comparison
 
 CoolPrompt provides several automatic prompt optimization methods with different
@@ -64,13 +71,6 @@ Compared metrics:
 | `compress` | None | Low | Medium | Low |
 | `reflective` | Required | High | High | High |
 | `distill` | Required | High | High | High |
-
-<p align="center">
-    <picture>
-    <source srcset="docs/images/coolprompt_2.png">
-    <img alt="CoolPrompt Scheme" width="100%" height="100%">
-    </picture>
-</p>
 
 ## Quick install
 - Install with pip:
