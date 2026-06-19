@@ -24,7 +24,7 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
 - Automatic prompt engineering for solving tasks using LLM
 - (Semi-)automatic generation of markup for fine-tuning
 - Formalization of response quality assessment using LLM
-- Prompt adoption for AI Agentic Pipelines
+- Prompt for AI Agentic Pipelines
 - Etc.
 
 ## Core features
