@@ -57,12 +57,12 @@ levels below are qualitative and task-dependent: they are intended as a quick
 guide for choosing a method before running a benchmark.
 
 Compared metrics:
-- **Data requirement** - whether validation data is required for the method to run.
+- **Data** - whether dataset is required for the method to run.
 - **Runtime** - relative wall-clock time of one optimization run.
 - **Performance** - expected ability to improve task quality compared with the initial prompt.
 - **Cost** - relative compute/API cost: LLM calls, evaluation calls, token usage, and extra scoring overhead.
 
-| Method | Data requirement | Runtime ↓ | Performance ↑ | Cost ↓ |
+| Method | Data | Runtime ↓ | Performance ↑ | Cost ↓ |
 |---|---:|---:|---:|---:|
 | `hyper_light` | None | Low | Medium | Low |
 | `hyper` | Required | Medium | High | Medium |
@@ -102,12 +102,6 @@ print(prompt_tuner.final_prompt)
 # You are an expert writer and seasonal observer tasked with composing a rich,
 # well-structured, and vividly descriptive essay on the theme of autumn...
 ```
-
-## Demo
-
-This short demo shows the full CoolPrompt optimization flow: setting up the
-prompt tuner, running an APO method, evaluating the result, and receiving the
-optimized prompt.
 
 <p align="center">
     <img src="docs/images/demo.gif" alt="CoolPrompt full optimization demo" width="100%">
