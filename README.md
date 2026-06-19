@@ -49,6 +49,29 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     </picture>
 </p>
 
+## APO methods comparison
+
+CoolPrompt provides several automatic prompt optimization methods with different
+trade-offs in data requirements, runtime, expected quality, and API cost. The
+levels below are qualitative and task-dependent: they are intended as a quick
+guide for choosing a method before running a benchmark.
+
+Compared metrics:
+- **Data** - whether dataset is required for the method to run.
+- **Runtime** - relative wall-clock time of one optimization run.
+- **Performance** - expected ability to improve task quality compared with the initial prompt.
+- **Cost** - relative compute/API cost: LLM calls, evaluation calls, token usage, and extra scoring overhead.
+
+| Method | Data | Runtime ↓ | Performance ↑ | Cost ↓ |
+|---|---:|---:|---:|---:|
+| `hyper_light` | None | Low | Medium | Low |
+| `hyper` | Required | Medium | High | Medium |
+| `regps` | Required | High | Very High | High |
+| `rider` | Required | Very High | Very High | Very High |
+| `compress` | None | Low | Medium | Low |
+| `reflective` | Required | High | High | High |
+| `distill` | Required | High | High | High |
+
 ## Quick install
 - Install with pip:
 ```bash
@@ -79,6 +102,10 @@ print(prompt_tuner.final_prompt)
 # You are an expert writer and seasonal observer tasked with composing a rich,
 # well-structured, and vividly descriptive essay on the theme of autumn...
 ```
+
+<p align="center">
+    <img src="docs/images/demo.gif" alt="CoolPrompt full optimization demo" width="100%">
+</p>
 
 ## Examples
 
