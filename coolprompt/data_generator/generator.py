@@ -173,6 +173,7 @@ class SyntheticDataGenerator:
                 Defaults to None
             num_samples (int):
                 number of samples in dataset to generate
+                Must be between 1 and 100
                 Defaults to 8
             corner_ratio (float):
                 fraction of generated samples that should be corner cases
@@ -186,11 +187,11 @@ class SyntheticDataGenerator:
                 generated dataset, target and problem description
         """
 
-        if num_samples <= 0:
-            raise ValueError("num_samples must be greater than 0")
+        if not 1 <= num_samples <= 100:
+            raise ValueError(f"num_samples must be between 1 and 100, got {num_samples}.")
 
         if not 0.0 <= corner_ratio <= 1.0:
-            raise ValueError("corner_ratio must be between 0.0 and 1.0")
+            raise ValueError(f"corner_ratio must be between 0.0 and 1.0, got {corner_ratio}.")
 
         if problem_description is None:
             logger.info(
