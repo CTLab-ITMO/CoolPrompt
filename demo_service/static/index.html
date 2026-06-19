@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CoolPrompt Demo</title>
-    <link rel="stylesheet" href="/static/styles.css?v=20260618-no-ans-prompts" />
+    <link rel="stylesheet" href="/static/styles.css?v=20260619-sample-import" />
   </head>
   <body>
     <main class="shell">
@@ -82,6 +82,12 @@
               <span>Данные</span>
               <button id="addRow" type="button" class="icon-btn" title="Добавить строку">+</button>
             </div>
+            <div class="data-actions">
+              <button id="importRows" type="button" class="ghost">Импорт CSV/XLSX</button>
+              <button id="clearRows" type="button" class="ghost danger">Очистить</button>
+              <input id="sampleFile" class="hidden" type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm,.xltx,.xltm,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            </div>
+            <div id="importStatus" class="hint import-status"></div>
             <div id="datasetRows" class="dataset-rows"></div>
           </section>
 
@@ -184,6 +190,6 @@
         </article>
       </section>
     </main>
-    <script src="/static/app.js?v=20260618-no-ans-prompts"></script>
+    <script src="/static/app.js?v=20260619-sample-import"></script>
   </body>
 </html>

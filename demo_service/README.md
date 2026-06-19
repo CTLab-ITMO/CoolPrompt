@@ -6,6 +6,7 @@ library locally. It exposes:
 - method selection across CoolPrompt optimizers;
 - method-specific hyperparameters;
 - dataset/target inputs for train/validation-aware methods;
+- CSV/TSV/XLSX import for two-column sample tables;
 - Railway-ready Docker deployment.
 
 ## Local Run

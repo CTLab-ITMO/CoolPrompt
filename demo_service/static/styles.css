@@ -278,6 +278,40 @@ textarea {
   margin-top: 8px;
 }
 
+.data-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.data-actions .ghost {
+  min-height: 32px;
+}
+
+.ghost.danger {
+  border-color: rgba(255, 107, 107, 0.44);
+  color: #ffd6d6;
+}
+
+.ghost.danger:hover {
+  background: rgba(255, 107, 107, 0.12);
+}
+
+.import-status {
+  min-height: 18px;
+  margin: -1px 0 8px;
+  font-size: 12px;
+}
+
+.import-status.ok {
+  color: var(--green);
+}
+
+.import-status.error {
+  color: var(--red);
+}
+
 .ghost,
 .icon-btn,
 .copy {
@@ -811,6 +845,7 @@ pre {
   .field-grid,
   .method-grid,
   .metric-strip,
+  .data-actions,
   .dataset-row,
   .detail-row,
   .progress-steps {

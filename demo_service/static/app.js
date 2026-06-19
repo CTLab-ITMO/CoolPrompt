@@ -426,6 +426,44 @@ function addDatasetRow(input = "", target = "") {
   $("datasetRows").appendChild(row);
 }
 
+function setImportStatus(message = "", tone = "") {
+  const status = $("importStatus");
+  status.textContent = message;
+  status.className = `hint import-status ${tone || ""}`.trim();
+}
+
+function clearDatasetRows() {
+  $("datasetRows").innerHTML = "";
+  setImportStatus("Семплы очищены.", "ok");
+}
+
+async function importSamplesFile(file) {
+  if (!file) return;
+  const form = new FormData();
+  form.append("file", file);
+  setImportStatus(`Импортируем ${file.name}...`);
+  const response = await fetch("/api/samples/import", {
+    method: "POST",
+    body: form,
+  });
+  if (!response.ok) {
+    let message = await response.text();
+    try {
+      const parsed = JSON.parse(message);
+      message = parsed.detail || message;
+    } catch {
+      // Keep the raw response text.
+    }
+    setImportStatus(message, "error");
+    throw new Error(message);
+  }
+  const data = await response.json();
+  $("datasetRows").innerHTML = "";
+  data.rows.forEach((row) => addDatasetRow(row.input, row.target));
+  const suffix = data.count >= 500 ? " Показаны первые 500 строк." : "";
+  setImportStatus(`Импортировано строк: ${data.count}.${suffix}`, "ok");
+}
+
 function escapeHtml(text) {
   return String(text)
     .replaceAll("&", "&amp;")
@@ -443,6 +481,7 @@ function setExample(name) {
   $("metricSelect").value = example.metric;
   $("datasetRows").innerHTML = "";
   example.rows.forEach(([input, target]) => addDatasetRow(input, target));
+  setImportStatus("");
   applyMethodRuntimeDefaults($("methodSelect").value);
 }
 
@@ -859,6 +898,21 @@ $("modelSelect").addEventListener("change", toggleCustomModel);
 $("modelName").addEventListener("input", updateRuntimeStatus);
 
 $("addRow").addEventListener("click", () => addDatasetRow());
+
+$("importRows").addEventListener("click", () => $("sampleFile").click());
+
+$("sampleFile").addEventListener("change", (event) => {
+  const [file] = event.target.files || [];
+  importSamplesFile(file)
+    .catch(() => {
+      // The import status block already contains the user-facing message.
+    })
+    .finally(() => {
+      event.target.value = "";
+    });
+});
+
+$("clearRows").addEventListener("click", clearDatasetRows);
 
 $("runButton").addEventListener("click", () => {
   createJob().catch((error) => {

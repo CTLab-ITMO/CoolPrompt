@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from io import BytesIO
 import time
 
 import pytest
@@ -357,3 +358,68 @@ def test_app_job_api_mock_roundtrip(monkeypatch):
     assert status["progress_stage"] == "completed"
     assert status["progress_percent"] == 100
     assert status["progress_message"] == "Оптимизация завершена"
+
+
+def test_import_samples_csv_endpoint(monkeypatch):
+    monkeypatch.setenv("COOLPROMPT_DEMO_ALLOW_MOCK", "1")
+
+    from fastapi.testclient import TestClient
+
+    from demo_service import app as app_module
+
+    client = TestClient(app_module.app)
+    response = client.post(
+        "/api/samples/import",
+        files={
+            "file": (
+                "samples.csv",
+                "input;target\nС меня списали дважды;оплата\nSMS не приходит;аккаунт\n".encode("utf-8"),
+                "text/csv",
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 2
+    assert data["rows"] == [
+        {"input": "С меня списали дважды", "target": "оплата"},
+        {"input": "SMS не приходит", "target": "аккаунт"},
+    ]
+
+
+def test_import_samples_xlsx_endpoint(monkeypatch):
+    monkeypatch.setenv("COOLPROMPT_DEMO_ALLOW_MOCK", "1")
+
+    from fastapi.testclient import TestClient
+    from openpyxl import Workbook
+
+    from demo_service import app as app_module
+
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.append(["пример", "метка"])
+    sheet.append(["Курьер не приехал", "доставка"])
+    sheet.append(["Товар поврежден", "возврат"])
+    buffer = BytesIO()
+    workbook.save(buffer)
+    workbook.close()
+    buffer.seek(0)
+
+    client = TestClient(app_module.app)
+    response = client.post(
+        "/api/samples/import",
+        files={
+            "file": (
+                "samples.xlsx",
+                buffer.getvalue(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 2
+    assert data["rows"][0] == {"input": "Курьер не приехал", "target": "доставка"}
+    assert data["rows"][1] == {"input": "Товар поврежден", "target": "возврат"}

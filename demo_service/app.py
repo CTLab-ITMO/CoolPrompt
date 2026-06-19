@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+import logging
 import time
 import uuid
-import logging
 from concurrent.futures import Future, ThreadPoolExecutor
+from csv import Sniffer, reader
+from io import BytesIO, StringIO
 from pathlib import Path
 from threading import Lock
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import FastAPI, File, HTTPException, Request, Response, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -32,6 +34,112 @@ logger.setLevel(logging.INFO)
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+MAX_IMPORT_ROWS = 500
+
+
+def _cell_text(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip()
+
+
+def _first_two_values(row: list[Any] | tuple[Any, ...]) -> tuple[str, str] | None:
+    values = [_cell_text(cell) for cell in row]
+    non_empty = [value for value in values if value]
+    if len(non_empty) < 2:
+        return None
+    return non_empty[0], non_empty[1]
+
+
+def _looks_like_header(first: str, second: str) -> bool:
+    normalized = {first.strip().lower(), second.strip().lower()}
+    input_headers = {
+        "input",
+        "source",
+        "text",
+        "sample",
+        "prompt",
+        "вход",
+        "пример",
+        "текст",
+        "запрос",
+        "сообщение",
+    }
+    target_headers = {
+        "target",
+        "label",
+        "output",
+        "answer",
+        "expected",
+        "метка",
+        "эталон",
+        "ответ",
+        "класс",
+        "результат",
+    }
+    return bool(normalized & input_headers) and bool(normalized & target_headers)
+
+
+def _normalize_import_rows(rows: list[tuple[str, str]]) -> list[dict[str, str]]:
+    if rows and _looks_like_header(rows[0][0], rows[0][1]):
+        rows = rows[1:]
+    normalized = [
+        {"input": input_text, "target": target_text}
+        for input_text, target_text in rows
+        if input_text and target_text
+    ]
+    return normalized[:MAX_IMPORT_ROWS]
+
+
+def _decode_tabular_text(content: bytes) -> str:
+    for encoding in ("utf-8-sig", "utf-8", "cp1251"):
+        try:
+            return content.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return content.decode("utf-8", errors="replace")
+
+
+def _parse_csv_samples(content: bytes) -> list[dict[str, str]]:
+    text = _decode_tabular_text(content)
+    sample = text[:4096]
+    try:
+        dialect = Sniffer().sniff(sample, delimiters=",;\t")
+    except Exception:
+        dialect = "excel"
+    parsed_rows: list[tuple[str, str]] = []
+    for row in reader(StringIO(text), dialect):
+        pair = _first_two_values(row)
+        if pair:
+            parsed_rows.append(pair)
+    return _normalize_import_rows(parsed_rows)
+
+
+def _parse_xlsx_samples(content: bytes) -> list[dict[str, str]]:
+    from openpyxl import load_workbook
+
+    workbook = load_workbook(BytesIO(content), read_only=True, data_only=True)
+    sheet = workbook.active
+    parsed_rows: list[tuple[str, str]] = []
+    for row in sheet.iter_rows(values_only=True):
+        pair = _first_two_values(row)
+        if pair:
+            parsed_rows.append(pair)
+        if len(parsed_rows) > MAX_IMPORT_ROWS + 1:
+            break
+    workbook.close()
+    return _normalize_import_rows(parsed_rows)
+
+
+def _parse_sample_file(filename: str, content: bytes) -> list[dict[str, str]]:
+    suffix = Path(filename).suffix.lower()
+    if suffix in {".xlsx", ".xlsm", ".xltx", ".xltm"}:
+        return _parse_xlsx_samples(content)
+    if suffix in {".csv", ".tsv", ".txt"}:
+        return _parse_csv_samples(content)
+    raise HTTPException(status_code=400, detail="Поддерживаются только CSV, TSV и XLSX-файлы.")
 
 
 def _public_error_message(exc: Exception) -> str:
@@ -172,6 +280,31 @@ def methods() -> list[dict[str, Any]]:
     """Return method catalog for the UI."""
 
     return public_methods()
+
+
+@app.post("/api/samples/import")
+async def import_samples(file: UploadFile = File(...)) -> dict[str, Any]:
+    """Parse two-column CSV/TSV/XLSX samples for the demo dataset editor."""
+
+    filename = file.filename or "samples"
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="Файл пустой.")
+
+    try:
+        rows = _parse_sample_file(filename, content)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001 - converted to a customer-facing error
+        logger.exception("sample import failed filename=%s", filename)
+        raise HTTPException(status_code=400, detail=f"Не удалось прочитать файл: {exc}") from exc
+
+    if not rows:
+        raise HTTPException(
+            status_code=400,
+            detail="Не удалось найти две заполненные колонки с примерами и эталонами.",
+        )
+    return {"filename": filename, "count": len(rows), "rows": rows}
 
 
 @app.post("/api/jobs", response_model=JobStatus)
