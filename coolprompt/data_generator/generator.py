@@ -175,19 +175,35 @@ class SyntheticDataGenerator:
         automatically.
 
         Args:
-            prompt (str): initial user prompt.
-            task (Task): optimization task — either classification or
-                generation.
-            problem_description (Optional[str]): problem description
-                provided by user. Will be generated if absent. Defaults
-                to ``None``.
-            num_samples (int): number of samples in dataset to generate.
-                Defaults to ``8``.
+            prompt (str): initial user prompt
+            task (Task): optimization task
+                Either classification or generation
+            problem_description (Optional[str]):
+                problem description provided by user
+                Will be generated if absent
+                Defaults to None
+            num_samples (int):
+                number of samples in dataset to generate
+                Must be between 1 and 100
+                Defaults to 8
+            corner_ratio (float):
+                fraction of generated samples that should be corner cases
+                Must be between 0.0 and 1.0
+                If 0.0, only regular samples are generated
+                If 1.0, only corner-case samples are generated
+                Defaults to 0.4
 
         Returns:
             Tuple[List[str], List[str], str]:
                 generated dataset, target and problem description.
         """
+
+        if not 1 <= num_samples <= 100:
+            raise ValueError(f"num_samples must be between 1 and 100, got {num_samples}.")
+
+        if not 0.0 <= corner_ratio <= 1.0:
+            raise ValueError(f"corner_ratio must be between 0.0 and 1.0, got {corner_ratio}.")
+
         if problem_description is None:
             logger.info(
                 "Problem description was not provided, "
@@ -205,34 +221,33 @@ class SyntheticDataGenerator:
             corner_template = GENERATION_CORNER_CASE_GENERATING_TEMPLATE
             schema = GenerationTaskResponse
 
-        if corner_template is None:
-            request = regular_template.format(
-                problem_description=problem_description, num_samples=num_samples
-            )
-            examples = self._generate(request, schema, "examples")
-        else:
-            n_corner = int(num_samples * corner_ratio)
-            n_regular = num_samples - n_corner
+        n_corner = int(num_samples * corner_ratio)
+        n_regular = num_samples - n_corner
+        logger.info(
+            f"Generating {n_regular} regular samples "
+            f"with {n_corner} corner samples "
+            f"total={num_samples}, corner_ratio={corner_ratio}"
+        )
 
-            regular_request = regular_template.format(
+        requests = []
+        if n_regular > 0:
+            requests.append((regular_template, n_regular))
+
+        if n_corner > 0:
+            requests.append((corner_template, n_corner))
+
+        examples = []
+
+        for template, n in requests:
+            request = template.format(
                 problem_description=problem_description,
-                num_samples=n_regular,
+                num_samples=n,
             )
 
-            corner_request = corner_template.format(
-                problem_description=problem_description,
-                num_samples=n_corner,
+            examples.extend(
+                list(self._generate(request, schema, "examples"))
             )
 
-            regular_examples = self._generate(
-                regular_request, schema, "examples"
-            )
-
-            corner_examples = self._generate(
-                corner_request, schema, "examples"
-            )
-
-            examples = list(regular_examples) + list(corner_examples)
         dataset, targets = self._convert_dataset(examples)
 
         return dataset, targets, problem_description
