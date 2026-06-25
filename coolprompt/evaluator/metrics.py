@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import re
-from typing import Optional, Dict, List, Tuple
+from typing import Optional, Dict, List, Tuple, Sequence
 
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCase, LLMTestCaseParams
@@ -394,6 +394,98 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
             "model_type": "bert-base-multilingual-cased"
         }
         self._return_parameter = "f1"
+
+
+class MultiReferenceBertScoreMetric(HFEvaluateMetric, GenerationMetric):
+    """BERTScore F1 with max-over-references for multi-reference targets."""
+
+    @staticmethod
+    def _get_name():
+        return "multiref_bertscore"
+
+    def __init__(self):
+        """Load BERTScore with the multilingual base model."""
+        super().__init__("bertscore")
+        self._compute_kwargs_func = lambda outputs, targets: {
+            "model_type": "bert-base-multilingual-cased"
+        }
+        self._return_parameter = "f1"
+
+    def compute(
+        self,
+        outputs: list[str | int],
+        targets: list[str | Sequence[str]],
+        dataset: Optional[list[str]] = None,
+        failed_examples: Optional[int] = None,
+        return_per_task: bool = False,
+    ) -> object:
+        """Compute mean max BERTScore over references for each output.
+
+        This method intentionally does not call ``BaseMetric.compute`` because
+        that generic path stringifies every target and would collapse a list of
+        references into a single string.
+        """
+        parsed_outputs = [
+            extract_answer(output, self.ANS_TAGS, format_mismatch_label=output)
+            for output in outputs
+        ]
+
+        results = self._compute_scores(parsed_outputs, targets)
+
+        if results is None or any(r is None for r in results):
+            return None
+
+        aggregate = float(np.mean(results))
+
+        if return_per_task:
+            bad_examples = (
+                self._extract_bad_examples(
+                    results, dataset, outputs, targets, failed_examples or 0
+                )
+                if failed_examples
+                else []
+            )
+            return aggregate, results, bad_examples
+
+        if failed_examples is not None and failed_examples > 0:
+            return aggregate, self._extract_bad_examples(
+                results, dataset, outputs, targets, failed_examples
+            )
+
+        return aggregate
+
+    def _compute_scores(
+        self,
+        outputs: list[str | int],
+        targets: list[str | Sequence[str]],
+    ) -> list[float]:
+        """Return one max-over-references BERTScore value per example."""
+        scores = []
+
+        for output, refs in zip(outputs, targets):
+            references = self._as_references(refs)
+            if not references:
+                scores.append(0.0)
+                continue
+
+            output_text = str(output)
+            predictions = [output_text] * len(references)
+            result = self._metric.compute(
+                predictions=predictions,
+                references=references,
+                **self._compute_kwargs_func(predictions, references),
+            )[self._return_parameter]
+
+            scores.append(float(max(result)))
+
+        return scores
+
+    @staticmethod
+    def _as_references(refs: str | Sequence[str]) -> list[str]:
+        """Normalize a single reference or a list of references."""
+        if isinstance(refs, str):
+            return [refs]
+        return [str(ref) for ref in refs if str(ref).strip()]
 
 
 class LLMAsJudge(GenerationMetric):

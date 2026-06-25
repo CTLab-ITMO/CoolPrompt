@@ -21,7 +21,12 @@ The default optimization method is `hyper_light`.
 
 Supported metric names:
 - classification: `accuracy`, `f1`
-- generation: `bleu`, `rouge`, `meteor`, `bertscore`, `codebertscore`, `em`, `geval`, `llm_as_judge`
+- generation: `bleu`, `rouge`, `meteor`, `bertscore`, `multiref_bertscore`, `codebertscore`, `em`, `geval`, `llm_as_judge`
+
+`multiref_bertscore` is intended for CommonGen-style multi-reference
+generation tasks. For each prediction it computes BERTScore F1 against every
+reference and uses the maximum reference score; the final score is the mean
+over examples.
 
 You can add a custom metric by implementing the `BaseMetric` interface.
 
