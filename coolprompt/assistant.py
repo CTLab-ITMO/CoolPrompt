@@ -314,7 +314,7 @@ class PromptTuner:
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
             prompt=final_prompt,
-            rule=LanguageRule(self._system_model),
+            rule=LanguageRule(self._system_model, use_structured_output=use_structured_output),
             start_prompt=start_prompt,
         )
 

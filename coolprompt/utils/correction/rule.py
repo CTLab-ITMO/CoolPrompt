@@ -1,6 +1,7 @@
 from abc import ABC
 from typing import Any
 from langchain_core.language_models.base import BaseLanguageModel
+from langchain_core.messages.ai import AIMessage
 from coolprompt.utils.prompt_templates.correction_templates import (
     TRANSLATION_TEMPLATE,
 )
@@ -10,6 +11,7 @@ from coolprompt.utils.parsing import (
     get_model_answer_extracted,
     safe_template,
 )
+from coolprompt.utils.structured_schemas.correction import TranslationResponse
 
 
 class Rule(ABC):
@@ -54,9 +56,21 @@ class LanguageRule(Rule):
     """The rule which checks if the final prompt and the start prompt are in
     the same languages."""
 
-    def __init__(self, llm: BaseLanguageModel) -> None:
-        """Initializes with LangChain language model."""
+    def __init__(
+        self, llm: BaseLanguageModel, use_structured_output: bool = False
+    ) -> None:
+        """Initializes with LangChain language model.
+
+        Args:
+            llm (BaseLanguageModel): LangChain language model.
+            use_structured_output (bool): if True, both language detection and
+                translation are performed via
+                ``llm.with_structured_output(...)`` using the dedicated
+                Pydantic schemas; otherwise plain ``invoke()`` calls with
+                JSON extraction from raw text are used.
+        """
         self.llm = llm
+        self.use_structured_output = use_structured_output
 
     @property
     def is_guaranteed_after_first_fix(self):
@@ -76,8 +90,12 @@ class LanguageRule(Rule):
                 and meta data with the target language.
         """
 
-        start_prompt_lang = detect_language(start_prompt, self.llm)
-        final_prompt_lang = detect_language(final_prompt, self.llm)
+        start_prompt_lang = detect_language(
+            start_prompt, self.llm, self.use_structured_output
+        )
+        final_prompt_lang = detect_language(
+            final_prompt, self.llm, self.use_structured_output
+        )
 
         if start_prompt_lang != final_prompt_lang:
             return False, {
@@ -103,6 +121,18 @@ class LanguageRule(Rule):
             user_prompt=final_prompt,
             to_lang=meta["to_lang"],
         )
+
+        if self.use_structured_output:
+            structured_model = self.llm.with_structured_output(
+                schema=TranslationResponse, method="json_schema"
+            )
+            output = structured_model.invoke(prompt)
+            if isinstance(output, AIMessage):
+                output = output.content
+            try:
+                return output.translated_text
+            except Exception:
+                return output["translated_text"]
 
         answer = get_model_answer_extracted(self.llm, prompt)
 
