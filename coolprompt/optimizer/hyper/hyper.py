@@ -253,6 +253,8 @@ class HyPEROptimizer(Optimizer):
             enable_instance_leak_audit: If True, run ``drop_instance_leaks`` when
                 ``meta_info`` contains a non-empty ``problem_description``. Defaults to True.
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
+            use_structured_output: a boolean variable.
+                Either to use structured output or nor.
         """
         super().__init__(model)
         self.use_structured_output = use_structured_output

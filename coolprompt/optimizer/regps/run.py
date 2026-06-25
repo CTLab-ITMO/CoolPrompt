@@ -19,6 +19,7 @@ def regps(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: Optional[str] = None,
+    use_structured_output: bool = False,
     **kwargs,
 ) -> str:
     """Runs Re-GPS evolution.
@@ -33,6 +34,7 @@ def regps(
             short description of problem to optimize.
         initial_prompt (str, optional): initial prompt to start evolution from.
             Defaults to None.
+        use_structured_output (bool): either use structured output or not.
         **kwargs (dict[str, Any]): other parameters
             (such as population_size, num_epochs, output_path, use_cache).
 
@@ -59,6 +61,7 @@ def regps(
         validation_targets=validation_targets,
         problem_description=problem_description,
         initial_prompt=initial_prompt,
+        use_structured_output=use_structured_output,
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],

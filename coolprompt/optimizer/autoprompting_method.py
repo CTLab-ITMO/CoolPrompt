@@ -69,7 +69,12 @@ def build_benchmark_context(
 
     task = validate_task(config["task"])
     metric = validate_and_create_metric(task, config["metric"])
-    evaluator = Evaluator(model, task, metric)
+    evaluator = Evaluator(
+        model,
+        task,
+        metric,
+        use_structured_output=config.get("use_structured_output", False)
+    )
 
     return BenchmarkContext(
         model=model,

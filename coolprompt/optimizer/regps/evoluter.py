@@ -44,6 +44,8 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             Defaults to 5.
         use_cache: a boolean variable.
             Either to use caching files or not.
+        use_structured_output: a boolean variable.
+            Either to use structured output or nor.
         output_path: a path to store logs of evolution.
         elitist: a prompt with highest score in population.
         best_score_overall: best evaluation score during evolution.
