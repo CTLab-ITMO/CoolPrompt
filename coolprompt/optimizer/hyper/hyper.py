@@ -29,6 +29,9 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
     PARAPHRASE_PROMPT,
     Recommendation,
 )
+from coolprompt.utils.structured_schemas.optimizer.hyper import (
+    ParaphrasedVariantResponse,
+)
 
 _BERTSCORE_MODEL_TYPE = "microsoft/deberta-large-mnli"
 _bertscore_evaluate = None
@@ -229,6 +232,7 @@ class HyPEROptimizer(Optimizer):
         feedback_answer_tail_chars: int = 500,
         enable_instance_leak_audit: bool = True,
         random_seed: Optional[int] = None,
+        use_structured_output: bool = False,
         **kwargs
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
@@ -249,9 +253,14 @@ class HyPEROptimizer(Optimizer):
             enable_instance_leak_audit: If True, run ``drop_instance_leaks`` when
                 ``meta_info`` contains a non-empty ``problem_description``. Defaults to True.
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
+            use_structured_output: a boolean variable.
+                Either to use structured output or nor.
         """
         super().__init__(model)
-        self.meta_prompt_module = MetaPromptOptimizer(model)
+        self.use_structured_output = use_structured_output
+        self.meta_prompt_module = MetaPromptOptimizer(
+            model, use_structured_output=use_structured_output
+        )
         self.evaluator = evaluator
         self.contrastive_probability = contrastive_probability
         self.contrastive_max_answer_chars = contrastive_max_answer_chars
@@ -265,6 +274,7 @@ class HyPEROptimizer(Optimizer):
             contrastive_max_answer_chars=contrastive_max_answer_chars,
             feedback_answer_head_chars=feedback_answer_head_chars,
             feedback_answer_tail_chars=feedback_answer_tail_chars,
+            use_structured_output=use_structured_output,
         )
         self.n_iterations = n_iterations or kwargs.get("num_epochs", 5)
         self.patience = patience
@@ -284,8 +294,18 @@ class HyPEROptimizer(Optimizer):
         Returns:
             List whose first element is ``best_prompt`` followed by paraphrases.
         """
+        query = PARAPHRASE_PROMPT.format(prompt=best_prompt)
+        if self.use_structured_output:
+            structured = self.model.bind(temperature=0.9).with_structured_output(
+                ParaphrasedVariantResponse, method="json_schema"
+            )
+            raw_outputs = [
+                r.paraphrased_prompt for r in structured.batch([query] * n_candidates)
+            ]
+            raw_outputs = list(dict.fromkeys(raw_outputs))
+            return [best_prompt] + raw_outputs
         raw_result = get_model_answer_extracted(
-            self.model, PARAPHRASE_PROMPT.format(prompt=best_prompt), n=n_candidates, temperature=0.9
+            self.model, query, n=n_candidates, temperature=0.9
         )
         return [best_prompt] + [self._process_model_output(r) for r in raw_result]
 
@@ -682,6 +702,8 @@ class HyPERMethod(AutoPromptingMethod):
         dataset_split=None,
         evaluator=None,
         problem_description=None,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         """Run iterative HyPER optimization through the PromptTuner method API."""
@@ -717,6 +739,7 @@ class HyPERMethod(AutoPromptingMethod):
             feedback_answer_tail_chars=feedback_answer_tail_chars,
             enable_instance_leak_audit=enable_instance_leak_audit,
             random_seed=random_seed,
+            use_structured_output=use_structured_output,
         )
 
         meta_info = meta_info.copy() if meta_info else {}
@@ -734,6 +757,8 @@ class HyPERMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         """Run HyPER from a benchmark context and method config."""
         meta = dict(ctx.config.get("meta_info", {}))
@@ -748,6 +773,7 @@ class HyPERMethod(AutoPromptingMethod):
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=ctx.config.get("problem_description"),
+            use_structured_output=use_structured_output,
             meta_info=meta if meta else None,
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),

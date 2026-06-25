@@ -17,6 +17,7 @@ from coolprompt.utils.var_validation import (
 from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
+from coolprompt.utils.utils import get_dataset_split
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 
@@ -91,33 +92,6 @@ class PromptTuner:
         if hasattr(self._target_model, "reset_stats"):
             self._target_model.reset_stats()
 
-    def _get_dataset_split(
-        self,
-        dataset: Iterable[str],
-        target: Iterable[str],
-        validation_size: float,
-        train_as_test: bool,
-    ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-        """Split the dataset into training and validation sets.
-
-        Args:
-            dataset (Iterable[str]): Input texts.
-            target (Iterable[str]): Corresponding labels/targets.
-            validation_size (float): Fraction of data to use for validation.
-            train_as_test (bool): If True, use the full dataset as both
-                train and validation (ignoring `validation_size`).
-
-        Returns:
-            Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
-                A tuple (train_data, val_data, train_targets, val_targets).
-        """
-        if train_as_test:
-            return (dataset, dataset, target, target)
-        train_data, val_data, train_targets, val_targets = train_test_split(
-            dataset, target, test_size=validation_size
-        )
-        return (train_data, val_data, train_targets, val_targets)
-
     def run(
         self,
         start_prompt: str,
@@ -144,6 +118,7 @@ class PromptTuner:
         return_final_prompt: bool = True,
         hyper_meta_info: dict = None,
         system_model_as_optimizer: bool = False,
+        use_structured_output: bool = True,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -205,6 +180,8 @@ class PromptTuner:
                 merged into the meta-info block for ``hyper`` and ``hyper_light``.
             system_model_as_optimizer (bool): If True, use the system model for
                 optimizing processes, while target model will be used for inference.
+            use_structured_output (bool): Either to use structured output or not.
+                Defaults to True.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -220,7 +197,10 @@ class PromptTuner:
             validate_verbose(verbose)
             set_verbose(verbose)
 
-        task_detector = TaskDetector(self._system_model)
+        task_detector = TaskDetector(
+            model=self._system_model,
+            use_structured_output=use_structured_output
+        )
         if task is None:
             task = task_detector.generate(start_prompt)
 
@@ -255,10 +235,17 @@ class PromptTuner:
         )
         metric_name = base_metric._get_name()
         evaluator = Evaluator(
-            self._target_model, task_value, base_metric, batch_size=batch_size
+            model=self._target_model,
+            task=task_value,
+            metric=base_metric,
+            batch_size=batch_size,
+            use_structured_output=use_structured_output
         )
         final_prompt = ""
-        generator = SyntheticDataGenerator(self._system_model)
+        generator = SyntheticDataGenerator(
+            model=self._system_model,
+            use_structured_output=use_structured_output
+        )
 
         if dataset is None:
             dataset, target, problem_description = generator.generate(
@@ -271,7 +258,7 @@ class PromptTuner:
             self.synthetic_dataset = dataset
             self.synthetic_target = target
 
-        dataset_split = self._get_dataset_split(
+        dataset_split = get_dataset_split(
             dataset=dataset,
             target=target,
             validation_size=validation_size,
@@ -320,13 +307,14 @@ class PromptTuner:
             dataset_split=dataset_split,
             evaluator=evaluator,
             problem_description=problem_description,
+            use_structured_output=use_structured_output,
             **kwargs,
         )
 
         logger.info("Running the prompt format checking...")
         final_prompt = correct(
             prompt=final_prompt,
-            rule=LanguageRule(self._system_model),
+            rule=LanguageRule(self._system_model, use_structured_output=use_structured_output),
             start_prompt=start_prompt,
         )
 
@@ -368,6 +356,7 @@ class PromptTuner:
         metric: Optional[str] = None,
         batch_size: int = 25,
         return_raw_outputs: bool = True,
+        use_structured_output: bool = True
     ) -> List[str] | Tuple[List[str], float]:
         """
         Generate model predictions for a test dataset and optionally compute a metric.
@@ -390,6 +379,8 @@ class PromptTuner:
             batch_size (int, default=25): Number of samples per inference batch.
             return_raw_outputs (bool, default=True): If True, return raw model outputs;
                 if False, return parsed outputs via metric.parse_output().
+            use_structured_output: a boolean variable.
+                Either to use structured output or nor.
 
         Returns:
             If targets is None: List[str] of raw/parsed outputs.
@@ -404,32 +395,33 @@ class PromptTuner:
                 "No prompt provided and self.final_prompt is not set. "
                 "Either call .run() first or pass prompt explicitly."
             )
-        
+
         if task is None:
             task_detector = TaskDetector(self._system_model)
             task = task_detector.generate(use_prompt)
-        
+
         task_str = task.lower()
         if task_str not in ("classification", "generation"):
             raise ValueError("task must be 'classification' or 'generation'.")
-        
+
         task_enum = Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
-        
+
         if metric is None:
             metric = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
-        
+
         metric_impl = validate_and_create_metric(task_enum, metric)
-        
+
         evaluator = Evaluator(
             model=self._target_model,
             task=task_enum,
             metric=metric_impl,
             batch_size=batch_size,
+            use_structured_output=use_structured_output
         )
-        
+
         dataset_list = list(dataset)
         use_targets = list(targets) if targets is not None else [""] * len(dataset_list)
-        
+
         result = evaluator.evaluate(
             prompt=use_prompt,
             dataset=dataset_list,
@@ -437,11 +429,11 @@ class PromptTuner:
             template=None,
             return_detailed=True,
         )
-        
+
         outputs = result.raw_outputs if return_raw_outputs else [
             metric_impl.parse_output(a) for a in result.raw_outputs
         ]
-        
+
         if targets is not None:
             return outputs, result.aggregate_score
         return outputs

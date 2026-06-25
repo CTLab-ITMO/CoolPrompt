@@ -19,6 +19,7 @@ def regps(
     evaluator: Evaluator,
     problem_description: str,
     initial_prompt: Optional[str] = None,
+    use_structured_output: bool = False,
     **kwargs,
 ) -> str:
     """Runs Re-GPS evolution.
@@ -33,6 +34,7 @@ def regps(
             short description of problem to optimize.
         initial_prompt (str, optional): initial prompt to start evolution from.
             Defaults to None.
+        use_structured_output (bool): either use structured output or not.
         **kwargs (dict[str, Any]): other parameters
             (such as population_size, num_epochs, output_path, use_cache).
 
@@ -59,6 +61,7 @@ def regps(
         validation_targets=validation_targets,
         problem_description=problem_description,
         initial_prompt=initial_prompt,
+        use_structured_output=use_structured_output,
         population_size=args["population_size"],
         num_epochs=args["num_epochs"],
         output_path=args["output_path"],
@@ -84,6 +87,8 @@ class ReGPSMethod(AutoPromptingMethod):
         dataset_split,
         evaluator,
         problem_description,
+        *,
+        use_structured_output: bool = False,
         **kwargs,
     ):
         """Run Re-GPS through the shared method interface."""
@@ -93,6 +98,7 @@ class ReGPSMethod(AutoPromptingMethod):
             evaluator=evaluator,
             problem_description=problem_description,
             initial_prompt=initial_prompt,
+            use_structured_output=use_structured_output,
             **kwargs,
         )
 
@@ -100,11 +106,17 @@ class ReGPSMethod(AutoPromptingMethod):
         self,
         ctx: BenchmarkContext,
         start_prompt: str,
+        *,
+        use_structured_output: bool = False,
     ) -> str:
         """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
+        mc = ctx.config["method"]
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+            generator = SyntheticDataGenerator(
+                ctx._system_model,
+                use_structured_output=use_structured_output,
+            )
             indices = sample(range(0, len(ctx.dataset_split[0])), 5)
             examples = [
                 (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
@@ -113,13 +125,13 @@ class ReGPSMethod(AutoPromptingMethod):
             problem_description = generator._generate_problem_description(
                 prompt=start_prompt, examples=examples
             )
-        mc = ctx.config["method"]
         return self.optimize(
             ctx.model,
             start_prompt,
             dataset_split=ctx.dataset_split,
             evaluator=ctx.evaluator,
             problem_description=problem_description,
+            use_structured_output=use_structured_output,
             population_size=mc.get("population_size", 10),
             num_epochs=mc.get("num_epochs", 5),
             output_path=mc.get("output_path", "./regps_outputs"),

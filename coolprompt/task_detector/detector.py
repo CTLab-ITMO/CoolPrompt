@@ -1,12 +1,11 @@
 from typing import Any
 
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages.ai import AIMessage
 from pydantic import BaseModel
 
-from coolprompt.task_detector.pydantic_formatters import (
-    TaskDetectionStructuredOutputSchema,
+from coolprompt.utils.structured_schemas.task_detector import (
+    TaskDetectionResponse,
 )
 from coolprompt.utils.prompt_templates.task_detector_templates import (
     TASK_DETECTOR_TEMPLATE,
@@ -21,50 +20,53 @@ class TaskDetector:
 
     Attributes:
         model: langchain.BaseLanguageModel class of model to use.
+        use_structured_output: if True, the LLM is queried via
+            ``model.with_structured_output(..., method="json_schema")``
+            using the dedicated pydantic schema; otherwise a plain
+            ``invoke()`` is performed and the JSON payload is parsed
+            from the raw text response.
     """
 
-    def __init__(self, model: BaseLanguageModel) -> None:
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        use_structured_output: bool = False,
+    ) -> None:
         self.model = model
+        self.use_structured_output = use_structured_output
 
     def _generate(
         self, request: str, schema: BaseModel, field_name: str
     ) -> Any:
-        """Generates model output
-        either using structured output from langchain
-        or just strict json output format for LLM
+        """Generates model output either using structured output from
+        langchain (when ``self.use_structured_output`` is True) or a
+        plain ``invoke()`` call combined with JSON extraction from text.
 
         Args:
             request (str): request to LLM
-                when langchain structured output is used
-            schema (BaseModel): Pydantic output format
+            schema (BaseModel): Pydantic output format (only used when
+                structured output is enabled)
             field_name (str): field name to select from output
 
         Returns:
             Any: generated data
         """
-        if hasattr(self.model, "model"):
-            wrapped_model = self.model.model
-        else:
-            wrapped_model = self.model
-
-        if not isinstance(wrapped_model, BaseChatModel):
-            output = self.model.invoke(request)
+        if self.use_structured_output:
+            structured_model = self.model.with_structured_output(
+                schema=schema, method="json_schema"
+            )
+            output = structured_model.invoke(request)
             if isinstance(output, AIMessage):
                 output = output.content
-            return extract_json(output)[field_name]
+            try:
+                return getattr(output, field_name)
+            except Exception:
+                return output[field_name]
 
-        structured_model = self.model.with_structured_output(
-            schema=schema, method="json_schema"
-        )
-        output = structured_model.invoke(request)
+        output = self.model.invoke(request)
         if isinstance(output, AIMessage):
             output = output.content
-
-        try:
-            output = getattr(output, field_name)
-        except Exception:
-            output = output[field_name]
-        return output
+        return extract_json(output)[field_name]
 
     def generate(
         self,
@@ -78,10 +80,8 @@ class TaskDetector:
         Returns:
             str: task class
         """
-        schema = TaskDetectionStructuredOutputSchema
-        request = TASK_DETECTOR_TEMPLATE
-
-        request = request.format(query=prompt)
+        schema = TaskDetectionResponse
+        request = TASK_DETECTOR_TEMPLATE.format(query=prompt)
 
         logger.info("Detecting the task by query")
 
