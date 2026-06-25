@@ -307,7 +307,7 @@ class PromptTuner:
             dataset_split=dataset_split,
             evaluator=evaluator,
             problem_description=problem_description,
-            use_structured_output=use_structured_output
+            use_structured_output=use_structured_output,
             **kwargs,
         )
 
