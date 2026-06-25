@@ -6,8 +6,11 @@ when the RIDER core is loaded by the CoolPrompt wrapper.
 
 from __future__ import annotations
 
+import json
 import threading
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Type
+
+from pydantic import BaseModel
 
 
 class _ModelRegistry:
@@ -140,6 +143,128 @@ def _invoke_model(model: Any, prompt: str, **kwargs: Any) -> str:
     )
 
 
+def _coerce_to_schema(value: Any, schema: Type[BaseModel]) -> BaseModel:
+    """Convert common structured-output shapes into a Pydantic object."""
+
+    if isinstance(value, schema):
+        return value
+    if isinstance(value, BaseModel):
+        return schema.model_validate(value.model_dump())
+    if isinstance(value, dict):
+        return schema.model_validate(value)
+    if isinstance(value, str):
+        return schema.model_validate(json.loads(value))
+    content = getattr(value, "content", None)
+    if isinstance(content, str):
+        return schema.model_validate(json.loads(content))
+    if isinstance(content, dict):
+        return schema.model_validate(content)
+    return schema.model_validate(value)
+
+
+def _with_structured_output(model: Any, schema: Type[BaseModel]) -> Any:
+    """Return a LangChain structured-output wrapper for a model."""
+
+    if not hasattr(model, "with_structured_output"):
+        raise NotImplementedError(
+            "Registered RIDER model does not expose with_structured_output()."
+        )
+    try:
+        return model.with_structured_output(schema=schema, method="json_schema")
+    except TypeError:
+        try:
+            return model.with_structured_output(schema, method="json_schema")
+        except TypeError:
+            return model.with_structured_output(schema)
+
+
+def _invoke_structured_model(
+    model: Any,
+    prompt: str,
+    schema: Type[BaseModel],
+    **kwargs: Any,
+) -> BaseModel:
+    """Invoke a LangChain structured-output model and validate its result."""
+
+    structured_model = _with_structured_output(model, schema)
+    if not hasattr(structured_model, "invoke"):
+        raise TypeError("Structured RIDER model must expose invoke().")
+    try:
+        value = structured_model.invoke(prompt, **kwargs)
+    except TypeError:
+        value = structured_model.invoke(prompt)
+    return _coerce_to_schema(value, schema)
+
+
+class _LangChainStructuredClient:
+    """Instructor-like adapter backed by LangChain structured output."""
+
+    def __init__(self, llm_client: "LLMClient", model_name: str) -> None:
+        self._llm_client = llm_client
+        self._model_name = model_name
+
+    def create(
+        self,
+        *,
+        response_model: Type[BaseModel],
+        messages: List[Dict[str, str]],
+        temperature: float = 0.0,
+        max_tokens: int = 2048,
+        max_retries: int = 1,
+        **kwargs: Any,
+    ) -> BaseModel:
+        """Create a Pydantic response via ``with_structured_output``.
+
+        The signature intentionally mirrors the subset of Instructor used by
+        the copied RIDER core, so the core can keep one structured-call path.
+        """
+
+        prompt = _messages_to_prompt(messages)
+        invoke_kwargs: Dict[str, Any] = {
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+        }
+        if "extra_body" in kwargs:
+            invoke_kwargs["extra_body"] = kwargs["extra_body"]
+
+        attempts = max(1, int(max_retries or 1))
+        last_exc: Optional[Exception] = None
+        for _ in range(attempts):
+            try:
+                obj = _invoke_structured_model(
+                    self._llm_client._resolve_model(self._model_name),
+                    prompt,
+                    response_model,
+                    **invoke_kwargs,
+                )
+                self._llm_client.total_api_calls += 1
+                self._llm_client.last_error_type = None
+                self._llm_client.last_response_metadata = {
+                    "model": self._model_name,
+                    "finish_reason": None,
+                    "completion_tokens": None,
+                    "max_tokens": max_tokens,
+                    "empty": False,
+                    "error_type": None,
+                    "structured": True,
+                }
+                return obj
+            except Exception as exc:
+                last_exc = exc
+                self._llm_client.last_error_type = (
+                    self._llm_client._classify_api_exception(exc)
+                )
+                self._llm_client.last_response_metadata = {
+                    "model": self._model_name,
+                    "finish_reason": None,
+                    "error_type": self._llm_client.last_error_type,
+                    "error": str(exc)[:500],
+                    "structured": True,
+                }
+        assert last_exc is not None
+        raise last_exc
+
+
 class LLMClient:
     """Drop-in subset of ``rider.llm.client.LLMClient`` backed by LangChain."""
 
@@ -224,6 +349,11 @@ class LLMClient:
         """
 
         return self._model_by_name.get(model_name) or self._default_model
+
+    def structured_client(self, model_name: str) -> _LangChainStructuredClient:
+        """Return an Instructor-compatible client for structured RIDER calls."""
+
+        return _LangChainStructuredClient(self, model_name)
 
     def generate(
         self,

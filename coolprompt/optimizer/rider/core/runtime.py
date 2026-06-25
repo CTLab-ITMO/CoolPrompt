@@ -11,6 +11,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List, Optional, Tuple, Type
 
 from pydantic import BaseModel
+from rider.llm.client import LLMClient
 
 from coolprompt.utils.prompt_templates.rider_templates import (
     RIDER_CONTRACT_PROMPT,

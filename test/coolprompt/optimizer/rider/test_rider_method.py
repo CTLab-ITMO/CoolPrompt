@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from coolprompt.optimizer.rider import _llm_shim
 from coolprompt.optimizer.rider import rider as rider_module
 from coolprompt.optimizer.rider.rider import RIDERGenesisMethod, RIDEROptimizer
 from coolprompt.utils.prompt_templates import rider_templates
@@ -271,6 +272,112 @@ def test_rider_external_validation_reranks_candidates():
     assert ranked[0][0][0] == "optimized"
     assert rider.external_rankings[-1]["num_examples"] == 1
     assert rider.external_rankings[-1]["combined_scores"][0]["name"] == "optimized"
+
+
+class _StructuredRunnable:
+    def __init__(self, parent, schema):
+        self.parent = parent
+        self.schema = schema
+
+    def invoke(self, prompt, **kwargs):
+        self.parent.structured_invocations.append((prompt, kwargs))
+        return self.schema.model_validate({"tests": ["structured case"]})
+
+
+class _StructuredCapableModel:
+    def __init__(self):
+        self.structured_args = []
+        self.structured_invocations = []
+        self.raw_invocations = []
+
+    def with_structured_output(self, schema=None, **kwargs):
+        self.structured_args.append((schema, kwargs))
+        return _StructuredRunnable(self, schema)
+
+    def invoke(self, prompt, **kwargs):
+        self.raw_invocations.append((prompt, kwargs))
+        return '{"tests": ["raw fallback case"]}'
+
+
+class _RawJsonModel:
+    def __init__(self):
+        self.raw_invocations = []
+
+    def invoke(self, prompt, **kwargs):
+        self.raw_invocations.append((prompt, kwargs))
+        return '{"tests": ["raw fallback case"]}'
+
+
+def _rider_with_model(model):
+    rider_cls = rider_module.load_rider_genesis()
+    _llm_shim.register_models(
+        model,
+        {
+            "planner-model": model,
+            "fallback-model": model,
+        },
+    )
+    rider = object.__new__(rider_cls)
+    rider._role_model_chains = {"planner": ["planner-model"]}
+    rider._llm_attempts = []
+    rider._mode = "ultra"
+    rider._api_key = "-"
+    rider.llm_client = _llm_shim.LLMClient(api_key="-")
+    return rider
+
+
+def test_rider_structured_calls_use_langchain_structured_output():
+    from coolprompt.optimizer.rider.core.schemas import _SyntheticTestsSchema
+
+    model = _StructuredCapableModel()
+    rider = _rider_with_model(model)
+
+    obj = rider._generate_structured(
+        "Generate synthetic tests.",
+        _SyntheticTestsSchema,
+        role="planner",
+        temperature=0.1,
+        max_tokens=128,
+        allowed_starts=("[", "{"),
+        max_retries=1,
+    )
+
+    assert obj.tests == ["structured case"]
+    assert model.structured_args[0][0] is _SyntheticTestsSchema
+    assert model.structured_args[0][1]["method"] == "json_schema"
+    assert model.structured_invocations
+    assert not model.raw_invocations
+    assert rider.llm_client.total_api_calls == 1
+    assert rider._llm_attempts[-1]["structured"] is True
+    assert rider._llm_attempts[-1]["status"] == "success"
+
+
+def test_rider_structured_calls_fall_back_to_manual_json_parser():
+    from coolprompt.optimizer.rider.core.schemas import _SyntheticTestsSchema
+
+    model = _RawJsonModel()
+    rider = _rider_with_model(model)
+
+    obj = rider._generate_structured(
+        "Generate synthetic tests.",
+        _SyntheticTestsSchema,
+        role="planner",
+        temperature=0.1,
+        max_tokens=128,
+        allowed_starts=("[", "{"),
+        max_retries=1,
+    )
+
+    assert obj.tests == ["raw fallback case"]
+    assert model.raw_invocations
+    assert rider.llm_client.total_api_calls == 1
+    assert any(
+        attempt["status"] == "failed"
+        and attempt["structured"] is True
+        and "instructor" in attempt["reason"]
+        for attempt in rider._llm_attempts
+    )
+    assert rider._llm_attempts[-1]["status"] == "success"
 
 
 def test_rider_budget_hyperparameters_change_ultra_plan():

@@ -53,18 +53,21 @@ def _restore_modules(previous: Dict[str, Any]) -> None:
             sys.modules[name] = module
 
 
-def _disable_instructor_client(self: Any, model: str) -> None:
-    """Disable RIDER structured-output client initialization.
+def _langchain_structured_client(self: Any, model: str) -> Any:
+    """Return a LangChain-backed structured-output client for RIDER.
 
     Args:
         self: RIDER ``RiderGenesis`` instance.
         model: Model name requested by the RIDER runtime.
 
     Returns:
-        ``None`` so RIDER falls back to the LangChain shim path.
+        Instructor-compatible adapter when the registered LangChain model
+        supports structured output; ``None`` keeps RIDER's manual fallback.
     """
 
-    _ = (self, model)
+    llm_client = getattr(self, "llm_client", None)
+    if hasattr(llm_client, "structured_client"):
+        return llm_client.structured_client(model)
     return None
 
 
@@ -102,6 +105,8 @@ def load_rider_genesis() -> type:
     finally:
         _restore_modules(previous)
 
-    # Keep structured-output calls on the same LangChain path as normal calls.
-    module.RiderGenesis._instructor_client = _disable_instructor_client
+    # Keep structured-output calls on the same registered LangChain path as
+    # normal calls, but only for RIDER calls that already expect Pydantic
+    # schemas. Free-form prompt-generation calls still use _generate().
+    module.RiderGenesis._instructor_client = _langchain_structured_client
     return module.RiderGenesis

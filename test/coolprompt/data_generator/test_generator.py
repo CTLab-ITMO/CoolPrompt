@@ -14,6 +14,8 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
     PROBLEM_DESCRIPTION_TEMPLATE,
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
     GENERATION_DATA_GENERATING_TEMPLATE,
+    CLASSIFICATION_CORNER_CASE_GENERATING_TEMPLATE,
+    GENERATION_CORNER_CASE_GENERATING_TEMPLATE,
 )
 from coolprompt.utils.enums import Task
 
@@ -85,21 +87,26 @@ class TestGenerator(unittest.TestCase):
     def test_generate_cls_dataset(self):
         """Test generation of classification dataset"""
 
-        self._generate_patcher = patch(
+        generate_patcher = patch(
             "coolprompt.data_generator.generator"
             + ".SyntheticDataGenerator._generate"
         )
-        self._generate_mock = self._generate_patcher.start()
+        generate_mock = generate_patcher.start()
+        self.addCleanup(generate_patcher.stop)
 
         problem_description = "problem"
         num_samples = 20
-        request = CLASSIFICATION_DATA_GENERATING_TEMPLATE.format(
-            problem_description=problem_description, num_samples=num_samples
+        regular_request = CLASSIFICATION_DATA_GENERATING_TEMPLATE.format(
+            problem_description=problem_description, num_samples=12
+        )
+        corner_request = CLASSIFICATION_CORNER_CASE_GENERATING_TEMPLATE.format(
+            problem_description=problem_description, num_samples=8
         )
         schema = ClassificationTaskStructuredOutputSchema
 
-        self._generate_mock.return_value = [
-            ClassificationTaskExample(input="in", output="out")
+        generate_mock.side_effect = [
+            [ClassificationTaskExample(input="regular in", output="regular out")],
+            [ClassificationTaskExample(input="corner in", output="corner out")],
         ]
         self.assertTupleEqual(
             self.generator.generate(
@@ -108,30 +115,39 @@ class TestGenerator(unittest.TestCase):
                 problem_description=problem_description,
                 num_samples=num_samples,
             ),
-            (["in"], ["out"], problem_description),
+            (
+                ["regular in", "corner in"],
+                ["regular out", "corner out"],
+                problem_description,
+            ),
         )
-        self._generate_mock.assert_called_once_with(request, schema, "examples")
-
-        self._generate_patcher.stop()
+        self.assertEqual(generate_mock.call_count, 2)
+        generate_mock.assert_any_call(regular_request, schema, "examples")
+        generate_mock.assert_any_call(corner_request, schema, "examples")
 
     def test_generate_gen_dataset(self):
         """Test generation of generation dataset"""
 
-        self._generate_patcher = patch(
+        generate_patcher = patch(
             "coolprompt.data_generator.generator"
             + ".SyntheticDataGenerator._generate"
         )
-        self._generate_mock = self._generate_patcher.start()
+        generate_mock = generate_patcher.start()
+        self.addCleanup(generate_patcher.stop)
 
         problem_description = "problem"
         num_samples = 20
-        request = GENERATION_DATA_GENERATING_TEMPLATE.format(
-            problem_description=problem_description, num_samples=num_samples
+        regular_request = GENERATION_DATA_GENERATING_TEMPLATE.format(
+            problem_description=problem_description, num_samples=12
+        )
+        corner_request = GENERATION_CORNER_CASE_GENERATING_TEMPLATE.format(
+            problem_description=problem_description, num_samples=8
         )
         schema = GenerationTaskStructuredOutputSchema
 
-        self._generate_mock.return_value = [
-            GenerationTaskExample(input="in", output="out")
+        generate_mock.side_effect = [
+            [GenerationTaskExample(input="regular in", output="regular out")],
+            [GenerationTaskExample(input="corner in", output="corner out")],
         ]
         self.assertTupleEqual(
             self.generator.generate(
@@ -140,48 +156,57 @@ class TestGenerator(unittest.TestCase):
                 problem_description=problem_description,
                 num_samples=num_samples,
             ),
-            (["in"], ["out"], problem_description),
+            (
+                ["regular in", "corner in"],
+                ["regular out", "corner out"],
+                problem_description,
+            ),
         )
-        self._generate_mock.assert_called_once_with(request, schema, "examples")
-
-        self._generate_patcher.stop()
+        self.assertEqual(generate_mock.call_count, 2)
+        generate_mock.assert_any_call(regular_request, schema, "examples")
+        generate_mock.assert_any_call(corner_request, schema, "examples")
 
     def test_generate_dataset_without_problem_description(self):
         """Test generation of classification dataset"""
 
-        self._generate_patcher = patch(
+        generate_patcher = patch(
             "coolprompt.data_generator.generator"
             + ".SyntheticDataGenerator._generate"
         )
-        self._generate_mock = self._generate_patcher.start()
-        self._generate_problem_description_patcher = patch(
+        generate_mock = generate_patcher.start()
+        self.addCleanup(generate_patcher.stop)
+        problem_description_patcher = patch(
             "coolprompt.data_generator.generator"
             + ".SyntheticDataGenerator._generate_problem_description"
         )
-        self._generate_problem_description_mock = (
-            self._generate_problem_description_patcher.start()
-        )
-        self._generate_problem_description_mock.return_value = "problem"
+        problem_description_mock = problem_description_patcher.start()
+        self.addCleanup(problem_description_patcher.stop)
+        problem_description_mock.return_value = "problem"
 
         num_samples = 20
-        request = GENERATION_DATA_GENERATING_TEMPLATE.format(
-            problem_description="problem", num_samples=num_samples
+        regular_request = GENERATION_DATA_GENERATING_TEMPLATE.format(
+            problem_description="problem", num_samples=12
+        )
+        corner_request = GENERATION_CORNER_CASE_GENERATING_TEMPLATE.format(
+            problem_description="problem", num_samples=8
         )
         schema = GenerationTaskStructuredOutputSchema
 
-        self._generate_mock.return_value = [
-            GenerationTaskExample(input="in", output="out")
+        generate_mock.side_effect = [
+            [GenerationTaskExample(input="regular in", output="regular out")],
+            [GenerationTaskExample(input="corner in", output="corner out")],
         ]
         self.assertTupleEqual(
             self.generator.generate(
                 prompt="prompt", task=Task.GENERATION, num_samples=num_samples
             ),
-            (["in"], ["out"], "problem"),
+            (
+                ["regular in", "corner in"],
+                ["regular out", "corner out"],
+                "problem",
+            ),
         )
-        self._generate_problem_description_mock.assert_called_once_with(
-            "prompt"
-        )
-        self._generate_mock.assert_called_once_with(request, schema, "examples")
-
-        self._generate_patcher.stop()
-        self._generate_problem_description_patcher.stop()
+        problem_description_mock.assert_called_once_with("prompt")
+        self.assertEqual(generate_mock.call_count, 2)
+        generate_mock.assert_any_call(regular_request, schema, "examples")
+        generate_mock.assert_any_call(corner_request, schema, "examples")
