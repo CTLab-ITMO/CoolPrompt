@@ -2,17 +2,12 @@
 
 These tests verify that telemetry tracking works correctly end-to-end
 with OpenRouter API calls. Requires OPENROUTER_API_KEY environment variable.
-
-Example:
-    export OPENROUTER_API_KEY=sk-or-v1-...
-    pytest test/coolprompt/test_telemetry_full_pipeline.py -v
 """
 from __future__ import annotations
 
 import os
 import json
 import pytest
-from typing import Any, Dict
 from pathlib import Path
 from langchain_openai import ChatOpenAI
 from coolprompt.assistant import PromptTuner
