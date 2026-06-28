@@ -162,7 +162,7 @@ class PromptTuner:
         telemetry_path: Optional[str] = None,  
         **kwargs,
     ) -> Optional[str]:
-            """
+        """
         Run prompt optimization using the selected method.
 
         This method orchestrates task detection, dataset preparation,
