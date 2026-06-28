@@ -1,0 +1,20 @@
+average_score: 1.0
+best_score: 1.0
+prompts:
+- origin: MUTATED
+  score: 1.0
+  text: Please analyze the provided context meticulously and identify the critical
+    information required to generate a precise and accurate answer to the question
+    posed.
+- origin: MUTATED
+  score: 1.0
+  text: Please analyze the provided context meticulously and extract the critical
+    information necessary to construct a precise and accurate answer to the posed
+    question.
+- origin: EVOLUTED
+  score: 1.0
+  text: Please read the provided context carefully and answer the following question
+    based on the information given.
+- origin: MANUAL
+  score: 1.0
+  text: Answer the question based on the context.

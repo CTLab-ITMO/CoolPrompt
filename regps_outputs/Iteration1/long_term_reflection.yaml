@@ -1,0 +1,5 @@
+Use clear action verbs and specify the output format. For example, replace "Categorize
+  the text" with "Classify the sentiment of the text as POSITIVE, NEGATIVE, or NEUTRAL,
+  and respond with a single word." This enhances clarity and guides the model towards
+  precise responses.
+...

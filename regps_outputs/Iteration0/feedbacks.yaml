@@ -1,0 +1,47 @@
+- !!python/tuple
+  - "To improve the prompt for sentiment classification, revise it to: \"Classify\
+    \ the following text based on its sentiment. Provide the sentiment label as either\
+    \ POSITIVE, NEGATIVE, or NEUTRAL without any additional formatting. Examples:\
+    \ 'The acting was superb.' \u2192 POSITIVE, 'I did not enjoy the movie.' \u2192\
+    \ NEGATIVE.\" This will help guide the model to produce the correct output format\
+    \ and understand the classification criteria better."
+  - '
+
+    To improve the prompt for sentiment classification, it should specify the output
+    format clearly, explicitly mention the sentiment categories, provide examples
+    for better understanding, and encourage simplicity in the output. A revised prompt
+    could be: "Classify the following text into one of the sentiment categories: POSITIVE,
+    NEGATIVE, or NEUTRAL. Provide the label only, without any tags or extra formatting.
+    For example, ''The acting was superb'' should be classified as POSITIVE."
+
+    '
+- !!python/tuple
+  - '
+
+    To improve the prompt for sentiment classification, specify the output format
+    clearly (e.g., "Provide only the sentiment category: POSITIVE, NEGATIVE, or NEUTRAL").
+    Include explicit definitions of each category and consider providing examples
+    to guide the model''s understanding. A revised prompt could be: "Classify the
+    following text as POSITIVE, NEGATIVE, or NEUTRAL. Output only the category name."
+    This will help eliminate unnecessary formatting and ensure accurate categorization.
+
+    '
+  - 'To improve the prompt for sentiment classification, specify the output format
+    clearly (e.g., "Provide your answer as a single word: POSITIVE, NEGATIVE, or NEUTRAL"),
+    add context about the task, and consider including examples to guide the model.
+    This will help eliminate issues with formatting and ensure the model produces
+    consistent and accurate outputs.'
+- !!python/tuple
+  - '
+
+    By specifying the output format, providing examples, and clarifying the task,
+    the prompt can guide the model to produce more accurate and consistent responses
+    for sentiment classification, thus avoiding the pitfalls observed in the initial
+    outputs.
+
+    '
+  - 'To improve the prompt for sentiment classification, specify the output format
+    (plain text), clarify the sentiment categories (POSITIVE, NEGATIVE, NEUTRAL),
+    and provide context for the task. A revised prompt could be: "Analyze the following
+    text and classify its sentiment as POSITIVE, NEGATIVE, or NEUTRAL. Provide your
+    answer in plain text without any additional formatting."'

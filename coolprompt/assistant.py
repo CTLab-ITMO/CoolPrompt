@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 import os
 import csv
-from typing import Iterable, List, Optional, Tuple, List
+from typing import Iterable, List, Optional, Tuple 
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_openai import ChatOpenAI
@@ -162,7 +162,8 @@ class PromptTuner:
         telemetry_path: Optional[str] = None,  
         **kwargs,
     ) -> Optional[str]:
-        """Run prompt optimization using the selected method.
+            """
+        Run prompt optimization using the selected method.
 
         This method orchestrates task detection, dataset preparation,
         problem description generation, evaluation, and the actual
@@ -181,7 +182,7 @@ class PromptTuner:
                 (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
-                "bertscore" for generation. Special metrics `llm_as_judge` and
+                "meteor" for generation. Special metrics `llm_as_judge` and
                 `geval` require additional configuration parameters below.
             problem_description (str | None): Natural language description
                 of the task. If None, it will be generated automatically
@@ -199,6 +200,8 @@ class PromptTuner:
                 during evaluation.
             verbose (int): Logging verbosity: 0 = silent, 1 = steps,
                 2 = steps + prompts.
+            corner_ratio (float, default=0.4): Ratio of corner-case examples
+                to include when generating synthetic data.
             llm_as_judge_criteria (str | list[str]): Criterion or list of
                 criteria for the LLM‑as‑judge metric.
             llm_as_judge_custom_templates (dict[str, str] | None): Custom
@@ -219,13 +222,22 @@ class PromptTuner:
                 `self.final_prompt`).
             hyper_meta_info (dict | None): Optional extra key-value pairs
                 merged into the meta-info block for ``hyper`` and ``hyper_light``.
-            system_model_as_optimizer (bool): If True, use the system model for
-                optimizing processes, while target model will be used for inference.
+            system_model_as_optimizer (bool, default=False): If True, use the
+                system model for optimization steps; target model used for inference.
+            enable_telemetry (bool, default=True): If True, collect iteration-level
+                telemetry during optimization.
+            export_telemetry (bool, default=False): If True and telemetry enabled,
+                write telemetry report to disk.
+            telemetry_format (str, default="json"): Format for exported telemetry:
+                "json", "csv", or "both".
+            telemetry_path (str | None, default=None): Base path for telemetry exports.
+                If None, auto-generates ./logs/telemetry_{timestamp}.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
             Optional[str]: The optimized prompt if `return_final_prompt` is
-            True, otherwise None.
+            True, otherwise None. If `enable_telemetry=True`, also sets
+            `self.telemetry_report` with the optimization trajectory.
 
         Raises:
             ValueError: On invalid task, missing required dataset for
@@ -440,7 +452,7 @@ class PromptTuner:
             targets (Optional[Iterable[str|int]]): Ground truth labels.
                 If provided, metric is computed and returned.
             metric (Optional[str]): Metric name. If None, defaults to "accuracy"
-                for classification or "bertscore" for generation.
+                for classification or "meteor" for generation.
             batch_size (int, default=25): Number of samples per inference batch.
             return_raw_outputs (bool, default=True): If True, return raw model outputs;
                 if False, return parsed outputs via metric.parse_output().

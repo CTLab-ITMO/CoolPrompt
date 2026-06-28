@@ -1,0 +1,11 @@
+- ' Use precise and action-oriented language to clearly define the task, and specify
+  the expected output format to minimize ambiguity. For example, instead of "Sort
+  the text into categories," use "Classify the sentiment of the following text as
+  POSITIVE, NEGATIVE, or NEUTRAL, and provide your answer as a single word." '
+- Enhance clarity and specificity by explicitly stating the expected output format
+  and providing clear examples that illustrate the classification categories, ensuring
+  that the prompt guides the model towards concise and accurate responses.
+- Be explicit about the task by using clear action verbs and specifying the output
+  format. For example, instead of saying "Categorize the text," use "Classify the
+  sentiment of the text as POSITIVE, NEGATIVE, or NEUTRAL." This provides clarity
+  and direction for the model.

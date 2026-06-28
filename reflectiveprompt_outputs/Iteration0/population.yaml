@@ -1,0 +1,17 @@
+average_score: 1.0
+best_score: 1.0
+prompts:
+- origin: MANUAL
+  score: 1.0
+  text: Answer the question based on the context.
+- origin: EVOLUTED
+  score: 1.0
+  text: Please analyze the provided context and extract relevant information to accurately
+    address the question posed.
+- origin: MUTATED
+  score: 1.0
+  text: Please scrutinize the provided context and distill pertinent information to
+    precisely respond to the question presented.
+- origin: APE
+  score: 1.0
+  text: Respond to the inquiry using the provided context.
