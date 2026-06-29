@@ -1,0 +1,53 @@
+average_score: 1.0
+best_score: 1.0
+prompts:
+- bad_examples:
+  - correct: POSITIVE
+    input: This movie was fantastic!
+    output: <ans>POSITIVE</ans>
+  - correct: NEGATIVE
+    input: I hated this film.
+    output: <ans>NEGATIVE</ans>
+  origin: APE
+  score: 1.0
+  text: Sort the text into categories.
+- bad_examples:
+  - correct: POSITIVE
+    input: This movie was fantastic!
+    output: <ans>POSITIVE</ans>
+  - correct: NEGATIVE
+    input: I hated this film.
+    output: <ans>NEGATIVE</ans>
+  origin: APE
+  score: 1.0
+  text: Categorize the text.
+- bad_examples:
+  - correct: POSITIVE
+    input: This movie was fantastic!
+    output: <ans>POSITIVE</ans>
+  - correct: NEGATIVE
+    input: I hated this film.
+    output: <ans>NEGATIVE</ans>
+  origin: MUTATED
+  score: 1.0
+  text: "Please classify the sentiment of the following text as either POSITIVE, NEGATIVE,\
+    \ or NEUTRAL. Provide your answer as a single word without any additional formatting\
+    \ or tags. If the sentiment is ambiguous or mixed, please indicate that as well.\
+    \ Here\u2019s an example: Input: The acting was superb. Output: POSITIVE."
+- bad_examples:
+  - correct: POSITIVE
+    input: This movie was fantastic!
+    output: <ans>POSITIVE</ans>
+  - correct: NEGATIVE
+    input: I hated this film.
+    output: <ans>NEGATIVE</ans>
+  origin: MUTATED
+  score: 1.0
+  text: 'Please classify the following text into one of the specified sentiment categories:
+    Positive, Negative, or Neutral. A Positive sentiment indicates a favorable or
+    optimistic view (e.g., ''I absolutely love this product!''), a Negative sentiment
+    indicates an unfavorable or pessimistic view (e.g., ''I really dislike waiting
+    in line.''), and a Neutral sentiment indicates a lack of strong feelings either
+    way (e.g., ''The weather is fine today.''). Please provide your classification
+    clearly, and if applicable, include a brief explanation for your choice to enhance
+    understanding.'

@@ -1,0 +1,14 @@
+prompts:
+- Provide a concise summary of the text by distinctly recognizing and emphasizing
+  its core concepts and essential points, while maintaining clarity.
+- Provide a concise summary of the text that clearly identifies and emphasizes its
+  main ideas and essential points, ensuring clarity throughout.
+- Provide a concise summary of the text that effectively identifies and emphasizes
+  its core concepts and essential points, ensuring clarity throughout.
+- Summarize the text by clearly identifying and highlighting its main ideas and key
+  points while ensuring clarity and conciseness.
+scores:
+- 0.7359470129013062
+- 0.7359470129013062
+- 0.7142391800880432
+- 0.7142391800880432

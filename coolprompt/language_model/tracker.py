@@ -4,6 +4,8 @@ from typing import Any
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_openai import ChatOpenAI
 
+import time
+
 
 class OpenAITracker:
     """Tracks OpenAI API usage stats like tokens and costs.
@@ -30,9 +32,10 @@ class OpenAITracker:
             "invoke_calls": 0,
             "batch_calls": 0,
             "batch_items": 0,
+            "api_wait_sec": 0.0,
         }
 
-    def _update_stats(self, callback, invoke_flag, batch_size, **kwargs):
+    def _update_stats(self, callback, invoke_flag, batch_size, duration_sec, **kwargs):
         """Updates stats from callback data.
 
         Args:
@@ -45,6 +48,7 @@ class OpenAITracker:
         self.stats["prompt_tokens"] += callback.prompt_tokens
         self.stats["completion_tokens"] += callback.completion_tokens
         self.stats["total_cost"] += callback.total_cost
+        self.stats["api_wait_sec"] += duration_sec
 
         if invoke_flag:
             self.stats["invoke_calls"] += 1
@@ -79,7 +83,7 @@ class OpenAITracker:
 class TrackedLLMWrapper(BaseLanguageModel):
     """Wrapper for LangChain models that tracks API usage.
 
-    Tracks tokens and costs for all invoke and batch calls.
+    Tracks tokens, costs, and API wait time for all invoke and batch calls.
     """
 
     model: Any
@@ -110,12 +114,14 @@ class TrackedLLMWrapper(BaseLanguageModel):
         Returns:
             Model output.
         """
+        start_time = time.time()
         with get_openai_callback() as cb:
             result = self.model.invoke(
                 input, config=config, stop=stop, **kwargs
             )
-            self.tracker._update_stats(cb, True, 0)
-            return result
+        duration_sec = time.time() - start_time
+        self.tracker._update_stats(cb, invoke_flag=True, batch_size=0, duration_sec=duration_sec)
+        return result
 
     def batch(self, inputs, config=None, *, return_exceptions=False, **kwargs):
         """Calls model in batch and tracks usage stats.
@@ -129,6 +135,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
         Returns:
             List of model outputs.
         """
+        start_time = time.time()
         with get_openai_callback() as cb:
             results = self.model.batch(
                 inputs,
@@ -136,8 +143,9 @@ class TrackedLLMWrapper(BaseLanguageModel):
                 return_exceptions=return_exceptions,
                 **kwargs,
             )
-            self.tracker._update_stats(cb, False, len(inputs))
-            return results
+        duration_sec = time.time() - start_time
+        self.tracker._update_stats(cb, invoke_flag=False, batch_size=len(inputs), duration_sec=duration_sec)
+        return results
 
     def with_structured_output(self, schema, **kwargs):
         """Returns model with structured output support.

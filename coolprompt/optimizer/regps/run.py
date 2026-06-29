@@ -11,6 +11,7 @@ from coolprompt.optimizer.autoprompting_method import (
 )
 from coolprompt.optimizer.regps.evoluter import ReGPSEvoluter
 from coolprompt.utils.logging_config import logger
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 
 def regps(
@@ -50,6 +51,10 @@ def regps(
         "bad_examples_number": 5,
     }
     args.update(kwargs)
+
+    telemetry_callback = args.pop("telemetry_callback", None)
+    use_structured_output = args.pop("use_structured_output", False)
+
     evoluter = ReGPSEvoluter(
         model=model,
         evaluator=evaluator,
@@ -64,7 +69,9 @@ def regps(
         output_path=args["output_path"],
         use_cache=args["use_cache"],
         bad_examples_number=args["bad_examples_number"],
-        checkpoint_path=args.get("checkpoint_path"),
+        checkpoint_path=args.get('checkpoint_path'),
+        use_structured_output=use_structured_output,
+        telemetry_callback=telemetry_callback,
     )
     logger.info("Starting Re-GPS optimization...")
     logger.debug(f"Start prompt:\n{initial_prompt}")
@@ -87,12 +94,15 @@ class ReGPSMethod(AutoPromptingMethod):
         **kwargs,
     ):
         """Run Re-GPS through the shared method interface."""
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
+
         return regps(
             model=model,
             dataset_split=dataset_split,
             evaluator=evaluator,
             problem_description=problem_description,
             initial_prompt=initial_prompt,
+            telemetry_callback=telemetry_callback,
             **kwargs,
         )
 

@@ -1,0 +1,12 @@
+average_score: 1.0
+best_score: 1.0
+prompts:
+- origin: APE
+  score: 1.0
+  text: Respond to the inquiry using the provided context.
+- origin: APE
+  score: 1.0
+  text: Provide an answer to the question considering the context.
+- origin: MANUAL
+  score: 1.0
+  text: Answer the question based on the context.

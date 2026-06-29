@@ -1,0 +1,9 @@
+- To enhance prompt clarity and effectiveness, always specify the task explicitly,
+  include clear output formatting instructions, and provide relevant examples to guide
+  the model. This approach helps ensure that the model understands the classification
+  criteria and the expected response format.
+- ' Clearly specify the output format and include explicit definitions or examples
+  for each category to guide the model''s understanding and ensure consistent responses. '
+- Enhance clarity and specificity by explicitly stating the expected output format
+  and the categories involved in the classification task, ensuring the model understands
+  the context and requirements for a more accurate response.

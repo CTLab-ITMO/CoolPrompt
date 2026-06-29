@@ -1,0 +1,14 @@
+prompts:
+- Provide a brief overview of the text by highlighting the central concepts and essential
+  information, excluding any superfluous details.
+- Provide a brief overview of the text by highlighting the central concepts and important
+  details, excluding any extraneous information.
+- Provide a clear and succinct summary of the text by highlighting the central concepts
+  and important points, excluding any extraneous information.
+- Summarize the text by identifying the main ideas and key points in a clear and concise
+  manner, while omitting unnecessary details.
+scores:
+- 0.7142391800880432
+- 0.7142391800880432
+- 0.7359470129013062
+- 0.7359470129013062

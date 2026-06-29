@@ -1,6 +1,6 @@
 """High-level entry point for the DistillPrompt optimization process."""
 
-from typing import List, Tuple, override
+from typing import List, Tuple, override, Optional
 
 from langchain_core.language_models.base import BaseLanguageModel
 
@@ -12,6 +12,7 @@ from coolprompt.optimizer.autoprompting_method import (
 from coolprompt.optimizer.distill_prompt.distiller import Distiller
 from coolprompt.utils.deprecation import warn_deprecated
 
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 def distillprompt(
     model: BaseLanguageModel,
@@ -22,6 +23,7 @@ def distillprompt(
     num_epochs: int = 5,
     output_path: str = "./distillprompt_outputs",
     use_cache: bool = True,
+    telemetry_callback: Optional[TelemetryCallback] = None,
 ) -> str:
     """Runs the full DistillPrompt optimization process.
 
@@ -67,6 +69,7 @@ def distillprompt(
         num_epochs=num_epochs,
         output_path=output_path,
         use_cache=use_cache,
+        telemetry_callback=telemetry_callback,
     )
 
     return distiller.distillation()
@@ -85,11 +88,15 @@ class DistillMethod(AutoPromptingMethod):
         **kwargs,
     ):
         """Run DistillPrompt through the shared method interface."""
+
+        telemetry_callback = kwargs.pop("telemetry_callback", None)
+
         return distillprompt(
             model=model,
             dataset_split=dataset_split,
             evaluator=evaluator,
             initial_prompt=initial_prompt,
+            telemetry_callback=telemetry_callback,
             **kwargs,
         )
 

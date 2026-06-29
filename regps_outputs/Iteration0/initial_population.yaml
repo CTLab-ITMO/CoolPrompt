@@ -1,0 +1,24 @@
+average_score: 1.0
+best_score: 1.0
+prompts:
+- bad_examples:
+  - correct: POSITIVE
+    input: The acting was superb.
+    output: <ans>POSITIVE</ans>
+  origin: APE
+  score: 1.0
+  text: Categorize the text.
+- bad_examples:
+  - correct: POSITIVE
+    input: The acting was superb.
+    output: <ans>POSITIVE</ans>
+  origin: APE
+  score: 1.0
+  text: Sort the text into categories.
+- bad_examples:
+  - correct: POSITIVE
+    input: The acting was superb.
+    output: <ans>POSITIVE</ans>
+  origin: MANUAL
+  score: 1.0
+  text: Classify the text.
