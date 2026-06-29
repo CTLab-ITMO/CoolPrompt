@@ -28,6 +28,9 @@ from coolprompt.utils.prompt_templates.llm_as_judge_templates import (
 )
 
 
+DEFAULT_BERTSCORE_MODEL_TYPE = "bert-base-multilingual-cased"
+
+
 class HFEvaluateMetric(ABC):
     """Mixin that delegates metric computation to HuggingFace ``evaluate``."""
 
@@ -387,11 +390,12 @@ class BertScoreMetric(HFEvaluateMetric, GenerationMetric):
     def _get_name():
         return "bertscore"
 
-    def __init__(self):
-        """Load BERTScore with the multilingual base model."""
+    def __init__(self, model_type: str = DEFAULT_BERTSCORE_MODEL_TYPE):
+        """Load BERTScore with the selected model type."""
         super().__init__(self._get_name())
+        self.model_type = model_type
         self._compute_kwargs_func = lambda outputs, targets: {
-            "model_type": "bert-base-multilingual-cased"
+            "model_type": self.model_type
         }
         self._return_parameter = "f1"
 
@@ -403,11 +407,12 @@ class MultiReferenceBertScoreMetric(HFEvaluateMetric, GenerationMetric):
     def _get_name():
         return "multiref_bertscore"
 
-    def __init__(self):
-        """Load BERTScore with the multilingual base model."""
+    def __init__(self, model_type: str = DEFAULT_BERTSCORE_MODEL_TYPE):
+        """Load BERTScore with the selected model type."""
         super().__init__("bertscore")
+        self.model_type = model_type
         self._compute_kwargs_func = lambda outputs, targets: {
-            "model_type": "bert-base-multilingual-cased"
+            "model_type": self.model_type
         }
         self._return_parameter = "f1"
 
@@ -681,6 +686,11 @@ GENERATION_METRIC_NAME_MAPPING = {
 }
 
 
+def _get_bertscore_model_type(kwargs: dict) -> str:
+    """Return the configured BERTScore model type."""
+    return kwargs.get("bertscore_model_type") or DEFAULT_BERTSCORE_MODEL_TYPE
+
+
 def validate_and_create_metric(
     task: Task,
     metric: str | None,
@@ -744,7 +754,15 @@ def validate_and_create_metric(
                     strict_mode=kwargs.get("geval_strict_mode", False),
                 )
             if metric in GENERATION_METRIC_NAME_MAPPING.keys():
-                return GENERATION_METRIC_NAME_MAPPING[metric]()
+                metric_class = GENERATION_METRIC_NAME_MAPPING[metric]
+                if issubclass(
+                    metric_class,
+                    (BertScoreMetric, MultiReferenceBertScoreMetric),
+                ):
+                    return metric_class(
+                        model_type=_get_bertscore_model_type(kwargs)
+                    )
+                return metric_class()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
                 f"Available metrics: {

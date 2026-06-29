@@ -28,6 +28,11 @@ generation tasks. For each prediction it computes BERTScore F1 against every
 reference and uses the maximum reference score; the final score is the mean
 over examples.
 
+For BERTScore-based metrics, the default underlying model is
+`bert-base-multilingual-cased`. You can override it with
+`bertscore_model_type`; the same model type is used for both `bertscore`
+and `multiref_bertscore`.
+
 You can add a custom metric by implementing the `BaseMetric` interface.
 
 ---
