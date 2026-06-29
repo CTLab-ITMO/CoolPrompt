@@ -16,6 +16,7 @@ from coolprompt.utils.prompt_templates.data_generator_templates import (
     CLASSIFICATION_DATA_GENERATING_TEMPLATE,
     GENERATION_DATA_GENERATING_TEMPLATE,
     PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE,
+    CLASSIFICATION_PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE,
 )
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
@@ -87,24 +88,49 @@ class SyntheticDataGenerator:
             [f"Input: {inp}\nOutput: {out}" for (inp, out) in examples]
         )
 
+    @staticmethod
+    def _extract_labels(targets: List) -> List[str]:
+        seen = set()
+        labels = []
+        for t in targets:
+            key = str(t)
+            if key not in seen:
+                seen.add(key)
+                labels.append(key)
+        return labels
+
     def _generate_problem_description(
         self,
         prompt: str,
-        examples: Optional[List[Tuple[str, str]]] = None
+        examples: Optional[List[Tuple[str, str]]] = None,
+        task: Optional[Task] = None,
+        labels: Optional[List[str]] = None,
     ) -> str:
         """Generates problem description based on given user prompt
 
         Args:
             prompt (str): initial user prompt
+            examples (Optional[List[Tuple[str, str]]]): dataset examples
+            task (Optional[Task]): task type
+            labels (Optional[List[str]]): unique class labels for
+                classification tasks; extract with _extract_labels(all_targets)
+                before calling
 
         Returns:
             str: generated problem description
         """
         if examples:
-            request = PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
-                prompt=prompt,
-                examples=self._examples_to_str(examples)
-            )
+            if task == Task.CLASSIFICATION and labels:
+                request = CLASSIFICATION_PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
+                    prompt=prompt,
+                    examples=self._examples_to_str(examples),
+                    labels=", ".join(labels),
+                )
+            else:
+                request = PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE.format(
+                    prompt=prompt,
+                    examples=self._examples_to_str(examples),
+                )
         else:
             request = PROBLEM_DESCRIPTION_TEMPLATE.format(prompt=prompt)
 
@@ -184,7 +210,9 @@ class SyntheticDataGenerator:
                 "Problem description was not provided, "
                 + "so it will be generated automatically"
             )
-            problem_description = self._generate_problem_description(prompt)
+            problem_description = self._generate_problem_description(
+                prompt, task=task
+            )
             logger.info(
                 f"Generated problem description: {problem_description}"
             )

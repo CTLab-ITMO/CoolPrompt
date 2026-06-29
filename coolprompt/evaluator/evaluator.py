@@ -113,8 +113,9 @@ class Evaluator:
 
         detailed_failures = []
         if failed_examples and failed_examples > 0:
-            indices = np.argsort(score_per_task)[:failed_examples]
-            for i in indices:
+            bad_indices = [i for i, s in enumerate(score_per_task) if s < 1.0]
+            bad_indices.sort(key=lambda i: score_per_task[i])
+            for i in bad_indices[:failed_examples]:
                 detailed_failures.append(
                     FailedExampleDetailed(
                         instance=dataset[i],

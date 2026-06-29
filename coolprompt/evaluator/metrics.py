@@ -156,7 +156,9 @@ class BaseMetric(ABC):
             List[float]: List of float metrics (for each model answer).
         """
 
-        indices = np.argsort(results)[:failed_examples]
+        bad_indices = [i for i, r in enumerate(results) if r < 1.0]
+        bad_indices.sort(key=lambda i: results[i])
+        indices = bad_indices[:failed_examples]
 
         return [
             {
