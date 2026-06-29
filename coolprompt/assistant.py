@@ -137,6 +137,7 @@ class PromptTuner:
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
         llm_as_judge_metric_ceil: int = 10,
+        bertscore_model_type: Optional[str] = None,
         geval_criteria: Optional[str] = None,
         geval_evaluation_steps: Optional[list[str]] = None,
         geval_evaluation_params: Optional[list] = None,
@@ -189,6 +190,8 @@ class PromptTuner:
                 prompt templates for each criterion.
             llm_as_judge_metric_ceil (int): Maximum integer score expected
                 from the judge (1..ceil); normalized to [0,1].
+            bertscore_model_type (str | None): Optional HF ``model_type`` for
+                `bertscore` and `multiref_bertscore`.
             geval_criteria (str | None): High‑level description for GEval.
                 Mutually exclusive with `geval_evaluation_steps`.
             geval_evaluation_steps (list[str] | None): Step‑by‑step
@@ -248,6 +251,7 @@ class PromptTuner:
             llm_as_judge_criteria=llm_as_judge_criteria,
             llm_as_judge_custom_templates=llm_as_judge_custom_templates,
             llm_as_judge_metric_ceil=llm_as_judge_metric_ceil,
+            bertscore_model_type=bertscore_model_type,
             geval_criteria=geval_criteria,
             geval_evaluation_steps=geval_evaluation_steps,
             geval_evaluation_params=geval_evaluation_params,
@@ -366,6 +370,7 @@ class PromptTuner:
         task: Optional[str] = None,
         targets: Optional[Iterable[str | int]] = None,
         metric: Optional[str] = None,
+        bertscore_model_type: Optional[str] = None,
         batch_size: int = 25,
         return_raw_outputs: bool = True,
     ) -> List[str] | Tuple[List[str], float]:
@@ -387,6 +392,8 @@ class PromptTuner:
                 If provided, metric is computed and returned.
             metric (Optional[str]): Metric name. If None, defaults to "accuracy"
                 for classification or "bertscore" for generation.
+            bertscore_model_type (Optional[str]): Optional HF ``model_type``
+                for `bertscore` and `multiref_bertscore`.
             batch_size (int, default=25): Number of samples per inference batch.
             return_raw_outputs (bool, default=True): If True, return raw model outputs;
                 if False, return parsed outputs via metric.parse_output().
@@ -418,7 +425,11 @@ class PromptTuner:
         if metric is None:
             metric = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
         
-        metric_impl = validate_and_create_metric(task_enum, metric)
+        metric_impl = validate_and_create_metric(
+            task_enum,
+            metric,
+            bertscore_model_type=bertscore_model_type,
+        )
         
         evaluator = Evaluator(
             model=self._target_model,
