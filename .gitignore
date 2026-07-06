@@ -178,3 +178,7 @@ run_logs/*
 coolprompt_test/*
 
 .DS_Store
+
+coolprompt/3_methods/GEPA/outputs*/*
+coolprompt/3_methods/GEPA/results/*
+coolprompt/3_methods/GEPA/runs/*

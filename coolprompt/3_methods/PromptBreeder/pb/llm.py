@@ -17,6 +17,7 @@ from typing import List, Optional
 
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
+from langchain_core.rate_limiters import InMemoryRateLimiter
 
 logger = logging.getLogger(__name__)
 
@@ -56,13 +57,19 @@ class OpenAIClient:
         self.model_name = model
         self.num_workers = max(1, int(num_workers))
         self.default_temperature = temperature
+        rate_limiter = InMemoryRateLimiter(
+            requests_per_second=5,  # 1 запрос в секунду
+            check_every_n_seconds=0.1,  # проверять каждые 100ms
+            max_bucket_size=10  # максимальный размер буфера
+        )
         self._llm = ChatOpenAI(
             model=model,
-            base_url="https://openrouter.ai/api/v1",
+            base_url="https://foundation-models.api.cloud.ru/v1",
             api_key=api_key,
             max_retries=max_retries,
             timeout=timeout,
             temperature=temperature,
+            rate_limiter=rate_limiter
         )
 
     # ------------------------------------------------------------------ utils

@@ -25,7 +25,7 @@ SUPPORTED_DATASETS: List[str] = [
     "xsum",
     "tweeteval",
     "mediqa",
-    "code_to_text",
+    # "code_to_text",
     "concode",
 ]
 
@@ -51,8 +51,36 @@ def load_examples(name: str, split: str = "train") -> List[Dict]:
         )
     if split not in {"train", "validation", "test"}:
         raise ValueError(f"Unknown split {split!r}")
-    path = os.path.join(_DATA_DIR, name, f"{split}_{name}.jsonl")
-    return _read_jsonl(path)
+    
+    from coolprompt.utils.load_dataset import load_dataset
+    from coolprompt.utils.utils import get_dataset_split
+    
+    if split == "train" or split == "validation":
+        dataset, target = load_dataset(name, split="train", size=150)
+        train_data, val_data, train_targets, val_targets = get_dataset_split(dataset, target, validation_size=2./3., seed=158)
+        if (split == "train"):
+            return [
+                {
+                    'input': inp,
+                    'target': tgt
+                }
+                for (inp, tgt) in zip(train_data, train_targets)
+            ]
+        return [
+            {
+                'input': inp,
+                'target': tgt
+            }
+            for (inp, tgt) in zip(val_data, val_targets)
+        ]
+    dataset, target = load_dataset(name, split="test", size=300)
+    return [
+        {
+            'input': inp,
+            'target': tgt
+        }
+        for (inp, tgt) in zip(dataset, target)
+    ]
 
 
 # --------------------------------------------------------- default task prompts

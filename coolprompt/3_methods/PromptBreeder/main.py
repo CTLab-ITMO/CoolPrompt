@@ -71,16 +71,12 @@ args = parser.parse_args()
 
 total_evaluations = args.num_mutation_prompts * args.num_thinking_styles * args.num_evals
 
-# --- OpenAI API key -----------------------------------------------------------
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    api_key = getpass("Enter your OpenAI API key: ")
-    os.environ["OPENAI_API_KEY"] = api_key
+# --- OpenAI API key ----------------------------------------------------------
 
 # --- LLM client ---------------------------------------------------------------
 co = OpenAIClient(
     model=args.model,
-    api_key=api_key,
+    api_key="",
     num_workers=max(1, total_evaluations),
     max_retries=5,
     timeout=30,

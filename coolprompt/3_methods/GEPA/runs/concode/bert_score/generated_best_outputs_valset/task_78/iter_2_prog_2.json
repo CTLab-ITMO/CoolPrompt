@@ -1,4 +1,0 @@
-{
-    "reasoning": "",
-    "output": "public String getEscapedJson() { return m_escapedJson; }"
-}

@@ -34,11 +34,11 @@ MAIN_FILE = ROOT / "main.py"
 PYTHON_BIN = Path(sys.executable)
 
 NUM_MUTATION_PROMPTS = 2
-NUM_THINKING_STYLES = 5
+NUM_THINKING_STYLES = 3
 NUM_EVALS = 50
 NUM_SIMULATIONS = 5
-MODEL_NAME = "openai/gpt-5-nano"
-TEMPERATURE = "1.0"
+MODEL_NAME = "openai/gpt-4o-mini"
+TEMPERATURE = "0.7"
 
 
 def build_command(dataset: str) -> list[str]:
@@ -67,10 +67,6 @@ def build_command(dataset: str) -> list[str]:
 def main() -> int:
     load_dotenv()
 
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        os.environ["OPENAI_API_KEY"] = getpass("Enter your OpenAI API key: ")
-
     print("=" * 80)
     print("Starting sequential PromptBreeder runs for all datasets")
     print(f"Python: {PYTHON_BIN}")
@@ -90,7 +86,7 @@ def main() -> int:
 
     failed_datasets: list[str] = []
 
-    for index, dataset in enumerate(SUPPORTED_DATASETS, start=1):
+    for index, dataset in enumerate(["mediqa", "concode", "gsm8k"], start=1):
         command = build_command(dataset)
         print()
         print("#" * 80)
