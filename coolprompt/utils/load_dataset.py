@@ -174,6 +174,10 @@ def common_gen_preproc(
 ) -> pd.DataFrame:
     """Preprocessing of CommonGen dataset.
 
+    CommonGen contains multiple valid references for one concept set. Keep
+    them grouped so multi-reference generation metrics can compare a model
+    output against every human reference.
+
     Args:
         sample (DatasetDict): sample of the dataset to preprocess.
         size (Optional[int]): what data size to return.
@@ -184,7 +188,24 @@ def common_gen_preproc(
     """
     data = pd.DataFrame(sample)
 
-    data["input_data"] = data["concepts"].apply(lambda x: str(x))
+    if "concept_set_idx" in data.columns:
+        group_key = "concept_set_idx"
+    else:
+        data["_concepts_group_key"] = data["concepts"].apply(
+            lambda x: tuple(x) if isinstance(x, list) else x
+        )
+        group_key = "_concepts_group_key"
+    grouped = (
+        data.groupby(group_key, sort=False)
+        .agg(
+            concepts=("concepts", "first"),
+            target=("target", list),
+        )
+        .reset_index(drop=True)
+    )
+
+    grouped["input_data"] = grouped["concepts"].apply(lambda x: str(x))
+    data = grouped[["input_data", "target"]]
 
     if size:
         data = data.head(size)
@@ -219,7 +240,7 @@ def load_dataset(
     split: str,
     subset: Optional[str] = None,
     size: Optional[int] = None,
-) -> Tuple[List[str], List[str]]:
+) -> Tuple[List[str], List[str | List[str]]]:
     """Loading preprocessed dataset
 
     Args:
@@ -235,7 +256,7 @@ def load_dataset(
             Defaults to None (full dataset size).
 
     Returns:
-        Tuple[List[str], List[str]]: loaded dataset and targets
+        Tuple[List[str], List[str | List[str]]]: loaded dataset and targets
     """
     match name:
         case "squad_v2":
