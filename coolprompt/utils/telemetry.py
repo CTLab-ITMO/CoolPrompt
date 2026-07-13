@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List
 from datetime import datetime
 import time
+
 
 class IterationSnapshot(BaseModel):
     """Telemetry for a single optimization iteration."""
