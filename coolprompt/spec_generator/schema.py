@@ -69,7 +69,7 @@ class CornerCase(BaseModel):
 
 class TaskSpec(BaseModel):
     domain: str = Field(
-        description="Subject-matter domain, e.g. 'social-media sentiment', 'legal summarisation'."
+        description="Subject-matter domain, e.g. 'social-media sentiment', 'legal summarization'."
     )
     task_type: TaskType = Field(description="High-level task family.")
     task_summary: str = Field(description="One-sentence description of what the model must do.")

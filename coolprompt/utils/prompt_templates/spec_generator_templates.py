@@ -11,7 +11,7 @@ that will be used to generate synthetic training/evaluation examples.
 Produce a detailed specification with exactly these fields:
 
 - domain: the subject-matter area of the task
-- task_type: one of: classification | generation | summarisation | QA | translation | extraction | evaluation | other
+- task_type: one of: classification | generation | summarization | QA | translation | extraction | evaluation | other
 - task_summary: one sentence describing exactly what the model must do
 - io_format:
     - input_description: format and content of the input
