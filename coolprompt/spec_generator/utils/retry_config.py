@@ -7,4 +7,4 @@ class ValidationConfig:
 
     judge_enabled: bool = True
     judge_quality_threshold: float = 0.7
-    judge_batch_size: int = 10
+    judge_batch_size: int = 15

@@ -22,8 +22,8 @@ _TRANSIENT_ERRORS = (
 @dataclass(frozen=True)
 class RetryConfig:
     max_network_retries: int = 3
-    network_retry_min_wait: float = 1.0
-    network_retry_max_wait: float = 8.0
+    network_retry_min_wait: float = 2.0
+    network_retry_max_wait: float = 20.0
 
     def __post_init__(self) -> None:
         if self.max_network_retries < 0:
