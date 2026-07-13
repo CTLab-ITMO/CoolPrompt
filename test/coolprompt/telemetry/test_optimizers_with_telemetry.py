@@ -1,7 +1,8 @@
 """Integration tests for full telemetry pipeline across all optimizers.
 
-These tests verify that telemetry tracking works correctly end-to-end
-with OpenRouter API calls. Requires OPENROUTER_API_KEY environment variable.
+These tests verify that telemetry tracking works correctly end-to-end.
+Real OpenRouter API calls require RUN_OPENROUTER_INTEGRATION=1 and
+OPENROUTER_API_KEY or OPENAI_API_KEY.
 """
 from __future__ import annotations
 
@@ -16,6 +17,12 @@ from coolprompt.utils.telemetry import OptimizationTelemetry
 
 def get_openrouter_api_key() -> str:
     """Get OpenRouter API key from environment."""
+    if os.environ.get("RUN_OPENROUTER_INTEGRATION") != "1":
+        pytest.skip(
+            "Set RUN_OPENROUTER_INTEGRATION=1 and OPENROUTER_API_KEY or "
+            "OPENAI_API_KEY to run OpenRouter telemetry integration tests"
+        )
+
     api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")
     if not api_key:
         pytest.skip("OPENROUTER_API_KEY or OPENAI_API_KEY not set")
@@ -191,6 +198,141 @@ class TestTelemetryHyper:
 
 class TestTelemetryCompress:
     """Test telemetry tracking for Compressor optimizer."""
+
+    def test_compress_telemetry_with_mocked_structured_response(
+        self,
+        monkeypatch,
+        temp_output_dir,
+    ):
+        """Test Compressor telemetry without external API access."""
+
+        class FakeMetric:
+            def _get_name(self):
+                return "mock_metric"
+
+        class FakeEvaluator:
+            def __init__(self, *args, **kwargs):
+                pass
+
+            def evaluate(self, prompt, dataset, targets, template=None, **kwargs):
+                return 0.9 if prompt == "short prompt" else 0.2
+
+        class FakeStructuredModel:
+            def __init__(self, parent, schema):
+                self.parent = parent
+                self.schema = schema
+
+            def invoke(self, messages):
+                self.parent.stats.update(
+                    {
+                        "total_calls": 1,
+                        "total_tokens": 12,
+                        "prompt_tokens": 8,
+                        "completion_tokens": 4,
+                        "total_cost": 0.001,
+                        "invoke_calls": 1,
+                        "api_wait_sec": 0.05,
+                    }
+                )
+                return self.schema(
+                    reasoning="mocked compression",
+                    prompt_input_context="context",
+                    prompt_task="task",
+                    final_prompt="short prompt",
+                )
+
+        class FakeModel:
+            def __init__(self):
+                self.stats = {
+                    "total_calls": 0,
+                    "total_tokens": 0,
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_cost": 0.0,
+                    "invoke_calls": 0,
+                    "batch_calls": 0,
+                    "batch_items": 0,
+                    "api_wait_sec": 0.0,
+                }
+
+            def with_structured_output(self, schema, **kwargs):
+                return FakeStructuredModel(self, schema)
+
+            def get_stats(self):
+                return self.stats.copy()
+
+        monkeypatch.setattr("coolprompt.assistant.validate_model", lambda model: None)
+        monkeypatch.setattr(
+            "coolprompt.assistant.validate_and_create_metric",
+            lambda *args, **kwargs: FakeMetric(),
+        )
+        monkeypatch.setattr("coolprompt.assistant.Evaluator", FakeEvaluator)
+        monkeypatch.setattr(
+            "coolprompt.assistant.correct",
+            lambda prompt, **kwargs: prompt,
+        )
+
+        telemetry_path = str(temp_output_dir / "mock_compress_telemetry")
+        tuner = PromptTuner(target_model=FakeModel(), system_model=FakeModel())
+
+        final_prompt = tuner.run(
+            start_prompt="This is a deliberately long prompt that should be compressed.",
+            task="generation",
+            dataset=["input one", "input two"],
+            target=["target one", "target two"],
+            method="compress",
+            metric="em",
+            problem_description="Mock compression",
+            validation_size=0.5,
+            enable_telemetry=True,
+            export_telemetry=True,
+            telemetry_format="both",
+            telemetry_path=telemetry_path,
+            verbose=0,
+        )
+
+        assert final_prompt == "short prompt"
+        report = tuner.telemetry_report
+        assert report.method_name == "compress"
+        assert report.task_type == "generation"
+        assert report.total_tokens == 12
+        assert report.total_tokens_in == 8
+        assert report.total_tokens_out == 4
+        assert report.total_cost_usd == 0.001
+        assert report.total_api_wait_sec == 0.05
+        assert report.total_api_requests == 1
+        assert report.initial_score == 0.2
+        assert report.final_score == 0.9
+        assert report.score_improvement == 0.7
+        assert len(report.trajectory) == 1
+
+        snapshot = report.trajectory[0]
+        assert snapshot.iteration == 1
+        assert snapshot.best_score == 0.0
+        assert snapshot.best_prompt_length == len("short prompt")
+        assert snapshot.cumulative_tokens_in == 8
+        assert snapshot.cumulative_tokens_out == 4
+        assert snapshot.cumulative_total_cost == 0.001
+        assert snapshot.cumulative_invoke_calls == 1
+        assert snapshot.cumulative_batch_calls == 0
+        assert snapshot.cumulative_api_wait_sec == 0.05
+
+        json_path = Path(f"{telemetry_path}.json")
+        csv_path = Path(f"{telemetry_path}_trajectory.csv")
+        assert json_path.exists()
+        assert csv_path.exists()
+
+        with open(json_path, "r", encoding="utf-8") as f:
+            json_data = json.load(f)
+        assert json_data["total_tokens"] == 12
+        assert json_data["trajectory"][0]["best_prompt_length"] == len("short prompt")
+
+        import csv
+
+        with open(csv_path, "r", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        assert rows[0]["iteration"] == "1"
+        assert rows[0]["cumulative_tokens_in"] == "8"
 
     def test_compress_with_telemetry(self, chat_model, temp_output_dir):
         """Test that Compressor correctly tracks telemetry."""
