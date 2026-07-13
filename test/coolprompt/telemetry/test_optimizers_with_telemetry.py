@@ -27,7 +27,7 @@ def create_chat_model() -> ChatOpenAI:
     api_key = get_openrouter_api_key()
     base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
     model = os.environ.get("INTEGRATION_LLM_MODEL", "openai/gpt-4o-mini")
-    
+
     return ChatOpenAI(
         model=model,
         temperature=0.3,
@@ -54,7 +54,7 @@ def temp_output_dir(tmp_path):
 
 class TestTelemetryHyperLight:
     """Test telemetry tracking for HyPER Light optimizer."""
-    
+
     def test_hyper_light_with_telemetry(self, chat_model, temp_output_dir):
         """Test that HyPER Light correctly tracks and exports telemetry."""
         tuner = PromptTuner(
@@ -62,9 +62,9 @@ class TestTelemetryHyperLight:
             system_model=chat_model,
             logs_dir=temp_output_dir / "logs"
         )
-        
+
         telemetry_path = str(temp_output_dir / "hyper_light_telemetry")
-        
+
         final_prompt = tuner.run(
             start_prompt="Classify the sentiment of this text as POSITIVE or NEGATIVE.",
             task="classification",
@@ -85,34 +85,34 @@ class TestTelemetryHyperLight:
             telemetry_path=telemetry_path,
             verbose=1,
         )
-        
+
         assert final_prompt is not None
         assert len(final_prompt) > 0
-        
+
         assert hasattr(tuner, "telemetry_report")
         assert tuner.telemetry_report is not None
-        
+
         report = tuner.telemetry_report
         assert isinstance(report, OptimizationTelemetry)
         assert report.method_name == "hyper_light"
         assert report.task_type == "classification"
-        
+
         assert report.total_api_wait_sec >= 0
         assert report.total_tokens >= 0
         assert report.total_cost_usd >= 0
-        
+
         assert len(report.trajectory) >= 1
         assert report.trajectory[0].iteration == 1
-        
+
         json_path = Path(f"{telemetry_path}.json")
         csv_path = Path(f"{telemetry_path}_trajectory.csv")
-        
+
         assert json_path.exists(), f"JSON telemetry not found at {json_path}"
         assert csv_path.exists(), f"CSV telemetry not found at {csv_path}"
-        
+
         with open(json_path, "r", encoding="utf-8") as f:
             json_data = json.load(f)
-        
+
         assert json_data["method_name"] == "hyper_light"
         assert "total_cost_usd" in json_data
         assert "trajectory" in json_data
@@ -121,7 +121,7 @@ class TestTelemetryHyperLight:
 
 class TestTelemetryHyper:
     """Test telemetry tracking for HyPER optimizer (multi-iteration)."""
-    
+
     def test_hyper_with_telemetry(self, chat_model, temp_output_dir):
         """Test that HyPER correctly tracks telemetry across iterations."""
         tuner = PromptTuner(
@@ -129,9 +129,9 @@ class TestTelemetryHyper:
             system_model=chat_model,
             logs_dir=temp_output_dir / "logs"
         )
-        
+
         telemetry_path = str(temp_output_dir / "hyper_telemetry")
-        
+
         final_prompt = tuner.run(
             start_prompt="Solve this math problem step by step.",
             task="generation",
@@ -155,43 +155,43 @@ class TestTelemetryHyper:
             mini_batch_size=2,
             patience=None,
         )
-        
+
         assert final_prompt is not None
         assert len(final_prompt) > 0
-        
+
         assert hasattr(tuner, "telemetry_report")
         report = tuner.telemetry_report
-        
+
         assert report.method_name == "hyper"
         assert report.task_type == "generation"
-        
+
         assert len(report.trajectory) >= 2, \
             f"Expected at least 2 iterations, got {len(report.trajectory)}"
-        
+
         for i, snapshot in enumerate(report.trajectory):
             assert snapshot.iteration == i + 1
             assert snapshot.best_score is not None
             assert snapshot.best_prompt_length > 0
-        
+
         if len(report.trajectory) > 1:
             for i in range(1, len(report.trajectory)):
                 assert report.trajectory[i].cumulative_tokens_in >= \
                        report.trajectory[i-1].cumulative_tokens_in
                 assert report.trajectory[i].cumulative_total_cost >= \
                        report.trajectory[i-1].cumulative_total_cost
-        
+
         json_path = Path(f"{telemetry_path}.json")
         assert json_path.exists()
-        
+
         with open(json_path, "r", encoding="utf-8") as f:
             json_data = json.load(f)
-        
+
         assert len(json_data["trajectory"]) >= 2
 
 
 class TestTelemetryCompress:
     """Test telemetry tracking for Compressor optimizer."""
-    
+
     def test_compress_with_telemetry(self, chat_model, temp_output_dir):
         """Test that Compressor correctly tracks telemetry."""
         tuner = PromptTuner(
@@ -199,15 +199,15 @@ class TestTelemetryCompress:
             system_model=chat_model,
             logs_dir=temp_output_dir / "logs"
         )
-        
+
         telemetry_path = str(temp_output_dir / "compress_telemetry")
-        
-        long_prompt = """You are an expert assistant. Your task is to analyze the provided text 
-        carefully and comprehensively. You should consider all aspects of the text including 
-        its structure, content, tone, and purpose. After your analysis, provide a detailed 
-        summary that captures the main points, key arguments, and important details. 
+
+        long_prompt = """You are an expert assistant. Your task is to analyze the provided text
+        carefully and comprehensively. You should consider all aspects of the text including
+        its structure, content, tone, and purpose. After your analysis, provide a detailed
+        summary that captures the main points, key arguments, and important details.
         Your response should be well-organized and easy to understand."""
-        
+
         final_prompt = tuner.run(
             start_prompt=long_prompt,
             task="generation",
@@ -218,25 +218,25 @@ class TestTelemetryCompress:
             telemetry_path=telemetry_path,
             verbose=1,
         )
-        
+
         assert final_prompt is not None
         assert len(final_prompt) < len(long_prompt)
-        
+
         assert hasattr(tuner, "telemetry_report")
         report = tuner.telemetry_report
-        
+
         assert report.method_name == "compress"
         assert len(report.trajectory) == 1
-        
+
         assert report.trajectory[0].best_score == 0.0
-        
+
         assert Path(f"{telemetry_path}.json").exists()
         assert Path(f"{telemetry_path}_trajectory.csv").exists()
 
 
 class TestTelemetryReflective:
     """Test telemetry tracking for ReflectivePrompt optimizer."""
-    
+
     def test_reflective_with_telemetry(self, chat_model, temp_output_dir):
         """Test that ReflectivePrompt correctly tracks telemetry."""
         tuner = PromptTuner(
@@ -244,9 +244,9 @@ class TestTelemetryReflective:
             system_model=chat_model,
             logs_dir=temp_output_dir / "logs"
         )
-        
+
         telemetry_path = str(temp_output_dir / "reflective_telemetry")
-        
+
         final_prompt = tuner.run(
             start_prompt="Answer the question based on the context.",
             task="generation",
@@ -268,24 +268,24 @@ class TestTelemetryReflective:
             population_size=3,
             num_epochs=2,
         )
-        
+
         assert final_prompt is not None
         assert len(final_prompt) > 0
-        
+
         assert hasattr(tuner, "telemetry_report")
         report = tuner.telemetry_report
-        
+
         assert report.method_name == "reflective"
         assert len(report.trajectory) >= 2
-        
+
         csv_path = Path(f"{telemetry_path}_trajectory.csv")
         assert csv_path.exists()
-        
+
         import csv
         with open(csv_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             rows = list(reader)
-        
+
         assert len(rows) >= 2
         assert "iteration" in rows[0]
         assert "best_score" in rows[0]
@@ -294,7 +294,7 @@ class TestTelemetryReflective:
 
 class TestTelemetryDistill:
     """Test telemetry tracking for DistillPrompt optimizer."""
-    
+
     def test_distill_with_telemetry(self, chat_model, temp_output_dir):
         """Test that DistillPrompt correctly tracks telemetry."""
         tuner = PromptTuner(
@@ -302,9 +302,9 @@ class TestTelemetryDistill:
             system_model=chat_model,
             logs_dir=temp_output_dir / "logs"
         )
-        
+
         telemetry_path = str(temp_output_dir / "distill_telemetry")
-        
+
         final_prompt = tuner.run(
             start_prompt="Summarize the text.",
             task="generation",
@@ -324,19 +324,19 @@ class TestTelemetryDistill:
             verbose=1,
             num_epochs=2,
         )
-        
+
         assert final_prompt is not None
-        
+
         assert hasattr(tuner, "telemetry_report")
         report = tuner.telemetry_report
-        
+
         assert report.method_name == "distill"
         assert len(report.trajectory) >= 2
 
 
 class TestTelemetryReGPS:
     """Test telemetry tracking for ReGPS optimizer."""
-    
+
     def test_regps_with_telemetry(self, chat_model, temp_output_dir):
         """Test that ReGPS correctly tracks telemetry."""
         tuner = PromptTuner(
@@ -344,9 +344,9 @@ class TestTelemetryReGPS:
             system_model=chat_model,
             logs_dir=temp_output_dir / "logs"
         )
-        
+
         telemetry_path = str(temp_output_dir / "regps_telemetry")
-        
+
         final_prompt = tuner.run(
             start_prompt="Classify the text.",
             task="classification",
@@ -368,11 +368,11 @@ class TestTelemetryReGPS:
             num_epochs=2,
             bad_examples_number=2,
         )
-        
+
         assert final_prompt is not None
-        
+
         assert hasattr(tuner, "telemetry_report")
         report = tuner.telemetry_report
-        
+
         assert report.method_name == "regps"
         assert len(report.trajectory) >= 2

@@ -23,17 +23,17 @@ class OptimizationTelemetry(BaseModel):
     end_time: datetime
     total_wall_clock_sec: float
     total_api_wait_sec: float
-    
+
     total_tokens_in: int
     total_tokens_out: int
     total_tokens: int
     total_cost_usd: float
-    
+
     total_invoke_calls: int
     total_batch_calls: int
     total_batch_items: int
     total_api_requests: int = Field(description="Sum of invoke_calls and batch_calls")
-    
+
     initial_score: float
     final_score: float
     score_improvement: float

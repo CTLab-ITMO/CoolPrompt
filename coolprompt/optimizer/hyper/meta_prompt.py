@@ -131,11 +131,15 @@ class HyPERLightMethod(AutoPromptingMethod):
         hyper_meta_info = kwargs.pop("hyper_meta_info", None)
         hyper_meta_prompt = kwargs.pop("hyper_meta_prompt", None)
         use_structured_output = kwargs.pop("use_structured_output", False)
-        optimizer = MetaPromptOptimizer(
-            model=model,
-            meta_prompt=hyper_meta_prompt,
-            use_structured_output=use_structured_output,
+        optimizer_kwargs = {
+            "model": model,
+            "use_structured_output": use_structured_output,
             **kwargs,
+        }
+        if hyper_meta_prompt is not None:
+            optimizer_kwargs["meta_prompt"] = hyper_meta_prompt
+        optimizer = MetaPromptOptimizer(
+            **optimizer_kwargs,
         )
         meta_info = hyper_meta_info.copy() if hyper_meta_info else {}
         if "problem_description" not in meta_info:
