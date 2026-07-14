@@ -1,7 +1,11 @@
 from pathlib import Path
+from datetime import datetime
+import os
+import csv
 from typing import Iterable, List, Optional, Tuple
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
+from langchain_openai import ChatOpenAI
 from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
@@ -19,6 +23,9 @@ from coolprompt.utils.correction.corrector import correct
 from coolprompt.utils.correction.rule import LanguageRule
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+
+from coolprompt.language_model.tracker import model_tracker, TrackedLLMWrapper
+from coolprompt.utils.telemetry import IterationSnapshot, TelemetryCollector
 
 
 class PromptTuner:
@@ -55,7 +62,11 @@ class PromptTuner:
         """
         setup_logging(logs_dir)
         self._target_model = target_model or DefaultLLM.init()
+        if isinstance(self._target_model, ChatOpenAI) and not isinstance(self._target_model, TrackedLLMWrapper):
+            self._target_model = model_tracker.wrap_model(self._target_model)
         self._system_model = system_model or self._target_model
+        if system_model is not None and isinstance(self._system_model, ChatOpenAI) and not isinstance(self._system_model, TrackedLLMWrapper):
+            self._system_model = model_tracker.wrap_model(self._system_model)
 
         self.init_metric = None
         self.init_prompt = None
@@ -143,8 +154,13 @@ class PromptTuner:
         geval_evaluation_params: Optional[list] = None,
         geval_strict_mode: bool = False,
         return_final_prompt: bool = True,
+        hyper_meta_prompt: Optional[str] = None,
         hyper_meta_info: dict = None,
         system_model_as_optimizer: bool = False,
+        enable_telemetry: bool = True,
+        export_telemetry: bool = False,
+        telemetry_format: str = "json",
+        telemetry_path: Optional[str] = None,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -166,7 +182,7 @@ class PromptTuner:
                 (constructed inside ``validate_method`` with no arguments).
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
-                "bertscore" for generation. Special metrics `llm_as_judge` and
+                "meteor" for generation. Special metrics `llm_as_judge` and
                 `geval` require additional configuration parameters below.
             problem_description (str | None): Natural language description
                 of the task. If None, it will be generated automatically
@@ -184,6 +200,8 @@ class PromptTuner:
                 during evaluation.
             verbose (int): Logging verbosity: 0 = silent, 1 = steps,
                 2 = steps + prompts.
+            corner_ratio (float, default=0.4): Ratio of corner-case examples
+                to include when generating synthetic data.
             llm_as_judge_criteria (str | list[str]): Criterion or list of
                 criteria for the LLM‑as‑judge metric.
             llm_as_judge_custom_templates (dict[str, str] | None): Custom
@@ -204,15 +222,26 @@ class PromptTuner:
             return_final_prompt (bool): If True, return the final prompt;
                 otherwise return None (the prompt is still stored in
                 `self.final_prompt`).
+            hyper_meta_prompt (str | None): Optional custom HyPER meta-prompt
+                template.
             hyper_meta_info (dict | None): Optional extra key-value pairs
                 merged into the meta-info block for ``hyper`` and ``hyper_light``.
-            system_model_as_optimizer (bool): If True, use the system model for
-                optimizing processes, while target model will be used for inference.
+            system_model_as_optimizer (bool, default=False): If True, use the
+                system model for optimization steps; target model used for inference.
+            enable_telemetry (bool, default=True): If True, collect iteration-level
+                telemetry during optimization.
+            export_telemetry (bool, default=False): If True and telemetry enabled,
+                write telemetry report to disk.
+            telemetry_format (str, default="json"): Format for exported telemetry:
+                "json", "csv", or "both".
+            telemetry_path (str | None, default=None): Base path for telemetry exports.
+                If None, auto-generates ./logs/telemetry_{timestamp}.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
             Optional[str]: The optimized prompt if `return_final_prompt` is
-            True, otherwise None.
+            True, otherwise None. If `enable_telemetry=True`, also sets
+            `self.telemetry_report` with the optimization trajectory.
 
         Raises:
             ValueError: On invalid task, missing required dataset for
@@ -316,8 +345,19 @@ class PromptTuner:
             logger.debug(f"Additional kwargs: {kwargs}")
 
         if hyper_meta_info is not None:
-            kwargs = {**kwargs, "meta_info": hyper_meta_info}
+            kwargs = {**kwargs, "hyper_meta_info": hyper_meta_info}
+        if hyper_meta_prompt is not None:
+            kwargs = {**kwargs, "hyper_meta_prompt": hyper_meta_prompt}
 
+        telemetry_collector = None
+        if enable_telemetry:
+            method_name = method_impl.name if hasattr(method_impl, "name") else str(method_impl)
+            telemetry_collector = TelemetryCollector(
+                method_name=method_name,
+                task_type=task_value.value,
+                target_model=self._target_model,
+            )
+            kwargs["telemetry_callback"] = telemetry_collector.on_iteration_end
         final_prompt = method_impl.optimize(
             model=self._system_model if system_model_as_optimizer else self._target_model,
             initial_prompt=start_prompt,
@@ -359,6 +399,43 @@ class PromptTuner:
         self.init_prompt = start_prompt
         self.final_prompt = final_prompt
 
+        if telemetry_collector is not None:
+            telemetry_report = telemetry_collector.finalize(
+                initial_score=self.init_metric,
+                final_score=self.final_metric,
+            )
+
+            if export_telemetry:
+                if telemetry_path is None:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    telemetry_path = f"./logs/telemetry_{timestamp}"
+
+                os.makedirs(
+                    os.path.dirname(telemetry_path)
+                    if os.path.dirname(telemetry_path)
+                    else ".",
+                    exist_ok=True,
+                )
+
+                if telemetry_format in ("json", "both"):
+                    json_path = f"{telemetry_path}.json"
+                    with open(json_path, "w", encoding="utf-8") as f:
+                        f.write(telemetry_report.model_dump_json(indent=2))
+                    logger.info(f"Telemetry saved to {json_path}")
+
+                if telemetry_format in ("csv", "both"):
+                    csv_path = f"{telemetry_path}_trajectory.csv"
+                    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+                        writer = csv.DictWriter(
+                            f,
+                            fieldnames=IterationSnapshot.model_fields.keys(),
+                        )
+                        writer.writeheader()
+                        for snap in telemetry_report.trajectory:
+                            writer.writerow(snap.model_dump())
+                    logger.info(f"Telemetry trajectory saved to {csv_path}")
+
+            self.telemetry_report = telemetry_report
         logger.info("=== Prompt Optimization Completed ===")
 
         return final_prompt if return_final_prompt else None
@@ -391,7 +468,7 @@ class PromptTuner:
             targets (Optional[Iterable[str|int]]): Ground truth labels.
                 If provided, metric is computed and returned.
             metric (Optional[str]): Metric name. If None, defaults to "accuracy"
-                for classification or "bertscore" for generation.
+                for classification or "meteor" for generation.
             bertscore_model_type (Optional[str]): Optional HF ``model_type``
                 for `bertscore` and `multiref_bertscore`.
             batch_size (int, default=25): Number of samples per inference batch.
