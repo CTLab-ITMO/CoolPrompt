@@ -47,13 +47,14 @@ MAX_RETRIES = 2
 REQUESTS_PER_SECOND = 3.0
 
 # ── Optimisation hyperparameters ───────────────────────────────────────────
-TOKEN_BUDGET = 80000   # set to e.g. 200_000 to use token budget instead of metric calls
-POPULATION_SIZE = 5
-NUM_EPOCHS = None      # ignored when TOKEN_BUDGET is set; set to e.g. 5 for metric-call mode
+TOKEN_BUDGET = None   # set to e.g. 80_000 to use token budget instead of metric calls
+MAX_METRIC_CALLS = 1250  # set to e.g. 500 for direct max metric calls; overrides population_size+num_epochs
+POPULATION_SIZE = None   # used for reflection_minibatch_size calculation (train_size // pop_size)
+NUM_EPOCHS = None        # ignored when TOKEN_BUDGET is set; only used if MAX_METRIC_CALLS is None
 TRAIN_SIZE = 50
 VAL_SIZE = 100
 TEST_SIZE = 10
-SEED = 158
+SEED = 19
 
 
 def build_command(dataset: str) -> list[str]:
@@ -80,15 +81,20 @@ def build_command(dataset: str) -> list[str]:
     ]
     if POPULATION_SIZE is not None:
         cmd += ["--population_size", str(POPULATION_SIZE)]
-    # num_epochs has no effect when token_budget is active
-    if TOKEN_BUDGET is None and NUM_EPOCHS is not None:
+
+    # Budget mode selection (priority: token_budget > max_metric_calls > population_size+num_epochs > default 500)
+    if TOKEN_BUDGET is not None:
+        cmd += ["--token_budget", str(TOKEN_BUDGET)]
+    elif MAX_METRIC_CALLS is not None:
+        cmd += ["--max_metric_calls", str(MAX_METRIC_CALLS)]
+    elif NUM_EPOCHS is not None:
+        # num_epochs only used when TOKEN_BUDGET and MAX_METRIC_CALLS are not set
         cmd += ["--num_epochs", str(NUM_EPOCHS)]
+
     if API_KEY:
         cmd += ["--api_key", API_KEY]
     if BASE_URL:
         cmd += ["--base_url", BASE_URL]
-    if TOKEN_BUDGET is not None:
-        cmd += ["--token_budget", str(TOKEN_BUDGET)]
     return cmd
 
 
@@ -105,7 +111,7 @@ def main() -> int:
 
     summary: list[tuple[str, int]] = []
 
-    for dataset in ["squad_v2", "gsm8k", "common_gen", "xsum", "tweeteval"]:
+    for dataset in DATASETS:
         cmd = build_command(dataset)
         metric = DEFAULT_METRICS[dataset]
 
