@@ -92,8 +92,4 @@ def test_hyper_optimizer_one_iteration_improves(
     assert best == "opt-final"
     assert len(hist) == 1
     assert hist[0]["iteration"] == 1
-    mock_bert.assert_not_called()
-    assert (
-        mock_mmr.call_args.kwargs["bertscore_evaluate"]
-        is None
-    )
+    mock_bert.assert_called_once_with(ev.metric)

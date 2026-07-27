@@ -454,10 +454,8 @@ class HyPEROptimizer(Optimizer):
                 logger.info(f"[HyPER]   After resample: total_failures={total_failures}")
 
             # MMR selection
-            bertscore_evaluate = (
-                _get_bertscore_evaluate(self.evaluator.metric)
-                if len(candidates) > self.top_n_candidates
-                else None
+            bertscore_evaluate = _get_bertscore_evaluate(
+                self.evaluator.metric
             )
             lambda_ = _adaptive_lambda(best_score if best_score is not None else 0.0)
             selected = mmr_select(
