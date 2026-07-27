@@ -209,7 +209,7 @@ class PromptTuner:
             llm_as_judge_metric_ceil (int): Maximum integer score expected
                 from the judge (1..ceil); normalized to [0,1].
             bertscore_model_type (str | None): Optional HF ``model_type`` for
-                `bertscore` and `multiref_bertscore`.
+                `bertscore`, `multiref_bertscore`, and HyPER's MMR similarity.
             geval_criteria (str | None): High‑level description for GEval.
                 Mutually exclusive with `geval_evaluation_steps`.
             geval_evaluation_steps (list[str] | None): Step‑by‑step
@@ -348,6 +348,8 @@ class PromptTuner:
             kwargs = {**kwargs, "hyper_meta_info": hyper_meta_info}
         if hyper_meta_prompt is not None:
             kwargs = {**kwargs, "hyper_meta_prompt": hyper_meta_prompt}
+        if method_impl.name == "hyper":
+            kwargs = {**kwargs, "bertscore_model_type": bertscore_model_type}
 
         telemetry_collector = None
         if enable_telemetry:
