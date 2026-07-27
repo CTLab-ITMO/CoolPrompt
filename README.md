@@ -15,6 +15,105 @@
 [![ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/43bb283758b43d75ec1df0a6bb4ae3eb20066323/badges/ITMO_badge.svg)](https://itmo.ru/)
 [![Telegram Channel](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/+0kMcymeAQrczN2Fi)
 
+---
+
+<div align="center">
+
+# 🧬 CoEvo — структурная ко-эволюция промптов
+
+**Выпускная квалификационная работа**
+
+Метод автоматической оптимизации промптов, реализованный внутри фреймворка CoolPrompt
+
+</div>
+
+> Этот раздел (ветка `role_based`) описывает мой дипломный метод **CoEvo** и его усиленную версию **CoEvo-M**: идею, результаты, запускаемое демо и список ключевых файлов. Общее описание фреймворка CoolPrompt — [ниже](#coolprompt-framework).
+
+## В чём идея
+
+Классические методы оптимизируют промпт как **единый кусок текста**. CoEvo представляет промпт как **три независимых поля** и эволюционирует каждое из них:
+
+| Поле | Куда подставляется | За что отвечает |
+|------|--------------------|-----------------|
+| `role` (`system_behavior`) | **system**-сообщение | роль и поведение модели |
+| `task` (`task_description`) | **user**-сообщение | что именно нужно сделать |
+| `constraints` (`output_constraints`) | **user**-сообщение | формат и ограничения ответа |
+
+1. **Декомпозиция.** На старте один вызов LLM-оптимизатора раскладывает исходный промпт на тройку `role / task / constraints` (структурированный JSON).
+2. **Эволюция.** Популяция таких троек оптимизируется генетически: рулеточный отбор → рефлексия → кроссовер → мутация → softmax-выживание. Рефлексия объясняет модели, *чем* удачные варианты лучше неудачных.
+3. **Отбор полей.** В конце ablation на валидации выбирает лучшую комбинацию полей (task / task+role / task+role+constraints).
+
+**CoEvo-M** — усиленная версия: штраф за длину роли и за смысловое дублирование `role`/`task` (sentence-transformers), hall-of-fame лучших особей, «плохие примеры» в мутации и форсированный элитизм.
+
+## Результаты
+
+Сравнение с базовым ReflectivePrompt на 6 датасетах (BERTScore / метрика задачи):
+
+<p align="center">
+  <img alt="CoEvo benchmark" src="notebooks/examples/benchmark_coevo.png" width="85%">
+</p>
+
+| Датасет | ReflectivePrompt | CoEvo | CoEvo-M |
+|---------|:---:|:---:|:---:|
+| TweetEval | 0.705 | **0.726** | 0.719 |
+| SQuAD v2 | 0.878 | 0.907 | **0.929** |
+| CommonGen | 0.808 | **0.809** | 0.807 |
+| MEDIQA | 0.688 | 0.700 | **0.703** |
+| GSM8K | 0.919 | **0.927** | 0.926 |
+| XSum | 0.730 | **0.736** | 0.734 |
+| **Среднее** | 0.788 | 0.801 | **0.803** |
+
+## Запускаемое демо
+
+📓 **[notebooks/examples/coevo_demo.ipynb](notebooks/examples/coevo_demo.ipynb)** — CoEvo end-to-end улучшает промпт для QA по SQuAD v2.
+
+Идея сценария: сильный оптимизатор (`gpt-4o-mini`) переписывает промпт для дешёвой продакшн-модели (`gpt-4.1-nano`).
+
+<p align="center">
+  <img alt="CoEvo demo result" src="notebooks/examples/coevo_demo_result.png" width="55%">
+</p>
+
+Из простого `"Answer the question based on the context."` метод за 5 эпох собирает структурированный промпт и поднимает BERTScore **0.823 → 0.896 (+0.073)**.
+
+## Быстрый старт CoEvo
+
+```python
+from coolprompt.assistant import PromptTuner
+
+tuner = PromptTuner()  # OPENAI_API_KEY в окружении
+
+tuner.run(
+    start_prompt="Answer the question based on the context.",
+    task="generation",
+    metric="bertscore",
+    dataset=dataset,   # список входов
+    target=targets,    # список эталонных ответов
+    method="coevo",    # или "coevo" + CoEvo-M опции
+)
+
+print(tuner.final_prompt)
+```
+
+## Мой вклад и ключевые файлы
+
+Реализация методов CoEvo / CoEvo-M поверх фреймворка CoolPrompt:
+
+- **[`coolprompt/optimizer/reflective_prompt/coevo_base_evoluter.py`](coolprompt/optimizer/reflective_prompt/coevo_base_evoluter.py)** — ядро метода: декомпозиция промпта на 3 поля, эволюционный цикл, рефлексия, отбор полей.
+- **[`coolprompt/optimizer/reflective_prompt/coevo_evoluter.py`](coolprompt/optimizer/reflective_prompt/coevo_evoluter.py)** — операторы кроссовера и мутации на уровне полей.
+- **[`coolprompt/optimizer/reflective_prompt/factorized_evoluter.py`](coolprompt/optimizer/reflective_prompt/factorized_evoluter.py)** — факторизованная эволюция по отдельным полям.
+- **[`coolprompt/optimizer/reflective_prompt/run.py`](coolprompt/optimizer/reflective_prompt/run.py)** — `CoevoMethod`, интеграция в публичный API (`method="coevo"`).
+- **[`coolprompt/utils/prompt_templates/`](coolprompt/utils/prompt_templates/)** — мета-промпты CoEvo: `reflective_templates_coevo_enhanced.py`, `reflective_templates_coevo_per_field.py`, `reflective_templates_coevolution.py`.
+
+
+## Материалы
+- 📓 Демо-ноутбук: [coevo_demo.ipynb](notebooks/examples/coevo_demo.ipynb).
+
+---
+
+<a name="coolprompt-framework"></a>
+
+# CoolPrompt — фреймворк автопромптинга
+
 CoolPrompt is a framework for automatic prompt creation and optimization.
 
 ### Join our [telegram](https://t.me/+0kMcymeAQrczN2Fi) channel to be in touch.

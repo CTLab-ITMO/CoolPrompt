@@ -717,6 +717,7 @@ class ReflectiveEvoluter:
         selected_population = []
 
         scores = np.array([prompt.score for prompt in population])
+        scores = np.clip(scores, 0, None)
         if np.sum(scores) == 0:
             probas = np.ones(len(scores)) / len(scores)
         else:
