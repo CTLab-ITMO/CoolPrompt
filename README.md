@@ -87,11 +87,14 @@ tuner.run(
     task="generation",
     metric="bertscore",
     dataset=dataset,   # список входов
-    target=targets,    # список эталонных ответов
-    method="coevo",    # или "coevo" + CoEvo-M опции
+    target=target,     # список эталонных ответов
+    method="coevo",    # CoEvo-M по умолчанию; use_enhancements=False базовый CoEvo
 )
 
-print(tuner.final_prompt)
+# CoEvo возвращает три поля:
+print(tuner.final_role)         # роль
+print(tuner.final_prompt)       # задача
+print(tuner.final_constraints)  # ограничения формата
 ```
 
 ## Мой вклад и ключевые файлы
