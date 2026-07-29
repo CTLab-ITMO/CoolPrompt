@@ -92,3 +92,4 @@ def test_hyper_optimizer_one_iteration_improves(
     assert best == "opt-final"
     assert len(hist) == 1
     assert hist[0]["iteration"] == 1
+    mock_bert.assert_called_once_with(ev.metric)

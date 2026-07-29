@@ -107,6 +107,15 @@ def test_prompt_tuner_runs_rider_method(monkeypatch):
             assert kwargs["problem_description"] == "Return a concise summary."
             return "optimized rider prompt"
 
+    class _FakeHyperMethod(_FakeRiderMethod):
+        @property
+        def name(self):
+            return "hyper"
+
+        def optimize(self, **kwargs):
+            assert kwargs["bertscore_model_type"] == "custom/bert"
+            return "optimized hyper prompt"
+
     monkeypatch.setattr(
         "coolprompt.assistant.validate_model",
         lambda model: None,
@@ -127,6 +136,7 @@ def test_prompt_tuner_runs_rider_method(monkeypatch):
         {
             **_METHOD_BY_NAME,
             "rider": _FakeRiderMethod,
+            "hyper": _FakeHyperMethod,
         },
     )
 
@@ -143,3 +153,14 @@ def test_prompt_tuner_runs_rider_method(monkeypatch):
 
     assert result == "optimized rider prompt"
     assert prompt_tuner.final_prompt == "optimized rider prompt"
+    hyper_result = prompt_tuner.run(
+        "Write a crisp summary",
+        task=Task.GENERATION.value,
+        dataset=["text one", "text two"],
+        target=["summary one", "summary two"],
+        method="hyper",
+        problem_description="Return a concise summary.",
+        validation_size=0.5,
+        bertscore_model_type="custom/bert",
+    )
+    assert hyper_result == "optimized hyper prompt"

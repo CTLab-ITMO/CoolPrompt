@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import evaluate
 import logging
 import random
 from typing import Any, List, Optional, Sequence, Tuple, override
@@ -24,7 +25,11 @@ from coolprompt.evaluator.evaluator import (
     Evaluator,
     EvalResultDetailed,
 )
-from coolprompt.evaluator.metrics import BertScoreMetric
+from coolprompt.evaluator.metrics import (
+    BertScoreMetric,
+    DEFAULT_BERTSCORE_MODEL_TYPE,
+    MultiReferenceBertScoreMetric,
+)
 from coolprompt.utils.prompt_templates.hyper_templates import (
     PARAPHRASE_PROMPT,
     Recommendation,
@@ -32,7 +37,7 @@ from coolprompt.utils.prompt_templates.hyper_templates import (
 
 from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
-_BERTSCORE_MODEL_TYPE = "microsoft/deberta-large-mnli"
+logger = logging.getLogger(__name__)
 _bertscore_evaluate = None
 
 
@@ -40,23 +45,20 @@ def _get_bertscore_evaluate(metric: Any):
     """Return a HuggingFace ``evaluate`` handle for BERTScore F1.
 
     Args:
-        metric: Evaluator metric; if it is a :class:`BertScoreMetric`, reuse its
-            internal ``evaluate`` module instance.
+        metric: Evaluator metric; reuse its internal ``evaluate`` module when
+            it is a BERTScore metric.
 
     Returns:
         Loaded ``bertscore`` metric object suitable for ``.compute(...)``.
     """
-    if isinstance(metric, BertScoreMetric):
+    if isinstance(metric, (BertScoreMetric, MultiReferenceBertScoreMetric)):
         return metric._metric
 
     global _bertscore_evaluate
     if _bertscore_evaluate is None:
-        import evaluate
-
+        logger.info("[HyPER] Loading a separate BERTScore evaluator for MMR")
         _bertscore_evaluate = evaluate.load("bertscore")
     return _bertscore_evaluate
-
-logger = logging.getLogger(__name__)
 
 
 def sample_mini_batch(
@@ -76,8 +78,6 @@ def sample_mini_batch(
     Returns:
         Tuple ``(samples, targets)`` of equal length (at most ``size``).
     """
-    import random
-
     rng = random.Random(seed)
     n = min(size, len(dataset))
     indices = rng.sample(range(len(dataset)), n)
@@ -115,12 +115,17 @@ def sample_mini_batch_with_indices(
     )
 
 
-def _compute_similarity_matrix(prompts: List[str], bertscore_evaluate: Any) -> np.ndarray:
+def _compute_similarity_matrix(
+    prompts: List[str],
+    bertscore_evaluate: Any,
+    bertscore_model_type: str = DEFAULT_BERTSCORE_MODEL_TYPE,
+) -> np.ndarray:
     """Pairwise semantic similarity (BERTScore F1) between prompt strings.
 
     Args:
         prompts: Candidate prompt texts (length ``K``).
         bertscore_evaluate: Loaded ``evaluate`` bertscore module.
+        bertscore_model_type: HuggingFace model used for BERTScore similarity.
 
     Returns:
         ``K x K`` symmetric matrix with ones on the diagonal; upper triangle filled
@@ -136,7 +141,7 @@ def _compute_similarity_matrix(prompts: List[str], bertscore_evaluate: Any) -> n
     result = bertscore_evaluate.compute(
         predictions=[prompts[i] for i, _ in pairs],
         references=[prompts[j] for _, j in pairs],
-        model_type=_BERTSCORE_MODEL_TYPE,
+        model_type=bertscore_model_type,
     )
 
     for idx, (i, j) in enumerate(pairs):
@@ -165,6 +170,7 @@ def mmr_select(
     top_n: int,
     lambda_: float,
     bertscore_evaluate: Any,
+    bertscore_model_type: str = DEFAULT_BERTSCORE_MODEL_TYPE,
 ) -> List[Tuple[str, EvalResultDetailed]]:
     """Select ``top_n`` candidates by maximal marginal relevance (MMR).
 
@@ -177,6 +183,7 @@ def mmr_select(
         top_n: Number of items to keep.
         lambda_: Trade-off between relevance and diversity (see :func:`_adaptive_lambda`).
         bertscore_evaluate: BERTScore ``evaluate`` handle.
+        bertscore_model_type: HuggingFace model used for BERTScore similarity.
 
     Returns:
         List of ``(prompt, EvalResultDetailed)`` pairs of length ``min(top_n, K)``.
@@ -184,7 +191,11 @@ def mmr_select(
     if len(candidates) <= top_n:
         return list(zip(candidates, results))
 
-    sim_matrix = _compute_similarity_matrix(candidates, bertscore_evaluate)
+    sim_matrix = _compute_similarity_matrix(
+        candidates,
+        bertscore_evaluate,
+        bertscore_model_type,
+    )
 
     scores = np.array([
         r.aggregate_score if r.aggregate_score is not None else 0.0
@@ -232,6 +243,7 @@ class HyPEROptimizer(Optimizer):
         enable_instance_leak_audit: bool = True,
         random_seed: Optional[int] = None,
         hyper_meta_prompt: Optional[str] = None,
+        bertscore_model_type: Optional[str] = None,
         **kwargs
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
@@ -252,6 +264,9 @@ class HyPEROptimizer(Optimizer):
             enable_instance_leak_audit: If True, run ``drop_instance_leaks`` when
                 ``meta_info`` contains a non-empty ``problem_description``. Defaults to True.
             random_seed: Base seed for mini-batch sampling (per-iteration offset applied).
+            bertscore_model_type: HuggingFace model used by MMR BERTScore.
+                If omitted, inherits the evaluator BERTScore model when
+                available, otherwise uses the shared BERTScore default.
         """
         super().__init__(model)
         self.meta_prompt_module = MetaPromptOptimizer(
@@ -279,6 +294,18 @@ class HyPEROptimizer(Optimizer):
         self.k_samples = k_samples
         self.mini_batch_size = mini_batch_size
         self.random_seed = random_seed
+        metric_model_type = getattr(self.evaluator.metric, "model_type", None)
+        if not isinstance(metric_model_type, str):
+            metric_model_type = None
+        self.bertscore_model_type = (
+            bertscore_model_type
+            or metric_model_type
+            or DEFAULT_BERTSCORE_MODEL_TYPE
+        )
+        logger.info(
+            "[HyPER] MMR BERTScore model: %s",
+            self.bertscore_model_type,
+        )
 
     def _get_variants_from_best(self, best_prompt: str, n_candidates: int) -> List[str]:
         """Paraphrase ``best_prompt`` and prepend the unchanged original.
@@ -427,7 +454,9 @@ class HyPEROptimizer(Optimizer):
                 logger.info(f"[HyPER]   After resample: total_failures={total_failures}")
 
             # MMR selection
-            bertscore_evaluate = _get_bertscore_evaluate(self.evaluator.metric)
+            bertscore_evaluate = _get_bertscore_evaluate(
+                self.evaluator.metric
+            )
             lambda_ = _adaptive_lambda(best_score if best_score is not None else 0.0)
             selected = mmr_select(
                 candidates=candidates,
@@ -435,6 +464,7 @@ class HyPEROptimizer(Optimizer):
                 top_n=self.top_n_candidates,
                 lambda_=lambda_,
                 bertscore_evaluate=bertscore_evaluate,
+                bertscore_model_type=self.bertscore_model_type,
             )
             p_star_str = f"{best_score:.4f}" if best_score is not None else "N/A"
             logger.info(
@@ -714,6 +744,7 @@ class HyPERMethod(AutoPromptingMethod):
         use_structured_output = kwargs.pop("use_structured_output", False)
         telemetry_callback = kwargs.pop("telemetry_callback", None)
         hyper_meta_prompt = kwargs.pop("hyper_meta_prompt", None)
+        bertscore_model_type = kwargs.pop("bertscore_model_type", None)
 
         hyper_meta_info = kwargs.pop("hyper_meta_info", None)
         optimizer = HyPEROptimizer(
@@ -732,6 +763,7 @@ class HyPERMethod(AutoPromptingMethod):
             enable_instance_leak_audit=enable_instance_leak_audit,
             random_seed=random_seed,
             hyper_meta_prompt=hyper_meta_prompt,
+            bertscore_model_type=bertscore_model_type,
         )
 
         meta_info = hyper_meta_info.copy() if hyper_meta_info else {}
@@ -766,6 +798,7 @@ class HyPERMethod(AutoPromptingMethod):
             problem_description=ctx.config.get("problem_description"),
             hyper_meta_info=meta if meta else None,
             hyper_meta_prompt=mc.get("hyper_meta_prompt"),
+            bertscore_model_type=mc.get("bertscore_model_type"),
             n_iterations=mc.get("n_iterations", 5),
             patience=mc.get("patience", None),
             n_candidates=mc.get("n_candidates", 3),

@@ -7,7 +7,11 @@ import pytest
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator.evaluator import EvalResultDetailed
-from coolprompt.evaluator.metrics import BertScoreMetric
+from coolprompt.evaluator.metrics import (
+    BertScoreMetric,
+    DEFAULT_BERTSCORE_MODEL_TYPE,
+    MultiReferenceBertScoreMetric,
+)
 from coolprompt.optimizer.hyper import hyper as hyper_mod
 from coolprompt.optimizer.hyper.hyper import (
     HyPERMethod,
@@ -62,11 +66,12 @@ def test_compute_similarity_matrix_pairs():
     mock_bs = MagicMock()
     mock_bs.compute.return_value = {"f1": [0.1, 0.2, 0.3]}
     prompts = ["a", "b", "c"]
-    m = _compute_similarity_matrix(prompts, mock_bs)
+    m = _compute_similarity_matrix(prompts, mock_bs, "custom/bert")
     assert m.shape == (3, 3)
     assert m[0, 0] == 1.0
     np.testing.assert_allclose(m[0, 1], 0.1)
     np.testing.assert_allclose(m[1, 2], 0.3)
+    assert mock_bs.compute.call_args.kwargs["model_type"] == "custom/bert"
 
 
 def test_mmr_select_returns_all_when_k_small():
@@ -103,17 +108,23 @@ def test_get_bertscore_uses_bert_metric_internal():
     assert _get_bertscore_evaluate(metric) is inner
 
 
+def test_get_bertscore_uses_multiref_metric_internal():
+    inner = MagicMock()
+    metric = MagicMock(spec=MultiReferenceBertScoreMetric)
+    metric._metric = inner
+    assert _get_bertscore_evaluate(metric) is inner
+
+
 def test_get_bertscore_loads_evaluate_once():
-    fake_mod = MagicMock()
     fake_metric = MagicMock()
     fake_metric.__class__ = object
-    with patch.dict("sys.modules", {"evaluate": fake_mod}):
+    with patch.object(hyper_mod.evaluate, "load") as mock_load:
         hyper_mod._bertscore_evaluate = None
-        fake_mod.load.return_value = "loaded_metric"
+        mock_load.return_value = "loaded_metric"
         a = _get_bertscore_evaluate(fake_metric)
         b = _get_bertscore_evaluate(fake_metric)
         assert a == b == "loaded_metric"
-        fake_mod.load.assert_called_once_with("bertscore")
+        mock_load.assert_called_once_with("bertscore")
 
 
 def test_hyper_optimizer_feedback_matches_builder_sections():
@@ -126,6 +137,29 @@ def test_hyper_optimizer_feedback_matches_builder_sections():
         opt.feedback_module.section_specs
         == opt.meta_prompt_module.builder.config.section_specs
     )
+    assert opt.bertscore_model_type == DEFAULT_BERTSCORE_MODEL_TYPE
+
+
+def test_hyper_optimizer_inherits_evaluator_bertscore_model():
+    model = MagicMock(spec=BaseLanguageModel)
+    evaluator = MagicMock()
+    evaluator.metric = MagicMock(spec=BertScoreMetric)
+    evaluator.metric.model_type = "custom/bert"
+    opt = HyPEROptimizer(model=model, evaluator=evaluator)
+    assert opt.bertscore_model_type == "custom/bert"
+
+
+def test_hyper_optimizer_explicit_bertscore_model_wins():
+    model = MagicMock(spec=BaseLanguageModel)
+    evaluator = MagicMock()
+    evaluator.metric = MagicMock(spec=BertScoreMetric)
+    evaluator.metric.model_type = "evaluator/bert"
+    opt = HyPEROptimizer(
+        model=model,
+        evaluator=evaluator,
+        bertscore_model_type="hyper/bert",
+    )
+    assert opt.bertscore_model_type == "hyper/bert"
 
 
 @patch.object(HyPEROptimizer, "_get_variants_from_best", return_value=[])
@@ -172,6 +206,11 @@ def test_hyper_method_passes_hyper_meta_info(mock_cls):
         evaluator=ev,
         problem_description="ignored_if_in_meta",
         hyper_meta_info=meta,
+        bertscore_model_type="custom/bert",
+    )
+    assert (
+        mock_cls.call_args.kwargs["bertscore_model_type"]
+        == "custom/bert"
     )
     kw = mock_inst.optimize.call_args.kwargs
     assert kw["meta_info"]["problem_description"] == "pd"
