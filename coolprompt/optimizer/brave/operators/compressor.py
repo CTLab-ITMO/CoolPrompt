@@ -20,9 +20,13 @@ class CompressorOperator(Operator):
         prompt: Prompt,
         evaluate_fn: Callable[[Prompt, str], None],
     ) -> Prompt:
-        compressed = self.compressor.compress(prompt.text)
-        compressed = Prompt(compressed, origin=PromptOrigin.COMPRESSED)
-        evaluate_fn(compressed, "train")
+        try:
+            compressed = self.compressor.compress(prompt.text)
+            compressed = Prompt(compressed, origin=PromptOrigin.COMPRESSED)
+            evaluate_fn(compressed, "train")
+        except Exception:
+            compressed = Prompt("failed to compress", origin=PromptOrigin.COMPRESSED)
+            compressed.set_score(0)
 
         if self.logger is not None:
             self.logger.log_mutation(

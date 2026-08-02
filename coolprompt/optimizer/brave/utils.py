@@ -12,7 +12,7 @@ ROLE_TAGS = ("<role>", "</role>")
 
 
 @dataclass
-class BEGRAPEConfig:
+class BRAVEConfig:
     actions: List[str] | str = field(
         default_factory=lambda: [
             "crossover",
@@ -49,7 +49,7 @@ class BEGRAPEConfig:
     diversity_duplicate_threshold: float = 0.95
     few_shot_examples_max_num: int = 5
     few_shot_examples_from_data_cnt: int = 7
-    population_initializer: str = "begrape"
+    population_initializer: str = "brave"
     population_clusterization: bool = True
     initial_population_size: int = 10
     train_batch_size: int = 0
@@ -76,7 +76,7 @@ def _merge_dicts(
 
 def load_begrape_config_from_yaml(
     path: str, profile: str = "balanced"
-) -> BEGRAPEConfig:
+) -> BRAVEConfig:
     """Load BEGRAPEConfig from YAML with merge rule:
 
     final = defaults overridden by profiles[profile]
@@ -106,9 +106,9 @@ def load_begrape_config_from_yaml(
         )
 
     merged = _merge_dicts(defaults, selected)
-    allowed = {x.name for x in fields(BEGRAPEConfig)}
+    allowed = {x.name for x in fields(BRAVEConfig)}
     kwargs = {k: v for k, v in merged.items() if k in allowed}
-    return BEGRAPEConfig(**kwargs)
+    return BRAVEConfig(**kwargs)
 
 
 @dataclass

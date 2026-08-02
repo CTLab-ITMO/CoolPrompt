@@ -105,8 +105,10 @@ class Prompt:
         self.text = text
         self.origin = origin
         self.score = score
-        self.bad_examples = bad_examples
-        self.few_shot_examples = few_shot_examples
+        self.bad_examples = bad_examples if bad_examples is not None else []
+        self.few_shot_examples = (
+            few_shot_examples if few_shot_examples is not None else []
+        )
         self.gradient = gradient
         self.val_score = val_score
 

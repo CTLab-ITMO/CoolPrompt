@@ -41,7 +41,7 @@ from coolprompt.optimizer.brave.population_diversity import (
     PopulationDiversityManager
 )
 from coolprompt.optimizer.brave.utils import (
-    BEGRAPEConfig,
+    BRAVEConfig,
     OptimizationLog,
     reranking_population
 )
@@ -52,8 +52,8 @@ from coolprompt.optimizer.reflective_prompt.prompt import (
 from coolprompt.utils.utils import get_dataset_split
 
 
-class BEGRAPEEvoluter:
-    """Budgeted Epistemic GRAPE (skeleton implementation).
+class BRAVEEvoluter:
+    """BRAVE (skeleton implementation).
 
     This class wires together:
     - EVC controller
@@ -79,7 +79,7 @@ class BEGRAPEEvoluter:
         self,
         model: BaseLanguageModel,
         evaluator: Evaluator,
-        config: Optional[BEGRAPEConfig] = None,
+        config: Optional[BRAVEConfig] = None,
         seed: int = 19,
         verbose: bool = True,
         log_dir: Optional[str] = None,
@@ -94,7 +94,7 @@ class BEGRAPEEvoluter:
         self.model.reset_stats()
 
         self.evaluator = evaluator
-        self.cfg = config or BEGRAPEConfig()
+        self.cfg = config or BRAVEConfig()
         self.featurizer = StateFeaturizer()
         self.cost_tracker_stats = {}
         self.seed = seed
@@ -142,7 +142,7 @@ class BEGRAPEEvoluter:
             self.population_initializer = ParaphraseInitializationOperator(
                 logger=self.logger
             )
-        elif self.cfg.population_initializer == "begrape":
+        elif self.cfg.population_initializer == "brave":
             self.population_initializer = PopulationInitializationOperator(
                 logger=self.logger
             )
