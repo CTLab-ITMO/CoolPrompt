@@ -13,14 +13,14 @@ from coolprompt.optimizer.regps import ReGPSMethod
 from coolprompt.optimizer.rider import RIDERGenesisMethod
 
 _BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
-    "hyper_light": HyPERLightMethod(),
-    "hyper": HyPERMethod(),
-    "reflectiveprompt": ReflectiveMethod(),
-    "reflective": ReflectiveMethod(),
-    "distill": DistillMethod(),
-    "compress": CompressorMethod(),
-    "regps": ReGPSMethod(),
-    "rider": RIDERGenesisMethod(),
+    "hyper_light": HyPERLightMethod,
+    "hyper": HyPERMethod,
+    "reflectiveprompt": ReflectiveMethod,
+    "reflective": ReflectiveMethod,
+    "distill": DistillMethod,
+    "compress": CompressorMethod,
+    "regps": ReGPSMethod,
+    "rider": RIDERGenesisMethod,
 }
 
 
@@ -57,6 +57,7 @@ def evaluate_method(
             f"Unsupported method name: {method}. "
             f"Supported: {sorted(_BENCHMARK_IMPL.keys())}."
         )
+    impl = impl()
 
     out = impl.run(
         model,
