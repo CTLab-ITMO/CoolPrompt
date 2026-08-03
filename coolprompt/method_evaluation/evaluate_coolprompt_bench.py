@@ -45,13 +45,13 @@ BENCHMARKS: tuple[BenchmarkSpec, ...] = (
     BenchmarkSpec(
         name="tweeteval",
         task="classification",
-        metric="accuracy",
+        metric="f1",
         start_prompt="Provide sentiment classification.",
     ),
     BenchmarkSpec(
         name="xsum",
         task="generation",
-        metric="rouge",
+        metric="bertscore",
         start_prompt="Summarize the sentence.",
     ),
 )
