@@ -17,7 +17,9 @@ from coolprompt.utils.utils import get_dataset_split
 
 
 def _parse_dataset_size(size: str) -> Optional[int]:
-    if size == "all":
+    """Parse a dataset-size token; ``-`` and ``all`` mean no size limit."""
+
+    if size in {"all", "-"}:
         return None
     return int(size)
 
@@ -41,29 +43,60 @@ class BenchmarkContext:
 def build_benchmark_context(
     model: BaseLanguageModel, config: dict[str, Any]
 ) -> BenchmarkContext:
-    """Load datasets from ``config`` and build an evaluator"""
+    """Load enabled dataset splits from ``config`` and build an evaluator.
+
+    The dataset configuration is ``train/validation/test``. A ``-`` disables
+    that split, so, for example, ``-/-/100`` loads only 100 test examples.
+    """
 
     data_split = config["dataset"]["configuration"].split("/")
+    if len(data_split) != 3:
+        raise ValueError(
+            "Dataset configuration must be train/validation/test, for example "
+            "'10/10/100' or '-/-/100'."
+        )
+
+    train_requested, val_requested, test_requested = data_split
     train_size = _parse_dataset_size(data_split[0])
     val_size = _parse_dataset_size(data_split[1])
     test_size = _parse_dataset_size(data_split[2])
 
-    train_dataset, train_target = load_dataset(
-        config["dataset"]["name"],
-        size=train_size + val_size,
-        split="train",
-    )
+    if train_requested == "-" and val_requested == "-":
+        dataset_split = ([], [], [], [])
+    elif train_requested == "-":
+        val_dataset, val_target = load_dataset(
+            config["dataset"]["name"],
+            size=val_size,
+            split="train",
+        )
+        dataset_split = ([], val_dataset, [], val_target)
+    elif val_requested == "-":
+        train_dataset, train_target = load_dataset(
+            config["dataset"]["name"],
+            size=train_size,
+            split="train",
+        )
+        dataset_split = (train_dataset, [], train_target, [])
+    else:
+        train_dataset, train_target = load_dataset(
+            config["dataset"]["name"],
+            size=train_size + val_size,
+            split="train",
+        )
 
-    dataset_split = get_dataset_split(
-        dataset=train_dataset,
-        target=train_target,
-        validation_size=val_size / (train_size + val_size),
-        train_as_test=config.get("train_as_test", False),
-    )
+        dataset_split = get_dataset_split(
+            dataset=train_dataset,
+            target=train_target,
+            validation_size=val_size / (train_size + val_size),
+            train_as_test=config.get("train_as_test", False),
+        )
 
-    test_dataset, test_target = load_dataset(
-        config["dataset"]["name"], size=test_size, split="test"
-    )
+    if test_requested == "-":
+        test_dataset, test_target = [], []
+    else:
+        test_dataset, test_target = load_dataset(
+            config["dataset"]["name"], size=test_size, split="test"
+        )
 
     from coolprompt.utils.var_validation import validate_task
 
@@ -153,21 +186,30 @@ class AutoPromptingMethod(ABC):
             dict with keys ``final_prompt``, ``val_score``, ``test_score``.
         """
         ctx = build_benchmark_context(model, config)
+        if not ctx.dataset_split[0] and self.is_data_driven():
+            raise ValueError(
+                "This method requires train/validation data; use a configuration "
+                "such as '10/10/100' instead of '-/-/100'."
+            )
         final_prompt = self.run_configured_benchmark(ctx, start_prompt)
-        val_score = ctx.evaluator.evaluate(
-            prompt=final_prompt,
-            dataset=ctx.dataset_split[1],
-            targets=ctx.dataset_split[3],
-        )
-        test_score = ctx.evaluator.evaluate(
-            prompt=final_prompt,
-            dataset=ctx.test_dataset,
-            targets=ctx.test_target,
-            save_model_answers=saving_model_answers,
-            model_answers_output_path=config.get(
-                "model_answers_output_path", "./model_answers.yaml"
-            ),
-        )
+        val_score = None
+        if ctx.dataset_split[1]:
+            val_score = ctx.evaluator.evaluate(
+                prompt=final_prompt,
+                dataset=ctx.dataset_split[1],
+                targets=ctx.dataset_split[3],
+            )
+        test_score = None
+        if ctx.test_dataset:
+            test_score = ctx.evaluator.evaluate(
+                prompt=final_prompt,
+                dataset=ctx.test_dataset,
+                targets=ctx.test_target,
+                save_model_answers=saving_model_answers,
+                model_answers_output_path=config.get(
+                    "model_answers_output_path", "./model_answers.yaml"
+                ),
+            )
         return {
             "final_prompt": final_prompt,
             "val_score": val_score,
