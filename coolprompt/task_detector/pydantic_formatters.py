@@ -1,12 +1,6 @@
 from pydantic import BaseModel, Field
 
-SUPPORTED_TASK_AREAS = [
-    "tweet_emotional_classification",
-    "school_math_reasoning",
-    "concept_to_sentence_generation",
-    "context_question_answering",
-    "text_summarization",
-]
+from coolprompt.utils.task_areas import SUPPORTED_TASK_AREAS
 
 
 class TaskDetectionStructuredOutputSchema(BaseModel):
@@ -16,9 +10,9 @@ class TaskDetectionStructuredOutputSchema(BaseModel):
 
 
 class TaskAreaDetectionStructuredOutputSchema(BaseModel):
-    task: str = Field(
-        description="Detected task type. Usually 'classification' or 'generation'."
-    )
+    """Structured output for task area detection."""
+
+    task: str = Field(description="Detected task type. Usually 'classification' or 'generation'.")
 
     task_area: str | None = Field(
         default=None,

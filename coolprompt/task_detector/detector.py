@@ -95,6 +95,15 @@ class TaskDetector:
         return task
 
     def _generate_structured(self, request: str, schema: type[BaseModel]) -> Any:
+        """Generates and validates structured model output.
+
+        Args:
+            request (str): request to LLM
+            schema (type[BaseModel]): Pydantic output format
+
+        Returns:
+            BaseModel: validated structured response
+        """
         wrapped_model = getattr(self.model, "model", self.model)
 
         if not isinstance(wrapped_model, BaseChatModel):
@@ -119,6 +128,14 @@ class TaskDetector:
         raise TypeError(f"Unexpected structured output type: {type(output)!r}")
 
     def detect_task_area(self, prompt: str) -> TaskAreaDetectionStructuredOutputSchema:
+        """Detects task type and supported task area.
+
+        Args:
+            prompt (str): initial user prompt
+
+        Returns:
+            TaskAreaDetectionStructuredOutputSchema: detected task area result
+        """
         logger.info("Detecting task area by query")
 
         result = self._generate_structured(
