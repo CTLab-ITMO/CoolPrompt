@@ -6,47 +6,31 @@ from langchain_core.messages.ai import AIMessage
 from pydantic import BaseModel
 
 from coolprompt.task_detector.pydantic_formatters import (
-    TaskDetectionStructuredOutputSchema,
     TaskAreaDetectionStructuredOutputSchema,
-)
-from coolprompt.utils.prompt_templates.task_detector_templates import (
-    TASK_DETECTOR_TEMPLATE,
-    TASK_AREA_DETECTOR_TEMPLATE,
+    TaskDetectionStructuredOutputSchema,
 )
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.parsing import extract_json
+from coolprompt.utils.prompt_templates.task_detector_templates import (
+    TASK_AREA_DETECTOR_TEMPLATE,
+    TASK_DETECTOR_TEMPLATE,
+)
 
 
 class TaskDetector:
-    """Task Detector
-    Defines task problem for prompt optimization
+    """Detect a task definition and supported task area from a user prompt."""
 
-    Attributes:
-        model: langchain.BaseLanguageModel class of model to use.
-    """
-
-    def __init__(self, model: BaseLanguageModel, confidence_threshold: float = 0.7) -> None:
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        confidence_threshold: float = 0.7,
+    ) -> None:
         self.model = model
         self._confidence_threshold = confidence_threshold
 
-    def _generate(self, request: str, schema: BaseModel, field_name: str) -> Any:
-        """Generates model output
-        either using structured output from langchain
-        or just strict json output format for LLM
-
-        Args:
-            request (str): request to LLM
-                when langchain structured output is used
-            schema (BaseModel): Pydantic output format
-            field_name (str): field name to select from output
-
-        Returns:
-            Any: generated data
-        """
-        if hasattr(self.model, "model"):
-            wrapped_model = self.model.model
-        else:
-            wrapped_model = self.model
+    def _generate(self, request: str, schema: type[BaseModel], field_name: str) -> Any:
+        """Generate model output and extract the requested response field."""
+        wrapped_model = getattr(self.model, "model", self.model)
 
         if not isinstance(wrapped_model, BaseChatModel):
             output = self.model.invoke(request)
@@ -54,45 +38,35 @@ class TaskDetector:
                 output = output.content
             return extract_json(output)[field_name]
 
-        structured_model = self.model.with_structured_output(
-            schema=schema, method="json_schema"
-        )
-        output = structured_model.invoke(request)
+        output = self.model.with_structured_output(
+            schema=schema,
+            method="json_schema",
+        ).invoke(request)
         if isinstance(output, AIMessage):
             output = output.content
 
         try:
-            output = getattr(output, field_name)
-        except Exception:
-            output = output[field_name]
-        return output
+            return getattr(output, field_name)
+        except (AttributeError, TypeError):
+            return output[field_name]
 
-    def generate(
-            self,
-            prompt: str,
-    ) -> str:
-        """Defines task definition
-
-        Args:
-            prompt (str): initial user prompt
-
-        Returns:
-            str: task class
-        """
-        schema = TaskDetectionStructuredOutputSchema
-        request = TASK_DETECTOR_TEMPLATE
-
-        request = request.format(query=prompt)
-
+    def generate(self, prompt: str) -> str:
+        """Return the task type detected from the user prompt."""
         logger.info("Detecting the task by query")
-
-        task = self._generate(request, schema, "task")
-
-        logger.info(f"Task defined as {task}")
-
+        task = self._generate(
+            TASK_DETECTOR_TEMPLATE.format(query=prompt),
+            TaskDetectionStructuredOutputSchema,
+            "task",
+        )
+        logger.info("Task defined as %s", task)
         return task
 
-    def _generate_structured(self, request: str, schema: type[BaseModel]) -> Any:
+    def _generate_structured(
+        self,
+        request: str,
+        schema: type[BaseModel],
+    ) -> BaseModel:
+        """Generate and validate structured model output."""
         wrapped_model = getattr(self.model, "model", self.model)
 
         if not isinstance(wrapped_model, BaseChatModel):
@@ -107,26 +81,31 @@ class TaskDetector:
 
         if isinstance(output, dict):
             return schema(**output)
-
         if isinstance(output, AIMessage):
             return schema(**extract_json(output.content))
-
         if isinstance(output, schema):
             return output
 
         raise TypeError(f"Unexpected structured output type: {type(output)!r}")
 
-    def detect_task_area(self, prompt: str) -> TaskAreaDetectionStructuredOutputSchema:
+    def detect_task_area(
+        self,
+        prompt: str,
+    ) -> TaskAreaDetectionStructuredOutputSchema:
+        """Detect the task type and supported task area."""
         logger.info("Detecting task area by query")
-
         result = self._generate_structured(
             request=TASK_AREA_DETECTOR_TEMPLATE.format(query=prompt),
             schema=TaskAreaDetectionStructuredOutputSchema,
         )
 
+        if not isinstance(result, TaskAreaDetectionStructuredOutputSchema):
+            raise TypeError(f"Unexpected task-area result type: {type(result)!r}")
+
         if result.confidence < self._confidence_threshold:
             logger.info(
-                "Task area confidence too low: area=%r, confidence=%.2f (threshold=%.2f) — treating as unmatched",
+                "Task area confidence too low: area=%r, confidence=%.2f "
+                "(threshold=%.2f); treating as unmatched",
                 result.task_area,
                 result.confidence,
                 self._confidence_threshold,
@@ -135,6 +114,8 @@ class TaskDetector:
 
         logger.info(
             "Task area detected: task=%s, area=%s, confidence=%.2f",
-            result.task, result.task_area, result.confidence,
+            result.task,
+            result.task_area,
+            result.confidence,
         )
         return result
