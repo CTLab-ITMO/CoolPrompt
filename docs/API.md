@@ -52,6 +52,10 @@ Implementations of the supported optimization methods.
 
 Method names accepted by `PromptTuner.run(method=...)`:
 - `hyper_light` - HyPER Light single-shot meta-prompt optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
+- `hyper_light_playbook` - HyPER Light with a generated task playbook added to meta-information. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
+- `hyper_light_pea_playbook` - HyPER Light with an MR.PEA-style abstraction playbook added to meta-information. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
+- `hyper_light_playbook_iterative` - Data-driven iterative HyPER Light with prompt and playbook updates on every iteration. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
+- `hyper_light_pea_playbook_iterative` - Data-driven iterative HyPER Light with MR.PEA-style playbook updates on every iteration. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
 - `hyper` - iterative HyPER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
 - `regps` - RE-GPS optimizer.
 - `rider` - RIDER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider/README.md">Documentation</a>
@@ -65,7 +69,7 @@ Custom methods should implement `AutoPromptingMethod` and can be passed to `Prom
 ## `method_evaluation/`
 Benchmark interface for comparing autoprompting methods on dataset/config-based experiments.
 
-`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, and `rider`.
+`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper_light_playbook`, `hyper_light_pea_playbook`, `hyper_light_playbook_iterative`, `hyper_light_pea_playbook_iterative`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, and `rider`.
 
 ---
 ## `data_generator/` and `task_detector/`

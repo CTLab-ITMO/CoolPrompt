@@ -6,6 +6,10 @@ candidates, mini-batch scoring, MMR, feedback, inner meta-prompt, validation).
 | Module | Role |
 |--------|------|
 | `meta_prompt.py` | `Optimizer`, `MetaPromptOptimizer`, `HyPERLightMethod` (`hyper_light`). |
+| `playbook.py` | `HyPERLightPlaybookMethod` (`hyper_light_playbook`). |
+| `pea_playbook.py` | `HyPERLightPEAPlaybookMethod` (`hyper_light_pea_playbook`). |
+| `iterative_playbook.py` | `HyPERLightPlaybookIterativeMethod` (`hyper_light_playbook_iterative`). |
+| `pea_playbook_iterative.py` | `HyPERLightPEAPlaybookIterativeMethod` (`hyper_light_pea_playbook_iterative`). |
 | `hyper.py` | `HyPEROptimizer`, `HyPERMethod` (`hyper`), sampling / MMR helpers. |
 | `feedback_module.py` | Section-targeted recommendations, contrastive feedback, grouping, leak audit. |
 | `coolprompt.utils.prompt_templates.hyper_templates` | Meta-prompt and feedback string templates. |
@@ -16,6 +20,92 @@ candidates, mini-batch scoring, MMR, feedback, inner meta-prompt, validation).
 
 One structured meta-prompt and **one** model call. The model should return the new
 prompt inside `<result_prompt>…</result_prompt>`.
+
+## HyPER Light + Playbook (`hyper_light_playbook`)
+
+This variant adds a preliminary model call. It generates a structured JSON playbook
+from the starting prompt, then passes the parsed playbook as `meta_info` to the
+regular HyPER Light meta-prompt step. The result is still returned as a prompt
+inside `<result_prompt>…</result_prompt>`.
+
+The method is available through both `PromptTuner` and the benchmark evaluator:
+
+```python
+from coolprompt.optimizer.hyper.playbook import HyPERLightPlaybookMethod
+
+method = HyPERLightPlaybookMethod()
+final_prompt = method.optimize(
+    model=llm,
+    initial_prompt="Your task prompt…",
+)
+```
+
+## Iterative HyPER Light + MR.PEA Playbook (`hyper_light_pea_playbook_iterative`)
+
+This variant keeps the data-driven iterative workflow above, but uses the flat
+MR.PEA knowledge format for both initial playbook generation and every playbook
+update: `strategies`, `principles`, `evaluation_criteria`, `gap_hypotheses`, and
+`change_rationale`.
+
+```python
+from coolprompt.optimizer.hyper.pea_playbook_iterative import (
+    HyPERLightPEAPlaybookIterativeMethod,
+)
+
+method = HyPERLightPEAPlaybookIterativeMethod()
+final_prompt = method.optimize(
+    model=llm,
+    initial_prompt="Your task prompt…",
+    dataset_split=(train_x, val_x, train_y, val_y),
+    evaluator=evaluator,
+    n_iterations=5,
+)
+```
+
+## HyPER Light + MR.PEA Playbook (`hyper_light_pea_playbook`)
+
+This variant uses the MR.PEA abstraction format for the preliminary model call.
+The generated knowledge is a flat JSON object with `strategies`, `principles`,
+`evaluation_criteria`, `gap_hypotheses`, and `change_rationale`. It is passed as
+the `playbook` meta-information to the regular HyPER Light step.
+
+```python
+from coolprompt.optimizer.hyper.pea_playbook import HyPERLightPEAPlaybookMethod
+
+method = HyPERLightPEAPlaybookMethod()
+final_prompt = method.optimize(
+    model=llm,
+    initial_prompt="Your task prompt…",
+)
+```
+
+## Iterative HyPER Light + Playbook (`hyper_light_playbook_iterative`)
+
+This data-driven variant regenerates the prompt and updates the playbook on every
+iteration. It first generates a playbook, optimizes the current prompt with that
+playbook, evaluates the new prompt, and then updates the playbook from low-scoring
+answer/reference pairs. Validation is used for model selection when available;
+otherwise the train split is used.
+
+```python
+from coolprompt.optimizer.hyper.iterative_playbook import (
+    HyPERLightPlaybookIterativeMethod,
+)
+
+method = HyPERLightPlaybookIterativeMethod()
+final_prompt = method.optimize(
+    model=llm,
+    initial_prompt="Your task prompt…",
+    dataset_split=(train_x, val_x, train_y, val_y),
+    evaluator=evaluator,
+    n_iterations=5,
+)
+```
+
+Supported iteration options include `n_iterations` / `num_epochs`,
+`max_failures`, `playbook_prompt`, `playbook_update_prompt`, and
+`hyper_meta_prompt`. The method requires a non-empty train split because the
+common `AutoPromptingMethod.run` contract uses it to enable data-driven methods.
 
 ### Workflow
 
