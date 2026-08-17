@@ -1,0 +1,449 @@
+method: mrpea_original
+run: 2
+dataset: xsum
+configuration: 300/-/300
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+seed: 42
+train_pool_size: 300
+sample_question_index: 19
+sample_question: 'A State Department spokesman said the election process was flawed
+  and could not be seen as free and fair.
+
+  He said the Ortega government had side-lined opposition candidates and limited monitoring
+  of the polls.
+
+  Daniel Ortega won 72.5% of the vote with 99.8% of the ballots counted.
+
+  His closest rival, centre-right candidate Maximino Rodriguez, only received 14.2%
+  of the vote.
+
+  The State Department''s Mark Toner  said the Ortega government had not invited international
+  election observers, which he said, "further degraded the legitimacy of the election".
+
+  "We continue to press the Nicaraguan government to uphold democratic practices,
+  including press freedom and respect for universal human rights in Nicaragua," he
+  added.
+
+  Mr Ortega had been widely expected to win both due to the popularity of his social
+  programmes and because he faced no obvious political challenger.
+
+  A former left-wing rebel, Mr Ortega has led Nicaragua through a period of economic
+  stability which has made him popular with the country''s business sector and foreign
+  investors.
+
+  Supporters of Mr Ortega took to the streets to celebrate his victory.
+
+  But even before the first results were announced, members of the opposition coalition
+  Broad Front for Democracy (FAD) called the elections a "farce".
+
+  The FAD, which had urged voters to boycott the election, alleged that more than
+  70% had abstained from voting.
+
+  They were contradicted by the electoral authorities which put voter participation
+  at 65.8%.
+
+  Mr Ortega''s running mate was his wife, Rosario Murillo, who now looks set to become
+  vice-president.
+
+  Analysts say that Ms Murillo already shares decision-making with Mr Ortega and could
+  become president if her 70-year-old husband were to bow out.
+
+  Nicaragua''s economy has grown at double the Latin American average, but the country
+  still needs to attract more foreign investment.
+
+  A $50bn (£40bn) plan to build an interoceanic canal across Nicaragua with Chinese
+  investment has gained international attention, but there are serious doubts over
+  whether it will ever be built.
+
+  The country has been able to avoid the sky-high murder rates of some of its Central
+  American neighbours but it also faces the ever pervasive threat of drug-trafficking.'
+validation_used: false
+test_size: 300
+start_prompt: Summarize the sentence.
+final_prompt: Summarize the provided news article in one concise sentence. Focus on
+  the main argument and central themes. Ensure clarity, maintain neutrality, and avoid
+  unsupported claims or unnecessary details. Return only the concise summary.
+val_score: null
+test_score: 0.7196507545312246
+task_description: Summarize the supplied news article in one concise sentence, keeping
+  the central meaning and avoiding unsupported information.
+task_objective: Return only the concise summary.
+mrpea:
+  task_name: xsum
+  initial_prompt: Summarize the sentence.
+  task_description: Summarize the supplied news article in one concise sentence, keeping
+    the central meaning and avoiding unsupported information.
+  sample_question: 'A State Department spokesman said the election process was flawed
+    and could not be seen as free and fair.
+
+    He said the Ortega government had side-lined opposition candidates and limited
+    monitoring of the polls.
+
+    Daniel Ortega won 72.5% of the vote with 99.8% of the ballots counted.
+
+    His closest rival, centre-right candidate Maximino Rodriguez, only received 14.2%
+    of the vote.
+
+    The State Department''s Mark Toner  said the Ortega government had not invited
+    international election observers, which he said, "further degraded the legitimacy
+    of the election".
+
+    "We continue to press the Nicaraguan government to uphold democratic practices,
+    including press freedom and respect for universal human rights in Nicaragua,"
+    he added.
+
+    Mr Ortega had been widely expected to win both due to the popularity of his social
+    programmes and because he faced no obvious political challenger.
+
+    A former left-wing rebel, Mr Ortega has led Nicaragua through a period of economic
+    stability which has made him popular with the country''s business sector and foreign
+    investors.
+
+    Supporters of Mr Ortega took to the streets to celebrate his victory.
+
+    But even before the first results were announced, members of the opposition coalition
+    Broad Front for Democracy (FAD) called the elections a "farce".
+
+    The FAD, which had urged voters to boycott the election, alleged that more than
+    70% had abstained from voting.
+
+    They were contradicted by the electoral authorities which put voter participation
+    at 65.8%.
+
+    Mr Ortega''s running mate was his wife, Rosario Murillo, who now looks set to
+    become vice-president.
+
+    Analysts say that Ms Murillo already shares decision-making with Mr Ortega and
+    could become president if her 70-year-old husband were to bow out.
+
+    Nicaragua''s economy has grown at double the Latin American average, but the country
+    still needs to attract more foreign investment.
+
+    A $50bn (£40bn) plan to build an interoceanic canal across Nicaragua with Chinese
+    investment has gained international attention, but there are serious doubts over
+    whether it will ever be built.
+
+    The country has been able to avoid the sky-high murder rates of some of its Central
+    American neighbours but it also faces the ever pervasive threat of drug-trafficking.'
+  best_prompt_id: 1
+  prompt_pool:
+    0: Summarize the sentence.
+    1: Summarize the provided news article in one concise sentence. Focus on the main
+      argument and central themes. Ensure clarity, maintain neutrality, and avoid
+      unsupported claims or unnecessary details.
+    2: Summarize the supplied news article in one clear and concise sentence. Identify
+      the main argument and central themes. Ensure the summary is neutral, avoids
+      unsupported claims, and omits unnecessary details.
+    3: Summarize the provided news article in a single, concise sentence. Identify
+      the main argument and central themes. Ensure clarity and neutrality, avoiding
+      unsupported claims and unnecessary details.
+  ranking_scores:
+    0: 0.81
+    1: 1.3710000000000002
+    2: 0.9
+    3: 1.0
+  knowledge_memory:
+  - &id001
+    need_change: true
+    strategies:
+    - Identify key facts and figures
+    - Focus on the main argument
+    - Eliminate redundant details
+    - Use clear and concise language
+    - Maintain neutrality in tone
+    principles:
+    - Summarize with accuracy
+    - Avoid speculation
+    - Highlight contrasting viewpoints
+    - Ensure clarity in meaning
+    - Stay within the context of the article
+    evaluation_criteria:
+    - Clarity of statement
+    - Coverage of central themes
+    - Conciseness of summary
+    - Neutral representation of perspectives
+    - Absence of unsupported claims
+    gap_hypotheses:
+    - Potential lack of examples for summarization techniques
+    - Need for clarity on what constitutes 'central meaning'
+    - Limited guidance on addressing conflicting information
+    change_rationale: Existing knowledge lacks comprehensive strategies and evaluation
+      criteria for effective summarization.
+  - &id003
+    need_change: true
+    strategies:
+    - Identify key facts and figures
+    - Focus on the main argument
+    - Eliminate redundant details
+    - Use clear and concise language
+    - Maintain neutrality in tone
+    - Prioritize significant events over minor details
+    principles:
+    - Summarize with accuracy
+    - Avoid speculation
+    - Highlight contrasting viewpoints
+    - Ensure clarity in meaning
+    - Stay within the context of the article
+    - Reflect the tone of the article
+    evaluation_criteria:
+    - Clarity of statement
+    - Coverage of central themes
+    - Conciseness of summary
+    - Neutral representation of perspectives
+    - Absence of unsupported claims
+    - Alignment with the article's intent
+    gap_hypotheses:
+    - Potential lack of examples for summarization techniques
+    - Need for clarity on what constitutes 'central meaning'
+    - Limited guidance on addressing conflicting information
+    - Insufficient emphasis on the significance of the election outcome
+    change_rationale: Existing knowledge could benefit from added strategies, principles,
+      and clearer evaluation criteria.
+  - &id005
+    need_change: true
+    strategies:
+    - Extract main arguments
+    - Highlight critical data points
+    - Avoid excessive detail
+    - Use straightforward language
+    - Maintain impartial tone
+    - Focus on pivotal events
+    principles:
+    - Ensure precise summarization
+    - Exclude conjecture
+    - Present diverse perspectives
+    - Maintain clear meaning
+    - Stay relevant to the article
+    - Reflect article's tone accurately
+    evaluation_criteria:
+    - Statement clarity
+    - Coverage of key themes
+    - Summary brevity
+    - Neutral perspective representation
+    - Absence of unverifiable claims
+    - Consistency with article's purpose
+    gap_hypotheses:
+    - Need examples of effective summarization
+    - Clarification on defining 'central meaning'
+    - Guidance on handling conflicting narratives
+    - Emphasis on the importance of election results
+    change_rationale: Existing knowledge can be improved for clarity, specificity,
+      and organization.
+  example_memory:
+  - sample_question: 'A State Department spokesman said the election process was flawed
+      and could not be seen as free and fair.
+
+      He said the Ortega government had side-lined opposition candidates and limited
+      monitoring of the polls.
+
+      Daniel Ortega won 72.5% of the vote with 99.8% of the ballots counted.
+
+      His closest rival, centre-right candidate Maximino Rodriguez, only received
+      14.2% of the vote.
+
+      The State Department''s Mark Toner  said the Ortega government had not invited
+      international election observers, which he said, "further degraded the legitimacy
+      of the election".
+
+      "We continue to press the Nicaraguan government to uphold democratic practices,
+      including press freedom and respect for universal human rights in Nicaragua,"
+      he added.
+
+      Mr Ortega had been widely expected to win both due to the popularity of his
+      social programmes and because he faced no obvious political challenger.
+
+      A former left-wing rebel, Mr Ortega has led Nicaragua through a period of economic
+      stability which has made him popular with the country''s business sector and
+      foreign investors.
+
+      Supporters of Mr Ortega took to the streets to celebrate his victory.
+
+      But even before the first results were announced, members of the opposition
+      coalition Broad Front for Democracy (FAD) called the elections a "farce".
+
+      The FAD, which had urged voters to boycott the election, alleged that more than
+      70% had abstained from voting.
+
+      They were contradicted by the electoral authorities which put voter participation
+      at 65.8%.
+
+      Mr Ortega''s running mate was his wife, Rosario Murillo, who now looks set to
+      become vice-president.
+
+      Analysts say that Ms Murillo already shares decision-making with Mr Ortega and
+      could become president if her 70-year-old husband were to bow out.
+
+      Nicaragua''s economy has grown at double the Latin American average, but the
+      country still needs to attract more foreign investment.
+
+      A $50bn (£40bn) plan to build an interoceanic canal across Nicaragua with Chinese
+      investment has gained international attention, but there are serious doubts
+      over whether it will ever be built.
+
+      The country has been able to avoid the sky-high murder rates of some of its
+      Central American neighbours but it also faces the ever pervasive threat of drug-trafficking.'
+  - &id002
+    question: The World Health Organization has declared a new strain of the influenza
+      virus as a global health emergency due to its rapid spread across multiple continents,
+      warning that it poses a significant threat to vulnerable populations, including
+      the elderly and those with pre-existing conditions, while urging countries to
+      enhance their surveillance and vaccination efforts.
+    answer: The World Health Organization has classified a rapidly spreading influenza
+      strain as a global health emergency, emphasizing the need for increased surveillance
+      and vaccination to protect vulnerable groups.
+    rationale: The summary captures the central theme of the WHO's declaration, maintains
+      neutrality, and avoids unnecessary detail, differing from previous examples
+      by focusing on a health-related scenario instead of political events.
+    tags:
+    - health
+    - WHO
+    - influenza
+    variation_type:
+    - topic change
+    - methodological shift
+  - &id004
+    question: Following a year of severe drought, the agricultural sector in California
+      is facing unprecedented challenges, with crop yields plummeting by 30%, farmers
+      reporting losses in the billions, and state officials urging immediate water
+      conservation measures to mitigate the impact on food supply and local economies.
+    answer: California's agriculture is severely impacted by a year of drought, with
+      crop yields down 30% and significant financial losses reported, prompting state
+      officials to call for urgent water conservation efforts.
+    rationale: This summary accurately reflects the main issue of drought affecting
+      agriculture in California while maintaining neutrality and conciseness. It differs
+      from previous examples by focusing on environmental and economic challenges
+      rather than political events or health crises.
+    tags:
+    - agriculture
+    - drought
+    - California
+    variation_type:
+    - topic change
+    - structural variation
+  - &id006
+    question: The recent agreement between the United States and a coalition of European
+      nations aims to enhance military cooperation in response to rising geopolitical
+      tensions, focusing on joint exercises, intelligence sharing, and increased defense
+      spending to ensure collective security and deter potential aggressors.
+    answer: The United States and European allies have reached an agreement to strengthen
+      military cooperation amid escalating geopolitical tensions, emphasizing joint
+      exercises and enhanced defense spending for collective security.
+    rationale: The summary succinctly captures the essence of the military cooperation
+      agreement without extraneous details, maintaining neutrality. It varies from
+      previous examples by addressing international security rather than health or
+      environmental issues.
+    tags:
+    - military
+    - international relations
+    - cooperation
+    variation_type:
+    - topic change
+    - thematic shift
+  feedback_memory:
+  - Prompt 1 could improve by providing specific guidelines on clarity and neutrality
+    to align better with the task intent.; Answer 1 should aim to more closely match
+    the concise and neutral tone of the reference answer, potentially by rephrasing
+    to emphasize the central themes more effectively.
+  - Consider reinforcing the requirement for a single, succinct sentence in both prompts
+    to ensure clarity and conciseness.; Encourage the use of terms like 'call for'
+    in the context of state officials to promote neutrality and focus, as seen in
+    Answer 1.
+  - Consider simplifying the language in Prompt 2 to enhance brevity and clarity,
+    focusing solely on the essential themes.; Ensure that summaries remain within
+    the scope of the original content to avoid over-explaining, as seen in Prompt
+    2.
+  iteration_history:
+  - iteration: 1
+    current_best_id_before_update: 0
+    new_prompt_id: 1
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Prompt 2 is clearer and more precise in its instructions, specifying the need
+        for focus on the main argument and central themes.
+      - Answer 2 closely aligns with the reference answer, providing a well-rounded
+        summary that maintains neutrality and covers all central themes.
+      feedback:
+      - Prompt 1 could improve by providing specific guidelines on clarity and neutrality
+        to align better with the task intent.
+      - Answer 1 should aim to more closely match the concise and neutral tone of
+        the reference answer, potentially by rephrasing to emphasize the central themes
+        more effectively.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+    knowledge: *id001
+    example: *id002
+    new_prompt: Summarize the provided news article in one concise sentence. Focus
+      on the main argument and central themes. Ensure clarity, maintain neutrality,
+      and avoid unsupported claims or unnecessary details.
+    feedback: Prompt 1 could improve by providing specific guidelines on clarity and
+      neutrality to align better with the task intent.; Answer 1 should aim to more
+      closely match the concise and neutral tone of the reference answer, potentially
+      by rephrasing to emphasize the central themes more effectively.
+  - iteration: 2
+    current_best_id_before_update: 1
+    new_prompt_id: 2
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Answer 1 maintains a more concise structure, delivering the key information
+        without additional elaboration, making it clearer and more aligned with the
+        requirement for brevity.
+      - 'Both prompts and outputs are similar, but the slight differences in wording
+        in Answer 2 introduce unnecessary complexity, which detracts from its overall
+        conciseness. '
+      feedback:
+      - Consider reinforcing the requirement for a single, succinct sentence in both
+        prompts to ensure clarity and conciseness.
+      - Encourage the use of terms like 'call for' in the context of state officials
+        to promote neutrality and focus, as seen in Answer 1.
+    ranking_scores:
+      0: 0.9
+      1: 1.1900000000000002
+      2: 1.0
+    knowledge: *id003
+    example: *id004
+    new_prompt: Summarize the supplied news article in one clear and concise sentence.
+      Identify the main argument and central themes. Ensure the summary is neutral,
+      avoids unsupported claims, and omits unnecessary details.
+    feedback: Consider reinforcing the requirement for a single, succinct sentence
+      in both prompts to ensure clarity and conciseness.; Encourage the use of terms
+      like 'call for' in the context of state officials to promote neutrality and
+      focus, as seen in Answer 1.
+  - iteration: 3
+    current_best_id_before_update: 1
+    new_prompt_id: 3
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Prompt 1's output is more concise and closely mirrors the reference answer
+        in terms of brevity and focus on the key themes without unnecessary elaboration.
+      - While both answers capture the main points, Prompt 2's output introduces additional
+        details that detract from its conciseness.
+      feedback:
+      - Consider simplifying the language in Prompt 2 to enhance brevity and clarity,
+        focusing solely on the essential themes.
+      - Ensure that summaries remain within the scope of the original content to avoid
+        over-explaining, as seen in Prompt 2.
+    ranking_scores:
+      0: 0.81
+      1: 1.3710000000000002
+      2: 0.9
+      3: 1.0
+    knowledge: *id005
+    example: *id006
+    new_prompt: Summarize the provided news article in a single, concise sentence.
+      Identify the main argument and central themes. Ensure clarity and neutrality,
+      avoiding unsupported claims and unnecessary details.
+    feedback: Consider simplifying the language in Prompt 2 to enhance brevity and
+      clarity, focusing solely on the essential themes.; Ensure that summaries remain
+      within the scope of the original content to avoid over-explaining, as seen in
+      Prompt 2.
+  iterations_completed: 3
+  consecutive_wins: 3

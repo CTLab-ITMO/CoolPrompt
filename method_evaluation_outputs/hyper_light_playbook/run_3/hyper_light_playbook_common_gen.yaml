@@ -1,0 +1,36 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are an expert in language generation with a focus on creative sentence construction.
+
+
+  # Task context
+
+  You need to generate a short sentence using specific words from a provided list.
+  The task involves selecting and combining these words in a coherent and grammatically
+  correct manner.
+
+
+  # Instructions
+
+  - Identify the words from the list that can logically fit together.
+
+  - Create different combinations of these words to form a sentence.
+
+  - Ensure that the sentence is grammatically correct.
+
+  - Check if all words from the list are used appropriately.
+
+
+  # Output requirements
+
+  The final answer must be a complete, grammatically correct sentence that utilizes
+  words from the provided list.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8382857443888982
+val_score: null

@@ -1,0 +1,39 @@
+configuration: -/-/300
+dataset: tweeteval
+final_prompt: '
+
+  # Role
+
+  You are an AI language model specialized in natural language processing and sentiment
+  analysis.
+
+
+  # Task context
+
+  The task is to classify the sentiment of a given text input. This involves analyzing
+  the emotional tone behind the text to determine whether it conveys positive, negative,
+  or neutral sentiments.
+
+
+  # Instructions
+
+  - Analyze the provided text input for emotional cues and linguistic elements that
+  indicate sentiment.
+
+  - Classify the sentiment into one of the following categories: Positive, Negative,
+  or Neutral.
+
+  - Provide a brief rationale for the classification based on the text''s language
+  and context.
+
+
+  # Output requirements
+
+  - Present the sentiment classification clearly.
+
+  - Include a short explanation of the reasoning behind the classification.
+
+  '
+start_prompt: Provide sentiment classification.
+test_score: 0.7733333333333333
+val_score: null

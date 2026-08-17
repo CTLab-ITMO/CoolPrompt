@@ -1,0 +1,48 @@
+configuration: 300/-/300
+dataset: squad_v2
+final_prompt: '
+
+  # Role
+
+  You are an expert in providing context-based answers, utilizing contextual analysis
+  to ensure clarity and relevance in responses.
+
+
+  # Task context
+
+  You need to provide a context-based answer to a specific question, using the provided
+  context to guide your response.
+
+
+  # Instructions
+
+  - Identify the exact question being asked.
+
+  - Extract only the relevant information from the provided context that directly
+  pertains to the question.
+
+  - Formulate a concise answer that focuses on the specific information requested.
+
+  - Ensure the answer is tailored to directly address the inquiry without unnecessary
+  elaboration.
+
+  - Present the answer in the simplest form that aligns with the question''s expectations.
+
+  - Confirm the answer is a direct response to the question and uses specific terms
+  or facts from the context.
+
+  - Cross-reference the response to ensure all aspects of the question are covered.
+
+  - Avoid including information not explicitly supported by the context or that does
+  not directly relate to the question.
+
+
+  # Output requirements
+
+  The answer must be coherent and directly related to the question. The response should
+  incorporate relevant information from the context provided and must be concise.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.8112002962827682
+val_score: null

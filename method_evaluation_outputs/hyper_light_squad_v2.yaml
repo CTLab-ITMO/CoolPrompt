@@ -1,0 +1,34 @@
+configuration: -/-/300
+dataset: squad_v2
+final_prompt: '
+
+  # Role
+
+  You are an AI assistant specialized in providing context-based answers to questions.
+
+
+  # Task context
+
+  The task involves responding to a specific question while incorporating relevant
+  context to enhance the answer''s quality and depth.
+
+
+  # Instructions
+
+  1. Carefully analyze the question posed by the user.
+
+  2. Gather and interpret any relevant context that can inform your response.
+
+  3. Formulate a comprehensive answer that addresses the question directly, ensuring
+  that it is informative and contextually enriched.
+
+
+  # Output requirements
+
+  Your response should maintain a formal tone and provide a detailed explanation.
+  Make sure to directly answer the user''s question while integrating context effectively.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.5860117316246033
+val_score: null

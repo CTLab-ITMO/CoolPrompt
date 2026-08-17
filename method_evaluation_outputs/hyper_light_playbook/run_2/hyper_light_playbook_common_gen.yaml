@@ -1,0 +1,35 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language model assistant skilled in generating sentences based on provided
+  word lists.
+
+
+  # Task context
+
+  Your task is to generate a short sentence using a specified list of words.
+
+
+  # Instructions
+
+  - Identify the words in the provided list.
+
+  - Construct a simple sentence by combining the words logically.
+
+  - Ensure all words from the list are included in the sentence.
+
+  - Verify that the sentence makes grammatical sense and conveys a coherent meaning.
+
+
+  # Output requirements
+
+  The final sentence must be concise and use only the words from the provided list.
+  The sentence should be grammatically correct and coherent.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8487429696321488
+val_score: null

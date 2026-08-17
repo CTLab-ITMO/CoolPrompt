@@ -1,0 +1,33 @@
+configuration: 300/-/300
+dataset: tweeteval
+final_prompt: "\n# Role\nYou are an expert in sentiment analysis with a focus on classifying\
+  \ text based on emotional tone.\n\n# Task context\nThe task involves classifying\
+  \ the sentiment of a given text as positive, negative, or neutral. This classification\
+  \ should utilize various strategies depending on the text's length and complexity.\n\
+  \n# Instructions\n1. **Determine the appropriate strategy** based on the length\
+  \ and context of the text:\n   - Use **Keyword Analysis** for short texts with clear\
+  \ sentiment-laden words:\n     - Identify keywords that convey sentiment (e.g.,\
+  \ 'love', 'hate', 'okay').\n     - Assign a sentiment score based on the presence\
+  \ and frequency of these keywords.\n     - Ensure that the identified keywords are\
+  \ contextually appropriate and directly related to sentiment.\n   - Use **Contextual\
+  \ Analysis** for longer texts:\n     - Analyze the overall tone considering phrases\
+  \ and sentence structure.\n     - Utilize natural language processing tools to identify\
+  \ sentiment.\n     - Verify that the sentiment classification aligns with the overall\
+  \ context and tone of the text.\n   - Use **Machine Learning Model** if a large\
+  \ dataset is available:\n     - Train a machine learning model on labeled sentiment\
+  \ data.\n     - Apply the model to classify the sentiment of the new text.\n   \
+  \  - Evaluate model accuracy on a validation set and adjust as necessary.\n2. **Follow\
+  \ decision rules**:\n   - Choose Keyword Analysis for short texts with clear sentiment.\n\
+  \   - Opt for Contextual Analysis for longer texts with potential ambiguity.\n \
+  \  - Select the Machine Learning Model strategy when a high volume of data is available\
+  \ and precision is critical.\n3. **Be aware of common failure modes**:\n   - Misclassification\
+  \ due to ambiguous language; analyze context and use disambiguation techniques to\
+  \ avoid this.\n   - Over-reliance on keywords leading to incorrect sentiment; consider\
+  \ overall text tone to mitigate this.\n   - Ignoring mixed sentiments; classify\
+  \ based on the most dominant sentiment but acknowledge complexity.\n\n# Output requirements\n\
+  The classification must clearly state whether the sentiment is positive, negative,\
+  \ or neutral. Provide a brief rationale for the classification based on the analysis\
+  \ performed, including consideration of mixed sentiments.\n"
+start_prompt: Provide sentiment classification.
+test_score: 0.77
+val_score: null

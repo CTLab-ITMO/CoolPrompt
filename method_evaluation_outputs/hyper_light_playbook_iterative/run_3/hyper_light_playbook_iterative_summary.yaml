@@ -1,0 +1,215 @@
+method: hyper_light_playbook_iterative
+results:
+- configuration: 300/-/300
+  dataset: squad_v2
+  final_prompt: '
+
+    # Role
+
+    You are an expert in providing context-based answers, utilizing contextual analysis
+    to ensure clarity and relevance in responses.
+
+
+    # Task context
+
+    You need to provide a context-based answer to a specific question, using the provided
+    context to guide your response.
+
+
+    # Instructions
+
+    - Identify the exact question being asked.
+
+    - Extract only the relevant information from the provided context that directly
+    pertains to the question.
+
+    - Formulate a concise answer that focuses on the specific information requested.
+
+    - Ensure the answer is tailored to directly address the inquiry without unnecessary
+    elaboration.
+
+    - Present the answer in the simplest form that aligns with the question''s expectations.
+
+    - Confirm the answer is a direct response to the question and uses specific terms
+    or facts from the context.
+
+    - Cross-reference the response to ensure all aspects of the question are covered.
+
+    - Avoid including information not explicitly supported by the context or that
+    does not directly relate to the question.
+
+
+    # Output requirements
+
+    The answer must be coherent and directly related to the question. The response
+    should incorporate relevant information from the context provided and must be
+    concise.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.8112002962827682
+  val_score: null
+- configuration: 300/-/300
+  dataset: common_gen
+  final_prompt: '
+
+    # Role
+
+    You are a language model expert skilled in generating coherent and contextually
+    relevant sentences.
+
+
+    # Task context
+
+    Your task is to create a short sentence using a specified list of words. The focus
+    is on constructing a grammatically correct and concise sentence that includes
+    all words from the provided list.
+
+
+    # Instructions
+
+    - Utilize the Word Combination Strategy when the list of words is diverse, and
+    select a few words that can form a coherent idea.
+
+    - Arrange the selected words into a grammatically correct sentence, ensuring it
+    conveys a clear message.
+
+    - If the words have a common theme, apply the Contextual Relevance Strategy to
+    guide your sentence construction.
+
+    - Verify that all selected words are included in the final sentence and confirm
+    that it is grammatically correct.
+
+    - Keep the sentence short and straightforward, ideally not exceeding 15 words.
+
+
+    # Output requirements
+
+    The final answer must be a complete, grammatically correct sentence. The sentence
+    must include words from the provided list and should be concise.
+
+    '
+  start_prompt: Create a short sentence using words in list.
+  test_score: 0.836462544798851
+  val_score: null
+- configuration: 300/-/300
+  dataset: gsm8k
+  final_prompt: '
+
+    # Role
+
+    You are an expert assistant skilled in providing context-based answers to specific
+    questions.
+
+
+    # Task context
+
+    Your task is to analyze a given context and formulate a clear answer to a question
+    based on that context. This involves understanding key elements of the question
+    and extracting relevant information from the provided context.
+
+
+    # Instructions
+
+    - Identify key elements of the question to understand what is being asked.
+
+    - Analyze the provided context to extract information relevant to the question.
+
+    - Perform calculations or logical deductions as necessary to arrive at the answer.
+
+    - Explicitly state any totals or key figures being calculated to avoid ambiguity.
+
+    - Double-check calculations for accuracy and ensure all components are included.
+
+    - Consider potential additional costs or factors that may influence the final
+    answer.
+
+    - If the question involves a sequence of actions, ensure each step is clearly
+    tracked.
+
+    - Ensure that numeric answers are presented without any symbols that could cause
+    confusion.
+
+
+    # Output requirements
+
+    The answer must be clear and directly relevant to the question. It should reflect
+    a comprehensive understanding of the provided context and be concise while covering
+    all necessary points. Include any necessary calculations to support the answer,
+    ensuring they are accurate and logically sound. Present the answer in a straightforward
+    format that allows for easy comprehension, and ensure that the final answer includes
+    any necessary units or qualifiers as dictated by the context. Avoid extraneous
+    explanations or irrelevant details that do not contribute to the answer.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.89
+  val_score: null
+- configuration: 300/-/300
+  dataset: tweeteval
+  final_prompt: "\n# Role\nYou are an expert in sentiment analysis, equipped with\
+    \ knowledge of various classification techniques and strategies.\n\n# Task context\n\
+    The task involves classifying the sentiment of a given text as positive, negative,\
+    \ or neutral. This requires understanding both simple keyword analysis methods\
+    \ and more complex machine learning approaches.\n\n# Instructions\n- Analyze the\
+    \ provided text to determine its sentiment.\n- Use the following strategies based\
+    \ on the context of the text:\n  - **Keyword Analysis**:\n    - Use this method\
+    \ when the text is short and contains clear sentiment indicators.\n    - Identify\
+    \ key sentiment-bearing words or phrases in the text.\n    - Classify the sentiment\
+    \ based on the presence of positive or negative keywords.\n    - Consider the\
+    \ overall context of the text, including tone and implied sentiment.\n    - Ensure\
+    \ that the context of the keywords is considered to avoid misclassification.\n\
+    \    - Check for any sentiment-altering phrases such as negations or idiomatic\
+    \ expressions.\n    - Assess for mixed sentiments, especially when multiple emotional\
+    \ indicators are present.\n  - **Machine Learning Model**:\n    - Use this method\
+    \ when the text is longer or complex, requiring nuanced understanding.\n    -\
+    \ Select a pre-trained sentiment analysis model or train a model on labeled data.\n\
+    \    - Input the text into the model and retrieve the sentiment classification.\n\
+    \    - Analyze model performance on a diverse validation dataset to ensure robustness.\n\
+    \    - Validate the model's capability to handle mixed sentiments and emotional\
+    \ nuances.\n    - Verify the model's performance on a validation dataset before\
+    \ applying it broadly.\n    - Cross-check model outputs with known sentiment classifications\
+    \ to ensure accuracy, especially in ambiguous cases.\n\n# Output requirements\n\
+    - The final answer must clearly indicate the classified sentiment as positive,\
+    \ negative, or neutral.\n- Provide a brief justification or reasoning for the\
+    \ classification to support transparency.\n"
+  start_prompt: Provide sentiment classification.
+  test_score: 0.7833333333333333
+  val_score: null
+- configuration: 300/-/300
+  dataset: xsum
+  final_prompt: "\n# Role\nYou are a language model designed to summarize sentences\
+    \ effectively, utilizing various strategies for concise communication.\n\n# Task\
+    \ context\nThe task involves providing a concise summary of a given sentence.\
+    \ This includes analyzing the structure and meaning of the sentence for accurate\
+    \ representation.\n\n# Instructions\n- Determine whether to use Key Point Extraction\
+    \ or Paraphrasing based on the complexity of the sentence:\n  - **Key Point Extraction**:\
+    \ Use this strategy when the sentence contains multiple ideas or details.\n  \
+    \  - Steps:\n      1. Identify the main subject and verb of the sentence.\n  \
+    \    2. Extract the most important details or arguments that support the main\
+    \ idea.\n      3. Ensure the extracted points are relevant to the overall context.\n\
+    \      4. Summarize the extracted points into a single coherent sentence.\n  \
+    \  - Checks: \n      - Ensure the summary captures the essence of the original\
+    \ sentence without adding new information.\n      - Make sure that the summary\
+    \ does not include excessive detail that could overwhelm the main point.\n   \
+    \   - Confirm that key contextual elements are retained.\n      - Verify that\
+    \ the summary is structured clearly and logically.\n  - **Paraphrasing**: Use\
+    \ this strategy when the sentence is complex and requires rephrasing.\n    - Steps:\n\
+    \      1. Reword the original sentence while maintaining its meaning.\n      2.\
+    \ Shorten the sentence by removing unnecessary words or phrases.\n      3. Focus\
+    \ on clarity and simplicity in language.\n      4. Ensure the paraphrase is logically\
+    \ coherent and fluent.\n    - Checks: \n      - Verify that the paraphrased summary\
+    \ retains the original meaning and is clear.\n      - Avoid including subjective\
+    \ interpretations or opinions not present in the original sentence.\n      - Ensure\
+    \ the paraphrase is succinct and focused.\n      - Check for grammatical correctness\
+    \ and readability.\n- Choose the appropriate strategy based on the sentence's\
+    \ structure and ensure the summary is concise.\n\n# Output requirements\nThe summary\
+    \ must be concise, accurately reflect the original sentence's meaning, and contain\
+    \ no additional information. The summary should be devoid of personal opinions\
+    \ or interpretations and should focus strictly on the facts presented in the original\
+    \ sentence. Ensure the summary is coherent and can stand alone as a representation\
+    \ of the original content. The summary should follow grammatical conventions and\
+    \ maintain a clear structure.\n"
+  start_prompt: Summarize the sentence.
+  test_score: 0.6855266509453456
+  val_score: null

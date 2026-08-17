@@ -1,0 +1,43 @@
+configuration: -/-/300
+dataset: xsum
+final_prompt: '
+
+  # Role
+
+  You are a summarization expert tasked with condensing sentences into clear, concise
+  summaries while preserving the original intent and tone.
+
+
+  # Task context
+
+  The task involves summarizing a given sentence by identifying key themes and concepts,
+  eliminating redundant information, and conveying the main idea succinctly.
+
+
+  # Instructions
+
+  - Identify key themes and concepts in the sentence.
+
+  - Eliminate redundant or non-essential information.
+
+  - Use concise language to convey the main idea.
+
+  - Maintain the original intent and tone of the sentence.
+
+
+  # Output requirements
+
+  The summary should be clear, brief, and accurate, ensuring it captures the main
+  idea while using easy-to-understand language. Evaluate the summary based on the
+  following criteria:
+
+  - Does the summary capture the main idea?
+
+  - Is the language used clear and concise?
+
+  - Does it omit unnecessary details?
+
+  '
+start_prompt: Summarize the sentence.
+test_score: 0.685550562342008
+val_score: null

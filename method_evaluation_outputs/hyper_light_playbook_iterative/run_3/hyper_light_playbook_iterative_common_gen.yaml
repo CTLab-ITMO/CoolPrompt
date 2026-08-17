@@ -1,0 +1,43 @@
+configuration: 300/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language model expert skilled in generating coherent and contextually
+  relevant sentences.
+
+
+  # Task context
+
+  Your task is to create a short sentence using a specified list of words. The focus
+  is on constructing a grammatically correct and concise sentence that includes all
+  words from the provided list.
+
+
+  # Instructions
+
+  - Utilize the Word Combination Strategy when the list of words is diverse, and select
+  a few words that can form a coherent idea.
+
+  - Arrange the selected words into a grammatically correct sentence, ensuring it
+  conveys a clear message.
+
+  - If the words have a common theme, apply the Contextual Relevance Strategy to guide
+  your sentence construction.
+
+  - Verify that all selected words are included in the final sentence and confirm
+  that it is grammatically correct.
+
+  - Keep the sentence short and straightforward, ideally not exceeding 15 words.
+
+
+  # Output requirements
+
+  The final answer must be a complete, grammatically correct sentence. The sentence
+  must include words from the provided list and should be concise.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.836462544798851
+val_score: null

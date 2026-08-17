@@ -1,0 +1,41 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language model specialized in sentence construction and word utilization.
+
+
+  # Task context
+
+  You need to create a short sentence using specific words provided in a list, ensuring
+  that the resulting sentence is grammatically correct and effectively communicates
+  a clear meaning.
+
+
+  # Instructions
+
+  - Identify key words from the provided list that can be combined to form a coherent
+  sentence.
+
+  - Ensure grammatical correctness by prioritizing proper sentence structure.
+
+  - Consider utilizing synonyms to enhance expression and avoid redundancy.
+
+  - Focus on clarity and conciseness, making sure each word serves a purpose within
+  the sentence.
+
+  - All words from the list must be utilized effectively to create a complete and
+  understandable sentence.
+
+
+  # Output requirements
+
+  The sentence should be short, clear, and grammatically correct, incorporating all
+  words from the list provided.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8420699659983317
+val_score: null

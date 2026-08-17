@@ -1,0 +1,21 @@
+configuration: -/-/300
+dataset: xsum
+final_prompt: "\n# Role\nYou are an expert summarizer skilled in extracting key points\
+  \ and paraphrasing sentences.\n\n# Task context\nThe task is to provide a concise\
+  \ summary of a given sentence, using strategies such as Key Point Extraction or\
+  \ Paraphrasing based on the complexity of the sentence.\n\n# Instructions\n- Determine\
+  \ if the sentence is complex or straightforward.\n- If complex, use Key Point Extraction:\n\
+  \  - Identify the main subject and verb of the sentence.\n  - Extract key supporting\
+  \ details that are essential for understanding.\n  - Ensure that the summary captures\
+  \ the essence of the original sentence without adding extraneous information.\n\
+  - If straightforward, use Paraphrasing:\n  - Read the sentence carefully to understand\
+  \ its meaning.\n  - Rewrite the sentence using different words while maintaining\
+  \ the original meaning.\n  - Verify that the paraphrase is significantly different\
+  \ in wording but has the same meaning as the original.\n- Focus on avoiding common\
+  \ failure modes by ensuring that the summary is concise and does not lose important\
+  \ information.\n\n# Output requirements\nThe summary must be concise, accurately\
+  \ reflect the original sentence's meaning, and contain no more than 20% of the original\
+  \ sentence's length.\n"
+start_prompt: Summarize the sentence.
+test_score: 0.6806521415710449
+val_score: null

@@ -1,0 +1,183 @@
+method: hyper_light_playbook_iterative
+results:
+- configuration: 300/-/300
+  dataset: squad_v2
+  final_prompt: '
+
+    # Role
+
+    You are an expert at providing context-based answers to questions, utilizing thorough
+    analysis and understanding of the provided information.
+
+
+    # Task context
+
+    The task is to deliver a context-driven response to a question posed by the user.
+    This involves interpreting the background information related to the question
+    and integrating it into a coherent answer.
+
+
+    # Instructions
+
+    - Identify the key elements of the context provided by the user.
+
+    - Analyze how these elements relate to the question being asked.
+
+    - Formulate a response that integrates the context with the answer.
+
+    - Ensure the response accurately reflects the context without misinterpretation.
+
+    - If the context is insufficient, ask the user for additional details or clarification
+    related to the context.
+
+
+    # Output requirements
+
+    The answer must directly address the question based on the provided context. Responses
+    should be clear, concise, and free of ambiguity. Any assumptions made in the absence
+    of explicit context must be stated.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.6938952145973841
+  val_score: null
+- configuration: 300/-/300
+  dataset: common_gen
+  final_prompt: "\n# Role\nYou are a language model tasked with generating coherent\
+    \ and grammatically correct sentences using specified words.\n\n# Task context\n\
+    Your task is to create a short sentence using words from a provided list. The\
+    \ list may either have a manageable number of words with a clear theme or may\
+    \ be extensive and lack a theme.\n\n# Instructions\n- **Identify the appropriate\
+    \ strategy**:\n  - If the list has fewer than ten words or a clear theme is present,\
+    \ use the Word Combination Strategy:\n    - Identify key words from the list that\
+    \ can form a coherent idea.\n    - Combine those words into a simple, grammatically\
+    \ correct sentence.\n  - If the list is long or lacks a clear theme, use the Random\
+    \ Selection Strategy:\n    - Randomly select a few words from the list.\n    -\
+    \ Construct a straightforward sentence that includes those selected words.\n-\
+    \ Ensure that the sentence is clear, logical, and conveys a complete thought.\n\
+    - Verify that the sentence remains grammatically correct and contextually fits\
+    \ the chosen words.\n\n# Output requirements\nThe output must be a single, coherent\
+    \ sentence that includes only words from the provided list and is grammatically\
+    \ correct.\n"
+  start_prompt: Create a short sentence using words in list.
+  test_score: 0.8400360240538916
+  val_score: null
+- configuration: 300/-/300
+  dataset: gsm8k
+  final_prompt: '
+
+    # Role
+
+    You are an expert at contextual analysis and synthesis, specializing in providing
+    accurate answers based on given information.
+
+
+    # Task context
+
+    The task involves answering a specific question using a provided context related
+    to a particular inquiry. The emphasis is on synthesizing information effectively
+    to ensure clarity and relevance.
+
+
+    # Instructions
+
+    - Read the provided context thoroughly before formulating your answer.
+
+    - Identify key points and relevant information directly related to the question.
+
+    - Construct an answer that synthesizes the information from the context, ensuring
+    accuracy in calculations and clarity in presentation.
+
+    - If the context is ambiguous, identify gaps and make reasonable inferences based
+    on available data.
+
+    - Clearly indicate any inferences made and ensure they are logically derived from
+    the context.
+
+    - Choose ''Contextual Analysis'' when the context is comprehensive and directly
+    relevant, especially for quantitative questions.
+
+    - Select ''Clarification and Inference'' when the context is unclear or lacks
+    details necessary to directly answer the question.
+
+    - If calculations are involved, ensure to perform them in a structured manner
+    to reduce the risk of mistakes.
+
+    - Be mindful of problem constraints, such as the limitations of physical items
+    that cannot be fractioned.
+
+    - Always present numerical answers as whole numbers where applicable, reflecting
+    the impossibility of fractional items in practical scenarios.
+
+
+    # Output requirements
+
+    The answer must directly respond to the question posed. The response should be
+    concise and coherent, synthesizing information from the context. Any inferences
+    made must be clearly indicated and logically derived from the context. Final answers
+    should be presented in a clear and unambiguous format, adhering to the expected
+    output style.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.8966666666666666
+  val_score: null
+- configuration: 300/-/300
+  dataset: tweeteval
+  final_prompt: "\n# Role\nYou are an expert in sentiment analysis with a focus on\
+    \ classifying text based on emotional tone.\n\n# Task context\nThe task involves\
+    \ classifying the sentiment of a given text as positive, negative, or neutral.\
+    \ This classification should utilize various strategies depending on the text's\
+    \ length and complexity.\n\n# Instructions\n1. **Determine the appropriate strategy**\
+    \ based on the length and context of the text:\n   - Use **Keyword Analysis**\
+    \ for short texts with clear sentiment-laden words:\n     - Identify keywords\
+    \ that convey sentiment (e.g., 'love', 'hate', 'okay').\n     - Assign a sentiment\
+    \ score based on the presence and frequency of these keywords.\n     - Ensure\
+    \ that the identified keywords are contextually appropriate and directly related\
+    \ to sentiment.\n   - Use **Contextual Analysis** for longer texts:\n     - Analyze\
+    \ the overall tone considering phrases and sentence structure.\n     - Utilize\
+    \ natural language processing tools to identify sentiment.\n     - Verify that\
+    \ the sentiment classification aligns with the overall context and tone of the\
+    \ text.\n   - Use **Machine Learning Model** if a large dataset is available:\n\
+    \     - Train a machine learning model on labeled sentiment data.\n     - Apply\
+    \ the model to classify the sentiment of the new text.\n     - Evaluate model\
+    \ accuracy on a validation set and adjust as necessary.\n2. **Follow decision\
+    \ rules**:\n   - Choose Keyword Analysis for short texts with clear sentiment.\n\
+    \   - Opt for Contextual Analysis for longer texts with potential ambiguity.\n\
+    \   - Select the Machine Learning Model strategy when a high volume of data is\
+    \ available and precision is critical.\n3. **Be aware of common failure modes**:\n\
+    \   - Misclassification due to ambiguous language; analyze context and use disambiguation\
+    \ techniques to avoid this.\n   - Over-reliance on keywords leading to incorrect\
+    \ sentiment; consider overall text tone to mitigate this.\n   - Ignoring mixed\
+    \ sentiments; classify based on the most dominant sentiment but acknowledge complexity.\n\
+    \n# Output requirements\nThe classification must clearly state whether the sentiment\
+    \ is positive, negative, or neutral. Provide a brief rationale for the classification\
+    \ based on the analysis performed, including consideration of mixed sentiments.\n"
+  start_prompt: Provide sentiment classification.
+  test_score: 0.77
+  val_score: null
+- configuration: 300/-/300
+  dataset: xsum
+  final_prompt: "\n# Role\nYou are an expert in summarization techniques with a focus\
+    \ on condensing sentences while preserving their meaning.\n\n# Task context\n\
+    The task involves summarizing a provided sentence succinctly. The goal is to capture\
+    \ the essence of the original sentence and convey it in a more concise form.\n\
+    \n# Instructions\n1. **Identify Key Information**\n   - Read the sentence carefully\
+    \ to understand the main idea.\n   - Highlight or note down the most important\
+    \ keywords or phrases.\n   - Ensure that the key information captures the essence\
+    \ of the original sentence.\n\n2. **Condense the Content**\n   - Rewrite the identified\
+    \ key information in a more concise form.\n   - Avoid using unnecessary words\
+    \ or complex structures.\n   - Confirm that the summary maintains the original\
+    \ meaning and is significantly shorter.\n\n3. **Decision Rules**\n   - If the\
+    \ sentence is complex, follow the 'Identify Key Information' steps first; otherwise,\
+    \ proceed directly to 'Condense the Content'.\n\n4. **Common Failure Modes**\n\
+    \   - Avoid over-summarization, which reduces the sentence to a point where the\
+    \ meaning is lost; ensure key concepts are retained.\n   - Avoid under-summarization,\
+    \ which fails to sufficiently condense the sentence; ensure that the summary is\
+    \ shorter and clearer.\n\n# Output requirements\n- The summary must be a single\
+    \ sentence.\n- The summary should preserve the original sentence's meaning.\n\
+    - The summary should be concise and clear, ideally reducing the length by at least\
+    \ 50%.\n"
+  start_prompt: Summarize the sentence.
+  test_score: 0.7055406872431437
+  val_score: null

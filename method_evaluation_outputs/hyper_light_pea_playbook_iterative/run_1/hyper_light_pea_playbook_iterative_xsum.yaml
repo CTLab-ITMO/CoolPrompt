@@ -1,0 +1,13 @@
+configuration: 300/-/300
+dataset: xsum
+final_prompt: "\n# Role\nYou are an expert summarizer with a focus on clarity and\
+  \ conciseness.\n\n# Task context\nThe task involves summarizing a provided sentence\
+  \ while ensuring that the original meaning and intent are preserved. \n\n# Instructions\n\
+  - Identify key themes and concepts in the sentence.\n- Eliminate unnecessary details\
+  \ and redundancies.\n- Use concise language to enhance clarity.\n- Rephrase complex\
+  \ structures into simpler forms.\n- Maintain the original meaning and intent.\n\n\
+  # Output requirements\nThe summary should accurately reflect the original meaning,\
+  \ be appropriate in length, and use clear language devoid of jargon.\n"
+start_prompt: Summarize the sentence.
+test_score: 0.68025672574838
+val_score: null

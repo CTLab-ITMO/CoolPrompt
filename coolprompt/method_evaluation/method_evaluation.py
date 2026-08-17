@@ -7,6 +7,14 @@ from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
 from coolprompt.optimizer.hyper.hyper import HyPERMethod
+from coolprompt.optimizer.hyper.playbook import HyPERLightPlaybookMethod
+from coolprompt.optimizer.hyper.pea_playbook import HyPERLightPEAPlaybookMethod
+from coolprompt.optimizer.hyper.iterative_playbook import (
+    HyPERLightPlaybookIterativeMethod,
+)
+from coolprompt.optimizer.hyper.pea_playbook_iterative import (
+    HyPERLightPEAPlaybookIterativeMethod,
+)
 from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
@@ -14,6 +22,10 @@ from coolprompt.optimizer.rider import RIDERGenesisMethod
 
 _BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
     "hyper_light": HyPERLightMethod,
+    "hyper_light_playbook": HyPERLightPlaybookMethod,
+    "hyper_light_pea_playbook": HyPERLightPEAPlaybookMethod,
+    "hyper_light_playbook_iterative": HyPERLightPlaybookIterativeMethod,
+    "hyper_light_pea_playbook_iterative": HyPERLightPEAPlaybookIterativeMethod,
     "hyper": HyPERMethod,
     "reflectiveprompt": ReflectiveMethod,
     "reflective": ReflectiveMethod,
@@ -36,7 +48,10 @@ def evaluate_method(
 
     Args:
         method: One of
-            ``hyper_light``, ``hyper``, ``reflective`` / ``reflectiveprompt``,
+            ``hyper_light``, ``hyper_light_playbook``, ``hyper_light_pea_playbook``,
+            ``hyper_light_playbook_iterative``,
+            ``hyper_light_pea_playbook_iterative``, ``hyper``,
+            ``reflective`` / ``reflectiveprompt``,
             ``distill``, ``compress``, ``regps``, ``rider`` (same names as in
             ``PromptTuner`` / ``validate_method`` where applicable).
         model: LangChain language model used for optimization and evaluation.

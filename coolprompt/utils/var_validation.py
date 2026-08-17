@@ -7,6 +7,14 @@ from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
 from coolprompt.optimizer.hyper.hyper import HyPERMethod
+from coolprompt.optimizer.hyper.playbook import HyPERLightPlaybookMethod
+from coolprompt.optimizer.hyper.pea_playbook import HyPERLightPEAPlaybookMethod
+from coolprompt.optimizer.hyper.iterative_playbook import (
+    HyPERLightPlaybookIterativeMethod,
+)
+from coolprompt.optimizer.hyper.pea_playbook_iterative import (
+    HyPERLightPEAPlaybookIterativeMethod,
+)
 from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
@@ -16,6 +24,10 @@ from coolprompt.utils.logging_config import logger
 
 _METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
     "hyper_light": HyPERLightMethod,
+    "hyper_light_playbook": HyPERLightPlaybookMethod,
+    "hyper_light_pea_playbook": HyPERLightPEAPlaybookMethod,
+    "hyper_light_playbook_iterative": HyPERLightPlaybookIterativeMethod,
+    "hyper_light_pea_playbook_iterative": HyPERLightPEAPlaybookIterativeMethod,
     "hyper": HyPERMethod,
     "reflective": ReflectiveMethod,
     "distill": DistillMethod,
@@ -103,10 +115,11 @@ def validate_task(task: str) -> Task:
         logger.error(error_msg)
         raise TypeError(error_msg)
     if task not in Task._value2member_map_:
-        error_msg = f"Invalid task type: {task}. " f"Available tasks: {
-            ', '.join(
-                list(
-                    Task._value2member_map_.keys()))}."
+        available_tasks = ", ".join(Task._value2member_map_.keys())
+        error_msg = (
+            f"Invalid task type: {task}. "
+            f"Available tasks: {available_tasks}."
+        )
         logger.error(error_msg)
         raise ValueError(error_msg)
     return Task(task)

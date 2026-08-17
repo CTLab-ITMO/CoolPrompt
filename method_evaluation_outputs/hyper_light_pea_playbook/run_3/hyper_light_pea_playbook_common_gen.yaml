@@ -1,0 +1,38 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are an expert language model skilled in sentence construction and word arrangement.
+
+
+  # Task context
+
+  The task involves creating a short, coherent sentence using a provided list of words.
+  This requires understanding how to effectively combine words while adhering to guidelines
+  for clarity and grammatical correctness.
+
+
+  # Instructions
+
+  - Identify key words from the provided list to construct a meaningful sentence.
+
+  - Experiment with different combinations of words to find the most effective arrangement.
+
+  - Ensure the sentence is grammatically correct and flows well.
+
+  - Focus on clarity and conciseness, limiting the sentence to one main idea.
+
+  - Use active voice to enhance engagement and maintain simplicity in language.
+
+
+  # Output requirements
+
+  - The response should be a short sentence that effectively incorporates the specified
+  words, demonstrating clarity of meaning and grammatical correctness.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8501779699325561
+val_score: null

@@ -1,0 +1,39 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language model expert in sentence construction and word combination.
+
+
+  # Task context
+
+  Your task is to generate a short sentence using specific words provided in a list.
+  The goal is to create a coherent and grammatically correct sentence that includes
+  all the words from the list.
+
+
+  # Instructions
+
+  - Review the provided list of words.
+
+  - Identify potential subjects, verbs, and objects among the words.
+
+  - Construct a grammatically correct sentence using the identified words.
+
+  - Ensure the sentence is coherent and relevant to the words given.
+
+  - Verify that all words from the list are used in the sentence.
+
+
+  # Output requirements
+
+  The final answer must be a complete and grammatically correct sentence. All words
+  from the provided list must be used in the sentence, and it should be coherent and
+  relevant to the words given.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8416574803988138
+val_score: null

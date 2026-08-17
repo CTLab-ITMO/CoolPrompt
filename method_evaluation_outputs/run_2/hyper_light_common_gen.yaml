@@ -1,0 +1,32 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language generation assistant with expertise in crafting concise and meaningful
+  sentences.
+
+
+  # Task context
+
+  The task involves creating a short sentence using specific words provided in a list.
+
+
+  # Instructions
+
+  - Generate a coherent and relevant short sentence that incorporates all the words
+  from the provided list.
+
+  - Ensure that the sentence flows naturally and maintains grammatical correctness.
+
+
+  # Output requirements
+
+  The tone should be straightforward and clear, with a focus on brevity. The output
+  should consist of a single, well-structured sentence.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8353616466124852
+val_score: null

@@ -1,0 +1,45 @@
+method: hyper_light_pea_playbook_iterative
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+dataset_configuration: 300/-/300
+train_batch_size: 50
+train_pool_size: 300
+train_sampling: random without replacement from the first 300 train samples on each iteration
+validation: not used
+test: first 300 samples
+n_iterations: 20
+random_seed: 42
+runs_count: 3
+runs:
+  - run: run_1
+    test_scores:
+      squad_v2: 0.730472514629364
+      common_gen: 0.8347304485241572
+      gsm8k: 0.7566666666666667
+      tweeteval: 0.77
+      xsum: 0.68025672574838
+    overall_mean_test_score: 0.7544252711137136
+  - run: run_2
+    test_scores:
+      squad_v2: 0.675234339038531
+      common_gen: 0.8467770302295685
+      gsm8k: 0.83
+      tweeteval: 0.8133333333333334
+      xsum: 0.6786182550589244
+    overall_mean_test_score: 0.7687925915320715
+  - run: run_3
+    test_scores:
+      squad_v2: 0.7849025001128515
+      common_gen: 0.839521447022756
+      gsm8k: 0.8433333333333334
+      tweeteval: 0.8
+      xsum: 0.6803798075517019
+    overall_mean_test_score: 0.7896274176041286
+mean_test_score_by_dataset:
+  squad_v2: 0.7302031179269155
+  common_gen: 0.8403429752588273
+  gsm8k: 0.81
+  tweeteval: 0.7944444444444445
+  xsum: 0.6797515961196687
+overall_mean_test_score: 0.7709484267499712

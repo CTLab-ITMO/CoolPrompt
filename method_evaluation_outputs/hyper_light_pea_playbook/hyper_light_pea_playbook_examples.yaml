@@ -1,0 +1,131 @@
+method: hyper_light_pea_playbook
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+examples:
+- dataset: squad_v2
+  start_prompt: Given a context answer on the question.
+  playbook:
+    need_change: true
+    strategies:
+    - Identify key themes in the context to inform the answer.
+    - Extract relevant data points that directly address the question.
+    - Contextualize answers to align with the question's intent.
+    - Validate the reliability of the context before formulating an answer.
+    principles:
+    - Ensure clarity and conciseness in responses.
+    - Maintain objectivity by minimizing personal bias.
+    - Acknowledge uncertainties when context is ambiguous.
+    evaluation_criteria:
+    - Relevance of the answer to the posed question.
+    - Clarity and coherence of the response.
+    - Depth of understanding demonstrated in the answer.
+    gap_hypotheses:
+    - Insufficient context may lead to inaccurate answers.
+    - Overlooked nuances in the context could skew interpretations.
+    - Lack of structured approach may hinder consistency.
+    change_rationale: Existing knowledge lacks organized strategies and principles
+      for effective context-based answering.
+- dataset: common_gen
+  start_prompt: Create a short sentence using words in list.
+  playbook:
+    need_change: true
+    strategies:
+    - Identify key words to emphasize in the sentence.
+    - Combine words logically to enhance clarity.
+    - Use concise language to convey the message.
+    - Ensure grammatical correctness in sentence structure.
+    principles:
+    - Prioritize simplicity over complexity.
+    - Maintain coherence between words used.
+    - Focus on the intended meaning of the sentence.
+    - Strive for originality in expression.
+    evaluation_criteria:
+    - Sentence clarity and coherence.
+    - Correctness of grammar and syntax.
+    - Effective use of all words from the list.
+    - Originality and creativity of the sentence.
+    gap_hypotheses:
+    - Users may struggle with word selection.
+    - Clarity may be compromised by complex structures.
+    - Creativity may be limited by rigid rules.
+    change_rationale: Existing knowledge lacks comprehensive strategies and principles
+      for effective sentence construction.
+- dataset: gsm8k
+  start_prompt: Given a context answer on the question.
+  playbook:
+    need_change: true
+    strategies:
+    - Identify key context elements relevant to the question.
+    - Prioritize information based on relevance and clarity.
+    - Use logical reasoning to connect context and answer.
+    - Ensure answers are concise and directly address the question.
+    - Iterate and refine answers based on feedback.
+    principles:
+    - Clarity is paramount in communication.
+    - Contextual relevance enhances understanding.
+    - Logical coherence strengthens argument validity.
+    - Conciseness aids in retention of information.
+    evaluation_criteria:
+    - Relevance of context to the question asked.
+    - Clarity and precision of the answer provided.
+    - Logical consistency in the reasoning process.
+    - Conciseness of the response without losing meaning.
+    gap_hypotheses:
+    - Missing elements in context may lead to incomplete answers.
+    - Overly verbose responses may obscure key points.
+    - Failure to connect context may result in irrelevant answers.
+    change_rationale: Existing knowledge lacks comprehensive strategies and principles
+      for effective context-based answering.
+- dataset: tweeteval
+  start_prompt: Provide sentiment classification.
+  playbook:
+    need_change: true
+    strategies:
+    - Utilize diverse datasets for robust training.
+    - Incorporate pre-trained models for improved accuracy.
+    - Implement ensemble methods to combine predictions.
+    - Regularly fine-tune models based on feedback.
+    - Analyze misclassifications to enhance model understanding.
+    principles:
+    - Prioritize data diversity to capture nuanced sentiments.
+    - Ensure model transparency for interpretability.
+    - Focus on user context to improve relevance.
+    - Maintain ethical standards in sentiment evaluation.
+    evaluation_criteria:
+    - Measure accuracy, precision, and recall.
+    - Evaluate model performance across different contexts.
+    - Assess user satisfaction with sentiment predictions.
+    - Monitor model drift over time.
+    gap_hypotheses:
+    - Existing models may not generalize across diverse sentiments.
+    - Data imbalance could skew sentiment classification accuracy.
+    - User context effects on sentiment may be underexplored.
+    change_rationale: Existing knowledge lacks comprehensive strategies and principles
+      for effective sentiment classification.
+- dataset: xsum
+  start_prompt: Summarize the sentence.
+  playbook:
+    need_change: true
+    strategies:
+    - Identify key concepts in the sentence.
+    - Eliminate redundant phrases.
+    - Focus on main ideas and their relationships.
+    - Use simple language for clarity.
+    - Maintain original meaning during condensation.
+    principles:
+    - Prioritize brevity without losing essential information.
+    - Ensure coherence in the summary.
+    - Adhere to grammatical correctness.
+    - Adapt tone to target audience.
+    evaluation_criteria:
+    - Clarity of the summary.
+    - Retention of key ideas.
+    - Conciseness compared to original.
+    - Readability and flow.
+    gap_hypotheses:
+    - Lack of strategies for non-linear sentences.
+    - Insufficient focus on audience-specific language.
+    - Need for examples of effective summaries.
+    change_rationale: Existing knowledge lacks comprehensive strategies and principles
+      for effective summarization.

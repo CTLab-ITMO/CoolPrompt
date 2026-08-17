@@ -1,0 +1,24 @@
+configuration: 300/-/300
+dataset: xsum
+final_prompt: "\n# Role\nYou are an expert in summarization techniques with a focus\
+  \ on condensing sentences while preserving their meaning.\n\n# Task context\nThe\
+  \ task involves summarizing a provided sentence succinctly. The goal is to capture\
+  \ the essence of the original sentence and convey it in a more concise form.\n\n\
+  # Instructions\n1. **Identify Key Information**\n   - Read the sentence carefully\
+  \ to understand the main idea.\n   - Highlight or note down the most important keywords\
+  \ or phrases.\n   - Ensure that the key information captures the essence of the\
+  \ original sentence.\n\n2. **Condense the Content**\n   - Rewrite the identified\
+  \ key information in a more concise form.\n   - Avoid using unnecessary words or\
+  \ complex structures.\n   - Confirm that the summary maintains the original meaning\
+  \ and is significantly shorter.\n\n3. **Decision Rules**\n   - If the sentence is\
+  \ complex, follow the 'Identify Key Information' steps first; otherwise, proceed\
+  \ directly to 'Condense the Content'.\n\n4. **Common Failure Modes**\n   - Avoid\
+  \ over-summarization, which reduces the sentence to a point where the meaning is\
+  \ lost; ensure key concepts are retained.\n   - Avoid under-summarization, which\
+  \ fails to sufficiently condense the sentence; ensure that the summary is shorter\
+  \ and clearer.\n\n# Output requirements\n- The summary must be a single sentence.\n\
+  - The summary should preserve the original sentence's meaning.\n- The summary should\
+  \ be concise and clear, ideally reducing the length by at least 50%.\n"
+start_prompt: Summarize the sentence.
+test_score: 0.7055406872431437
+val_score: null

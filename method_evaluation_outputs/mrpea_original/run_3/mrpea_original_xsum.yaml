@@ -1,0 +1,386 @@
+method: mrpea_original
+run: 3
+dataset: xsum
+configuration: 300/-/300
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+seed: 42
+train_pool_size: 300
+sample_question_index: 209
+sample_question: 'Kensington and Chelsea council said it had given the owner a section
+  215 notice ordering the stripes'' removal after neighbours complained.
+
+  The stripes appeared earlier this month after plans to demolish the house and replace
+  it with a new house and two-storey basement were refused.
+
+  Neighbours said it looked "hideous".
+
+  The house, in a quiet cul-de-sac, must be repainted by 3 July.
+
+  The owner has until 5 June to appeal the decision.
+
+  A council spokesman said: "The property is situated within the Kensington Square
+  Conservation Area and its condition and appearance has attracted numerous complaints
+  to the council''s planning enforcement team."'
+validation_used: false
+test_size: 300
+start_prompt: Summarize the sentence.
+final_prompt: Summarize the provided news article in one precise sentence. Focus on
+  the main event and its consequences. Omit any unnecessary details. Ensure grammatical
+  correctness and objective representation of the article's core message. Verify that
+  each included detail is relevant to the summary. Return only the concise summary.
+val_score: null
+test_score: 0.7204046364625295
+task_description: Summarize the supplied news article in one concise sentence, keeping
+  the central meaning and avoiding unsupported information.
+task_objective: Return only the concise summary.
+mrpea:
+  task_name: xsum
+  initial_prompt: Summarize the sentence.
+  task_description: Summarize the supplied news article in one concise sentence, keeping
+    the central meaning and avoiding unsupported information.
+  sample_question: 'Kensington and Chelsea council said it had given the owner a section
+    215 notice ordering the stripes'' removal after neighbours complained.
+
+    The stripes appeared earlier this month after plans to demolish the house and
+    replace it with a new house and two-storey basement were refused.
+
+    Neighbours said it looked "hideous".
+
+    The house, in a quiet cul-de-sac, must be repainted by 3 July.
+
+    The owner has until 5 June to appeal the decision.
+
+    A council spokesman said: "The property is situated within the Kensington Square
+    Conservation Area and its condition and appearance has attracted numerous complaints
+    to the council''s planning enforcement team."'
+  best_prompt_id: 2
+  prompt_pool:
+    0: Summarize the sentence.
+    1: Summarize the provided news article in one clear sentence. Capture the main
+      event and its effects while omitting unnecessary details. Ensure the summary
+      maintains grammatical correctness and reflects the article's core message objectively
+      and concisely.
+    2: Summarize the provided news article in one precise sentence. Focus on the main
+      event and its consequences. Omit any unnecessary details. Ensure grammatical
+      correctness and objective representation of the article's core message. Verify
+      that each included detail is relevant to the summary.
+    3: Summarize the provided news article in one concise sentence. Identify the main
+      event and its significant consequences. Include impactful adjectives to enhance
+      clarity. Omit irrelevant details. Ensure grammatical correctness and an objective
+      tone. Verify that all included information is crucial to the summary.
+    4: Summarize the provided news article in one concise sentence. Identify the main
+      event and its consequences. Include only essential information. Ensure grammatical
+      correctness and an objective tone. Verify that every included detail is crucial
+      to the summary.
+  ranking_scores:
+    0: 0.81
+    1: 0.8910000000000001
+    2: 1.6420000000000003
+    3: 0.9
+    4: 1.0
+  knowledge_memory:
+  - &id001
+    need_change: true
+    strategies:
+    - Identify the main event and stakeholders.
+    - Condense details into a single coherent sentence.
+    - Focus on the cause-and-effect relationship.
+    principles:
+    - Maintain objectivity and neutrality.
+    - Ensure clarity and conciseness.
+    - Highlight the most relevant information.
+    evaluation_criteria:
+    - Sentence must encapsulate the core message.
+    - Avoid inclusion of extraneous details.
+    - Check for grammatical correctness.
+    gap_hypotheses:
+    - Lack of strategies for varying article lengths.
+    - Unclear criteria for prioritizing information.
+    change_rationale: Existing knowledge lacks comprehensive strategies and clarity
+      for effective summarization.
+  - &id003
+    need_change: true
+    strategies:
+    - Extract key themes and underlying issues.
+    - Prioritize significant events and their implications.
+    - Ensure logical flow of information.
+    principles:
+    - Emphasize accuracy and factual representation.
+    - Use straightforward language for broader understanding.
+    - Clarify the timeline of events.
+    evaluation_criteria:
+    - Ensure the summary captures the essence in one sentence.
+    - Assess relevance of each included detail.
+    - Verify alignment with the original article's intent.
+    gap_hypotheses:
+    - Absence of guidelines for summarizing complex narratives.
+    - Need for differentiation in summarizing styles based on audience.
+    change_rationale: Improved strategies, principles, and criteria enhance clarity
+      and applicability across diverse articles.
+  - &id005
+    need_change: true
+    strategies:
+    - Identify main actors and their actions.
+    - Synthesize multiple viewpoints into a cohesive statement.
+    - Avoid unnecessary jargon.
+    principles:
+    - Maintain neutrality in tone.
+    - Focus on the most impactful information.
+    - Highlight the context and significance.
+    evaluation_criteria:
+    - Check for clarity and brevity of the summary.
+    - Confirm that all crucial information is included.
+    - Evaluate the summary against the original article for accuracy.
+    gap_hypotheses:
+    - Lack of techniques for handling conflicting information.
+    - Need for best practices in summarizing varied article lengths.
+    change_rationale: Existing knowledge can be improved for clarity, comprehensiveness,
+      and practical application.
+  - &id007
+    need_change: true
+    strategies:
+    - Identify key facts and events succinctly.
+    - Prioritize information based on relevance.
+    - Eliminate extraneous details for clarity.
+    principles:
+    - Ensure objectivity and neutrality.
+    - Emphasize essential details and context.
+    - Maintain a clear and concise structure.
+    evaluation_criteria:
+    - Assess the summary for clarity and conciseness.
+    - Ensure all critical points are represented.
+    - Verify the summary mirrors the article's intent.
+    gap_hypotheses:
+    - Insufficient methods for summarizing emotional language.
+    - Need for guidelines on varying summary lengths.
+  example_memory:
+  - sample_question: 'Kensington and Chelsea council said it had given the owner a
+      section 215 notice ordering the stripes'' removal after neighbours complained.
+
+      The stripes appeared earlier this month after plans to demolish the house and
+      replace it with a new house and two-storey basement were refused.
+
+      Neighbours said it looked "hideous".
+
+      The house, in a quiet cul-de-sac, must be repainted by 3 July.
+
+      The owner has until 5 June to appeal the decision.
+
+      A council spokesman said: "The property is situated within the Kensington Square
+      Conservation Area and its condition and appearance has attracted numerous complaints
+      to the council''s planning enforcement team."'
+  - &id002
+    question: A recent study found that implementing a four-day workweek led to a
+      25% increase in employee productivity and improved work-life balance, prompting
+      several companies to consider this model despite concerns about potential downsides
+      such as reduced availability for clients.
+    answer: A study indicates that a four-day workweek boosts employee productivity
+      by 25% and enhances work-life balance, leading many companies to explore this
+      approach despite client availability concerns.
+    rationale: This example summarizes a news article by clearly identifying the main
+      event (four-day workweek study) and its effects, differing from prior examples
+      by introducing a specific outcome (productivity increase) and addressing potential
+      downsides, enhancing complexity.
+    tags:
+    - news summary
+    - workplace changes
+    variation_type:
+    - difficulty increase
+    - different context
+  - &id004
+    question: Following a series of wildfires that devastated large areas of the national
+      park, officials have implemented a temporary ban on all recreational activities
+      to ensure public safety and aid recovery efforts, while also evaluating long-term
+      restoration strategies.
+    answer: In response to extensive wildfires, officials have temporarily banned
+      recreational activities in the national park to prioritize public safety and
+      facilitate recovery, while assessing restoration strategies.
+    rationale: This summary effectively captures the main events surrounding the wildfires
+      and their implications for public safety and recovery efforts, differing from
+      prior examples by focusing on environmental issues rather than urban planning
+      or workplace changes.
+    tags:
+    - environmental news
+    - public safety
+    variation_type:
+    - different context
+    - methodological variation
+  - &id006
+    question: The recent decision by the federal government to allocate an additional
+      $2 billion towards renewable energy initiatives aims to accelerate the transition
+      to sustainable power sources, while also addressing job creation in the green
+      sector and climate change concerns.
+    answer: The federal government has committed an extra $2 billion to renewable
+      energy projects to speed up the shift to sustainable power and create jobs in
+      the green sector amid climate change challenges.
+    rationale: This summary succinctly captures the central action (funding for renewable
+      energy) and its implications (job creation and climate response), differing
+      by focusing on governmental financial initiatives rather than previous urban
+      or workplace issues.
+    tags:
+    - renewable energy
+    - government policy
+    variation_type:
+    - different context
+    - methodological variation
+  - &id008
+    question: In a recent breakthrough, scientists have developed a new vaccine that
+      demonstrates 95% efficacy against a highly contagious virus, potentially changing
+      public health strategies and reducing the burden on healthcare systems worldwide.
+    answer: Scientists have created a new vaccine with 95% efficacy against a contagious
+      virus, which could significantly alter public health strategies and alleviate
+      pressure on global healthcare systems.
+    rationale: This summary captures a major scientific advancement and its potential
+      impact on public health, differing from previous examples by emphasizing health
+      innovation and global implications rather than workplace or environmental issues.
+    tags:
+    - health news
+    - vaccine development
+    variation_type:
+    - different context
+    - new scientific breakthrough
+  feedback_memory:
+  - Consider making Prompt 1's instructions more detailed to match the clarity of
+    Prompt 2.; Ensure that Answer 1 is more concise and directly addresses the need
+    to reflect the article's core message without unnecessary detail.
+  - Prompt 1 could improve by specifying the need to include key adjectives like 'devastating'
+    that enhance the summary's impact.; Answer 1 can be improved by including 'all
+    recreational activities' to make it more complete and aligned with the reference
+    answer.
+  - Prompt 2 could improve by emphasizing clarity and brevity over the use of impactful
+    adjectives, which can distract from the core message.; Both prompts should explicitly
+    state the importance of including only essential information to avoid verbosity
+    in the summary.
+  - Consider using stronger verbs in the prompt, such as 'articulate' or 'synthesize,'
+    to enhance the clarity of the task.; Ensure both prompts maintain a consistent
+    tone in their instructions, emphasizing the scientific context more directly.
+  iteration_history:
+  - iteration: 1
+    current_best_id_before_update: 0
+    new_prompt_id: 1
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Prompt 2 is clearer in its instructions, explicitly stating the need to capture
+        the main event and its effects while omitting unnecessary details, which aligns
+        well with the task intent.
+      - Answer 2 maintains grammatical correctness and concisely reflects the article's
+        core message more effectively than Answer 1.
+      feedback:
+      - Consider making Prompt 1's instructions more detailed to match the clarity
+        of Prompt 2.
+      - Ensure that Answer 1 is more concise and directly addresses the need to reflect
+        the article's core message without unnecessary detail.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+    knowledge: *id001
+    example: *id002
+    new_prompt: Summarize the provided news article in one clear sentence. Capture
+      the main event and its effects while omitting unnecessary details. Ensure the
+      summary maintains grammatical correctness and reflects the article's core message
+      objectively and concisely.
+    feedback: Consider making Prompt 1's instructions more detailed to match the clarity
+      of Prompt 2.; Ensure that Answer 1 is more concise and directly addresses the
+      need to reflect the article's core message without unnecessary detail.
+  - iteration: 2
+    current_best_id_before_update: 1
+    new_prompt_id: 2
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Answer 2 captures the full extent of the events by including 'all recreational
+        activities' and 'devastating wildfires,' which adds clarity and emphasizes
+        the severity of the situation.
+      - Prompt 2's instruction to verify detail relevance aligns well with the evaluation
+        criteria, ensuring a comprehensive and precise summary.
+      feedback:
+      - Prompt 1 could improve by specifying the need to include key adjectives like
+        'devastating' that enhance the summary's impact.
+      - Answer 1 can be improved by including 'all recreational activities' to make
+        it more complete and aligned with the reference answer.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+      2: 1.2
+    knowledge: *id003
+    example: *id004
+    new_prompt: Summarize the provided news article in one precise sentence. Focus
+      on the main event and its consequences. Omit any unnecessary details. Ensure
+      grammatical correctness and objective representation of the article's core message.
+      Verify that each included detail is relevant to the summary.
+    feedback: Prompt 1 could improve by specifying the need to include key adjectives
+      like 'devastating' that enhance the summary's impact.; Answer 1 can be improved
+      by including 'all recreational activities' to make it more complete and aligned
+      with the reference answer.
+  - iteration: 3
+    current_best_id_before_update: 2
+    new_prompt_id: 3
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Answer 1 is clearer and more concise than Answer 2, effectively summarizing
+        the main event and its consequences without adding unnecessary adjectives.
+      - Answer 1 maintains a straightforward tone that aligns well with the task of
+        summarization, while Answer 2's use of adjectives complicates the message
+        and detracts from brevity.
+      feedback:
+      - Prompt 2 could improve by emphasizing clarity and brevity over the use of
+        impactful adjectives, which can distract from the core message.
+      - Both prompts should explicitly state the importance of including only essential
+        information to avoid verbosity in the summary.
+    ranking_scores:
+      0: 0.9
+      1: 0.9900000000000001
+      2: 1.3800000000000001
+      3: 1.0
+    knowledge: *id005
+    example: *id006
+    new_prompt: Summarize the provided news article in one concise sentence. Identify
+      the main event and its significant consequences. Include impactful adjectives
+      to enhance clarity. Omit irrelevant details. Ensure grammatical correctness
+      and an objective tone. Verify that all included information is crucial to the
+      summary.
+    feedback: Prompt 2 could improve by emphasizing clarity and brevity over the use
+      of impactful adjectives, which can distract from the core message.; Both prompts
+      should explicitly state the importance of including only essential information
+      to avoid verbosity in the summary.
+  - iteration: 4
+    current_best_id_before_update: 2
+    new_prompt_id: 4
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Answer 1 is clearer in its phrasing, using 'developed' rather than 'created'
+        which is more aligned with scientific terminology.
+      - Prompt 1 emphasizes the importance of omitting unnecessary details effectively,
+        leading to a more precise summary.
+      feedback:
+      - Consider using stronger verbs in the prompt, such as 'articulate' or 'synthesize,'
+        to enhance the clarity of the task.
+      - Ensure both prompts maintain a consistent tone in their instructions, emphasizing
+        the scientific context more directly.
+    ranking_scores:
+      0: 0.81
+      1: 0.8910000000000001
+      2: 1.6420000000000003
+      3: 0.9
+      4: 1.0
+    knowledge: *id007
+    example: *id008
+    new_prompt: Summarize the provided news article in one concise sentence. Identify
+      the main event and its consequences. Include only essential information. Ensure
+      grammatical correctness and an objective tone. Verify that every included detail
+      is crucial to the summary.
+    feedback: Consider using stronger verbs in the prompt, such as 'articulate' or
+      'synthesize,' to enhance the clarity of the task.; Ensure both prompts maintain
+      a consistent tone in their instructions, emphasizing the scientific context
+      more directly.
+  iterations_completed: 4
+  consecutive_wins: 3

@@ -1,0 +1,42 @@
+method: hyper_light_playbook_iterative
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+dataset_configuration: 300/-/300
+train_batch_size: 50
+train_pool_size: 300
+train_sampling: random without replacement from the first 300 train samples per iteration
+validation: not used
+test: first 300 samples
+n_iterations: 20
+random_seed: 42
+runs_count: 3
+runs:
+- run: run_1
+  test_scores:
+    squad_v2: 0.7649652930100759
+    common_gen: 0.8495961932341257
+    gsm8k: 0.83
+    tweeteval: 0.77
+    xsum: 0.686507318019867
+- run: run_2
+  test_scores:
+    squad_v2: 0.6938952145973841
+    common_gen: 0.8400360240538916
+    gsm8k: 0.8966666666666666
+    tweeteval: 0.77
+    xsum: 0.7055406872431437
+- run: run_3
+  test_scores:
+    squad_v2: 0.8112002962827682
+    common_gen: 0.836462544798851
+    gsm8k: 0.89
+    tweeteval: 0.7833333333333333
+    xsum: 0.6855266509453456
+mean_test_score_by_dataset:
+  common_gen: 0.8420315873622894
+  gsm8k: 0.8722222222222222
+  squad_v2: 0.7566869346300761
+  tweeteval: 0.7744444444444444
+  xsum: 0.6925248854027855
+overall_mean_test_score: 0.7875820148123635

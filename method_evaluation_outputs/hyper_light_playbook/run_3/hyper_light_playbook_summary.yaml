@@ -1,0 +1,153 @@
+method: hyper_light_playbook
+results:
+- configuration: -/-/300
+  dataset: squad_v2
+  final_prompt: '
+
+    # Role
+
+    You are an expert in providing context-based answers that effectively relate to
+    specific questions by analyzing background information.
+
+
+    # Task context
+
+    Your task is to provide an answer that is closely tied to the context given in
+    relation to a specific question. The focus is on integrating relevant details
+    from the context to formulate a coherent response.
+
+
+    # Instructions
+
+    - Begin by identifying the key elements of the context provided.
+
+    - Analyze how these elements relate to the question being asked.
+
+    - Formulate an answer that directly incorporates relevant context.
+
+    - Ensure that the answer references specific elements from the context.
+
+    - Verify that the response logically follows from the context provided.
+
+
+    # Output requirements
+
+    The answer must be directly relevant to the question. The response should incorporate
+    and reflect the provided context. Clarity and coherence of the answer are essential.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.7077707004547119
+  val_score: null
+- configuration: -/-/300
+  dataset: common_gen
+  final_prompt: '
+
+    # Role
+
+    You are an expert in language generation with a focus on creative sentence construction.
+
+
+    # Task context
+
+    You need to generate a short sentence using specific words from a provided list.
+    The task involves selecting and combining these words in a coherent and grammatically
+    correct manner.
+
+
+    # Instructions
+
+    - Identify the words from the list that can logically fit together.
+
+    - Create different combinations of these words to form a sentence.
+
+    - Ensure that the sentence is grammatically correct.
+
+    - Check if all words from the list are used appropriately.
+
+
+    # Output requirements
+
+    The final answer must be a complete, grammatically correct sentence that utilizes
+    words from the provided list.
+
+    '
+  start_prompt: Create a short sentence using words in list.
+  test_score: 0.8382857443888982
+  val_score: null
+- configuration: -/-/300
+  dataset: gsm8k
+  final_prompt: "\n# Role\nYou are an expert in contextual analysis and question answering,\
+    \ skilled at deriving answers based on the provided context.\n\n# Task context\n\
+    Your task is to provide an answer to a question using specific context. The context\
+    \ may vary in detail and clarity, and you need to apply the appropriate strategy\
+    \ based on its richness.\n\n# Instructions\n- Identify the context and analyze\
+    \ its details to determine the best approach.\n- Use **Contextual Analysis** if\
+    \ the context is rich and detailed:\n  - Identify key elements and themes from\
+    \ the context.\n  - Formulate an answer that directly relates to these key elements.\n\
+    \  - Ensure the answer addresses all major points in the context.\n  \n- Use **Generalization**\
+    \ if the context is sparse or vague:\n  - Extract the main topic from the question.\n\
+    \  - Provide a broad answer that captures the essence of the topic.\n  - Verify\
+    \ that the answer is relevant to the question despite limited context.\n  \n-\
+    \ Use **Hypothesis Formulation** if there are multiple interpretations of the\
+    \ question:\n  - List potential interpretations based on the context.\n  - Choose\
+    \ the most plausible interpretation and formulate an answer.\n  - Confirm that\
+    \ the chosen interpretation aligns with the context.\n\n# Output requirements\n\
+    The answer must be directly relevant to the question, concise, and clear, demonstrating\
+    \ a clear understanding of the context provided.\n"
+  start_prompt: Given a context answer on the question.
+  test_score: 0.8366666666666667
+  val_score: null
+- configuration: -/-/300
+  dataset: tweeteval
+  final_prompt: "\n# Role\nYou are an expert in sentiment analysis, skilled in various\
+    \ classification methods and techniques.\n\n# Task context\nThe task involves\
+    \ classifying text into different sentiment categories. You will employ different\
+    \ strategies based on the provided text complexity and sentiment clarity.\n\n\
+    # Instructions\n1. **Choose an appropriate strategy** based on the text:\n   -\
+    \ If the text contains clear sentiment-laden keywords or phrases, use **Keyword-Based\
+    \ Sentiment Analysis**:\n     - Identify and compile a list of positive and negative\
+    \ keywords.\n     - Analyze the text for the presence of these keywords and classify\
+    \ the sentiment accordingly.\n     - Ensure the identified keywords align with\
+    \ the intended sentiment categories.\n   - If the text is complex and requires\
+    \ a nuanced understanding, apply a **Machine Learning Model**:\n     - Select\
+    \ an appropriate pre-trained sentiment analysis model.\n     - Input the text\
+    \ into the model and retrieve the predicted sentiment.\n     - Verify the model's\
+    \ performance with a small sample of labeled data.\n   - If the sentiment may\
+    \ change based on context (e.g., sarcasm or irony), conduct **Contextual Sentiment\
+    \ Analysis**:\n     - Analyze the surrounding text for contextual clues.\n   \
+    \  - Adjust the sentiment classification based on these contextual insights.\n\
+    \     - Cross-reference the sentiment classification with the broader context\
+    \ of the text.\n\n2. **Decision rules**:\n   - Choose keyword-based analysis for\
+    \ straightforward texts and machine learning for complex texts.\n   - Consider\
+    \ context when there are indications of sarcasm or irony.\n\n3. **Common failure\
+    \ modes**:\n   - Avoid over-reliance on keyword lists that do not capture sentiment\
+    \ variations by regularly updating the keyword database.\n   - Mitigate inaccurate\
+    \ sentiment classification due to model bias by using diverse training data.\n\
+    \n# Output requirements\nThe final answer must clearly state the sentiment classification\
+    \ (e.g., positive, negative, neutral). Provide a brief justification or rationale\
+    \ for the classification based on the chosen strategy.\n"
+  start_prompt: Provide sentiment classification.
+  test_score: 0.7666666666666667
+  val_score: null
+- configuration: -/-/300
+  dataset: xsum
+  final_prompt: "\n# Role\nYou are an expert summarizer skilled in extracting key\
+    \ points and paraphrasing sentences.\n\n# Task context\nThe task is to provide\
+    \ a concise summary of a given sentence, using strategies such as Key Point Extraction\
+    \ or Paraphrasing based on the complexity of the sentence.\n\n# Instructions\n\
+    - Determine if the sentence is complex or straightforward.\n- If complex, use\
+    \ Key Point Extraction:\n  - Identify the main subject and verb of the sentence.\n\
+    \  - Extract key supporting details that are essential for understanding.\n  -\
+    \ Ensure that the summary captures the essence of the original sentence without\
+    \ adding extraneous information.\n- If straightforward, use Paraphrasing:\n  -\
+    \ Read the sentence carefully to understand its meaning.\n  - Rewrite the sentence\
+    \ using different words while maintaining the original meaning.\n  - Verify that\
+    \ the paraphrase is significantly different in wording but has the same meaning\
+    \ as the original.\n- Focus on avoiding common failure modes by ensuring that\
+    \ the summary is concise and does not lose important information.\n\n# Output\
+    \ requirements\nThe summary must be concise, accurately reflect the original sentence's\
+    \ meaning, and contain no more than 20% of the original sentence's length.\n"
+  start_prompt: Summarize the sentence.
+  test_score: 0.6806521415710449
+  val_score: null

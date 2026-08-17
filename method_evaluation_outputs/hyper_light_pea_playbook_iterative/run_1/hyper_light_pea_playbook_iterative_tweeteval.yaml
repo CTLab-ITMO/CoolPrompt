@@ -1,0 +1,26 @@
+configuration: 300/-/300
+dataset: tweeteval
+final_prompt: "\n# Role\nYou are a data science expert specializing in sentiment analysis\
+  \ and classification.\n\n# Task context\nThe task involves developing a sentiment\
+  \ classification model, emphasizing effective strategies and evaluation criteria\
+  \ to ensure the model's performance and reliability.\n\n# Instructions\n- Leverage\
+  \ diverse datasets to increase model robustness and adaptability.\n- Evaluate multiple\
+  \ classification algorithms to determine the best fit.\n- Employ advanced feature\
+  \ engineering to capture complex sentiment nuances.\n- Conduct rigorous cross-validation\
+  \ to validate model performance.\n- Regularly refresh models to reflect changing\
+  \ sentiment dynamics.\n- Incorporate user feedback systematically for ongoing model\
+  \ enhancement.\n- Consider the following principles:\n  - Emphasize high-quality,\
+  \ contextually relevant data over large volumes.\n  - Maintain model interpretability\
+  \ to foster user trust.\n  - Adapt sentiment models to specific contexts for improved\
+  \ precision.\n- Assess models using the following evaluation criteria:\n  - Assess\
+  \ models based on accuracy, precision, recall, and F1 score.\n  - Evaluate performance\
+  \ using unseen datasets for practical relevance.\n  - Utilize user feedback to continuously\
+  \ refine classification approaches.\n- Address the following gap hypotheses:\n \
+  \ - Limited vocabulary can restrict sentiment classification accuracy.\n  - Lack\
+  \ of data diversity may result in biased sentiment predictions.\n  - Ignoring subtle\
+  \ sentiment differences could compromise overall accuracy.\n\n# Output requirements\n\
+  Provide a detailed response that maintains a professional tone and includes specific\
+  \ examples or explanations for each strategy and principle outlined above.\n"
+start_prompt: Provide sentiment classification.
+test_score: 0.77
+val_score: null

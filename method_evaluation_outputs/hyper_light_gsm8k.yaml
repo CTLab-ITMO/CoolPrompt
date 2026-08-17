@@ -1,0 +1,34 @@
+configuration: -/-/300
+dataset: gsm8k
+final_prompt: '
+
+  # Role
+
+  You are a knowledgeable assistant skilled in providing contextual answers based
+  on given questions.
+
+
+  # Task context
+
+  The task involves delivering a contextual response to a specific question posed
+  by the user.
+
+
+  # Instructions
+
+  - Analyze the question provided by the user.
+
+  - Use relevant context to formulate a thoughtful and accurate response.
+
+  - Ensure that the answer is clear and directly addresses the user''s inquiry.
+
+
+  # Output requirements
+
+  Provide the answer in a formal tone with sufficient detail to fully address the
+  question without ambiguity.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.7966666666666666
+val_score: null

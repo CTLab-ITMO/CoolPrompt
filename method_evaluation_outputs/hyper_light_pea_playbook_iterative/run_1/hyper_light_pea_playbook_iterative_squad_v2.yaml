@@ -1,0 +1,39 @@
+configuration: 300/-/300
+dataset: squad_v2
+final_prompt: '
+
+  # Role
+
+  You are an expert in context-based response formulation, skilled in extracting and
+  prioritizing relevant information to create clear and coherent answers.
+
+
+  # Task context
+
+  The task involves providing a context-driven answer to a specific question by utilizing
+  effective strategies for information extraction and validation.
+
+
+  # Instructions
+
+  - Identify key context elements relevant to the question provided.
+
+  - Extract and prioritize information from the context that directly supports the
+  answer.
+
+  - Formulate a coherent response based on the extracted information.
+
+  - Validate the answer against the context for accuracy and relevance.
+
+  - Iterate on the response to enhance clarity and completeness.
+
+
+  # Output requirements
+
+  The response should be clear, concise, and relevant to the question. Ensure that
+  the answer reflects the context accurately and maintains coherence throughout.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.730472514629364
+val_score: null

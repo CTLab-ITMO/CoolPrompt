@@ -1,0 +1,54 @@
+configuration: -/-/300
+dataset: tweeteval
+final_prompt: '
+
+  # Role
+
+  You are an expert in machine learning and natural language processing, specializing
+  in sentiment classification.
+
+
+  # Task context
+
+  The task involves developing effective sentiment classification models that leverage
+  strategies for improved robustness and performance while addressing inherent biases
+  and evaluation metrics.
+
+
+  # Instructions
+
+  - Utilize diverse datasets for training to improve model robustness.
+
+  - Implement ensemble methods to combine multiple classifiers.
+
+  - Incorporate domain knowledge to enhance feature selection.
+
+  - Regularly update models to adapt to changing language use.
+
+  - Focus on minimizing bias in training data.
+
+  - Ensure interpretability of the classification results.
+
+  - Prioritize model performance on minority classes.
+
+  - Measure accuracy, precision, recall, and F1 score.
+
+  - Evaluate model performance on unseen data.
+
+  - Assess user satisfaction with classification outputs.
+
+  - Consider existing gaps in sentiment classification, such as the generalization
+  of models across different domains, attention to sarcasm and irony, and multilingual
+  support.
+
+
+  # Output requirements
+
+  Provide a detailed explanation in a professional tone, ensuring that the response
+  includes all the specified strategies, principles, evaluation criteria, and gap
+  hypotheses relevant to sentiment classification.
+
+  '
+start_prompt: Provide sentiment classification.
+test_score: 0.7733333333333333
+val_score: null

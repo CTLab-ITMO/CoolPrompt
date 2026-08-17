@@ -1,0 +1,550 @@
+method: mrpea_original
+run: 3
+dataset: tweeteval
+configuration: 300/-/300
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+seed: 42
+train_pool_size: 300
+sample_question_index: 209
+sample_question: '@user No!  By Y''all I mean rioting, fire starting, business burning,
+  looting ASSHOLES!  That create #BlackLivesmatter'
+validation_used: false
+test_size: 300
+start_prompt: Provide sentiment classification.
+final_prompt: 'Classify the predominant emotion in a tweet as anger, joy, optimism,
+  or sadness. Follow these steps: 1. Identify emotional keywords. 2. Analyze the tweet''s
+  context and intensity. 3. Evaluate the tone based on punctuation and capitalization.
+  4. Consider cultural nuances. Your classification must reflect the primary emotion
+  accurately. Return exactly one allowed emotion label.'
+val_score: null
+test_score: 0.7733333333333333
+task_description: Classify the emotion expressed in a tweet. The allowed labels are
+  anger, joy, optimism, and sadness.
+task_objective: Return exactly one allowed emotion label.
+mrpea:
+  task_name: tweeteval
+  initial_prompt: Provide sentiment classification.
+  task_description: Classify the emotion expressed in a tweet. The allowed labels
+    are anger, joy, optimism, and sadness.
+  sample_question: '@user No!  By Y''all I mean rioting, fire starting, business burning,
+    looting ASSHOLES!  That create #BlackLivesmatter'
+  best_prompt_id: 4
+  prompt_pool:
+    0: Provide sentiment classification.
+    1: 'Classify the emotion expressed in a tweet. Use the labels: anger, joy, optimism,
+      or sadness. Ensure accuracy by identifying emotional keywords, analyzing context
+      and intensity, and evaluating tone through punctuation. Focus on the predominant
+      emotion, considering nuances and cultural context.'
+    2: 'Classify the predominant emotion in a tweet using the labels: anger, joy,
+      optimism, or sadness. Follow these steps: 1. Identify emotional keywords that
+      indicate feelings. 2. Analyze the context and intensity of the tweet. 3. Evaluate
+      the tone, paying attention to punctuation and capitalization. 4. Consider cultural
+      nuances that may affect interpretation. Ensure your classification is accurate
+      and reflects the primary emotion expressed.'
+    3: 'Classify the predominant emotion in a tweet using the labels: anger, joy,
+      optimism, or sadness. Follow these steps: 1. Identify emotional keywords and
+      phrases. 2. Analyze the tweet''s context and intensity. 3. Evaluate the tone,
+      noting punctuation and capitalization. 4. Consider cultural nuances that may
+      influence interpretation. Your classification should accurately reflect the
+      primary emotion expressed.'
+    4: 'Classify the predominant emotion in a tweet as anger, joy, optimism, or sadness.
+      Follow these steps: 1. Identify emotional keywords. 2. Analyze the tweet''s
+      context and intensity. 3. Evaluate the tone based on punctuation and capitalization.
+      4. Consider cultural nuances. Your classification must reflect the primary emotion
+      accurately.'
+    5: 'Classify the predominant emotion in a tweet as anger, joy, optimism, or sadness.
+      Use these steps: 1. Identify emotional keywords. 2. Analyze context and intensity.
+      3. Evaluate tone through punctuation and capitalization. 4. Consider cultural
+      nuances. Your classification must clearly state the primary emotion.'
+    6: 'Classify the predominant emotion in a tweet as anger, joy, optimism, or sadness.
+      Follow these steps: 1. Identify key emotional words and phrases. 2. Analyze
+      the tweet''s context for emotional intensity. 3. Assess the tone by examining
+      punctuation and capitalization. 4. Account for cultural nuances influencing
+      emotion. Ensure that your classification accurately represents the primary emotion.'
+  ranking_scores:
+    0: 0.81
+    1: 0.8910000000000001
+    2: 0.9720000000000001
+    3: 1.0530000000000002
+    4: 2.184
+    5: 0.9
+    6: 1.0
+  knowledge_memory:
+  - &id001
+    need_change: true
+    strategies:
+    - Identify emotional keywords and phrases.
+    - Analyze sentiment using context and intensity.
+    - Evaluate tone through punctuation and capitalization.
+    - Consider cultural and situational context.
+    - Utilize machine learning models for classification.
+    principles:
+    - Emotions can be nuanced and context-dependent.
+    - Consider multiple emotions may coexist.
+    - Focus on the predominant emotion expressed.
+    - Ensure cultural sensitivity in interpretation.
+    evaluation_criteria:
+    - Accuracy of classification against ground truth.
+    - Clarity in distinguishing similar emotions.
+    - Consistency across various tweets and contexts.
+    - Adaptability to evolving language and slang.
+    gap_hypotheses:
+    - Insufficient coverage of sarcasm and irony.
+    - Lack of consideration for emotional intensity.
+    - Inadequate handling of mixed emotions.
+    - Limited focus on the impact of user history.
+    change_rationale: Existing knowledge lacks comprehensive strategies and insights
+      for effective emotion classification.
+  - &id003
+    need_change: true
+    strategies:
+    - Identify key emotional indicators in language.
+    - Assess sentiment through surrounding context.
+    - Evaluate tone via punctuation and capitalization.
+    - Incorporate cultural and situational relevance.
+    - Employ advanced machine learning for deeper analysis.
+    principles:
+    - Emotions are complex and context-sensitive.
+    - Multiple emotions may be present simultaneously.
+    - Identify the primary emotion conveyed.
+    - Maintain cultural awareness in analysis.
+    evaluation_criteria:
+    - Classification accuracy against established benchmarks.
+    - Effectiveness in distinguishing closely related emotions.
+    - Consistency in diverse tweet contexts.
+    - Flexibility to adapt to new slang and usage.
+    gap_hypotheses:
+    - Underrepresentation of sarcasm and irony.
+    - Neglected emotional intensity variations.
+    - Challenges in recognizing mixed emotional states.
+    - User history's influence on emotional expression remains unexplored.
+    change_rationale: Improved clarity, specificity, and organization enhance the
+      utility of strategies, principles, and criteria.
+  - &id005
+    need_change: true
+    strategies:
+    - Identify emotional keywords and phrases.
+    - Analyze context and narrative structure.
+    - Assess tone with punctuation and capitalization.
+    - Consider cultural and situational context.
+    - Utilize machine learning for nuanced insights.
+    principles:
+    - Emotions are multifaceted and contextual.
+    - Simultaneous emotions can coexist.
+    - Identify dominant emotional expression.
+    - Cultural context is crucial for analysis.
+    evaluation_criteria:
+    - Accuracy compared to standard benchmarks.
+    - Ability to differentiate nuanced emotions.
+    - Consistency across various tweet contexts.
+    - Adaptability to evolving language and slang.
+    gap_hypotheses:
+    - Insufficient handling of sarcasm and irony.
+    - Emotional intensity variations are overlooked.
+    - Mixed emotions recognition is challenging.
+    - User history's impact on expression is underexamined.
+    change_rationale: Improved clarity, specificity, and organization enhance understanding
+      and applicability.
+  - &id007
+    need_change: true
+    strategies:
+    - Identify emotional keywords and phrases.
+    - Analyze context and narrative structure.
+    - Assess tone using punctuation and capitalization.
+    - Consider cultural and situational context.
+    - Utilize machine learning for nuanced insights.
+    - Incorporate sentiment scoring algorithms.
+    principles:
+    - Emotions are multifaceted and contextual.
+    - Simultaneous emotions can coexist.
+    - Identify dominant emotional expression.
+    - Cultural context is crucial for analysis.
+    - Emotional expression may vary by platform.
+    evaluation_criteria:
+    - Accuracy compared to standard benchmarks.
+    - Ability to differentiate nuanced emotions.
+    - Consistency across various tweet contexts.
+    - Adaptability to evolving language and slang.
+    - Speed of classification process.
+    gap_hypotheses:
+    - Insufficient handling of sarcasm and irony.
+    - Emotional intensity variations are overlooked.
+    - Mixed emotions recognition is challenging.
+    - User history's impact on expression is underexamined.
+    - Lack of real-time analysis capabilities.
+  - &id009
+    need_change: true
+    strategies:
+    - Identify key emotional indicators in language.
+    - Examine surrounding context and implications.
+    - Evaluate tone through punctuation and capitalization.
+    - Account for cultural and situational nuances.
+    - Apply machine learning for deeper analysis.
+    - Leverage sentiment analysis techniques.
+    principles:
+    - Emotions are complex and contextual.
+    - Multiple emotions can be present simultaneously.
+    - Discern the primary emotional tone.
+    - Cultural context affects emotional interpretation.
+    - Emotional expressions differ by platform.
+    evaluation_criteria:
+    - Precision against established benchmarks.
+    - Capability to recognize subtle emotional differences.
+    - Consistency in diverse tweet scenarios.
+    - Flexibility to adapt to new slang.
+    - Efficiency in the classification process.
+    gap_hypotheses:
+    - Struggles with sarcasm and irony recognition.
+    - Neglects emotional intensity differences.
+    - Difficulty in identifying mixed emotions.
+    - Influence of user history on emotion is insufficiently explored.
+    - Inadequate real-time processing capabilities.
+    change_rationale: Existing knowledge can be streamlined for clarity and effectiveness.
+  - &id011
+    need_change: true
+    strategies:
+    - Identify emotional cues in wording.
+    - Assess context and implications.
+    - Analyze tone via punctuation and capitalization.
+    - Consider cultural nuances.
+    - Utilize machine learning for insights.
+    - Implement sentiment analysis methods.
+    principles:
+    - Emotions are multifaceted and contextual.
+    - Simultaneous emotions can occur.
+    - Identify primary emotional tone.
+    - Cultural context influences interpretation.
+    - Platform affects emotional expression.
+    evaluation_criteria:
+    - Precision against benchmarks.
+    - Ability to detect emotional subtleties.
+    - Consistency across tweet contexts.
+    - Adaptability to new language.
+    - Efficiency in classification.
+    gap_hypotheses:
+    - Challenges with sarcasm and irony.
+    - Lacks focus on emotional intensity.
+    - Difficulty with mixed emotions.
+    - User history's emotional impact is underexplored.
+    - Real-time processing capabilities are limited.
+    change_rationale: Simplified language, improved clarity, and enhanced specificity
+      throughout.
+  example_memory:
+  - sample_question: '@user No!  By Y''all I mean rioting, fire starting, business
+      burning, looting ASSHOLES!  That create #BlackLivesmatter'
+  - &id002
+    question: '@user I can''t believe they canceled my favorite show! It''s like they
+      don''t care about us fans at all! 😡'
+    answer: anger
+    rationale: The tweet expresses frustration and disappointment over the cancellation
+      of a show, emphasized by the use of the angry emoji and strong language. This
+      differs from previous examples by focusing on a context of disappointment rather
+      than broader social issues.
+    tags:
+    - emotion classification
+    - anger
+    variation_type:
+    - contextual change
+    - emotional nuance
+  - &id004
+    question: '@user Just got a promotion at work! I can''t wait to start this new
+      chapter in my career! 🎉✨'
+    answer: joy
+    rationale: The tweet conveys excitement and happiness about a promotion, highlighted
+      by celebratory emojis. This example differs from previous ones by focusing on
+      personal achievement and positive life changes, showcasing a different context
+      and emotion.
+    tags:
+    - emotion classification
+    - joy
+    variation_type:
+    - contextual change
+    - emotional nuance
+  - &id006
+    question: '@user I just found out my best friend is moving away, and I feel so
+      lost without them. 😢'
+    answer: sadness
+    rationale: The tweet expresses a deep sense of loss and sadness regarding a friend's
+      departure, emphasized by the sad emoji. This example differs by focusing on
+      personal relationships and the emotional impact of separation, providing a more
+      intimate context than previous examples.
+    tags:
+    - emotion classification
+    - sadness
+    variation_type:
+    - contextual change
+    - emotional nuance
+  - &id008
+    question: '@user I never thought I''d see the day when we''d finally have clean
+      air in the city! What a relief! 🌍💚'
+    answer: optimism
+    rationale: The tweet expresses hope and positive outlook regarding environmental
+      improvements, indicated by uplifting language and green emojis. This differs
+      from prior examples by focusing on a broader societal issue and highlighting
+      a collective emotional response, showcasing optimism rather than personal experiences.
+    tags:
+    - emotion classification
+    - optimism
+    variation_type:
+    - contextual change
+    - emotional nuance
+  - &id010
+    question: '@user I can''t believe people are still ignoring the climate crisis.
+      It makes me so angry! 🔥😡'
+    answer: anger
+    rationale: The tweet conveys frustration and anger towards others' inaction on
+      climate issues, indicated by strong language and angry emojis. This example
+      differs by emphasizing a societal concern and collective responsibility, contrasting
+      previous personal or optimistic contexts.
+    tags:
+    - emotion classification
+    - anger
+    variation_type:
+    - contextual change
+    - emotional nuance
+  - &id012
+    question: '@user Just finished a marathon! I pushed through the pain and feel
+      like I can conquer anything now! 💪😄'
+    answer: joy
+    rationale: The tweet expresses a triumphant feeling of joy and accomplishment
+      after completing a marathon, highlighted by motivational language and celebratory
+      emojis. This example differs by focusing on personal achievement and positive
+      reinforcement, contrasting with previous examples that dealt with loss, societal
+      issues, or optimism about the future.
+    tags:
+    - emotion classification
+    - joy
+    variation_type:
+    - contextual change
+    - emotional nuance
+  feedback_memory:
+  - Prompt 1 should include more specific guidelines on how to classify sentiments,
+    similar to those in Prompt 2, to improve clarity and precision.; Answer 1 could
+    benefit from a more detailed rationale that connects the user's language and emojis
+    to the identified emotion, enhancing the analysis and providing a richer context.
+  - Prompt 2 is more structured and detailed than Prompt 1, which enhances clarity.
+    However, it could be more concise by eliminating redundant phrases.; Consider
+    improving Prompt 1 by integrating a structured format similar to Prompt 2 to enhance
+    clarity and depth in the analysis.
+  - Consider using more complex emotional language to describe feelings in output
+    1, as it can improve the differentiation of nuanced emotions.; Prompt 1 could
+    benefit from more concise wording, particularly in the steps, to enhance clarity
+    and focus on the task intent.
+  - Prompt 1 could improve by being more concise in its instructions to enhance clarity.;
+    Both outputs should explicitly mention the final classification as optimism to
+    align with the reference answer, as there is a nuanced distinction between joy
+    and optimism in this context.
+  - Prompt 2 could improve by offering a more detailed analysis of the emotional intensity
+    and context, similar to Prompt 1.; Adding more specific examples of how cultural
+    nuances affect emotional expression could enhance the clarity and depth of the
+    response.
+  - In Prompt 2, consider using 'emotional keywords' instead of 'key emotional words
+    and phrases' for consistency with Prompt 1.; Both prompts could improve by providing
+    a summary statement at the end to emphasize the conclusion more effectively.
+  iteration_history:
+  - iteration: 1
+    current_best_id_before_update: 0
+    new_prompt_id: 1
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Prompt 2 provides a clear and precise instruction for classifying emotions,
+        outlining specific labels and analytical criteria, which aligns closely with
+        the task intent.
+      - Answer 2 accurately identifies and rationalizes the predominant emotion as
+        anger, aligning with the reference answer and demonstrating a deeper analysis
+        of the user's emotional state.
+      feedback:
+      - Prompt 1 should include more specific guidelines on how to classify sentiments,
+        similar to those in Prompt 2, to improve clarity and precision.
+      - Answer 1 could benefit from a more detailed rationale that connects the user's
+        language and emojis to the identified emotion, enhancing the analysis and
+        providing a richer context.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+    knowledge: *id001
+    example: *id002
+    new_prompt: 'Classify the emotion expressed in a tweet. Use the labels: anger,
+      joy, optimism, or sadness. Ensure accuracy by identifying emotional keywords,
+      analyzing context and intensity, and evaluating tone through punctuation. Focus
+      on the predominant emotion, considering nuances and cultural context.'
+    feedback: Prompt 1 should include more specific guidelines on how to classify
+      sentiments, similar to those in Prompt 2, to improve clarity and precision.;
+      Answer 1 could benefit from a more detailed rationale that connects the user's
+      language and emojis to the identified emotion, enhancing the analysis and providing
+      a richer context.
+  - iteration: 2
+    current_best_id_before_update: 1
+    new_prompt_id: 2
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Answer 2 provides a detailed step-by-step analysis that enhances clarity and
+        demonstrates a thorough understanding of the emotion classification process.
+      - The structured approach in Answer 2 allows for a more comprehensive evaluation
+        of the tweet's emotional content, aligning closely with the evaluation criteria.
+      feedback:
+      - Prompt 2 is more structured and detailed than Prompt 1, which enhances clarity.
+        However, it could be more concise by eliminating redundant phrases.
+      - Consider improving Prompt 1 by integrating a structured format similar to
+        Prompt 2 to enhance clarity and depth in the analysis.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+      2: 1.2
+    knowledge: *id003
+    example: *id004
+    new_prompt: 'Classify the predominant emotion in a tweet using the labels: anger,
+      joy, optimism, or sadness. Follow these steps: 1. Identify emotional keywords
+      that indicate feelings. 2. Analyze the context and intensity of the tweet. 3.
+      Evaluate the tone, paying attention to punctuation and capitalization. 4. Consider
+      cultural nuances that may affect interpretation. Ensure your classification
+      is accurate and reflects the primary emotion expressed.'
+    feedback: Prompt 2 is more structured and detailed than Prompt 1, which enhances
+      clarity. However, it could be more concise by eliminating redundant phrases.;
+      Consider improving Prompt 1 by integrating a structured format similar to Prompt
+      2 to enhance clarity and depth in the analysis.
+  - iteration: 3
+    current_best_id_before_update: 2
+    new_prompt_id: 3
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Output 2 provides a more comprehensive analysis by including both emotional
+        keywords and phrases, which enhances its clarity and depth.
+      - Output 2 explicitly states the melancholic and reflective tone, which adds
+        nuance to the emotional classification.
+      feedback:
+      - Consider using more complex emotional language to describe feelings in output
+        1, as it can improve the differentiation of nuanced emotions.
+      - Prompt 1 could benefit from more concise wording, particularly in the steps,
+        to enhance clarity and focus on the task intent.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+      2: 1.2
+      3: 1.3
+    knowledge: *id005
+    example: *id006
+    new_prompt: 'Classify the predominant emotion in a tweet using the labels: anger,
+      joy, optimism, or sadness. Follow these steps: 1. Identify emotional keywords
+      and phrases. 2. Analyze the tweet''s context and intensity. 3. Evaluate the
+      tone, noting punctuation and capitalization. 4. Consider cultural nuances that
+      may influence interpretation. Your classification should accurately reflect
+      the primary emotion expressed.'
+    feedback: Consider using more complex emotional language to describe feelings
+      in output 1, as it can improve the differentiation of nuanced emotions.; Prompt
+      1 could benefit from more concise wording, particularly in the steps, to enhance
+      clarity and focus on the task intent.
+  - iteration: 4
+    current_best_id_before_update: 3
+    new_prompt_id: 4
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Output 2 accurately identifies the predominant emotion as joy, consistent
+        with the reference answer.
+      - Prompt 2 maintains clarity and conciseness while effectively guiding the analysis
+        process.
+      feedback:
+      - Prompt 1 could improve by being more concise in its instructions to enhance
+        clarity.
+      - Both outputs should explicitly mention the final classification as optimism
+        to align with the reference answer, as there is a nuanced distinction between
+        joy and optimism in this context.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+      2: 1.2
+      3: 1.3
+      4: 1.4
+    knowledge: *id007
+    example: *id008
+    new_prompt: 'Classify the predominant emotion in a tweet as anger, joy, optimism,
+      or sadness. Follow these steps: 1. Identify emotional keywords. 2. Analyze the
+      tweet''s context and intensity. 3. Evaluate the tone based on punctuation and
+      capitalization. 4. Consider cultural nuances. Your classification must reflect
+      the primary emotion accurately.'
+    feedback: Prompt 1 could improve by being more concise in its instructions to
+      enhance clarity.; Both outputs should explicitly mention the final classification
+      as optimism to align with the reference answer, as there is a nuanced distinction
+      between joy and optimism in this context.
+  - iteration: 5
+    current_best_id_before_update: 4
+    new_prompt_id: 5
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Prompt 1 provides a more thorough analysis of the emotional keywords, context,
+        intensity, tone, and cultural nuances, demonstrating a deeper understanding
+        of the emotional expression in the tweet.
+      - The detailed breakdown of how each aspect contributes to the classification
+        reinforces the accuracy of the identified emotion.
+      feedback:
+      - Prompt 2 could improve by offering a more detailed analysis of the emotional
+        intensity and context, similar to Prompt 1.
+      - Adding more specific examples of how cultural nuances affect emotional expression
+        could enhance the clarity and depth of the response.
+    ranking_scores:
+      0: 0.9
+      1: 0.9900000000000001
+      2: 1.08
+      3: 1.1700000000000002
+      4: 1.76
+      5: 1.0
+    knowledge: *id009
+    example: *id010
+    new_prompt: 'Classify the predominant emotion in a tweet as anger, joy, optimism,
+      or sadness. Use these steps: 1. Identify emotional keywords. 2. Analyze context
+      and intensity. 3. Evaluate tone through punctuation and capitalization. 4. Consider
+      cultural nuances. Your classification must clearly state the primary emotion.'
+    feedback: Prompt 2 could improve by offering a more detailed analysis of the emotional
+      intensity and context, similar to Prompt 1.; Adding more specific examples of
+      how cultural nuances affect emotional expression could enhance the clarity and
+      depth of the response.
+  - iteration: 6
+    current_best_id_before_update: 4
+    new_prompt_id: 6
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Prompt 1 provides a more detailed analysis of emotional keywords by explicitly
+        highlighting the emotional phrases, which enhances clarity.
+      - The breakdown of context and tone in Answer 1 is slightly more nuanced, making
+        it easier to follow the reasoning.
+      feedback:
+      - In Prompt 2, consider using 'emotional keywords' instead of 'key emotional
+        words and phrases' for consistency with Prompt 1.
+      - Both prompts could improve by providing a summary statement at the end to
+        emphasize the conclusion more effectively.
+    ranking_scores:
+      0: 0.81
+      1: 0.8910000000000001
+      2: 0.9720000000000001
+      3: 1.0530000000000002
+      4: 2.184
+      5: 0.9
+      6: 1.0
+    knowledge: *id011
+    example: *id012
+    new_prompt: 'Classify the predominant emotion in a tweet as anger, joy, optimism,
+      or sadness. Follow these steps: 1. Identify key emotional words and phrases.
+      2. Analyze the tweet''s context for emotional intensity. 3. Assess the tone
+      by examining punctuation and capitalization. 4. Account for cultural nuances
+      influencing emotion. Ensure that your classification accurately represents the
+      primary emotion.'
+    feedback: In Prompt 2, consider using 'emotional keywords' instead of 'key emotional
+      words and phrases' for consistency with Prompt 1.; Both prompts could improve
+      by providing a summary statement at the end to emphasize the conclusion more
+      effectively.
+  iterations_completed: 6
+  consecutive_wins: 3

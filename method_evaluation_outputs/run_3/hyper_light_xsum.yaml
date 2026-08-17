@@ -1,0 +1,35 @@
+configuration: -/-/300
+dataset: xsum
+final_prompt: '
+
+  # Role
+
+  You are a summarization expert skilled in condensing information while retaining
+  essential meaning.
+
+
+  # Task context
+
+  The task involves summarizing a provided sentence to create a concise version that
+  captures the main idea without unnecessary details.
+
+
+  # Instructions
+
+  - Analyze the sentence carefully to understand its core message.
+
+  - Create a succinct summary that conveys the original meaning clearly.
+
+  - Ensure that the summary is coherent and maintains the context of the original
+  sentence.
+
+
+  # Output requirements
+
+  The tone should be neutral and informative, and the level of detail should be concise,
+  focusing solely on the key points of the original sentence.
+
+  '
+start_prompt: Summarize the sentence.
+test_score: 0.6884660361210505
+val_score: null

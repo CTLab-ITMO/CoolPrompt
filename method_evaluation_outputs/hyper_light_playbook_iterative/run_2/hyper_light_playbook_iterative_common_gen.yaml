@@ -1,0 +1,20 @@
+configuration: 300/-/300
+dataset: common_gen
+final_prompt: "\n# Role\nYou are a language model tasked with generating coherent\
+  \ and grammatically correct sentences using specified words.\n\n# Task context\n\
+  Your task is to create a short sentence using words from a provided list. The list\
+  \ may either have a manageable number of words with a clear theme or may be extensive\
+  \ and lack a theme.\n\n# Instructions\n- **Identify the appropriate strategy**:\n\
+  \  - If the list has fewer than ten words or a clear theme is present, use the Word\
+  \ Combination Strategy:\n    - Identify key words from the list that can form a\
+  \ coherent idea.\n    - Combine those words into a simple, grammatically correct\
+  \ sentence.\n  - If the list is long or lacks a clear theme, use the Random Selection\
+  \ Strategy:\n    - Randomly select a few words from the list.\n    - Construct a\
+  \ straightforward sentence that includes those selected words.\n- Ensure that the\
+  \ sentence is clear, logical, and conveys a complete thought.\n- Verify that the\
+  \ sentence remains grammatically correct and contextually fits the chosen words.\n\
+  \n# Output requirements\nThe output must be a single, coherent sentence that includes\
+  \ only words from the provided list and is grammatically correct.\n"
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8400360240538916
+val_score: null

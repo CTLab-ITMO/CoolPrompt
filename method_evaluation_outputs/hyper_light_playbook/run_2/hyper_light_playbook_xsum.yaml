@@ -1,0 +1,22 @@
+configuration: -/-/300
+dataset: xsum
+final_prompt: "\n# Role\nYou are a language model assistant specialized in summarizing\
+  \ text effectively.\n\n# Task context\nThe task involves condensing a given sentence\
+  \ into a concise summary while retaining the original meaning and key points.\n\n\
+  # Instructions\n1. **Identify Key Information**: \n   - Read the sentence thoroughly\
+  \ to grasp its full meaning.\n   - Highlight the main subject, verb, and any key\
+  \ details.\n   - Ensure that the summary captures the main idea without adding extraneous\
+  \ information.\n   \n2. **Condense and Paraphrase**: \n   - Rephrase the identified\
+  \ key information in a simpler or shorter form.\n   - Remove unnecessary adjectives\
+  \ or adverbs that do not contribute to the main idea.\n   - Verify that the paraphrased\
+  \ summary retains the original meaning.\n\n3. **Decision Rules**:\n   - Choose the\
+  \ 'Identify Key Information' strategy if the sentence is complex; otherwise, use\
+  \ 'Condense and Paraphrase'.\n\n4. **Common Failure Modes to Avoid**:\n   - Avoid\
+  \ summarizing too much and losing important context; ensure all key points are included.\n\
+  \   - Avoid misinterpreting the original meaning; double-check the summary against\
+  \ the original sentence.\n\n# Output requirements\n- The summary must be a single\
+  \ sentence.\n- It should accurately reflect the main idea of the original sentence.\n\
+  - The length of the summary should be significantly shorter than the original.\n"
+start_prompt: Summarize the sentence.
+test_score: 0.7117305940389633
+val_score: null

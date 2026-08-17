@@ -1,0 +1,74 @@
+method: hyper_light_playbook
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+configuration: -/-/300
+runs_count: 3
+runs:
+  - run_id: 1
+    source_summary: hyper_light_playbook/run_1/hyper_light_playbook_summary.yaml
+    results:
+      - dataset: squad_v2
+        val_score: null
+        test_score: 0.7692602368195852
+      - dataset: common_gen
+        val_score: null
+        test_score: 0.8416574803988138
+      - dataset: gsm8k
+        val_score: null
+        test_score: 0.8266666666666667
+      - dataset: tweeteval
+        val_score: null
+        test_score: 0.7666666666666667
+      - dataset: xsum
+        val_score: null
+        test_score: 0.68210136393706
+  - run_id: 2
+    source_summary: hyper_light_playbook/run_2/hyper_light_playbook_summary.yaml
+    results:
+      - dataset: squad_v2
+        val_score: null
+        test_score: 0.7016203926006953
+      - dataset: common_gen
+        val_score: null
+        test_score: 0.8487429696321488
+      - dataset: gsm8k
+        val_score: null
+        test_score: 0.83
+      - dataset: tweeteval
+        val_score: null
+        test_score: 0.7666666666666667
+      - dataset: xsum
+        val_score: null
+        test_score: 0.7117305940389633
+  - run_id: 3
+    source_summary: hyper_light_playbook/run_3/hyper_light_playbook_summary.yaml
+    results:
+      - dataset: squad_v2
+        val_score: null
+        test_score: 0.7077707004547119
+      - dataset: common_gen
+        val_score: null
+        test_score: 0.8382857443888982
+      - dataset: gsm8k
+        val_score: null
+        test_score: 0.8366666666666667
+      - dataset: tweeteval
+        val_score: null
+        test_score: 0.7666666666666667
+      - dataset: xsum
+        val_score: null
+        test_score: 0.6806521415710449
+averages:
+  - dataset: squad_v2
+    mean_test_score: 0.7262171099583308
+  - dataset: common_gen
+    mean_test_score: 0.8428953981399536
+  - dataset: gsm8k
+    mean_test_score: 0.8311111111111111
+  - dataset: tweeteval
+    mean_test_score: 0.7666666666666667
+  - dataset: xsum
+    mean_test_score: 0.6914946998490228
+  - dataset: overall
+    mean_test_score: 0.771676997145017

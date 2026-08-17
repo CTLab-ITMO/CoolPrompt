@@ -1,0 +1,383 @@
+method: mrpea_original
+run: 2
+dataset: tweeteval
+configuration: 300/-/300
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+seed: 42
+train_pool_size: 300
+sample_question_index: 19
+sample_question: '@user @user @user Tamra would F her up if she swung on Tamra\nKelly
+  is a piece of 💩 #needstobeadmitted #bully'
+validation_used: false
+test_size: 300
+start_prompt: Provide sentiment classification.
+final_prompt: 'Classify the emotion expressed in a tweet using the labels: anger,
+  joy, optimism, and sadness. Identify and highlight key emotional words and phrases.
+  Analyze the context for tone, taking into account punctuation and emojis. Clearly
+  explain your classification rationale, ensuring it addresses emotional indicators,
+  nuances, and any potential sarcasm or irony present in the tweet. Return exactly
+  one allowed emotion label.'
+val_score: null
+test_score: 0.7466666666666667
+task_description: Classify the emotion expressed in a tweet. The allowed labels are
+  anger, joy, optimism, and sadness.
+task_objective: Return exactly one allowed emotion label.
+mrpea:
+  task_name: tweeteval
+  initial_prompt: Provide sentiment classification.
+  task_description: Classify the emotion expressed in a tweet. The allowed labels
+    are anger, joy, optimism, and sadness.
+  sample_question: '@user @user @user Tamra would F her up if she swung on Tamra\nKelly
+    is a piece of 💩 #needstobeadmitted #bully'
+  best_prompt_id: 2
+  prompt_pool:
+    0: Provide sentiment classification.
+    1: 'Classify the emotion expressed in a tweet. Use the labels: anger, joy, optimism,
+      and sadness. Identify key emotional words and phrases, analyze the context for
+      tone, and consider punctuation and emojis. Provide a clear rationale for your
+      classification.'
+    2: 'Classify the emotion expressed in a tweet using the labels: anger, joy, optimism,
+      and sadness. Identify and highlight key emotional words and phrases. Analyze
+      the context for tone, taking into account punctuation and emojis. Clearly explain
+      your classification rationale, ensuring it addresses emotional indicators, nuances,
+      and any potential sarcasm or irony present in the tweet.'
+    3: Classify the emotion in a tweet as anger, joy, optimism, or sadness. Identify
+      key emotional words and phrases. Analyze the tone by considering punctuation
+      and emojis. Explain your classification clearly, addressing emotional indicators,
+      nuances, and any sarcasm or irony.
+    4: Classify the emotion in a tweet as anger, joy, optimism, or sadness. Identify
+      key emotional words and phrases. Analyze the tone by examining punctuation and
+      emojis. Provide a detailed rationale for your classification. Address emotional
+      indicators, nuances, and possible sarcasm or irony, ensuring a comprehensive
+      analysis of the tweet's context.
+  ranking_scores:
+    0: 0.81
+    1: 0.8910000000000001
+    2: 1.6420000000000003
+    3: 0.9
+    4: 1.0
+  knowledge_memory:
+  - &id001
+    need_change: true
+    strategies:
+    - Identify key emotional words and phrases
+    - Analyze context for emotional tone
+    - Use sentiment analysis tools
+    - Consider user history for additional context
+    principles:
+    - Focus on explicit emotion indicators
+    - Account for sarcasm and irony
+    - Evaluate punctuation and emojis
+    - Prioritize context over literal meaning
+    evaluation_criteria:
+    - Accuracy of emotion classification
+    - Consistency across similar tweets
+    - Clarity of rationale for classification
+    - Ability to handle nuanced expressions
+    gap_hypotheses:
+    - Lack of guidance on sarcasm detection
+    - Insufficient strategies for ambiguous tweets
+    - Need for examples of edge cases
+    - Limited assessment of multi-emotion expressions
+    change_rationale: Existing knowledge lacks depth and clarity in strategies and
+      principles.
+  - &id003
+    need_change: true
+    strategies:
+    - Identify emotional keywords and phrases
+    - Analyze contextual emotional tone
+    - Utilize sentiment analysis tools
+    - Incorporate user history for context
+    - Assess tweet structure for emotional cues
+    principles:
+    - Focus on explicit emotion indicators
+    - Account for sarcasm and irony
+    - Evaluate punctuation and emojis
+    - Prioritize context over literal meaning
+    - Consider cultural references in emotional interpretation
+    evaluation_criteria:
+    - Accuracy of emotion classification
+    - Consistency across similar tweets
+    - Clarity of rationale for classification
+    - Ability to handle nuanced expressions
+    - Reproducibility of results across different classifiers
+    gap_hypotheses:
+    - Lack of guidance on sarcasm detection
+    - Insufficient strategies for ambiguous tweets
+    - Need for examples of edge cases
+    - Limited assessment of multi-emotion expressions
+    - Absence of user sentiment evolution tracking
+  - &id005
+    need_change: true
+    strategies:
+    - Identify emotional keywords and phrases
+    - Analyze contextual emotional tone
+    - Utilize sentiment analysis tools
+    - Incorporate user history for context
+    - Assess tweet structure for emotional cues
+    - Explore multi-emotion detection methods
+    principles:
+    - Focus on explicit emotion indicators
+    - Account for sarcasm and irony
+    - Evaluate punctuation and emojis
+    - Prioritize context over literal meaning
+    - Consider cultural references in emotional interpretation
+    - Recognize regional language variations
+    evaluation_criteria:
+    - Accuracy of emotion classification
+    - Consistency across similar tweets
+    - Clarity of rationale for classification
+    - Ability to handle nuanced expressions
+    - Reproducibility of results across different classifiers
+    - Effectiveness in detecting multi-emotional contexts
+    gap_hypotheses:
+    - Lack of guidance on sarcasm detection
+    - Insufficient strategies for ambiguous tweets
+    - Need for examples of edge cases
+    - Limited assessment of multi-emotion expressions
+    - Absence of user sentiment evolution tracking
+    - Underexplored impact of tweet length on emotion detection
+    change_rationale: Added strategies, principles, and gaps for a more comprehensive
+      approach to emotion classification.
+  - &id007
+    need_change: true
+    strategies:
+    - Identify emotional keywords and phrases
+    - Analyze contextual emotional tone
+    - Utilize sentiment analysis tools
+    - Incorporate user history for context
+    - Assess tweet structure for emotional cues
+    - Explore multi-emotion detection methods
+    principles:
+    - Focus on explicit emotion indicators
+    - Account for sarcasm and irony
+    - Evaluate punctuation and emojis
+    - Prioritize context over literal meaning
+    - Consider cultural references in emotional interpretation
+    - Recognize regional language variations
+    evaluation_criteria:
+    - Accuracy of emotion classification
+    - Consistency across similar tweets
+    - Clarity of rationale for classification
+    - Ability to handle nuanced expressions
+    - Reproducibility of results across classifiers
+    - Effectiveness in detecting multi-emotional contexts
+    gap_hypotheses:
+    - Lack of guidance on sarcasm detection
+    - Insufficient strategies for ambiguous tweets
+    - Need for examples of edge cases
+    - Limited assessment of multi-emotion expressions
+    - Absence of user sentiment evolution tracking
+    - Underexplored impact of tweet length on emotion detection
+    change_rationale: Existing knowledge can be improved for clarity and completeness,
+      especially on ambiguity and sarcasm.
+  example_memory:
+  - sample_question: '@user @user @user Tamra would F her up if she swung on Tamra\nKelly
+      is a piece of 💩 #needstobeadmitted #bully'
+  - &id002
+    question: '@user I can''t believe how amazing today was! The sun was shining,
+      and I got to see my best friends after so long! 🌞💖 #bestdayever'
+    answer: joy
+    rationale: The tweet expresses positive emotions through phrases like "amazing
+      today" and "best day ever," reinforced by the cheerful emojis. This example
+      differs as it focuses on a clear, uplifting experience, contrasting with the
+      previous example's negative tone.
+    tags:
+    - emotion classification
+    - sentiment analysis
+    variation_type:
+    - different emotion
+    - positive context
+  - &id004
+    question: '@user I can''t believe how much I miss my old life... Everything feels
+      so heavy and pointless lately. 😞 #lost #sad'
+    answer: sadness
+    rationale: The tweet conveys deep sorrow through phrases like "miss my old life"
+      and "heavy and pointless," along with the sad emoji. This example differs by
+      focusing on a clear expression of sadness, contrasting with previous examples
+      that showcased joy or anger.
+    tags:
+    - emotion classification
+    - sentiment analysis
+    variation_type:
+    - different emotion
+    - negative context
+  - &id006
+    question: '@user It''s frustrating to see people not taking this seriously. How
+      can anyone be so ignorant? #annoyed #frustration'
+    answer: anger
+    rationale: The tweet clearly expresses anger with phrases like "frustrating" and
+      "so ignorant," emphasized by the use of hashtags related to annoyance. This
+      example introduces a different emotional context focused on frustration, contrasting
+      with previous examples that highlighted sadness or joy.
+    tags:
+    - emotion classification
+    - sentiment analysis
+    variation_type:
+    - different emotion
+    - negative context
+  - &id008
+    question: '@user Despite the challenges ahead, I believe we can make a difference
+      together! Let''s stay hopeful! 💪🌟 #optimism'
+    answer: optimism
+    rationale: The tweet conveys a hopeful sentiment through phrases like "make a
+      difference together" and the motivating emojis. This example introduces a focus
+      on optimism, differing from prior examples by emphasizing a positive outlook
+      amidst challenges rather than straightforward joy or sadness.
+    tags:
+    - emotion classification
+    - sentiment analysis
+    variation_type:
+    - different emotion
+    - positive context
+  feedback_memory:
+  - Prompt 1 should be more detailed to guide the classification process effectively;
+    consider including specific labels or instructions for analysis.; Answer 1 needs
+    to elaborate on the rationale for the classification to meet clarity and depth
+    requirements; provide examples and context as seen in Answer 2.
+  - Prompt 2 could be further improved by emphasizing conciseness to avoid redundancy
+    in instruction.; Consider simplifying the language in both prompts for clearer
+    understanding and quicker responses, while maintaining the necessary depth of
+    analysis.
+  - In Prompt 2, consider expanding on the analysis of emotional indicators and the
+    overall tone to provide a richer context for the classification.; Make sure to
+    explicitly mention any potential nuances or sarcasm as seen in Prompt 1, even
+    if they aren't present, to demonstrate a thorough analysis process.
+  - Prompt 2 could improve clarity by being more concise in its instructions, avoiding
+    redundancy in phrasing.; Both outputs could benefit from a more explicit connection
+    of emotional indicators to the classification, enhancing the rationale further.
+  iteration_history:
+  - iteration: 1
+    current_best_id_before_update: 0
+    new_prompt_id: 1
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Prompt 2 clearly outlines the task with specific instructions and a structured
+        approach, while Prompt 1 lacks detail and depth.
+      - Answer 2 provides a comprehensive analysis of the emotional content, including
+        key words, context, punctuation, and emojis, which aligns closely with the
+        evaluation criteria.
+      feedback:
+      - Prompt 1 should be more detailed to guide the classification process effectively;
+        consider including specific labels or instructions for analysis.
+      - Answer 1 needs to elaborate on the rationale for the classification to meet
+        clarity and depth requirements; provide examples and context as seen in Answer
+        2.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+    knowledge: *id001
+    example: *id002
+    new_prompt: 'Classify the emotion expressed in a tweet. Use the labels: anger,
+      joy, optimism, and sadness. Identify key emotional words and phrases, analyze
+      the context for tone, and consider punctuation and emojis. Provide a clear rationale
+      for your classification.'
+    feedback: Prompt 1 should be more detailed to guide the classification process
+      effectively; consider including specific labels or instructions for analysis.;
+      Answer 1 needs to elaborate on the rationale for the classification to meet
+      clarity and depth requirements; provide examples and context as seen in Answer
+      2.
+  - iteration: 2
+    current_best_id_before_update: 1
+    new_prompt_id: 2
+    winner: 2
+    evaluation:
+      winner: 2
+      reason_for_winner:
+      - Answer 2 provides a more comprehensive analysis of the emotional content,
+        clearly highlighting key phrases and analyzing context in detail.
+      - The rationale in Answer 2 is structured and explicit, addressing nuances and
+        explicitly ruling out sarcasm or irony, which strengthens the clarity and
+        accuracy of the classification.
+      feedback:
+      - Prompt 2 could be further improved by emphasizing conciseness to avoid redundancy
+        in instruction.
+      - Consider simplifying the language in both prompts for clearer understanding
+        and quicker responses, while maintaining the necessary depth of analysis.
+    ranking_scores:
+      0: 1.0
+      1: 1.1
+      2: 1.2
+    knowledge: *id003
+    example: *id004
+    new_prompt: 'Classify the emotion expressed in a tweet using the labels: anger,
+      joy, optimism, and sadness. Identify and highlight key emotional words and phrases.
+      Analyze the context for tone, taking into account punctuation and emojis. Clearly
+      explain your classification rationale, ensuring it addresses emotional indicators,
+      nuances, and any potential sarcasm or irony present in the tweet.'
+    feedback: Prompt 2 could be further improved by emphasizing conciseness to avoid
+      redundancy in instruction.; Consider simplifying the language in both prompts
+      for clearer understanding and quicker responses, while maintaining the necessary
+      depth of analysis.
+  - iteration: 3
+    current_best_id_before_update: 2
+    new_prompt_id: 3
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Prompt 1 provides a more detailed analysis of the emotional words and context,
+        clearly outlining the key phrases and their implications.
+      - The rationale in Answer 1 includes a thorough examination of the tone and
+        emotional indicators, enhancing clarity and understanding of the classification
+        process.
+      feedback:
+      - In Prompt 2, consider expanding on the analysis of emotional indicators and
+        the overall tone to provide a richer context for the classification.
+      - Make sure to explicitly mention any potential nuances or sarcasm as seen in
+        Prompt 1, even if they aren't present, to demonstrate a thorough analysis
+        process.
+    ranking_scores:
+      0: 0.9
+      1: 0.9900000000000001
+      2: 1.3800000000000001
+      3: 1.0
+    knowledge: *id005
+    example: *id006
+    new_prompt: Classify the emotion in a tweet as anger, joy, optimism, or sadness.
+      Identify key emotional words and phrases. Analyze the tone by considering punctuation
+      and emojis. Explain your classification clearly, addressing emotional indicators,
+      nuances, and any sarcasm or irony.
+    feedback: In Prompt 2, consider expanding on the analysis of emotional indicators
+      and the overall tone to provide a richer context for the classification.; Make
+      sure to explicitly mention any potential nuances or sarcasm as seen in Prompt
+      1, even if they aren't present, to demonstrate a thorough analysis process.
+  - iteration: 4
+    current_best_id_before_update: 2
+    new_prompt_id: 4
+    winner: 1
+    evaluation:
+      winner: 1
+      reason_for_winner:
+      - Answer 1 provides a more structured and clear classification of optimism,
+        with a thorough analysis of emotional words and phrases.
+      - 'It effectively addresses the nuances and emotional indicators while maintaining
+        a concise format, making it easier for readers to follow the rationale. '
+      feedback:
+      - Prompt 2 could improve clarity by being more concise in its instructions,
+        avoiding redundancy in phrasing.
+      - Both outputs could benefit from a more explicit connection of emotional indicators
+        to the classification, enhancing the rationale further.
+    ranking_scores:
+      0: 0.81
+      1: 0.8910000000000001
+      2: 1.6420000000000003
+      3: 0.9
+      4: 1.0
+    knowledge: *id007
+    example: *id008
+    new_prompt: Classify the emotion in a tweet as anger, joy, optimism, or sadness.
+      Identify key emotional words and phrases. Analyze the tone by examining punctuation
+      and emojis. Provide a detailed rationale for your classification. Address emotional
+      indicators, nuances, and possible sarcasm or irony, ensuring a comprehensive
+      analysis of the tweet's context.
+    feedback: Prompt 2 could improve clarity by being more concise in its instructions,
+      avoiding redundancy in phrasing.; Both outputs could benefit from a more explicit
+      connection of emotional indicators to the classification, enhancing the rationale
+      further.
+  iterations_completed: 4
+  consecutive_wins: 3

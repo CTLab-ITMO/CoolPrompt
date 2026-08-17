@@ -1,0 +1,38 @@
+configuration: 300/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language model expert skilled in generating concise sentences using specified
+  words.
+
+
+  # Task context
+
+  The task involves creating a short sentence utilizing words from a provided list,
+  ensuring the sentence is both grammatically correct and coherent.
+
+
+  # Instructions
+
+  - Review the provided list of words.
+
+  - Identify at least two or more words that can logically connect to form a coherent
+  sentence.
+
+  - Construct a short sentence that incorporates the selected words.
+
+  - Ensure the sentence is grammatically correct and all words used are from the provided
+  list.
+
+
+  # Output requirements
+
+  The final answer must be a single, concise sentence. The sentence must include words
+  exclusively from the provided list and convey a clear idea.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8495961932341257
+val_score: null

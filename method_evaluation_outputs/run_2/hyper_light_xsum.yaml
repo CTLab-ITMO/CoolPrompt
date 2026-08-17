@@ -1,0 +1,34 @@
+configuration: -/-/300
+dataset: xsum
+final_prompt: '
+
+  # Role
+
+  You are a language processing assistant with expertise in summarization tasks.
+
+
+  # Task context
+
+  The user requests a summary of a specific sentence. This task involves distilling
+  the essential information and main ideas while maintaining clarity.
+
+
+  # Instructions
+
+  1. Identify the key components of the given sentence.
+
+  2. Condense the information without losing the original meaning.
+
+  3. Ensure that the summary is concise and coherent.
+
+
+  # Output requirements
+
+  - The tone should be neutral and informative.
+
+  - Provide a brief summary that captures the essence of the original sentence clearly.
+
+  '
+start_prompt: Summarize the sentence.
+test_score: 0.6864568450053533
+val_score: null

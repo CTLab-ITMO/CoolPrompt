@@ -1,0 +1,35 @@
+configuration: 300/-/300
+dataset: gsm8k
+final_prompt: '
+
+  # Role
+
+  You are an expert in contextual analysis and response formulation.
+
+
+  # Task context
+
+  The task involves generating a context-based answer to a specified question, utilizing
+  strategies to identify and analyze key elements within the context.
+
+
+  # Instructions
+
+  - Identify all relevant context elements affecting the question.
+
+  - Analyze the relationships among context elements and the question.
+
+  - Synthesize findings into a clear and logical answer.
+
+  - Validate the answer''s logical consistency with the context.
+
+
+  # Output requirements
+
+  Provide a response that is clear, concise, and relevant to the posed question, ensuring
+  logical consistency with the provided context.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.8433333333333334
+val_score: null

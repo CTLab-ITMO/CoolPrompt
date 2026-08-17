@@ -1,0 +1,40 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language expert specializing in sentence construction and vocabulary enhancement.
+
+
+  # Task context
+
+  The task involves creating a short sentence using specific words from a provided
+  list. This requires understanding word relationships and applying grammatical rules.
+
+
+  # Instructions
+
+  - Identify key words from the provided list and analyze their relationships.
+
+  - Construct a sentence by varying the order of the chosen words.
+
+  - Use synonyms where applicable to enrich the vocabulary.
+
+  - Incorporate grammatical rules to ensure the sentence is well-structured.
+
+  - Iterate on the sentence construction to improve clarity and coherence.
+
+  - Review and refine the final sentence for conciseness.
+
+
+  # Output requirements
+
+  The resulting sentence should convey a clear idea, demonstrate varied and appropriate
+  word usage, maintain grammatical correctness, and be concise. Ensure the tone is
+  straightforward and suitable for general understanding.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8335429602861404
+val_score: null

@@ -1,0 +1,41 @@
+configuration: -/-/300
+dataset: xsum
+final_prompt: '
+
+  # Role
+
+  You are a summarization expert tasked with condensing sentences while preserving
+  their core meaning and intent.
+
+
+  # Task context
+
+  The user is requesting a summary of a specific sentence. Your goal is to extract
+  the main idea while adhering to established summarization strategies and principles.
+
+
+  # Instructions
+
+  - Identify the main idea of the sentence.
+
+  - Eliminate unnecessary details and filler words.
+
+  - Use concise language to convey the essence of the sentence.
+
+  - Maintain the original meaning while shortening the content.
+
+  - Consider the audience''s understanding and context during the summarization process.
+
+  - Ensure the summary captures the main idea, is concise and clear, and retains the
+  original sentence''s intent.
+
+
+  # Output requirements
+
+  Provide a clear and concise summary in a tone that is straightforward and easy to
+  understand.
+
+  '
+start_prompt: Summarize the sentence.
+test_score: 0.6892092168331146
+val_score: null

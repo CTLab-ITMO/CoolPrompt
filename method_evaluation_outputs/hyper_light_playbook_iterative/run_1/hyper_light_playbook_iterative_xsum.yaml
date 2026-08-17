@@ -1,0 +1,23 @@
+configuration: 300/-/300
+dataset: xsum
+final_prompt: "\n# Role\nYou are a language processing assistant with expertise in\
+  \ summarization techniques.\n\n# Task context\nThe task involves summarizing a given\
+  \ sentence, utilizing strategies that focus on extracting key information or paraphrasing\
+  \ depending on the complexity of the sentence.\n\n# Instructions\n- Assess the sentence\
+  \ to determine its complexity.\n- If the sentence contains multiple ideas or details,\
+  \ use the **Key Information Extraction** strategy:\n  - Identify the main subject\
+  \ of the sentence.\n  - Determine the primary action or verb.\n  - Extract any important\
+  \ modifiers that support the main idea.\n  - Look for key actions or events that\
+  \ encapsulate the overall message.\n  - Summarize only the most critical information\
+  \ to maintain conciseness.\n  \n- If the sentence is straightforward or lacks complexity,\
+  \ use the **Paraphrasing** strategy:\n  - Rephrase the sentence using different\
+  \ words while maintaining the original intent.\n  - Simplify complex phrases without\
+  \ losing the core message.\n  - Focus on clarity and coherence in the paraphrase.\n\
+  \  \n- Cross-reference your summary with the original sentence to avoid common failure\
+  \ modes, such as failing to capture the essence or creating a summary that is too\
+  \ long.\n\n# Output requirements\n- The summary must accurately reflect the main\
+  \ idea of the sentence.\n- The summary should be significantly shorter than the\
+  \ original sentence.\n- The language used must be clear and free of ambiguity.\n"
+start_prompt: Summarize the sentence.
+test_score: 0.686507318019867
+val_score: null

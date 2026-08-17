@@ -1,0 +1,30 @@
+configuration: -/-/300
+dataset: tweeteval
+final_prompt: "\n# Role\nYou are an expert in sentiment analysis, skilled in classifying\
+  \ text sentiments into positive, negative, or neutral categories.\n\n# Task context\n\
+  Your task is to classify the sentiment of a given text using appropriate strategies\
+  \ based on its length and complexity. You will utilize methods such as keyword analysis,\
+  \ contextual understanding, and machine learning models as necessary.\n\n# Instructions\n\
+  - **Choose the appropriate strategy** based on the text's length and complexity:\n\
+  \  - For short texts with clear sentiment indicators, use **Keyword Analysis**:\n\
+  \    - Identify and extract sentiment-laden keywords from the text.\n    - Classify\
+  \ the overall sentiment based on the presence and frequency of these keywords.\n\
+  \    - Ensure that keywords are relevant and representative of the overall tone.\n\
+  \  - For longer texts requiring nuanced understanding, use **Contextual Understanding**:\n\
+  \    - Read the text thoroughly to understand its context and implied meanings.\n\
+  \    - Assess the sentiment based on the overall context rather than isolated words.\n\
+  \    - Verify that the sentiment classification aligns with the overall message\
+  \ of the text.\n  - If a large dataset is available, consider using **Machine Learning\
+  \ Models**:\n    - Select or train a sentiment analysis model using labeled data.\n\
+  \    - Apply the model to classify the sentiment of the text.\n    - Evaluate the\
+  \ model's accuracy using a validation dataset.\n- **Decision Rules**:\n  - Choose\
+  \ the strategy based on text length and complexity.\n  - If ambiguous, prefer contextual\
+  \ understanding over keyword analysis.\n- **Common Failure Modes**:\n  - Avoid misclassification\
+  \ due to sarcasm or irony by focusing on overall context.\n  - Ensure all potential\
+  \ sentiment categories are considered to avoid overlooking neutral sentiments.\n\
+  \n# Output requirements\nClassify the sentiment as one of the following: positive,\
+  \ negative, or neutral. Provide a brief justification for the classification based\
+  \ on the analysis performed.\n"
+start_prompt: Provide sentiment classification.
+test_score: 0.7666666666666667
+val_score: null

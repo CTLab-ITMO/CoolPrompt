@@ -58,7 +58,9 @@ BENCHMARKS: tuple[BenchmarkSpec, ...] = (
 
 
 def build_config(
-    spec: BenchmarkSpec, dataset_configuration: str
+    spec: BenchmarkSpec,
+    dataset_configuration: str,
+    method_options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build the YAML-style configuration consumed by an optimizer."""
 
@@ -67,7 +69,7 @@ def build_config(
             "name": spec.name,
             "configuration": dataset_configuration,
         },
-        "method": {},
+        "method": method_options or {},
         "task": spec.task,
         "metric": spec.metric,
     }
@@ -79,16 +81,27 @@ def run_benchmarks(
     model: ChatOpenAI,
     output_dir: Path,
     dataset_configuration: str,
+    method_options: dict[str, Any] | None = None,
     saving_model_answers: bool = False,
+    datasets: Sequence[str] | None = None,
 ) -> Path:
-    """Evaluate one method on every dataset and return the summary path."""
+    """Evaluate one method on selected datasets and return the summary path."""
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    results: list[dict[str, Any]] = []
+    available_datasets = {spec.name for spec in BENCHMARKS}
+    selected_datasets = set(datasets) if datasets is not None else available_datasets
+    unknown_datasets = selected_datasets - available_datasets
+    if unknown_datasets:
+        raise ValueError(
+            f"Unknown datasets: {sorted(unknown_datasets)}. "
+            f"Available: {sorted(available_datasets)}."
+        )
 
     for spec in BENCHMARKS:
+        if spec.name not in selected_datasets:
+            continue
         output_path = output_dir / f"{method}_{spec.name}.yaml"
-        config = build_config(spec, dataset_configuration)
+        config = build_config(spec, dataset_configuration, method_options)
         if saving_model_answers:
             config["model_answers_output_path"] = str(
                 output_dir / f"{method}_{spec.name}_answers.yaml"
@@ -104,8 +117,12 @@ def run_benchmarks(
             saving_model_answers=saving_model_answers,
         )
 
-        with output_path.open() as output_file:
-            results.append(yaml.safe_load(output_file))
+    results: list[dict[str, Any]] = []
+    for spec in BENCHMARKS:
+        output_path = output_dir / f"{method}_{spec.name}.yaml"
+        if output_path.exists():
+            with output_path.open() as output_file:
+                results.append(yaml.safe_load(output_file))
 
     summary_path = output_dir / f"{method}_summary.yaml"
     with summary_path.open("w") as summary_file:
@@ -143,8 +160,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=4000,
-        help="Maximum tokens per model response (default: 4000).",
+        default=None,
+        help="Maximum tokens per model response (default: unlimited).",
     )
     parser.add_argument(
         "--temperature",
@@ -172,14 +189,38 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--dataset-configuration",
-        default="-/-/100",
-        help="Dataset sizes in train/validation/test form (default: -/-/100).",
+        default="-/-/300",
+        help="Dataset sizes in train/validation/test form (default: -/-/300).",
+    )
+    parser.add_argument(
+        "--n-iterations",
+        type=int,
+        help="Override iterative method iteration count.",
+    )
+    parser.add_argument(
+        "--train-batch-size",
+        type=int,
+        help="Override iterative method train batch size.",
+    )
+    parser.add_argument(
+        "--train-pool-size",
+        type=int,
+        help="Override iterative method train pool size.",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        help="Override iterative method sampling seed.",
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("method_evaluation_outputs"),
         help="Directory for per-dataset and summary YAML results.",
+    )
+    parser.add_argument(
+        "--datasets",
+        help="Comma-separated dataset names to run (default: all five).",
     )
     parser.add_argument(
         "--save-model-answers",
@@ -200,18 +241,35 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     model = ChatOpenAI(
         model=args.model,
-        api_key=args.api_key or os.environ.get("OPENAI_API_KEY"),
+        api_key="",
         base_url=args.base_url,
         max_tokens=args.max_tokens,
         temperature=args.temperature,
         rate_limiter=rate_limiter,
+    )
+    method_options = {
+        key: value
+        for key, value in {
+            "n_iterations": args.n_iterations,
+            "train_batch_size": args.train_batch_size,
+            "train_pool_size": args.train_pool_size,
+            "random_seed": args.seed,
+        }.items()
+        if value is not None
+    }
+    datasets = (
+        [dataset.strip() for dataset in args.datasets.split(",") if dataset.strip()]
+        if args.datasets
+        else None
     )
     summary_path = run_benchmarks(
         method=args.method,
         model=model,
         output_dir=args.output_dir,
         dataset_configuration=args.dataset_configuration,
+        method_options=method_options,
         saving_model_answers=args.save_model_answers,
+        datasets=datasets,
     )
     print(f"Benchmark summary saved to {summary_path}")
 

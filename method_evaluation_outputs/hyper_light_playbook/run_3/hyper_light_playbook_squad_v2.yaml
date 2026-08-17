@@ -1,0 +1,39 @@
+configuration: -/-/300
+dataset: squad_v2
+final_prompt: '
+
+  # Role
+
+  You are an expert in providing context-based answers that effectively relate to
+  specific questions by analyzing background information.
+
+
+  # Task context
+
+  Your task is to provide an answer that is closely tied to the context given in relation
+  to a specific question. The focus is on integrating relevant details from the context
+  to formulate a coherent response.
+
+
+  # Instructions
+
+  - Begin by identifying the key elements of the context provided.
+
+  - Analyze how these elements relate to the question being asked.
+
+  - Formulate an answer that directly incorporates relevant context.
+
+  - Ensure that the answer references specific elements from the context.
+
+  - Verify that the response logically follows from the context provided.
+
+
+  # Output requirements
+
+  The answer must be directly relevant to the question. The response should incorporate
+  and reflect the provided context. Clarity and coherence of the answer are essential.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.7077707004547119
+val_score: null

@@ -1,0 +1,37 @@
+method: hyper_light_pea_playbook
+model: gpt-4o-mini
+temperature: 0.7
+max_tokens: unlimited
+dataset_configuration: -/-/300
+runs:
+- run: 1
+  source_summary: hyper_light_pea_playbook/run_1/hyper_light_pea_playbook_summary.yaml
+  scores:
+    squad_v2: 0.7885699448982875
+    common_gen: 0.8420699659983317
+    gsm8k: 0.7533333333333333
+    tweeteval: 0.7766666666666666
+    xsum: 0.685550562342008
+- run: 2
+  source_summary: hyper_light_pea_playbook/run_2/hyper_light_pea_playbook_summary.yaml
+  scores:
+    squad_v2: 0.7726889050006867
+    common_gen: 0.8335429602861404
+    gsm8k: 0.82
+    tweeteval: 0.7733333333333333
+    xsum: 0.6892092168331146
+- run: 3
+  source_summary: hyper_light_pea_playbook/run_3/hyper_light_pea_playbook_summary.yaml
+  scores:
+    squad_v2: 0.7117136931419372
+    common_gen: 0.8501779699325561
+    gsm8k: 0.8266666666666667
+    tweeteval: 0.8066666666666666
+    xsum: 0.6787119420369466
+mean_test_score_by_dataset:
+  squad_v2: 0.7576575143469705
+  common_gen: 0.8419302987390094
+  gsm8k: 0.7999999999999999
+  tweeteval: 0.7855555555555556
+  xsum: 0.6844905737373564
+overall_mean_test_score: 0.7739267884757783

@@ -1,0 +1,14 @@
+configuration: -/-/300
+dataset: gsm8k
+final_prompt: "\n# Role\nYou are an AI assistant with expertise in providing context-based\
+  \ answers to questions.\n\n# Task context\nThe task involves answering a question\
+  \ based on a given context, ensuring that the response is relevant and well-informed.\n\
+  \n# Instructions\n- Analyze the provided context thoroughly.\n- Extract key information\
+  \ that directly addresses the question.\n- Formulate a clear and concise answer\
+  \ that reflects the context accurately.\n- Ensure the answer is informative and\
+  \ relevant to the user\u2019s query.\n\n# Output requirements\nThe tone should be\
+  \ professional and informative, with a focus on clarity. The response should include\
+  \ all necessary details to effectively answer the question while being succinct.\n"
+start_prompt: Given a context answer on the question.
+test_score: 0.7733333333333333
+val_score: null

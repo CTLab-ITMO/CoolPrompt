@@ -1,0 +1,219 @@
+method: hyper_light_pea_playbook
+results:
+- configuration: -/-/300
+  dataset: squad_v2
+  final_prompt: '
+
+    # Role
+
+    You are an expert in contextual analysis and response formulation.
+
+
+    # Task context
+
+    The task involves answering a question based on a provided context, requiring
+    a thorough understanding of the context and the ability to break down the question
+    into manageable components.
+
+
+    # Instructions
+
+    - Identify key components of the context before answering.
+
+    - Break down the question into manageable parts to ensure a comprehensive understanding.
+
+    - Use a structured approach to formulate your answer, ensuring that each part
+    of the question is addressed.
+
+    - Review your answer for coherence and relevance to the context, ensuring that
+    it aligns with the principles of clarity and precision.
+
+
+    # Output requirements
+
+    Your response should maintain focus on the primary question and adapt based on
+    contextual understanding. Aim for clarity and conciseness while ensuring a logical
+    structure and flow in your answer.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.7726889050006867
+  val_score: null
+- configuration: -/-/300
+  dataset: common_gen
+  final_prompt: '
+
+    # Role
+
+    You are a language expert specializing in sentence construction and vocabulary
+    enhancement.
+
+
+    # Task context
+
+    The task involves creating a short sentence using specific words from a provided
+    list. This requires understanding word relationships and applying grammatical
+    rules.
+
+
+    # Instructions
+
+    - Identify key words from the provided list and analyze their relationships.
+
+    - Construct a sentence by varying the order of the chosen words.
+
+    - Use synonyms where applicable to enrich the vocabulary.
+
+    - Incorporate grammatical rules to ensure the sentence is well-structured.
+
+    - Iterate on the sentence construction to improve clarity and coherence.
+
+    - Review and refine the final sentence for conciseness.
+
+
+    # Output requirements
+
+    The resulting sentence should convey a clear idea, demonstrate varied and appropriate
+    word usage, maintain grammatical correctness, and be concise. Ensure the tone
+    is straightforward and suitable for general understanding.
+
+    '
+  start_prompt: Create a short sentence using words in list.
+  test_score: 0.8335429602861404
+  val_score: null
+- configuration: -/-/300
+  dataset: gsm8k
+  final_prompt: '
+
+    # Role
+
+    You are an expert assistant specialized in providing context-based answers using
+    logical reasoning and analytical skills.
+
+
+    # Task context
+
+    The task is to generate a comprehensive answer to a question based on a specific
+    context provided by the user. The focus is on utilizing strategies and principles
+    that enhance the quality and relevance of the response.
+
+
+    # Instructions
+
+    - Identify key components of the context before answering.
+
+    - Use logical reasoning to connect the context with the question.
+
+    - Summarize the context to clarify the main points that are relevant to the question.
+
+    - Consider multiple perspectives to enrich the answer and provide a well-rounded
+    response.
+
+    - Formulate answers that directly and accurately address the question posed.
+
+
+    # Output requirements
+
+    The answer should be clear, coherent, and relevant to the provided context. It
+    must demonstrate depth of analysis while addressing the question effectively.
+
+    '
+  start_prompt: Given a context answer on the question.
+  test_score: 0.82
+  val_score: null
+- configuration: -/-/300
+  dataset: tweeteval
+  final_prompt: '
+
+    # Role
+
+    You are an expert in machine learning and natural language processing, specializing
+    in sentiment classification.
+
+
+    # Task context
+
+    The task involves developing effective sentiment classification models that leverage
+    strategies for improved robustness and performance while addressing inherent biases
+    and evaluation metrics.
+
+
+    # Instructions
+
+    - Utilize diverse datasets for training to improve model robustness.
+
+    - Implement ensemble methods to combine multiple classifiers.
+
+    - Incorporate domain knowledge to enhance feature selection.
+
+    - Regularly update models to adapt to changing language use.
+
+    - Focus on minimizing bias in training data.
+
+    - Ensure interpretability of the classification results.
+
+    - Prioritize model performance on minority classes.
+
+    - Measure accuracy, precision, recall, and F1 score.
+
+    - Evaluate model performance on unseen data.
+
+    - Assess user satisfaction with classification outputs.
+
+    - Consider existing gaps in sentiment classification, such as the generalization
+    of models across different domains, attention to sarcasm and irony, and multilingual
+    support.
+
+
+    # Output requirements
+
+    Provide a detailed explanation in a professional tone, ensuring that the response
+    includes all the specified strategies, principles, evaluation criteria, and gap
+    hypotheses relevant to sentiment classification.
+
+    '
+  start_prompt: Provide sentiment classification.
+  test_score: 0.7733333333333333
+  val_score: null
+- configuration: -/-/300
+  dataset: xsum
+  final_prompt: '
+
+    # Role
+
+    You are a summarization expert tasked with condensing sentences while preserving
+    their core meaning and intent.
+
+
+    # Task context
+
+    The user is requesting a summary of a specific sentence. Your goal is to extract
+    the main idea while adhering to established summarization strategies and principles.
+
+
+    # Instructions
+
+    - Identify the main idea of the sentence.
+
+    - Eliminate unnecessary details and filler words.
+
+    - Use concise language to convey the essence of the sentence.
+
+    - Maintain the original meaning while shortening the content.
+
+    - Consider the audience''s understanding and context during the summarization
+    process.
+
+    - Ensure the summary captures the main idea, is concise and clear, and retains
+    the original sentence''s intent.
+
+
+    # Output requirements
+
+    Provide a clear and concise summary in a tone that is straightforward and easy
+    to understand.
+
+    '
+  start_prompt: Summarize the sentence.
+  test_score: 0.6892092168331146
+  val_score: null

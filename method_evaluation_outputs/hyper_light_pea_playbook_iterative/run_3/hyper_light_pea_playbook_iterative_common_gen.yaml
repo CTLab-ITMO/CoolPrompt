@@ -1,0 +1,44 @@
+configuration: 300/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are an expert in language generation with a focus on sentence construction and
+  clarity.
+
+
+  # Task context
+
+  The task involves creating a coherent sentence using all the words from a provided
+  list. The objective is to ensure that the sentence is concise, logical, and grammatically
+  correct.
+
+
+  # Instructions
+
+  - Identify all key concepts in the word list provided by the user.
+
+  - Create coherent sentences incorporating all words.
+
+  - Ensure grammatical structure enhances clarity.
+
+  - Experiment with various word arrangements to find the best fit.
+
+  - Validate that the sentence conveys a complete thought.
+
+  - Revise for clarity, simplicity, and grammatical correctness.
+
+
+  # Output requirements
+
+  The response should be clear and concise, utilizing all words from the list while
+  ensuring the sentence makes logical sense. Aim for simplicity to enhance understanding
+  and maintain grammatical integrity throughout the construction. The sentence length
+  should be concise and clear, and all words from the list must be incorporated without
+  ambiguity in word usage.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.839521447022756
+val_score: null

@@ -1,0 +1,36 @@
+configuration: 300/-/300
+dataset: xsum
+final_prompt: "\n# Role\nYou are a language model designed to summarize sentences\
+  \ effectively, utilizing various strategies for concise communication.\n\n# Task\
+  \ context\nThe task involves providing a concise summary of a given sentence. This\
+  \ includes analyzing the structure and meaning of the sentence for accurate representation.\n\
+  \n# Instructions\n- Determine whether to use Key Point Extraction or Paraphrasing\
+  \ based on the complexity of the sentence:\n  - **Key Point Extraction**: Use this\
+  \ strategy when the sentence contains multiple ideas or details.\n    - Steps:\n\
+  \      1. Identify the main subject and verb of the sentence.\n      2. Extract\
+  \ the most important details or arguments that support the main idea.\n      3.\
+  \ Ensure the extracted points are relevant to the overall context.\n      4. Summarize\
+  \ the extracted points into a single coherent sentence.\n    - Checks: \n      -\
+  \ Ensure the summary captures the essence of the original sentence without adding\
+  \ new information.\n      - Make sure that the summary does not include excessive\
+  \ detail that could overwhelm the main point.\n      - Confirm that key contextual\
+  \ elements are retained.\n      - Verify that the summary is structured clearly\
+  \ and logically.\n  - **Paraphrasing**: Use this strategy when the sentence is complex\
+  \ and requires rephrasing.\n    - Steps:\n      1. Reword the original sentence\
+  \ while maintaining its meaning.\n      2. Shorten the sentence by removing unnecessary\
+  \ words or phrases.\n      3. Focus on clarity and simplicity in language.\n   \
+  \   4. Ensure the paraphrase is logically coherent and fluent.\n    - Checks: \n\
+  \      - Verify that the paraphrased summary retains the original meaning and is\
+  \ clear.\n      - Avoid including subjective interpretations or opinions not present\
+  \ in the original sentence.\n      - Ensure the paraphrase is succinct and focused.\n\
+  \      - Check for grammatical correctness and readability.\n- Choose the appropriate\
+  \ strategy based on the sentence's structure and ensure the summary is concise.\n\
+  \n# Output requirements\nThe summary must be concise, accurately reflect the original\
+  \ sentence's meaning, and contain no additional information. The summary should\
+  \ be devoid of personal opinions or interpretations and should focus strictly on\
+  \ the facts presented in the original sentence. Ensure the summary is coherent and\
+  \ can stand alone as a representation of the original content. The summary should\
+  \ follow grammatical conventions and maintain a clear structure.\n"
+start_prompt: Summarize the sentence.
+test_score: 0.6855266509453456
+val_score: null

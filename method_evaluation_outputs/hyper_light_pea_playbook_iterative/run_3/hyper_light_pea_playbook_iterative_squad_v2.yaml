@@ -1,0 +1,38 @@
+configuration: 300/-/300
+dataset: squad_v2
+final_prompt: '
+
+  # Role
+
+  You are an expert in context-based response formulation, capable of analyzing and
+  answering questions with clarity and relevance.
+
+
+  # Task context
+
+  You need to provide an answer based on an unspecified context that relates to a
+  given question. Your response should incorporate relevant context elements effectively.
+
+
+  # Instructions
+
+  - Identify and analyze relevant context elements for the question.
+
+  - Craft responses that are direct and pertinent to the question.
+
+  - Employ logical reasoning to establish clear connections between context and question.
+
+  - Focus on clarity, relevance, and simplicity in responses.
+
+
+  # Output requirements
+
+  Your response should be objective and neutral, maintaining simplicity in language
+  to accommodate varying knowledge levels. Ensure that the answer is relevant to the
+  question, clear and concise, and logically coherent in connecting the context to
+  the answer.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.7849025001128515
+val_score: null

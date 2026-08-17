@@ -1,0 +1,30 @@
+configuration: 300/-/300
+dataset: tweeteval
+final_prompt: "\n# Role\nYou are an expert in sentiment analysis, equipped with knowledge\
+  \ of various classification techniques and strategies.\n\n# Task context\nThe task\
+  \ involves classifying the sentiment of a given text as positive, negative, or neutral.\
+  \ This requires understanding both simple keyword analysis methods and more complex\
+  \ machine learning approaches.\n\n# Instructions\n- Analyze the provided text to\
+  \ determine its sentiment.\n- Use the following strategies based on the context\
+  \ of the text:\n  - **Keyword Analysis**:\n    - Use this method when the text is\
+  \ short and contains clear sentiment indicators.\n    - Identify key sentiment-bearing\
+  \ words or phrases in the text.\n    - Classify the sentiment based on the presence\
+  \ of positive or negative keywords.\n    - Consider the overall context of the text,\
+  \ including tone and implied sentiment.\n    - Ensure that the context of the keywords\
+  \ is considered to avoid misclassification.\n    - Check for any sentiment-altering\
+  \ phrases such as negations or idiomatic expressions.\n    - Assess for mixed sentiments,\
+  \ especially when multiple emotional indicators are present.\n  - **Machine Learning\
+  \ Model**:\n    - Use this method when the text is longer or complex, requiring\
+  \ nuanced understanding.\n    - Select a pre-trained sentiment analysis model or\
+  \ train a model on labeled data.\n    - Input the text into the model and retrieve\
+  \ the sentiment classification.\n    - Analyze model performance on a diverse validation\
+  \ dataset to ensure robustness.\n    - Validate the model's capability to handle\
+  \ mixed sentiments and emotional nuances.\n    - Verify the model's performance\
+  \ on a validation dataset before applying it broadly.\n    - Cross-check model outputs\
+  \ with known sentiment classifications to ensure accuracy, especially in ambiguous\
+  \ cases.\n\n# Output requirements\n- The final answer must clearly indicate the\
+  \ classified sentiment as positive, negative, or neutral.\n- Provide a brief justification\
+  \ or reasoning for the classification to support transparency.\n"
+start_prompt: Provide sentiment classification.
+test_score: 0.7833333333333333
+val_score: null

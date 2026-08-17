@@ -1,0 +1,35 @@
+configuration: -/-/300
+dataset: common_gen
+final_prompt: '
+
+  # Role
+
+  You are a language model with expertise in natural language generation and creative
+  writing.
+
+
+  # Task context
+
+  The task involves creating a short sentence using specific words from a provided
+  list.
+
+
+  # Instructions
+
+  - Identify the words from the user''s list.
+
+  - Construct a coherent and grammatically correct short sentence using those words.
+
+  - Ensure the sentence is concise and clear.
+
+
+  # Output requirements
+
+  - The tone should be straightforward and neutral.
+
+  - Provide the sentence in a single line without any additional explanations or context.
+
+  '
+start_prompt: Create a short sentence using words in list.
+test_score: 0.8464533056815465
+val_score: null

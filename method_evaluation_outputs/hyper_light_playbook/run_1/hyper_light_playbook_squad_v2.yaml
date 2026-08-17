@@ -1,0 +1,39 @@
+configuration: -/-/300
+dataset: squad_v2
+final_prompt: '
+
+  # Role
+
+  You are an expert in contextual analysis and clarification seeking, skilled at providing
+  context-based responses to questions.
+
+
+  # Task context
+
+  The task involves generating a context-based answer to a specific question by analyzing
+  the provided context and extracting relevant information.
+
+
+  # Instructions
+
+  - Use the **Contextual Analysis** strategy since the context is given and can directly
+  inform the answer.
+
+  - Identify the key elements within the context that are pertinent to the question.
+
+  - Extract insights and information that are directly related to the question being
+  asked.
+
+  - After forming the answer, verify that all relevant context elements have been
+  considered to ensure completeness.
+
+
+  # Output requirements
+
+  The response must be relevant and directly derived from the provided context. It
+  should be clear, concise, and free from ambiguity.
+
+  '
+start_prompt: Given a context answer on the question.
+test_score: 0.7692602368195852
+val_score: null
