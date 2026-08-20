@@ -24,7 +24,7 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
 - Automatic prompt engineering for solving tasks using LLM
 - (Semi-)automatic generation of markup for fine-tuning
 - Formalization of response quality assessment using LLM
-- Prompt adoption for AI Agentic Pipelines
+- Prompt for AI Agentic Pipelines
 - Etc.
 
 ## Core features
@@ -48,6 +48,29 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     <img alt="CoolPrompt Scheme" width="100%" height="100%">
     </picture>
 </p>
+
+## APO methods comparison
+
+CoolPrompt provides several automatic prompt optimization methods with different
+trade-offs in data requirements, runtime, expected quality, and API cost. The
+levels below are qualitative and task-dependent: they are intended as a quick
+guide for choosing a method before running a benchmark.
+
+Compared metrics:
+- **Data** - whether dataset is required for the method to run.
+- **Runtime** - relative wall-clock time of one optimization run.
+- **Performance** - expected ability to improve task quality compared with the initial prompt.
+- **Cost** - relative compute/API cost: LLM calls, evaluation calls, token usage, and extra scoring overhead.
+
+| Method | Data | Runtime ↓ | Performance ↑ | Cost ↓ |
+|---|---:|---:|---:|---:|
+| `hyper_light` | None | Low | Medium | Low |
+| `hyper` | Required | Medium | High | Medium |
+| `regps` | Required | High | Very High | High |
+| `rider` | Required | Very High | Very High | Very High |
+| `compress` | None | Low | Medium | Low |
+| `reflective` | Required | High | High | High |
+| `distill` | Required | High | High | High |
 
 ## Quick install
 - Install with pip:
@@ -80,6 +103,10 @@ print(prompt_tuner.final_prompt)
 # well-structured, and vividly descriptive essay on the theme of autumn...
 ```
 
+<p align="center">
+    <img src="docs/images/demo.gif" alt="CoolPrompt full optimization demo" width="100%">
+</p>
+
 ## Examples
 
 See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples/) to familiarize yourself with our framework
@@ -105,6 +132,20 @@ For technical details and full experimental results, please check our papers + c
       series = {FSE Companion '26},
       year = {2026},
       doi = {10.1145/3803437.3807393}
+    }
+    
+</details>
+
+<details close>
+    <summary><a href="https://ieeexplore.ieee.org/abstract/document/11506566"><b>RE-GPS</b></a></summary>
+    
+    @inproceedings{kulin2026re,
+      title={RE-GPS: Reflective Evolutionary Gradient Prompting System for Large Language Models},
+      author={Kulin, Nikita and Zhuravlev, Viktor and Khairullin, Artur and Muravyov, Sergey},
+      booktitle={2026 39th Conference of Open Innovations Association (FRUCT)},
+      pages={157--163},
+      year={2026},
+      organization={IEEE}
     }
     
 </details>
