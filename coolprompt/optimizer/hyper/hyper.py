@@ -197,10 +197,9 @@ def mmr_select(
         bertscore_model_type,
     )
 
-    scores = np.array([
-        r.aggregate_score if r.aggregate_score is not None else 0.0
-        for r in results
-    ])
+    scores = np.array(
+        [r.aggregate_score if r.aggregate_score is not None else 0.0 for r in results]
+    )
 
     selected: List[int] = []
     remaining = list(range(len(candidates)))
@@ -212,7 +211,7 @@ def mmr_select(
     while len(selected) < top_n and remaining:
         mmr_scores = {
             idx: lambda_ * scores[idx]
-                 - (1 - lambda_) * max(sim_matrix[idx, j] for j in selected)
+            - (1 - lambda_) * max(sim_matrix[idx, j] for j in selected)
             for idx in remaining
         }
         next_idx = max(mmr_scores, key=mmr_scores.get)
@@ -244,7 +243,7 @@ class HyPEROptimizer(Optimizer):
         random_seed: Optional[int] = None,
         hyper_meta_prompt: Optional[str] = None,
         bertscore_model_type: Optional[str] = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         """Configure HyPER hyperparameters and construct submodules.
 
@@ -298,9 +297,7 @@ class HyPEROptimizer(Optimizer):
         if not isinstance(metric_model_type, str):
             metric_model_type = None
         self.bertscore_model_type = (
-            bertscore_model_type
-            or metric_model_type
-            or DEFAULT_BERTSCORE_MODEL_TYPE
+            bertscore_model_type or metric_model_type or DEFAULT_BERTSCORE_MODEL_TYPE
         )
         logger.info(
             "[HyPER] MMR BERTScore model: %s",
@@ -318,7 +315,10 @@ class HyPEROptimizer(Optimizer):
             List whose first element is ``best_prompt`` followed by paraphrases.
         """
         raw_result = get_model_answer_extracted(
-            self.model, PARAPHRASE_PROMPT.format(prompt=best_prompt), n=n_candidates, temperature=0.9
+            self.model,
+            PARAPHRASE_PROMPT.format(prompt=best_prompt),
+            n=n_candidates,
+            temperature=0.9,
         )
         return [best_prompt] + [self._process_model_output(r) for r in raw_result]
 
@@ -379,18 +379,24 @@ class HyPEROptimizer(Optimizer):
         ):
             score_str = f"{best_score:.4f}" if best_score is not None else "N/A"
             logger.info(f"\n{'='*60}")
-            logger.info(f"[HyPER] === Iteration {iteration + 1}/{self.n_iterations} | best_score={score_str} ===")
+            logger.info(
+                f"[HyPER] === Iteration {iteration + 1}/{self.n_iterations} | best_score={score_str} ==="
+            )
             logger.debug(f"[HyPER] Current best prompt: {best_prompt[:250]}...")
 
             score_before_iteration = best_score
             best_prompt_before_iteration = best_prompt
 
             # Generate candidates from best_prompt
-            logger.info(f"[HyPER] Generating {self.n_candidates} paraphrase candidates...")
+            logger.info(
+                f"[HyPER] Generating {self.n_candidates} paraphrase candidates..."
+            )
             candidates = self._get_variants_from_best(
                 best_prompt, n_candidates=self.n_candidates
             )
-            logger.info(f"[HyPER] Generated {len(candidates)} candidates (including original)")
+            logger.info(
+                f"[HyPER] Generated {len(candidates)} candidates (including original)"
+            )
 
             if not candidates:
                 logger.warning("[HyPER] No candidates generated, returning best prompt")
@@ -401,8 +407,13 @@ class HyPEROptimizer(Optimizer):
             mini_batch_seed = (
                 None if self.random_seed is None else self.random_seed + iteration
             )
-            samples, sample_targets, mini_batch_indices = sample_mini_batch_with_indices(
-                train_samples, train_targets, self.mini_batch_size, seed=mini_batch_seed
+            samples, sample_targets, mini_batch_indices = (
+                sample_mini_batch_with_indices(
+                    train_samples,
+                    train_targets,
+                    self.mini_batch_size,
+                    seed=mini_batch_seed,
+                )
             )
             logger.info(
                 f"[HyPER] Mini-batch sampled: {len(samples)} examples "
@@ -413,15 +424,29 @@ class HyPEROptimizer(Optimizer):
                 logger.warning("[HyPER] No samples in mini-batch, skipping iteration")
                 continue
 
-            logger.info(f"[HyPER] Evaluating {len(candidates)} candidates on mini-batch...")
+            logger.info(
+                f"[HyPER] Evaluating {len(candidates)} candidates on mini-batch..."
+            )
             results: List[EvalResultDetailed] = [
-                self.evaluator.evaluate(cand, samples, sample_targets, failed_examples=self.k_samples, return_detailed=True)
+                self.evaluator.evaluate(
+                    cand,
+                    samples,
+                    sample_targets,
+                    failed_examples=self.k_samples,
+                    return_detailed=True,
+                )
                 for cand in candidates
             ]
 
             for i, (cand, res) in enumerate(zip(candidates, results)):
-                score_str = f"{res.aggregate_score:.4f}" if res.aggregate_score is not None else "N/A"
-                logger.info(f"[HyPER]   Candidate {i+1}: mini_batch_score={score_str}, n_examples_for_analysis={len(res.failed_examples)}")
+                score_str = (
+                    f"{res.aggregate_score:.4f}"
+                    if res.aggregate_score is not None
+                    else "N/A"
+                )
+                logger.info(
+                    f"[HyPER]   Candidate {i+1}: mini_batch_score={score_str}, n_examples_for_analysis={len(res.failed_examples)}"
+                )
                 logger.debug(f"[HyPER]   Candidate {i+1} prompt:\n{cand}")
 
             # Guard: if no candidate has failures, mini-batch is too easy; resample once.
@@ -430,14 +455,21 @@ class HyPEROptimizer(Optimizer):
             mini_batch_resample_seed = None
             if total_failures == 0:
                 logger.info(
-                    f"[HyPER] All candidates have 0 failures on mini-batch. Resampling once..."
+                    "[HyPER] All candidates have 0 failures on mini-batch. Resampling once..."
                 )
                 mini_batch_resampled = True
                 mini_batch_resample_seed = (
-                    None if self.random_seed is None else self.random_seed + 10_000 + iteration
+                    None
+                    if self.random_seed is None
+                    else self.random_seed + 10_000 + iteration
                 )
-                samples, sample_targets, mini_batch_indices = sample_mini_batch_with_indices(
-                    train_samples, train_targets, self.mini_batch_size, seed=mini_batch_resample_seed
+                samples, sample_targets, mini_batch_indices = (
+                    sample_mini_batch_with_indices(
+                        train_samples,
+                        train_targets,
+                        self.mini_batch_size,
+                        seed=mini_batch_resample_seed,
+                    )
                 )
                 logger.info(
                     f"[HyPER]   Resampled mini-batch: {len(samples)} examples "
@@ -445,18 +477,21 @@ class HyPEROptimizer(Optimizer):
                 )
                 results = [
                     self.evaluator.evaluate(
-                        cand, samples, sample_targets,
-                        failed_examples=self.k_samples, return_detailed=True,
+                        cand,
+                        samples,
+                        sample_targets,
+                        failed_examples=self.k_samples,
+                        return_detailed=True,
                     )
                     for cand in candidates
                 ]
                 total_failures = sum(len(r.failed_examples) for r in results)
-                logger.info(f"[HyPER]   After resample: total_failures={total_failures}")
+                logger.info(
+                    f"[HyPER]   After resample: total_failures={total_failures}"
+                )
 
             # MMR selection
-            bertscore_evaluate = _get_bertscore_evaluate(
-                self.evaluator.metric
-            )
+            bertscore_evaluate = _get_bertscore_evaluate(self.evaluator.metric)
             lambda_ = _adaptive_lambda(best_score if best_score is not None else 0.0)
             selected = mmr_select(
                 candidates=candidates,
@@ -473,11 +508,17 @@ class HyPEROptimizer(Optimizer):
             )
 
             if not selected:
-                logger.warning("[HyPER] No candidates selected by MMR, skipping iteration")
+                logger.warning(
+                    "[HyPER] No candidates selected by MMR, skipping iteration"
+                )
                 continue
 
             for i, (cand_prompt, res) in enumerate(selected):
-                score_str = f"{res.aggregate_score:.4f}" if res.aggregate_score is not None else "N/A"
+                score_str = (
+                    f"{res.aggregate_score:.4f}"
+                    if res.aggregate_score is not None
+                    else "N/A"
+                )
                 logger.info(f"[HyPER]   MMR[{i+1}] mini_batch_score={score_str}")
                 logger.debug(f"[HyPER]   MMR[{i+1}] prompt:\n{cand_prompt}")
 
@@ -497,7 +538,11 @@ class HyPEROptimizer(Optimizer):
                         for cand, res in zip(candidates, results)
                         if cand not in selected_prompts and res.failed_examples
                     ],
-                    key=lambda x: x[1].aggregate_score if x[1].aggregate_score is not None else 0.0,
+                    key=lambda x: (
+                        x[1].aggregate_score
+                        if x[1].aggregate_score is not None
+                        else 0.0
+                    ),
                     reverse=True,
                 )[:substitutes_needed]
                 feedback_sources.extend(substitutes)
@@ -527,14 +572,19 @@ class HyPEROptimizer(Optimizer):
                         for other_cand, other_res in zip(candidates, results):
                             if other_cand == cand_prompt:
                                 continue
-                            if not other_res.score_per_task or not other_res.raw_outputs:
+                            if (
+                                not other_res.score_per_task
+                                or not other_res.raw_outputs
+                            ):
                                 continue
                             if fe.batch_index >= len(other_res.score_per_task):
                                 continue
                             others.append(
                                 ContrastiveCandidate(
                                     prompt=other_cand,
-                                    score=float(other_res.score_per_task[fe.batch_index]),
+                                    score=float(
+                                        other_res.score_per_task[fe.batch_index]
+                                    ),
                                     raw_answer=other_res.raw_outputs[fe.batch_index],
                                     parsed_answer=self.evaluator.metric.parse_output(
                                         other_res.raw_outputs[fe.batch_index]
@@ -554,18 +604,16 @@ class HyPEROptimizer(Optimizer):
                 all_recs = self.feedback_module.filter_recommendations(all_recs)
                 recommendations_before_audit = list(all_recs)
                 audit_trace = []
-                logger.info(f"[HyPER]   {len(all_recs)} recommendations after filtering:")
+                logger.info(
+                    f"[HyPER]   {len(all_recs)} recommendations after filtering:"
+                )
                 for i, rec in enumerate(all_recs):
                     logger.info(f"[HyPER]   Rec {i+1} [{rec.section}]: {rec.text}")
 
                 # Audit instance leaks: keep broad recs, rewrite useful leaky
                 # recs, and drop narrow/vague ones.
                 problem_description = (meta_info or {}).get("problem_description", "")
-                if (
-                    self.enable_instance_leak_audit
-                    and problem_description
-                    and all_recs
-                ):
+                if self.enable_instance_leak_audit and problem_description and all_recs:
                     pre_audit = len(all_recs)
                     all_recs = self.feedback_module.drop_instance_leaks(
                         all_recs, problem_description
@@ -583,7 +631,9 @@ class HyPEROptimizer(Optimizer):
                         f"({len(all_recs)} kept)"
                     )
                     for i, rec in enumerate(all_recs):
-                        logger.info(f"[HyPER]   AuditedRec {i+1} [{rec.section}]: {rec.text}")
+                        logger.info(
+                            f"[HyPER]   AuditedRec {i+1} [{rec.section}]: {rec.text}"
+                        )
 
                 self.meta_prompt_module.update_section("recommendations", all_recs)
             else:
@@ -595,15 +645,21 @@ class HyPEROptimizer(Optimizer):
                 )
 
             # Meta-prompt optimization for each MMR-selected candidate; validate on val.
-            logger.info(f"[HyPER] MetaPrompt-optimizing {len(selected)} MMR candidates + val evaluation...")
-            validation_score_cache = {best_prompt_before_iteration: score_before_iteration}
+            logger.info(
+                f"[HyPER] MetaPrompt-optimizing {len(selected)} MMR candidates + val evaluation..."
+            )
+            validation_score_cache = {
+                best_prompt_before_iteration: score_before_iteration
+            }
             optimized_val_scores: List[dict] = []
             for i, (cand_prompt, res) in enumerate(selected):
                 logger.info(f"[HyPER]   Optimizing MMR[{i+1}] with MetaPrompt...")
                 optimized_prompt = self.meta_prompt_module.optimize(
                     cand_prompt, meta_info=meta_info
                 )
-                logger.debug(f"[HyPER]   MMR[{i+1}] optimized prompt:\n{optimized_prompt}")
+                logger.debug(
+                    f"[HyPER]   MMR[{i+1}] optimized prompt:\n{optimized_prompt}"
+                )
 
                 val_score_cached = optimized_prompt in validation_score_cache
                 if val_score_cached:
@@ -621,7 +677,9 @@ class HyPEROptimizer(Optimizer):
                     validation_score_cache[optimized_prompt] = val_score
                 val_score_str = f"{val_score:.4f}" if val_score is not None else "N/A"
                 cached_suffix = " cached" if val_score_cached else ""
-                logger.info(f"[HyPER]   MMR[{i+1}] val_score={val_score_str}{cached_suffix}")
+                logger.info(
+                    f"[HyPER]   MMR[{i+1}] val_score={val_score_str}{cached_suffix}"
+                )
                 optimized_val_scores.append(
                     {
                         "prompt": optimized_prompt,
@@ -630,8 +688,14 @@ class HyPEROptimizer(Optimizer):
                     }
                 )
 
-                if val_score is not None and best_score is not None and val_score > best_score:
-                    logger.info(f"[HyPER]   *** NEW BEST: {best_score:.4f} -> {val_score:.4f} (MMR[{i+1}])")
+                if (
+                    val_score is not None
+                    and best_score is not None
+                    and val_score > best_score
+                ):
+                    logger.info(
+                        f"[HyPER]   *** NEW BEST: {best_score:.4f} -> {val_score:.4f} (MMR[{i+1}])"
+                    )
                     best_score = val_score
                     best_prompt = optimized_prompt
 
@@ -643,7 +707,9 @@ class HyPEROptimizer(Optimizer):
                 )
             else:
                 patience_counter = 0
-                logger.info(f"[HyPER] Score improved: {score_before_iteration:.4f} -> {best_score:.4f}")
+                logger.info(
+                    f"[HyPER] Score improved: {score_before_iteration:.4f} -> {best_score:.4f}"
+                )
 
             iter_record = {
                 "iteration": iteration + 1,
@@ -702,11 +768,13 @@ class HyPEROptimizer(Optimizer):
             )
 
             if self.patience and patience_counter >= self.patience:
-                logger.info(f"[HyPER] Early stopping triggered: patience {self.patience} reached at iteration {iteration + 1}")
+                logger.info(
+                    f"[HyPER] Early stopping triggered: patience {self.patience} reached at iteration {iteration + 1}"
+                )
                 break
 
         logger.info(f"\n{'='*60}")
-        logger.info(f"[HyPER] Optimization complete!")
+        logger.info("[HyPER] Optimization complete!")
         final_score_str = f"{best_score:.4f}" if best_score is not None else "N/A"
         logger.info(f"[HyPER] Final best score: {final_score_str}")
         logger.info(f"[HyPER] Total iterations completed: {len(iteration_history)}")
@@ -741,7 +809,7 @@ class HyPERMethod(AutoPromptingMethod):
         feedback_answer_tail_chars = kwargs.pop("feedback_answer_tail_chars", 500)
         enable_instance_leak_audit = kwargs.pop("enable_instance_leak_audit", True)
         random_seed = kwargs.pop("random_seed", None)
-        use_structured_output = kwargs.pop("use_structured_output", False)
+        kwargs.pop("use_structured_output", False)
         telemetry_callback = kwargs.pop("telemetry_callback", None)
         hyper_meta_prompt = kwargs.pop("hyper_meta_prompt", None)
         bertscore_model_type = kwargs.pop("bertscore_model_type", None)

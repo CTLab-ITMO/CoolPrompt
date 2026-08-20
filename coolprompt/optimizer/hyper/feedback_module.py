@@ -85,9 +85,9 @@ class FeedbackModule:
 
         self.model = model
         self.section_specs: List[PromptSectionSpec] = section_specs or []
-        self._valid_sections: set[str] = (
-            {spec.name for spec in self.section_specs} | {GENERAL_SECTION}
-        )
+        self._valid_sections: set[str] = {spec.name for spec in self.section_specs} | {
+            GENERAL_SECTION
+        }
         self.contrastive_probability = contrastive_probability
         self.contrastive_max_answer_chars = contrastive_max_answer_chars
         self.feedback_answer_head_chars = feedback_answer_head_chars
@@ -277,19 +277,25 @@ class FeedbackModule:
 
         Returns:
             Tuple ``(section, text, error_kind)`` where ``error_kind`` is ``None`` on
-            success, ``"json_error"`` for malformed JSON, or ``"invalid_section"`` when 
+            success, ``"json_error"`` for malformed JSON, or ``"invalid_section"`` when
             the section is not whitelisted (text still returned, mapped to ``general`` upstream by callers).
         """
         try:
             data = extract_json(raw_str)
-            if not isinstance(data, dict) or "section" not in data or "text" not in data:
+            if (
+                not isinstance(data, dict)
+                or "section" not in data
+                or "text" not in data
+            ):
                 return GENERAL_SECTION, raw_str.strip(), "json_error"
             section = str(data["section"]).strip()
             text = str(data["text"]).strip()
             if not text:
                 return GENERAL_SECTION, raw_str.strip(), "json_error"
             if section not in self._valid_sections:
-                logger.debug(f"[Feedback] Unknown section '{section}' from model -> general")
+                logger.debug(
+                    f"[Feedback] Unknown section '{section}' from model -> general"
+                )
                 return GENERAL_SECTION, text, "invalid_section"
             return section, text, None
         except Exception as exc:
@@ -315,7 +321,9 @@ class FeedbackModule:
         self,
         prompt: str,
         failed_examples: List[FailedExampleDetailed],
-        contrastive_candidates_per_failure: Optional[List[List[ContrastiveCandidate]]] = None,
+        contrastive_candidates_per_failure: Optional[
+            List[List[ContrastiveCandidate]]
+        ] = None,
     ) -> List[Recommendation]:
         """Call :meth:`generate_recommendation` for each failed example.
 
@@ -414,8 +422,14 @@ class FeedbackModule:
             kept: List[Recommendation] = []
             trace: List[Dict[str, Any]] = []
             for r, v in zip(recs, verdicts):
-                verdict = str(v.get("verdict", "")).strip().upper() if isinstance(v, dict) else ""
-                rewritten = str(v.get("text", "")).strip() if isinstance(v, dict) else ""
+                verdict = (
+                    str(v.get("verdict", "")).strip().upper()
+                    if isinstance(v, dict)
+                    else ""
+                )
+                rewritten = (
+                    str(v.get("text", "")).strip() if isinstance(v, dict) else ""
+                )
                 final_text: Optional[str] = None
                 kept_flag = False
                 if verdict == "KEEP":
@@ -494,8 +508,7 @@ class FeedbackModule:
         groups = self._partition_texts_into_groups(texts)
 
         group_payload = [
-            {"weight": len(g), "members": [texts[i] for i in g]}
-            for g in groups
+            {"weight": len(g), "members": [texts[i] for i in g]} for g in groups
         ]
         prompt = SECTION_GROUPS_FILTER_PROMPT.format(
             section_name=section_name,

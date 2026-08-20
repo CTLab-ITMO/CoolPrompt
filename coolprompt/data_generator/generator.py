@@ -36,9 +36,7 @@ class SyntheticDataGenerator:
     def __init__(self, model: BaseLanguageModel) -> None:
         self.model = model
 
-    def _generate(
-            self, request: str, schema: BaseModel, field_name: str
-    ) -> Any:
+    def _generate(self, request: str, schema: BaseModel, field_name: str) -> Any:
         """Generates model output
         either using structured output from langchain
         or just strict json output format for LLM
@@ -85,12 +83,10 @@ class SyntheticDataGenerator:
         Returns:
             str: string representation of the provided examples.
         """
-        return "\n\n".join(
-            [f"Input: {inp}\nOutput: {out}" for (inp, out) in examples]
-        )
+        return "\n\n".join([f"Input: {inp}\nOutput: {out}" for (inp, out) in examples])
 
     def _generate_problem_description(
-            self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
+        self, prompt: str, examples: Optional[List[Tuple[str, str]]] = None
     ) -> str:
         """Generates problem description based on given user prompt
 
@@ -114,10 +110,8 @@ class SyntheticDataGenerator:
         )
 
     def _convert_dataset(
-            self,
-            examples: List[
-                dict | ClassificationTaskExample | GenerationTaskExample
-                ],
+        self,
+        examples: List[dict | ClassificationTaskExample | GenerationTaskExample],
     ) -> Tuple[List[str], List[str]]:
         """Converts outputs to the dataset format
 
@@ -139,7 +133,7 @@ class SyntheticDataGenerator:
 
         for example in examples:
             if isinstance(example, GenerationTaskExample) or isinstance(
-                    example, ClassificationTaskExample
+                example, ClassificationTaskExample
             ):
                 dataset.append(example.input)
                 targets.append(example.output)
@@ -149,12 +143,12 @@ class SyntheticDataGenerator:
         return dataset, targets
 
     def generate(
-            self,
-            prompt: str,
-            task: Task,
-            problem_description: Optional[str] = None,
-            num_samples: int = 8,
-            corner_ratio: float = 0.4,
+        self,
+        prompt: str,
+        task: Task,
+        problem_description: Optional[str] = None,
+        num_samples: int = 8,
+        corner_ratio: float = 0.4,
     ) -> Tuple[List[str], List[str], str]:
         """Generates synthetic dataset
         based on given user prompt, optimization task
@@ -188,10 +182,14 @@ class SyntheticDataGenerator:
         """
 
         if not 1 <= num_samples <= 100:
-            raise ValueError(f"num_samples must be between 1 and 100, got {num_samples}.")
+            raise ValueError(
+                f"num_samples must be between 1 and 100, got {num_samples}."
+            )
 
         if not 0.0 <= corner_ratio <= 1.0:
-            raise ValueError(f"corner_ratio must be between 0.0 and 1.0, got {corner_ratio}.")
+            raise ValueError(
+                f"corner_ratio must be between 0.0 and 1.0, got {corner_ratio}."
+            )
 
         if problem_description is None:
             logger.info(
@@ -233,9 +231,7 @@ class SyntheticDataGenerator:
                 num_samples=n,
             )
 
-            examples.extend(
-                list(self._generate(request, schema, "examples"))
-            )
+            examples.extend(list(self._generate(request, schema, "examples")))
 
         dataset, targets = self._convert_dataset(examples)
 

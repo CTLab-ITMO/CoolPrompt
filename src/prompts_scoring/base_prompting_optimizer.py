@@ -62,9 +62,7 @@ def get_labels(labels: list[str], task: str):
 
     labels_list = labels.get(task)
     if labels_list is None:
-        raise ValueError(
-            f"Task {task} is not known or not a classification task"
-        )
+        raise ValueError(f"Task {task} is not known or not a classification task")
     else:
         return labels_list
 
@@ -168,9 +166,7 @@ def run_role_based(
             ROLE_EXTRACTING_TEMPLATE.format(instruction=prompt)
         ).strip()
         return response[
-            (response.rfind("<ROLE>") + len("<ROLE>")) : response.rfind(
-                "</ROLE>"
-            )
+            (response.rfind("<ROLE>") + len("<ROLE>")) : response.rfind("</ROLE>")
         ]
 
     for task, prompt in prompts.items():
@@ -251,9 +247,7 @@ def run_few_shot_chain_of_thoughts(
         return formatted_string
 
     for task, prompt in prompts.items():
-        few_shot_prompt = (
-            prompt + "\n\nExamples:\n" + generate_samples(task, prompt)
-        )
+        few_shot_prompt = prompt + "\n\nExamples:\n" + generate_samples(task, prompt)
         result[task] = few_shot_prompt
 
     return result
@@ -301,14 +295,10 @@ def run_self_discover(
     for task, prompt in prompts.items():
         selected_modules = model.invoke(SELECT_TEMPLATE.format(Task=prompt))
         adapted_modules = model.invoke(
-            ADAPT_TEMPLATE.format(
-                Task=prompt, selected_modules=selected_modules
-            )
+            ADAPT_TEMPLATE.format(Task=prompt, selected_modules=selected_modules)
         )
         implement_prompt = model.invoke(
-            IMPLEMENT_TEMPLATE.format(
-                Task=prompt, adapted_modules=adapted_modules
-            )
+            IMPLEMENT_TEMPLATE.format(Task=prompt, adapted_modules=adapted_modules)
         )
 
         result[task] = implement_prompt

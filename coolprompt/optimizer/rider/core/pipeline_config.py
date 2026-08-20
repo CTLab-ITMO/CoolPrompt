@@ -116,17 +116,40 @@ class RiderPipelineConfigMixin:
     # v4.4: adaptive complexity detection. Multi-phase pipeline is overkill for
     # short classification prompts (every refine layer adds noise → bloat),
     # but essential for long generation prompts (each phase adds structural depth).
-    _SIMPLE_ARCHETYPES = frozenset({
-        'classification', 'data_extraction', 'extractive', 'qa',
-        'yes_no', 'label', 'choice', 'binary',
-    })
-    _COMPLEX_ARCHETYPES = frozenset({
-        'reasoning', 'synthesis', 'generation', 'analysis', 'planning',
-        'writing', 'creative_writing', 'analytical_essay',
-        'technical_explanation', 'code_generation', 'code_review', 'debugging',
-        'summarization', 'translation', 'brainstorming', 'instruction_design',
-        'persuasion', 'creative',
-    })
+    _SIMPLE_ARCHETYPES = frozenset(
+        {
+            "classification",
+            "data_extraction",
+            "extractive",
+            "qa",
+            "yes_no",
+            "label",
+            "choice",
+            "binary",
+        }
+    )
+    _COMPLEX_ARCHETYPES = frozenset(
+        {
+            "reasoning",
+            "synthesis",
+            "generation",
+            "analysis",
+            "planning",
+            "writing",
+            "creative_writing",
+            "analytical_essay",
+            "technical_explanation",
+            "code_generation",
+            "code_review",
+            "debugging",
+            "summarization",
+            "translation",
+            "brainstorming",
+            "instruction_design",
+            "persuasion",
+            "creative",
+        }
+    )
 
     def _complexity_tier(self) -> str:
         """Return 'simple' | 'medium' | 'complex' based on prompt size and archetype.
@@ -136,16 +159,16 @@ class RiderPipelineConfigMixin:
         needs tight polishing, a 15K-char reasoning prompt needs the full 5-phase
         beam.
         """
-        orig_len = getattr(self, '_original_prompt_len', 0) or 0
-        archetype = (self._contract.get('task_archetype') or 'other').lower()
+        orig_len = getattr(self, "_original_prompt_len", 0) or 0
+        archetype = (self._contract.get("task_archetype") or "other").lower()
 
         # Size tier.
         if orig_len < 3000:
-            size_tier = 'simple'
+            size_tier = "simple"
         elif orig_len < 8000:
-            size_tier = 'medium'
+            size_tier = "medium"
         else:
-            size_tier = 'complex'
+            size_tier = "complex"
 
         # Archetype adjustment: simple archetypes downgrade one level, complex bump up.
         if archetype in self._SIMPLE_ARCHETYPES:
@@ -153,16 +176,16 @@ class RiderPipelineConfigMixin:
             # validated on EXTREM1 (9.7K, classification): full 5-phase gave ideal
             # hierarchy ultra > blitz > standard > light.
             if orig_len >= 7000:
-                return 'complex'
-            if size_tier == 'medium':
-                return 'medium'
-            return 'simple'
+                return "complex"
+            if size_tier == "medium":
+                return "medium"
+            return "simple"
         if archetype in self._COMPLEX_ARCHETYPES:
-            if size_tier == 'simple':
-                return 'medium'
-            if size_tier == 'medium':
-                return 'complex'
-            return 'complex'
+            if size_tier == "simple":
+                return "medium"
+            if size_tier == "medium":
+                return "complex"
+            return "complex"
         return size_tier
 
     def _ultra_pipeline_config(self, tier: str) -> Dict[str, Any]:
@@ -170,57 +193,63 @@ class RiderPipelineConfigMixin:
         prevents multi-phase bloat accumulation; all 5 phases fire on complex prompts
         where each phase provides measurable uplift (verified on EXTREM1 9.7K)."""
         return {
-            'simple': {
+            "simple": {
                 # 3 phases: IGNITION + FUSION + SYNTH-EVAL beam. No crystal/validation/red-team.
-                'num_strategies': 3,
-                'tournament_k_phase1': 2,
-                'run_crystallization': False,
-                'run_validation': False,
-                'run_red_team_harden': False,
-                'run_triple_merge': False,
-                'beam_includes_original': True,
+                "num_strategies": 3,
+                "tournament_k_phase1": 2,
+                "run_crystallization": False,
+                "run_validation": False,
+                "run_red_team_harden": False,
+                "run_triple_merge": False,
+                "beam_includes_original": True,
             },
-            'medium': {
+            "medium": {
                 # 4 phases: IGNITION + FUSION + CRYSTAL + SYNTH-EVAL beam. Skip validation & red-team hardening.
-                'num_strategies': 4,
-                'tournament_k_phase1': 3,
-                'run_crystallization': True,
-                'run_validation': False,
-                'run_red_team_harden': False,
-                'run_triple_merge': False,
-                'beam_includes_original': True,
+                "num_strategies": 4,
+                "tournament_k_phase1": 3,
+                "run_crystallization": True,
+                "run_validation": False,
+                "run_red_team_harden": False,
+                "run_triple_merge": False,
+                "beam_includes_original": True,
             },
-            'complex': {
+            "complex": {
                 # Full 5 phases + triple-merge. Only fires on long/reasoning/generation prompts.
-                'num_strategies': 5,
-                'tournament_k_phase1': 3,
-                'run_crystallization': True,
-                'run_validation': True,
-                'run_red_team_harden': True,
-                'run_triple_merge': True,
-                'beam_includes_original': True,
+                "num_strategies": 5,
+                "tournament_k_phase1": 3,
+                "run_crystallization": True,
+                "run_validation": True,
+                "run_red_team_harden": True,
+                "run_triple_merge": True,
+                "beam_includes_original": True,
             },
-        }.get(tier, {
-            'num_strategies': 5, 'tournament_k_phase1': 3,
-            'run_crystallization': True, 'run_validation': True,
-            'run_red_team_harden': True, 'run_triple_merge': True,
-            'beam_includes_original': True,
-        })
+        }.get(
+            tier,
+            {
+                "num_strategies": 5,
+                "tournament_k_phase1": 3,
+                "run_crystallization": True,
+                "run_validation": True,
+                "run_red_team_harden": True,
+                "run_triple_merge": True,
+                "beam_includes_original": True,
+            },
+        )
 
     # -----------------------------------------------------------------------
     # Adaptive bloat budget — single source of truth for all 4 bloat-guard
     # layers (strategy/merge/refine hard caps, synth-eval penalty, beam filter).
     # -----------------------------------------------------------------------
-    _BLOAT_FLOOR = 4000     # absolute minimum budget — short originals (e.g. 27
-                            # chars) must still be able to expand to a full
-                            # ultra-quality prompt with role/steps/criteria/
-                            # constraints/anti-patterns/examples. 4 KB matches
-                            # the typical length of a well-structured ultra
-                            # prompt (~500-700 words) so short-prompt blow-up
-                            # isn't artificially clipped mid-section.
-    _BLOAT_RATIO = 3.0      # multiplicative cap for long originals — a 10 KB
-                            # prompt should not balloon past 30 KB (runs of
-                            # 10-15x were observed pre-guard on merge pipelines).
+    _BLOAT_FLOOR = 4000  # absolute minimum budget — short originals (e.g. 27
+    # chars) must still be able to expand to a full
+    # ultra-quality prompt with role/steps/criteria/
+    # constraints/anti-patterns/examples. 4 KB matches
+    # the typical length of a well-structured ultra
+    # prompt (~500-700 words) so short-prompt blow-up
+    # isn't artificially clipped mid-section.
+    _BLOAT_RATIO = 3.0  # multiplicative cap for long originals — a 10 KB
+    # prompt should not balloon past 30 KB (runs of
+    # 10-15x were observed pre-guard on merge pipelines).
 
     def _bloat_budget(self, orig_len: int) -> int:
         """Maximum allowed length (in characters) for an optimized prompt.
@@ -240,11 +269,16 @@ class RiderPipelineConfigMixin:
         apart, which was the root cause of the "ultra returns original
         verbatim" regression on short English prompts.
         """
-        archetype = str(self._contract.get('task_archetype') or '').lower()
-        if (
-            self._is_underoptimized_prompt(getattr(self, "_original_prompt", ""))
-            and archetype in {'creative_writing', 'analytical_essay', 'persuasion', 'brainstorming', 'other'}
-        ):
+        archetype = str(self._contract.get("task_archetype") or "").lower()
+        if self._is_underoptimized_prompt(
+            getattr(self, "_original_prompt", "")
+        ) and archetype in {
+            "creative_writing",
+            "analytical_essay",
+            "persuasion",
+            "brainstorming",
+            "other",
+        }:
             # Short under-specified prompts need room to become real production
             # instructions. Keep long operational prompts strict; loosen only
             # for raw under-specified creative/general asks.
@@ -254,7 +288,7 @@ class RiderPipelineConfigMixin:
     @classmethod
     def _is_underoptimized_prompt(cls, text: str) -> bool:
         """Detect short/raw prompts where returning original is never impressive."""
-        stripped = (text or '').strip()
+        stripped = (text or "").strip()
         if not stripped:
             return False
         words = re.findall(r"\w+", stripped, re.UNICODE)
@@ -264,13 +298,16 @@ class RiderPipelineConfigMixin:
             return True
         lower = stripped.lower()
         return any(re.match(pat, lower) for pat in cls._GENERIC_PREFIXES)
+
     # Custom XML-like tags used as structural anchors (e.g. <шкала_нарушений>). Allows
     # Cyrillic tag names used in RU prompt engineering (moderation rubrics).
     # Matches opening/closing tag pair: <name>...</name>, name length ≥ 3 to avoid
     # catching generic HTML stubs like <p>.
     _XML_TAG_RE = re.compile(r"<([\w\u0400-\u04FF_]{3,})>[\s\S]*?</\1>")
 
-    def _adaptive_max_tokens(self, *prompts: str, min_tokens: int = 4000, ceiling: int = 16000) -> int:
+    def _adaptive_max_tokens(
+        self, *prompts: str, min_tokens: int = 4000, ceiling: int = 16000
+    ) -> int:
         """v4.3: Cyrillic-aware scaling so full rewrites don't get truncated, but
         also don't balloon 10x — cap at input*1.5 + 1024 headroom.
 

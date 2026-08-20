@@ -3,6 +3,7 @@
 These tests verify that telemetry tracking works correctly end-to-end
 with OpenRouter API calls. Requires OPENROUTER_API_KEY environment variable.
 """
+
 from __future__ import annotations
 
 import os
@@ -60,7 +61,7 @@ class TestTelemetryHyperLight:
         tuner = PromptTuner(
             target_model=chat_model,
             system_model=chat_model,
-            logs_dir=temp_output_dir / "logs"
+            logs_dir=temp_output_dir / "logs",
         )
 
         telemetry_path = str(temp_output_dir / "hyper_light_telemetry")
@@ -127,7 +128,7 @@ class TestTelemetryHyper:
         tuner = PromptTuner(
             target_model=chat_model,
             system_model=chat_model,
-            logs_dir=temp_output_dir / "logs"
+            logs_dir=temp_output_dir / "logs",
         )
 
         telemetry_path = str(temp_output_dir / "hyper_telemetry")
@@ -165,8 +166,9 @@ class TestTelemetryHyper:
         assert report.method_name == "hyper"
         assert report.task_type == "generation"
 
-        assert len(report.trajectory) >= 2, \
-            f"Expected at least 2 iterations, got {len(report.trajectory)}"
+        assert (
+            len(report.trajectory) >= 2
+        ), f"Expected at least 2 iterations, got {len(report.trajectory)}"
 
         for i, snapshot in enumerate(report.trajectory):
             assert snapshot.iteration == i + 1
@@ -175,10 +177,14 @@ class TestTelemetryHyper:
 
         if len(report.trajectory) > 1:
             for i in range(1, len(report.trajectory)):
-                assert report.trajectory[i].cumulative_tokens_in >= \
-                       report.trajectory[i-1].cumulative_tokens_in
-                assert report.trajectory[i].cumulative_total_cost >= \
-                       report.trajectory[i-1].cumulative_total_cost
+                assert (
+                    report.trajectory[i].cumulative_tokens_in
+                    >= report.trajectory[i - 1].cumulative_tokens_in
+                )
+                assert (
+                    report.trajectory[i].cumulative_total_cost
+                    >= report.trajectory[i - 1].cumulative_total_cost
+                )
 
         json_path = Path(f"{telemetry_path}.json")
         assert json_path.exists()
@@ -197,7 +203,7 @@ class TestTelemetryCompress:
         tuner = PromptTuner(
             target_model=chat_model,
             system_model=chat_model,
-            logs_dir=temp_output_dir / "logs"
+            logs_dir=temp_output_dir / "logs",
         )
 
         telemetry_path = str(temp_output_dir / "compress_telemetry")
@@ -242,7 +248,7 @@ class TestTelemetryReflective:
         tuner = PromptTuner(
             target_model=chat_model,
             system_model=chat_model,
-            logs_dir=temp_output_dir / "logs"
+            logs_dir=temp_output_dir / "logs",
         )
 
         telemetry_path = str(temp_output_dir / "reflective_telemetry")
@@ -282,6 +288,7 @@ class TestTelemetryReflective:
         assert csv_path.exists()
 
         import csv
+
         with open(csv_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             rows = list(reader)
@@ -300,7 +307,7 @@ class TestTelemetryDistill:
         tuner = PromptTuner(
             target_model=chat_model,
             system_model=chat_model,
-            logs_dir=temp_output_dir / "logs"
+            logs_dir=temp_output_dir / "logs",
         )
 
         telemetry_path = str(temp_output_dir / "distill_telemetry")
@@ -313,7 +320,11 @@ class TestTelemetryDistill:
                 "Artificial intelligence is transforming many industries.",
                 "Climate change poses significant challenges to our planet.",
             ],
-            target=["Fox jumps over dog", "AI transforms industries", "Climate change challenges"],
+            target=[
+                "Fox jumps over dog",
+                "AI transforms industries",
+                "Climate change challenges",
+            ],
             method="distill",
             metric="bertscore",
             problem_description="Text summarization",
@@ -342,7 +353,7 @@ class TestTelemetryReGPS:
         tuner = PromptTuner(
             target_model=chat_model,
             system_model=chat_model,
-            logs_dir=temp_output_dir / "logs"
+            logs_dir=temp_output_dir / "logs",
         )
 
         telemetry_path = str(temp_output_dir / "regps_telemetry")

@@ -105,7 +105,9 @@ def test_filter_recommendations_empty():
     assert fb.filter_recommendations([]) == []
 
 
-@patch.object(FeedbackModule, "_filter_section", return_value=[Recommendation("general", "x", 1)])
+@patch.object(
+    FeedbackModule, "_filter_section", return_value=[Recommendation("general", "x", 1)]
+)
 def test_filter_routes_by_section(_mock_filter):
     fb = FeedbackModule(MagicMock())
     out = fb.filter_recommendations(

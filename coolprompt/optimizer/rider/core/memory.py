@@ -41,11 +41,14 @@ class RiderMemoryMixin:
     def _load_lesson_cache(cls) -> Dict[str, List[str]]:
         try:
             if os.path.exists(cls._LESSON_CACHE_PATH):
-                with open(cls._LESSON_CACHE_PATH, 'r', encoding='utf-8') as f:
+                with open(cls._LESSON_CACHE_PATH, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 if isinstance(data, dict):
-                    return {k: [str(x) for x in v][:cls._LESSON_CACHE_MAX_PER_KEY]
-                            for k, v in data.items() if isinstance(v, list)}
+                    return {
+                        k: [str(x) for x in v][: cls._LESSON_CACHE_MAX_PER_KEY]
+                        for k, v in data.items()
+                        if isinstance(v, list)
+                    }
         except Exception:
             pass
         return {}
@@ -56,22 +59,22 @@ class RiderMemoryMixin:
         except Exception:
             pass
         try:
-            with open(self._LESSON_CACHE_PATH, 'w', encoding='utf-8') as f:
+            with open(self._LESSON_CACHE_PATH, "w", encoding="utf-8") as f:
                 json.dump(self._lesson_cache, f, ensure_ascii=False, indent=2)
         except Exception:
             pass
 
     def _cache_key(self) -> str:
-        archetype = self._contract.get('task_archetype', 'other') or 'other'
-        domain = self._contract.get('domain', 'general') or 'general'
+        archetype = self._contract.get("task_archetype", "other") or "other"
+        domain = self._contract.get("domain", "general") or "general"
         # Normalize to lowercase, first word of domain only (to merge related domains).
-        d = str(domain).lower().split()[0] if str(domain).strip() else 'general'
+        d = str(domain).lower().split()[0] if str(domain).strip() else "general"
         return f"{archetype}::{d}"
 
     def _prefetch_cached_lessons(self) -> int:
         """Inject cached lessons from prior runs for the same archetype+domain.
         Standard/Ultra use this; light/blitz don't (by design)."""
-        if self._mode not in ('standard', 'ultra'):
+        if self._mode not in ("standard", "ultra"):
             return 0
         key = self._cache_key()
         cached = self._lesson_cache.get(key) or []
@@ -89,7 +92,7 @@ class RiderMemoryMixin:
 
     def _persist_new_lessons(self):
         """After run, merge this run's lessons into the disk cache (standard/ultra only)."""
-        if self._mode not in ('standard', 'ultra'):
+        if self._mode not in ("standard", "ultra"):
             return
         if not self._lessons:
             return
@@ -102,52 +105,124 @@ class RiderMemoryMixin:
                 existing.append(lsn)
                 existing_set.add(sig)
         # Keep only the most recent N per key.
-        self._lesson_cache[key] = existing[-self._LESSON_CACHE_MAX_PER_KEY:]
+        self._lesson_cache[key] = existing[-self._LESSON_CACHE_MAX_PER_KEY :]
         self._save_lesson_cache()
 
     # ══════════════════════════════════════════════════════════════════════
     # Contract extraction + adaptive routing
     # ══════════════════════════════════════════════════════════════════════
 
-    _VALID_STRATEGIES = ('structural', 'analytical', 'creative', 'depth', 'techniques')
+    _VALID_STRATEGIES = ("structural", "analytical", "creative", "depth", "techniques")
 
     _DEFAULT_CONTRACT: Dict[str, Any] = {
-        'task_archetype': 'other',
-        'language': 'unknown',
-        'domain': 'general',
-        'audience': 'general audience',
-        'output_format_anchor': 'free-form',
-        'must_preserve': [],
-        'failure_modes': [],
-        'recommended_strategies': ['structural', 'analytical', 'creative', 'depth', 'techniques'],
-        'avoid_strategies': [],
-        'domain_rules': [],
-        'quality_dimensions': [],
+        "task_archetype": "other",
+        "language": "unknown",
+        "domain": "general",
+        "audience": "general audience",
+        "output_format_anchor": "free-form",
+        "must_preserve": [],
+        "failure_modes": [],
+        "recommended_strategies": [
+            "structural",
+            "analytical",
+            "creative",
+            "depth",
+            "techniques",
+        ],
+        "avoid_strategies": [],
+        "domain_rules": [],
+        "quality_dimensions": [],
     }
 
     _MODERATION_HINTS = (
-        'moderation', 'censor', 'classification', 'json array', 'risk', 'level',
-        'модерац', 'цензор', 'классифик', 'запрещ', 'нарушен', 'уровень',
-        'экстремизм', 'терроризм', 'наркотик', 'пропаганд', 'дискредитац',
-        'госбезопас', 'ненавист', 'вражд', 'нацизм', 'порнограф',
-        'модерац', 'цензор', 'классифик', 'запрещ', 'нарушен', 'уровень',
-        'экстремизм', 'терроризм', 'наркотик', 'пропаганд', 'дискредитац',
-        'госбезопас', 'ненавист', 'вражд', 'нацизм', 'порнограф',
+        "moderation",
+        "censor",
+        "classification",
+        "json array",
+        "risk",
+        "level",
+        "модерац",
+        "цензор",
+        "классифик",
+        "запрещ",
+        "нарушен",
+        "уровень",
+        "экстремизм",
+        "терроризм",
+        "наркотик",
+        "пропаганд",
+        "дискредитац",
+        "госбезопас",
+        "ненавист",
+        "вражд",
+        "нацизм",
+        "порнограф",
+        "модерац",
+        "цензор",
+        "классифик",
+        "запрещ",
+        "нарушен",
+        "уровень",
+        "экстремизм",
+        "терроризм",
+        "наркотик",
+        "пропаганд",
+        "дискредитац",
+        "госбезопас",
+        "ненавист",
+        "вражд",
+        "нацизм",
+        "порнограф",
     )
     _TRANSLATION_HINTS = (
-        'translation', 'translator', 'translate', '<translation>', '<dictionary>',
-        'перевод', 'переводчик', '<перевод>', 'словар',
-        'оригинал', 'русский текст', 'английского на русский',
-        'перевод', 'переводчик', '<перевод>', '<dictionary>', 'словар',
-        'оригинал', 'русский текст', 'английского на русский',
+        "translation",
+        "translator",
+        "translate",
+        "<translation>",
+        "<dictionary>",
+        "перевод",
+        "переводчик",
+        "<перевод>",
+        "словар",
+        "оригинал",
+        "русский текст",
+        "английского на русский",
+        "перевод",
+        "переводчик",
+        "<перевод>",
+        "<dictionary>",
+        "словар",
+        "оригинал",
+        "русский текст",
+        "английского на русский",
     )
     _GEO_RISK_HINTS = (
-        'россия', 'росси', 'украина', 'украин', 'рф', 'российск', 'украинск', 'вооруженных сил',
-        'вооружённых сил', 'дискредитац', 'антигосударствен', 'госбезопас',
-        'сво', 'армии',
-        'россия', 'украина', 'рф', 'российск', 'украинск', 'вооруженных сил',
-        'вооружённых сил', 'дискредитац', 'антигосударствен', 'госбезопас',
-        'сво', 'армии',
+        "россия",
+        "росси",
+        "украина",
+        "украин",
+        "рф",
+        "российск",
+        "украинск",
+        "вооруженных сил",
+        "вооружённых сил",
+        "дискредитац",
+        "антигосударствен",
+        "госбезопас",
+        "сво",
+        "армии",
+        "россия",
+        "украина",
+        "рф",
+        "российск",
+        "украинск",
+        "вооруженных сил",
+        "вооружённых сил",
+        "дискредитац",
+        "антигосударствен",
+        "госбезопас",
+        "сво",
+        "армии",
     )
 
     def _forge_block(self, strategy: str) -> str:
@@ -156,7 +231,7 @@ class RiderMemoryMixin:
             return ""
         bullets = []
         for i, snippet in enumerate(top[:2], 1):
-            short = snippet[:180].replace('\n', ' ')
+            short = snippet[:180].replace("\n", " ")
             if len(snippet) > 180:
                 short += "..."
             bullets.append(f"  [prev best {i}] {short}")

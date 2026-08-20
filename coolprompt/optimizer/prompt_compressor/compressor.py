@@ -17,9 +17,7 @@ from coolprompt.utils.prompt_templates.compress_templates import (
 class CompressedPromptResponse(BaseModel):
     """Structure for LLM answer."""
 
-    reasoning: str = Field(
-        description="Анализ задачи и вопроса в исходном промпте"
-    )
+    reasoning: str = Field(description="Анализ задачи и вопроса в исходном промпте")
     prompt_input_context: str = Field(
         description="Выделенный входной контекст задачи в одном предложении"
     )

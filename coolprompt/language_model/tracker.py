@@ -116,9 +116,7 @@ class TrackedLLMWrapper(BaseLanguageModel):
         """
         start_time = time.time()
         with get_openai_callback() as cb:
-            result = self.model.invoke(
-                input, config=config, stop=stop, **kwargs
-            )
+            result = self.model.invoke(input, config=config, stop=stop, **kwargs)
         duration_sec = time.time() - start_time
         self.tracker._update_stats(
             cb,
@@ -171,7 +169,9 @@ class TrackedLLMWrapper(BaseLanguageModel):
             NotImplementedError: If model does not support structured output.
         """
         if hasattr(self.model, "with_structured_output"):
-            return model_tracker.wrap_model(self.model.with_structured_output(schema, **kwargs))
+            return model_tracker.wrap_model(
+                self.model.with_structured_output(schema, **kwargs)
+            )
         raise NotImplementedError(
             f"Model {type(self.model)} does not support structured output"
         )

@@ -62,10 +62,16 @@ class PromptTuner:
         """
         setup_logging(logs_dir)
         self._target_model = target_model or DefaultLLM.init()
-        if isinstance(self._target_model, ChatOpenAI) and not isinstance(self._target_model, TrackedLLMWrapper):
+        if isinstance(self._target_model, ChatOpenAI) and not isinstance(
+            self._target_model, TrackedLLMWrapper
+        ):
             self._target_model = model_tracker.wrap_model(self._target_model)
         self._system_model = system_model or self._target_model
-        if system_model is not None and isinstance(self._system_model, ChatOpenAI) and not isinstance(self._system_model, TrackedLLMWrapper):
+        if (
+            system_model is not None
+            and isinstance(self._system_model, ChatOpenAI)
+            and not isinstance(self._system_model, TrackedLLMWrapper)
+        ):
             self._system_model = model_tracker.wrap_model(self._system_model)
 
         self.init_metric = None
@@ -272,11 +278,7 @@ class PromptTuner:
         base_metric = validate_and_create_metric(
             task_value,
             metric,
-            model=(
-                self._system_model
-                if metric in ("llm_as_judge", "geval")
-                else None
-            ),
+            model=(self._system_model if metric in ("llm_as_judge", "geval") else None),
             llm_as_judge_criteria=llm_as_judge_criteria,
             llm_as_judge_custom_templates=llm_as_judge_custom_templates,
             llm_as_judge_metric_ceil=llm_as_judge_metric_ceil,
@@ -286,7 +288,6 @@ class PromptTuner:
             geval_evaluation_params=geval_evaluation_params,
             geval_strict_mode=geval_strict_mode,
         )
-        metric_name = base_metric._get_name()
         evaluator = Evaluator(
             self._target_model, task_value, base_metric, batch_size=batch_size
         )
@@ -323,8 +324,7 @@ class PromptTuner:
                 )
                 indices = sample(range(len(dataset_split[0])), k)
                 examples = [
-                    (dataset_split[0][ind], dataset_split[2][ind])
-                    for ind in indices
+                    (dataset_split[0][ind], dataset_split[2][ind]) for ind in indices
                 ]
                 problem_description = generator._generate_problem_description(
                     prompt=start_prompt, examples=examples
@@ -353,7 +353,9 @@ class PromptTuner:
 
         telemetry_collector = None
         if enable_telemetry:
-            method_name = method_impl.name if hasattr(method_impl, "name") else str(method_impl)
+            method_name = (
+                method_impl.name if hasattr(method_impl, "name") else str(method_impl)
+            )
             telemetry_collector = TelemetryCollector(
                 method_name=method_name,
                 task_type=task_value.value,
@@ -361,7 +363,9 @@ class PromptTuner:
             )
             kwargs["telemetry_callback"] = telemetry_collector.on_iteration_end
         final_prompt = method_impl.optimize(
-            model=self._system_model if system_model_as_optimizer else self._target_model,
+            model=(
+                self._system_model if system_model_as_optimizer else self._target_model
+            ),
             initial_prompt=start_prompt,
             dataset_split=dataset_split,
             evaluator=evaluator,
@@ -413,9 +417,11 @@ class PromptTuner:
                     telemetry_path = f"./logs/telemetry_{timestamp}"
 
                 os.makedirs(
-                    os.path.dirname(telemetry_path)
-                    if os.path.dirname(telemetry_path)
-                    else ".",
+                    (
+                        os.path.dirname(telemetry_path)
+                        if os.path.dirname(telemetry_path)
+                        else "."
+                    ),
                     exist_ok=True,
                 )
 
@@ -490,36 +496,38 @@ class PromptTuner:
                 "No prompt provided and self.final_prompt is not set. "
                 "Either call .run() first or pass prompt explicitly."
             )
-        
+
         if task is None:
             task_detector = TaskDetector(self._system_model)
             task = task_detector.generate(use_prompt)
-        
+
         task_str = task.lower()
         if task_str not in ("classification", "generation"):
             raise ValueError("task must be 'classification' or 'generation'.")
-        
-        task_enum = Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
-        
+
+        task_enum = (
+            Task.CLASSIFICATION if task_str == "classification" else Task.GENERATION
+        )
+
         if metric is None:
             metric = "accuracy" if task_enum == Task.CLASSIFICATION else "meteor"
-        
+
         metric_impl = validate_and_create_metric(
             task_enum,
             metric,
             bertscore_model_type=bertscore_model_type,
         )
-        
+
         evaluator = Evaluator(
             model=self._target_model,
             task=task_enum,
             metric=metric_impl,
             batch_size=batch_size,
         )
-        
+
         dataset_list = list(dataset)
         use_targets = list(targets) if targets is not None else [""] * len(dataset_list)
-        
+
         result = evaluator.evaluate(
             prompt=use_prompt,
             dataset=dataset_list,
@@ -527,11 +535,13 @@ class PromptTuner:
             template=None,
             return_detailed=True,
         )
-        
-        outputs = result.raw_outputs if return_raw_outputs else [
-            metric_impl.parse_output(a) for a in result.raw_outputs
-        ]
-        
+
+        outputs = (
+            result.raw_outputs
+            if return_raw_outputs
+            else [metric_impl.parse_output(a) for a in result.raw_outputs]
+        )
+
         if targets is not None:
             return outputs, result.aggregate_score
         return outputs

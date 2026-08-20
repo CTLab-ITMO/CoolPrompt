@@ -42,8 +42,10 @@ class RiderSyntheticEvalMixin:
         meta = self._BILINGUAL_ADVERSARIAL_PROMPT.format(prompt=prompt, lang=lang)
         try:
             resp = self._generate(
-                prompt=meta, role="critic",
-                temperature=0.2, max_tokens=400,
+                prompt=meta,
+                role="critic",
+                temperature=0.2,
+                max_tokens=400,
             )
             return resp.strip() if resp and resp.strip() else None
         except Exception:
@@ -55,41 +57,65 @@ class RiderSyntheticEvalMixin:
 
     def _fallback_synthetic_tests(self, count: int = 3) -> List[str]:
         """Deterministic NEXUS-lite cases when the planner model does not return JSON."""
-        archetype = str(self._contract.get('task_archetype') or 'other').lower()
-        output_format = self._contract.get('output_format_anchor') or 'requested output'
-        domain = self._contract.get('domain') or 'general domain'
-        rules = "; ".join(str(x) for x in (self._contract.get('domain_rules') or [])[:3])
+        archetype = str(self._contract.get("task_archetype") or "other").lower()
+        output_format = self._contract.get("output_format_anchor") or "requested output"
+        domain = self._contract.get("domain") or "general domain"
+        rules = "; ".join(
+            str(x) for x in (self._contract.get("domain_rules") or [])[:3]
+        )
         rules = rules or "follow the source task contract"
         contract_text = " ".join(
             str(x)
             for x in (
-                list(self._contract.get('must_preserve') or [])
-                + list(self._contract.get('domain_rules') or [])
-                + list(self._contract.get('failure_modes') or [])
-                + list(self._contract.get('quality_dimensions') or [])
+                list(self._contract.get("must_preserve") or [])
+                + list(self._contract.get("domain_rules") or [])
+                + list(self._contract.get("failure_modes") or [])
+                + list(self._contract.get("quality_dimensions") or [])
             )
         ).lower()
-        has_geo_level_rule = any(term in contract_text for term in (
-            'russia', 'ukraine', 'russian-side', 'россия', 'украина', 'геополит',
-        ))
-        has_exclusive_output_rule = any(term in contract_text for term in (
-            'exclusive', 'only allowed output', 'output only', 'json only',
-            'единственный', 'только json', 'schema drift',
-        ))
+        has_geo_level_rule = any(
+            term in contract_text
+            for term in (
+                "russia",
+                "ukraine",
+                "russian-side",
+                "россия",
+                "украина",
+                "геополит",
+            )
+        )
+        has_exclusive_output_rule = any(
+            term in contract_text
+            for term in (
+                "exclusive",
+                "only allowed output",
+                "output only",
+                "json only",
+                "единственный",
+                "только json",
+                "schema drift",
+            )
+        )
 
-        if archetype in {'creative_writing', 'analytical_essay', 'persuasion', 'brainstorming', 'other'}:
+        if archetype in {
+            "creative_writing",
+            "analytical_essay",
+            "persuasion",
+            "brainstorming",
+            "other",
+        }:
             tests = [
                 f"Input: execute the prompt for a skeptical educated reader in {domain}. Expected invariant checks: distinctive angle, concrete details, clear structure, anti-generic wording, output format = {output_format}.",
                 "Input: execute the prompt while avoiding cliches and generic school-essay framing. Expected invariant checks: named thesis, specific evidence/details, no padded meta-commentary.",
                 "Input: execute the prompt for a publication-quality result. Expected invariant checks: coherent arc, vivid examples, quality bar satisfied, no irrelevant constraints.",
             ]
-        elif archetype in {'debugging', 'code_generation', 'code_review'}:
+        elif archetype in {"debugging", "code_generation", "code_review"}:
             tests = [
                 f"Input: solve the original code task exactly. Expected invariant checks: preserve identifiers/API, minimal patch, tests included, runtime reasoning correct, output format = {output_format}.",
                 "Input: handle the edge case that caused the reported failure. Expected invariant checks: regression test covers the failure and no unrelated refactor is introduced.",
                 "Input: explain verification briefly. Expected invariant checks: concrete commands or test cases, no invented dependencies, no renamed fields.",
             ]
-        elif archetype == 'classification':
+        elif archetype == "classification":
             tests = [
                 f"Input: benign placeholder quote with no violation. Expected invariant checks: valid JSON, exact fields, Level 0 stays Level 0, rules: {rules}.",
                 f"Input: borderline placeholder quote with ambiguous risk marker. Expected invariant checks: quote-grounded category decision, no invented law/category, schema = {output_format}.",
@@ -105,13 +131,13 @@ class RiderSyntheticEvalMixin:
                     0,
                     f"Input: any valid classification case. Expected invariant checks: the only output is {output_format}; no explanations, helper prose, markdown fences, or alternate schemas.",
                 )
-        elif archetype == 'translation':
+        elif archetype == "translation":
             tests = [
                 f"Input: short literary paragraph plus glossary entry. Expected invariant checks: glossary compliance, authorial rhythm, no extra commentary, output format = {output_format}.",
                 "Input: intentionally rough source sentence with repetition and odd syntax. Expected invariant checks: preserve author texture rather than smoothing into generic Russian.",
                 "Input: source paragraph with names/placeholders/tags. Expected invariant checks: placeholders and XML tags preserved exactly.",
             ]
-        elif archetype == 'data_extraction':
+        elif archetype == "data_extraction":
             tests = [
                 f"Input: noisy OCR/table-of-contents snippet. Expected invariant checks: verbatim extraction, no paraphrase, no extra commentary, output format = {output_format}.",
                 "Input: partially unreadable line with page numbers and tags. Expected invariant checks: preserve unreadable markers and structure exactly.",
@@ -125,19 +151,29 @@ class RiderSyntheticEvalMixin:
             ]
         return tests[:count]
 
-    def _generate_synthetic_tests(self, candidate_prompt: str, count: int = 3) -> List[str]:
+    def _generate_synthetic_tests(
+        self, candidate_prompt: str, count: int = 3
+    ) -> List[str]:
         """v4: Generate safe synthetic test inputs via Sonnet. Returns up to `count` inputs."""
         count = self._hyper_int("num_samples", count, min_value=1, max_value=20)
         if not self._contract:
             return []
         meta = self._SYNTHETIC_TEST_PROMPT.format(
-            archetype=self._contract.get('task_archetype', 'other'),
-            domain=self._contract.get('domain', 'general'),
-            audience=self._contract.get('audience', 'general'),
-            output_format=self._contract.get('output_format_anchor', 'free-form'),
-            domain_rules="\n".join(f"- {x}" for x in (self._contract.get('domain_rules') or ['none'])),
-            quality_dimensions="\n".join(f"- {x}" for x in (self._contract.get('quality_dimensions') or ['general task fulfillment'])),
-            prompt=(candidate_prompt or '')[:2500],
+            archetype=self._contract.get("task_archetype", "other"),
+            domain=self._contract.get("domain", "general"),
+            audience=self._contract.get("audience", "general"),
+            output_format=self._contract.get("output_format_anchor", "free-form"),
+            domain_rules="\n".join(
+                f"- {x}" for x in (self._contract.get("domain_rules") or ["none"])
+            ),
+            quality_dimensions="\n".join(
+                f"- {x}"
+                for x in (
+                    self._contract.get("quality_dimensions")
+                    or ["general task fulfillment"]
+                )
+            ),
+            prompt=(candidate_prompt or "")[:2500],
             count=count,
         )
         obj = self._generate_structured(
@@ -176,18 +212,26 @@ class RiderSyntheticEvalMixin:
             # attention asymmetry (Google arxiv.org/pdf/2512.14982, +67% on non-reasoning).
             exec_prompt = f"{candidate}\n\n{candidate}\n\nInput:\n{test_input}"
             response = self._generate(
-                prompt=exec_prompt, role="worker", temperature=0.3,
-                max_tokens=self._adaptive_max_tokens(test_input, min_tokens=500, ceiling=3000),
+                prompt=exec_prompt,
+                role="worker",
+                temperature=0.3,
+                max_tokens=self._adaptive_max_tokens(
+                    test_input, min_tokens=500, ceiling=3000
+                ),
             )
             meta = self._EVAL_RESPONSE_PROMPT.format(
-                archetype=self._contract.get('task_archetype', 'other'),
-                output_format=self._contract.get('output_format_anchor', 'free-form'),
+                archetype=self._contract.get("task_archetype", "other"),
+                output_format=self._contract.get("output_format_anchor", "free-form"),
                 quality_dimensions="\n".join(
-                    f"- {x}" for x in (self._contract.get('quality_dimensions') or ['general task fulfillment'])
+                    f"- {x}"
+                    for x in (
+                        self._contract.get("quality_dimensions")
+                        or ["general task fulfillment"]
+                    )
                 ),
-                candidate=(candidate or '')[:1500],
-                test_input=(test_input or '')[:800],
-                response=(response or '')[:2000],
+                candidate=(candidate or "")[:1500],
+                test_input=(test_input or "")[:800],
+                response=(response or "")[:2000],
             )
             score_obj = self._generate_structured(
                 prompt=meta,
@@ -213,7 +257,10 @@ class RiderSyntheticEvalMixin:
         # worker model often infers missing structure by itself. For auto-prompting
         # fitness, the prompt must carry the contract explicitly.
         original_prompt = getattr(self, "_original_prompt", "") or ""
-        if candidate.strip() == original_prompt.strip() and self._is_underoptimized_prompt(original_prompt):
+        if (
+            candidate.strip() == original_prompt.strip()
+            and self._is_underoptimized_prompt(original_prompt)
+        ):
             base = min(base, 0.45)
 
         # Bloat guard: penalize over-engineered monsters relative to _bloat_budget().
@@ -249,6 +296,7 @@ class RiderSyntheticEvalMixin:
             return dataset[:size], targets[:size]
         seed = context.get("seed")
         import random
+
         indices = sorted(random.Random(seed).sample(range(size), limit_int))
         return [dataset[i] for i in indices], [targets[i] for i in indices]
 
@@ -289,15 +337,17 @@ class RiderSyntheticEvalMixin:
                 continue
             scores[candidate] = self._normalize_external_score(raw_score)
         if scores:
-            self._external_rankings.append({
-                "num_examples": len(dataset),
-                "scores": [
-                    {"name": cand[0], "score": score}
-                    for cand, score in sorted(
-                        scores.items(), key=lambda item: -item[1]
-                    )
-                ],
-            })
+            self._external_rankings.append(
+                {
+                    "num_examples": len(dataset),
+                    "scores": [
+                        {"name": cand[0], "score": score}
+                        for cand, score in sorted(
+                            scores.items(), key=lambda item: -item[1]
+                        )
+                    ],
+                }
+            )
         return scores
 
     def _rank_by_synthetic_eval(
@@ -317,10 +367,12 @@ class RiderSyntheticEvalMixin:
             ranked = [f.result() for f in futures]
 
         ranked.sort(key=lambda x: -x[1])
-        self._synthetic_rankings.append({
-            'tests': list(tests),
-            'scores': [{'name': cand[0], 'score': score} for cand, score in ranked],
-        })
+        self._synthetic_rankings.append(
+            {
+                "tests": list(tests),
+                "scores": [{"name": cand[0], "score": score} for cand, score in ranked],
+            }
+        )
 
         external_scores = self._rank_by_external_eval(candidates)
         if not external_scores:
@@ -352,20 +404,35 @@ class RiderSyntheticEvalMixin:
 
     def _original_margin_for_beam(self) -> float:
         """How much a safe non-original may trail original and still be worth using."""
-        archetype = str(self._contract.get('task_archetype') or '').lower()
-        dims = {str(x).lower() for x in (self._contract.get('quality_dimensions') or [])}
-        if archetype == 'classification' or {'schema_compliance', 'level_calibration'} & dims:
+        archetype = str(self._contract.get("task_archetype") or "").lower()
+        dims = {
+            str(x).lower() for x in (self._contract.get("quality_dimensions") or [])
+        }
+        if (
+            archetype == "classification"
+            or {"schema_compliance", "level_calibration"} & dims
+        ):
             return 0.03
-        if archetype == 'translation':
+        if archetype == "translation":
             return 0.08
-        if archetype == 'data_extraction' or {'verbatim_fidelity', 'markup_compliance'} & dims:
+        if (
+            archetype == "data_extraction"
+            or {"verbatim_fidelity", "markup_compliance"} & dims
+        ):
             return 0.05
-        if archetype in {'creative_writing', 'analytical_essay', 'persuasion', 'brainstorming'}:
+        if archetype in {
+            "creative_writing",
+            "analytical_essay",
+            "persuasion",
+            "brainstorming",
+        }:
             return 0.15
         return 0.12
 
     def _safe_non_original_candidates(
-        self, ranked: List[Tuple[Tuple[str, str], float]], original: str,
+        self,
+        ranked: List[Tuple[Tuple[str, str], float]],
+        original: str,
     ) -> List[Tuple[Tuple[str, str], float]]:
         """Filter beam candidates that can be selected without final safety rollback."""
         budget = self._bloat_budget(max(1, len(original)))
@@ -387,9 +454,9 @@ class RiderSyntheticEvalMixin:
     def _red_team_adversarial(self, prompt: str) -> Optional[Dict[str, Any]]:
         """v4 Ultra-only: adversary finds edge cases + fix directives."""
         meta = self._RED_TEAM_PROMPT.format(
-            prompt=(prompt or '')[:3000],
-            archetype=self._contract.get('task_archetype', 'other'),
-            failure_modes=self._contract.get('failure_modes', []),
+            prompt=(prompt or "")[:3000],
+            archetype=self._contract.get("task_archetype", "other"),
+            failure_modes=self._contract.get("failure_modes", []),
         )
         obj = self._generate_structured(
             prompt=meta,

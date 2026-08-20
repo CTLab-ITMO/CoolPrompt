@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock, patch
 
 import numpy as np
-import pytest
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.evaluator.evaluator import EvalResultDetailed
@@ -208,10 +207,7 @@ def test_hyper_method_passes_hyper_meta_info(mock_cls):
         hyper_meta_info=meta,
         bertscore_model_type="custom/bert",
     )
-    assert (
-        mock_cls.call_args.kwargs["bertscore_model_type"]
-        == "custom/bert"
-    )
+    assert mock_cls.call_args.kwargs["bertscore_model_type"] == "custom/bert"
     kw = mock_inst.optimize.call_args.kwargs
     assert kw["meta_info"]["problem_description"] == "pd"
     assert kw["meta_info"]["x"] == 1

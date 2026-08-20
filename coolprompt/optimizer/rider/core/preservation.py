@@ -40,31 +40,33 @@ class RiderPreservationMixin:
     def _extract_required_artifacts(self, original: str) -> Dict[str, List[str]]:
         """Detect artifacts in the original that should be preserved."""
         artifacts: Dict[str, List[str]] = {}
-        preserve_items = [str(x) for x in (self._contract.get('must_preserve') or [])]
+        preserve_items = [str(x) for x in (self._contract.get("must_preserve") or [])]
         flags = {x.lower() for x in preserve_items}
         # Auto-detect common artifacts regardless of contract flags.
         code_fences = self._CODE_FENCE_RE.findall(original)
         if code_fences:
-            artifacts['code_blocks'] = code_fences
+            artifacts["code_blocks"] = code_fences
         inline_code = self._INLINE_CODE_RE.findall(original)
         if inline_code:
-            artifacts['inline_code'] = inline_code
+            artifacts["inline_code"] = inline_code
         placeholders = self._PLACEHOLDER_RE.findall(original)
         if placeholders:
-            artifacts['placeholders'] = placeholders
+            artifacts["placeholders"] = placeholders
         urls = self._URL_RE.findall(original)
         if urls:
-            artifacts['urls'] = urls
+            artifacts["urls"] = urls
         # Markdown tables — any markdown/table mention in contract or auto-detect.
-        if any('table' in f or 'markdown' in f for f in flags) or self._MD_TABLE_RE.search(original):
+        if any(
+            "table" in f or "markdown" in f for f in flags
+        ) or self._MD_TABLE_RE.search(original):
             lines = [ln for ln in original.splitlines() if self._MD_TABLE_RE.match(ln)]
             if lines:
-                artifacts['markdown_table_lines'] = lines
+                artifacts["markdown_table_lines"] = lines
         # Custom XML-like tags (e.g. <шкала_нарушений>, <scale>, etc.) — common anchor
         # in moderation / rubric prompts.
         xml_matches = [m.group(0) for m in self._XML_TAG_RE.finditer(original)]
         if xml_matches:
-            artifacts['xml_anchors'] = xml_matches
+            artifacts["xml_anchors"] = xml_matches
             # Also require the opening and closing tag names to reappear.
             tag_names: List[str] = []
             for m in self._XML_TAG_RE.finditer(original):
@@ -73,13 +75,13 @@ class RiderPreservationMixin:
                     tag_names.append(f"<{name}>")
                     tag_names.append(f"</{name}>")
             if tag_names:
-                artifacts['xml_tag_names'] = tag_names
+                artifacts["xml_tag_names"] = tag_names
         json_fields: List[str] = []
         for field in self._JSON_FIELD_RE.findall(original):
             if field not in json_fields:
                 json_fields.append(field)
         if json_fields:
-            artifacts['json_field_names'] = json_fields[:80]
+            artifacts["json_field_names"] = json_fields[:80]
         category_labels: List[str] = []
         for pat in (
             r'"name"\s*:\s*"([^"]+)"',
@@ -92,82 +94,112 @@ class RiderPreservationMixin:
                 if 2 < len(value) <= 80 and value not in category_labels:
                     category_labels.append(value)
         if category_labels:
-            artifacts['category_labels'] = category_labels[:80]
+            artifacts["category_labels"] = category_labels[:80]
         level_values = []
-        for m in re.finditer(r'\b(?:level|уровень)[ \t]*(?:=|:|-)?[ \t]*([0-3])\b', original, re.IGNORECASE):
+        for m in re.finditer(
+            r"\b(?:level|уровень)[ \t]*(?:=|:|-)?[ \t]*([0-3])\b",
+            original,
+            re.IGNORECASE,
+        ):
             value = m.group(1)
             if value not in level_values:
                 level_values.append(value)
         if level_values:
-            artifacts['level_values'] = level_values
+            artifacts["level_values"] = level_values
         # Director-feedback invariants from real EKSMO moderation prompts:
         # the optimizer may improve wording, but it must not soften the machine
         # output contract, priority order, level caps, or exception semantics.
-        policy_lines = [ln.strip() for ln in original.splitlines() if 4 <= len(ln.strip()) <= 500]
+        policy_lines = [
+            ln.strip() for ln in original.splitlines() if 4 <= len(ln.strip()) <= 500
+        ]
         exclusive_output_lines: List[str] = []
         level_policy_lines: List[str] = []
         priority_policy_lines: List[str] = []
         for line in policy_lines:
             low = line.lower()
-            if any(term in low for term in (
-                'единственный допустимый вывод',
-                'единственный вывод',
-                'только json',
-                'строго json',
-                'без пояснений',
-                'без объяснений',
-                'only allowed output',
-                'output only',
-                'json only',
-                'no prose',
-                'no explanations',
-            )):
+            if any(
+                term in low
+                for term in (
+                    "единственный допустимый вывод",
+                    "единственный вывод",
+                    "только json",
+                    "строго json",
+                    "без пояснений",
+                    "без объяснений",
+                    "only allowed output",
+                    "output only",
+                    "json only",
+                    "no prose",
+                    "no explanations",
+                )
+            ):
                 if line not in exclusive_output_lines:
                     exclusive_output_lines.append(line)
-            has_level_word = ('level' in low) or ('уров' in low)
-            if has_level_word and any(term in low for term in (
-                'не выше',
-                'выше',
-                'поднима',
-                'повыш',
-                'кроме',
-                'исключ',
-                'нулев',
-                'level 0',
-                'level 3',
-                'cap',
-                'maximum',
-                'max ',
-                'raise',
-                'escalat',
-                'except',
-            )):
+            has_level_word = ("level" in low) or ("уров" in low)
+            if has_level_word and any(
+                term in low
+                for term in (
+                    "не выше",
+                    "выше",
+                    "поднима",
+                    "повыш",
+                    "кроме",
+                    "исключ",
+                    "нулев",
+                    "level 0",
+                    "level 3",
+                    "cap",
+                    "maximum",
+                    "max ",
+                    "raise",
+                    "escalat",
+                    "except",
+                )
+            ):
                 if line not in level_policy_lines:
                     level_policy_lines.append(line)
-            if any(term in low for term in ('приоритет', 'порядок', 'сначала', 'затем', 'priority', 'order')) and (
-                has_level_word or 'категор' in low or 'category' in low or 'rule' in low
+            if any(
+                term in low
+                for term in (
+                    "приоритет",
+                    "порядок",
+                    "сначала",
+                    "затем",
+                    "priority",
+                    "order",
+                )
+            ) and (
+                has_level_word or "категор" in low or "category" in low or "rule" in low
             ):
                 if line not in priority_policy_lines:
                     priority_policy_lines.append(line)
         if exclusive_output_lines:
-            artifacts['exclusive_output_rules'] = exclusive_output_lines[:12]
+            artifacts["exclusive_output_rules"] = exclusive_output_lines[:12]
         if level_policy_lines:
-            artifacts['level_escalation_rules'] = level_policy_lines[:20]
+            artifacts["level_escalation_rules"] = level_policy_lines[:20]
         if priority_policy_lines:
-            artifacts['priority_policy_rules'] = priority_policy_lines[:12]
+            artifacts["priority_policy_rules"] = priority_policy_lines[:12]
         legal_citations: List[str] = []
         for m in self._LEGAL_CITATION_RE.finditer(original):
             value = m.group(0)
             if value not in legal_citations:
                 legal_citations.append(value)
         if legal_citations:
-            artifacts['legal_citations'] = legal_citations[:40]
+            artifacts["legal_citations"] = legal_citations[:40]
         geo_terms: List[str] = []
-        for term in ('Россия', 'Украина', 'РФ', 'СВО', 'ВС РФ', 'Вооруженных сил', 'Вооружённых сил'):
+        for term in (
+            "Россия",
+            "Украина",
+            "РФ",
+            "СВО",
+            "ВС РФ",
+            "Вооруженных сил",
+            "Вооружённых сил",
+        ):
             if term.lower() in original.lower():
                 geo_terms.append(term)
         if geo_terms:
-            artifacts['geo_escalation_terms'] = geo_terms
+            artifacts["geo_escalation_terms"] = geo_terms
         # Literal strings from contract.must_preserve that look like concrete quotes /
         # markers (not generic categories). A simple heuristic: if the item appears
         # verbatim in the original, treat it as a hard preservation requirement.
@@ -179,13 +211,13 @@ class RiderPreservationMixin:
             if item_clean in original and item_clean not in literal_hits:
                 literal_hits.append(item_clean)
         if literal_hits:
-            artifacts['contract_literal_strings'] = literal_hits
+            artifacts["contract_literal_strings"] = literal_hits
         # v4.1 Enumerated structure preservation — the #1 failure mode for legal /
         # moderation rubrics. LLM judges prefer prose flow, but lawyers need
         # numbered criteria for citation in court.
         numbered_items = re.findall(r"(?m)^\s*\d+[\.\)]\s+\S", original)
         if len(numbered_items) >= 3:
-            artifacts['enumerated_count'] = [str(len(numbered_items))]
+            artifacts["enumerated_count"] = [str(len(numbered_items))]
         # Explicit level / step markers (case-insensitive, multi-language).
         # `[ \t]+` (no newlines) to avoid matching word-across-line artifacts.
         marker_patterns = [
@@ -203,15 +235,17 @@ class RiderPreservationMixin:
                 if txt not in markers:
                     markers.append(txt)
         if markers:
-            artifacts['enumeration_markers'] = markers[:50]  # cap for safety
+            artifacts["enumeration_markers"] = markers[:50]  # cap for safety
         return artifacts
 
-    def _check_preservation(self, original: str, improved: str) -> Tuple[List[str], Dict[str, List[str]]]:
+    def _check_preservation(
+        self, original: str, improved: str
+    ) -> Tuple[List[str], Dict[str, List[str]]]:
         """Return (violations, required_items_by_kind)."""
         artifacts = self._extract_required_artifacts(original)
         violations: List[str] = []
         for kind, items in artifacts.items():
-            if kind == 'enumerated_count':
+            if kind == "enumerated_count":
                 # Special: numbered list count must not drop by more than 40%.
                 try:
                     expected_min = int(int(items[0]) * 0.6)
@@ -224,28 +258,33 @@ class RiderPreservationMixin:
                         f"numbered items, found {actual} (original had {items[0]})"
                     )
                 continue
-            if kind == 'enumeration_markers':
+            if kind == "enumeration_markers":
                 # All explicit level/step/category markers must remain present.
                 missing = [m for m in items if m not in improved]
                 if missing:
                     for mk in missing[:6]:
                         violations.append(f"missing enumeration_marker: {mk}")
                 continue
-            if kind == 'json_field_names':
+            if kind == "json_field_names":
                 improved_fields = set(self._JSON_FIELD_RE.findall(improved))
                 missing = [m for m in items if m not in improved_fields]
                 if missing:
-                    violations.append(f"missing json_field_names: {', '.join(missing[:12])}")
+                    violations.append(
+                        f"missing json_field_names: {', '.join(missing[:12])}"
+                    )
                 continue
-            if kind == 'category_labels':
+            if kind == "category_labels":
                 missing = [m for m in items if m not in improved]
                 if missing:
-                    violations.append(f"missing category_labels: {', '.join(missing[:8])}")
+                    violations.append(
+                        f"missing category_labels: {', '.join(missing[:8])}"
+                    )
                 continue
-            if kind == 'level_values':
+            if kind == "level_values":
                 improved_values = set(
-                    m.group(1) for m in re.finditer(
-                        r'\b(?:level|уровень)[ \t]*(?:=|:|-)?[ \t]*([0-3])\b',
+                    m.group(1)
+                    for m in re.finditer(
+                        r"\b(?:level|уровень)[ \t]*(?:=|:|-)?[ \t]*([0-3])\b",
                         improved,
                         re.IGNORECASE,
                     )
@@ -254,15 +293,19 @@ class RiderPreservationMixin:
                 if missing:
                     violations.append(f"missing level_values: {', '.join(missing)}")
                 continue
-            if kind == 'legal_citations':
+            if kind == "legal_citations":
                 missing = [m for m in items if m not in improved]
                 if missing:
-                    violations.append(f"missing legal_citations: {', '.join(missing[:6])}")
+                    violations.append(
+                        f"missing legal_citations: {', '.join(missing[:6])}"
+                    )
                 continue
-            if kind == 'geo_escalation_terms':
+            if kind == "geo_escalation_terms":
                 missing = [m for m in items if m.lower() not in improved.lower()]
                 if missing:
-                    violations.append(f"missing geo_escalation_terms: {', '.join(missing[:6])}")
+                    violations.append(
+                        f"missing geo_escalation_terms: {', '.join(missing[:6])}"
+                    )
                 continue
             for item in items:
                 if item and item not in improved:
@@ -270,7 +313,10 @@ class RiderPreservationMixin:
         return violations, artifacts
 
     def _repair_preservation(
-        self, original: str, improved: str, violations: List[str],
+        self,
+        original: str,
+        improved: str,
+        violations: List[str],
         required: Dict[str, List[str]],
     ) -> str:
         """One repair call — only fired when violations were detected."""
@@ -283,12 +329,15 @@ class RiderPreservationMixin:
         required_text = "\n".join(flat_items[:12]) or "(auto-detected artifacts above)"
         meta = self._PRESERVE_REPAIR_PROMPT.format(
             required_items=required_text,
-            original=original, broken=improved,
+            original=original,
+            broken=improved,
             violations="\n".join(f"- {v}" for v in violations[:12]),
         )
         try:
             resp = self._generate(
-                prompt=meta, role="worker", temperature=0.1,
+                prompt=meta,
+                role="worker",
+                temperature=0.1,
                 max_tokens=self._adaptive_max_tokens(original, improved),
             )
             text = self._strip_wrappers(resp)
@@ -310,7 +359,13 @@ class RiderPreservationMixin:
         opens: Dict[str, int] = {}
         closes: Dict[str, int] = {}
         structural_opens: Dict[str, int] = {}
-        structural_tag_names = {'перевод', 'translation', 'rules', 'final_check', 'шкала_нарушений'}
+        structural_tag_names = {
+            "перевод",
+            "translation",
+            "rules",
+            "final_check",
+            "шкала_нарушений",
+        }
         for m in tag_re.finditer(stripped):
             raw = m.group(0)
             if raw.endswith("/>"):
@@ -329,22 +384,61 @@ class RiderPreservationMixin:
                     structural_opens[name] = structural_opens.get(name, 0) + 1
         for name in opens:
             structural_count = structural_opens.get(name, 0)
-            if (name in structural_tag_names or closes.get(name, 0) > 0) and structural_count and closes.get(name, 0) < structural_count:
+            if (
+                (name in structural_tag_names or closes.get(name, 0) > 0)
+                and structural_count
+                and closes.get(name, 0) < structural_count
+            ):
                 issues.append(f"unclosed_xml_tag:{name}")
                 if len(issues) >= 4:
                     break
 
-        last_line = next((ln.strip() for ln in reversed(stripped.splitlines()) if ln.strip()), "")
+        last_line = next(
+            (ln.strip() for ln in reversed(stripped.splitlines()) if ln.strip()), ""
+        )
         last_word_match = re.search(r"([\w\u0400-\u04FF-]+)$", last_line)
-        last_word = (last_word_match.group(1).lower() if last_word_match else "")
+        last_word = last_word_match.group(1).lower() if last_word_match else ""
         dangling_words = {
-            'if', 'when', 'while', 'because', 'and', 'or', 'with', 'for',
-            'если', 'когда', 'пока', 'потому', 'что', 'как', 'и', 'или',
-            'эпизод', 'упоминание', 'критер', 'критерий', 'раздел', 'пункт',
-            'если', 'когда', 'пока', 'потому', 'что', 'как', 'и', 'или',
-            'эпизод', 'упоминание', 'критер', 'критерий', 'раздел', 'пункт',
+            "if",
+            "when",
+            "while",
+            "because",
+            "and",
+            "or",
+            "with",
+            "for",
+            "если",
+            "когда",
+            "пока",
+            "потому",
+            "что",
+            "как",
+            "и",
+            "или",
+            "эпизод",
+            "упоминание",
+            "критер",
+            "критерий",
+            "раздел",
+            "пункт",
+            "если",
+            "когда",
+            "пока",
+            "потому",
+            "что",
+            "как",
+            "и",
+            "или",
+            "эпизод",
+            "упоминание",
+            "критер",
+            "критерий",
+            "раздел",
+            "пункт",
         }
-        if re.match(r"^\s*#{1,6}\s+\S", last_line) and not re.search(r"[.!?:;…)]$", last_line):
+        if re.match(r"^\s*#{1,6}\s+\S", last_line) and not re.search(
+            r"[.!?:;…)]$", last_line
+        ):
             issues.append("ends_with_heading")
         if last_word in dangling_words or re.search(r"[,;({\[-]\s*$", last_line):
             issues.append("dangling_final_line")
@@ -359,24 +453,28 @@ class RiderPreservationMixin:
 
     def _deterministic_safe_enhancement(self, original: str) -> str:
         """Non-LLM fallback that improves the wrapper while preserving source verbatim."""
-        archetype = str(self._contract.get('task_archetype') or '').lower()
-        lang = str(self._contract.get('language') or '').lower()
-        is_ru = lang == 'ru' or bool(re.search(r'[\u0400-\u04FF]', original or ''))
+        archetype = str(self._contract.get("task_archetype") or "").lower()
+        lang = str(self._contract.get("language") or "").lower()
+        is_ru = lang == "ru" or bool(re.search(r"[\u0400-\u04FF]", original or ""))
 
-        if archetype in {'debugging', 'code_generation', 'code_review'}:
+        if archetype in {"debugging", "code_generation", "code_review"}:
             template = RIDER_SAFE_CODE_PROMPT_RU if is_ru else RIDER_SAFE_CODE_PROMPT_EN
             return template.format(original=original)
 
-        if archetype == 'classification':
+        if archetype == "classification":
             template = (
                 RIDER_SAFE_CLASSIFICATION_PROMPT_RU
-                if is_ru else
-                RIDER_SAFE_CLASSIFICATION_PROMPT_EN
+                if is_ru
+                else RIDER_SAFE_CLASSIFICATION_PROMPT_EN
             )
             return template.format(original=original)
 
-        if archetype == 'translation':
-            template = RIDER_SAFE_TRANSLATION_PROMPT_RU if is_ru else RIDER_SAFE_TRANSLATION_PROMPT_EN
+        if archetype == "translation":
+            template = (
+                RIDER_SAFE_TRANSLATION_PROMPT_RU
+                if is_ru
+                else RIDER_SAFE_TRANSLATION_PROMPT_EN
+            )
             return template.format(original=original)
 
         if is_ru:
@@ -389,15 +487,51 @@ class RiderPreservationMixin:
 
     _WORD_RE = re.compile(r"\w+", re.UNICODE)
     _STOPWORDS_EN = {
-        'the', 'a', 'an', 'and', 'or', 'of', 'to', 'in', 'for', 'on', 'with', 'as',
-        'by', 'is', 'are', 'be', 'been', 'was', 'were', 'this', 'that', 'it', 'at',
-        'from', 'you', 'your', 'we', 'our', 'they', 'them', 'not', 'no', 'do', 'does',
-        'should', 'must', 'can', 'will', 'would', 'could',
+        "the",
+        "a",
+        "an",
+        "and",
+        "or",
+        "of",
+        "to",
+        "in",
+        "for",
+        "on",
+        "with",
+        "as",
+        "by",
+        "is",
+        "are",
+        "be",
+        "been",
+        "was",
+        "were",
+        "this",
+        "that",
+        "it",
+        "at",
+        "from",
+        "you",
+        "your",
+        "we",
+        "our",
+        "they",
+        "them",
+        "not",
+        "no",
+        "do",
+        "does",
+        "should",
+        "must",
+        "can",
+        "will",
+        "would",
+        "could",
     }
 
     @classmethod
     def _tokens(cls, text: str) -> set:
-        words = [w.lower() for w in cls._WORD_RE.findall(text or '')]
+        words = [w.lower() for w in cls._WORD_RE.findall(text or "")]
         return {w for w in words if len(w) > 2 and w not in cls._STOPWORDS_EN}
 
     @classmethod
@@ -410,7 +544,9 @@ class RiderPreservationMixin:
         return inter / union if union else 0.0
 
     def _pick_diverse_pair(
-        self, candidates: List[Tuple[str, str]], similarity_threshold: float = 0.85,
+        self,
+        candidates: List[Tuple[str, str]],
+        similarity_threshold: float = 0.85,
     ) -> Tuple[Optional[Tuple[str, str]], Optional[Tuple[str, str]], bool]:
         """Pick top-1 + most diverse partner. Returns (top1, partner, is_collapsed)."""
         if not candidates:

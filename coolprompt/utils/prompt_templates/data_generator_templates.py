@@ -153,7 +153,7 @@ Make sure to include all necessary data in "input"object. You must not add any o
 "input"and "output".
 Also remember that "input"and "output"are textual fields. If you have some answer choices for input - just
 concat them with input text into one string.
-Output format is the JSON structure below: 
+Output format is the JSON structure below:
 {{
    "examples": [
        {{

@@ -24,7 +24,16 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.12"
+
+      - name: Install code-quality tools
+        run: python -m pip install --upgrade pip -r requirements-dev.txt
+
+      - name: Check formatting with Black
+        run: black --check --diff coolprompt test src
+
+      - name: Lint with Flake8
+        run: flake8 coolprompt test src
 
       - name: Build release distributions
         run: |

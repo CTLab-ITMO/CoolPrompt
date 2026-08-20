@@ -135,9 +135,7 @@ def _invoke_model(model: Any, prompt: str, **kwargs: Any) -> str:
             return _coerce_to_text(model(prompt, **kwargs))
         except TypeError:
             return _coerce_to_text(model(prompt))
-    raise TypeError(
-        "Registered RIDER model must be callable or expose invoke()."
-    )
+    raise TypeError("Registered RIDER model must be callable or expose invoke().")
 
 
 class LLMClient:
@@ -203,11 +201,7 @@ class LLMClient:
             return "not_found"
         if "context" in text and "large" in text:
             return "context_too_large"
-        if (
-            "content_filter" in text
-            or "content filter" in text
-            or "blocked" in text
-        ):
+        if "content_filter" in text or "content filter" in text or "blocked" in text:
             return "content_filter"
         if "rate" in text or "429" in text:
             return "rate_limit"

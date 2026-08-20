@@ -11,7 +11,6 @@ from coolprompt.optimizer.autoprompting_method import (
 )
 from coolprompt.optimizer.regps.evoluter import ReGPSEvoluter
 from coolprompt.utils.logging_config import logger
-from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 
 def regps(
@@ -40,9 +39,7 @@ def regps(
     Returns:
         str: best evoluted prompt.
     """
-    train_dataset, validation_dataset, train_targets, validation_targets = (
-        dataset_split
-    )
+    train_dataset, validation_dataset, train_targets, validation_targets = dataset_split
     args = {
         "population_size": 10,
         "num_epochs": 5,

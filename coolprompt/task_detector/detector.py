@@ -26,9 +26,7 @@ class TaskDetector:
     def __init__(self, model: BaseLanguageModel) -> None:
         self.model = model
 
-    def _generate(
-        self, request: str, schema: BaseModel, field_name: str
-    ) -> Any:
+    def _generate(self, request: str, schema: BaseModel, field_name: str) -> Any:
         """Generates model output
         either using structured output from langchain
         or just strict json output format for LLM

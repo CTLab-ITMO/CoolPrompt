@@ -175,8 +175,7 @@ class Distiller:
             # Generation
             gen_prompts = transformer.generate_prompts(best_candidate)
             gen_candidates = [
-                Candidate(prompt, self._evaluate(prompt))
-                for prompt in gen_prompts
+                Candidate(prompt, self._evaluate(prompt)) for prompt in gen_prompts
             ]
             history.extend(gen_candidates)
 
@@ -189,9 +188,7 @@ class Distiller:
             history.extend(distilled_candidates)
 
             # Compression
-            compressed_prompts = transformer.compress_prompts(
-                distilled_candidates
-            )
+            compressed_prompts = transformer.compress_prompts(distilled_candidates)
             compressed_candidates = [
                 Candidate(prompt, self._evaluate(prompt))
                 for prompt in compressed_prompts
@@ -199,9 +196,7 @@ class Distiller:
             history.extend(compressed_candidates)
 
             # Aggregation
-            aggregated_prompt = transformer.aggregate_prompts(
-                compressed_candidates
-            )
+            aggregated_prompt = transformer.aggregate_prompts(compressed_candidates)
             aggregated_candidate = Candidate(
                 aggregated_prompt, self._evaluate(aggregated_prompt)
             )
@@ -232,7 +227,10 @@ class Distiller:
                 self._make_output_path("round_results"),
             )
 
-            if self.telemetry_callback is not None and best_candidate.train_score is not None:
+            if (
+                self.telemetry_callback is not None
+                and best_candidate.train_score is not None
+            ):
                 self.telemetry_callback(
                     iteration=round_num + 1,
                     best_score=best_candidate.train_score,
@@ -241,9 +239,7 @@ class Distiller:
 
         final_prompt = best_candidate.prompt
         final_score = self._evaluate(final_prompt, split="validation")
-        self.logger.info(
-            f"Final best prompt score on validation: {final_score}"
-        )
+        self.logger.info(f"Final best prompt score on validation: {final_score}")
         self.logger.debug(f"Final best prompt: {final_prompt}")
 
         self._cache_data(

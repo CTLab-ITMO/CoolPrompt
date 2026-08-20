@@ -1,6 +1,18 @@
 [flake8]
-max-line-length = 80
-ignore = W503, W504, E203
-exclude = 
+max-line-length = 88
+extend-ignore =
+    E203,
+    E226,
+    E501,
+    W503,
+    W504
+exclude =
     .git,
+    .venv,
+    venv,
+    build,
+    dist,
     __pycache__
+per-file-ignores =
+    __init__.py:F401,
+    coolprompt/optimizer/rider/core/*.py:F401
