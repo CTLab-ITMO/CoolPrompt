@@ -21,9 +21,7 @@ logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description="Run prompts scoring.")
 
-parser.add_argument(
-    "--gen-only", action="store_true", help="Skip classification tasks"
-)
+parser.add_argument("--gen-only", action="store_true", help="Skip classification tasks")
 parser.add_argument("--input-file-path", required=True)
 parser.add_argument("--output-file-path", required=True)
 parser.add_argument(

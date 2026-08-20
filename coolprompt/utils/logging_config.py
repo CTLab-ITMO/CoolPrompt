@@ -71,9 +71,7 @@ def set_verbose(verbose: int) -> None:
             2 - DEBUG (all messages)
     """
 
-    logger_level = {0: logging.ERROR, 1: logging.INFO, 2: logging.DEBUG}[
-        verbose
-    ]
+    logger_level = {0: logging.ERROR, 1: logging.INFO, 2: logging.DEBUG}[verbose]
     logger.setLevel(logger_level)
     for handler in logger.handlers:
         handler.setLevel(logger_level)

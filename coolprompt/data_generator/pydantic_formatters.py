@@ -5,9 +5,7 @@ from typing import List
 class ProblemDescriptionStructuredOutputSchema(BaseModel):
     """Structured response containing a generated problem description."""
 
-    problem_description: str = Field(
-        description="Determined problem description"
-    )
+    problem_description: str = Field(description="Determined problem description")
 
 
 class ClassificationTaskExample(BaseModel):

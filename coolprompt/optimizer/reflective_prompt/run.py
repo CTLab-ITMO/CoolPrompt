@@ -41,9 +41,7 @@ def reflectiveprompt(
     """
 
     warn_deprecated("ReflectivePrompt")
-    train_dataset, validation_dataset, train_targets, validation_targets = (
-        dataset_split
-    )
+    train_dataset, validation_dataset, train_targets, validation_targets = dataset_split
     args = {
         "population_size": 10,
         "num_epochs": 5,

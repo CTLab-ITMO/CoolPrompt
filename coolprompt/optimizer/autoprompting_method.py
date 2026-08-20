@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple, Protocol
+from typing import Any, List, Optional, Tuple, Protocol
 
 from langchain_core.language_models.base import BaseLanguageModel
 
@@ -116,6 +116,7 @@ def build_benchmark_context(
 
 class TelemetryCallback(Protocol):
     """Protocol for reporting iteration-level telemetry."""
+
     def __call__(self, iteration: int, best_score: float, best_prompt: str) -> None:
         pass
 

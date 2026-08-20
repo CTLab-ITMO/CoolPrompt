@@ -217,7 +217,9 @@ class RIDEROptimizer:
                 min(len(val_dataset), len(val_targets)),
             )
         else:
-            logger.info("RIDER Ultra external validation disabled: no evaluator/val split")
+            logger.info(
+                "RIDER Ultra external validation disabled: no evaluator/val split"
+            )
 
         if hasattr(rider, "configure_hyperparameters"):
             rider.configure_hyperparameters(

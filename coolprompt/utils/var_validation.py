@@ -51,8 +51,7 @@ def validate_model(model: BaseLanguageModel) -> None:
     """
     if not isinstance(model, BaseLanguageModel):
         error_msg = (
-            "Provided model must be an "
-            "instance of LangChain BaseLanguageModel"
+            "Provided model must be an " "instance of LangChain BaseLanguageModel"
         )
         logger.error(error_msg)
         raise TypeError(error_msg)
@@ -97,16 +96,15 @@ def validate_task(task: str) -> Task:
             error_msg = "Task type must be provided."
         else:
             error_msg = (
-                "Task type must be a string. "
-                f"Provided: {type(task).__name__}."
+                "Task type must be a string. " f"Provided: {type(task).__name__}."
             )
         logger.error(error_msg)
         raise TypeError(error_msg)
     if task not in Task._value2member_map_:
-        error_msg = f"Invalid task type: {task}. " f"Available tasks: {
-            ', '.join(
-                list(
-                    Task._value2member_map_.keys()))}."
+        available_tasks = ", ".join(Task._value2member_map_.keys())
+        error_msg = (
+            f"Invalid task type: {task}. " f"Available tasks: {available_tasks}."
+        )
         logger.error(error_msg)
         raise ValueError(error_msg)
     return Task(task)
@@ -251,9 +249,7 @@ def validate_validation_size(validation_size: float | Any) -> None:
     Raises:
         ValueError: If `validation_size` is not a float in [0.0, 1.0].
     """
-    if not isinstance(validation_size, float) or not (
-        0.0 <= validation_size <= 1.0
-    ):
+    if not isinstance(validation_size, float) or not (0.0 <= validation_size <= 1.0):
         error_msg = (
             "Validation size must be a float between 0.0 and 1.0. "
             f"Provided: {validation_size}."

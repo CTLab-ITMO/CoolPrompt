@@ -45,9 +45,7 @@ def code_to_text_preproc(
     return data
 
 
-def concode_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def concode_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of CONCODE dataset.
 
     Args:
@@ -69,9 +67,7 @@ def concode_preproc(
     return data
 
 
-def mediqa_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def mediqa_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of MediQA dataset.
 
     Args:
@@ -93,9 +89,7 @@ def mediqa_preproc(
     return data
 
 
-def tweeteval_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def tweeteval_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of TweetEval (emotions) dataset.
 
     Args:
@@ -117,9 +111,7 @@ def tweeteval_preproc(
     return data
 
 
-def squad_v2_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def squad_v2_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of SQUAD v2 dataset.
 
     Args:
@@ -145,9 +137,7 @@ def squad_v2_preproc(
     return data
 
 
-def gsm8k_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def gsm8k_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of GSM8k dataset.
 
     Args:
@@ -169,9 +159,7 @@ def gsm8k_preproc(
     return data
 
 
-def common_gen_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def common_gen_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of CommonGen dataset.
 
     CommonGen contains multiple valid references for one concept set. Keep
@@ -213,9 +201,7 @@ def common_gen_preproc(
     return data
 
 
-def xsum_preproc(
-    sample: DatasetDict, size: Optional[int] = None
-) -> pd.DataFrame:
+def xsum_preproc(sample: DatasetDict, size: Optional[int] = None) -> pd.DataFrame:
     """Preprocessing of XSUM dataset.
 
     Args:

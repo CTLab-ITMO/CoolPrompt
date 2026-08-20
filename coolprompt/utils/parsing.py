@@ -49,8 +49,7 @@ def safe_template(template: str, **kwargs) -> str:
     """
 
     escaped = {
-        k: str(v).replace("{", "{{").replace("}", "}}")
-        for k, v in kwargs.items()
+        k: str(v).replace("{", "{{").replace("}", "}}") for k, v in kwargs.items()
     }
     return template.format(**escaped)
 
@@ -133,9 +132,6 @@ def parse_assistant_response(answer: str) -> str:
         return answer_after.strip()
     else:
         return answer.strip()
-
-
-from typing import Tuple
 
 
 def get_model_answer_extracted(

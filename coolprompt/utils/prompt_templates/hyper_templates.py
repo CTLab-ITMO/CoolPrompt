@@ -19,6 +19,7 @@ class Recommendation:
         weight: Group size after aggregation. Defaults to 1 (raw rec from
             a single failure). Used for conflict resolution and sorting.
     """
+
     section: str
     text: str
     weight: int = 1
@@ -209,7 +210,9 @@ class MetaPromptBuilder:
         """Return a cached section by name (role, prompt_structure, output_format)."""
         return self.config._cached_sections.get(name)
 
-    def get_section(self, name: str) -> Union[str, List[str], List[Recommendation], None]:
+    def get_section(
+        self, name: str
+    ) -> Union[str, List[str], List[Recommendation], None]:
         """Return section value by name.
 
         - recommendations → List[Recommendation]
@@ -226,7 +229,9 @@ class MetaPromptBuilder:
             return list(self.config.constraints)
         return self.get_cached_section(name)
 
-    def set_section(self, name: str, value: Union[str, List[str], List[Recommendation]]) -> None:
+    def set_section(
+        self, name: str, value: Union[str, List[str], List[Recommendation]]
+    ) -> None:
         """Update a section value. Only recommendations, constraints, and output_format are settable.
 
         recommendations accepts both List[str] (legacy, treated as 'general')
@@ -244,7 +249,9 @@ class MetaPromptBuilder:
                 if isinstance(item, Recommendation):
                     normalized.append(item)
                 elif isinstance(item, str):
-                    normalized.append(Recommendation(section=GENERAL_SECTION, text=item))
+                    normalized.append(
+                        Recommendation(section=GENERAL_SECTION, text=item)
+                    )
                 else:
                     raise ValueError(
                         f"recommendation must be str or Recommendation, got {type(item).__name__}"

@@ -266,7 +266,6 @@ class ReGPSEvoluter(ReflectiveEvoluter):
             for response in responses
         ]
         population = [
-            Prompt(response, origin=PromptOrigin.MUTATED)
-            for response in responses
+            Prompt(response, origin=PromptOrigin.MUTATED) for response in responses
         ]
         return population

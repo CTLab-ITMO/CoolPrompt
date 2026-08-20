@@ -106,14 +106,11 @@ class Evaluator:
         if template is None:
             template = self._get_default_template()
 
-        logger.info(
-            f"Evaluating prompt for {self.task} task on {len(dataset)} samples"
-        )
+        logger.info(f"Evaluating prompt for {self.task} task on {len(dataset)} samples")
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
         full_prompts = [
-            self._get_full_prompt(prompt, sample, template)
-            for sample in dataset
+            self._get_full_prompt(prompt, sample, template) for sample in dataset
         ]
 
         answers = self._run_batches(full_prompts)
@@ -226,9 +223,7 @@ class Evaluator:
         match self.task:
             case Task.CLASSIFICATION:
                 labels = ", ".join(map(str, self.metric.label_to_id.keys()))
-                return template.format(
-                    PROMPT=prompt, LABELS=labels, INPUT=sample
-                )
+                return template.format(PROMPT=prompt, LABELS=labels, INPUT=sample)
             case Task.GENERATION:
                 return template.format(PROMPT=prompt, INPUT=sample)
 

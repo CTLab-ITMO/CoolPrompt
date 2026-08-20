@@ -123,11 +123,11 @@ RIDER_STRATEGY_PROMPTS = {
         "Collapsed batch (do not repeat these patterns):\n{collapsed_preview}\n\n"
         "Original task:\n{prompt}\n\n"
         "Examples of paradigm shifts:\n"
-        "  - \"Summarize the text\"  ->  \"What would a news editor write as the headline?\"\n"
-        "  - \"Explain quantum physics\"  ->  \"Design a dialogue where a physicist convinces "
-        "a skeptical journalist in 4 exchanges.\"\n"
-        "  - \"Write an essay on X\"  ->  \"Generate a four-voice panel "
-        "(historian/engineer/artist/skeptic) arguing about X.\"\n\n"
+        '  - "Summarize the text"  ->  "What would a news editor write as the headline?"\n'
+        '  - "Explain quantum physics"  ->  "Design a dialogue where a physicist convinces '
+        'a skeptical journalist in 4 exchanges."\n'
+        '  - "Write an essay on X"  ->  "Generate a four-voice panel '
+        '(historian/engineer/artist/skeptic) arguing about X."\n\n'
         "Produce ONE genuinely different reframing, not a surface tweak.\n"
         "CRITICAL: write in the SAME LANGUAGE as the original prompt.\n"
         "Write ONLY the reimagined prompt."
@@ -284,9 +284,9 @@ RIDER_SYNTHETIC_TEST_PROMPT = (
     "diverse edge cases (trivial / borderline / complex). Each string may include "
     "an 'Expected invariant checks:' sentence naming what a good answer must satisfy "
     "(schema, fields, no extra prose, level priority, quote evidence, glossary usage, etc.).\n\n"
-    "Output a JSON array of strings: [\"input1\", \"input2\", ...]. No prose, no fences. "
+    'Output a JSON array of strings: ["input1", "input2", ...]. No prose, no fences. '
     "If a structured-output schema is enforced, use the equivalent object "
-    "{{\"tests\": [\"input1\", \"input2\", ...]}}."
+    '{{"tests": ["input1", "input2", ...]}}.'
 )
 
 
@@ -313,7 +313,7 @@ RIDER_EVAL_RESPONSE_PROMPT = (
     "TEST INPUT:\n<<<\n{test_input}\n>>>\n\n"
     "AI RESPONSE:\n<<<\n{response}\n>>>\n\n"
     "Output ONLY a single integer 1-10. If a structured-output schema is enforced, "
-    "use {{\"score\": <integer 1-10>}}."
+    'use {{"score": <integer 1-10>}}.'
 )
 
 

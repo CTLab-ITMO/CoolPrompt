@@ -22,7 +22,13 @@ class _PromptContractSchema(BaseModel):
     recommended_strategies: List[str] = Field(default_factory=list)
     avoid_strategies: List[str] = Field(default_factory=list)
 
-    @field_validator("must_preserve", "failure_modes", "recommended_strategies", "avoid_strategies", mode="before")
+    @field_validator(
+        "must_preserve",
+        "failure_modes",
+        "recommended_strategies",
+        "avoid_strategies",
+        mode="before",
+    )
     @classmethod
     def _coerce_string_list(cls, value: Any) -> List[str]:
         if value is None:
@@ -43,7 +49,9 @@ class _SyntheticTestsSchema(BaseModel):
     @classmethod
     def _coerce_tests(cls, value: Any) -> List[str]:
         if isinstance(value, dict):
-            value = value.get("tests") or value.get("items") or value.get("inputs") or []
+            value = (
+                value.get("tests") or value.get("items") or value.get("inputs") or []
+            )
         if isinstance(value, str):
             return [value]
         if not isinstance(value, list):
@@ -52,7 +60,9 @@ class _SyntheticTestsSchema(BaseModel):
         for item in value:
             if isinstance(item, dict):
                 item = item.get("input") or item.get("text") or item.get("case") or item
-            text = item if isinstance(item, str) else json.dumps(item, ensure_ascii=False)
+            text = (
+                item if isinstance(item, str) else json.dumps(item, ensure_ascii=False)
+            )
             if text.strip():
                 tests.append(text.strip())
         return tests

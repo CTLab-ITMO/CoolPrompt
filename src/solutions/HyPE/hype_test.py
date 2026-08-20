@@ -62,9 +62,7 @@ def run_hype_dataset() -> dict[str, Any]:
         _, data_val = cfg["data"]["train"], cfg["data"]["validation"]
         preproc_data = cfg["preproc"](data_val)
         data_sample = sample(preproc_data, sample_size=100)
-        dataset, target = list(data_sample["input_data"]), list(
-            data_sample["target"]
-        )
+        dataset, target = list(data_sample["input_data"]), list(data_sample["target"])
 
         final_prompt = pt.run(
             cfg["start_prompt"],

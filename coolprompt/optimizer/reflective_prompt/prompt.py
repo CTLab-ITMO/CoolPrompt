@@ -64,9 +64,7 @@ class BadExample:
             BadExample: created bad example variable.
         """
 
-        return cls(
-            input=data["input"], output=data["output"], correct=data["correct"]
-        )
+        return cls(input=data["input"], output=data["output"], correct=data["correct"])
 
 
 class Prompt:

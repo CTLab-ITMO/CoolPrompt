@@ -57,9 +57,7 @@ BENCHMARKS: tuple[BenchmarkSpec, ...] = (
 )
 
 
-def build_config(
-    spec: BenchmarkSpec, dataset_configuration: str
-) -> dict[str, Any]:
+def build_config(spec: BenchmarkSpec, dataset_configuration: str) -> dict[str, Any]:
     """Build the YAML-style configuration consumed by an optimizer."""
 
     return {
@@ -134,11 +132,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--base-url",
         default="https://openrouter.ai/api/v1",
-        help="Optional OpenAI-compatible API base URL, for example OpenRouter."
+        help="Optional OpenAI-compatible API base URL, for example OpenRouter.",
     )
     parser.add_argument(
         "--api-key",
-        help="API key. Defaults to the OPENAI_API_KEY environment variable."
+        help="API key. Defaults to the OPENAI_API_KEY environment variable.",
     )
     parser.add_argument(
         "--max-tokens",
