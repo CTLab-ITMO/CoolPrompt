@@ -90,6 +90,7 @@ class TestGenerator(unittest.TestCase):
             + ".SyntheticDataGenerator._generate"
         )
         self._generate_mock = self._generate_patcher.start()
+        self.addCleanup(self._generate_patcher.stop)
 
         problem_description = "problem"
         num_samples = 20
@@ -107,13 +108,11 @@ class TestGenerator(unittest.TestCase):
                 task=Task.CLASSIFICATION,
                 problem_description=problem_description,
                 num_samples=num_samples,
+                corner_ratio=0.0,
             ),
             (["in"], ["out"], problem_description),
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
-
-        self._generate_patcher.stop()
-
     def test_generate_gen_dataset(self):
         """Test generation of generation dataset"""
 
@@ -122,6 +121,7 @@ class TestGenerator(unittest.TestCase):
             + ".SyntheticDataGenerator._generate"
         )
         self._generate_mock = self._generate_patcher.start()
+        self.addCleanup(self._generate_patcher.stop)
 
         problem_description = "problem"
         num_samples = 20
@@ -139,13 +139,11 @@ class TestGenerator(unittest.TestCase):
                 task=Task.GENERATION,
                 problem_description=problem_description,
                 num_samples=num_samples,
+                corner_ratio=0.0,
             ),
             (["in"], ["out"], problem_description),
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
-
-        self._generate_patcher.stop()
-
     def test_generate_dataset_without_problem_description(self):
         """Test generation of classification dataset"""
 
@@ -154,6 +152,7 @@ class TestGenerator(unittest.TestCase):
             + ".SyntheticDataGenerator._generate"
         )
         self._generate_mock = self._generate_patcher.start()
+        self.addCleanup(self._generate_patcher.stop)
         self._generate_problem_description_patcher = patch(
             "coolprompt.data_generator.generator"
             + ".SyntheticDataGenerator._generate_problem_description"
@@ -161,6 +160,7 @@ class TestGenerator(unittest.TestCase):
         self._generate_problem_description_mock = (
             self._generate_problem_description_patcher.start()
         )
+        self.addCleanup(self._generate_problem_description_patcher.stop)
         self._generate_problem_description_mock.return_value = "problem"
 
         num_samples = 20
@@ -174,7 +174,10 @@ class TestGenerator(unittest.TestCase):
         ]
         self.assertTupleEqual(
             self.generator.generate(
-                prompt="prompt", task=Task.GENERATION, num_samples=num_samples
+                prompt="prompt",
+                task=Task.GENERATION,
+                num_samples=num_samples,
+                corner_ratio=0.0,
             ),
             (["in"], ["out"], "problem"),
         )
@@ -183,5 +186,3 @@ class TestGenerator(unittest.TestCase):
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
 
-        self._generate_patcher.stop()
-        self._generate_problem_description_patcher.stop()
