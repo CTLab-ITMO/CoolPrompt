@@ -21,6 +21,7 @@ from coolprompt.utils.prompt_templates.reflective_templates import (
     REFLECTIVEPROMPT_PROMPT_BY_DESCRIPTION_TEMPLATE,
 )
 from coolprompt.utils.parsing import extract_answer, extract_json
+from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
 
 class ReflectiveEvoluter:
@@ -72,6 +73,8 @@ class ReflectiveEvoluter:
         output_path: str = "./reflectiveprompt_outputs",
         checkpoint_path: Optional[str] = None,
         use_cache: bool = True,
+        use_structured_output: bool = False,
+        telemetry_callback: Optional[TelemetryCallback] = None,
     ) -> None:
         """Initialize ReflectivePrompt state and search configuration."""
         self.model = model
@@ -87,6 +90,8 @@ class ReflectiveEvoluter:
         self.output_path = output_path
         self.initial_prompt = initial_prompt
         self.checkpoint_path = checkpoint_path
+        self.use_structured_output = use_structured_output
+        self.telemetry_callback = telemetry_callback
 
         self.elitist = None
         self._long_term_reflection_str = ""
@@ -548,6 +553,12 @@ class ReflectiveEvoluter:
             population = self._reranking(population)
 
             self._update_iter(population)
+            if self.telemetry_callback is not None and self.best_score_overall is not None:
+                self.telemetry_callback(
+                    iteration=self.iteration,
+                    best_score=self.best_score_overall,
+                    best_prompt=self.best_prompt_overall,
+                )
 
         logger.info(f"BEST TRAIN SCORE: {self.best_score_overall}")
 
