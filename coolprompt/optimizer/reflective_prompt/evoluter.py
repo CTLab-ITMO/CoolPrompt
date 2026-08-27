@@ -109,9 +109,7 @@ class ReflectiveEvoluter:
         Returns:
             List[Prompt]: sorted population.
         """
-        return list(
-            sorted(population, key=lambda prompt: prompt.score, reverse=True)
-        )
+        return list(sorted(population, key=lambda prompt: prompt.score, reverse=True))
 
     def _evaluate(self, prompt: Prompt, split="train") -> None:
         """Evaluates given prompt on self.dataset and records the score.
@@ -132,9 +130,7 @@ class ReflectiveEvoluter:
         )
         prompt.set_score(score)
 
-    def _evaluation(
-        self, population: List[Prompt], split: str = "train"
-    ) -> None:
+    def _evaluation(self, population: List[Prompt], split: str = "train") -> None:
         """Evaluation operation for prompts population.
         Evaluates every prompt in population and records the results.
 
@@ -157,9 +153,7 @@ class ReflectiveEvoluter:
             PROBLEM_DESCRIPTION=self.problem_description
         )
         answer = self._llm_query([request])[0]
-        return extract_answer(
-            answer, self.PROMPT_TAGS, format_mismatch_label=""
-        )
+        return extract_answer(answer, self.PROMPT_TAGS, format_mismatch_label="")
 
     def _init_pop(self) -> List[Prompt]:
         """Creates initial population of prompts.
@@ -176,9 +170,7 @@ class ReflectiveEvoluter:
                 Prompt.from_dict(prompt_data) for prompt_data in data["prompts"]
             ]
             initial_population = self._reranking(initial_population)
-            with open(
-                f"{self.checkpoint_path}/long_term_reflection.yaml", "r"
-            ) as f:
+            with open(f"{self.checkpoint_path}/long_term_reflection.yaml", "r") as f:
                 data = yaml.safe_load(f)
             self._long_term_reflection_str = data
             return initial_population
@@ -193,9 +185,7 @@ class ReflectiveEvoluter:
         initial_population = [
             Prompt(prompt, origin=PromptOrigin.APE) for prompt in prompts
         ]
-        initial_population[-1] = Prompt(
-            self.initial_prompt, origin=PromptOrigin.MANUAL
-        )
+        initial_population[-1] = Prompt(self.initial_prompt, origin=PromptOrigin.MANUAL)
         self._evaluation(initial_population)
         initial_population = self._reranking(initial_population)
         return initial_population
@@ -256,9 +246,7 @@ class ReflectiveEvoluter:
         trial = 0
         anyways = False
         while len(selected_population) < 2 * self.population_size:
-            parents = np.random.choice(
-                population, size=2, replace=False, p=probas
-            )
+            parents = np.random.choice(population, size=2, replace=False, p=probas)
             if parents[0].score != parents[1].score or anyways:
                 selected_population.extend(parents)
             trial += 1
@@ -378,9 +366,7 @@ class ReflectiveEvoluter:
         Returns:
             List[Prompt]: new crossed prompts population.
         """
-        reflection_contents, worse_prompts, better_prompts = (
-            short_term_reflection_tuple
-        )
+        reflection_contents, worse_prompts, better_prompts = short_term_reflection_tuple
         requests = []
         for reflection, worse_prompt, better_prompt in zip(
             reflection_contents, worse_prompts, better_prompts
@@ -412,15 +398,14 @@ class ReflectiveEvoluter:
         scores = [prompt.score for prompt in population]
         best_score, best_sample_idx = max(scores), np.argmax(np.array(scores))
 
-        if (
-            self.best_score_overall is None
-            or best_score >= self.best_score_overall
-        ):
+        if self.best_score_overall is None or best_score >= self.best_score_overall:
             self.best_score_overall = best_score
             self.best_prompt_overall = population[best_sample_idx].text
             self.elitist = population[best_sample_idx]
-            logger.info(f"""Iteration {self.iteration}
-                Elitist score: {self.best_score_overall}""")
+            logger.info(
+                f"""Iteration {self.iteration}
+                Elitist score: {self.best_score_overall}"""
+            )
             logger.debug(f"Elitist text:\n{self.elitist.text}")
 
     def _update_iter(self, population: List[Prompt]) -> None:
@@ -468,9 +453,7 @@ class ReflectiveEvoluter:
         requests = [request.replace('"', "'") for request in requests]
         answers = self.model.batch(requests)
 
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
-        ]
+        answers = [a.content if isinstance(a, AIMessage) else a for a in answers]
 
         return answers
 
@@ -491,8 +474,7 @@ class ReflectiveEvoluter:
             for response in responses
         ]
         population = [
-            Prompt(response, origin=PromptOrigin.MUTATED)
-            for response in responses
+            Prompt(response, origin=PromptOrigin.MUTATED) for response in responses
         ]
         return population
 
@@ -512,16 +494,12 @@ class ReflectiveEvoluter:
         """
 
         population = np.array(self._init_pop())
-        self._cache_population(
-            population, self._make_output_path("initial_population")
-        )
+        self._cache_population(population, self._make_output_path("initial_population"))
 
         while self.iteration < self.num_epochs:
             parent_population = self._selection(population)
 
-            short_term_reflection_tuple = self._short_term_reflection(
-                parent_population
-            )
+            short_term_reflection_tuple = self._short_term_reflection(parent_population)
             self._cache_data(
                 short_term_reflection_tuple[0],
                 self._make_output_path("short_term_reflections"),
@@ -553,7 +531,10 @@ class ReflectiveEvoluter:
             population = self._reranking(population)
 
             self._update_iter(population)
-            if self.telemetry_callback is not None and self.best_score_overall is not None:
+            if (
+                self.telemetry_callback is not None
+                and self.best_score_overall is not None
+            ):
                 self.telemetry_callback(
                     iteration=self.iteration,
                     best_score=self.best_score_overall,
@@ -567,9 +548,7 @@ class ReflectiveEvoluter:
         population = np.append(population, self.elitist)
         self._evaluation(population, split="validation")
         population = self._reranking(population)
-        self._cache_population(
-            population, self._make_output_path("best_prompts_infer")
-        )
+        self._cache_population(population, self._make_output_path("best_prompts_infer"))
         self.elitist = population[0]
         self.best_prompt_overall = self.elitist.text
         self.best_score_overall = self.elitist.score

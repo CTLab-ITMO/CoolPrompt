@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from coolprompt.utils.prompt_templates.rider_templates import (
     RIDER_BATCH_RANK_PROMPT,
@@ -60,28 +60,89 @@ class RiderGenesis(
     _ROLES = ("worker", "planner", "judge", "critic")
     _MODE_ROLE_MODELS: Dict[str, Dict[str, List[str]]] = {
         "light": {
-            "worker": ["anthropic/claude-sonnet-4.6", "google/gemini-3-flash-preview", "openai/gpt-5.4-mini"],
-            "planner": ["openai/gpt-5.4-mini", "google/gemini-3-flash-preview", "anthropic/claude-sonnet-4.6"],
-            "judge": ["google/gemini-3-flash-preview", "openai/gpt-5.4-mini", "anthropic/claude-sonnet-4.6"],
-            "critic": ["anthropic/claude-sonnet-4.6", "google/gemini-3-flash-preview", "openai/gpt-5.4-mini"],
+            "worker": [
+                "anthropic/claude-sonnet-4.6",
+                "google/gemini-3-flash-preview",
+                "openai/gpt-5.4-mini",
+            ],
+            "planner": [
+                "openai/gpt-5.4-mini",
+                "google/gemini-3-flash-preview",
+                "anthropic/claude-sonnet-4.6",
+            ],
+            "judge": [
+                "google/gemini-3-flash-preview",
+                "openai/gpt-5.4-mini",
+                "anthropic/claude-sonnet-4.6",
+            ],
+            "critic": [
+                "anthropic/claude-sonnet-4.6",
+                "google/gemini-3-flash-preview",
+                "openai/gpt-5.4-mini",
+            ],
         },
         "blitz": {
-            "worker": ["anthropic/claude-sonnet-4.6", "google/gemini-3-flash-preview", "openai/gpt-5.4-mini"],
-            "planner": ["openai/gpt-5.4-mini", "google/gemini-3-flash-preview", "anthropic/claude-sonnet-4.6"],
-            "judge": ["google/gemini-3-flash-preview", "openai/gpt-5.4", "anthropic/claude-sonnet-4.6"],
-            "critic": ["anthropic/claude-sonnet-4.6", "google/gemini-3-flash-preview", "openai/gpt-5.4-mini"],
+            "worker": [
+                "anthropic/claude-sonnet-4.6",
+                "google/gemini-3-flash-preview",
+                "openai/gpt-5.4-mini",
+            ],
+            "planner": [
+                "openai/gpt-5.4-mini",
+                "google/gemini-3-flash-preview",
+                "anthropic/claude-sonnet-4.6",
+            ],
+            "judge": [
+                "google/gemini-3-flash-preview",
+                "openai/gpt-5.4",
+                "anthropic/claude-sonnet-4.6",
+            ],
+            "critic": [
+                "anthropic/claude-sonnet-4.6",
+                "google/gemini-3-flash-preview",
+                "openai/gpt-5.4-mini",
+            ],
         },
         "standard": {
-            "worker": ["anthropic/claude-sonnet-4.6", "anthropic/claude-opus-4.7", "google/gemini-3-flash-preview"],
-            "planner": ["google/gemini-3.1-pro-preview", "openai/gpt-5.5", "anthropic/claude-sonnet-4.6"],
-            "judge": ["openai/gpt-5.5", "google/gemini-3.1-pro-preview", "anthropic/claude-sonnet-4.6"],
-            "critic": ["anthropic/claude-opus-4.7", "google/gemini-3.1-pro-preview", "openai/gpt-5.4"],
+            "worker": [
+                "anthropic/claude-sonnet-4.6",
+                "anthropic/claude-opus-4.7",
+                "google/gemini-3-flash-preview",
+            ],
+            "planner": [
+                "google/gemini-3.1-pro-preview",
+                "openai/gpt-5.5",
+                "anthropic/claude-sonnet-4.6",
+            ],
+            "judge": [
+                "openai/gpt-5.5",
+                "google/gemini-3.1-pro-preview",
+                "anthropic/claude-sonnet-4.6",
+            ],
+            "critic": [
+                "anthropic/claude-opus-4.7",
+                "google/gemini-3.1-pro-preview",
+                "openai/gpt-5.4",
+            ],
         },
         "ultra": {
             "worker": ["anthropic/claude-opus-4.7", "anthropic/claude-sonnet-4.6"],
-            "planner": ["google/gemini-3.1-pro-preview", "openai/gpt-5.5", "anthropic/claude-opus-4.7"],
-            "judge": ["openai/gpt-5.5-pro", "openai/gpt-5.5", "google/gemini-3.1-pro-preview"],
-            "critic": ["anthropic/claude-opus-4.7", "google/gemini-3.1-pro-preview", "openai/gpt-5.5", "x-ai/grok-4.3"],
+            "planner": [
+                "google/gemini-3.1-pro-preview",
+                "openai/gpt-5.5",
+                "anthropic/claude-opus-4.7",
+            ],
+            "judge": [
+                "openai/gpt-5.5-pro",
+                "openai/gpt-5.5",
+                "google/gemini-3.1-pro-preview",
+            ],
+            "critic": [
+                "anthropic/claude-opus-4.7",
+                "google/gemini-3.1-pro-preview",
+                "openai/gpt-5.5",
+                "x-ai/grok-4.3",
+            ],
         },
     }
     _BLOCKED_MODEL_PREFIXES = ("deepseek/",)
@@ -94,9 +155,11 @@ class RiderGenesis(
     # ULTRA-only: force max reasoning effort for top-tier Anthropic models.
     # Applied via OpenRouter ``extra_body={"reasoning":{"effort":"high"}}``.
     # Other modes keep default effort to avoid unnecessary thinking-token cost.
-    _MAX_EFFORT_ULTRA_MODELS = frozenset({
-        "anthropic/claude-opus-4.7",
-    })
+    _MAX_EFFORT_ULTRA_MODELS = frozenset(
+        {
+            "anthropic/claude-opus-4.7",
+        }
+    )
 
     # ══════════════════════════════════════════════════════════════════════
     # Strategy meta-prompts
@@ -196,7 +259,7 @@ class RiderGenesis(
     def run(
         self,
         prompt: str,
-        mode: str = 'standard',
+        mode: str = "standard",
         num_samples: Optional[int] = None,
         population_size: Optional[int] = None,
         num_generations: Optional[int] = None,
@@ -222,22 +285,21 @@ class RiderGenesis(
             use_llm_judge=use_llm_judge,
         )
 
-        valid_modes = {'light', 'blitz', 'standard', 'ultra'}
+        valid_modes = {"light", "blitz", "standard", "ultra"}
         if mode not in valid_modes:
             logger.warning(
                 f"RiderGenesis: unknown mode '{mode}', valid: {sorted(valid_modes)}. "
                 f"Falling back to 'standard'."
             )
-            mode = 'standard'
+            mode = "standard"
 
-        if mode == 'light':
+        if mode == "light":
             return self.run_light(prompt)
-        if mode == 'blitz':
+        if mode == "blitz":
             return self._run_blitz(prompt)
-        if mode == 'ultra':
+        if mode == "ultra":
             return self._run_ultra(prompt)
         return self._run_standard(prompt)
-
 
     def configure_coolprompt_context(
         self,
@@ -301,7 +363,9 @@ class RiderGenesis(
         """Percentage fitness improvement from the last run."""
         if self._original_fitness <= 0:
             return 0.0
-        return (self._best_fitness - self._original_fitness) / self._original_fitness * 100
+        return (
+            (self._best_fitness - self._original_fitness) / self._original_fitness * 100
+        )
 
     @property
     def fitness(self) -> float:
@@ -319,26 +383,32 @@ class RiderGenesis(
     def contract(self) -> Dict[str, Any]:
         """Last extracted prompt contract (v3 addition)."""
         return dict(self._contract)
+
     @property
     def lessons(self) -> List[str]:
         """GENESIS-lite lessons collected during the last run (v3 addition)."""
         return list(self._lessons)
+
     @property
     def synthetic_tests(self) -> List[str]:
         """Synthetic cases generated during the last Standard/Ultra run."""
         return list(self._synthetic_tests)
+
     @property
     def synthetic_rankings(self) -> List[Dict[str, Any]]:
         """Synthetic beam audit trail: cases, candidate names, and scores."""
         return list(self._synthetic_rankings)
+
     @property
     def external_rankings(self) -> List[Dict[str, Any]]:
         """CoolPrompt validation reranking audit trail."""
         return list(self._external_rankings)
+
     @property
     def role_models(self) -> Dict[str, str]:
         """Primary model used by each RIDER Genesis role in the last/current run."""
         return {role: self._role_model(role) for role in self._ROLES}
+
     @property
     def llm_attempts(self) -> List[Dict[str, Any]]:
         """Diagnostics for model routing, validation failures, and fallbacks."""
@@ -351,5 +421,5 @@ class RiderGenesis(
             try:
                 print(msg)
             except UnicodeEncodeError:
-                print(str(msg).encode('ascii', errors='replace').decode('ascii'))
+                print(str(msg).encode("ascii", errors="replace").decode("ascii"))
         logger.info(msg)

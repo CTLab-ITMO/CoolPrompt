@@ -177,7 +177,11 @@ class BaseMetric(ABC):
         dataset: Optional[list[str]] = None,
         failed_examples: Optional[int] = None,
         return_per_task: bool = False,
-    ) -> float | Tuple[float, List[Dict[str, Tuple[str, str]]]] | Tuple[float, List[float], List[Dict]]:
+    ) -> (
+        float
+        | Tuple[float, List[Dict[str, Tuple[str, str]]]]
+        | Tuple[float, List[float], List[Dict]]
+    ):
         """Compute metric value from text model outputs.
 
         Must be implemented by subclasses to handle input formatting.
@@ -202,9 +206,7 @@ class BaseMetric(ABC):
             output_labels, targets
         )
 
-        results = self._compute_raw(
-            encoded_output_labels, encoded_targets, dataset
-        )
+        results = self._compute_raw(encoded_output_labels, encoded_targets, dataset)
 
         if results is None or any(r is None for r in results):
             return None
@@ -213,9 +215,13 @@ class BaseMetric(ABC):
         aggregate = float(np.mean(results))
 
         if return_per_task:
-            bad_examples = self._extract_bad_examples(
-                results, dataset, outputs, targets, failed_examples or 0
-            ) if failed_examples else []
+            bad_examples = (
+                self._extract_bad_examples(
+                    results, dataset, outputs, targets, failed_examples or 0
+                )
+                if failed_examples
+                else []
+            )
             return aggregate, results, bad_examples
 
         if failed_examples is not None and failed_examples > 0:
@@ -344,9 +350,7 @@ class F1Metric(HFEvaluateMetric, ClassificationMetric):
 
     def __init__(self):
         super().__init__(self._get_name())
-        self._compute_kwargs_func = lambda outputs, targets: {
-            "average": "macro"
-        }
+        self._compute_kwargs_func = lambda outputs, targets: {"average": "macro"}
 
 
 class BleuMetric(HFEvaluateMetric, GenerationMetric):
@@ -528,9 +532,7 @@ class LLMAsJudge(GenerationMetric):
             criteria = [criteria]
         self.criteria = criteria
 
-        self.templates = {
-            crit: self.prompt_templates[crit] for crit in self.criteria
-        }
+        self.templates = {crit: self.prompt_templates[crit] for crit in self.criteria}
 
     def _compute_raw(self, outputs, targets, dataset):
         scores = []
@@ -549,9 +551,7 @@ class LLMAsJudge(GenerationMetric):
             for a in answers:
                 if isinstance(a, AIMessage):
                     content = (
-                        a.content
-                        if isinstance(a.content, str)
-                        else str(a.content)
+                        a.content if isinstance(a.content, str) else str(a.content)
                     )
                     match = re.search(r"\d+", content)
                     parsed.append(int(match.group()) if match else 0)
@@ -559,8 +559,7 @@ class LLMAsJudge(GenerationMetric):
                     parsed.append(0)
 
             normalized = [
-                clip(ans, 0, self.metric_ceil) / self.metric_ceil
-                for ans in parsed
+                clip(ans, 0, self.metric_ceil) / self.metric_ceil for ans in parsed
             ]
             scores.append(mean(normalized))
 
@@ -736,9 +735,7 @@ def validate_and_create_metric(
                 return LLMAsJudge(
                     model=model,
                     criteria=kwargs.get("llm_as_judge_criteria", "relevance"),
-                    custom_templates=kwargs.get(
-                        "llm_as_judge_custom_templates"
-                    ),
+                    custom_templates=kwargs.get("llm_as_judge_custom_templates"),
                     metric_ceil=kwargs.get("llm_as_judge_metric_ceil", 10),
                 )
             if metric == "geval":
@@ -759,9 +756,7 @@ def validate_and_create_metric(
                     metric_class,
                     (BertScoreMetric, MultiReferenceBertScoreMetric),
                 ):
-                    return metric_class(
-                        model_type=_get_bertscore_model_type(kwargs)
-                    )
+                    return metric_class(model_type=_get_bertscore_model_type(kwargs))
                 return metric_class()
             error_msg = (
                 f"Invalid metric for {task} task: {metric}. "
@@ -771,9 +766,7 @@ def validate_and_create_metric(
             )
             logger.error(error_msg)
             raise ValueError(error_msg)
-    error_msg = (
-        f"Invalid task: {task}" f"Available tasks: classification, generation"
-    )
+    error_msg = f"Invalid task: {task}" f"Available tasks: classification, generation"
     logger.error(error_msg)
     raise ValueError(error_msg)
 

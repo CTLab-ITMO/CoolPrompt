@@ -35,17 +35,14 @@ class TestGenerator(unittest.TestCase):
         """Testing inner generate function"""
 
         self.mock_model.invoke.return_value = '{"foo": "bar"}'
-        self.assertEqual(
-            self.generator._generate("Request", None, "foo"), "bar"
-        )
+        self.assertEqual(self.generator._generate("Request", None, "foo"), "bar")
         self.mock_model.invoke.assert_called_once_with("Request")
 
     def test_generate_problem_description(self):
         """Testing problem description generator"""
 
         with patch(
-            "coolprompt.data_generator.generator"
-            + ".SyntheticDataGenerator._generate"
+            "coolprompt.data_generator.generator" + ".SyntheticDataGenerator._generate"
         ) as self._generate_mock:
             self._generate_mock.return_value = "problem"
             self.assertEqual(
@@ -86,8 +83,7 @@ class TestGenerator(unittest.TestCase):
         """Test generation of classification dataset"""
 
         self._generate_patcher = patch(
-            "coolprompt.data_generator.generator"
-            + ".SyntheticDataGenerator._generate"
+            "coolprompt.data_generator.generator" + ".SyntheticDataGenerator._generate"
         )
         self._generate_mock = self._generate_patcher.start()
         self.addCleanup(self._generate_patcher.stop)
@@ -113,12 +109,12 @@ class TestGenerator(unittest.TestCase):
             (["in"], ["out"], problem_description),
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
+
     def test_generate_gen_dataset(self):
         """Test generation of generation dataset"""
 
         self._generate_patcher = patch(
-            "coolprompt.data_generator.generator"
-            + ".SyntheticDataGenerator._generate"
+            "coolprompt.data_generator.generator" + ".SyntheticDataGenerator._generate"
         )
         self._generate_mock = self._generate_patcher.start()
         self.addCleanup(self._generate_patcher.stop)
@@ -144,12 +140,12 @@ class TestGenerator(unittest.TestCase):
             (["in"], ["out"], problem_description),
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
+
     def test_generate_dataset_without_problem_description(self):
         """Test generation of classification dataset"""
 
         self._generate_patcher = patch(
-            "coolprompt.data_generator.generator"
-            + ".SyntheticDataGenerator._generate"
+            "coolprompt.data_generator.generator" + ".SyntheticDataGenerator._generate"
         )
         self._generate_mock = self._generate_patcher.start()
         self.addCleanup(self._generate_patcher.stop)
@@ -181,8 +177,5 @@ class TestGenerator(unittest.TestCase):
             ),
             (["in"], ["out"], "problem"),
         )
-        self._generate_problem_description_mock.assert_called_once_with(
-            "prompt"
-        )
+        self._generate_problem_description_mock.assert_called_once_with("prompt")
         self._generate_mock.assert_called_once_with(request, schema, "examples")
-

@@ -76,13 +76,10 @@ class PromptTransformer:
             request_prompts.append(compression_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
-        ]
+        answers = [a.content if isinstance(a, AIMessage) else a for a in answers]
 
         return [
-            self._parse_tagged_text(answer, "<START>", "<END>")
-            for answer in answers
+            self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers
         ]
 
     def distill_samples(
@@ -115,12 +112,9 @@ class PromptTransformer:
             request_prompts.append(distillation_prompt)
 
         answers = self.model.batch(request_prompts, temperature=temperature)
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
-        ]
+        answers = [a.content if isinstance(a, AIMessage) else a for a in answers]
         return [
-            self._parse_tagged_text(answer, "<START>", "<END>")
-            for answer in answers
+            self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers
         ]
 
     def generate_prompts(
@@ -144,12 +138,9 @@ class PromptTransformer:
         )
         requests = [generation_prompt] * n
         answers = self.model.batch(requests, temperature=temperature)
-        answers = [
-            a.content if isinstance(a, AIMessage) else a for a in answers
-        ]
+        answers = [a.content if isinstance(a, AIMessage) else a for a in answers]
         return [
-            self._parse_tagged_text(answer, "<START>", "<END>")
-            for answer in answers
+            self._parse_tagged_text(answer, "<START>", "<END>") for answer in answers
         ]
 
     def generate_synonyms(
@@ -172,14 +163,10 @@ class PromptTransformer:
         )
         requests = [rewriter_prompt] * n
         responses = self.model.batch(requests, temperature=temperature)
-        responses = [
-            a.content if isinstance(a, AIMessage) else a for a in responses
-        ]
+        responses = [a.content if isinstance(a, AIMessage) else a for a in responses]
         return [response for response in responses if response]
 
-    def convert_to_fewshot(
-        self, candidate: Candidate, sample_count: int = 3
-    ) -> str:
+    def convert_to_fewshot(self, candidate: Candidate, sample_count: int = 3) -> str:
         """Converts a zero-shot prompt into a few-shot format with examples.
 
         Args:

@@ -66,7 +66,12 @@ Documentation = "https://github.com/CTLab-ITMO/CoolPrompt"
 Repository = "https://github.com/CTLab-ITMO/CoolPrompt"
 Changelog = "https://github.com/CTLab-ITMO/CoolPrompt/blob/master/CHANGELOG.md"
 
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
 [tool.pytest.ini_options]
 markers = [
     "integration: needs OPENROUTER_API_KEY or OPENAI_API_KEY and network (OpenRouter by default)",
+    "maintainability: optional architectural and code-size checks",
 ]

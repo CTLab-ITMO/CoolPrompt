@@ -14,6 +14,7 @@ from coolprompt.utils.deprecation import warn_deprecated
 
 from coolprompt.optimizer.autoprompting_method import TelemetryCallback
 
+
 def distillprompt(
     model: BaseLanguageModel,
     dataset_split: Tuple[List[str], List[str], List[str], List[str]],

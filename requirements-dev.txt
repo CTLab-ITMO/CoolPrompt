@@ -1,0 +1,4 @@
+# Code-quality tools used locally and in CI.
+black==25.1.0
+flake8==7.1.2
+pytest==9.0.3

@@ -32,9 +32,7 @@ def _integration_chat_model() -> Any:
     api_key = _integration_api_key()
     if not api_key:
         raise RuntimeError("integration API key missing")
-    base_url = os.environ.get(
-        "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
-    )
+    base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
     model = os.environ.get("INTEGRATION_LLM_MODEL", "openai/gpt-4o-mini")
     return ChatOpenAI(
         model=model,

@@ -87,9 +87,7 @@ def load_rider_genesis() -> type:
         assistant_path,
     )
     if spec is None or spec.loader is None:
-        raise ImportError(
-            f"Cannot load RIDER core assistant from {assistant_path}"
-        )
+        raise ImportError(f"Cannot load RIDER core assistant from {assistant_path}")
 
     module = importlib.util.module_from_spec(spec)
     previous = _install_temporary_rider_modules()

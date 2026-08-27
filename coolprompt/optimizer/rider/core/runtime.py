@@ -58,11 +58,15 @@ class RiderRuntimeMixin:
         return []
 
     @classmethod
-    def _dedupe_models(cls, models: List[str], allow_blocked: bool = False) -> List[str]:
+    def _dedupe_models(
+        cls, models: List[str], allow_blocked: bool = False
+    ) -> List[str]:
         seen = set()
         result: List[str] = []
         for model in models:
-            if not allow_blocked and any(model.startswith(prefix) for prefix in cls._BLOCKED_MODEL_PREFIXES):
+            if not allow_blocked and any(
+                model.startswith(prefix) for prefix in cls._BLOCKED_MODEL_PREFIXES
+            ):
                 continue
             if model and model not in seen:
                 result.append(model)
@@ -71,8 +75,13 @@ class RiderRuntimeMixin:
 
     @staticmethod
     def _allow_chinese_model_fallbacks() -> bool:
-        return os.environ.get("RIDER_GENESIS_ALLOW_CHINESE_MODELS", "").strip().lower() in {
-            "1", "true", "yes", "on",
+        return os.environ.get(
+            "RIDER_GENESIS_ALLOW_CHINESE_MODELS", ""
+        ).strip().lower() in {
+            "1",
+            "true",
+            "yes",
+            "on",
         }
 
     def _record_llm_attempt(
@@ -84,13 +93,15 @@ class RiderRuntimeMixin:
         reason: str = "",
         structured: bool = False,
     ) -> None:
-        self._llm_attempts.append({
-            "role": role,
-            "model": model,
-            "status": status,
-            "reason": reason,
-            "structured": structured,
-        })
+        self._llm_attempts.append(
+            {
+                "role": role,
+                "model": model,
+                "status": status,
+                "reason": reason,
+                "structured": structured,
+            }
+        )
 
     def _build_role_model_chains(self, mode: str) -> Dict[str, List[str]]:
         base = self._MODE_ROLE_MODELS.get(mode, self._MODE_ROLE_MODELS["standard"])
@@ -106,8 +117,14 @@ class RiderRuntimeMixin:
 
     def _role_models(self, role: str = "worker") -> List[str]:
         if not self._role_model_chains:
-            self._role_model_chains = self._build_role_model_chains(self._mode or "standard")
-        chain = self._role_model_chains.get(role) or self._role_model_chains.get("worker") or [self.model]
+            self._role_model_chains = self._build_role_model_chains(
+                self._mode or "standard"
+            )
+        chain = (
+            self._role_model_chains.get(role)
+            or self._role_model_chains.get("worker")
+            or [self.model]
+        )
         return chain
 
     def _role_model(self, role: str = "worker") -> str:
@@ -128,7 +145,10 @@ class RiderRuntimeMixin:
             return False  # full-length outputs are not refusals
         if cls._REFUSAL_RE is None:
             import re as _re
-            cls._REFUSAL_RE = _re.compile("|".join(cls._REFUSAL_PATTERNS), _re.IGNORECASE)
+
+            cls._REFUSAL_RE = _re.compile(
+                "|".join(cls._REFUSAL_PATTERNS), _re.IGNORECASE
+            )
         return bool(cls._REFUSAL_RE.search(text))
 
     @staticmethod
@@ -154,7 +174,9 @@ class RiderRuntimeMixin:
                 return "near_ceiling"
         return ""
 
-    def _main_model_chain(self, role: str, model: Optional[str], allow_fallback: bool) -> List[str]:
+    def _main_model_chain(
+        self, role: str, model: Optional[str], allow_fallback: bool
+    ) -> List[str]:
         chain = [model] if model else list(self._role_models(role))
         if allow_fallback and self.FALLBACK_MODEL not in chain:
             chain.append(self.FALLBACK_MODEL)
@@ -207,16 +229,22 @@ class RiderRuntimeMixin:
                         ):
                             gen_kwargs["extra_body"] = {"reasoning": {"effort": "high"}}
                         resp = self.llm_client.generate(**gen_kwargs)
-                        metadata = getattr(self.llm_client, "last_response_metadata", {}) or {}
+                        metadata = (
+                            getattr(self.llm_client, "last_response_metadata", {}) or {}
+                        )
                         reason = self._unusable_response_reason(resp or "", metadata)
                     except Exception as exc:
-                        metadata = getattr(self.llm_client, "last_response_metadata", {}) or {}
+                        metadata = (
+                            getattr(self.llm_client, "last_response_metadata", {}) or {}
+                        )
                         reason = (
                             str(metadata.get("error_type") or "")
                             or getattr(self.llm_client, "last_error_type", None)
                             or "exception"
                         )
-                        logger.debug(f"_generate({effective_model}, role={role}) exc: {exc}")
+                        logger.debug(
+                            f"_generate({effective_model}, role={role}) exc: {exc}"
+                        )
                         resp = ""
 
                     last_resp = resp or ""
@@ -225,22 +253,31 @@ class RiderRuntimeMixin:
 
                     if not allow_fallback:
                         self._record_llm_attempt(
-                            role=role, model=effective_model,
-                            status="success" if not reason else "failed", reason=reason,
+                            role=role,
+                            model=effective_model,
+                            status="success" if not reason else "failed",
+                            reason=reason,
                         )
                         return last_resp
 
                     if not reason:
-                        self._record_llm_attempt(role=role, model=effective_model, status="success")
+                        self._record_llm_attempt(
+                            role=role, model=effective_model, status="success"
+                        )
                         return last_resp
 
                     self._record_llm_attempt(
-                        role=role, model=effective_model, status="failed", reason=reason,
+                        role=role,
+                        model=effective_model,
+                        status="failed",
+                        reason=reason,
                     )
                     if reason == "content_filter":
                         saw_content_filter = True
                     if reason in {"length", "near_ceiling"} and local_attempt == 0:
-                        model_max_tokens = max(model_max_tokens + 256, int(model_max_tokens * 1.35))
+                        model_max_tokens = max(
+                            model_max_tokens + 256, int(model_max_tokens * 1.35)
+                        )
                         continue
                     if reason == "refusal":
                         logger.info(
@@ -345,16 +382,21 @@ class RiderRuntimeMixin:
                             },
                         )
                         self._record_llm_attempt(
-                            role=role, model=effective_model, status="success", structured=True,
+                            role=role,
+                            model=effective_model,
+                            status="success",
+                            structured=True,
                         )
                         return obj
                     except Exception as exc:
-                        reason = LLMClient._classify_api_exception(exc)
+                        reason = self.llm_client._classify_api_exception(exc)
                         if reason == "content_filter":
                             saw_content_filter = True
                         self._record_llm_attempt(
-                            role=role, model=effective_model,
-                            status="failed", reason=f"instructor:{reason}",
+                            role=role,
+                            model=effective_model,
+                            status="failed",
+                            reason=f"instructor:{reason}",
                             structured=True,
                         )
                         logger.debug(
@@ -377,15 +419,22 @@ class RiderRuntimeMixin:
                 if reason == "content_filter":
                     saw_content_filter = True
                     continue
-                obj = self._parse_structured_text(text or "", schema, allowed_starts=allowed_starts)
+                obj = self._parse_structured_text(
+                    text or "", schema, allowed_starts=allowed_starts
+                )
                 if obj is not None:
                     self._record_llm_attempt(
-                        role=role, model=effective_model, status="success", structured=True,
+                        role=role,
+                        model=effective_model,
+                        status="success",
+                        structured=True,
                     )
                     return obj
                 self._record_llm_attempt(
-                    role=role, model=effective_model,
-                    status="failed", reason="schema_validation",
+                    role=role,
+                    model=effective_model,
+                    status="failed",
+                    reason="schema_validation",
                     structured=True,
                 )
 
@@ -403,8 +452,8 @@ class RiderRuntimeMixin:
 
     # v4.3 PHASE REACTOR temperatures — 4-phase progression.
     _PHASE_T = {
-        'ignition': 1.15,       # broad exploration
-        'fusion': 0.85,         # balanced refine
-        'crystallization': 0.55,  # polish, low drift
-        'validation': 0.3,      # stabilize, near-deterministic
+        "ignition": 1.15,  # broad exploration
+        "fusion": 0.85,  # balanced refine
+        "crystallization": 0.55,  # polish, low drift
+        "validation": 0.3,  # stabilize, near-deterministic
     }
