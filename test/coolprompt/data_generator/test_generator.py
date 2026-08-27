@@ -109,6 +109,7 @@ class TestGenerator(unittest.TestCase):
             (["in"], ["out"], problem_description),
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
+
     def test_generate_gen_dataset(self):
         """Test generation of generation dataset"""
 
@@ -139,6 +140,7 @@ class TestGenerator(unittest.TestCase):
             (["in"], ["out"], problem_description),
         )
         self._generate_mock.assert_called_once_with(request, schema, "examples")
+
     def test_generate_dataset_without_problem_description(self):
         """Test generation of classification dataset"""
 
@@ -177,4 +179,3 @@ class TestGenerator(unittest.TestCase):
         )
         self._generate_problem_description_mock.assert_called_once_with("prompt")
         self._generate_mock.assert_called_once_with(request, schema, "examples")
-
