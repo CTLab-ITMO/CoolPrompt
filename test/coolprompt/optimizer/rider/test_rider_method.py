@@ -118,6 +118,7 @@ def test_rider_core_loader_points_to_core_assistant():
     assert rider_module.load_rider_genesis.__module__.endswith("rider._core_loader")
 
 
+@pytest.mark.maintainability
 def test_rider_core_modules_stay_reviewable():
     core_dir = Path(rider_module.__file__).resolve().parent / "core"
     modules = [

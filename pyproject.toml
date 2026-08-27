@@ -73,4 +73,5 @@ target-version = ["py312"]
 [tool.pytest.ini_options]
 markers = [
     "integration: needs OPENROUTER_API_KEY or OPENAI_API_KEY and network (OpenRouter by default)",
+    "maintainability: optional architectural and code-size checks",
 ]

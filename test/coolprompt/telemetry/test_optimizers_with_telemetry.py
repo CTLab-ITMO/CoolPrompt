@@ -15,6 +15,9 @@ from coolprompt.assistant import PromptTuner
 from coolprompt.utils.telemetry import OptimizationTelemetry
 
 
+pytestmark = pytest.mark.integration
+
+
 def get_openrouter_api_key() -> str:
     """Get OpenRouter API key from environment."""
     api_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENAI_API_KEY")
