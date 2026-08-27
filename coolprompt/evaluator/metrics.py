@@ -76,6 +76,10 @@ class HFEvaluateMetric(ABC):
             List[float]: List of float metrics (for each model answer).
         """
 
+        outputs = [
+            "none" if isinstance(o, str) and not o.strip() else o
+            for o in outputs
+        ]
         return [
             self._postprocessing(
                 self._metric.compute(

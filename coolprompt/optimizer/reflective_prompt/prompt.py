@@ -78,6 +78,8 @@ class Prompt:
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
         score: float = None,
         bad_examples: List[BadExample] = [],
+        role: str = "",
+        constraints: str = "",
     ) -> None:
         """Prompt class.
 
@@ -88,12 +90,16 @@ class Prompt:
             score (float, optional): prompt evaluation score. Defaults to None.
             bad_examples (List[BadExample]): a list of
                 bad examples for the prompt.
+            role (str): system behavior / role for the model (CoEvo). Defaults to "".
+            constraints (str): output format constraints (CoEvo). Defaults to "".
         """
 
         self.text = text
         self.origin = origin
         self.score = score
         self.bad_examples = bad_examples
+        self.role = role
+        self.constraints = constraints
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
@@ -127,6 +133,10 @@ class Prompt:
             "text": self.text,
             "origin": self.origin.name,
         }
+        if self.role:
+            result["role"] = self.role
+        if self.constraints:
+            result["constraints"] = self.constraints
         if self.score is not None:
             result["score"] = self.score
         if len(self.bad_examples) > 0:
@@ -159,6 +169,8 @@ class Prompt:
                 BadExample.from_dict(bad_example_data)
                 for bad_example_data in data.get("bad_examples", [])
             ],
+            role=data.get("role", ""),
+            constraints=data.get("constraints", ""),
         )
 
     def __str__(self) -> str:

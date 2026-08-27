@@ -6,6 +6,7 @@ import yaml
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 import numpy as np
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
@@ -67,6 +68,8 @@ class Evaluator:
         targets: list[str | int],
         template: Optional[str] = None,
         failed_examples: Optional[int] = None,
+        system_role: Optional[str] = None,
+        constraints: Optional[str] = None,
         *,
         return_detailed: bool = False,
         save_model_answers: bool = False,
@@ -112,7 +115,9 @@ class Evaluator:
         if self.task == Task.CLASSIFICATION:
             self.metric.extract_labels(targets)
         full_prompts = [
-            self._get_full_prompt(prompt, sample, template)
+            self._get_full_prompt(
+                prompt, sample, template, system_role, constraints
+            )
             for sample in dataset
         ]
 
@@ -203,7 +208,9 @@ class Evaluator:
         prompt: str,
         sample: str,
         template: Optional[str] = None,
-    ) -> str:
+        system_role: Optional[str] = None,
+        constraints: Optional[str] = None,
+    ) -> str | list:
         """Inserts parts of the prompt into the task template.
 
         Args:
@@ -212,25 +219,43 @@ class Evaluator:
             template (Optional[str]):
                 Prompt template for defined task type.
                 If None, uses default template.
+            system_role (Optional[str]): system behavior prepended as a
+                SystemMessage (CoEvo). Defaults to None.
+            constraints (Optional[str]): output format constraints appended
+                to the prompt (CoEvo). Defaults to None.
 
         Raises:
             ValueError: if type of task is not supported
 
         Returns:
-            str: the full prompt to be passed to the model
+            str | list: the full prompt string, or a list of
+                SystemMessage + HumanMessage if system_role is set.
         """
 
         if template is None:
             template = self._get_default_template()
 
+        effective_prompt = prompt
+        if constraints:
+            effective_prompt = f"{prompt}\n\n{constraints}"
+
         match self.task:
             case Task.CLASSIFICATION:
                 labels = ", ".join(map(str, self.metric.label_to_id.keys()))
-                return template.format(
-                    PROMPT=prompt, LABELS=labels, INPUT=sample
+                formatted = template.format(
+                    PROMPT=effective_prompt, LABELS=labels, INPUT=sample
                 )
             case Task.GENERATION:
-                return template.format(PROMPT=prompt, INPUT=sample)
+                formatted = template.format(
+                    PROMPT=effective_prompt, INPUT=sample
+                )
+
+        if system_role:
+            return [
+                SystemMessage(content=system_role),
+                HumanMessage(content=formatted),
+            ]
+        return formatted
 
     def _get_default_template(self) -> str:
         """Returns the default template for the task type."""
