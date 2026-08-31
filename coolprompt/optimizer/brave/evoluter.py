@@ -368,7 +368,7 @@ class BRAVEEvoluter:
                     self.cfg.population_size
                 )
                 filter_report = self.diversity_manager.get_filter_report()
-                if filter_report:
+                if filter_report and self.logger is not None:
                     self.logger.log_diversity_filter(
                         step=step,
                         filter_report=filter_report
@@ -946,7 +946,7 @@ class BRAVEEvoluter:
         useless_ops_count = 0
         spent_tokens = 0.0
         self.val_elitist: Optional[Prompt] = None
-        self.best_val_quality: float = 0.0
+        self.best_val_quality: float = float("-inf")
 
         self.population = self.population_initializer.run(
             initial_prompt=initial_prompt,
@@ -1012,14 +1012,15 @@ class BRAVEEvoluter:
                 "trials": float(self.controller.action_stats[action]["trials"]),
             }
 
-            self.logger.log_controller_state(
-                iteration=step,
-                selected_action=action,
-                action_scores=score_dict,
-                is_fallback=is_fallback,
-                action_stats=self.controller.action_stats,
-                global_step=self.controller.global_step
-            )
+            if self.logger is not None:
+                self.logger.log_controller_state(
+                    iteration=step,
+                    selected_action=action,
+                    action_scores=score_dict,
+                    is_fallback=is_fallback,
+                    action_stats=self.controller.action_stats,
+                    global_step=self.controller.global_step
+                )
 
             result = self._execute_action(action=action, iteration=step)
 
@@ -1071,7 +1072,7 @@ class BRAVEEvoluter:
                 )
             )
 
-            if step % 5 == 0:
+            if step % 5 == 0 and self.logger is not None:
                 self.logger.log_population(step, self.population)
 
             if (
@@ -1087,7 +1088,8 @@ class BRAVEEvoluter:
             if self.cfg.early_stop and self.best_quality == 1.0:
                 break
 
-        self.logger.log_population(-2, self.population)
+        if self.logger is not None:
+            self.logger.log_population(-2, self.population)
 
         for prompt in self.population:
             prompt.set_score(self._evaluate_val_cached(prompt))
@@ -1096,7 +1098,8 @@ class BRAVEEvoluter:
         self.population = list(
             sorted(self.population, key=lambda prompt: prompt.val_score, reverse=True)
         )
-        self.logger.log_population(-3, self.population)
+        if self.logger is not None:
+            self.logger.log_population(-3, self.population)
 
         summary = {
             "best_prompt": self.elitist.text,

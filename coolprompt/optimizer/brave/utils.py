@@ -18,7 +18,7 @@ class BRAVEConfig:
     actions: List[str] | str = field(
         default_factory=lambda: [
             "crossover",
-            "mutation",
+            "elitist_mutation",
         ]
     )
     initial_budget_tokens: float = 200_000.0
