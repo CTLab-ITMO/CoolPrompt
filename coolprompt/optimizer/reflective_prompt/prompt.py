@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Type, List, Dict
+from typing import Type, List, Dict, Tuple, Optional
 
 
 class PromptOrigin(Enum):
@@ -9,9 +9,20 @@ class PromptOrigin(Enum):
     """
 
     MANUAL = "manual"
-    APE = "ape"
+    BY_PD = "by_pd"
     EVOLUTED = "evoluted"
     MUTATED = "mutated"
+    HYPE = "hype"
+    APE = "ape"
+    COMPRESSED = "compressed"
+    CROSSOVER = "crossover"
+    ELITIST_MUTATION = "elitist_mutation"
+    LONG_TERM_MUTATION = "long_term_mutation"
+    GRADIENT_STEP = "gradient_step"
+    PARAPHRASED = "paraphrased"
+    CREATIVE_ZERO_ORDER_PD = "creative_zero_order_pd"
+    CREATIVE_IN_STYLE_OF = "creative_in_style_of"
+    FEW_SHOT = "few_shot"
 
     @classmethod
     def from_string(cls: Type["PromptOrigin"], string: str) -> "PromptOrigin":
@@ -75,7 +86,10 @@ class Prompt:
         text: str,
         origin: PromptOrigin = PromptOrigin.EVOLUTED,
         score: float = None,
-        bad_examples: List[BadExample] = [],
+        val_score: float = None,
+        gradient: str = None,
+        bad_examples: Optional[List[BadExample]] = None,
+        few_shot_examples: Optional[List[Tuple[str, str]]] = None,
     ) -> None:
         """Prompt class.
 
@@ -91,7 +105,12 @@ class Prompt:
         self.text = text
         self.origin = origin
         self.score = score
-        self.bad_examples = bad_examples
+        self.bad_examples = bad_examples if bad_examples is not None else []
+        self.few_shot_examples = (
+            few_shot_examples if few_shot_examples is not None else []
+        )
+        self.gradient = gradient
+        self.val_score = val_score
 
     def set_score(self, new_score: float) -> None:
         """Records new prompt evaluation score.
@@ -101,6 +120,9 @@ class Prompt:
         """
 
         self.score = float(new_score)
+
+    def set_val_score(self, new_score: float) -> None:
+        self.val_score = float(new_score)
 
     def set_bad_examples(self, bad_examples: List[Dict[str, str]]) -> None:
         """Stores provided bad examples."""
@@ -113,6 +135,10 @@ class Prompt:
             )
             for example in bad_examples
         ]
+        self.gradient = None
+
+    def add_few_shot_example(self, example: Tuple[str, str]) -> None:
+        self.few_shot_examples.append(example)
 
     def to_dict(self) -> dict:
         """Creates dictionary representation of prompt.
@@ -127,6 +153,8 @@ class Prompt:
         }
         if self.score is not None:
             result["score"] = self.score
+        if self.val_score is not None:
+            result["val_score"] = self.val_score
         if len(self.bad_examples) > 0:
             result["bad_examples"] = [ex.to_dict() for ex in self.bad_examples]
         return result

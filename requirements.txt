@@ -16,3 +16,4 @@ langchain-openai>=0.3.30
 langdetect>=0.4.31
 deepeval>=3.7.2
 transformers<5.0.0
+sentence-transformers>=3.0.0

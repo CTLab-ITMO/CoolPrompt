@@ -4,6 +4,7 @@ from typing import Any, Iterable
 from langchain_core.language_models.base import BaseLanguageModel
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+from coolprompt.optimizer.brave import BRAVEMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
 from coolprompt.optimizer.hyper.hyper import HyPERMethod
@@ -22,6 +23,7 @@ _METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
     "regps": ReGPSMethod,
     "compress": CompressorMethod,
     "rider": RIDERGenesisMethod,
+    "brave": BRAVEMethod,
 }
 
 
