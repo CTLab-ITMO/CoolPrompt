@@ -133,7 +133,7 @@ Output the mutated prompt only.
 Bracket the final prompt with <prompt> </prompt>.
 """
 CREATIVE_ZERO_ORDER_MUTATION_TEMPLATE = """Imagine that you're an artist. You can do what you want and how you want. You have the mightiest power of free will.
-Below is a task user is needed to solve. 
+Below is a task user is needed to solve.
 {PROBLEM_DESCRIPTION}
 
 Think deeply throughout your mind, collect all your pros and cons, your powers and your weaknesses.

@@ -1,16 +1,11 @@
 from typing import List, Callable
 
-from coolprompt.optimizer.reflective_prompt.prompt import (
-    Prompt,
-    PromptOrigin
-)
+from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.optimizer.brave.operators.basic_operator import Operator
 from coolprompt.optimizer.brave.prompt_templates import (
-    CREATIVE_ZERO_ORDER_MUTATION_TEMPLATE
+    CREATIVE_ZERO_ORDER_MUTATION_TEMPLATE,
 )
-from coolprompt.optimizer.brave.utils import (
-    PROMPT_TAGS
-)
+from coolprompt.optimizer.brave.utils import PROMPT_TAGS
 from coolprompt.utils.parsing import extract_answer
 
 
@@ -23,7 +18,7 @@ class CreativeZeroOrderMutationOperator(Operator):
         prompt: Prompt,  # won't be used, but needed for the interface
         problem_description: str,
         llm_query_fn: Callable[[List[str]], List[str]],
-        evaluate_fn: Callable[[Prompt, str], None]
+        evaluate_fn: Callable[[Prompt, str], None],
     ) -> Prompt:
         """Generate and evaluate a creative zero-order mutation.
 
@@ -45,12 +40,9 @@ class CreativeZeroOrderMutationOperator(Operator):
         generated = extract_answer(
             answer=llm_query_fn([generating_template])[0],
             tags=PROMPT_TAGS,
-            format_mismatch_label=""
+            format_mismatch_label="",
         )
-        generated = Prompt(
-            generated,
-            origin=PromptOrigin.CREATIVE_ZERO_ORDER_PD
-        )
+        generated = Prompt(generated, origin=PromptOrigin.CREATIVE_ZERO_ORDER_PD)
         evaluate_fn(generated, "train")
 
         if self.logger is not None:
@@ -60,7 +52,7 @@ class CreativeZeroOrderMutationOperator(Operator):
                 prev_score=-1.0,
                 mutated_prompt=generated.text,
                 mutated_score=generated.score,
-                file_name="creative_zero_orders"
+                file_name="creative_zero_orders",
             )
 
         return generated

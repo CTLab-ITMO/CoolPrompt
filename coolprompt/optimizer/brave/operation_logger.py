@@ -126,12 +126,7 @@ class OperationLogger:
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
-    def _append_logs(
-        self,
-        filename: str,
-        key: str,
-        log_entry: Any
-    ) -> None:
+    def _append_logs(self, filename: str, key: str, log_entry: Any) -> None:
         """Append a dataclass log entry beneath a YAML document key.
 
         Args:
@@ -142,18 +137,13 @@ class OperationLogger:
 
         existing_logs = []
         if filename.exists():
-            with open(filename, 'r', encoding='utf-8') as f:
+            with open(filename, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
                 existing_logs = data.get(key, [])
 
         existing_logs.append(asdict(log_entry))
-        with open(filename, 'w', encoding='utf-8') as f:
-            yaml.dump(
-                {key: existing_logs},
-                f,
-                allow_unicode=True,
-                sort_keys=False
-            )
+        with open(filename, "w", encoding="utf-8") as f:
+            yaml.dump({key: existing_logs}, f, allow_unicode=True, sort_keys=False)
 
     def log_elitist_mutation(
         self,
@@ -163,7 +153,7 @@ class OperationLogger:
         mutated_prompt: str,
         mutated_score: float,
         new_long_term_reflection: str,
-        short_term_reflections: List[str]
+        short_term_reflections: List[str],
     ) -> None:
         """Log an elite mutation to a YAML file.
 
@@ -184,7 +174,7 @@ class OperationLogger:
             mutated_prompt=mutated_prompt,
             mutated_score=mutated_score,
             new_long_term_reflection=new_long_term_reflection,
-            short_term_reflections=short_term_reflections
+            short_term_reflections=short_term_reflections,
         )
 
         log_file = self.log_dir / "elitist_mutations.yaml"
@@ -197,7 +187,7 @@ class OperationLogger:
         prev_score: float,
         mutated_prompt: str,
         mutated_score: float,
-        file_name: str = "mutations"
+        file_name: str = "mutations",
     ) -> None:
         """Log a generic mutation to a YAML file.
 
@@ -248,7 +238,7 @@ class OperationLogger:
             prev_score=prev_score,
             mutated_prompt=mutated_prompt,
             mutated_score=mutated_score,
-            textual_gradient=textual_gradient
+            textual_gradient=textual_gradient,
         )
 
         log_file = self.log_dir / "gradient_steps.yaml"
@@ -262,7 +252,7 @@ class OperationLogger:
         mutated_prompt: str,
         mutated_score: float,
         style: str,
-        role: str
+        role: str,
     ) -> None:
         """Log a creative role-and-style mutation.
 
@@ -284,7 +274,7 @@ class OperationLogger:
             mutated_prompt=mutated_prompt,
             mutated_score=mutated_score,
             style=style,
-            role=role
+            role=role,
         )
 
         log_file = self.log_dir / "creative_role_style_mutations.yaml"
@@ -339,7 +329,7 @@ class OperationLogger:
         parent2_textual_gradient: str,
         offspring_prompt: str,
         offspring_score: float,
-        short_term_reflection: str
+        short_term_reflection: str,
     ) -> None:
         """Log a crossover operation to a YAML file.
 
@@ -366,7 +356,7 @@ class OperationLogger:
             parent2_textual_gradient=parent2_textual_gradient,
             offspring_prompt=offspring_prompt,
             offsprint_score=offspring_score,
-            short_term_reflection=short_term_reflection
+            short_term_reflection=short_term_reflection,
         )
 
         log_file = self.log_dir / "crossovers.yaml"
@@ -384,17 +374,12 @@ class OperationLogger:
         log_entry = PopulationLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
-            population=population
+            population=population,
         )
 
         log_file = self.log_dir / f"{iteration}_population.yaml"
-        with open(log_file, 'w', encoding='utf-8') as f:
-            yaml.dump(
-                asdict(log_entry),
-                f,
-                allow_unicode=True,
-                sort_keys=False
-            )
+        with open(log_file, "w", encoding="utf-8") as f:
+            yaml.dump(asdict(log_entry), f, allow_unicode=True, sort_keys=False)
 
     def log_controller_state(
         self,
@@ -403,7 +388,7 @@ class OperationLogger:
         action_scores: dict,
         is_fallback: bool,
         action_stats: dict,
-        global_step: int
+        global_step: int,
     ) -> None:
         """Log controller state and action selection.
 
@@ -422,30 +407,26 @@ class OperationLogger:
             action_scores=action_scores,
             is_fallback=is_fallback,
             action_stats=action_stats,
-            global_step=global_step
+            global_step=global_step,
         )
 
         log_file = self.log_dir / "controller_state.yaml"
         existing_logs = []
         if log_file.exists():
-            with open(log_file, 'r', encoding='utf-8') as f:
+            with open(log_file, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
-                existing_logs = data.get('controller_states', [])
+                existing_logs = data.get("controller_states", [])
 
         existing_logs.append(asdict(log_entry))
-        with open(log_file, 'w', encoding='utf-8') as f:
+        with open(log_file, "w", encoding="utf-8") as f:
             yaml.dump(
-                {'controller_states': existing_logs},
+                {"controller_states": existing_logs},
                 f,
                 allow_unicode=True,
-                sort_keys=False
+                sort_keys=False,
             )
 
-    def log_diversity_filter(
-        self,
-        step: int,
-        filter_report: dict
-    ) -> None:
+    def log_diversity_filter(self, step: int, filter_report: dict) -> None:
         """Log a population-diversity filtering report.
 
         Args:
@@ -455,25 +436,25 @@ class OperationLogger:
         log_file = self.log_dir / "diversity_filter.yaml"
         existing_logs = []
         if log_file.exists():
-            with open(log_file, 'r', encoding='utf-8') as f:
+            with open(log_file, "r", encoding="utf-8") as f:
                 data = yaml.safe_load(f) or {}
-                existing_logs = data.get('diversity_filters', [])
+                existing_logs = data.get("diversity_filters", [])
 
         log_entry = {
-            'step': step,
-            'timestamp': datetime.now().isoformat(),
-            'duplicate_threshold': filter_report.get('threshold'),
-            'num_clusters': filter_report.get('num_clusters'),
-            'num_removed': filter_report.get('num_removed'),
-            'removed_indices': filter_report.get('removed_indices'),
-            'deduplication_removed': filter_report.get('deduplication_removed')
+            "step": step,
+            "timestamp": datetime.now().isoformat(),
+            "duplicate_threshold": filter_report.get("threshold"),
+            "num_clusters": filter_report.get("num_clusters"),
+            "num_removed": filter_report.get("num_removed"),
+            "removed_indices": filter_report.get("removed_indices"),
+            "deduplication_removed": filter_report.get("deduplication_removed"),
         }
 
         existing_logs.append(log_entry)
-        with open(log_file, 'w', encoding='utf-8') as f:
+        with open(log_file, "w", encoding="utf-8") as f:
             yaml.dump(
-                {'diversity_filters': existing_logs},
+                {"diversity_filters": existing_logs},
                 f,
                 allow_unicode=True,
-                sort_keys=False
+                sort_keys=False,
             )

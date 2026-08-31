@@ -1,19 +1,12 @@
 from typing import List, Tuple, Callable
 
-from coolprompt.optimizer.reflective_prompt.prompt import (
-    Prompt,
-    PromptOrigin
-)
+from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.optimizer.brave.operators.basic_operator import Operator
 from coolprompt.optimizer.brave.prompt_templates import (
     CREATIVE_STYLE_AND_ROLE_TEMPLATE,
-    CREATIVE_ZERO_ORDER_MUTATION_TEMPLATE
+    CREATIVE_ZERO_ORDER_MUTATION_TEMPLATE,
 )
-from coolprompt.optimizer.brave.utils import (
-    PROMPT_TAGS,
-    STYLE_TAGS,
-    ROLE_TAGS
-)
+from coolprompt.optimizer.brave.utils import PROMPT_TAGS, STYLE_TAGS, ROLE_TAGS
 from coolprompt.utils.parsing import extract_answer
 
 
@@ -26,7 +19,7 @@ class CreativeRoleAndStyleMutationOperator(Operator):
         prompt: Prompt,
         problem_description: str,
         llm_query_fn: Callable[[List[str]], List[str]],
-        evaluate_fn: Callable[[Prompt, str], None]
+        evaluate_fn: Callable[[Prompt, str], None],
     ) -> Tuple[Prompt, str]:
         """Generate and evaluate a role-and-style mutation.
 
@@ -49,30 +42,25 @@ class CreativeRoleAndStyleMutationOperator(Operator):
         model_answer = llm_query_fn([style_and_role_template])[0]
         print(model_answer)
         style = extract_answer(
-            answer=model_answer,
-            tags=STYLE_TAGS,
-            format_mismatch_label=""
+            answer=model_answer, tags=STYLE_TAGS, format_mismatch_label=""
         )
         role = extract_answer(
-            answer=model_answer,
-            tags=ROLE_TAGS,
-            format_mismatch_label=""
+            answer=model_answer, tags=ROLE_TAGS, format_mismatch_label=""
         )
 
         mutation_template = CREATIVE_ZERO_ORDER_MUTATION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=problem_description,
             STYLE=style,
             ROLE=role,
-            PROMPT=prompt.text
+            PROMPT=prompt.text,
         )
         mutated_offspring = extract_answer(
             answer=llm_query_fn([mutation_template])[0],
             tags=PROMPT_TAGS,
-            format_mismatch_label=""
+            format_mismatch_label="",
         )
         mutated_offspring = Prompt(
-            mutated_offspring,
-            origin=PromptOrigin.CREATIVE_IN_STYLE_OF
+            mutated_offspring, origin=PromptOrigin.CREATIVE_IN_STYLE_OF
         )
         evaluate_fn(mutated_offspring, "train")
 
@@ -84,7 +72,7 @@ class CreativeRoleAndStyleMutationOperator(Operator):
                 mutated_prompt=mutated_offspring.text,
                 mutated_score=mutated_offspring.score,
                 style=style,
-                role=role
+                role=role,
             )
 
         return mutated_offspring

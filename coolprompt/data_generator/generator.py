@@ -119,9 +119,7 @@ class SyntheticDataGenerator:
         """
         if examples:
             if task == Task.CLASSIFICATION and labels:
-                template = (
-                    CLASSIFICATION_PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE
-                )
+                template = CLASSIFICATION_PROBLEM_DESCRIPTION_BASED_ON_EXAMPLES_TEMPLATE
                 request = template.format(
                     prompt=prompt,
                     examples=self._examples_to_str(examples),
@@ -228,12 +226,8 @@ class SyntheticDataGenerator:
                 "Problem description was not provided, "
                 + "so it will be generated automatically"
             )
-            problem_description = self._generate_problem_description(
-                prompt, task=task
-            )
-            logger.info(
-                f"Generated problem description: {problem_description}"
-            )
+            problem_description = self._generate_problem_description(prompt, task=task)
+            logger.info(f"Generated problem description: {problem_description}")
 
         if task == Task.CLASSIFICATION:
             regular_template = CLASSIFICATION_DATA_GENERATING_TEMPLATE

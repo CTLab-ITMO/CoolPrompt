@@ -1,12 +1,9 @@
 from typing import Callable
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.optimizer.reflective_prompt.prompt import (
-    Prompt,
-    PromptOrigin
-)
+from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.optimizer.brave.operators.basic_operator import Operator
-from coolprompt.optimizer.hype.hype import HyPEOptimizer
+from coolprompt.optimizer.hyper.meta_prompt import MetaPromptOptimizer
 
 
 class HypeOperator(Operator):
@@ -21,7 +18,7 @@ class HypeOperator(Operator):
         """
 
         super().__init__(**kwargs)
-        self.hype = HyPEOptimizer(model)
+        self.hype = MetaPromptOptimizer(model)
 
     def run(
         self,
@@ -43,10 +40,7 @@ class HypeOperator(Operator):
         """
 
         hyped = self.hype.optimize(
-            prompt.text,
-            meta_info={
-                'problem_description': problem_description
-            }
+            prompt.text, meta_info={"problem_description": problem_description}
         )
         hyped = Prompt(hyped, origin=PromptOrigin.HYPE)
         evaluate_fn(hyped, "train")
@@ -58,7 +52,7 @@ class HypeOperator(Operator):
                 prev_score=prompt.score,
                 mutated_prompt=hyped.text,
                 mutated_score=hyped.score,
-                file_name="hype"
+                file_name="hype",
             )
 
         return hyped

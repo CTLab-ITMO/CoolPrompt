@@ -35,20 +35,15 @@ from coolprompt.optimizer.brave.operators import (
     CreativeRoleAndStyleMutationOperator,
     CreativeZeroOrderMutationOperator,
     HardFewShotExamplesOperator,
-    BiggerPopulationInitializationOperator
+    BiggerPopulationInitializationOperator,
 )
-from coolprompt.optimizer.brave.population_diversity import (
-    PopulationDiversityManager
-)
+from coolprompt.optimizer.brave.population_diversity import PopulationDiversityManager
 from coolprompt.optimizer.brave.utils import (
     BRAVEConfig,
     OptimizationLog,
-    reranking_population
+    reranking_population,
 )
-from coolprompt.optimizer.reflective_prompt.prompt import (
-    Prompt,
-    PromptOrigin
-)
+from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.utils.utils import get_dataset_split
 
 
@@ -72,7 +67,7 @@ class BRAVEEvoluter:
         "zero_order",
         "creative_role_and_style",
         "creative_zero_order",
-        "few_shot_mutation"
+        "few_shot_mutation",
     }
 
     def __init__(
@@ -148,7 +143,7 @@ class BRAVEEvoluter:
             use_hierarchical=self.cfg.diversity_use_hierarchical,
             use_bert=self.cfg.diversity_use_bert,
             bert_weight=self.cfg.diversity_bert_weight,
-            duplicate_threshold=self.cfg.diversity_duplicate_threshold
+            duplicate_threshold=self.cfg.diversity_duplicate_threshold,
         )
 
         self.long_term_reflection = ""
@@ -163,41 +158,37 @@ class BRAVEEvoluter:
                 logger=self.logger
             )
         elif self.cfg.population_initializer == "bigger":
-            self.population_initializer = \
-                BiggerPopulationInitializationOperator(
-                    logger=self.logger
-                )
+            self.population_initializer = BiggerPopulationInitializationOperator(
+                logger=self.logger
+            )
         else:
             raise ValueError(
-                "Unsupported population initializer: " +
-                self.cfg.population_initializer
+                "Unsupported population initializer: " + self.cfg.population_initializer
             )
 
         self.crossover_operator = CrossoverOperator(self.logger)
         self.elitist_mutation_operator = ElitistMutationOperator(self.logger)
         self.compressor_operator = CompressorOperator(
-            model=self.model,
-            logger=self.logger
+            model=self.model, logger=self.logger
         )
         self.gradient_step_operator = GradientStepOperator(self.logger)
         self.hype_operator = HypeOperator(model=self.model, logger=self.logger)
         self.long_term_mutation_operator = LongTermMutationOperator(self.logger)
         self.paraphrasing_operator = ParaphrasingByPDOperator(self.logger)
         self.zero_order_operator = ZeroOrderMutationOperator(self.logger)
-        self.creative_role_and_style_operator =\
-            CreativeRoleAndStyleMutationOperator(self.logger)
-        self.creative_zero_order_mutation_operator =\
-            CreativeZeroOrderMutationOperator(self.logger)
+        self.creative_role_and_style_operator = CreativeRoleAndStyleMutationOperator(
+            self.logger
+        )
+        self.creative_zero_order_mutation_operator = CreativeZeroOrderMutationOperator(
+            self.logger
+        )
 
         self.population: List[Prompt] = []
         self.logs: List[OptimizationLog] = []
         self.initial_budget: float = self.cfg.initial_budget_tokens
         self.artifacts: Dict[str, bool] = self._init_artifacts()
 
-    def _calculate_costs(
-        self,
-        new_tracker_stats: Dict[str, float]
-    ) -> Dict[str, float]:
+    def _calculate_costs(self, new_tracker_stats: Dict[str, float]) -> Dict[str, float]:
         """Calculate tracker-stat deltas and store cumulative values.
 
         Args:
@@ -234,10 +225,7 @@ class BRAVEEvoluter:
         }
 
     def _update_artifacts(
-        self,
-        action: str,
-        result: ActionResult,
-        improved: bool
+        self, action: str, result: ActionResult, improved: bool
     ) -> None:
         """Update action-artifact flags from an execution result.
 
@@ -295,9 +283,9 @@ class BRAVEEvoluter:
             quality_slope=float(np.clip((slope + 1.0) / 2.0, 0.0, 1.0)),
             stagnation=float(stagnation),
             useless_ops_ratio=float(np.clip(useless_ratio, 0.0, 1.0)),
-            remaining_budget_ratio=float(np.clip(
-                remaining_budget / self.cfg.initial_budget_tokens, 0.0, 1.0
-            )),
+            remaining_budget_ratio=float(
+                np.clip(remaining_budget / self.cfg.initial_budget_tokens, 0.0, 1.0)
+            ),
             epoch_progress=float(progress),
             population_diversity=float(np.clip(population_diversity, 0.0, 1.0)),
         )
@@ -316,14 +304,19 @@ class BRAVEEvoluter:
         min_score = float(np.min([p.score for p in self.population]))
         delta_mean = new_prompt.score - mean_score
         delta_min = new_prompt.score - min_score
-        delta = new_prompt.score - self.best_quality +\
-            self.cfg.lambda_mean_quality * delta_mean +\
-            self.cfg.lambda_min_quality * delta_min
+        delta = (
+            new_prompt.score
+            - self.best_quality
+            + self.cfg.lambda_mean_quality * delta_mean
+            + self.cfg.lambda_min_quality * delta_min
+        )
         if new_prompt.score > self.best_quality:
             self.elitist = new_prompt
             self.best_quality = new_prompt.score
-        elif new_prompt.score == self.best_quality \
-                and self.elitist.origin == PromptOrigin.MANUAL:
+        elif (
+            new_prompt.score == self.best_quality
+            and self.elitist.origin == PromptOrigin.MANUAL
+        ):
             self.elitist = new_prompt
         return delta
 
@@ -364,17 +357,15 @@ class BRAVEEvoluter:
         if len(self.population) > self.cfg.population_size:
             if self.cfg.population_clusterization:
                 self.population = self.diversity_manager.maintain_diversity(
-                    self.population,
-                    self.cfg.population_size
+                    self.population, self.cfg.population_size
                 )
                 filter_report = self.diversity_manager.get_filter_report()
                 if filter_report and self.logger is not None:
                     self.logger.log_diversity_filter(
-                        step=step,
-                        filter_report=filter_report
+                        step=step, filter_report=filter_report
                     )
             else:
-                self.population = self.population[:self.cfg.population_size]
+                self.population = self.population[: self.cfg.population_size]
         return prompt in self.population
 
     def _crossover(self, iteration: int) -> ActionResult:
@@ -387,15 +378,12 @@ class BRAVEEvoluter:
             ActionResult: crossover quality change, cost, and offspring data.
         """
 
-        (
-            offspring,
-            short_term_reflection
-        ) = self.crossover_operator.run(
+        (offspring, short_term_reflection) = self.crossover_operator.run(
             iteration=iteration,
             population=self.population,
             problem_description=self.problem_description,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
         improved = self._add_new_prompt(offspring, iteration)
         delta_quality = self._update_elitist(offspring)
@@ -408,8 +396,8 @@ class BRAVEEvoluter:
         return ActionResult(
             action="crossover",
             delta_quality=delta_quality,
-            cost_tokens=costs['total_tokens'],
-            improved=improved
+            cost_tokens=costs["total_tokens"],
+            improved=improved,
         )
 
     def _elitist_mutation(self, iteration: int) -> ActionResult:
@@ -432,7 +420,7 @@ class BRAVEEvoluter:
             long_term_reflection=self.long_term_reflection,
             short_term_reflections=self.short_term_reflections,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
         improved = self._add_new_prompt(mutated, iteration)
 
@@ -442,16 +430,12 @@ class BRAVEEvoluter:
         return ActionResult(
             action="mutation",
             delta_quality=delta_quality,
-            cost_tokens=costs['total_tokens'],
-            improved=improved
+            cost_tokens=costs["total_tokens"],
+            improved=improved,
         )
 
     def _basic_mutation(
-        self,
-        iteration: int,
-        action_name: str,
-        mutation_operator: Operator,
-        **kwargs
+        self, iteration: int, action_name: str, mutation_operator: Operator, **kwargs
     ) -> ActionResult:
         """Run a mutation operator and package its measured outcome.
 
@@ -467,9 +451,7 @@ class BRAVEEvoluter:
 
         prompt_to_mutate = np.random.choice(self.population)
         mutated = mutation_operator.run(
-            iteration=iteration,
-            prompt=prompt_to_mutate,
-            **kwargs
+            iteration=iteration, prompt=prompt_to_mutate, **kwargs
         )
         improved = self._add_new_prompt(mutated, iteration)
 
@@ -478,8 +460,8 @@ class BRAVEEvoluter:
         return ActionResult(
             action=action_name,
             delta_quality=delta_quality,
-            cost_tokens=costs['total_tokens'],
-            improved=improved
+            cost_tokens=costs["total_tokens"],
+            improved=improved,
         )
 
     def _compression(self, iteration: int) -> ActionResult:
@@ -497,9 +479,7 @@ class BRAVEEvoluter:
         ind = np.random.choice(len(self.population), p=weights)
         prompt_to_mutate = self.population[ind]
         mutated = self.compressor_operator.run(
-            iteration=iteration,
-            prompt=prompt_to_mutate,
-            evaluate_fn=self._evaluate
+            iteration=iteration, prompt=prompt_to_mutate, evaluate_fn=self._evaluate
         )
         improved = self._add_new_prompt(mutated, iteration)
         delta_quality = self._update_elitist(mutated)
@@ -507,8 +487,8 @@ class BRAVEEvoluter:
         return ActionResult(
             action="long_compression",
             delta_quality=delta_quality,
-            cost_tokens=costs['total_tokens'],
-            improved=improved
+            cost_tokens=costs["total_tokens"],
+            improved=improved,
         )
 
     def _gradient_step(self, iteration: int) -> ActionResult:
@@ -527,7 +507,7 @@ class BRAVEEvoluter:
             mutation_operator=self.gradient_step_operator,
             problem_description=self.problem_description,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _hype(self, iteration: int) -> ActionResult:
@@ -545,7 +525,7 @@ class BRAVEEvoluter:
             action_name="hype",
             mutation_operator=self.hype_operator,
             problem_description=self.problem_description,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _long_term_mutation(self, iteration: int) -> ActionResult:
@@ -565,7 +545,7 @@ class BRAVEEvoluter:
             problem_description=self.problem_description,
             long_term_reflection=self.long_term_reflection,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _paraphrasing(self, iteration: int) -> ActionResult:
@@ -584,7 +564,7 @@ class BRAVEEvoluter:
             mutation_operator=self.paraphrasing_operator,
             problem_description=self.problem_description,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _zero_order_mutation(self, iteration: int) -> ActionResult:
@@ -603,7 +583,7 @@ class BRAVEEvoluter:
             mutation_operator=self.zero_order_operator,
             problem_description=self.problem_description,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _creative_role_and_style_mutation(self, iteration: int) -> ActionResult:
@@ -622,7 +602,7 @@ class BRAVEEvoluter:
             mutation_operator=self.creative_role_and_style_operator,
             problem_description=self.problem_description,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _creative_zero_order_mutation(self, iteration: int) -> ActionResult:
@@ -641,7 +621,7 @@ class BRAVEEvoluter:
             mutation_operator=self.creative_zero_order_mutation_operator,
             problem_description=self.problem_description,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
     def _few_shots_mutation(self, iteration: int) -> ActionResult:
@@ -659,14 +639,10 @@ class BRAVEEvoluter:
             action_name="few_shot_mutation",
             mutation_operator=self.few_shots_mutation_operator,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
 
-    def _execute_action(
-        self,
-        action: str,
-        iteration: int
-    ) -> ActionResult:
+    def _execute_action(self, action: str, iteration: int) -> ActionResult:
         """Dispatch a named BRAVE action to its implementation.
 
         Args:
@@ -681,21 +657,30 @@ class BRAVEEvoluter:
         """
 
         match action:
-            case "crossover": return self._crossover(iteration)
-            case "elitist_mutation": return self._elitist_mutation(iteration)
-            case "compression": return self._compression(iteration)
-            case "gradient_step": return self._gradient_step(iteration)
-            case "hype": return self._hype(iteration)
+            case "crossover":
+                return self._crossover(iteration)
+            case "elitist_mutation":
+                return self._elitist_mutation(iteration)
+            case "compression":
+                return self._compression(iteration)
+            case "gradient_step":
+                return self._gradient_step(iteration)
+            case "hype":
+                return self._hype(iteration)
             case "long_term_mutation":
                 return self._long_term_mutation(iteration)
-            case "paraphrase": return self._paraphrasing(iteration)
-            case "zero_order": return self._zero_order_mutation(iteration)
+            case "paraphrase":
+                return self._paraphrasing(iteration)
+            case "zero_order":
+                return self._zero_order_mutation(iteration)
             case "creative_role_and_style":
                 return self._creative_role_and_style_mutation(iteration)
             case "creative_zero_order":
                 return self._creative_zero_order_mutation(iteration)
-            case "few_shot_mutation": return self._few_shots_mutation(iteration)
-            case _: raise ValueError(f"Unsupported action: {action}")
+            case "few_shot_mutation":
+                return self._few_shots_mutation(iteration)
+            case _:
+                raise ValueError(f"Unsupported action: {action}")
 
     def _init_train_batch_sampler(self) -> None:
         """Initialize the configured stratified training-batch sampler."""
@@ -750,9 +735,7 @@ class BRAVEEvoluter:
             epoch=epoch,
         )
         self.current_train_batch_indices = batch_indices
-        self.current_train_batch_data = [
-            self.train_data[i] for i in batch_indices
-        ]
+        self.current_train_batch_data = [self.train_data[i] for i in batch_indices]
         self.current_train_batch_targets = [
             self.train_targets[i] for i in batch_indices
         ]
@@ -768,10 +751,7 @@ class BRAVEEvoluter:
             self.current_train_batch_data is not None
             and self.current_train_batch_targets is not None
         ):
-            return (
-                self.current_train_batch_data,
-                self.current_train_batch_targets
-            )
+            return (self.current_train_batch_data, self.current_train_batch_targets)
         return self.train_data, self.train_targets
 
     def _evaluate_val_cached(self, prompt: Prompt) -> float:
@@ -818,7 +798,7 @@ class BRAVEEvoluter:
                 prompt=prompt.text,
                 dataset=dataset,
                 targets=targets,
-                failed_examples=self.cfg.bad_examples_num
+                failed_examples=self.cfg.bad_examples_num,
             )
         except Exception:
             score = 0
@@ -832,7 +812,7 @@ class BRAVEEvoluter:
             and isinstance(self.train_batch_sampler, CurriculumStratifiedBatchSampler)
             and self.current_train_batch_indices is not None
         ):
-            bad_inputs = {ex['input'] for ex in bad_examples}
+            bad_inputs = {ex["input"] for ex in bad_examples}
             failed_global = [
                 self.current_train_batch_indices[i]
                 for i, text in enumerate(dataset)
@@ -853,7 +833,7 @@ class BRAVEEvoluter:
             List[str]: model answers.
         """
 
-        requests = [request.replace('\"', '\'') for request in requests]
+        requests = [request.replace('"', "'") for request in requests]
 
         answers = None
         for _ in range(5):
@@ -867,9 +847,7 @@ class BRAVEEvoluter:
         if answers is None:
             return [""] * len(requests)
 
-        answers = [a.content
-                   if isinstance(a, AIMessage)
-                   else a for a in answers]
+        answers = [a.content if isinstance(a, AIMessage) else a for a in answers]
 
         return answers
 
@@ -918,24 +896,21 @@ class BRAVEEvoluter:
             cnt = self.cfg.few_shot_examples_from_data_cnt
             ratio = cnt * 1.0 / len(self.train_data)
             max_num = self.cfg.few_shot_examples_max_num
-            (
-                self.train_data,
-                examples_data,
-                self.train_targets,
-                examples_targets
-            ) = get_dataset_split(
-                dataset=self.train_data,
-                target=self.train_targets,
-                validation_size=ratio,
-                train_as_test=False,
-                random_state=self.seed,
+            (self.train_data, examples_data, self.train_targets, examples_targets) = (
+                get_dataset_split(
+                    dataset=self.train_data,
+                    target=self.train_targets,
+                    validation_size=ratio,
+                    train_as_test=False,
+                    random_state=self.seed,
+                )
             )
             data_sample = list(zip(examples_data, examples_targets))
             if "few_shot_mutation" in self.actions:
                 self.few_shots_mutation_operator = HardFewShotExamplesOperator(
                     max_few_shot_examples_num=max_num,
                     data_sample=data_sample,
-                    logger=self.logger
+                    logger=self.logger,
                 )
 
         self._init_train_batch_sampler()
@@ -954,14 +929,12 @@ class BRAVEEvoluter:
             problem_description=problem_description,
             model=self.model,
             llm_query_fn=self._llm_query,
-            evaluate_fn=self._evaluate
+            evaluate_fn=self._evaluate,
         )
         self.elitist = self.population[0]
         self.best_quality = self.elitist.score
 
-        spent = self._calculate_costs(
-            self.model.get_stats()
-        )['total_tokens']
+        spent = self._calculate_costs(self.model.get_stats())["total_tokens"]
         remaining_budget -= spent
         spent_tokens += spent
 
@@ -976,9 +949,9 @@ class BRAVEEvoluter:
                 and self.train_batch_sampler is not None
             ):
                 self._rescore_population()
-                rescore_cost = self._calculate_costs(
-                    self.model.get_stats()
-                )['total_tokens']
+                rescore_cost = self._calculate_costs(self.model.get_stats())[
+                    "total_tokens"
+                ]
                 remaining_budget -= rescore_cost
                 spent_tokens += rescore_cost
 
@@ -1006,9 +979,7 @@ class BRAVEEvoluter:
             controller_diag = {
                 "action_score": action_score,
                 "fallback": 1.0 if "fallback" in score_dict else 0.0,
-                "ema_roi": float(
-                    self.controller.action_stats[action]["ema_roi"]
-                ),
+                "ema_roi": float(self.controller.action_stats[action]["ema_roi"]),
                 "trials": float(self.controller.action_stats[action]["trials"]),
             }
 
@@ -1019,7 +990,7 @@ class BRAVEEvoluter:
                     action_scores=score_dict,
                     is_fallback=is_fallback,
                     action_stats=self.controller.action_stats,
-                    global_step=self.controller.global_step
+                    global_step=self.controller.global_step,
                 )
 
             result = self._execute_action(action=action, iteration=step)
@@ -1048,9 +1019,7 @@ class BRAVEEvoluter:
                 useless_ops_count += 1
 
             self._update_artifacts(
-                action=action,
-                result=result,
-                improved=result.improved
+                action=action, result=result, improved=result.improved
             )
 
             recent_quality.append(self.best_quality)
@@ -1079,7 +1048,7 @@ class BRAVEEvoluter:
                 self.cfg.val_checkpoint_steps > 0
                 and step % self.cfg.val_checkpoint_steps == 0
             ):
-                for candidate in self.population[:self.cfg.val_checkpoint_topk]:
+                for candidate in self.population[: self.cfg.val_checkpoint_topk]:
                     self._update_val_elitist(candidate)
 
             if no_improve_steps >= self.cfg.patience_steps:
@@ -1104,7 +1073,9 @@ class BRAVEEvoluter:
         summary = {
             "best_prompt": self.elitist.text,
             "best_quality": self.best_quality,
-            "best_val_prompt": self.val_elitist.text if self.val_elitist else self.elitist.text,
+            "best_val_prompt": (
+                self.val_elitist.text if self.val_elitist else self.elitist.text
+            ),
             "best_val_quality": self.best_val_quality if self.val_elitist else -1,
             "remaining_budget_tokens": max(remaining_budget, 0.0),
             "steps_done": len(self.logs),
@@ -1115,10 +1086,7 @@ class BRAVEEvoluter:
         }
         if self.log_dir and self.verbose:
             self.export_logs_jsonl(f"{self.log_dir}/all_iterations_log.jsonl")
-            self.export_summary_json(
-                f"{self.log_dir}/summary_log.json",
-                summary
-            )
+            self.export_summary_json(f"{self.log_dir}/summary_log.json", summary)
         return summary
 
     def _quality_at_budget_fraction(self, fraction: float) -> float:
@@ -1150,12 +1118,7 @@ class BRAVEEvoluter:
                 "spent_tokens": 0.0,
                 "value_per_1k_tokens": 0.0,
                 "useful_ops_ratio": 0.0,
-                "quality_at_budget": {
-                    "25%": 0.0,
-                    "50%": 0.0,
-                    "75%": 0.0,
-                    "100%": 0.0
-                },
+                "quality_at_budget": {"25%": 0.0, "50%": 0.0, "75%": 0.0, "100%": 0.0},
             }
 
         spent_tokens = max(self.logs[-1].cumulative_spent, 1e-6)
@@ -1206,9 +1169,7 @@ class BRAVEEvoluter:
                 )
 
     def export_summary_json(
-        self,
-        path: str,
-        summary: Optional[Dict[str, Any]] = None
+        self, path: str, summary: Optional[Dict[str, Any]] = None
     ) -> None:
         """Write an optimization summary to a JSON file.
 
@@ -1220,11 +1181,15 @@ class BRAVEEvoluter:
 
         out_path = Path(path)
         out_path.parent.mkdir(parents=True, exist_ok=True)
-        payload = summary if summary is not None else {
-            "best_quality": self.logs[-1].best_quality if self.logs else 0.0,
-            "steps_done": len(self.logs),
-            "efficiency": self._build_efficiency_summary(),
-        }
+        payload = (
+            summary
+            if summary is not None
+            else {
+                "best_quality": self.logs[-1].best_quality if self.logs else 0.0,
+                "steps_done": len(self.logs),
+                "efficiency": self._build_efficiency_summary(),
+            }
+        )
         serializable = dict(payload)
         if "logs" in serializable:
             serializable["logs"] = [

@@ -4,7 +4,8 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 from coolprompt.optimizer.brave.bayesian_sampling import (
-    BayesianLinearTS, OnlineActionMLP
+    BayesianLinearTS,
+    OnlineActionMLP,
 )
 
 
@@ -74,16 +75,13 @@ class EVCController:
         self.rng = np.random.default_rng(seed)
 
         self.benefit_models: Dict[str, BayesianLinearTS] = {
-            a: BayesianLinearTS(feature_dim, alpha=1.0, sigma2=1.0)
-            for a in actions
+            a: BayesianLinearTS(feature_dim, alpha=1.0, sigma2=1.0) for a in actions
         }
         self.cost_models: Dict[str, BayesianLinearTS] = {
-            a: BayesianLinearTS(feature_dim, alpha=1.0, sigma2=1.0)
-            for a in actions
+            a: BayesianLinearTS(feature_dim, alpha=1.0, sigma2=1.0) for a in actions
         }
         self.improvement_models: Dict[str, BayesianLinearTS] = {
-            a: BayesianLinearTS(feature_dim, alpha=1.0, sigma2=1.0)
-            for a in actions
+            a: BayesianLinearTS(feature_dim, alpha=1.0, sigma2=1.0) for a in actions
         }
         self.neural_bandit = (
             OnlineActionMLP(
@@ -108,11 +106,7 @@ class EVCController:
         }
         self.global_step: int = 0
 
-    def _sample_benefit_cost(
-        self,
-        action: str,
-        x: np.ndarray
-    ) -> Tuple[float, float]:
+    def _sample_benefit_cost(self, action: str, x: np.ndarray) -> Tuple[float, float]:
         """Sample an action's benefit and cost from its posteriors.
 
         Args:
@@ -175,17 +169,13 @@ class EVCController:
         usefulness = self._calculate_usefulness(action)
         lack_of_usefulness = 1.0 - usefulness
         if lack_of_usefulness < 0.5:
-            lack_of_usefulness = self._sigmoid(
-                15 * (lack_of_usefulness - 0.5)
-            )
+            lack_of_usefulness = self._sigmoid(15 * (lack_of_usefulness - 0.5))
         else:
-            lack_of_usefulness = self._sigmoid(
-                4 * (lack_of_usefulness - 0.5)
-            )
+            lack_of_usefulness = self._sigmoid(4 * (lack_of_usefulness - 0.5))
 
         cooldown = int(
-            self.kill_switch_base_cooldown +
-            self.kill_switch_scaling_factor * lack_of_usefulness
+            self.kill_switch_base_cooldown
+            + self.kill_switch_scaling_factor * lack_of_usefulness
         )
 
         return cooldown
@@ -208,8 +198,9 @@ class EVCController:
             return False
         # Check if just exiting disability period
         # (give second chance by resetting ema_roi)
-        if st["disabled_until_step"] > 0 and \
-           self.global_step == int(st["disabled_until_step"]):
+        if st["disabled_until_step"] > 0 and self.global_step == int(
+            st["disabled_until_step"]
+        ):
             st["ema_roi"] = 0.0  # Reset to give fresh evaluation
             st["disabled_until_step"] = -1.0
             return False
@@ -263,24 +254,29 @@ class EVCController:
 
             if self.neural_bandit is not None:
                 nn = self.neural_bandit.predict(action, x)
-                benefit_hat = (1.0 - self.neural_weight) * benefit_hat +\
-                    self.neural_weight * nn["benefit"]
-                cost_hat = (1.0 - self.neural_weight) * cost_hat +\
-                    self.neural_weight * nn["cost"]
-                impr_prob = (1.0 - self.neural_weight) * impr_hat_linear +\
-                    self.neural_weight * nn["impr_prob"]
+                benefit_hat = (
+                    1.0 - self.neural_weight
+                ) * benefit_hat + self.neural_weight * nn["benefit"]
+                cost_hat = (
+                    1.0 - self.neural_weight
+                ) * cost_hat + self.neural_weight * nn["cost"]
+                impr_prob = (
+                    1.0 - self.neural_weight
+                ) * impr_hat_linear + self.neural_weight * nn["impr_prob"]
             else:
                 impr_prob = impr_hat_linear
 
             if cost_hat > remaining_budget_tokens:
                 continue
-            if cost_hat > self.max_action_budget_share *\
-                    max(remaining_budget_tokens, 1.0):
+            if cost_hat > self.max_action_budget_share * max(
+                remaining_budget_tokens, 1.0
+            ):
                 continue
 
-            effective_cost = cost_hat *\
-                (1.0 + self.uncertainty_penalty_beta * uncertainty)
-            score = (benefit_hat * (1.0 + self.improve_prob_weight * impr_prob))
+            effective_cost = cost_hat * (
+                1.0 + self.uncertainty_penalty_beta * uncertainty
+            )
+            score = benefit_hat * (1.0 + self.improve_prob_weight * impr_prob)
             score = score / max(effective_cost, self.min_cost_eps)
             scores[action] = score
             if score > best_score:
@@ -290,8 +286,7 @@ class EVCController:
         if best_action is None:
             return None, None
 
-        self.action_stats[best_action]["last_selected_step"] =\
-            float(self.global_step)
+        self.action_stats[best_action]["last_selected_step"] = float(self.global_step)
         return best_action, scores
 
     def update(
@@ -334,8 +329,9 @@ class EVCController:
             st["success_count"] += 1.0
         realized_roi = benefit / max(cost, self.min_cost_eps)
         # EMA for kill-switch
-        st["ema_roi"] = (1.0 - self.alpha_roi_ema) * st["ema_roi"] +\
-            self.alpha_roi_ema * realized_roi
+        st["ema_roi"] = (1.0 - self.alpha_roi_ema) * st[
+            "ema_roi"
+        ] + self.alpha_roi_ema * realized_roi
 
     def diagnostics(self) -> Dict[str, Any]:
         """Return a serializable snapshot of controller state.

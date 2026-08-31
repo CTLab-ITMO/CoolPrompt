@@ -122,14 +122,8 @@ class StratifiedBatchSampler:
             return strata
 
         features = self._build_generation_features(dataset, targets)
-        input_lengths = np.array(
-            [f.input_len for f in features],
-            dtype=np.float64
-        )
-        target_lengths = np.array(
-            [f.target_len for f in features],
-            dtype=np.float64
-        )
+        input_lengths = np.array([f.input_len for f in features], dtype=np.float64)
+        target_lengths = np.array([f.target_len for f in features], dtype=np.float64)
         input_edges = self._quantile_edges(input_lengths)
         target_edges = self._quantile_edges(target_lengths)
 
@@ -160,8 +154,7 @@ class StratifiedBatchSampler:
             return {}
         target_size = min(self.batch_size, total_size)
         expected = {
-            key: target_size * (size / total_size)
-            for key, size in strata_sizes.items()
+            key: target_size * (size / total_size) for key, size in strata_sizes.items()
         }
         base = {key: int(np.floor(value)) for key, value in expected.items()}
         assigned = sum(base.values())
@@ -169,9 +162,7 @@ class StratifiedBatchSampler:
 
         if remainder > 0:
             ranked = sorted(
-                expected.items(),
-                key=lambda item: item[1] - base[item[0]],
-                reverse=True
+                expected.items(), key=lambda item: item[1] - base[item[0]], reverse=True
             )
             for key, _ in ranked[:remainder]:
                 base[key] += 1
@@ -233,7 +224,7 @@ class StratifiedBatchSampler:
             selected.extend(int(x) for x in fallback)
 
         rng.shuffle(selected)
-        return selected[:self.batch_size]
+        return selected[: self.batch_size]
 
 
 class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
@@ -387,7 +378,7 @@ class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
             selected_set = set(selected)
             remain = [idx for idx in leftovers if idx not in selected_set]
             rng.shuffle(remain)
-            selected.extend(remain[:self.batch_size - len(selected)])
+            selected.extend(remain[: self.batch_size - len(selected)])
 
         if len(selected) < self.batch_size:
             need = self.batch_size - len(selected)
@@ -395,4 +386,4 @@ class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
             selected.extend(int(x) for x in fallback)
 
         rng.shuffle(selected)
-        return selected[:self.batch_size]
+        return selected[: self.batch_size]

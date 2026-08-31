@@ -1,49 +1,37 @@
-from coolprompt.optimizer.brave.operators.basic_operator import (
-    Operator
-)
+from coolprompt.optimizer.brave.operators.basic_operator import Operator
 from coolprompt.optimizer.brave.operators.bigger_initializer import (
-    BiggerPopulationInitializationOperator
+    BiggerPopulationInitializationOperator,
 )
-from coolprompt.optimizer.brave.operators.compressor import (
-    CompressorOperator
-)
+from coolprompt.optimizer.brave.operators.compressor import CompressorOperator
 from coolprompt.optimizer.brave.operators.creative_role_and_style import (
-    CreativeRoleAndStyleMutationOperator
+    CreativeRoleAndStyleMutationOperator,
 )
 from coolprompt.optimizer.brave.operators.creative_zero_order import (
-    CreativeZeroOrderMutationOperator
+    CreativeZeroOrderMutationOperator,
 )
-from coolprompt.optimizer.brave.operators.crossover import (
-    CrossoverOperator
-)
+from coolprompt.optimizer.brave.operators.crossover import CrossoverOperator
 from coolprompt.optimizer.brave.operators.elitist_mutation import (
-    ElitistMutationOperator
+    ElitistMutationOperator,
 )
 from coolprompt.optimizer.brave.operators.few_shot_examples import (
-    FewShotExamplesOperator
+    FewShotExamplesOperator,
 )
 from coolprompt.optimizer.brave.operators.hard_few_shot_examples import (
-    HardFewShotExamplesOperator
+    HardFewShotExamplesOperator,
 )
-from coolprompt.optimizer.brave.operators.gradient_step import (
-    GradientStepOperator
-)
+from coolprompt.optimizer.brave.operators.gradient_step import GradientStepOperator
 from coolprompt.optimizer.brave.operators.hype import HypeOperator
 from coolprompt.optimizer.brave.operators.initializer import (
-    PopulationInitializationOperator
+    PopulationInitializationOperator,
 )
 from coolprompt.optimizer.brave.operators.long_term_mutation import (
-    LongTermMutationOperator
+    LongTermMutationOperator,
 )
 from coolprompt.optimizer.brave.operators.paraphrase_initializer import (
-    ParaphraseInitializationOperator
+    ParaphraseInitializationOperator,
 )
-from coolprompt.optimizer.brave.operators.paraphrasing import (
-    ParaphrasingByPDOperator
-)
-from coolprompt.optimizer.brave.operators.zero_order import (
-    ZeroOrderMutationOperator
-)
+from coolprompt.optimizer.brave.operators.paraphrasing import ParaphrasingByPDOperator
+from coolprompt.optimizer.brave.operators.zero_order import ZeroOrderMutationOperator
 
 __all__ = [
     "Operator",
@@ -61,5 +49,5 @@ __all__ = [
     "FewShotExamplesOperator",
     "HardFewShotExamplesOperator",
     "ParaphraseInitializationOperator",
-    "BiggerPopulationInitializationOperator"
+    "BiggerPopulationInitializationOperator",
 ]

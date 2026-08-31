@@ -6,7 +6,6 @@ import yaml
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
-import numpy as np
 from coolprompt.evaluator.metrics import BaseMetric
 from coolprompt.utils.logging_config import logger
 from coolprompt.utils.enums import Task

@@ -67,10 +67,7 @@ class BRAVEConfig:
     early_stop: bool = False
 
 
-def _merge_dicts(
-    base: Dict[str, Any],
-    override: Dict[str, Any]
-) -> Dict[str, Any]:
+def _merge_dicts(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
     """Return a shallow merge in which override values take precedence.
 
     Args:
@@ -86,9 +83,7 @@ def _merge_dicts(
     return out
 
 
-def load_brave_config_from_yaml(
-    path: str, profile: str = "balanced"
-) -> BRAVEConfig:
+def load_brave_config_from_yaml(path: str, profile: str = "balanced") -> BRAVEConfig:
     """Load a BRAVE configuration profile from YAML.
 
     Values from ``profiles[profile]`` override the file's ``defaults``.
@@ -109,8 +104,8 @@ def load_brave_config_from_yaml(
         import yaml  # type: ignore
     except Exception as exc:
         raise ImportError(
-            "PyYAML is required to load YAML configs. " +
-            "Install with: pip install pyyaml"
+            "PyYAML is required to load YAML configs. "
+            + "Install with: pip install pyyaml"
         ) from exc
 
     cfg_path = Path(path)
@@ -125,9 +120,7 @@ def load_brave_config_from_yaml(
     selected = profiles.get(profile)
     if selected is None:
         available = ", ".join(sorted(profiles.keys()))
-        raise KeyError(
-            f"Profile '{profile}' not found. Available: [{available}]"
-        )
+        raise KeyError(f"Profile '{profile}' not found. Available: [{available}]")
 
     merged = _merge_dicts(defaults, selected)
     allowed = {x.name for x in fields(BRAVEConfig)}
@@ -162,6 +155,4 @@ def reranking_population(population: List[Prompt]) -> List[Prompt]:
     Returns:
         List[Prompt]: sorted population.
     """
-    return list(
-        sorted(population, key=lambda prompt: prompt.score, reverse=True)
-    )
+    return list(sorted(population, key=lambda prompt: prompt.score, reverse=True))

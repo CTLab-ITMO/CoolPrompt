@@ -177,5 +177,7 @@ class TestGenerator(unittest.TestCase):
             ),
             (["in"], ["out"], "problem"),
         )
-        self._generate_problem_description_mock.assert_called_once_with("prompt")
+        self._generate_problem_description_mock.assert_called_once_with(
+            "prompt", task=Task.GENERATION
+        )
         self._generate_mock.assert_called_once_with(request, schema, "examples")

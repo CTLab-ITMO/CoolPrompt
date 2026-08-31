@@ -12,8 +12,7 @@ class BERTSimilarityComputer:
     """Compute semantic similarity using BERT embeddings"""
 
     def __init__(
-        self,
-        model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
+        self, model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
     ) -> None:
         """Initialize a model for semantic similarity.
 
@@ -56,7 +55,7 @@ class PopulationDiversityManager:
         use_hierarchical: bool = True,
         use_bert: bool = True,
         bert_weight: float = 0.6,
-        duplicate_threshold: float = 0.95
+        duplicate_threshold: float = 0.95,
     ):
         """Initialize population-diversity controls.
 
@@ -81,11 +80,11 @@ class PopulationDiversityManager:
 
         # TF-IDF for fast syntactic similarity
         self.vectorizer = TfidfVectorizer(
-            analyzer='word',
+            analyzer="word",
             ngram_range=(1, 2),
             lowercase=True,
             max_features=500,
-            min_df=1
+            min_df=1,
         )
 
         # BERT for semantic similarity
@@ -117,23 +116,23 @@ class PopulationDiversityManager:
             tfidf_sim = np.ones((len(texts), len(texts)))
 
         # Compute BERT similarity if available
-        if self.use_bert and self.bert_computer is not None and \
-                self.bert_computer.available:
+        if (
+            self.use_bert
+            and self.bert_computer is not None
+            and self.bert_computer.available
+        ):
             bert_sim = self.bert_computer.compute_similarity(texts)
             if bert_sim is not None:
                 # Hybrid similarity: weighted average
                 similarity = (
-                    (1 - self.bert_weight) * tfidf_sim +
-                    self.bert_weight * bert_sim
-                )
+                    1 - self.bert_weight
+                ) * tfidf_sim + self.bert_weight * bert_sim
                 return similarity
 
         return tfidf_sim
 
     def _adaptive_threshold(
-        self,
-        similarity_matrix: np.ndarray,
-        population_size: int
+        self, similarity_matrix: np.ndarray, population_size: int
     ) -> float:
         """Choose a threshold near the target number of clusters.
 
@@ -151,9 +150,7 @@ class PopulationDiversityManager:
         if self.use_hierarchical:
             distance_matrix = 1 - similarity_matrix
             # Make distance matrix for clustering
-            upper_triangle = distance_matrix[
-                np.triu_indices_from(distance_matrix, k=1)
-            ]
+            upper_triangle = distance_matrix[np.triu_indices_from(distance_matrix, k=1)]
             if len(upper_triangle) == 0:
                 return self.similarity_threshold
 
@@ -168,12 +165,8 @@ class PopulationDiversityManager:
 
                 try:
                     if len(upper_triangle) > 0:
-                        Z = linkage(upper_triangle, method='complete')
-                        clusters = fcluster(
-                            Z,
-                            distance_threshold,
-                            criterion='distance'
-                        )
+                        Z = linkage(upper_triangle, method="complete")
+                        clusters = fcluster(Z, distance_threshold, criterion="distance")
                         num_clusters = len(np.unique(clusters))
                     else:
                         num_clusters = len(similarity_matrix)
@@ -183,7 +176,7 @@ class PopulationDiversityManager:
                 if num_clusters < self.target_cluster_count:
                     high = mid  # Need more clusters, raise threshold
                 else:
-                    low = mid   # Have enough clusters, lower threshold
+                    low = mid  # Have enough clusters, lower threshold
 
                 if abs(num_clusters - self.target_cluster_count) <= 1:
                     best_threshold = mid
@@ -194,9 +187,7 @@ class PopulationDiversityManager:
             return self.similarity_threshold
 
     def _hierarchical_clustering(
-        self,
-        similarity_matrix: np.ndarray,
-        threshold: float
+        self, similarity_matrix: np.ndarray, threshold: float
     ) -> List[List[int]]:
         """Cluster prompts with complete-linkage hierarchical clustering.
 
@@ -208,17 +199,15 @@ class PopulationDiversityManager:
             List[List[int]]: clusters of prompt indices.
         """
         distance_matrix = 1 - similarity_matrix
-        upper_triangle = distance_matrix[
-            np.triu_indices_from(distance_matrix, k=1)
-        ]
+        upper_triangle = distance_matrix[np.triu_indices_from(distance_matrix, k=1)]
 
         if len(upper_triangle) == 0:
             return [[i] for i in range(len(similarity_matrix))]
 
         try:
-            Z = linkage(upper_triangle, method='complete')
+            Z = linkage(upper_triangle, method="complete")
             distance_threshold = 1 - threshold
-            clusters_arr = fcluster(Z, distance_threshold, criterion='distance')
+            clusters_arr = fcluster(Z, distance_threshold, criterion="distance")
 
             clusters = {}
             for idx, cluster_id in enumerate(clusters_arr):
@@ -231,9 +220,7 @@ class PopulationDiversityManager:
             return [[i] for i in range(len(similarity_matrix))]
 
     def _dfs_clustering(
-        self,
-        similarity_matrix: np.ndarray,
-        threshold: float
+        self, similarity_matrix: np.ndarray, threshold: float
     ) -> List[List[int]]:
         """Cluster prompts as connected components using DFS.
 
@@ -262,8 +249,7 @@ class PopulationDiversityManager:
                 cluster.append(node)
 
                 for j in range(n):
-                    if not visited[j] and \
-                       similarity_matrix[node][j] >= threshold:
+                    if not visited[j] and similarity_matrix[node][j] >= threshold:
                         stack.append(j)
 
             clusters.append(sorted(cluster))
@@ -274,7 +260,7 @@ class PopulationDiversityManager:
         self,
         population: List[Prompt],
         similarity_matrix: np.ndarray,
-        duplicate_threshold: float = 0.95
+        duplicate_threshold: float = 0.95,
     ) -> Tuple[List[Prompt], np.ndarray, np.ndarray]:
         """Remove near-duplicates, keeping the best of each group.
 
@@ -297,8 +283,7 @@ class PopulationDiversityManager:
 
             duplicates = [i]
             for j in range(i + 1, n):
-                if not visited[j] and \
-                   similarity_matrix[i][j] >= duplicate_threshold:
+                if not visited[j] and similarity_matrix[i][j] >= duplicate_threshold:
                     duplicates.append(j)
                     visited[j] = True
 
@@ -314,9 +299,7 @@ class PopulationDiversityManager:
         return kept_population, kept_sim_matrix, kept_indices
 
     def filter_by_diversity(
-        self,
-        population: List[Prompt],
-        target_population_size: int
+        self, population: List[Prompt], target_population_size: int
     ) -> List[Prompt]:
         """Filter a population for diversity while retaining strong prompts.
 
@@ -334,14 +317,8 @@ class PopulationDiversityManager:
         similarity_matrix = self._compute_similarity_matrix(population)
 
         # Level 1: Remove near-duplicates (threshold similarity)
-        (
-            population,
-            similarity_matrix,
-            kept_indices
-        ) = self._filter_near_duplicates(
-            population,
-            similarity_matrix,
-            duplicate_threshold=self.duplicate_threshold
+        (population, similarity_matrix, kept_indices) = self._filter_near_duplicates(
+            population, similarity_matrix, duplicate_threshold=self.duplicate_threshold
         )
 
         if len(population) <= target_population_size:
@@ -350,23 +327,18 @@ class PopulationDiversityManager:
         # Determine threshold
         if self.auto_threshold:
             threshold = self._adaptive_threshold(
-                similarity_matrix,
-                target_population_size
+                similarity_matrix, target_population_size
             )
         else:
             threshold = self.similarity_threshold
 
         threshold = max(
-            self.similarity_threshold,
-            min(threshold, self.duplicate_threshold)
+            self.similarity_threshold, min(threshold, self.duplicate_threshold)
         )
 
         # Cluster prompts
         if self.use_hierarchical:
-            clusters = self._hierarchical_clustering(
-                similarity_matrix,
-                threshold
-            )
+            clusters = self._hierarchical_clustering(similarity_matrix, threshold)
         else:
             clusters = self._dfs_clustering(similarity_matrix, threshold)
 
@@ -377,21 +349,21 @@ class PopulationDiversityManager:
         for cluster in clusters:
             # Keep top max_per_cluster from this cluster
             # (already sorted by score)
-            for idx in cluster[:self.max_per_cluster]:
+            for idx in cluster[: self.max_per_cluster]:
                 selected_indices.append(idx)
 
             # Track removed prompts
-            for idx in cluster[self.max_per_cluster:]:
+            for idx in cluster[self.max_per_cluster :]:
                 removed_indices.append(idx)
 
         # Store report for logging
         self.last_filter_report = {
-            'threshold': threshold,
-            'num_clusters': len(clusters),
-            'num_removed': len(removed_indices),
-            'removed_indices': removed_indices,
-            'similarity_matrix': similarity_matrix,
-            'deduplication_removed': len(kept_indices)
+            "threshold": threshold,
+            "num_clusters": len(clusters),
+            "num_removed": len(removed_indices),
+            "removed_indices": removed_indices,
+            "similarity_matrix": similarity_matrix,
+            "deduplication_removed": len(kept_indices),
         }
 
         # Sort by original order and select
@@ -400,17 +372,13 @@ class PopulationDiversityManager:
 
         # Re-sort by score and trim to target size
         selected_prompts = sorted(
-            selected_prompts,
-            key=lambda p: p.score,
-            reverse=True
+            selected_prompts, key=lambda p: p.score, reverse=True
         )[:target_population_size]
 
         return selected_prompts
 
     def maintain_diversity(
-        self,
-        population: List[Prompt],
-        max_size: int
+        self, population: List[Prompt], max_size: int
     ) -> List[Prompt]:
         """Sort prompts by score and enforce a diverse population bound.
 

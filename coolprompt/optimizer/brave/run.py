@@ -120,9 +120,7 @@ class BRAVEMethod(AutoPromptingMethod):
         method_config = dict(ctx.config.get("method", {}))
         seed = method_config.pop("seed", 19)
         verbose = method_config.pop("verbose", True)
-        log_dir = method_config.pop(
-            "log_dir", method_config.pop("output_path", None)
-        )
+        log_dir = method_config.pop("log_dir", method_config.pop("output_path", None))
         return self.optimize(
             model=ctx.model,
             initial_prompt=start_prompt,

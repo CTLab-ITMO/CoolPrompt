@@ -51,12 +51,7 @@ class StateFeaturizer:
 class BayesianLinearTS:
     """Bayesian linear regression with Thompson sampling."""
 
-    def __init__(
-        self,
-        dim: int,
-        alpha: float = 1.0,
-        sigma2: float = 1.0
-    ) -> None:
+    def __init__(self, dim: int, alpha: float = 1.0, sigma2: float = 1.0) -> None:
         """Initialize the precision matrix and response vector.
 
         Args:
@@ -268,18 +263,16 @@ class OnlineActionMLP:
         # forward
         pred_b = float(np.dot(self.W_benefit[idx], h) + self.b_benefit[idx])
         raw_cost = float(np.dot(self.W_cost[idx], h) + self.b_cost[idx])
-        pred_c = float(
-            np.log1p(math.exp(np.clip(raw_cost, -20.0, 20.0))) + 1e-6
-        )
+        pred_c = float(np.log1p(math.exp(np.clip(raw_cost, -20.0, 20.0))) + 1e-6)
         pred_l = float(np.dot(self.W_impr[idx], h) + self.b_impr[idx])
         pred_p = self._sigmoid(pred_l)
 
         # losses:
         # benefit, cost -> mse
         # improvement -> logistic BCE
-        db = (pred_b - float(target_benefit))
-        dc = (pred_c - float(target_cost))
-        dp = (pred_p - float(target_impr))
+        db = pred_b - float(target_benefit)
+        dc = pred_c - float(target_cost)
+        dp = pred_p - float(target_impr)
 
         # gradients wrt head outputs
         # cost head uses softplus(raw_cost),

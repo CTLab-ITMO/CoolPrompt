@@ -74,19 +74,22 @@ def get_stratified_dataset_split(
         n_bins = max(int(generation_bins), 2)
         quantiles = np.linspace(0.0, 1.0, n_bins + 1)[1:-1]
         edges = np.unique(np.quantile(lengths, quantiles))
-        stratify_labels = [str(int(np.searchsorted(edges, l, side="right")))
-                           for l in lengths]
+        stratify_labels = [
+            str(int(np.searchsorted(edges, length, side="right"))) for length in lengths
+        ]
 
     try:
         train_data, val_data, train_targets, val_targets = train_test_split(
-            dataset, target,
+            dataset,
+            target,
             test_size=validation_size,
             stratify=stratify_labels,
             random_state=random_state,
         )
     except ValueError:
         train_data, val_data, train_targets, val_targets = train_test_split(
-            dataset, target,
+            dataset,
+            target,
             test_size=validation_size,
             random_state=random_state,
         )

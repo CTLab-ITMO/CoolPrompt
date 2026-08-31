@@ -1,10 +1,7 @@
 from typing import Callable
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.optimizer.reflective_prompt.prompt import (
-    Prompt,
-    PromptOrigin
-)
+from coolprompt.optimizer.reflective_prompt.prompt import Prompt, PromptOrigin
 from coolprompt.optimizer.brave.operators.basic_operator import Operator
 from coolprompt.optimizer.prompt_compressor.compressor import PromptCompressor
 
@@ -56,7 +53,7 @@ class CompressorOperator(Operator):
                 prev_score=prompt.score,
                 mutated_prompt=compressed.text,
                 mutated_score=compressed.score,
-                file_name="compressions"
+                file_name="compressions",
             )
 
         return compressed
