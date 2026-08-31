@@ -34,6 +34,31 @@ class EVCController:
         neural_learning_rate: float = 5e-3,
         seed: int = 42,
     ) -> None:
+        """Initialize action models, constraints, and kill-switch state.
+
+        Args:
+            actions (List[str]): action names available to the controller.
+            feature_dim (int): contextual feature-vector dimensionality.
+            min_cost_eps (float): lower bound used in cost divisions.
+            max_action_budget_share (float): maximum remaining-budget fraction
+                that a single action may consume.
+            uncertainty_penalty_beta (float): strength of the cost uncertainty
+                penalty.
+            neural_weight (float): weight of neural versus linear predictions.
+            alpha_roi_ema (float): smoothing factor for realized ROI.
+            improve_prob_weight (float): influence of improvement probability.
+            kill_switch_min_trials (int): observations required before
+                disabling an action.
+            kill_switch_roi_threshold (float): ROI threshold for disabling.
+            kill_switch_base_cooldown (int): minimum disabled duration.
+            kill_switch_scaling_factor (float): usefulness-based cooldown
+                scale.
+            use_neural_bandit (bool): whether to blend neural predictions.
+            neural_hidden_dim (int): neural bandit hidden-layer width.
+            neural_learning_rate (float): neural bandit learning rate.
+            seed (int): Thompson-sampling and neural initialization seed.
+        """
+
         self.actions = actions
         self.min_cost_eps = min_cost_eps
         self.max_action_budget_share = max_action_budget_share
@@ -88,6 +113,16 @@ class EVCController:
         action: str,
         x: np.ndarray
     ) -> Tuple[float, float]:
+        """Sample an action's benefit and cost from its posteriors.
+
+        Args:
+            action (str): action to sample.
+            x (np.ndarray): contextual feature vector.
+
+        Returns:
+            Tuple[float, float]: sampled benefit and positive cost.
+        """
+
         theta_b = self.benefit_models[action].sample_theta(self.rng)
         theta_c = self.cost_models[action].sample_theta(self.rng)
 
@@ -98,12 +133,26 @@ class EVCController:
 
     @staticmethod
     def _sigmoid(z: float) -> float:
+        """Compute a numerically bounded logistic sigmoid.
+
+        Args:
+            z (float): sigmoid logit.
+
+        Returns:
+            float: probability in ``(0, 1)``.
+        """
+
         z = float(np.clip(z, -20.0, 20.0))
         return 1.0 / (1.0 + math.exp(-z))
 
     def _calculate_usefulness(self, action: str) -> float:
-        """Calculate usefulness metric
-        (0-1, where 1 = highly useful, 0 = not useful)
+        """Calculate an action's empirical usefulness.
+
+        Args:
+            action (str): action whose successes should be inspected.
+
+        Returns:
+            float: success rate in ``[0, 1]``; ``1`` before any trials.
         """
         st = self.action_stats[action]
         trials = st["trials"]
@@ -115,7 +164,14 @@ class EVCController:
         return float(success_rate)
 
     def _calculate_adaptive_cooldown(self, action: str) -> int:
-        """Calculate adaptive cooldown duration based on operator usefulness"""
+        """Calculate cooldown duration from operator usefulness.
+
+        Args:
+            action (str): action to place on cooldown.
+
+        Returns:
+            int: number of controller steps to disable the action.
+        """
         usefulness = self._calculate_usefulness(action)
         lack_of_usefulness = 1.0 - usefulness
         if lack_of_usefulness < 0.5:
@@ -135,6 +191,15 @@ class EVCController:
         return cooldown
 
     def _should_disable(self, action: str) -> bool:
+        """Return whether an action is blocked by its kill switch.
+
+        Args:
+            action (str): action to inspect.
+
+        Returns:
+            bool: whether the action should be skipped at the current step.
+        """
+
         st = self.action_stats[action]
         if self.global_step < int(st["disabled_until_step"]):
             return True
@@ -162,6 +227,19 @@ class EVCController:
         remaining_budget_tokens: float,
         candidate_actions: Optional[List[str]] = None,
     ) -> Tuple[str, Dict[str, float]]:
+        """Select the eligible action with the highest value per cost.
+
+        Args:
+            x (np.ndarray): contextual feature vector.
+            remaining_budget_tokens (float): tokens available for future
+                actions.
+            candidate_actions (Optional[List[str]]): optional action subset.
+
+        Returns:
+            Tuple[str, Dict[str, float]]: selected action and scores by action.
+                Returns ``(None, None)`` when no action is eligible.
+        """
+
         self.global_step += 1
         best_action: Optional[str] = None
         best_score = -math.inf
@@ -224,6 +302,16 @@ class EVCController:
         actual_cost_tokens: float,
         improved: bool = False,
     ) -> None:
+        """Update action models and statistics from an observed outcome.
+
+        Args:
+            action (str): action that produced the outcome.
+            x_before (np.ndarray): context observed before execution.
+            delta_quality (float): measured quality change.
+            actual_cost_tokens (float): measured token cost.
+            improved (bool): whether the operation was considered useful.
+        """
+
         benefit = float(delta_quality)
         cost = max(float(actual_cost_tokens), self.min_cost_eps)
         improvement = 1.0 if float(delta_quality) > 0.0 else 0.0
@@ -250,6 +338,12 @@ class EVCController:
             self.alpha_roi_ema * realized_roi
 
     def diagnostics(self) -> Dict[str, Any]:
+        """Return a serializable snapshot of controller state.
+
+        Returns:
+            Dict[str, Any]: step, action statistics, and model settings.
+        """
+
         return {
             "global_step": self.global_step,
             "action_stats": self.action_stats,

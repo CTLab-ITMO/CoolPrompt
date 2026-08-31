@@ -27,6 +27,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class BiggerPopulationInitializationOperator(Operator):
+    """Initialize a large prompt population through several strategies."""
+
     def run(
         self,
         initial_prompt: str,
@@ -36,6 +38,21 @@ class BiggerPopulationInitializationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> List[Prompt]:
+        """Generate, evaluate, and return an expanded initial population.
+
+        Args:
+            initial_prompt (str): seed prompt included in the population.
+            problem_description (str): description of the target task.
+            population_size (int): target size retained for interface parity.
+            model (BaseLanguageModel): model used by delegated operators.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            List[Prompt]: evaluated initial prompt candidates.
+        """
+
         prompt_by_description_template =\
             PROMPT_BY_DESCRIPTION_TEMPLATE.format(
                 PROBLEM_DESCRIPTION=problem_description

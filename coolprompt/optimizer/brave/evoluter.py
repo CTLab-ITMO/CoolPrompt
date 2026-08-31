@@ -84,6 +84,22 @@ class BRAVEEvoluter:
         verbose: bool = True,
         log_dir: Optional[str] = None,
     ) -> None:
+        """Initialize BRAVE's controller, operators, and runtime state.
+
+        Args:
+            model (BaseLanguageModel): language model used for prompt
+                generation.
+            evaluator (Evaluator): evaluator used to score prompts.
+            config (Optional[BRAVEConfig]): optimizer configuration.
+            seed (int): random seed for sampling and controller models.
+            verbose (bool): whether operation logging is enabled.
+            log_dir (Optional[str]): directory for operation logs.
+
+        Raises:
+            ValueError: if the configured population initializer is
+                unsupported.
+        """
+
         self.log_dir = log_dir
         self.verbose = verbose
         self.logger = None
@@ -182,6 +198,16 @@ class BRAVEEvoluter:
         self,
         new_tracker_stats: Dict[str, float]
     ) -> Dict[str, float]:
+        """Calculate tracker-stat deltas and store cumulative values.
+
+        Args:
+            new_tracker_stats (Dict[str, float]): latest cumulative model
+                statistics.
+
+        Returns:
+            Dict[str, float]: change in every supplied statistic.
+        """
+
         delta = {
             metric: new_stat - self.cost_tracker_stats.get(metric, 0.0)
             for metric, new_stat in new_tracker_stats.items()
@@ -191,6 +217,12 @@ class BRAVEEvoluter:
 
     @staticmethod
     def _init_artifacts() -> Dict[str, bool]:
+        """Create the initial action-artifact availability flags.
+
+        Returns:
+            Dict[str, bool]: artifact names mapped to initial availability.
+        """
+
         return {
             "has_eval": False,
             "has_failures": False,
@@ -207,6 +239,14 @@ class BRAVEEvoluter:
         result: ActionResult,
         improved: bool
     ) -> None:
+        """Update action-artifact flags from an execution result.
+
+        Args:
+            action (str): action that was executed.
+            result (ActionResult): action outcome and payload.
+            improved (bool): whether the action improved the population.
+        """
+
         if action == "crossover":
             self.artifacts["has_offspring"] = True
         if action == "mutation":
@@ -229,6 +269,20 @@ class BRAVEEvoluter:
         remaining_budget: float,
         population_diversity: float = 0.5,
     ) -> OptimizerState:
+        """Build controller state from quality, progress, and budget data.
+
+        Args:
+            best_quality (float): best score observed so far.
+            recent_quality (List[float]): recent best-score history.
+            useless_ops_count (int): number of recent non-improving operations.
+            steps_done (int): completed optimization steps.
+            remaining_budget (float): unspent token budget.
+            population_diversity (float): current diversity estimate.
+
+        Returns:
+            OptimizerState: normalized contextual state for action selection.
+        """
+
         slope = 0.0
         if len(recent_quality) >= 2:
             slope = max(min(recent_quality[-1] - recent_quality[-2], 1.0), -1.0)
@@ -249,6 +303,15 @@ class BRAVEEvoluter:
         )
 
     def _update_elitist(self, new_prompt: Prompt) -> float:
+        """Update the elite prompt and compute population-aware gain.
+
+        Args:
+            new_prompt (Prompt): evaluated candidate prompt.
+
+        Returns:
+            float: quality gain adjusted by population mean and minimum.
+        """
+
         mean_score = float(np.mean([p.score for p in self.population]))
         min_score = float(np.min([p.score for p in self.population]))
         delta_mean = new_prompt.score - mean_score
@@ -265,12 +328,20 @@ class BRAVEEvoluter:
         return delta
 
     def _update_val_elitist(self, new_prompt: Prompt) -> None:
+        """Promote a prompt when it improves the best validation score.
+
+        Args:
+            new_prompt (Prompt): candidate prompt to validate.
+        """
+
         vs = self._evaluate_val_cached(new_prompt)
         if vs > self.best_val_quality:
             self.best_val_quality = vs
             self.val_elitist = new_prompt
 
     def _rescore_population(self) -> None:
+        """Re-evaluate and rank the current population on training data."""
+
         for prompt in self.population:
             self._evaluate(prompt, split="train")
         self.population = reranking_population(self.population)
@@ -278,6 +349,16 @@ class BRAVEEvoluter:
         self.best_quality = self.elitist.score
 
     def _add_new_prompt(self, prompt: Prompt, step: int) -> bool:
+        """Insert a prompt and enforce population limits.
+
+        Args:
+            prompt (Prompt): evaluated prompt to add.
+            step (int): current optimization step used for logging.
+
+        Returns:
+            bool: whether the prompt remains in the bounded population.
+        """
+
         self.population.append(prompt)
         self.population = reranking_population(self.population)
         if len(self.population) > self.cfg.population_size:
@@ -297,6 +378,15 @@ class BRAVEEvoluter:
         return prompt in self.population
 
     def _crossover(self, iteration: int) -> ActionResult:
+        """Execute crossover and package its outcome for the controller.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: crossover quality change, cost, and offspring data.
+        """
+
         (
             offspring,
             short_term_reflection
@@ -323,6 +413,15 @@ class BRAVEEvoluter:
         )
 
     def _elitist_mutation(self, iteration: int) -> ActionResult:
+        """Execute an elite mutation and update reflection memory.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: mutation quality change, cost, and prompt data.
+        """
+
         prompt_to_mutate = self.elitist
         if random.random() < self.cfg.random_mutation_probability:
             prompt_to_mutate = np.random.choice(self.population)
@@ -354,6 +453,18 @@ class BRAVEEvoluter:
         mutation_operator: Operator,
         **kwargs
     ) -> ActionResult:
+        """Run a mutation operator and package its measured outcome.
+
+        Args:
+            iteration (int): current optimization iteration.
+            action_name (str): controller-facing action name.
+            mutation_operator (Operator): operator to execute.
+            **kwargs (Any): additional arguments forwarded to ``run``.
+
+        Returns:
+            ActionResult: mutation quality change, cost, and prompt data.
+        """
+
         prompt_to_mutate = np.random.choice(self.population)
         mutated = mutation_operator.run(
             iteration=iteration,
@@ -372,6 +483,15 @@ class BRAVEEvoluter:
         )
 
     def _compression(self, iteration: int) -> ActionResult:
+        """Compress a length-weighted population member.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: compression quality change, cost, and prompt data.
+        """
+
         lengths = np.array([len(p.text) for p in self.population], dtype=float)
         weights = lengths / lengths.sum()
         ind = np.random.choice(len(self.population), p=weights)
@@ -392,6 +512,15 @@ class BRAVEEvoluter:
         )
 
     def _gradient_step(self, iteration: int) -> ActionResult:
+        """Apply a feedback-derived textual-gradient mutation.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: textual-gradient action outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="gradient_step",
@@ -402,6 +531,15 @@ class BRAVEEvoluter:
         )
 
     def _hype(self, iteration: int) -> ActionResult:
+        """Apply the HYPE optimizer to a sampled prompt.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: HYPE action outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="hype",
@@ -411,6 +549,15 @@ class BRAVEEvoluter:
         )
 
     def _long_term_mutation(self, iteration: int) -> ActionResult:
+        """Mutate a prompt using accumulated long-term reflection.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: long-term mutation outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="long_term_mutation",
@@ -422,6 +569,15 @@ class BRAVEEvoluter:
         )
 
     def _paraphrasing(self, iteration: int) -> ActionResult:
+        """Apply a problem-aware paraphrasing mutation.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: paraphrasing action outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="paraphrase",
@@ -432,6 +588,15 @@ class BRAVEEvoluter:
         )
 
     def _zero_order_mutation(self, iteration: int) -> ActionResult:
+        """Generate a zero-order mutation from the problem description.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: zero-order mutation outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="zero_order",
@@ -442,6 +607,15 @@ class BRAVEEvoluter:
         )
 
     def _creative_role_and_style_mutation(self, iteration: int) -> ActionResult:
+        """Apply a creative role-and-style mutation.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: role-and-style mutation outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="creative_role_and_style",
@@ -452,6 +626,15 @@ class BRAVEEvoluter:
         )
 
     def _creative_zero_order_mutation(self, iteration: int) -> ActionResult:
+        """Apply a creative zero-order mutation.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: creative zero-order mutation outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="creative_zero_order",
@@ -462,6 +645,15 @@ class BRAVEEvoluter:
         )
 
     def _few_shots_mutation(self, iteration: int) -> ActionResult:
+        """Mutate a prompt by inserting a difficult few-shot example.
+
+        Args:
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: few-shot mutation outcome.
+        """
+
         return self._basic_mutation(
             iteration=iteration,
             action_name="few_shot_mutation",
@@ -475,6 +667,19 @@ class BRAVEEvoluter:
         action: str,
         iteration: int
     ) -> ActionResult:
+        """Dispatch a named BRAVE action to its implementation.
+
+        Args:
+            action (str): configured action name.
+            iteration (int): current optimization iteration.
+
+        Returns:
+            ActionResult: result returned by the action implementation.
+
+        Raises:
+            ValueError: if ``action`` is not supported.
+        """
+
         match action:
             case "crossover": return self._crossover(iteration)
             case "elitist_mutation": return self._elitist_mutation(iteration)
@@ -493,6 +698,8 @@ class BRAVEEvoluter:
             case _: raise ValueError(f"Unsupported action: {action}")
 
     def _init_train_batch_sampler(self) -> None:
+        """Initialize the configured stratified training-batch sampler."""
+
         self.train_batch_sampler = None
         self.current_train_batch_data = None
         self.current_train_batch_targets = None
@@ -525,6 +732,12 @@ class BRAVEEvoluter:
             )
 
     def _refresh_train_batch(self, epoch: int) -> None:
+        """Select and cache the training subset for an epoch.
+
+        Args:
+            epoch (int): current optimization epoch.
+        """
+
         if self.train_batch_sampler is None:
             self.current_train_batch_data = None
             self.current_train_batch_targets = None
@@ -545,6 +758,12 @@ class BRAVEEvoluter:
         ]
 
     def _get_train_eval_data(self) -> Tuple[List[str], List[Any]]:
+        """Return the active training batch or complete training split.
+
+        Returns:
+            Tuple[List[str], List[Any]]: evaluation inputs and targets.
+        """
+
         if (
             self.current_train_batch_data is not None
             and self.current_train_batch_targets is not None
@@ -559,6 +778,13 @@ class BRAVEEvoluter:
         """Evaluate prompt on val set, using cached val_score if available.
 
         Does NOT overwrite prompt.score — train score is preserved.
+
+        Args:
+            prompt (Prompt): prompt to evaluate or read from cache.
+
+        Returns:
+            float: cached or newly computed validation score; ``0.0`` when
+                evaluation fails.
         """
         if prompt.val_score is not None:
             return prompt.val_score
@@ -656,6 +882,21 @@ class BRAVEEvoluter:
         val_data: List[str],
         val_targets: List[str],
     ) -> Dict[str, Any]:
+        """Optimize an initial prompt under token and step budgets.
+
+        Args:
+            initial_prompt (str): seed prompt for population initialization.
+            problem_description (str): description of the target task.
+            train_data (List[str]): training inputs.
+            train_targets (List[str]): expected training outputs.
+            val_data (List[str]): validation inputs.
+            val_targets (List[str]): expected validation outputs.
+
+        Returns:
+            Dict[str, Any]: best prompts, logs, controller diagnostics, and
+                efficiency statistics.
+        """
+
         np.random.seed(self.seed)
         random.seed(self.seed)
 
@@ -878,6 +1119,15 @@ class BRAVEEvoluter:
         return summary
 
     def _quality_at_budget_fraction(self, fraction: float) -> float:
+        """Return the best quality reached within a budget fraction.
+
+        Args:
+            fraction (float): fraction of the initial budget to inspect.
+
+        Returns:
+            float: best quality reached before the spending threshold.
+        """
+
         target_spend = self.initial_budget * fraction
         best = 0.0
         for row in self.logs:
@@ -886,6 +1136,12 @@ class BRAVEEvoluter:
         return best
 
     def _build_efficiency_summary(self) -> Dict[str, Any]:
+        """Summarize quality gains, useful actions, and token efficiency.
+
+        Returns:
+            Dict[str, Any]: aggregate spending and quality statistics.
+        """
+
         if not self.logs:
             return {
                 "spent_tokens": 0.0,
@@ -916,6 +1172,12 @@ class BRAVEEvoluter:
         }
 
     def export_logs_jsonl(self, path: str) -> None:
+        """Write per-step optimization logs as JSON Lines.
+
+        Args:
+            path (str): destination JSONL path; parent directories are created.
+        """
+
         out_path = Path(path)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         with out_path.open("w", encoding="utf-8") as f:
@@ -945,6 +1207,14 @@ class BRAVEEvoluter:
         path: str,
         summary: Optional[Dict[str, Any]] = None
     ) -> None:
+        """Write an optimization summary to a JSON file.
+
+        Args:
+            path (str): destination JSON path; parent directories are created.
+            summary (Optional[Dict[str, Any]]): payload to write, or ``None``
+                to derive a summary from current logs.
+        """
+
         out_path = Path(path)
         out_path.parent.mkdir(parents=True, exist_ok=True)
         payload = summary if summary is not None else {

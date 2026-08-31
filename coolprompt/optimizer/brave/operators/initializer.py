@@ -18,6 +18,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class PopulationInitializationOperator(Operator):
+    """Create BRAVE's initial population from a problem description."""
+
     def run(
         self,
         initial_prompt: str,
@@ -27,6 +29,21 @@ class PopulationInitializationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> List[Prompt]:
+        """Generate and evaluate an initial population of diverse prompts.
+
+        Args:
+            initial_prompt (str): seed prompt included in the population.
+            problem_description (str): description of the target task.
+            population_size (int): number of prompts to generate.
+            model (BaseLanguageModel): model retained for interface parity.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            List[Prompt]: evaluated initial population.
+        """
+
         prompt_by_description_template =\
             PROMPT_BY_DESCRIPTION_TEMPLATE.format(
                 PROBLEM_DESCRIPTION=problem_description

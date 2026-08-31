@@ -10,7 +10,16 @@ from coolprompt.optimizer.hype.hype import HyPEOptimizer
 
 
 class HypeOperator(Operator):
+    """Apply the HYPE prompt optimization strategy."""
+
     def __init__(self, model: BaseLanguageModel, **kwargs) -> None:
+        """Create a HYPE optimizer backed by the supplied model.
+
+        Args:
+            model (BaseLanguageModel): model used by HYPE.
+            **kwargs (Any): base-operator arguments such as ``logger``.
+        """
+
         super().__init__(**kwargs)
         self.hype = HyPEOptimizer(model)
 
@@ -21,6 +30,18 @@ class HypeOperator(Operator):
         problem_description: str,
         evaluate_fn: Callable[[Prompt, str], None],
     ) -> Prompt:
+        """Optimize and evaluate a prompt with HYPE.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): prompt to optimize.
+            problem_description (str): description of the target task.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Prompt: evaluated HYPE mutation.
+        """
+
         hyped = self.hype.optimize(
             prompt.text,
             meta_info={

@@ -10,6 +10,8 @@ from coolprompt.utils.enums import Task
 
 @dataclass(frozen=True)
 class GenerationFeatures:
+    """Store source and target lengths used for generation stratification."""
+
     input_len: int
     target_len: int
 
@@ -24,6 +26,15 @@ class StratifiedBatchSampler:
         seed: int = 19,
         generation_bins: int = 3,
     ) -> None:
+        """Configure deterministic stratified batch sampling.
+
+        Args:
+            task (Task): optimization task that determines stratification.
+            batch_size (int): maximum number of sampled examples.
+            seed (int): base seed combined with the epoch number.
+            generation_bins (int): number of quantile bins per length feature.
+        """
+
         self.task = task
         self.batch_size = max(int(batch_size), 1)
         self.generation_bins = max(int(generation_bins), 2)
@@ -34,6 +45,16 @@ class StratifiedBatchSampler:
         dataset: List[str],
         targets: List[str],
     ) -> List[GenerationFeatures]:
+        """Build length features for paired generation examples.
+
+        Args:
+            dataset (List[str]): source texts.
+            targets (List[str]): target texts paired with the sources.
+
+        Returns:
+            List[GenerationFeatures]: source and target lengths per example.
+        """
+
         features: List[GenerationFeatures] = []
         for source, target in zip(dataset, targets):
             features.append(
@@ -45,6 +66,15 @@ class StratifiedBatchSampler:
         return features
 
     def _quantile_edges(self, values: np.ndarray) -> np.ndarray:
+        """Return unique internal quantile boundaries for an array.
+
+        Args:
+            values (np.ndarray): numeric values to divide into bins.
+
+        Returns:
+            np.ndarray: sorted unique internal quantile boundaries.
+        """
+
         if values.size == 0:
             return np.array([], dtype=np.float64)
         quantiles = np.linspace(0.0, 1.0, self.generation_bins + 1)[1:-1]
@@ -55,6 +85,16 @@ class StratifiedBatchSampler:
 
     @staticmethod
     def _assign_bin(value: float, edges: np.ndarray) -> int:
+        """Map a value to the bin delimited by ``edges``.
+
+        Args:
+            value (float): value to assign.
+            edges (np.ndarray): sorted bin boundaries.
+
+        Returns:
+            int: zero-based bin index.
+        """
+
         if edges.size == 0:
             return 0
         return int(np.searchsorted(edges, value, side="right"))
@@ -64,6 +104,16 @@ class StratifiedBatchSampler:
         dataset: List[str],
         targets: List[str | int],
     ) -> Dict[Tuple[str, ...], List[int]]:
+        """Group examples by label or source and target length bins.
+
+        Args:
+            dataset (List[str]): source examples.
+            targets (List[str | int]): labels or generation targets.
+
+        Returns:
+            Dict[Tuple[str, ...], List[int]]: stratum keys mapped to indices.
+        """
+
         strata: Dict[Tuple[str, ...], List[int]] = {}
         if self.task == Task.CLASSIFICATION:
             for idx, target in enumerate(targets):
@@ -96,6 +146,16 @@ class StratifiedBatchSampler:
         strata_sizes: Dict[Tuple[str, ...], int],
         total_size: int,
     ) -> Dict[Tuple[str, ...], int]:
+        """Allocate batch slots proportionally across strata.
+
+        Args:
+            strata_sizes (Dict[Tuple[str, ...], int]): examples per stratum.
+            total_size (int): total number of available examples.
+
+        Returns:
+            Dict[Tuple[str, ...], int]: number of slots per stratum.
+        """
+
         if total_size <= 0:
             return {}
         target_size = min(self.batch_size, total_size)
@@ -123,6 +183,17 @@ class StratifiedBatchSampler:
         targets: Sequence[str | int],
         epoch: int,
     ) -> List[int]:
+        """Sample deterministic stratified indices for an epoch.
+
+        Args:
+            dataset (Sequence[str]): source examples.
+            targets (Sequence[str | int]): labels or generation targets.
+            epoch (int): epoch used to derive the random seed.
+
+        Returns:
+            List[int]: selected dataset indices.
+        """
+
         total_size = len(dataset)
         if total_size == 0:
             return []
@@ -183,6 +254,18 @@ class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
         warmup_steps: int = 20,
         max_alpha: float = 0.6,
     ) -> None:
+        """Configure curriculum sampling and its difficulty schedule.
+
+        Args:
+            task (Task): optimization task that determines stratification.
+            batch_size (int): maximum number of sampled examples.
+            total_steps (int): number of curriculum steps.
+            seed (int): base random seed.
+            generation_bins (int): number of quantile bins per length feature.
+            warmup_steps (int): steps that use uniform stratum sampling.
+            max_alpha (float): maximum weight assigned to difficulty.
+        """
+
         super().__init__(task, batch_size, seed, generation_bins)
         self.total_steps = max(int(total_steps), 1)
         self.warmup_steps = max(int(warmup_steps), 0)
@@ -198,8 +281,8 @@ class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
         """Record per-example outcomes after an evaluation step.
 
         Args:
-            batch_indices: global dataset indices that were in the batch.
-            failed_indices: subset of batch_indices where the prompt failed.
+            batch_indices (List[int]): global indices included in the batch.
+            failed_indices (List[int]): batch indices where evaluation failed.
         """
         failed_set = set(failed_indices)
         for idx in batch_indices:
@@ -208,12 +291,30 @@ class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
                 self._error_counts[idx] = self._error_counts.get(idx, 0) + 1
 
     def _curriculum_alpha(self, epoch: int) -> float:
+        """Return the difficulty weight for the requested epoch.
+
+        Args:
+            epoch (int): current curriculum epoch.
+
+        Returns:
+            float: difficulty mixture weight in ``[0, max_alpha]``.
+        """
+
         if epoch <= self.warmup_steps:
             return 0.0
         ramp_len = max(self.total_steps - self.warmup_steps, 1)
         return self.max_alpha * min((epoch - self.warmup_steps) / ramp_len, 1.0)
 
     def _difficulty(self, idx: int) -> float:
+        """Return the observed difficulty of an example.
+
+        Args:
+            idx (int): dataset index.
+
+        Returns:
+            float: empirical error rate, or ``0.5`` when unseen.
+        """
+
         evals = self._eval_counts.get(idx, 0)
         if evals == 0:
             return 0.5  # neutral prior for unseen examples
@@ -225,6 +326,17 @@ class CurriculumStratifiedBatchSampler(StratifiedBatchSampler):
         targets: Sequence[str | int],
         epoch: int,
     ) -> List[int]:
+        """Sample stratified indices with curriculum difficulty weighting.
+
+        Args:
+            dataset (Sequence[str]): source examples.
+            targets (Sequence[str | int]): labels or generation targets.
+            epoch (int): current curriculum epoch.
+
+        Returns:
+            List[int]: selected dataset indices.
+        """
+
         alpha = self._curriculum_alpha(epoch)
         if alpha == 0.0:
             return super().sample(dataset, targets, epoch)

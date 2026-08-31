@@ -15,12 +15,24 @@ class BERTSimilarityComputer:
         self,
         model_name: str = "sentence-transformers/all-MiniLM-L6-v2"
     ) -> None:
-        """Initialize BERT model for semantic similarity"""
+        """Initialize a model for semantic similarity.
+
+        Args:
+            model_name (str): SentenceTransformers model identifier.
+        """
         self.model = SentenceTransformer(model_name)
         self.available = True
 
     def compute_similarity(self, texts: List[str]) -> np.ndarray:
-        """Compute semantic similarity matrix using BERT"""
+        """Compute a semantic similarity matrix using BERT.
+
+        Args:
+            texts (List[str]): texts to compare.
+
+        Returns:
+            np.ndarray: pairwise cosine similarities, or ``None`` when fewer
+                than two texts are supplied or encoding fails.
+        """
         if not self.available or len(texts) < 2:
             return None
 
@@ -46,21 +58,17 @@ class PopulationDiversityManager:
         bert_weight: float = 0.6,
         duplicate_threshold: float = 0.95
     ):
-        """
+        """Initialize population-diversity controls.
+
         Args:
-            similarity_threshold: cosine similarity threshold for clustering
-                (0-1)
-            max_per_cluster: max number of prompts
-                to keep per similarity cluster
-            auto_threshold: if True, automatically adjust threshold
-                to maintain cluster count
-            target_cluster_count: target number of clusters
-                (default: population_size)
-            use_hierarchical: if True, use hierarchical clustering
-                instead of DFS
-            use_bert: if True, use BERT embeddings for semantic similarity
-            bert_weight: weight for BERT in hybrid similarity (0-1),
-                TF-IDF gets (1-bert_weight)
+            similarity_threshold (float): cosine-similarity clustering cutoff.
+            max_per_cluster (int): maximum prompts retained per cluster.
+            auto_threshold (bool): whether to adapt the clustering threshold.
+            target_cluster_count (int): desired number of clusters.
+            use_hierarchical (bool): whether to use hierarchical clustering.
+            use_bert (bool): whether to blend semantic BERT similarity.
+            bert_weight (float): BERT weight in the hybrid similarity.
+            duplicate_threshold (float): cutoff for near-duplicate removal.
         """
         self.similarity_threshold = similarity_threshold
         self.max_per_cluster = max_per_cluster
@@ -88,7 +96,14 @@ class PopulationDiversityManager:
         self.last_filter_report = {}
 
     def _compute_similarity_matrix(self, prompts: List[Prompt]) -> np.ndarray:
-        """Compute hybrid similarity matrix: TF-IDF + BERT (if available)"""
+        """Compute a hybrid TF-IDF and BERT similarity matrix.
+
+        Args:
+            prompts (List[Prompt]): prompts to compare.
+
+        Returns:
+            np.ndarray: square pairwise-similarity matrix.
+        """
         texts = [p.text for p in prompts]
 
         if len(texts) < 2:
@@ -120,8 +135,15 @@ class PopulationDiversityManager:
         similarity_matrix: np.ndarray,
         population_size: int
     ) -> float:
-        """Automatically determine threshold
-        to maintain ~target_cluster_count clusters"""
+        """Choose a threshold near the target number of clusters.
+
+        Args:
+            similarity_matrix (np.ndarray): pairwise similarities.
+            population_size (int): number of prompts represented by the matrix.
+
+        Returns:
+            float: adapted threshold, or the configured fixed threshold.
+        """
         if population_size < 2 or self.target_cluster_count is None:
             return self.similarity_threshold
 
@@ -176,7 +198,15 @@ class PopulationDiversityManager:
         similarity_matrix: np.ndarray,
         threshold: float
     ) -> List[List[int]]:
-        """Use hierarchical clustering for more stable grouping"""
+        """Cluster prompts with complete-linkage hierarchical clustering.
+
+        Args:
+            similarity_matrix (np.ndarray): pairwise similarities.
+            threshold (float): minimum within-cluster similarity.
+
+        Returns:
+            List[List[int]]: clusters of prompt indices.
+        """
         distance_matrix = 1 - similarity_matrix
         upper_triangle = distance_matrix[
             np.triu_indices_from(distance_matrix, k=1)
@@ -205,7 +235,15 @@ class PopulationDiversityManager:
         similarity_matrix: np.ndarray,
         threshold: float
     ) -> List[List[int]]:
-        """Use DFS clustering (original method)"""
+        """Cluster prompts as connected components using DFS.
+
+        Args:
+            similarity_matrix (np.ndarray): pairwise similarities.
+            threshold (float): minimum edge similarity.
+
+        Returns:
+            List[List[int]]: clusters of prompt indices.
+        """
         n = len(similarity_matrix)
         visited = [False] * n
         clusters = []
@@ -238,18 +276,16 @@ class PopulationDiversityManager:
         similarity_matrix: np.ndarray,
         duplicate_threshold: float = 0.95
     ) -> Tuple[List[Prompt], np.ndarray, np.ndarray]:
-        """
-        Remove near-duplicates (>duplicate_threshold% similarity)
-        keep only best from each duplicate group.
+        """Remove near-duplicates, keeping the best of each group.
 
         Args:
-            population: list of prompts
-            similarity_matrix: similarity matrix
-            duplicate_threshold: threshold
-                for considering prompts as duplicates (default 0.95)
+            population (List[Prompt]): prompts sorted by descending score.
+            similarity_matrix (np.ndarray): pairwise similarities.
+            duplicate_threshold (float): duplicate-similarity cutoff.
 
         Returns:
-            filtered population and new similarity matrix
+            Tuple[List[Prompt], np.ndarray, np.ndarray]: retained prompts,
+                reduced similarity matrix, and retained original indices.
         """
         n = len(population)
         visited = [False] * n
@@ -282,15 +318,14 @@ class PopulationDiversityManager:
         population: List[Prompt],
         target_population_size: int
     ) -> List[Prompt]:
-        """
-        Filter population to maintain diversity while keeping best prompts.
+        """Filter a population for diversity while retaining strong prompts.
 
         Args:
-            population: list of prompts sorted by score (descending)
-            target_population_size: target size for population
+            population (List[Prompt]): prompts sorted by descending score.
+            target_population_size (int): maximum returned population size.
 
         Returns:
-            filtered population with maintained diversity
+            List[Prompt]: diverse population sorted by descending score.
         """
         if len(population) <= target_population_size:
             return population
@@ -377,15 +412,14 @@ class PopulationDiversityManager:
         population: List[Prompt],
         max_size: int
     ) -> List[Prompt]:
-        """
-        Main function: sort by score, filter by diversity, return best prompts
+        """Sort prompts by score and enforce a diverse population bound.
 
         Args:
-            population: list of prompts
-            max_size: maximum population size
+            population (List[Prompt]): candidate prompts.
+            max_size (int): maximum returned population size.
 
         Returns:
-            diverse population sorted by score
+            List[Prompt]: diverse population sorted by descending score.
         """
         if len(population) <= max_size:
             return sorted(population, key=lambda p: p.score, reverse=True)
@@ -403,6 +437,12 @@ class PopulationDiversityManager:
         """Return mean pairwise distance in [0, 1] using TF-IDF only (fast).
 
         Returns 1.0 (fully diverse) when population has fewer than 2 prompts.
+
+        Args:
+            population (List[Prompt]): prompts whose diversity to measure.
+
+        Returns:
+            float: mean pairwise distance, or ``0.5`` if computation fails.
         """
         if len(population) < 2:
             return 1.0
@@ -417,5 +457,9 @@ class PopulationDiversityManager:
             return 0.5
 
     def get_filter_report(self) -> dict:
-        """Get details about last filtering operation"""
+        """Get details about the last filtering operation.
+
+        Returns:
+            dict: thresholds, clusters, and removed prompt indices.
+        """
         return self.last_filter_report

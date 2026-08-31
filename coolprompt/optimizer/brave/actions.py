@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Protocol
 
-from coolprompt.optimizer.begrape.core_states import (
-    OptimizerState, EpistemicMemory
-)
+from coolprompt.optimizer.brave.core_states import OptimizerState
 
 
 @dataclass
 class ActionResult:
+    """Describe the outcome and token cost of an optimizer action."""
+
     action: str
     delta_quality: float
     cost_tokens: float
@@ -26,8 +26,20 @@ class ActionExecutor(Protocol):
         action: str,
         population: List[str],
         state: OptimizerState,
-        memory: EpistemicMemory,
         train_data: Any,
         val_data: Any,
     ) -> ActionResult:
+        """Execute an action against the current optimizer context.
+
+        Args:
+            action (str): name of the action to execute.
+            population (List[str]): current prompt population.
+            state (OptimizerState): current normalized optimizer state.
+            train_data (Any): training data available to the action.
+            val_data (Any): validation data available to the action.
+
+        Returns:
+            ActionResult: measured action outcome and its payload.
+        """
+
         pass

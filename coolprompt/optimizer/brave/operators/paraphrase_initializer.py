@@ -17,6 +17,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class ParaphraseInitializationOperator(Operator):
+    """Initialize a population by paraphrasing a seed prompt."""
+
     def run(
         self,
         initial_prompt: str,
@@ -26,6 +28,21 @@ class ParaphraseInitializationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> List[Prompt]:
+        """Generate, evaluate, and return paraphrases of a seed prompt.
+
+        Args:
+            initial_prompt (str): prompt to paraphrase.
+            population_size (int): number of population members.
+            problem_description (str): description of the target task.
+            model (BaseLanguageModel): model retained for interface parity.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            List[Prompt]: evaluated paraphrase population.
+        """
+
         prompt_by_description_template =\
             PROMPT_BY_DESCRIPTION_TEMPLATE.format(
                 PROBLEM_DESCRIPTION=problem_description

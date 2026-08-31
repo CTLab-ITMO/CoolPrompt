@@ -18,6 +18,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class GradientStepOperator(Operator):
+    """Improve a prompt using a textual gradient from failed examples."""
+
     def _make_bad_examples(self, bad_examples: List[BadExample]) -> str:
         """Converts an array of bad examples into string format
 
@@ -43,13 +45,16 @@ class GradientStepOperator(Operator):
         problem_description: str,
         llm_query_fn: Callable[[List[str]], List[str]],
     ) -> str:
-        """Generates textual gradient for provided prompt
+        """Generate a textual gradient for a prompt.
 
         Args:
-            prompt (Prompt): prompt to generate textual gradient for.
+            prompt (Prompt): prompt to critique.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
 
         Returns:
-            str: textual gradient for given prompt
+            str: cached or newly generated textual gradient.
         """
 
         if prompt.gradient is not None:
@@ -76,6 +81,20 @@ class GradientStepOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Prompt:
+        """Generate feedback, apply it, and evaluate the mutation.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): prompt to improve.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Prompt: evaluated textual-gradient mutation.
+        """
+
         gradient = self._gen_textual_gradient(
             prompt=prompt,
             problem_description=problem_description,

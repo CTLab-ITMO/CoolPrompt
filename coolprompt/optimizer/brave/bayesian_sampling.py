@@ -10,6 +10,15 @@ class StateFeaturizer:
     """Maps OptimizerState to a dense feature vector."""
 
     def transform(self, s: OptimizerState) -> np.ndarray:
+        """Convert an optimizer state into contextual bandit features.
+
+        Args:
+            s (OptimizerState): normalized optimizer state.
+
+        Returns:
+            np.ndarray: dense feature vector for the controller.
+        """
+
         x = np.array(
             [
                 s.val_quality,
@@ -30,6 +39,12 @@ class StateFeaturizer:
 
     @property
     def dim(self) -> int:
+        """Return the number of features emitted by :meth:`transform`.
+
+        Returns:
+            int: feature-vector dimensionality.
+        """
+
         return 9
 
 
@@ -42,6 +57,14 @@ class BayesianLinearTS:
         alpha: float = 1.0,
         sigma2: float = 1.0
     ) -> None:
+        """Initialize the precision matrix and response vector.
+
+        Args:
+            dim (int): number of regression features.
+            alpha (float): isotropic prior precision.
+            sigma2 (float): observation-noise variance.
+        """
+
         self.dim = dim
         self.alpha = alpha
         self.sigma2 = sigma2
@@ -49,10 +72,26 @@ class BayesianLinearTS:
         self.b = np.zeros(dim)
 
     def update(self, x: np.ndarray, y: float) -> None:
+        """Update posterior statistics with one observation.
+
+        Args:
+            x (np.ndarray): observation feature vector.
+            y (float): observed scalar response.
+        """
+
         self.A += np.outer(x, x) / self.sigma2
         self.b += (x * y) / self.sigma2
 
     def sample_theta(self, rng: np.random.Generator) -> np.ndarray:
+        """Draw regression coefficients from the current posterior.
+
+        Args:
+            rng (np.random.Generator): random-number generator to use.
+
+        Returns:
+            np.ndarray: sampled coefficient vector.
+        """
+
         # Numerical guard
         A_inv = np.linalg.pinv(self.A)
         mu = A_inv @ self.b
@@ -60,13 +99,37 @@ class BayesianLinearTS:
         return rng.multivariate_normal(mu, cov)
 
     def posterior_mean(self) -> np.ndarray:
+        """Return the posterior mean of the regression coefficients.
+
+        Returns:
+            np.ndarray: posterior coefficient mean.
+        """
+
         A_inv = np.linalg.pinv(self.A)
         return A_inv @ self.b
 
     def predictive_mean(self, x: np.ndarray) -> float:
+        """Predict the expected response for a feature vector.
+
+        Args:
+            x (np.ndarray): feature vector.
+
+        Returns:
+            float: posterior predictive mean.
+        """
+
         return float(np.dot(self.posterior_mean(), x))
 
     def predictive_std(self, x: np.ndarray) -> float:
+        """Estimate posterior predictive uncertainty for a feature vector.
+
+        Args:
+            x (np.ndarray): feature vector.
+
+        Returns:
+            float: posterior predictive standard deviation.
+        """
+
         A_inv = np.linalg.pinv(self.A)
         var = float(np.dot(x, A_inv @ x)) * self.sigma2
         return float(math.sqrt(max(var, 1e-12)))
@@ -89,6 +152,16 @@ class OnlineActionMLP:
         learning_rate: float = 5e-3,
         seed: int = 123,
     ) -> None:
+        """Initialize the shared trunk and action-specific heads.
+
+        Args:
+            actions (List[str]): supported action names.
+            input_dim (int): input feature dimensionality.
+            hidden_dim (int): width of the shared hidden layer.
+            learning_rate (float): stochastic-gradient learning rate.
+            seed (int): parameter-initialization seed.
+        """
+
         self.actions = actions
         self.a2i = {a: i for i, a in enumerate(actions)}
         self.input_dim = input_dim
@@ -111,17 +184,55 @@ class OnlineActionMLP:
 
     @staticmethod
     def _relu(z: np.ndarray) -> np.ndarray:
+        """Apply the rectified linear activation element-wise.
+
+        Args:
+            z (np.ndarray): activation input.
+
+        Returns:
+            np.ndarray: rectified values.
+        """
+
         return np.maximum(z, 0.0)
 
     @staticmethod
     def _sigmoid(z: float) -> float:
+        """Compute a numerically bounded logistic sigmoid.
+
+        Args:
+            z (float): sigmoid logit.
+
+        Returns:
+            float: probability in ``(0, 1)``.
+        """
+
         z = float(np.clip(z, -20.0, 20.0))
         return 1.0 / (1.0 + math.exp(-z))
 
     def _forward_hidden(self, x: np.ndarray) -> np.ndarray:
+        """Project an input through the shared hidden layer.
+
+        Args:
+            x (np.ndarray): input feature vector.
+
+        Returns:
+            np.ndarray: hidden representation.
+        """
+
         return self._relu(x @ self.W1 + self.b1)
 
     def predict(self, action: str, x: np.ndarray) -> Dict[str, float]:
+        """Predict benefit, cost, and improvement probability for an action.
+
+        Args:
+            action (str): action whose heads should be evaluated.
+            x (np.ndarray): contextual feature vector.
+
+        Returns:
+            Dict[str, float]: benefit, positive cost, and improvement
+                probability.
+        """
+
         idx = self.a2i[action]
         h = self._forward_hidden(x)
         benefit = float(np.dot(self.W_benefit[idx], h) + self.b_benefit[idx])
@@ -140,6 +251,16 @@ class OnlineActionMLP:
         target_cost: float,
         target_impr: float,
     ) -> None:
+        """Train the selected action heads and shared trunk with one sample.
+
+        Args:
+            action (str): action whose heads should be updated.
+            x (np.ndarray): contextual feature vector.
+            target_benefit (float): observed quality benefit.
+            target_cost (float): observed token cost.
+            target_impr (float): binary improvement target.
+        """
+
         idx = self.a2i[action]
         h_pre = x @ self.W1 + self.b1
         h = self._relu(h_pre)

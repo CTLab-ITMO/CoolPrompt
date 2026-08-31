@@ -17,12 +17,22 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class FewShotExamplesOperator(Operator):
+    """Mutate prompts by adding or replacing embedded few-shot examples."""
+
     def __init__(
         self,
         max_few_shot_examples_num: int,
         data_sample: List[Tuple[str, str]],
         **kwargs
     ) -> None:
+        """Store the candidate example pool and maximum example count.
+
+        Args:
+            max_few_shot_examples_num (int): maximum examples in a prompt.
+            data_sample (List[Tuple[str, str]]): candidate input-output pairs.
+            **kwargs (Any): base-operator arguments such as ``logger``.
+        """
+
         super().__init__(**kwargs)
         self.max_few_shot_examples_num = max_few_shot_examples_num
         self.examples = data_sample
@@ -31,6 +41,15 @@ class FewShotExamplesOperator(Operator):
         self,
         prompt_few_shots: List[Tuple[str, str]]
     ) -> List[Tuple[str, str]]:
+        """Return examples not already attached to the prompt.
+
+        Args:
+            prompt_few_shots (List[Tuple[str, str]]): current prompt examples.
+
+        Returns:
+            List[Tuple[str, str]]: examples eligible for insertion.
+        """
+
         return [
             example
             for example in self.examples
@@ -38,6 +57,15 @@ class FewShotExamplesOperator(Operator):
         ]
 
     def _prepare_examples(self, examples: List[Tuple[str, str]]) -> str:
+        """Format examples for insertion into an LLM request.
+
+        Args:
+            examples (List[Tuple[str, str]]): input-output pairs.
+
+        Returns:
+            str: examples separated by blank lines.
+        """
+
         return '\n\n'.join([
             f"Input: {inp}\nOutput: {out}"
             for inp, out in examples
@@ -50,6 +78,20 @@ class FewShotExamplesOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Prompt:
+        """Insert a sampled example, rewrite the prompt, and evaluate it.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): prompt whose examples should change.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Prompt: evaluated rewritten prompt, or a zero-scored failure
+                placeholder when rewriting fails.
+        """
+
         possible_examples = self._filter_possible_examples(
             prompt_few_shots=prompt.few_shot_examples
         )

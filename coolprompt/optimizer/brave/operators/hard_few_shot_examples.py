@@ -37,6 +37,13 @@ class HardFewShotExamplesOperator(FewShotExamplesOperator):
 
         Similarity is TF-IDF cosine, averaged over all bad_example inputs.
         Falls back to random if bad_examples is empty or TF-IDF fails.
+
+        Args:
+            possible_examples (List[Tuple[str, str]]): insertion candidates.
+            bad_examples (List[BadExample]): current prompt failures.
+
+        Returns:
+            Tuple[str, str]: selected input-output example.
         """
         if not bad_examples or len(possible_examples) == 1:
             return possible_examples[np.random.choice(len(possible_examples))]
@@ -69,6 +76,20 @@ class HardFewShotExamplesOperator(FewShotExamplesOperator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None],
     ) -> Prompt:
+        """Insert a hard example, rewrite the prompt, and evaluate it.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): prompt whose examples should change.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Prompt: evaluated rewritten prompt, or a zero-scored failure
+                placeholder when rewriting fails.
+        """
+
         possible_examples = self._filter_possible_examples(
             prompt_few_shots=prompt.few_shot_examples
         )

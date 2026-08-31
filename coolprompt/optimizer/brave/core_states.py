@@ -20,6 +20,8 @@ class OptimizerState:
 
 @dataclass
 class ReflectionRecord:
+    """Record a reflection together with its score and creation step."""
+
     text: str
     source_action: str
     utility_score: float = 0.0

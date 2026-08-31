@@ -18,6 +18,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class ElitistMutationOperator(Operator):
+    """Mutate the elite prompt using short- and long-term reflections."""
+
     def run(
         self,
         iteration: int,
@@ -28,6 +30,23 @@ class ElitistMutationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Tuple[Prompt, str]:
+        """Generate an elite mutation and update long-term reflection.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            elitist (Prompt): elite prompt to mutate.
+            problem_description (str): description of the target task.
+            long_term_reflection (str): accumulated reflection text.
+            short_term_reflections (List[str]): recent crossover reflections.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Tuple[Prompt, str]: evaluated mutation and new long-term
+                reflection.
+        """
+
         if long_term_reflection == "":
             long_term_template = LONG_TERM_REFLECTION_TEMPLATE.format(
                 SHORT_TERM_REFLECTIONS='/n'.join(short_term_reflections)

@@ -18,6 +18,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class CreativeRoleAndStyleMutationOperator(Operator):
+    """Mutate a prompt by inventing and applying a role and writing style."""
+
     def run(
         self,
         iteration: int,
@@ -26,6 +28,20 @@ class CreativeRoleAndStyleMutationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Tuple[Prompt, str]:
+        """Generate and evaluate a role-and-style mutation.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): source prompt.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Tuple[Prompt, str]: evaluated mutation and generated style text.
+        """
+
         style_and_role_template = CREATIVE_STYLE_AND_ROLE_TEMPLATE.format(
             PROBLEM_DESCRIPTION=problem_description
         )

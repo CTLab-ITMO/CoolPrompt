@@ -9,6 +9,8 @@ from coolprompt.optimizer.reflective_prompt.prompt import Prompt
 
 @dataclass
 class ElitistMutationLog:
+    """Represent one logged mutation of the elite prompt."""
+
     iteration: int
     timestamp: str
     elitist_prompt: str
@@ -21,6 +23,8 @@ class ElitistMutationLog:
 
 @dataclass
 class GradientStepLog:
+    """Represent one logged textual-gradient step."""
+
     iteration: int
     timestamp: str
     prompt: str
@@ -32,6 +36,8 @@ class GradientStepLog:
 
 @dataclass
 class MutationLog:
+    """Represent one generic prompt mutation log entry."""
+
     iteration: int
     timestamp: str
     prompt: str
@@ -42,6 +48,8 @@ class MutationLog:
 
 @dataclass
 class CreativeRoleStyleMutationLog:
+    """Represent one creative role-and-style mutation."""
+
     iteration: int
     timestamp: str
     prompt: str
@@ -54,6 +62,8 @@ class CreativeRoleStyleMutationLog:
 
 @dataclass
 class FewShotExamplesMutationLog:
+    """Represent one mutation of a prompt's few-shot examples."""
+
     iteration: int
     timestamp: str
     prompt: str
@@ -66,6 +76,8 @@ class FewShotExamplesMutationLog:
 
 @dataclass
 class CrossoverLog:
+    """Represent one crossover and its parent feedback."""
+
     iteration: int
     timestamp: str
     parent1_prompt: str
@@ -81,6 +93,8 @@ class CrossoverLog:
 
 @dataclass
 class PopulationLog:
+    """Represent a population snapshot at an optimization iteration."""
+
     iteration: int
     timestamp: str
     population: List[Dict[str, Any]]
@@ -88,6 +102,8 @@ class PopulationLog:
 
 @dataclass
 class ControllerStateLog:
+    """Represent a controller action-selection snapshot."""
+
     iteration: int
     timestamp: str
     selected_action: str
@@ -98,7 +114,15 @@ class ControllerStateLog:
 
 
 class OperationLogger:
+    """Persist BRAVE operation diagnostics as YAML files."""
+
     def __init__(self, log_dir: str = "operation_logs"):
+        """Create a logger that writes beneath ``log_dir``.
+
+        Args:
+            log_dir (str): directory in which YAML logs are stored.
+        """
+
         self.log_dir = Path(log_dir)
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
@@ -108,6 +132,14 @@ class OperationLogger:
         key: str,
         log_entry: Any
     ) -> None:
+        """Append a dataclass log entry beneath a YAML document key.
+
+        Args:
+            filename (str): YAML file to update.
+            key (str): top-level list key in the YAML document.
+            log_entry (Any): dataclass instance to serialize and append.
+        """
+
         existing_logs = []
         if filename.exists():
             with open(filename, 'r', encoding='utf-8') as f:
@@ -133,7 +165,17 @@ class OperationLogger:
         new_long_term_reflection: str,
         short_term_reflections: List[str]
     ) -> None:
-        """Log a mutation operation to YAML file"""
+        """Log an elite mutation to a YAML file.
+
+        Args:
+            iteration (int): optimization iteration.
+            elitist_prompt (str): elite prompt before mutation.
+            prev_score (float): elite score before mutation.
+            mutated_prompt (str): generated prompt text.
+            mutated_score (float): generated prompt score.
+            new_long_term_reflection (str): updated long-term reflection.
+            short_term_reflections (List[str]): reflections used by mutation.
+        """
         log_entry = ElitistMutationLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -157,7 +199,16 @@ class OperationLogger:
         mutated_score: float,
         file_name: str = "mutations"
     ) -> None:
-        """Log a mutation operation to YAML file"""
+        """Log a generic mutation to a YAML file.
+
+        Args:
+            iteration (int): optimization iteration.
+            prompt (str): source prompt text.
+            prev_score (float): source prompt score.
+            mutated_prompt (str): generated prompt text.
+            mutated_score (float): generated prompt score.
+            file_name (str): output filename without extension.
+        """
         log_entry = MutationLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -179,6 +230,17 @@ class OperationLogger:
         mutated_score: float,
         textual_gradient: str,
     ) -> None:
+        """Log a textual-gradient mutation.
+
+        Args:
+            iteration (int): optimization iteration.
+            prompt (str): source prompt text.
+            prev_score (float): source prompt score.
+            mutated_prompt (str): generated prompt text.
+            mutated_score (float): generated prompt score.
+            textual_gradient (str): feedback applied by the mutation.
+        """
+
         log_entry = GradientStepLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -202,6 +264,18 @@ class OperationLogger:
         style: str,
         role: str
     ) -> None:
+        """Log a creative role-and-style mutation.
+
+        Args:
+            iteration (int): optimization iteration.
+            prompt (str): source prompt text.
+            prev_score (float): source prompt score.
+            mutated_prompt (str): generated prompt text.
+            mutated_score (float): generated prompt score.
+            style (str): generated writing style.
+            role (str): generated model role.
+        """
+
         log_entry = CreativeRoleStyleMutationLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -227,6 +301,19 @@ class OperationLogger:
         removed_few_shot: Tuple[str, str],
         file_name: str = "few_shot_mutations",
     ) -> None:
+        """Log an addition or replacement of a few-shot example.
+
+        Args:
+            iteration (int): optimization iteration.
+            prompt (str): source prompt text.
+            prev_score (float): source prompt score.
+            mutated_prompt (str): generated prompt text.
+            mutated_score (float): generated prompt score.
+            added_few_shot (Tuple[str, str]): inserted input-output example.
+            removed_few_shot (Tuple[str, str]): replaced example, if any.
+            file_name (str): output filename without extension.
+        """
+
         log_entry = FewShotExamplesMutationLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -254,7 +341,20 @@ class OperationLogger:
         offspring_score: float,
         short_term_reflection: str
     ) -> None:
-        """Log a crossover operation to YAML file"""
+        """Log a crossover operation to a YAML file.
+
+        Args:
+            iteration (int): optimization iteration.
+            parent1_prompt (str): first parent text.
+            parent1_score (float): first parent score.
+            parent2_prompt (str): second parent text.
+            parent2_score (float): second parent score.
+            parent1_textual_gradient (str): first parent feedback.
+            parent2_textual_gradient (str): second parent feedback.
+            offspring_prompt (str): generated offspring text.
+            offspring_score (float): generated offspring score.
+            short_term_reflection (str): crossover reflection.
+        """
         log_entry = CrossoverLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -273,6 +373,13 @@ class OperationLogger:
         self._append_logs(log_file, "crossovers", log_entry)
 
     def log_population(self, iteration: int, population: List[Prompt]) -> None:
+        """Write a complete population snapshot for an iteration.
+
+        Args:
+            iteration (int): optimization iteration.
+            population (List[Prompt]): evaluated prompts to serialize.
+        """
+
         population = [p.to_dict() for p in population]
         log_entry = PopulationLog(
             iteration=iteration,
@@ -298,7 +405,16 @@ class OperationLogger:
         action_stats: dict,
         global_step: int
     ) -> None:
-        """Log controller state and action selection"""
+        """Log controller state and action selection.
+
+        Args:
+            iteration (int): optimization iteration.
+            selected_action (str): selected action name.
+            action_scores (dict): controller scores by action.
+            is_fallback (bool): whether fallback selection was used.
+            action_stats (dict): current per-action statistics.
+            global_step (int): controller step counter.
+        """
         log_entry = ControllerStateLog(
             iteration=iteration,
             timestamp=datetime.now().isoformat(),
@@ -330,7 +446,12 @@ class OperationLogger:
         step: int,
         filter_report: dict
     ) -> None:
-        """Log population diversity filtering report"""
+        """Log a population-diversity filtering report.
+
+        Args:
+            step (int): optimization step.
+            filter_report (dict): thresholds, clusters, and removed indices.
+        """
         log_file = self.log_dir / "diversity_filter.yaml"
         existing_logs = []
         if log_file.exists():

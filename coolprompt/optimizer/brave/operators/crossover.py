@@ -21,6 +21,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class CrossoverOperator(Operator):
+    """Combine two parent prompts using feedback-driven reflection."""
+
     def _make_bad_examples(self, bad_examples: List[BadExample]) -> str:
         """Converts an array of bad examples into string format
 
@@ -46,13 +48,16 @@ class CrossoverOperator(Operator):
         problem_description: str,
         llm_query_fn: Callable[[List[str]], List[str]],
     ) -> str:
-        """Generates textual gradient for provided prompt
+        """Generate a textual gradient for a prompt.
 
         Args:
-            prompt (Prompt): prompt to generate textual gradient for.
+            prompt (Prompt): prompt to critique.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
 
         Returns:
-            str: textual gradient for given prompt
+            str: cached or newly generated textual gradient.
         """
 
         if prompt.gradient is not None:
@@ -79,6 +84,20 @@ class CrossoverOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None],
     ) -> Tuple[Prompt, str]:
+        """Cross two prompts and evaluate their offspring.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            population (List[Prompt]): parent prompt population.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Tuple[Prompt, str]: evaluated offspring and short-term reflection.
+        """
+
         scores = np.array([prompt.score for prompt in population])
         probas = (scores + 1e-5) / np.sum(scores + 1e-5)
         parents = np.random.choice(

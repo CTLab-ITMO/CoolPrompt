@@ -15,6 +15,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class LongTermMutationOperator(Operator):
+    """Mutate a prompt using the accumulated long-term reflection."""
+
     def run(
         self,
         iteration: int,
@@ -24,6 +26,21 @@ class LongTermMutationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Tuple[Prompt, str]:
+        """Generate and evaluate a mutation guided by long-term memory.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): prompt to mutate.
+            problem_description (str): description of the target task.
+            long_term_reflection (str): accumulated reflection text.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Tuple[Prompt, str]: evaluated mutation and unchanged reflection.
+        """
+
         mutation_template = ELITIST_MUTATION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=problem_description,
             ELITIST_PROMPT=prompt.text,

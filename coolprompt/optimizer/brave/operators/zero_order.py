@@ -15,6 +15,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class ZeroOrderMutationOperator(Operator):
+    """Mutate a prompt without using evaluation-derived gradients."""
+
     def run(
         self,
         iteration: int,
@@ -23,6 +25,20 @@ class ZeroOrderMutationOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Prompt:
+        """Generate and evaluate a zero-order prompt mutation.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): interface-compatible source prompt; not read.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Prompt: evaluated generated prompt.
+        """
+
         generating_template = PROMPT_BY_DESCRIPTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=problem_description,
         )

@@ -13,6 +13,8 @@ ROLE_TAGS = ("<role>", "</role>")
 
 @dataclass
 class BRAVEConfig:
+    """Configure BRAVE actions, budgets, sampling, and diversity controls."""
+
     actions: List[str] | str = field(
         default_factory=lambda: [
             "crossover",
@@ -69,17 +71,39 @@ def _merge_dicts(
     base: Dict[str, Any],
     override: Dict[str, Any]
 ) -> Dict[str, Any]:
+    """Return a shallow merge in which override values take precedence.
+
+    Args:
+        base (Dict[str, Any]): base mapping.
+        override (Dict[str, Any]): replacement values.
+
+    Returns:
+        Dict[str, Any]: newly merged mapping.
+    """
+
     out = dict(base)
     out.update(override)
     return out
 
 
-def load_begrape_config_from_yaml(
+def load_brave_config_from_yaml(
     path: str, profile: str = "balanced"
 ) -> BRAVEConfig:
-    """Load BEGRAPEConfig from YAML with merge rule:
+    """Load a BRAVE configuration profile from YAML.
 
-    final = defaults overridden by profiles[profile]
+    Values from ``profiles[profile]`` override the file's ``defaults``.
+
+    Args:
+        path (str): path to the YAML configuration file.
+        profile (str): profile name within the ``profiles`` mapping.
+
+    Returns:
+        BRAVEConfig: validated configuration fields from the merged profile.
+
+    Raises:
+        ImportError: if PyYAML is unavailable.
+        FileNotFoundError: if ``path`` does not exist.
+        KeyError: if the requested profile is absent.
     """
     try:
         import yaml  # type: ignore
@@ -113,6 +137,8 @@ def load_begrape_config_from_yaml(
 
 @dataclass
 class OptimizationLog:
+    """Store controller and efficiency metrics for one optimization step."""
+
     step: int
     action: str
     score: float

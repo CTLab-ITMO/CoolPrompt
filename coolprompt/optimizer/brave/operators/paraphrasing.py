@@ -15,6 +15,8 @@ from coolprompt.utils.parsing import extract_answer
 
 
 class ParaphrasingByPDOperator(Operator):
+    """Paraphrase a prompt in the context of its problem description."""
+
     def run(
         self,
         iteration: int,
@@ -23,6 +25,20 @@ class ParaphrasingByPDOperator(Operator):
         llm_query_fn: Callable[[List[str]], List[str]],
         evaluate_fn: Callable[[Prompt, str], None]
     ) -> Prompt:
+        """Generate and evaluate a problem-aware paraphrase.
+
+        Args:
+            iteration (int): optimization iteration used for logging.
+            prompt (Prompt): prompt to paraphrase.
+            problem_description (str): description of the target task.
+            llm_query_fn (Callable[[List[str]], List[str]]): batched LLM
+                callback.
+            evaluate_fn (Callable[[Prompt, str], None]): prompt evaluator.
+
+        Returns:
+            Prompt: evaluated paraphrased prompt.
+        """
+
         paraphrasing_template = PARAPHRASE_BY_DESCRIPTION_TEMPLATE.format(
             PROBLEM_DESCRIPTION=problem_description,
             PROMPT=prompt.text
