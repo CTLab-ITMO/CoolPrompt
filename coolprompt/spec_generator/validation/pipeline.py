@@ -22,7 +22,7 @@ class ValidationPipeline:
             deduplicator: Deduplicator,
             judge: LLMJudge,
             *,
-            max_topup_attempts: int = 3,
+            max_topup_attempts: int = 10,
     ) -> None:
         if max_topup_attempts < 1:
             raise ValueError("max_topup_attempts must be at least 1")

@@ -35,10 +35,32 @@ def _normalize(values: tuple[str, ...] | None) -> tuple[str, ...] | None:
 
 
 class Example(StrictModel):
-    """Input-output pair."""
+    """One generated/seed example with optional alternative valid outputs.
+
+    ``output`` is the primary target used by legacy code. ``references`` contains
+    additional valid targets for the same input. Keeping one primary output preserves
+    backward compatibility while allowing multi-reference metrics (e.g. CommonGen).
+    """
 
     input: str = Field(min_length=1)
     output: str = Field(min_length=1)
+    references: tuple[str, ...] = ()
+
+    @model_validator(mode="after")
+    def normalize_references(self) -> "Example":
+        primary = self.output.strip().casefold()
+        unique: dict[str, str] = {}
+        for item in self.references:
+            value = str(item).strip()
+            if value and value.casefold() != primary:
+                unique.setdefault(value.casefold(), value)
+        object.__setattr__(self, "references", tuple(unique.values()))
+        return self
+
+    @property
+    def all_outputs(self) -> tuple[str, ...]:
+        """Return primary output followed by alternative valid outputs."""
+        return (self.output, *self.references)
 
 
 class TaskSpec(StrictModel):
@@ -136,3 +158,9 @@ class GenerationResult(StrictModel):
         """Return generated output values."""
 
         return [example.output for example in self.examples]
+
+    @property
+    def multireference_target(self) -> list[list[str]]:
+        """Return all valid outputs per generated input for multi-reference metrics."""
+
+        return [list(example.all_outputs) for example in self.examples]
