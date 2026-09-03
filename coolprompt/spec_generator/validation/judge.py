@@ -132,6 +132,10 @@ Language: {spec.language}
 {corner_rule}
 Evaluate every indexed pair for correctness, format compliance, clarity, and realism.
 A classification output must be exactly one valid label.
+For open-ended generation tasks, many different phrasings can be equally correct:
+judge on whether the output satisfies the input constraints (e.g. uses all required
+concepts), is fluent, and matches the requirements — do not penalize an output for
+differing in wording or structure from any single "canonical" phrasing.
 Reject ambiguous, unsupported, malformed, or low-quality examples.
 
 Pairs:
