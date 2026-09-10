@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from html import escape
 from typing import Any
 
 from langchain_core.language_models.base import BaseLanguageModel
@@ -57,14 +56,12 @@ def _render_draft(draft: TaskSpecDraft | None) -> str:
 
 
 def _render_examples(examples: Sequence[Example]) -> str:
-    """Render trusted examples as escaped XML."""
+    """Render trusted examples as JSON."""
 
-    return "\n".join(
-        f'<example index="{index}">\n'
-        f"<input>{escape(example.input)}</input>\n"
-        f"<output>{escape(example.output)}</output>\n"
-        "</example>"
-        for index, example in enumerate(examples, start=1)
+    return json.dumps(
+        [{"input": e.input, "output": e.output} for e in examples],
+        ensure_ascii=False,
+        indent=2,
     )
 
 
@@ -93,18 +90,12 @@ def _build_request(
     }
 
     if examples:
-        return SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE.format(
-            **values,
-            examples=_render_examples(examples),
-        )
+        return SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE.format(**values, examples=_render_examples(examples))
 
     return SPEC_FROM_PROMPT_TEMPLATE.format(**values)
 
 
-def _apply_draft(
-        spec: TaskSpec,
-        draft: TaskSpecDraft | None,
-) -> TaskSpec:
+def _apply_draft(spec: TaskSpec, draft: TaskSpecDraft | None) -> TaskSpec:
     """Apply explicit user overrides and revalidate the specification."""
 
     if draft is None or draft.is_empty:
@@ -112,11 +103,7 @@ def _apply_draft(
 
     updates = draft.overrides()
 
-    if (
-            "task" in updates
-            and updates["task"] != Task.CLASSIFICATION
-            and "labels" not in updates
-    ):
+    if updates.get("task") not in (None, Task.CLASSIFICATION) and "labels" not in updates:
         updates["labels"] = None
 
     return TaskSpec.model_validate(spec.model_dump() | updates)
@@ -151,12 +138,11 @@ class SpecBuilder:
             *,
             task_spec_model: BaseLanguageModel | None = None,
     ) -> None:
+        """Initialize specification inference and optional dataset detection."""
+
         self._spec_model = task_spec_model or model
         self._retry_config = retry_config or RetryConfig()
-        self._detector = TaskDetector(
-            model,
-            confidence_threshold=detector_confidence_threshold,
-        )
+        self._detector = TaskDetector(model, confidence_threshold=detector_confidence_threshold)
 
     def build(
             self,
@@ -169,125 +155,61 @@ class SpecBuilder:
     ) -> GenerationContext:
         """Build the immutable context used for synthetic generation."""
 
-        detected_dataset = dataset_name
-        if detected_dataset is None and detect_dataset:
-            detected_dataset = self._detect_dataset(prompt)
-
-        seed_examples, from_dataset = self._resolve_examples(
-            examples,
-            detected_dataset,
+        dataset = dataset_name or (
+            self._detect_dataset(prompt)
+            if detect_dataset
+            else None
         )
 
-        spec = _apply_draft(
-            self._invoke(
-                _build_request(
-                    prompt,
-                    seed_examples,
-                    detected_dataset,
-                    draft,
-                )
-            ),
-            draft,
-        )
+        seed_examples, from_dataset = self._resolve_examples(examples, dataset)
+        spec = _apply_draft(self._invoke(_build_request(prompt, seed_examples, dataset, draft)), draft)
+        dataset = self._validate_dataset_match(spec, dataset)
 
-        validated_dataset = self._validate_dataset_match(
-            spec,
-            detected_dataset,
-        )
-
-        if from_dataset and validated_dataset is None:
+        if from_dataset and dataset is None:
             seed_examples = ()
 
-        logger.info(
-            "GenerationContext ready: task=%r, corner_cases=%d, dataset=%r",
-            spec.task,
-            len(spec.corner_cases),
-            validated_dataset,
-        )
-
-        return GenerationContext(
-            spec=spec,
-            dataset_name=validated_dataset,
-            seed_examples=seed_examples,
-        )
+        logger.info("GenerationContext ready: task=%r, dataset=%r", spec.task, dataset)
+        return GenerationContext(spec=spec, dataset_name=dataset, seed_examples=seed_examples)
 
     @staticmethod
     def _resolve_examples(
             examples: Sequence[tuple[str, str] | Example] | None,
             dataset_name: str | None,
     ) -> tuple[tuple[Example, ...], bool]:
-        """Resolve user-provided or dataset reference examples.
-
-        Args:
-            examples: Optional user-provided input-output examples.
-            dataset_name: Detected reference dataset name.
-
-        Returns:
-            A tuple containing resolved examples and whether they came from
-            the reference dataset.
-        """
+        """Resolve user-provided or dataset reference examples."""
 
         if examples is not None:
-            return (
-                tuple(
-                    item
-                    if isinstance(item, Example)
-                    else Example(input=item[0], output=item[1])
-                    for item in examples
-                ),
-                False,
+            resolved = tuple(
+                item
+                if isinstance(item, Example)
+                else Example(input=item[0], output=item[1])
+                for item in examples
             )
+            return resolved, False
 
-        dataset_examples = (
-            DATASET_EXAMPLES.get(dataset_name, ())
-            if dataset_name
-            else ()
-        )
+        resolved = tuple(Example(input=item.input, output=item.target)
+                         for item in DATASET_EXAMPLES.get(dataset_name, ()))
 
-        return (
-            tuple(
-                Example(input=item.input, output=item.target)
-                for item in dataset_examples
-            ),
-            bool(dataset_examples),
-        )
+        return resolved, bool(resolved)
 
     @staticmethod
-    def _validate_dataset_match(
-            spec: TaskSpec,
-            dataset_name: str | None,
-    ) -> str | None:
-        """Validate that the detected dataset matches the TaskSpec.
-
-        Args:
-            spec (TaskSpec): Validated task specification.
-            dataset_name (str | None): Detected dataset name.
-
-        Returns:
-            str | None: Dataset name when compatible, otherwise None.
-        """
+    def _validate_dataset_match(spec: TaskSpec, dataset_name: str | None) -> str | None:
+        """Return dataset name if it matches the task spec."""
 
         if not dataset_name:
             return None
 
-        expected_labels = DATASET_LABEL_SETS.get(dataset_name)
-        if expected_labels is None:
+        if (expected := DATASET_LABEL_SETS.get(dataset_name)) is None:
             return dataset_name
 
         if spec.task != Task.CLASSIFICATION or not spec.labels:
             logger.info("Ignoring dataset %r: classification task expected.", dataset_name)
             return None
 
-        actual = {
-            label.strip().casefold()
-            for label in spec.labels
-        }
-        expected = {
-            label.strip().casefold()
-            for label in expected_labels
-        }
+        labels = {label.strip().casefold() for label in spec.labels}
+        expected_labels = {label.strip().casefold() for label in expected}
 
-        if actual == expected:
+        if labels == expected_labels:
             return dataset_name
 
         logger.info(
@@ -310,45 +232,43 @@ class SpecBuilder:
     def _invoke_once(self, request: str) -> TaskSpec:
         """Invoke and parse one specification-model response."""
 
-        chat_model = resolve_chat_model(self._spec_model)
-
         try:
-            output = (
-                self._spec_model.invoke(request)
-                if chat_model is None
-                else chat_model.with_structured_output(
-                    schema=TaskSpec,
-                    method="json_schema",
-                ).invoke(request)
+            chat_model = resolve_chat_model(self._spec_model)
+
+            model = (
+                chat_model.with_structured_output(schema=TaskSpec, method="json_schema")
+                if chat_model is not None
+                else self._spec_model
             )
-            return _parse_spec(output)
+
+            return _parse_spec(model.invoke(request))
 
         except ValidationError as exc:
             raise SpecResponseError("Specification response failed validation.") from exc
+
         except (TypeError, ValueError) as exc:
             raise SpecResponseError("Specification response could not be parsed.") from exc
 
     def _detect_dataset(self, prompt: str) -> str | None:
-        """Detect a reference dataset from the user prompt."""
+        """Detect a reference dataset from the prompt."""
 
         try:
             detection = self._detector.detect_task_area(prompt)
-            if detection.task_area is None:
-                return None
-
-            dataset_name = TASK_AREA_TO_DATASET.get(detection.task_area)
-            if dataset_name is None:
-                logger.info("No dataset mapping for task area %r.", detection.task_area)
-                return None
-
-            logger.info(
-                "Detected dataset %r from task area %r (confidence=%.2f).",
-                dataset_name,
-                detection.task_area,
-                detection.confidence,
-            )
-            return dataset_name
-
         except Exception as exc:
             logger.warning("Dataset detection failed: %s", exc)
             return None
+
+        if detection.task_area is None:
+            return None
+
+        if (dataset := TASK_AREA_TO_DATASET.get(detection.task_area)) is None:
+            logger.info("No dataset mapping for task area %r.", detection.task_area)
+            return None
+
+        logger.info(
+            "Detected dataset %r from task area %r (confidence=%.2f).",
+            dataset,
+            detection.task_area,
+            detection.confidence,
+        )
+        return dataset

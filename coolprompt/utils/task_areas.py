@@ -39,143 +39,300 @@ class Example(NamedTuple):
 DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
     "common_gen": (
         Example(
-            input="lake, shore, canoe",
-            target="A canoe on shore with rainbow across the lake",
+            input="['dog', 'leap', 'catch']",
+            target="A dog leaps into the air to catch a frisbee.",
         ),
+
         Example(
-            input="boat, lake, drive",
-            target="The fisherman drives his boat on the lake",
+            input="['chef', 'slice', 'tomato', 'knife']",
+            target="Using a sharp knife, the chef slices a tomato for the salad.",
         ),
+
         Example(
-            input="grass, horse, eat",
-            target="In the field, a horse eats the grass.",
+            input="['cat', 'hide', 'box']",
+            target="A cat hides inside an empty cardboard box.",
+        ),
+
+        Example(
+            input="['child', 'feed', 'duck', 'pond']",
+            target="Beside the pond, a child crouches down to feed the ducks.",
+        ),
+
+        Example(
+            input="['cyclist', 'push', 'bicycle', 'hill', 'rain']",
+            target="Caught in the rain, a cyclist pushes her bicycle up a muddy hill.",
         ),
     ),
 
     "gsm8k": (
         Example(
-            input="On a school trip to the seashore, Alan and his friends collected shells. "
-                  "Alan collected four times as many shells as Ben did. "
-                  "Ben got a late start and only collected a third of what Laurie did. "
-                  "If Laurie collected 36 shells how many did Alan collect?",
+            input=(
+                "On a school trip to the seashore, Alan and his friends collected shells. "
+                "Alan collected four times as many shells as Ben did. "
+                "Ben collected a third as many shells as Laurie did. "
+                "If Laurie collected 36 shells, how many shells did Alan collect?"
+            ),
             target="48",
         ),
 
         Example(
             input=(
-                "A robe takes some bolts of blue fiber and half that much white fiber. "
-                "There are 3 bolts in total. How many blue fibers are there?"
+                "A robe requires some bolts of blue fiber and half as many bolts "
+                "of white fiber. There are 3 bolts in total. "
+                "How many bolts of blue fiber are needed?"
             ),
-            target=(
-                "2"
-            ),
+            target="2",
         ),
 
         Example(
             input=(
                 "Sam memorized six more digits of pi than Carlos memorized. "
                 "Mina memorized six times as many digits of pi as Carlos memorized. "
-                "If Mina memorized 24 digits of pi, how many digits did Sam memorize?"
+                "If Mina memorized 24 digits, how many digits did Sam memorize?"
             ),
-            target=(
-                "10"
+            target="10",
+        ),
+
+        Example(
+            input=(
+                "Maya buys 4 notebooks for $3 each and 2 pens for $2 each. "
+                "She pays with a $20 bill. How many dollars in change does she receive?"
             ),
+            target="4",
+        ),
+
+        Example(
+            input=(
+                "A bus travels 45 miles per hour for 2 hours and then "
+                "30 miles per hour for 1 hour. How many miles does it travel in total?"
+            ),
+            target="120",
+        ),
+
+        Example(
+            input=(
+                "A jacket originally costs $80. The store gives a 25 percent discount. "
+                "How many dollars does the jacket cost after the discount?"
+            ),
+            target="60",
+        ),
+
+        Example(
+            input=(
+                "A library has 250 books. It lends out 68 books on Monday "
+                "and 47 books on Tuesday. Then 25 books are returned. "
+                "How many books are in the library now?"
+            ),
+            target="160",
+        ),
+
+        Example(
+            input=(
+                "A bakery makes 72 cupcakes. It packs 6 cupcakes in each box. "
+                "After selling 5 boxes, how many cupcakes remain?"
+            ),
+            target="42",
         ),
     ),
 
     "tweeteval": (
         Example(
-            input="“Worry is a down payment on a problem you may never have'. "
-                  "Joyce Meyer.  #motivation #leadership #worry",
-            target="optimism",
-        ),
-        Example(
-            input="it's pretty depressing when u hit pan on ur favourite highlighter",
-            target="sadness",
-        ),
-        Example(
-            input="No but that's so cute. Atsu was probably shy about photos before but cherry helped her out uwu",
-            target="joy",
-        ),
-        Example(
-            input="Rooneys fucking untouchable isn't he? Been fucking dreadful again, depay has looked decent(ish)tonight",
-            target='anger',
+            input=(
+                "@user yeah thanks for cancelling it AFTER we all got there 🙃 "
+                "TWO HOURS wasted for absolutely nothing #brilliant"
+            ),
+            target="anger",
         ),
 
+        Example(
+            input=(
+                "How do you lose my order TWICE and then tell me to 'just place "
+                "another one'?? 😂 WHAT A JOKE"
+            ),
+            target="anger",
+        ),
+
+        Example(
+            input=(
+                "@user love how you can ignore every message for a WEEK then suddenly "
+                "need an answer from me RIGHT NOW lol #nice"
+            ),
+            target="anger",
+        ),
+
+        Example(
+            input=(
+                "@user nah it's FINE, you guys have fun :) kinda getting used to "
+                "finding out about everything from the photos anyway"
+            ),
+            target="sadness",
+        ),
+
+        Example(
+            input=(
+                "Still catch myself saving things to send you and then remembering "
+                "there's NOBODY on the other end anymore."
+            ),
+            target="sadness",
+        ),
+
+        Example(
+            input=(
+                "@user you absolute idiot 😂❤️ can't believe you travelled ALL THAT WAY "
+                "just to surprise me, I'm still smiling"
+            ),
+            target="joy",
+        ),
+
+        Example(
+            input=(
+                "@user ONE rejection doesn't decide where this goes. send the next "
+                "application, then the next one. somebody's gonna say YES #keepgoing"
+            ),
+            target="optimism",
+        ),
     ),
     "squad_v2": (
         Example(
-            input='Context: The Roman Catholic Church canon law also includes the main five rites (groups) of '
-                  'churches which are in full union with the Roman Catholic Church and the Supreme Pontiff:'
-                  'Question: What term characterizes the intersection of the rites with the Roman Catholic Church?',
-            target='full union',
+            input="The economy of Victoria is highly diversified: service sectors including financial and property "
+                  "services, health, education, wholesale, retail, hospitality and manufacturing constitute the "
+                  "majority of employment. Victoria's total gross state product (GSP) is ranked second in Australia, "
+                  "although Victoria is ranked fourth in terms of GSP per capita because of its limited mining "
+                  "activity. Culturally, Melbourne is home to a number of museums, art galleries and theatres and is "
+                  "also described as the \"sporting capital of Australia\". The Melbourne Cricket Ground is "
+                  "the largest stadium in Australia, and the host of the 1956 Summer Olympics and the 2006 "
+                  "Commonwealth Games. The ground is also considered the \"spiritual home\" of Australian cricket "
+                  "and Australian rules football, and hosts the grand final of the Australian Football League (AFL) "
+                  "each year, usually drawing crowds of over 95,000 people. Victoria includes eight public "
+                  "universities, with the oldest, the University of Melbourne, having been founded in 1853. What "
+                  "city in Victoria is called the sporting capital of Australia?",
+            target="Melbourne",
         ),
+
         Example(
-            input='Context: Machine languages and the assembly languages that represent them '
-                  '(collectively termed low-level programming languages) tend to be unique to a particular type '
-                  'of computer. For instance, an ARM architecture computer '
-                  '(such as may be found in a PDA or a hand-held videogame) cannot understand the machine language of '
-                  'an Intel Pentium or the AMD Athlon 64 computer that might be in a PC.'
-                  'Question: An ARM architecture computer can be found in what?',
-            target='a PDA or a hand-held videogame',
-        ),
-        Example(
-            input='Context: Many of the instruments used to perform medieval music still exist, but in different forms. '
-                  'Medieval instruments included the wood flute (which in the 21st century is made of metal), '
-                  'the recorder and plucked string instruments like the lute. As well, early versions of the organ, '
-                  'fiddle (or vielle), and trombone (called the sackbut) existed. '
-                  'Medieval instruments in Europe had most commonly been used singly, often self accompanied with '
-                  'a drone note, or occasionally in parts. From at least as early as the 13th century through '
-                  'the 15th century there was a division of instruments into haut (loud, shrill, outdoor instruments) '
-                  'and bas (quieter, more intimate instruments).'
-                  'Question: What was the medieval flute made from?',
-            target='wood',
+            input="In the course of the 10th century, the initially destructive incursions of Norse war bands into "
+                  "the rivers of France evolved into more permanent encampments that included local women and "
+                  "personal property. The Duchy of Normandy, which began in 911 as a fiefdom, was established by "
+                  "the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking "
+                  "ruler Rollo, and was situated in the former Frankish kingdom of Neustria. The treaty offered Rollo "
+                  "and his men the French lands between the river Epte and the Atlantic coast in exchange for their "
+                  "protection against further Viking incursions. The area corresponded to the northern part of "
+                  "present-day Upper Normandy down to the river Seine, but the Duchy would eventually extend west "
+                  "beyond the Seine. The territory was roughly equivalent to the old province of Rouen, and "
+                  "reproduced the Roman administrative structure of Gallia Lugdunensis II "
+                  "(part of the former Gallia Lugdunensis). When was the Duchy of Normandy founded?",
+            target="911",
         ),
     ),
     "xsum": (
         Example(
-            input='The theme tune of Antiques Roadshow was played as the presenter\'s coffin was carried out '
-                  'of the church at Mawnan Smith near Falmouth.\nScully joined the BBC as a freelance journalist '
-                  'in 1965 and hosted the BBC\'s Nationwide before presenting Antiques Roadshow with Arthur Negus '
-                  'from 1981.\nThe presenter\'s family described the funeral as "a wonderful occasion".'
-                  '\nA lot of people thought he was the Antiques Roadshow and will never get used to anyone else '
-                  'presenting it\nScully hosted the BBC\'s Nationwide before presenting Antiques Roadshow with '
-                  'Arthur Negus from 1981.\nHe resigned from the BBC One show in 2000 to join an internet auction '
-                  'company launching an antiques business.\nThe presenter\'s eldest son Charles Scully told the '
-                  'BBC his father\'s success was partly due to his "ability to put people at ease".\n'
-                  'He said: "His ability to talk to everybody from a shopkeeper to a president will be sadly missed."'
-                  '\nFormer Nationwide presenter Sue Lawley remembered Scully as a "great talent" who was "fun-loving" '
-                  'and most proud of his interviews with Margaret Thatcher.',
-            target='The funeral has been held for the former Antiques Roadshow TV host Hugh Scully, '
-                   'who died at the age of 72.',
+            input=(
+                "A fire broke out overnight at a warehouse on the outskirts of Bristol, "
+                "forcing nearby residents to leave their homes. More than 60 firefighters "
+                "attended the scene and roads around the industrial estate were closed. "
+                "The fire service said no injuries had been reported and investigators "
+                "were working to determine the cause."
+            ),
+            target=(
+                "Residents were evacuated after a large warehouse fire broke out "
+                "on the outskirts of Bristol."
+            ),
         ),
+
         Example(
-            input='Up to 100,000 youngsters will be eligible for half-price day tickets using The Young Persons '
-                  '16-18 card from September.\nIt was agreed by the area\'s mayor Andy Burnham and Transport for '
-                  'Greater Manchester, and a similar scheme is being considered for the Metrolink.\nHajrah Ahmed, 17, '
-                  'said half-price bus tickets "will be such a big help".\nThe Manchester College business student'
-                  ' who travels to Openshaw from Cheetham Hill every day said her journeys are costing £100 per month.'
-                  '\n"[It] is obviously an awful lot of money for someone like me, who doesn\'t have a part-time job.'
-                  '\n"I can look ahead to the next year or so without the worry of how much money I am spending on my '
-                  'journey," she said.\nThe deal was proposed by Mr Burnham in his manifesto for mayor in April.\n"I '
-                  'promised to help our young people get on in life, and this is the first step in delivering on '
-                  'that," Mr Burnham said.\nGreater Manchester Travelcards Ltd, which represents all bus companies '
-                  'in the area, will extend its multi-operator 50% discounted 16-and-under ticket.\nA junior day ticket'
-                  ' to cover 16 to 18 year olds will also be introduced.\nEligibility to use the ticket will run up '
-                  'to 31 August after the user\'s 18th birthday.',
-            target='Discounted bus tickets for 16 to 18 year olds will be rolled out in Greater Manchester, '
-                   'it has been announced.',
+            input=(
+                "The city council approved plans for a new sports centre after months of "
+                "debate over its cost. The £28m complex will include a swimming pool, gym "
+                "and indoor courts. Opposition councillors criticised the budget, while "
+                "local sports clubs welcomed the decision. Construction is expected to "
+                "begin next spring."
+            ),
+            target=(
+                "The city council has approved a £28m sports centre that is due "
+                "to begin construction next spring."
+            ),
         ),
+
         Example(
-            input='Ogilvie, 21, has yet to make a first team appearance for Spurs and spent most of the last two '
-                  'seasons on loan at League Two Stevenage.\nThe former under-16 and under-17 England international '
-                  'made 18 appearances for the Boro last season.\n"I\'m looking forward to it and I want to be playing '
-                  'games regularly," Ogilvie told the club website.\n"I\'m really pleased to secure Connor\'s signature. '
-                  'He\'s got pedigree having come through the youth ranks at Tottenham and what is an added bonus for '
-                  'us is that he has experience of playing league football," added Gillingham manager Ady Pennock.'
-                  '\nFind all the latest football transfers on our dedicated page.',
-            target='League One side Gillingham have signed Tottenham Hotspur defender '
-                   'Connor Ogilvie on a six-month loan deal.',
+            input=(
+                "Maya Lewis joined the museum as an assistant curator in 2004 and later "
+                "led several major exhibitions. She became director in 2016 and oversaw "
+                "a major expansion of the modern-art collection. The museum announced on "
+                "Tuesday that Lewis will step down at the end of the year to become head "
+                "of the National Arts Foundation."
+            ),
+            target=(
+                "Museum director Maya Lewis will step down at the end of the year "
+                "to lead the National Arts Foundation."
+            ),
         ),
-    ),
+
+        Example(
+            input=(
+                "\"This is a disappointing day for everyone involved,\" said manager "
+                "Daniel Price after Westford lost 2-1 to Harborough. Westford had taken "
+                "the lead in the first half but conceded twice after the break. The defeat "
+                "means they will miss the play-offs for the first time in five seasons."
+            ),
+            target=(
+                "Westford will miss the play-offs for the first time in five seasons "
+                "after losing 2-1 to Harborough."
+            ),
+        ),
+
+        Example(
+            input=(
+                "Researchers at Northbridge University tested a new battery material over "
+                "18 months. Early trials showed improved charging speed, although the team "
+                "said more work was needed on long-term durability. The researchers have "
+                "now demonstrated that the material can retain 90% of its capacity after "
+                "1,000 charging cycles."
+            ),
+            target=(
+                "Northbridge University researchers have developed a battery material "
+                "that retained 90% of its capacity after 1,000 charging cycles."
+            ),
+        ),
+
+        Example(
+            input=(
+                "The government announced a review of rural transport funding following "
+                "complaints from local councils. Several councils said recent cuts had "
+                "left villages with fewer bus services. Ministers said the review would "
+                "report later this year. Separately, the government confirmed that £40m "
+                "would be made available immediately to protect existing rural routes."
+            ),
+            target=(
+                "The government has announced £40m in immediate funding to protect "
+                "rural bus routes."
+            ),
+        ),
+
+        Example(
+            input=(
+                "Singer Lena Brooks began her career performing in small clubs before "
+                "releasing her first album in 1998. She later won three national music "
+                "awards and toured internationally. Her latest album was released last "
+                "year. Brooks has announced that she will retire from touring after a "
+                "final series of concerts next summer."
+            ),
+            target=(
+                "Singer Lena Brooks will retire from touring after a final series "
+                "of concerts next summer."
+            ),
+        ),
+
+        Example(
+            input=(
+                "Rovers dominated possession for much of the match and created several "
+                "chances before half-time. Their captain missed a penalty in the 63rd "
+                "minute, but substitute Aaron Cole scored with five minutes remaining. "
+                "The 1-0 victory secured Rovers promotion to the top division for the "
+                "first time in 12 years."
+            ),
+            target=(
+                "Rovers have won promotion to the top division for the first time "
+                "in 12 years after beating their opponents 1-0."
+            ),
+        ))
 }

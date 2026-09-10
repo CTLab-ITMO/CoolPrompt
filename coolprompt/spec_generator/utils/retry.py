@@ -20,10 +20,14 @@ class RetryConfig:
     max_wait_seconds: float = 8.0
 
     def __post_init__(self) -> None:
+        """Validate retry counts and backoff bounds."""
+
         if self.max_retries < 0:
             raise ValueError("max_retries must be non-negative")
+
         if self.min_wait_seconds < 0 or self.max_wait_seconds < 0:
             raise ValueError("retry waits must be non-negative")
+
         if self.min_wait_seconds > self.max_wait_seconds:
             raise ValueError("min_wait_seconds must not exceed max_wait_seconds")
 
@@ -32,8 +36,7 @@ def invoke_with_retry(
         operation: Callable[[], T],
         config: RetryConfig,
         *,
-        extra_retry_exceptions: tuple[type[Exception], ...] = (),
-) -> T:
+        extra_retry_exceptions: tuple[type[Exception], ...] = ()) -> T:
     """Run ``operation`` with exponential backoff for retryable exceptions."""
 
     retryable = _TRANSIENT_ERRORS + extra_retry_exceptions
@@ -42,13 +45,14 @@ def invoke_with_retry(
         try:
             return operation()
         except retryable:
-            if attempt >= config.max_retries:
+            if attempt == config.max_retries:
                 raise
 
-            delay = min(
-                config.max_wait_seconds,
-                config.min_wait_seconds * (2 ** attempt),
+            time.sleep(
+                min(
+                    config.max_wait_seconds,
+                    config.min_wait_seconds * 2 ** attempt,
+                )
             )
-            time.sleep(delay)
 
     raise RuntimeError("unreachable retry state")

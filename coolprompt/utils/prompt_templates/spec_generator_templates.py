@@ -23,12 +23,10 @@ Return these fields:
 - requirements: hard rules applying to every example
 - labels: exhaustive labels for classification; null for generation
 - language: primary language
-- corner_cases: 2-5 realistic, difficult, but valid input patterns
 
 Rules:
 - Preserve exact label spelling and casing.
 - Do not invent unsupported labels, limits, or formatting rules.
-- Corner cases must not change the task or make the answer ambiguous.
 - Keep fields concise and non-redundant.
 - Return only valid JSON matching the provided schema.
 """
@@ -64,13 +62,11 @@ Return these fields:
 - requirements: hard rules applying to every example
 - labels: exhaustive labels for classification; null for generation
 - language: primary language
-- corner_cases: 2-5 realistic, difficult, but valid input patterns
 
 Rules:
 - Preserve exact label spelling and casing.
 - Do not assume observed labels are exhaustive without supporting evidence.
 - Do not invent unsupported labels, limits, or formatting rules.
-- Corner cases must not change the task or make the answer ambiguous.
 - Keep fields concise and non-redundant.
 - Return only valid JSON matching the provided schema.
 """
@@ -121,62 +117,6 @@ Rules:
 - Outputs must be supported by the input and task rules.
 - Do not copy or lightly paraphrase reference examples.
 - Avoid duplicate and near-duplicate inputs.
-
-Return only:
-{{"examples": [{{"input": "string", "output": "string"}}]}}
-"""
-
-SPEC_CORNER_CLASSIFICATION_TEMPLATE = """\
-Generate exactly {num_samples} difficult but valid CLASSIFICATION examples.
-
-Task: {description}
-Input format: {input_format}
-Output format: {output_format}
-Requirements:
-{requirements}
-Valid labels:
-{labels}
-Language: {language}
-
-Target corner cases:
-{corner_cases}
-
-Reference examples:
-{reference_examples}
-
-Rules:
-- Every example must clearly represent at least one target corner case.
-- Difficulty must not come from ambiguity or missing information.
-- Every output must be exactly one valid label with no extra text.
-- Make exactly one label clearly correct.
-- Avoid repeated constructions, duplicates, and copied examples.
-
-Return only:
-{{"examples": [{{"input": "string", "output": "valid label"}}]}}
-"""
-
-SPEC_CORNER_GENERATION_TEMPLATE = """\
-Generate exactly {num_samples} difficult but valid GENERATION examples.
-
-Task: {description}
-Input format: {input_format}
-Output format: {output_format}
-Requirements:
-{requirements}
-Language: {language}
-
-Target corner cases:
-{corner_cases}
-
-Reference examples:
-{reference_examples}
-
-Rules:
-- Every example must clearly represent at least one target corner case.
-- Difficulty must not come from missing information or an underdetermined answer.
-- Every output must correctly solve its input.
-- Outputs must be supported by the input and task rules.
-- Avoid repeated constructions, duplicates, and copied examples.
 
 Return only:
 {{"examples": [{{"input": "string", "output": "string"}}]}}

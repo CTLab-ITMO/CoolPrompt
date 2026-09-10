@@ -19,48 +19,11 @@ class StrictModel(BaseModel):
     )
 
 
-def _normalize(values: tuple[str, ...] | None) -> tuple[str, ...] | None:
-    """Trim values and remove empty case-insensitive duplicates."""
-
-    if values is None:
-        return None
-
-    unique: dict[str, str] = {}
-    for item in values:
-        value = item.strip()
-        if value:
-            unique.setdefault(value.casefold(), value)
-
-    return tuple(unique.values())
-
-
 class Example(StrictModel):
-    """One generated/seed example with optional alternative valid outputs.
-
-    ``output`` is the primary target used by legacy code. ``references`` contains
-    additional valid targets for the same input. Keeping one primary output preserves
-    backward compatibility while allowing multi-reference metrics (e.g. CommonGen).
-    """
+    """One generated or seed example."""
 
     input: str = Field(min_length=1)
-    output: str = Field(min_length=1)
-    references: tuple[str, ...] = ()
-
-    @model_validator(mode="after")
-    def normalize_references(self) -> "Example":
-        primary = self.output.strip().casefold()
-        unique: dict[str, str] = {}
-        for item in self.references:
-            value = str(item).strip()
-            if value and value.casefold() != primary:
-                unique.setdefault(value.casefold(), value)
-        object.__setattr__(self, "references", tuple(unique.values()))
-        return self
-
-    @property
-    def all_outputs(self) -> tuple[str, ...]:
-        """Return primary output followed by alternative valid outputs."""
-        return (self.output, *self.references)
+    output: str
 
 
 class TaskSpec(StrictModel):
@@ -73,32 +36,27 @@ class TaskSpec(StrictModel):
     requirements: tuple[str, ...] = ()
     labels: tuple[str, ...] | None = None
     language: str = Field(default="English", min_length=1)
-    corner_cases: tuple[str, ...] = ()
 
-    @field_validator(
-        "requirements",
-        "labels",
-        "corner_cases",
-    )
+    @field_validator("requirements", "labels")
     @classmethod
-    def normalize_collections(
-            cls,
-            values: tuple[str, ...] | None,
-    ) -> tuple[str, ...] | None:
-        """Normalize collection fields."""
+    def normalize_collections(cls, values: tuple[str, ...] | None) -> tuple[str, ...] | None:
+        if values is None:
+            return None
 
-        return _normalize(values)
+        unique: dict[str, str] = {}
+
+        for item in values:
+            if value := item.strip():
+                unique.setdefault(value.casefold(), value)
+
+        return tuple(unique.values())
 
     @model_validator(mode="after")
     def validate_labels(self) -> "TaskSpec":
-        """Validate label usage for the selected task type."""
-
-        is_classification = self.task == Task.CLASSIFICATION
-
-        if is_classification and not self.labels:
+        if self.task == Task.CLASSIFICATION and not self.labels:
             raise ValueError("Classification tasks require at least one label.")
 
-        if not is_classification and self.labels is not None:
+        if self.task != Task.CLASSIFICATION and self.labels is not None:
             raise ValueError("Labels are only valid for classification tasks.")
 
         return self
@@ -119,7 +77,6 @@ class TaskSpecDraft(BaseModel):
     requirements: tuple[str, ...] | None = None
     labels: tuple[str, ...] | None = None
     language: str | None = Field(default=None, min_length=1)
-    corner_cases: tuple[str, ...] | None = None
 
     @property
     def is_empty(self) -> bool:
@@ -158,9 +115,3 @@ class GenerationResult(StrictModel):
         """Return generated output values."""
 
         return [example.output for example in self.examples]
-
-    @property
-    def multireference_target(self) -> list[list[str]]:
-        """Return all valid outputs per generated input for multi-reference metrics."""
-
-        return [list(example.all_outputs) for example in self.examples]

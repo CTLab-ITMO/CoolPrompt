@@ -10,7 +10,7 @@ from .models import (
 )
 from .prompt_builder import GenerationPromptBuilder
 from .spec_builder import SpecBuilder
-from .validation import Deduplicator, ExampleValidator, LLMJudge, ValidationPipeline
+from .validation import Deduplicator, ExampleValidator, ValidationPipeline
 
 __all__ = [
     "Deduplicator",
@@ -19,7 +19,6 @@ __all__ = [
     "GenerationContext",
     "GenerationPromptBuilder",
     "GenerationResult",
-    "LLMJudge",
     "SpecBuilder",
     "SyntheticDataGenerator",
     "TaskSpec",

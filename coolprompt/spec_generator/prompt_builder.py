@@ -2,65 +2,77 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping, Sequence
-from html import escape
 from typing import Any
 
 from coolprompt.spec_generator.distribution import TaskDistribution
 from coolprompt.spec_generator.models import Example, GenerationContext
+from coolprompt.utils.prompt_templates.snippets_templates import (
+    DISTRIBUTION_AWARE_GUIDANCE,
+    TARGETED_GUIDANCE,
+)
 from coolprompt.utils.enums import Task
 from coolprompt.utils.prompt_templates.spec_generator_templates import (
-    SPEC_CORNER_CLASSIFICATION_TEMPLATE,
-    SPEC_CORNER_GENERATION_TEMPLATE,
     SPEC_REGULAR_CLASSIFICATION_TEMPLATE,
     SPEC_REGULAR_GENERATION_TEMPLATE,
 )
+
 
 _REGULAR_TEMPLATES: Mapping[Task, str] = {
     Task.CLASSIFICATION: SPEC_REGULAR_CLASSIFICATION_TEMPLATE,
     Task.GENERATION: SPEC_REGULAR_GENERATION_TEMPLATE,
 }
 
-_CORNER_TEMPLATES: Mapping[Task, str] = {
-    Task.CLASSIFICATION: SPEC_CORNER_CLASSIFICATION_TEMPLATE,
-    Task.GENERATION: SPEC_CORNER_GENERATION_TEMPLATE,
-}
+_RETURN_MARKER = "\nReturn only:"
 
 
 def _bullets(items: Sequence[str]) -> str:
-    values = [item.strip() for item in items if item.strip()]
-    return "\n".join(f"- {item}" for item in values) or "None"
+    """Render non-empty strings as a Markdown bullet list."""
+
+    return "\n".join(f"- {item.strip()}" for item in items if item.strip()) or "None"
 
 
 def _distribution_axes(distribution: TaskDistribution) -> str:
-    blocks: list[str] = []
-    for axis in distribution.axes:
-        values = "\n".join(
-            f"  - {value.id}: {value.description}"
-            + (f" (target≈{value.target_ratio:.1%})" if value.target_ratio is not None else "")
-            for value in axis.values
-        )
-        blocks.append(f"- {axis.name}: {axis.description}\n{values}")
-    return "\n".join(blocks) or "None"
+    """Render distribution axes and values for a generation prompt."""
+
+    def render_value(value) -> str:
+        """Render one axis value with its optional target proportion."""
+
+        target = f" (target≈{value.target_ratio:.1%})" if value.target_ratio is not None else ""
+        return f"  - {value.id}: {value.description}{target}"
+
+    return "\n".join(
+        f"- {axis.name}: {axis.description}\n"
+        + "\n".join(render_value(value) for value in axis.values)
+        for axis in distribution.axes
+    ) or "None"
 
 
 def _target_lines(targets: Sequence[dict[str, Any]]) -> str:
-    lines: list[str] = []
-    for target in targets:
+    """Render targeted generation quotas as readable instructions."""
+
+    def render_target(target: dict[str, Any]) -> str:
+        """Render one targeted or exploratory generation quota."""
+
         count = int(target.get("count", 0))
         constraints = target.get("constraints", [])
+
         if not constraints:
-            lines.append(f"- {count} exploratory examples with broad variation")
-            continue
-        rendered = ", ".join(
+            return f"- {count} exploratory examples with broad variation"
+
+        values = ", ".join(
             f"{item['axis']}={item['value_id']} ({item['description']})"
             for item in constraints
         )
-        lines.append(f"- {count} examples targeting: {rendered}")
-    return "\n".join(lines) or "None"
+        return f"- {count} examples targeting: {values}"
+
+    return "\n".join(render_target(target) for target in targets) or "None"
 
 
 def _avoid_lines(avoid: Sequence[dict[str, Any]]) -> str:
+    """Render axis values that should not be overproduced."""
+
     return "\n".join(
         f"- avoid overusing {item['axis']}={item['value_id']}: {item['description']}"
         for item in avoid
@@ -68,109 +80,56 @@ def _avoid_lines(avoid: Sequence[dict[str, Any]]) -> str:
 
 
 def _examples(examples: Sequence[Example]) -> str:
+    """Render examples as JSON for inclusion in a prompt."""
+
     if not examples:
         return "None"
 
-    blocks: list[str] = []
-    for index, example in enumerate(examples, start=1):
-        refs = ""
-        if example.references:
-            rendered = "\n".join(
-                f"<reference>{escape(ref)}</reference>" for ref in example.references
-            )
-            refs = (
-                "\n<alternative_valid_outputs>\n"
-                f"{rendered}\n"
-                "</alternative_valid_outputs>"
-            )
-        blocks.append(
-            f'<example index="{index}">\n'
-            f"<input>{escape(example.input)}</input>\n"
-            f"<output>{escape(example.output)}</output>"
-            f"{refs}\n"
-            "</example>"
-        )
-    return "\n".join(blocks)
+    return json.dumps(
+        [
+            {"input": example.input, "output": example.output}
+            for example in examples
+        ],
+        ensure_ascii=False,
+        indent=2,
+    )
 
 
-def _accepted_examples(examples: Sequence[Example], *, limit: int = 10) -> str:
-    if not examples:
-        return "None"
-    return _examples(examples[-limit:])
-
-
-def _distribution_reference_examples(
+def _limited_examples(
     examples: Sequence[Example],
+    limit: int,
     *,
-    limit: int = 8,
+    latest: bool = False,
 ) -> str:
-    """Render a small source-distribution sample as style/structure grounding.
+    """Render a bounded prefix or suffix of an example sequence."""
 
-    These examples are not extra training targets. They are only broad distribution
-    evidence and must not be copied.
-    """
-
-    if not examples:
-        return "None"
-    return _examples(examples[:limit])
+    selected = examples[-limit:] if latest else examples[:limit]
+    return _examples(selected)
 
 
+def _insert_guidance(base: str, guidance: str) -> str:
+    """Insert additional guidance immediately before the output contract."""
 
-def _multi_reference_guidance(context: GenerationContext, valid_outputs_per_example: int) -> str:
-    """Ask generation tasks for several genuinely different valid outputs per input."""
-    if context.spec.task != Task.GENERATION or valid_outputs_per_example <= 1:
-        return ""
-    alternatives = valid_outputs_per_example - 1
-    return f"""
-Multi-reference requirement:
-For each generated input, produce exactly {valid_outputs_per_example} valid outputs for the
-same input: one primary `output` plus exactly {alternatives} strings in `references`.
-All outputs must satisfy the same task requirements and use the same input concepts.
-The references must be meaningfully different realizations, not trivial lexical paraphrases:
-vary syntax, event framing/subject choice, and reasonable contextual detail while preserving
-correctness. Do not introduce a contradictory event or omit required input concepts.
-"""
+    if not guidance:
+        return base
 
-def _inject_before_return(base: str, guidance: str) -> str:
-    marker = "\nReturn only:"
-    if marker not in base:
-        return f"{base.rstrip()}\n\n{guidance.strip()}\n"
-    return base.replace(marker, f"\n\n{guidance.strip()}\n{marker}", 1)
+    guidance = guidance.strip()
+    insert = f"\n\n{guidance}\n"
+
+    return (
+        base.replace(_RETURN_MARKER, insert + _RETURN_MARKER, 1)
+        if _RETURN_MARKER in base
+        else f"{base.rstrip()}{insert}"
+    )
 
 
 class GenerationPromptBuilder:
-    """Build regular, targeted, and corner-case generation prompts."""
+    """Build regular, distribution-aware, and targeted prompts."""
 
-    def regular(
-        self,
-        context: GenerationContext,
-        n: int,
-        *,
-        valid_outputs_per_example: int = 1,
-    ) -> str:
-        base = self._render(context=context, n=n, templates=_REGULAR_TEMPLATES)
-        guidance = _multi_reference_guidance(context, valid_outputs_per_example)
-        return _inject_before_return(base, guidance) if guidance else base
+    def regular(self, context: GenerationContext, n: int) -> str:
+        """Build a standard generation prompt for the requested batch size."""
 
-    def corner(
-        self,
-        context: GenerationContext,
-        n: int,
-        *,
-        corner_cases: Sequence[str] | None = None,
-        valid_outputs_per_example: int = 1,
-    ) -> str:
-        selected = tuple(context.spec.corner_cases if corner_cases is None else corner_cases)
-        if not selected:
-            raise ValueError("Corner-case generation requires at least one corner case.")
-        base = self._render(
-            context=context,
-            n=n,
-            templates=_CORNER_TEMPLATES,
-            corner_cases=_bullets(selected),
-        )
-        guidance = _multi_reference_guidance(context, valid_outputs_per_example)
-        return _inject_before_return(base, guidance) if guidance else base
+        return self._render(context, n)
 
     def distribution_aware(
         self,
@@ -180,41 +139,14 @@ class GenerationPromptBuilder:
         *,
         accepted_examples: Sequence[Example] = (),
         reference_examples: Sequence[Example] = (),
-        valid_outputs_per_example: int = 1,
     ) -> str:
-        """Build exploratory generation grounded in desired and source distributions."""
-
-        base = self.regular(
-            context, n, valid_outputs_per_example=valid_outputs_per_example
+        """Build exploratory distribution-aware generation."""
+        guidance = DISTRIBUTION_AWARE_GUIDANCE.format(
+            axes=_distribution_axes(distribution),
+            reference_examples=_limited_examples(reference_examples, 8),
+            accepted_examples=_limited_examples(accepted_examples, 10, latest=True),
         )
-        guidance = f"""
-Coverage guidance:
-Use the task axes below to create meaningful variation. For TARGET_PROPORTIONS axes,
-keep the batch direction consistent with the shown empirical source proportions; exact
-per-batch ratios are not required because feedback corrects them across batches.
-
-Task-distribution axes:
-{_distribution_axes(distribution)}
-
-Source-distribution reference examples:
-{_distribution_reference_examples(reference_examples)}
-
-Use the source examples only to match broad properties such as input cardinality,
-concreteness, semantic regime, relation types, and output style. Do NOT copy their exact
-concept combinations, scenarios, or wording. Do not drift into abstract/philosophical
-examples unless that regime is actually represented in the source references or TaskSpec.
-
-Previously accepted synthetic examples:
-{_accepted_examples(accepted_examples)}
-
-Generate examples substantially different from already accepted synthetic examples.
-Avoid repeating semantic scenarios, concept combinations, and sentence structures with
-only small lexical changes.
-
-For every generated example, report axis_tags using only the exact axis names and value
-ids listed above. For each axis, report exactly one value id from that axis.
-"""
-        return _inject_before_return(base, guidance)
+        return _insert_guidance(self.regular(context, n), guidance)
 
     def targeted(
         self,
@@ -226,114 +158,39 @@ ids listed above. For each axis, report exactly one value id from that axis.
         avoid: Sequence[dict[str, Any]] = (),
         accepted_examples: Sequence[Example] = (),
         reference_examples: Sequence[Example] = (),
-        valid_outputs_per_example: int = 1,
     ) -> str:
-        """Build a gap-targeted batch grounded in source-distribution examples."""
-
-        base = self.regular(
-            context, n, valid_outputs_per_example=valid_outputs_per_example
+        """Build coverage-gap-targeted generation."""
+        guidance = TARGETED_GUIDANCE.format(
+            axes=_distribution_axes(distribution),
+            targets=_target_lines(targets),
+            avoid=_avoid_lines(avoid),
+            reference_examples=_limited_examples(reference_examples, 8),
+            accepted_examples=_limited_examples(accepted_examples, 10, latest=True),
         )
-        guidance = f"""
-Task-distribution axes:
-{_distribution_axes(distribution)}
+        return _insert_guidance(self.regular(context, n), guidance)
 
-Target this batch according to:
-{_target_lines(targets)}
+    def _render(self, context: GenerationContext, n: int) -> str:
+        """Render the task-specific base template from a generation context."""
 
-Overrepresented values to avoid unless required for correctness:
-{_avoid_lines(avoid)}
-
-Source-distribution reference examples:
-{_distribution_reference_examples(reference_examples)}
-
-Stay in the broad source-data regime shown above. Match its kinds of inputs, semantic
-concreteness, relations/actions, and output style without copying exact examples.
-
-Previously accepted synthetic examples:
-{_accepted_examples(accepted_examples)}
-
-The new examples must not be simple paraphrases of accepted examples. Vary semantic
-scenario, concept combinations, relation structure, and sentence structure before merely
-varying wording.
-
-For every generated example, report axis_tags using only exact axis names and value ids
-from the task-distribution axes. For each axis, report exactly one value id from that axis.
-"""
-        return _inject_before_return(base, guidance)
-
-    def corner_cover(
-        self,
-        context: GenerationContext,
-        corner_cases: Sequence[str],
-        *,
-        distribution: TaskDistribution | None = None,
-        accepted_examples: Sequence[Example] = (),
-        reference_examples: Sequence[Example] = (),
-        valid_outputs_per_example: int = 1,
-    ) -> str:
-        if not corner_cases:
-            raise ValueError("corner_cases must not be empty")
-
-        base = self.corner(
-            context,
-            len(corner_cases),
-            corner_cases=corner_cases,
-            valid_outputs_per_example=valid_outputs_per_example,
-        )
-        mapping = "\n".join(
-            f"- Example {index}: {case}"
-            for index, case in enumerate(corner_cases, start=1)
-        )
-        guidance = f"""
-Coverage requirement:
-Generate exactly one example for each listed corner case, in the same order:
-{mapping}
-
-Source-distribution reference examples:
-{_distribution_reference_examples(reference_examples)}
-
-Previously accepted synthetic examples:
-{_accepted_examples(accepted_examples)}
-
-Keep corner cases valid for the same source-data regime and avoid semantic/structural
-repetition of accepted examples.
-"""
-        if distribution is not None:
-            guidance += f"""
-
-Task-distribution axes:
-{_distribution_axes(distribution)}
-
-Also report axis_tags using exact axis names/value ids. For each axis, report exactly one
-value id from that axis.
-"""
-        return _inject_before_return(base, guidance)
-
-    def _render(
-        self,
-        *,
-        context: GenerationContext,
-        n: int,
-        templates: Mapping[Task, str],
-        **extra: str,
-    ) -> str:
         if n < 1:
             raise ValueError(f"n must be at least 1, got {n}.")
 
-        try:
-            template = templates[context.spec.task]
-        except KeyError as exc:
-            raise ValueError(f"Unsupported task: {context.spec.task!r}.") from exc
+        task = context.spec.task
+        template = _REGULAR_TEMPLATES.get(task)
+
+        if template is None:
+            raise ValueError(f"Unsupported task: {task!r}.")
 
         return template.format(
             **self._args(context),
-            **extra,
             reference_examples=_examples(context.seed_examples),
             num_samples=n,
         )
 
     @staticmethod
     def _args(context: GenerationContext) -> dict[str, str]:
+        """Convert TaskSpec fields into template-ready strings."""
+
         spec = context.spec
         return {
             "description": spec.description,
