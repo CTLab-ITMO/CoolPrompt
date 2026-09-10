@@ -39,14 +39,21 @@ def _distribution_axes(distribution: TaskDistribution) -> str:
     def render_value(value) -> str:
         """Render one axis value with its optional target proportion."""
 
-        target = f" (target≈{value.target_ratio:.1%})" if value.target_ratio is not None else ""
+        target = (
+            f" (target≈{value.target_ratio:.1%})"
+            if value.target_ratio is not None
+            else ""
+        )
         return f"  - {value.id}: {value.description}{target}"
 
-    return "\n".join(
-        f"- {axis.name}: {axis.description}\n"
-        + "\n".join(render_value(value) for value in axis.values)
-        for axis in distribution.axes
-    ) or "None"
+    return (
+        "\n".join(
+            f"- {axis.name}: {axis.description}\n"
+            + "\n".join(render_value(value) for value in axis.values)
+            for axis in distribution.axes
+        )
+        or "None"
+    )
 
 
 def _target_lines(targets: Sequence[dict[str, Any]]) -> str:
@@ -73,10 +80,13 @@ def _target_lines(targets: Sequence[dict[str, Any]]) -> str:
 def _avoid_lines(avoid: Sequence[dict[str, Any]]) -> str:
     """Render axis values that should not be overproduced."""
 
-    return "\n".join(
-        f"- avoid overusing {item['axis']}={item['value_id']}: {item['description']}"
-        for item in avoid
-    ) or "None"
+    return (
+        "\n".join(
+            f"- avoid overusing {item['axis']}={item['value_id']}: {item['description']}"
+            for item in avoid
+        )
+        or "None"
+    )
 
 
 def _examples(examples: Sequence[Example]) -> str:
@@ -86,10 +96,7 @@ def _examples(examples: Sequence[Example]) -> str:
         return "None"
 
     return json.dumps(
-        [
-            {"input": example.input, "output": example.output}
-            for example in examples
-        ],
+        [{"input": example.input, "output": example.output} for example in examples],
         ensure_ascii=False,
         indent=2,
     )

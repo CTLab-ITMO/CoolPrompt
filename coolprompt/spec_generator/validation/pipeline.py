@@ -16,11 +16,11 @@ class ValidationPipeline:
     """Validate, deduplicate, and top up examples."""
 
     def __init__(
-            self,
-            validator: ExampleValidator,
-            deduplicator: Deduplicator,
-            *,
-            max_topup_attempts: int = 10,
+        self,
+        validator: ExampleValidator,
+        deduplicator: Deduplicator,
+        *,
+        max_topup_attempts: int = 10,
     ) -> None:
         """Initialize validation components and the top-up attempt limit."""
 
@@ -32,12 +32,12 @@ class ValidationPipeline:
         self._max_topup_attempts = max_topup_attempts
 
     def run(
-            self,
-            producer: Producer,
-            context: GenerationContext,
-            target_n: int,
-            *,
-            reset_deduplicator: bool = True,
+        self,
+        producer: Producer,
+        context: GenerationContext,
+        target_n: int,
+        *,
+        reset_deduplicator: bool = True,
     ) -> list[Example]:
         """Produce, validate, deduplicate, and top up to the target size."""
 

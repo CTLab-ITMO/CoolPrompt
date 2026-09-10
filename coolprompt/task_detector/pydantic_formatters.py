@@ -12,7 +12,9 @@ class TaskDetectionStructuredOutputSchema(BaseModel):
 class TaskAreaDetectionStructuredOutputSchema(BaseModel):
     """Structured output for task area detection."""
 
-    task: str = Field(description="Detected task type. Usually 'classification' or 'generation'.")
+    task: str = Field(
+        description="Detected task type. Usually 'classification' or 'generation'."
+    )
 
     task_area: str | None = Field(
         default=None,

@@ -55,10 +55,7 @@ def _tokens(text: str) -> list[str]:
 
     normalized = unicodedata.normalize("NFKC", unescape(text))
 
-    return [
-        token.casefold()
-        for token in _WORD_RE.findall(normalized)
-    ]
+    return [token.casefold() for token in _WORD_RE.findall(normalized)]
 
 
 def _canonical_concept_set(value: str) -> tuple[str, ...] | None:
@@ -73,9 +70,7 @@ def _canonical_concept_set(value: str) -> tuple[str, ...] | None:
         return None
 
     normalized = sorted(
-        text
-        for item in parsed
-        if (text := str(item).strip().casefold())
+        text for item in parsed if (text := str(item).strip().casefold())
     )
 
     return tuple(normalized) or None
@@ -89,16 +84,14 @@ def _structural_signature(example: Example) -> str | None:
     if len(output_tokens) < 6:
         return None
 
-    input_tokens = {
-        token
-        for token in _tokens(example.input)
-        if len(token) >= 2
-    }
+    input_tokens = {token for token in _tokens(example.input) if len(token) >= 2}
 
     signature = [
-        "__concept__"
-        if token in input_tokens else "__number__"
-        if _NUMBER_RE.match(token) else token
+        (
+            "__concept__"
+            if token in input_tokens
+            else "__number__" if _NUMBER_RE.match(token) else token
+        )
         for token in output_tokens
     ]
 
@@ -108,7 +101,9 @@ def _structural_signature(example: Example) -> str | None:
 class ExampleValidator:
     """Validate generated examples against a task specification."""
 
-    def validate(self, raw_examples: list[Any], spec: TaskSpec) -> tuple[list[Example], list[Any]]:
+    def validate(
+        self, raw_examples: list[Any], spec: TaskSpec
+    ) -> tuple[list[Example], list[Any]]:
         """Split raw candidates into valid and invalid examples."""
 
         valid: list[Example] = []
@@ -135,7 +130,9 @@ class ExampleValidator:
         canonical = labels.get(example.output.casefold())
 
         if canonical is None:
-            raise ValueError(f"Output {example.output!r} is not in label set {spec.labels!r}.")
+            raise ValueError(
+                f"Output {example.output!r} is not in label set {spec.labels!r}."
+            )
 
         return (
             example
@@ -150,21 +147,21 @@ class ExampleValidator:
         payload = (
             raw.model_dump()
             if isinstance(raw, BaseModel)
-            else raw
-            if isinstance(raw, dict)
-            else {
-                "input": getattr(raw, "input", None),
-                "output": getattr(raw, "output", None),
-            }
+            else (
+                raw
+                if isinstance(raw, dict)
+                else {
+                    "input": getattr(raw, "input", None),
+                    "output": getattr(raw, "output", None),
+                }
+            )
         )
 
         input_value = payload.get("input")
 
         return {
             "input": (
-                unescape(input_value)
-                if isinstance(input_value, str)
-                else input_value
+                unescape(input_value) if isinstance(input_value, str) else input_value
             ),
             "output": payload.get("output"),
         }
@@ -174,14 +171,14 @@ class Deduplicator:
     """Remove exact, near, semantic, structural, and concept-set duplicates."""
 
     def __init__(
-            self,
-            near_dup_threshold: float = 0.80,
-            enable_near_dup: bool = True,
-            *,
-            enable_semantic_novelty: bool = False,
-            semantic_threshold: float = 0.72,
-            enable_structural_novelty: bool = False,
-            structural_threshold: float = 0.78,
+        self,
+        near_dup_threshold: float = 0.80,
+        enable_near_dup: bool = True,
+        *,
+        enable_semantic_novelty: bool = False,
+        semantic_threshold: float = 0.72,
+        enable_structural_novelty: bool = False,
+        structural_threshold: float = 0.78,
     ) -> None:
         """Configure duplicate and novelty thresholds and vectorizers."""
 
@@ -199,9 +196,7 @@ class Deduplicator:
 
         for name, value in thresholds.items():
             if not 0.0 <= value <= 1.0:
-                raise ValueError(
-                    f"{name} must be between 0 and 1"
-                )
+                raise ValueError(f"{name} must be between 0 and 1")
 
         self._near_dup_threshold = near_dup_threshold
         self._enable_near_dup = enable_near_dup
@@ -213,7 +208,7 @@ class Deduplicator:
         self._char_vectorizer = HashingVectorizer(
             analyzer="char_wb",
             ngram_range=(3, 5),
-            n_features=2 ** 18,
+            n_features=2**18,
             lowercase=False,
             alternate_sign=False,
             norm="l2",
@@ -222,7 +217,7 @@ class Deduplicator:
         self._semantic_vectorizer = HashingVectorizer(
             analyzer="word",
             ngram_range=(1, 2),
-            n_features=2 ** 18,
+            n_features=2**18,
             lowercase=True,
             alternate_sign=False,
             norm="l2",
@@ -231,13 +226,11 @@ class Deduplicator:
         self._structure_vectorizer = HashingVectorizer(
             analyzer="word",
             ngram_range=(1, 3),
-            n_features=2 ** 16,
+            n_features=2**16,
             lowercase=False,
             alternate_sign=False,
             norm="l2",
-            token_pattern=(
-                r"(?u)\b\w[\w_'-]*\b"
-            ),
+            token_pattern=(r"(?u)\b\w[\w_'-]*\b"),
         )
 
         self.reset()
@@ -250,8 +243,7 @@ class Deduplicator:
         unique: list[Example] = []
 
         for example in examples:
-            key = (_normalize_text(example.input),
-                   _normalize_output(example.output))
+            key = (_normalize_text(example.input), _normalize_output(example.output))
 
             if key in seen:
                 continue
@@ -261,7 +253,9 @@ class Deduplicator:
 
         return unique
 
-    def filter(self, examples: list[Example], *, limit: int | None = None) -> list[Example]:
+    def filter(
+        self, examples: list[Example], *, limit: int | None = None
+    ) -> list[Example]:
         """Filter candidates against examples already accepted by this instance."""
 
         if limit is not None and limit < 0:
@@ -286,7 +280,8 @@ class Deduplicator:
 
             char_vector = (
                 self._char_vectorizer.transform([normalized_input])
-                if normalized_input else None
+                if normalized_input
+                else None
             )
 
             semantic_text = _normalize_text(f"{example.input} {example.output}")
@@ -346,7 +341,9 @@ class Deduplicator:
 
             self._char_matrix = self._append(self._char_matrix, char_vector)
             self._semantic_matrix = self._append(self._semantic_matrix, semantic_vector)
-            self._structure_matrix = self._append(self._structure_matrix, structure_vector)
+            self._structure_matrix = self._append(
+                self._structure_matrix, structure_vector
+            )
 
             accepted.append(example)
 
@@ -354,8 +351,8 @@ class Deduplicator:
 
     @staticmethod
     def _append(
-            matrix: csr_matrix | None,
-            vector: csr_matrix | None,
+        matrix: csr_matrix | None,
+        vector: csr_matrix | None,
     ) -> csr_matrix | None:
         """Append a sparse vector to the comparison matrix."""
 
@@ -366,8 +363,8 @@ class Deduplicator:
 
     @staticmethod
     def _best_similarity(
-            vector: csr_matrix | None,
-            matrix: csr_matrix | None,
+        vector: csr_matrix | None,
+        matrix: csr_matrix | None,
     ) -> float:
         """Return maximum cosine similarity against previously accepted vectors."""
 

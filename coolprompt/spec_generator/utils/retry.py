@@ -33,10 +33,11 @@ class RetryConfig:
 
 
 def invoke_with_retry(
-        operation: Callable[[], T],
-        config: RetryConfig,
-        *,
-        extra_retry_exceptions: tuple[type[Exception], ...] = ()) -> T:
+    operation: Callable[[], T],
+    config: RetryConfig,
+    *,
+    extra_retry_exceptions: tuple[type[Exception], ...] = (),
+) -> T:
     """Run ``operation`` with exponential backoff for retryable exceptions."""
 
     retryable = _TRANSIENT_ERRORS + extra_retry_exceptions
@@ -51,7 +52,7 @@ def invoke_with_retry(
             time.sleep(
                 min(
                     config.max_wait_seconds,
-                    config.min_wait_seconds * 2 ** attempt,
+                    config.min_wait_seconds * 2**attempt,
                 )
             )
 

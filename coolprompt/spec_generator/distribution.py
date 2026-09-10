@@ -19,7 +19,9 @@ from coolprompt.spec_generator.utils.model_utils import resolve_chat_model
 from coolprompt.spec_generator.utils.retry import RetryConfig, invoke_with_retry
 from coolprompt.utils.enums import Task
 from coolprompt.utils.parsing import extract_json
-from coolprompt.utils.prompt_templates.distribution_prompts import DISTRIBUTION_REQUEST_TEMPLATE
+from coolprompt.utils.prompt_templates.distribution_prompts import (
+    DISTRIBUTION_REQUEST_TEMPLATE,
+)
 
 _SchemaT = TypeVar("_SchemaT", bound=BaseModel)
 
@@ -71,7 +73,9 @@ class TaskAxis(StrictModel):
                 raise ValueError("BALANCED must not define target_ratio.")
         else:
             if any(ratio is None for ratio in ratios):
-                raise ValueError("TARGET_PROPORTIONS requires target_ratio for every value.")
+                raise ValueError(
+                    "TARGET_PROPORTIONS requires target_ratio for every value."
+                )
 
             if not 0.95 <= sum(ratio for ratio in ratios if ratio is not None) <= 1.05:
                 raise ValueError("target_ratio values must sum approximately to 1.0.")
@@ -82,7 +86,9 @@ class TaskAxis(StrictModel):
 def _canonical_axis_key(value: str) -> str:
     """Normalize equivalent axis-name spellings for matching."""
 
-    return " ".join(value.strip().casefold().replace("_", " ").replace("-", " ").split())
+    return " ".join(
+        value.strip().casefold().replace("_", " ").replace("-", " ").split()
+    )
 
 
 class TaskDistribution(StrictModel):
@@ -213,10 +219,10 @@ def _input_size_axis(reference_examples: Sequence[Example]) -> TaskAxis | None:
 
 
 def _distribution_request(
-        prompt: str,
-        spec: TaskSpec,
-        seed_examples: Sequence[Example],
-        reference_examples: Sequence[Example],
+    prompt: str,
+    spec: TaskSpec,
+    seed_examples: Sequence[Example],
+    reference_examples: Sequence[Example],
 ) -> str:
     """Build the prompt used to infer non-deterministic coverage axes."""
 
@@ -234,7 +240,7 @@ def _distribution_request(
         "for axes whose proportions are directly and repeatedly observable in that sample."
         if len(reference_examples) >= 20
         else "The distribution-reference sample is small. "
-             "Use BALANCED; do not infer target proportions."
+        "Use BALANCED; do not infer target proportions."
     )
 
     payload = {
@@ -320,12 +326,12 @@ class _TaskDistributionBuilder:
         self._retry_config = retry_config
 
     def build(
-            self,
-            prompt: str,
-            spec: TaskSpec,
-            examples: Sequence[Example],
-            *,
-            reference_examples: Sequence[Example] | None = None,
+        self,
+        prompt: str,
+        spec: TaskSpec,
+        examples: Sequence[Example],
+        *,
+        reference_examples: Sequence[Example] | None = None,
     ) -> TaskDistribution:
         """Infer axes and combine them with deterministic task axes."""
 
@@ -333,8 +339,9 @@ class _TaskDistributionBuilder:
         reference = tuple(reference_examples or seed_examples)
 
         inferred = invoke_with_retry(
-            lambda:
-            self._invoke_once(_distribution_request(prompt, spec, seed_examples, reference)),
+            lambda: self._invoke_once(
+                _distribution_request(prompt, spec, seed_examples, reference)
+            ),
             self._retry_config,
             extra_retry_exceptions=(DistributionResponseError,),
         )
@@ -379,13 +386,13 @@ class _TaskDistributionBuilder:
         )
 
     def _invoke_structured(
-            self,
-            request: str,
-            schema: type[_SchemaT],
-            *,
-            invalid_type_msg: str,
-            validation_msg: str,
-            parse_msg: str,
+        self,
+        request: str,
+        schema: type[_SchemaT],
+        *,
+        invalid_type_msg: str,
+        validation_msg: str,
+        parse_msg: str,
     ) -> _SchemaT:
         """Invoke the model with structured output and validate it."""
 
@@ -397,7 +404,9 @@ class _TaskDistributionBuilder:
                 content = raw.content if isinstance(raw, AIMessage) else str(raw)
                 return schema.model_validate(extract_json(content))
 
-            output = chat_model.with_structured_output(schema=schema, method="json_schema").invoke(request)
+            output = chat_model.with_structured_output(
+                schema=schema, method="json_schema"
+            ).invoke(request)
 
             if isinstance(output, schema):
                 return output
@@ -417,12 +426,12 @@ class _TaskDistributionBuilder:
 
 
 def validate_axis_tags(
-        distribution: TaskDistribution,
-        raw_tags: Mapping[str, str] | None,
-        *,
-        input: str | None = None,
-        output: str | None = None,
-        spec: TaskSpec | None = None,
+    distribution: TaskDistribution,
+    raw_tags: Mapping[str, str] | None,
+    *,
+    input: str | None = None,
+    output: str | None = None,
+    spec: TaskSpec | None = None,
 ) -> dict[str, str]:
     """Validate model tags and derive deterministic axis values."""
 
@@ -434,7 +443,7 @@ def validate_axis_tags(
         axis.name: value_id
         for axis in distribution.axes
         if (value_id := tags.get(_canonical_axis_key(axis.name)))
-           in {value.id for value in axis.values}
+        in {value.id for value in axis.values}
     }
 
     _set_axis(result, distribution.axis("input_size"), input=input)
@@ -444,12 +453,12 @@ def validate_axis_tags(
 
 
 def _set_axis(
-        result: dict[str, str],
-        axis: TaskAxis | None,
-        *,
-        input: str | None = None,
-        output: str | None = None,
-        spec: TaskSpec | None = None,
+    result: dict[str, str],
+    axis: TaskAxis | None,
+    *,
+    input: str | None = None,
+    output: str | None = None,
+    spec: TaskSpec | None = None,
 ) -> None:
     """Derive a deterministic axis value from input/output and set or remove it."""
 
@@ -480,17 +489,22 @@ def _set_axis(
 def _axis_entry(axis: TaskAxis, value: AxisValue, **extra: Any) -> dict[str, Any]:
     """Serialize an axis-value pair with optional coverage metadata."""
 
-    return {"axis": axis.name, "value_id": value.id, "description": value.description, **extra}
+    return {
+        "axis": axis.name,
+        "value_id": value.id,
+        "description": value.description,
+        **extra,
+    }
 
 
 def _desired_and_allowed_share(
-        axis: TaskAxis,
-        value: AxisValue,
-        target_counts: dict[str, int],
-        k: int,
-        total_target: int,
-        balanced_floor_fraction: float,
-        balanced_over_fraction: float,
+    axis: TaskAxis,
+    value: AxisValue,
+    target_counts: dict[str, int],
+    k: int,
+    total_target: int,
+    balanced_floor_fraction: float,
+    balanced_over_fraction: float,
 ) -> tuple[int, float]:
     """Return the desired count and maximum tolerated share for one value."""
 
@@ -502,12 +516,12 @@ def _desired_and_allowed_share(
 
 
 def coverage_gaps(
-        distribution: TaskDistribution,
-        state: GenerationState,
-        total_target: int,
-        *,
-        balanced_floor_fraction: float = 0.70,
-        balanced_over_fraction: float = 1.35,
+    distribution: TaskDistribution,
+    state: GenerationState,
+    total_target: int,
+    *,
+    balanced_floor_fraction: float = 0.70,
+    balanced_over_fraction: float = 1.35,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Return under- and overrepresented axis values."""
 
@@ -551,10 +565,10 @@ def coverage_gaps(
 
 
 def _target(
-        count: int,
-        axis: str | None = None,
-        value_id: str | None = None,
-        description: str | None = None,
+    count: int,
+    axis: str | None = None,
+    value_id: str | None = None,
+    description: str | None = None,
 ) -> dict[str, Any]:
     """Build one generation-target instruction."""
 
@@ -567,12 +581,12 @@ def _target(
 
 
 def build_generation_targets(
-        distribution: TaskDistribution,
-        state: GenerationState,
-        *,
-        batch_size: int,
-        remaining_budget: int,
-        total_target: int,
+    distribution: TaskDistribution,
+    state: GenerationState,
+    *,
+    batch_size: int,
+    remaining_budget: int,
+    total_target: int,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Build a target plan from current coverage gaps."""
 

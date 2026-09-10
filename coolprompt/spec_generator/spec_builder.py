@@ -66,10 +66,10 @@ def _render_examples(examples: Sequence[Example]) -> str:
 
 
 def _build_request(
-        prompt: str,
-        examples: Sequence[Example],
-        dataset_name: str | None,
-        draft: TaskSpecDraft | None,
+    prompt: str,
+    examples: Sequence[Example],
+    dataset_name: str | None,
+    draft: TaskSpecDraft | None,
 ) -> str:
     """Build the TaskSpec inference prompt."""
 
@@ -90,7 +90,9 @@ def _build_request(
     }
 
     if examples:
-        return SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE.format(**values, examples=_render_examples(examples))
+        return SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE.format(
+            **values, examples=_render_examples(examples)
+        )
 
     return SPEC_FROM_PROMPT_TEMPLATE.format(**values)
 
@@ -103,7 +105,10 @@ def _apply_draft(spec: TaskSpec, draft: TaskSpecDraft | None) -> TaskSpec:
 
     updates = draft.overrides()
 
-    if updates.get("task") not in (None, Task.CLASSIFICATION) and "labels" not in updates:
+    if (
+        updates.get("task") not in (None, Task.CLASSIFICATION)
+        and "labels" not in updates
+    ):
         updates["labels"] = None
 
     return TaskSpec.model_validate(spec.model_dump() | updates)
@@ -131,64 +136,72 @@ class SpecBuilder:
     """Infer a complete TaskSpec from a natural-language prompt."""
 
     def __init__(
-            self,
-            model: BaseLanguageModel,
-            detector_confidence_threshold: float = 0.7,
-            retry_config: RetryConfig | None = None,
-            *,
-            task_spec_model: BaseLanguageModel | None = None,
+        self,
+        model: BaseLanguageModel,
+        detector_confidence_threshold: float = 0.7,
+        retry_config: RetryConfig | None = None,
+        *,
+        task_spec_model: BaseLanguageModel | None = None,
     ) -> None:
         """Initialize specification inference and optional dataset detection."""
 
         self._spec_model = task_spec_model or model
         self._retry_config = retry_config or RetryConfig()
-        self._detector = TaskDetector(model, confidence_threshold=detector_confidence_threshold)
+        self._detector = TaskDetector(
+            model, confidence_threshold=detector_confidence_threshold
+        )
 
     def build(
-            self,
-            prompt: str,
-            examples: Sequence[tuple[str, str] | Example] | None = None,
-            draft: TaskSpecDraft | None = None,
-            *,
-            detect_dataset: bool = False,
-            dataset_name: str | None = None,
+        self,
+        prompt: str,
+        examples: Sequence[tuple[str, str] | Example] | None = None,
+        draft: TaskSpecDraft | None = None,
+        *,
+        detect_dataset: bool = False,
+        dataset_name: str | None = None,
     ) -> GenerationContext:
         """Build the immutable context used for synthetic generation."""
 
         dataset = dataset_name or (
-            self._detect_dataset(prompt)
-            if detect_dataset
-            else None
+            self._detect_dataset(prompt) if detect_dataset else None
         )
 
         seed_examples, from_dataset = self._resolve_examples(examples, dataset)
-        spec = _apply_draft(self._invoke(_build_request(prompt, seed_examples, dataset, draft)), draft)
+        spec = _apply_draft(
+            self._invoke(_build_request(prompt, seed_examples, dataset, draft)), draft
+        )
         dataset = self._validate_dataset_match(spec, dataset)
 
         if from_dataset and dataset is None:
             seed_examples = ()
 
         logger.info("GenerationContext ready: task=%r, dataset=%r", spec.task, dataset)
-        return GenerationContext(spec=spec, dataset_name=dataset, seed_examples=seed_examples)
+        return GenerationContext(
+            spec=spec, dataset_name=dataset, seed_examples=seed_examples
+        )
 
     @staticmethod
     def _resolve_examples(
-            examples: Sequence[tuple[str, str] | Example] | None,
-            dataset_name: str | None,
+        examples: Sequence[tuple[str, str] | Example] | None,
+        dataset_name: str | None,
     ) -> tuple[tuple[Example, ...], bool]:
         """Resolve user-provided or dataset reference examples."""
 
         if examples is not None:
             resolved = tuple(
-                item
-                if isinstance(item, Example)
-                else Example(input=item[0], output=item[1])
+                (
+                    item
+                    if isinstance(item, Example)
+                    else Example(input=item[0], output=item[1])
+                )
                 for item in examples
             )
             return resolved, False
 
-        resolved = tuple(Example(input=item.input, output=item.target)
-                         for item in DATASET_EXAMPLES.get(dataset_name, ()))
+        resolved = tuple(
+            Example(input=item.input, output=item.target)
+            for item in DATASET_EXAMPLES.get(dataset_name, ())
+        )
 
         return resolved, bool(resolved)
 
@@ -203,7 +216,9 @@ class SpecBuilder:
             return dataset_name
 
         if spec.task != Task.CLASSIFICATION or not spec.labels:
-            logger.info("Ignoring dataset %r: classification task expected.", dataset_name)
+            logger.info(
+                "Ignoring dataset %r: classification task expected.", dataset_name
+            )
             return None
 
         labels = {label.strip().casefold() for label in spec.labels}
@@ -244,10 +259,14 @@ class SpecBuilder:
             return _parse_spec(model.invoke(request))
 
         except ValidationError as exc:
-            raise SpecResponseError("Specification response failed validation.") from exc
+            raise SpecResponseError(
+                "Specification response failed validation."
+            ) from exc
 
         except (TypeError, ValueError) as exc:
-            raise SpecResponseError("Specification response could not be parsed.") from exc
+            raise SpecResponseError(
+                "Specification response could not be parsed."
+            ) from exc
 
     def _detect_dataset(self, prompt: str) -> str | None:
         """Detect a reference dataset from the prompt."""

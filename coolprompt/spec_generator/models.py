@@ -39,7 +39,9 @@ class TaskSpec(StrictModel):
 
     @field_validator("requirements", "labels")
     @classmethod
-    def normalize_collections(cls, values: tuple[str, ...] | None) -> tuple[str, ...] | None:
+    def normalize_collections(
+        cls, values: tuple[str, ...] | None
+    ) -> tuple[str, ...] | None:
         if values is None:
             return None
 

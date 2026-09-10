@@ -23,10 +23,12 @@ TASK_AREA_TO_DATASET: dict[str, str] = {
     SCHOOL_MATH_REASONING: "gsm8k",
     CONCEPT_TO_SENTENCE_GENERATION: "common_gen",
     CONTEXT_QUESTION_ANSWERING: "squad_v2",
-    TEXT_SUMMARIZATION: "xsum"
+    TEXT_SUMMARIZATION: "xsum",
 }
 
-DATASET_LABEL_SETS: dict[str, set[str]] = {"tweeteval": {"anger", "joy", "optimism", "sadness"}}
+DATASET_LABEL_SETS: dict[str, set[str]] = {
+    "tweeteval": {"anger", "joy", "optimism", "sadness"}
+}
 
 
 class Example(NamedTuple):
@@ -42,28 +44,23 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             input="['dog', 'leap', 'catch']",
             target="A dog leaps into the air to catch a frisbee.",
         ),
-
         Example(
             input="['chef', 'slice', 'tomato', 'knife']",
             target="Using a sharp knife, the chef slices a tomato for the salad.",
         ),
-
         Example(
             input="['cat', 'hide', 'box']",
             target="A cat hides inside an empty cardboard box.",
         ),
-
         Example(
             input="['child', 'feed', 'duck', 'pond']",
             target="Beside the pond, a child crouches down to feed the ducks.",
         ),
-
         Example(
             input="['cyclist', 'push', 'bicycle', 'hill', 'rain']",
             target="Caught in the rain, a cyclist pushes her bicycle up a muddy hill.",
         ),
     ),
-
     "gsm8k": (
         Example(
             input=(
@@ -74,7 +71,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="48",
         ),
-
         Example(
             input=(
                 "A robe requires some bolts of blue fiber and half as many bolts "
@@ -83,7 +79,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="2",
         ),
-
         Example(
             input=(
                 "Sam memorized six more digits of pi than Carlos memorized. "
@@ -92,7 +87,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="10",
         ),
-
         Example(
             input=(
                 "Maya buys 4 notebooks for $3 each and 2 pens for $2 each. "
@@ -100,7 +94,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="4",
         ),
-
         Example(
             input=(
                 "A bus travels 45 miles per hour for 2 hours and then "
@@ -108,7 +101,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="120",
         ),
-
         Example(
             input=(
                 "A jacket originally costs $80. The store gives a 25 percent discount. "
@@ -116,7 +108,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="60",
         ),
-
         Example(
             input=(
                 "A library has 250 books. It lends out 68 books on Monday "
@@ -125,7 +116,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="160",
         ),
-
         Example(
             input=(
                 "A bakery makes 72 cupcakes. It packs 6 cupcakes in each box. "
@@ -134,7 +124,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             target="42",
         ),
     ),
-
     "tweeteval": (
         Example(
             input=(
@@ -143,7 +132,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="anger",
         ),
-
         Example(
             input=(
                 "How do you lose my order TWICE and then tell me to 'just place "
@@ -151,7 +139,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="anger",
         ),
-
         Example(
             input=(
                 "@user love how you can ignore every message for a WEEK then suddenly "
@@ -159,7 +146,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="anger",
         ),
-
         Example(
             input=(
                 "@user nah it's FINE, you guys have fun :) kinda getting used to "
@@ -167,7 +153,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="sadness",
         ),
-
         Example(
             input=(
                 "Still catch myself saving things to send you and then remembering "
@@ -175,7 +160,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="sadness",
         ),
-
         Example(
             input=(
                 "@user you absolute idiot 😂❤️ can't believe you travelled ALL THAT WAY "
@@ -183,7 +167,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
             ),
             target="joy",
         ),
-
         Example(
             input=(
                 "@user ONE rejection doesn't decide where this goes. send the next "
@@ -195,32 +178,31 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
     "squad_v2": (
         Example(
             input="The economy of Victoria is highly diversified: service sectors including financial and property "
-                  "services, health, education, wholesale, retail, hospitality and manufacturing constitute the "
-                  "majority of employment. Victoria's total gross state product (GSP) is ranked second in Australia, "
-                  "although Victoria is ranked fourth in terms of GSP per capita because of its limited mining "
-                  "activity. Culturally, Melbourne is home to a number of museums, art galleries and theatres and is "
-                  "also described as the \"sporting capital of Australia\". The Melbourne Cricket Ground is "
-                  "the largest stadium in Australia, and the host of the 1956 Summer Olympics and the 2006 "
-                  "Commonwealth Games. The ground is also considered the \"spiritual home\" of Australian cricket "
-                  "and Australian rules football, and hosts the grand final of the Australian Football League (AFL) "
-                  "each year, usually drawing crowds of over 95,000 people. Victoria includes eight public "
-                  "universities, with the oldest, the University of Melbourne, having been founded in 1853. What "
-                  "city in Victoria is called the sporting capital of Australia?",
+            "services, health, education, wholesale, retail, hospitality and manufacturing constitute the "
+            "majority of employment. Victoria's total gross state product (GSP) is ranked second in Australia, "
+            "although Victoria is ranked fourth in terms of GSP per capita because of its limited mining "
+            "activity. Culturally, Melbourne is home to a number of museums, art galleries and theatres and is "
+            'also described as the "sporting capital of Australia". The Melbourne Cricket Ground is '
+            "the largest stadium in Australia, and the host of the 1956 Summer Olympics and the 2006 "
+            'Commonwealth Games. The ground is also considered the "spiritual home" of Australian cricket '
+            "and Australian rules football, and hosts the grand final of the Australian Football League (AFL) "
+            "each year, usually drawing crowds of over 95,000 people. Victoria includes eight public "
+            "universities, with the oldest, the University of Melbourne, having been founded in 1853. What "
+            "city in Victoria is called the sporting capital of Australia?",
             target="Melbourne",
         ),
-
         Example(
             input="In the course of the 10th century, the initially destructive incursions of Norse war bands into "
-                  "the rivers of France evolved into more permanent encampments that included local women and "
-                  "personal property. The Duchy of Normandy, which began in 911 as a fiefdom, was established by "
-                  "the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking "
-                  "ruler Rollo, and was situated in the former Frankish kingdom of Neustria. The treaty offered Rollo "
-                  "and his men the French lands between the river Epte and the Atlantic coast in exchange for their "
-                  "protection against further Viking incursions. The area corresponded to the northern part of "
-                  "present-day Upper Normandy down to the river Seine, but the Duchy would eventually extend west "
-                  "beyond the Seine. The territory was roughly equivalent to the old province of Rouen, and "
-                  "reproduced the Roman administrative structure of Gallia Lugdunensis II "
-                  "(part of the former Gallia Lugdunensis). When was the Duchy of Normandy founded?",
+            "the rivers of France evolved into more permanent encampments that included local women and "
+            "personal property. The Duchy of Normandy, which began in 911 as a fiefdom, was established by "
+            "the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking "
+            "ruler Rollo, and was situated in the former Frankish kingdom of Neustria. The treaty offered Rollo "
+            "and his men the French lands between the river Epte and the Atlantic coast in exchange for their "
+            "protection against further Viking incursions. The area corresponded to the northern part of "
+            "present-day Upper Normandy down to the river Seine, but the Duchy would eventually extend west "
+            "beyond the Seine. The territory was roughly equivalent to the old province of Rouen, and "
+            "reproduced the Roman administrative structure of Gallia Lugdunensis II "
+            "(part of the former Gallia Lugdunensis). When was the Duchy of Normandy founded?",
             target="911",
         ),
     ),
@@ -238,7 +220,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "on the outskirts of Bristol."
             ),
         ),
-
         Example(
             input=(
                 "The city council approved plans for a new sports centre after months of "
@@ -252,7 +233,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "to begin construction next spring."
             ),
         ),
-
         Example(
             input=(
                 "Maya Lewis joined the museum as an assistant curator in 2004 and later "
@@ -266,10 +246,9 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "to lead the National Arts Foundation."
             ),
         ),
-
         Example(
             input=(
-                "\"This is a disappointing day for everyone involved,\" said manager "
+                '"This is a disappointing day for everyone involved," said manager '
                 "Daniel Price after Westford lost 2-1 to Harborough. Westford had taken "
                 "the lead in the first half but conceded twice after the break. The defeat "
                 "means they will miss the play-offs for the first time in five seasons."
@@ -279,7 +258,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "after losing 2-1 to Harborough."
             ),
         ),
-
         Example(
             input=(
                 "Researchers at Northbridge University tested a new battery material over "
@@ -293,7 +271,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "that retained 90% of its capacity after 1,000 charging cycles."
             ),
         ),
-
         Example(
             input=(
                 "The government announced a review of rural transport funding following "
@@ -307,7 +284,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "rural bus routes."
             ),
         ),
-
         Example(
             input=(
                 "Singer Lena Brooks began her career performing in small clubs before "
@@ -321,7 +297,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "of concerts next summer."
             ),
         ),
-
         Example(
             input=(
                 "Rovers dominated possession for much of the match and created several "
@@ -334,5 +309,6 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
                 "Rovers have won promotion to the top division for the first time "
                 "in 12 years after beating their opponents 1-0."
             ),
-        ))
+        ),
+    ),
 }

@@ -74,13 +74,13 @@ def _extract_examples(payload: Any) -> list[Any]:
     examples = (
         getattr(payload, "examples", None)
         if isinstance(payload, BaseModel)
-        else payload.get("examples")
-        if isinstance(payload, dict)
-        else None
+        else payload.get("examples") if isinstance(payload, dict) else None
     )
 
     if not isinstance(examples, list):
-        raise GenerationResponseError("Generation response does not contain an examples list.")
+        raise GenerationResponseError(
+            "Generation response does not contain an examples list."
+        )
     if not examples:
         raise GenerationResponseError("Generation response contains no examples.")
 
@@ -91,13 +91,13 @@ class SyntheticDataGenerator:
     """Generate synthetic examples from an immutable generation context."""
 
     def __init__(
-            self,
-            model: BaseLanguageModel,
-            detector_confidence_threshold: float = 0.7,
-            retry_config: RetryConfig | None = None,
-            max_topup_attempts: int = 10,
-            *,
-            task_spec_model: BaseLanguageModel | None = None,
+        self,
+        model: BaseLanguageModel,
+        detector_confidence_threshold: float = 0.7,
+        retry_config: RetryConfig | None = None,
+        max_topup_attempts: int = 10,
+        *,
+        task_spec_model: BaseLanguageModel | None = None,
     ) -> None:
         """Initialize generation, specification, and distribution components."""
 
@@ -121,13 +121,13 @@ class SyntheticDataGenerator:
         self._last_generation_state: GenerationState | None = None
 
     def build_context(
-            self,
-            prompt: str,
-            dataset_name: str | None = None,
-            *,
-            draft: TaskSpecDraft | None = None,
-            examples: Sequence[tuple[str, str] | Example] | None = None,
-            detect_dataset: bool = False,
+        self,
+        prompt: str,
+        dataset_name: str | None = None,
+        *,
+        draft: TaskSpecDraft | None = None,
+        examples: Sequence[tuple[str, str] | Example] | None = None,
+        detect_dataset: bool = False,
     ) -> GenerationContext:
         """Build the validated context used by subsequent generation stages."""
 
@@ -140,20 +140,20 @@ class SyntheticDataGenerator:
         )
 
     def generate(
-            self,
-            prompt: str,
-            dataset_name: str | None = None,
-            *,
-            draft: TaskSpecDraft | None = None,
-            examples: Sequence[tuple[str, str] | Example] | None = None,
-            distribution_examples: Sequence[tuple[str, str] | Example] | None = None,
-            task_distribution: TaskDistribution | None = None,
-            detect_dataset: bool = True,
-            num_samples: int = 40,
-            batch_size: int = 15,
-            structural_validation: bool = False,
-            use_task_distribution: bool = True,
-            feedback_controlled: bool = True
+        self,
+        prompt: str,
+        dataset_name: str | None = None,
+        *,
+        draft: TaskSpecDraft | None = None,
+        examples: Sequence[tuple[str, str] | Example] | None = None,
+        distribution_examples: Sequence[tuple[str, str] | Example] | None = None,
+        task_distribution: TaskDistribution | None = None,
+        detect_dataset: bool = True,
+        num_samples: int = 40,
+        batch_size: int = 15,
+        structural_validation: bool = False,
+        use_task_distribution: bool = True,
+        feedback_controlled: bool = True,
     ) -> GenerationResult:
         """Generate exactly ``num_samples`` synthetic examples."""
 
@@ -172,7 +172,9 @@ class SyntheticDataGenerator:
 
         self._validate_context(context)
 
-        reference_examples = self._reference_examples(distribution_examples, fallback=context.seed_examples)
+        reference_examples = self._reference_examples(
+            distribution_examples, fallback=context.seed_examples
+        )
 
         distribution = self._resolve_distribution(
             prompt=prompt,
@@ -211,18 +213,19 @@ class SyntheticDataGenerator:
             )
 
         if len(generated) != num_samples:
-            raise RuntimeError(f"Expected {num_samples} examples, received {len(generated)}")
+            raise RuntimeError(
+                f"Expected {num_samples} examples, received {len(generated)}"
+            )
 
         return GenerationResult(
-            examples=tuple(map(self._coerce_example, generated)),
-            context=context
+            examples=tuple(map(self._coerce_example, generated)), context=context
         )
 
     @staticmethod
     def _reference_examples(
-            examples: Sequence[tuple[str, str] | Example] | None,
-            *,
-            fallback: Sequence[Example],
+        examples: Sequence[tuple[str, str] | Example] | None,
+        *,
+        fallback: Sequence[Example],
     ) -> tuple[Example, ...]:
         """Normalize explicit distribution references or use seed examples."""
 
@@ -230,18 +233,22 @@ class SyntheticDataGenerator:
             return tuple(fallback)
 
         return tuple(
-            item if isinstance(item, Example) else Example(input=item[0], output=item[1])
+            (
+                item
+                if isinstance(item, Example)
+                else Example(input=item[0], output=item[1])
+            )
             for item in examples
         )
 
     def _resolve_distribution(
-            self,
-            *,
-            prompt: str,
-            context: GenerationContext,
-            reference_examples: Sequence[Example],
-            distribution: TaskDistribution | None,
-            enabled: bool,
+        self,
+        *,
+        prompt: str,
+        context: GenerationContext,
+        reference_examples: Sequence[Example],
+        distribution: TaskDistribution | None,
+        enabled: bool,
     ) -> TaskDistribution | None:
         """Return a supplied or inferred distribution when the feature is enabled."""
 
@@ -276,10 +283,7 @@ class SyntheticDataGenerator:
         """Reject task types unsupported by the generation schemas."""
 
         if context.spec.task not in _OUTPUT_SCHEMAS:
-            supported = ", ".join(
-                task.value
-                for task in _OUTPUT_SCHEMAS
-            )
+            supported = ", ".join(task.value for task in _OUTPUT_SCHEMAS)
 
             raise ValueError(
                 f"Unsupported task {context.spec.task!r}; "
@@ -287,11 +291,11 @@ class SyntheticDataGenerator:
             )
 
     def _generate_validated(
-            self,
-            context: GenerationContext,
-            target: int,
-            batch_size: int,
-            distribution: TaskDistribution | None = None,
+        self,
+        context: GenerationContext,
+        target: int,
+        batch_size: int,
+        distribution: TaskDistribution | None = None,
     ) -> list[Example]:
         """Generate and structurally validate exactly the requested examples."""
 
@@ -311,17 +315,19 @@ class SyntheticDataGenerator:
         )
 
         if len(result) < target:
-            raise RuntimeError(f"Could not generate enough examples: {len(result)}/{target}")
+            raise RuntimeError(
+                f"Could not generate enough examples: {len(result)}/{target}"
+            )
 
         return result
 
     def _generate_group(
-            self,
-            context: GenerationContext,
-            total: int,
-            batch_size: int,
-            *,
-            distribution: TaskDistribution | None = None,
+        self,
+        context: GenerationContext,
+        total: int,
+        batch_size: int,
+        *,
+        distribution: TaskDistribution | None = None,
     ) -> list[Any]:
         """Generate examples in bounded batches with optional distribution guidance."""
 
@@ -348,19 +354,15 @@ class SyntheticDataGenerator:
         return generated
 
     def _call_model(
-            self,
-            request: str,
-            task: Task,
-            *,
-            with_axis_tags: bool = False,
+        self,
+        request: str,
+        task: Task,
+        *,
+        with_axis_tags: bool = False,
     ) -> list[Any]:
         """Invoke the model with the appropriate structured-output schema."""
 
-        schema = (
-            TaggedGenerationBatch
-            if with_axis_tags
-            else _OUTPUT_SCHEMAS[task]
-        )
+        schema = TaggedGenerationBatch if with_axis_tags else _OUTPUT_SCHEMAS[task]
         chat_model = resolve_chat_model(self._model)
 
         def invoke() -> list[Any]:
@@ -369,12 +371,10 @@ class SyntheticDataGenerator:
             if chat_model is None:
                 output = self._model.invoke(request)
             else:
-                method = (
-                    "function_calling"
-                    if with_axis_tags
-                    else "json_schema"
-                )
-                output = chat_model.with_structured_output(schema=schema, method=method).invoke(request)
+                method = "function_calling" if with_axis_tags else "json_schema"
+                output = chat_model.with_structured_output(
+                    schema=schema, method=method
+                ).invoke(request)
 
             return _extract_examples(output)
 
@@ -385,14 +385,14 @@ class SyntheticDataGenerator:
         )
 
     def _generate_feedback_controlled(
-            self,
-            *,
-            context: GenerationContext,
-            distribution: TaskDistribution,
-            num_samples: int,
-            batch_size: int,
-            reference_examples: Sequence[Example],
-            structural_validation: bool,
+        self,
+        *,
+        context: GenerationContext,
+        distribution: TaskDistribution,
+        num_samples: int,
+        batch_size: int,
+        reference_examples: Sequence[Example],
+        structural_validation: bool,
     ) -> list[Example]:
         """Generate, observe coverage, then target the next batch."""
 
@@ -470,18 +470,18 @@ class SyntheticDataGenerator:
         return accepted[:num_samples]
 
     def _run_feedback_batch(
-            self,
-            *,
-            pipeline: ValidationPipeline,
-            context: GenerationContext,
-            distribution: TaskDistribution,
-            target_n: int,
-            batch_size: int,
-            reset_deduplicator: bool,
-            targets: Sequence[dict[str, Any]] | None,
-            avoid: Sequence[dict[str, Any]],
-            accepted_examples: Sequence[Example],
-            reference_examples: Sequence[Example],
+        self,
+        *,
+        pipeline: ValidationPipeline,
+        context: GenerationContext,
+        distribution: TaskDistribution,
+        target_n: int,
+        batch_size: int,
+        reset_deduplicator: bool,
+        targets: Sequence[dict[str, Any]] | None,
+        avoid: Sequence[dict[str, Any]],
+        accepted_examples: Sequence[Example],
+        reference_examples: Sequence[Example],
     ) -> tuple[list[Example], dict[tuple[str, str], dict[str, str]]]:
         """Generate, validate, and retain axis tags for one feedback batch."""
 
@@ -516,7 +516,7 @@ class SyntheticDataGenerator:
                 target_n=target_n,
                 reset_deduplicator=reset_deduplicator,
             ),
-            tag_cache
+            tag_cache,
         )
 
     @staticmethod
@@ -537,9 +537,9 @@ class SyntheticDataGenerator:
 
     @classmethod
     def _cache_axis_tags(
-            cls,
-            cache: dict[tuple[str, str], dict[str, str]],
-            raw_examples: Sequence[Any],
+        cls,
+        cache: dict[tuple[str, str], dict[str, str]],
+        raw_examples: Sequence[Any],
     ) -> None:
         """Index valid model-provided axis tags by normalized input-output pair."""
 
@@ -561,11 +561,11 @@ class SyntheticDataGenerator:
 
     @staticmethod
     def _record_feedback_batch(
-            state: GenerationState,
-            distribution: TaskDistribution,
-            context: GenerationContext,
-            examples: Sequence[Example],
-            tag_cache: dict[tuple[str, str], dict[str, str]],
+        state: GenerationState,
+        distribution: TaskDistribution,
+        context: GenerationContext,
+        examples: Sequence[Example],
+        tag_cache: dict[tuple[str, str], dict[str, str]],
     ) -> None:
         """Validate batch tags and record their observed coverage counts."""
 
