@@ -283,7 +283,7 @@ Corner-case categories — cover all 8 types, distributing {num_samples} example
 
 1. irrelevant_numbers
    The problem contains one or more numbers that must be IGNORED to get the correct answer.
-   
+
 2. multi_step_arithmetic
    Solving requires TWO OR MORE sequential arithmetic operations.
    No single operation on the given numbers yields the answer directly.
