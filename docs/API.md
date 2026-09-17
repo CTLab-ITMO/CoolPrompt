@@ -68,8 +68,8 @@ Benchmark interface for comparing autoprompting methods on dataset/config-based 
 `evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, and `rider`.
 
 ---
-## `data_generator/` and `task_detector/`
-- `data_generator/` - synthetic dataset and target generation when no dataset is provided.
+## `spec_generator/` and `task_detector/`
+- `spec_generator/` - task specification inference and controlled synthetic data generation with validation and deduplication.
 - `task_detector/` - automatic task detection for `classification` and `generation` workflows.
 
 ---

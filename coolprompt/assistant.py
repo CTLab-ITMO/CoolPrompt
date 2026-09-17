@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
-from coolprompt.data_generator.generator import SyntheticDataGenerator
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
@@ -150,7 +150,6 @@ class PromptTuner:
         generate_num_samples: int = 10,
         batch_size: int = 25,
         verbose: int = 1,
-        corner_ratio: float = 0.4,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
         llm_as_judge_metric_ceil: int = 10,
@@ -206,8 +205,6 @@ class PromptTuner:
                 during evaluation.
             verbose (int): Logging verbosity: 0 = silent, 1 = steps,
                 2 = steps + prompts.
-            corner_ratio (float, default=0.4): Ratio of corner-case examples
-                to include when generating synthetic data.
             llm_as_judge_criteria (str | list[str]): Criterion or list of
                 criteria for the LLM‑as‑judge metric.
             llm_as_judge_custom_templates (dict[str, str] | None): Custom
@@ -292,16 +289,28 @@ class PromptTuner:
             self._target_model, task_value, base_metric, batch_size=batch_size
         )
         final_prompt = ""
-        generator = SyntheticDataGenerator(self._system_model)
+        generator = SyntheticDataGenerator(
+            model=self._system_model,
+            task_spec_model=self._system_model,
+        )
 
         if dataset is None:
-            dataset, target, problem_description = generator.generate(
-                prompt=start_prompt,
-                task=task_value,
-                problem_description=problem_description,
-                num_samples=generate_num_samples,
-                corner_ratio=corner_ratio,
+            draft = (
+                TaskSpecDraft(
+                    task=task_value,
+                    description=problem_description.strip(),
+                )
+                if problem_description and problem_description.strip()
+                else TaskSpecDraft(task=task_value)
             )
+            generation = generator.generate(
+                prompt=start_prompt,
+                draft=draft,
+                num_samples=generate_num_samples,
+            )
+            dataset = generation.dataset
+            target = generation.target
+            problem_description = generation.context.spec.description
             self.synthetic_dataset = dataset
             self.synthetic_target = target
 
@@ -313,22 +322,28 @@ class PromptTuner:
         )
 
         if problem_description is None:
-            if pd_method is PD_Method.BASE:
-                problem_description = generator._generate_problem_description(
-                    prompt=start_prompt
+            examples = None
+
+            if pd_method is PD_Method.DATASET_BASED:
+                indices = sample(
+                    range(len(dataset_split[0])),
+                    min(
+                        self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD,
+                        len(dataset_split[0]),
+                    ),
                 )
-            elif pd_method is PD_Method.DATASET_BASED:
-                k = min(
-                    self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD,
-                    len(dataset_split[0]),
-                )
-                indices = sample(range(len(dataset_split[0])), k)
                 examples = [
-                    (dataset_split[0][ind], dataset_split[2][ind]) for ind in indices
+                    (dataset_split[0][index], dataset_split[2][index])
+                    for index in indices
                 ]
-                problem_description = generator._generate_problem_description(
-                    prompt=start_prompt, examples=examples
-                )
+
+            context = generator.build_context(
+                prompt=start_prompt,
+                draft=TaskSpecDraft(task=task_value),
+                examples=examples,
+                detect_dataset=False,
+            )
+            problem_description = context.spec.description
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method_impl.name}, Task: {task}")

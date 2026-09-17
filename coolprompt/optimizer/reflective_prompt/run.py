@@ -2,13 +2,13 @@ from typing import List, Tuple, override
 
 from langchain_core.language_models import BaseLanguageModel
 
-from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.autoprompting_method import (
     AutoPromptingMethod,
     BenchmarkContext,
 )
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.utils.deprecation import warn_deprecated
 from coolprompt.utils.logging_config import logger
 
@@ -110,10 +110,16 @@ class ReflectiveMethod(AutoPromptingMethod):
         """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
-            problem_description = generator._generate_problem_description(
-                prompt=start_prompt
+            generator = SyntheticDataGenerator(
+                model=ctx._system_model,
+                task_spec_model=ctx._system_model,
             )
+            context = generator.build_context(
+                prompt=start_prompt,
+                draft=TaskSpecDraft(task=ctx.evaluator.task),
+                detect_dataset=False,
+            )
+            problem_description = context.spec.description
         mc = ctx.config["method"]
         return self.optimize(
             ctx.model,
