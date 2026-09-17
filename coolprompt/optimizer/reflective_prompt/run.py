@@ -14,12 +14,12 @@ from coolprompt.utils.logging_config import logger
 
 
 def reflectiveprompt(
-        model: BaseLanguageModel,
-        dataset_split: Tuple[List[str], List[str], List[str], List[str]],
-        evaluator: Evaluator,
-        problem_description: str,
-        initial_prompt: str = None,
-        **kwargs,
+    model: BaseLanguageModel,
+    dataset_split: Tuple[List[str], List[str], List[str], List[str]],
+    evaluator: Evaluator,
+    problem_description: str,
+    initial_prompt: str = None,
+    **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
 
@@ -82,13 +82,13 @@ class ReflectiveMethod(AutoPromptingMethod):
     """Reflective prompting method for auto‑prompting."""
 
     def optimize(
-            self,
-            model,
-            initial_prompt,
-            dataset_split,
-            evaluator,
-            problem_description,
-            **kwargs,
+        self,
+        model,
+        initial_prompt,
+        dataset_split,
+        evaluator,
+        problem_description,
+        **kwargs,
     ):
         """Run ReflectivePrompt through the shared method interface."""
         telemetry_callback = kwargs.pop("telemetry_callback", None)
@@ -103,9 +103,9 @@ class ReflectiveMethod(AutoPromptingMethod):
         )
 
     def run_configured_benchmark(
-            self,
-            ctx: BenchmarkContext,
-            start_prompt: str,
+        self,
+        ctx: BenchmarkContext,
+        start_prompt: str,
     ) -> str:
         """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
