@@ -9,10 +9,6 @@ from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
 from pydantic import BaseModel
 
-from coolprompt.data_generator.pydantic_formatters import (
-    ClassificationTaskStructuredOutputSchema,
-    GenerationTaskStructuredOutputSchema,
-)
 from coolprompt.spec_generator.distribution import (
     GenerationState,
     TaggedGenerationBatch,
@@ -21,6 +17,7 @@ from coolprompt.spec_generator.distribution import (
     build_generation_targets,
     validate_axis_tags,
 )
+from coolprompt.spec_generator.schemas import TaskExamples
 from coolprompt.spec_generator.models import (
     Example,
     GenerationContext,
@@ -37,8 +34,8 @@ from coolprompt.utils.enums import Task
 from coolprompt.utils.parsing import extract_json
 
 _OUTPUT_SCHEMAS: dict[Task, type[BaseModel]] = {
-    Task.CLASSIFICATION: ClassificationTaskStructuredOutputSchema,
-    Task.GENERATION: GenerationTaskStructuredOutputSchema,
+    Task.CLASSIFICATION: TaskExamples,
+    Task.GENERATION: TaskExamples,
 }
 
 

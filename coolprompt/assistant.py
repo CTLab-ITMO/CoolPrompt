@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
-from coolprompt.data_generator.generator import SyntheticDataGenerator
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
@@ -42,10 +42,10 @@ class PromptTuner:
     description from the dataset (only for DATASET_BASED method)."""
 
     def __init__(
-        self,
-        target_model: BaseLanguageModel = None,
-        system_model: BaseLanguageModel = None,
-        logs_dir: str | Path = None,
+            self,
+            target_model: BaseLanguageModel = None,
+            system_model: BaseLanguageModel = None,
+            logs_dir: str | Path = None,
     ) -> None:
         """Initialize the PromptTuner with language models and logging.
 
@@ -63,14 +63,14 @@ class PromptTuner:
         setup_logging(logs_dir)
         self._target_model = target_model or DefaultLLM.init()
         if isinstance(self._target_model, ChatOpenAI) and not isinstance(
-            self._target_model, TrackedLLMWrapper
+                self._target_model, TrackedLLMWrapper
         ):
             self._target_model = model_tracker.wrap_model(self._target_model)
         self._system_model = system_model or self._target_model
         if (
-            system_model is not None
-            and isinstance(self._system_model, ChatOpenAI)
-            and not isinstance(self._system_model, TrackedLLMWrapper)
+                system_model is not None
+                and isinstance(self._system_model, ChatOpenAI)
+                and not isinstance(self._system_model, TrackedLLMWrapper)
         ):
             self._system_model = model_tracker.wrap_model(self._system_model)
 
@@ -109,11 +109,11 @@ class PromptTuner:
             self._target_model.reset_stats()
 
     def _get_dataset_split(
-        self,
-        dataset: Iterable[str],
-        target: Iterable[str],
-        validation_size: float,
-        train_as_test: bool,
+            self,
+            dataset: Iterable[str],
+            target: Iterable[str],
+            validation_size: float,
+            train_as_test: bool,
     ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
         """Split the dataset into training and validation sets.
 
@@ -136,38 +136,37 @@ class PromptTuner:
         return (train_data, val_data, train_targets, val_targets)
 
     def run(
-        self,
-        start_prompt: str,
-        task: Optional[str] = None,
-        dataset: Optional[Iterable[str]] = None,
-        target: Optional[Iterable[str] | Iterable[int]] = None,
-        method: str | AutoPromptingMethod | type[AutoPromptingMethod] = "hyper_light",
-        metric: Optional[str] = None,
-        problem_description: Optional[str] = None,
-        problem_description_generation_method: str = "base",
-        validation_size: float = 0.25,
-        train_as_test: bool = False,
-        generate_num_samples: int = 10,
-        batch_size: int = 25,
-        verbose: int = 1,
-        corner_ratio: float = 0.4,
-        llm_as_judge_criteria: str | list[str] = "relevance",
-        llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
-        llm_as_judge_metric_ceil: int = 10,
-        bertscore_model_type: Optional[str] = None,
-        geval_criteria: Optional[str] = None,
-        geval_evaluation_steps: Optional[list[str]] = None,
-        geval_evaluation_params: Optional[list] = None,
-        geval_strict_mode: bool = False,
-        return_final_prompt: bool = True,
-        hyper_meta_prompt: Optional[str] = None,
-        hyper_meta_info: dict = None,
-        system_model_as_optimizer: bool = False,
-        enable_telemetry: bool = True,
-        export_telemetry: bool = False,
-        telemetry_format: str = "json",
-        telemetry_path: Optional[str] = None,
-        **kwargs,
+            self,
+            start_prompt: str,
+            task: Optional[str] = None,
+            dataset: Optional[Iterable[str]] = None,
+            target: Optional[Iterable[str] | Iterable[int]] = None,
+            method: str | AutoPromptingMethod | type[AutoPromptingMethod] = "hyper_light",
+            metric: Optional[str] = None,
+            problem_description: Optional[str] = None,
+            problem_description_generation_method: str = "base",
+            validation_size: float = 0.25,
+            train_as_test: bool = False,
+            generate_num_samples: int = 10,
+            batch_size: int = 25,
+            verbose: int = 1,
+            llm_as_judge_criteria: str | list[str] = "relevance",
+            llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
+            llm_as_judge_metric_ceil: int = 10,
+            bertscore_model_type: Optional[str] = None,
+            geval_criteria: Optional[str] = None,
+            geval_evaluation_steps: Optional[list[str]] = None,
+            geval_evaluation_params: Optional[list] = None,
+            geval_strict_mode: bool = False,
+            return_final_prompt: bool = True,
+            hyper_meta_prompt: Optional[str] = None,
+            hyper_meta_info: dict = None,
+            system_model_as_optimizer: bool = False,
+            enable_telemetry: bool = True,
+            export_telemetry: bool = False,
+            telemetry_format: str = "json",
+            telemetry_path: Optional[str] = None,
+            **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
 
@@ -206,8 +205,6 @@ class PromptTuner:
                 during evaluation.
             verbose (int): Logging verbosity: 0 = silent, 1 = steps,
                 2 = steps + prompts.
-            corner_ratio (float, default=0.4): Ratio of corner-case examples
-                to include when generating synthetic data.
             llm_as_judge_criteria (str | list[str]): Criterion or list of
                 criteria for the LLM‑as‑judge metric.
             llm_as_judge_custom_templates (dict[str, str] | None): Custom
@@ -292,16 +289,28 @@ class PromptTuner:
             self._target_model, task_value, base_metric, batch_size=batch_size
         )
         final_prompt = ""
-        generator = SyntheticDataGenerator(self._system_model)
+        generator = SyntheticDataGenerator(
+            model=self._system_model,
+            task_spec_model=self._system_model,
+        )
 
         if dataset is None:
-            dataset, target, problem_description = generator.generate(
-                prompt=start_prompt,
-                task=task_value,
-                problem_description=problem_description,
-                num_samples=generate_num_samples,
-                corner_ratio=corner_ratio,
+            draft = (
+                TaskSpecDraft(
+                    task=task_value,
+                    description=problem_description.strip(),
+                )
+                if problem_description and problem_description.strip()
+                else TaskSpecDraft(task=task_value)
             )
+            generation = generator.generate(
+                prompt=start_prompt,
+                draft=draft,
+                num_samples=generate_num_samples,
+            )
+            dataset = generation.dataset
+            target = generation.target
+            problem_description = generation.context.spec.description
             self.synthetic_dataset = dataset
             self.synthetic_target = target
 
@@ -313,22 +322,28 @@ class PromptTuner:
         )
 
         if problem_description is None:
-            if pd_method is PD_Method.BASE:
-                problem_description = generator._generate_problem_description(
-                    prompt=start_prompt
+            examples = None
+
+            if pd_method is PD_Method.DATASET_BASED:
+                indices = sample(
+                    range(len(dataset_split[0])),
+                    min(
+                        self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD,
+                        len(dataset_split[0]),
+                    ),
                 )
-            elif pd_method is PD_Method.DATASET_BASED:
-                k = min(
-                    self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD,
-                    len(dataset_split[0]),
-                )
-                indices = sample(range(len(dataset_split[0])), k)
                 examples = [
-                    (dataset_split[0][ind], dataset_split[2][ind]) for ind in indices
+                    (dataset_split[0][index], dataset_split[2][index])
+                    for index in indices
                 ]
-                problem_description = generator._generate_problem_description(
-                    prompt=start_prompt, examples=examples
-                )
+
+            context = generator.build_context(
+                prompt=start_prompt,
+                draft=TaskSpecDraft(task=task_value),
+                examples=examples,
+                detect_dataset=False,
+            )
+            problem_description = context.spec.description
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method_impl.name}, Task: {task}")
@@ -449,15 +464,15 @@ class PromptTuner:
         return final_prompt if return_final_prompt else None
 
     def test(
-        self,
-        dataset: Iterable[str],
-        prompt: Optional[str] = None,
-        task: Optional[str] = None,
-        targets: Optional[Iterable[str | int]] = None,
-        metric: Optional[str] = None,
-        bertscore_model_type: Optional[str] = None,
-        batch_size: int = 25,
-        return_raw_outputs: bool = True,
+            self,
+            dataset: Iterable[str],
+            prompt: Optional[str] = None,
+            task: Optional[str] = None,
+            targets: Optional[Iterable[str | int]] = None,
+            metric: Optional[str] = None,
+            bertscore_model_type: Optional[str] = None,
+            batch_size: int = 25,
+            return_raw_outputs: bool = True,
     ) -> List[str] | Tuple[List[str], float]:
         """
         Generate model predictions for a test dataset and optionally compute a metric.

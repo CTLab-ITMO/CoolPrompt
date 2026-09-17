@@ -9,6 +9,7 @@ from .models import (
     TaskSpecDraft,
 )
 from .prompt_builder import GenerationPromptBuilder
+from .schemas import TaskExample, TaskExamples
 from .spec_builder import SpecBuilder
 from .validation import Deduplicator, ExampleValidator, ValidationPipeline
 
@@ -23,5 +24,7 @@ __all__ = [
     "SyntheticDataGenerator",
     "TaskSpec",
     "TaskSpecDraft",
+    "TaskExample",
+    "TaskExamples",
     "ValidationPipeline",
 ]

@@ -3,13 +3,13 @@ from typing import List, Tuple, Optional, override
 
 from langchain_core.language_models import BaseLanguageModel
 
-from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.autoprompting_method import (
     AutoPromptingMethod,
     BenchmarkContext,
 )
 from coolprompt.optimizer.regps.evoluter import ReGPSEvoluter
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.utils.logging_config import logger
 
 
@@ -110,15 +110,25 @@ class ReGPSMethod(AutoPromptingMethod):
         """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
-            indices = sample(range(0, len(ctx.dataset_split[0])), 5)
+            generator = SyntheticDataGenerator(
+                model=ctx._system_model,
+                task_spec_model=ctx._system_model,
+            )
+            indices = sample(
+                range(len(ctx.dataset_split[0])),
+                min(5, len(ctx.dataset_split[0])),
+            )
             examples = [
                 (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
                 for ind in indices
             ]
-            problem_description = generator._generate_problem_description(
-                prompt=start_prompt, examples=examples
+            context = generator.build_context(
+                prompt=start_prompt,
+                draft=TaskSpecDraft(task=ctx.evaluator.task),
+                examples=examples,
+                detect_dataset=False,
             )
+            problem_description = context.spec.description
         mc = ctx.config["method"]
         return self.optimize(
             ctx.model,

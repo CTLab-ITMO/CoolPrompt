@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.language_models.chat_models import BaseChatModel
 
 
-def resolve_chat_model(model: BaseLanguageModel) -> BaseChatModel | None:
-    """Return a chat model directly or through a common wrapper attribute."""
+def resolve_chat_model(model: BaseLanguageModel) -> BaseLanguageModel | None:
+    """Return a model that supports structured output without unwrapping it."""
 
-    if isinstance(model, BaseChatModel):
+    if hasattr(model, "with_structured_output"):
         return model
 
     wrapped = getattr(model, "model", None)
-    return wrapped if isinstance(wrapped, BaseChatModel) else None
+    if wrapped is not None and hasattr(wrapped, "with_structured_output"):
+        return wrapped
+
+    return None

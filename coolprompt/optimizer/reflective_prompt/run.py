@@ -2,24 +2,24 @@ from typing import List, Tuple, override
 
 from langchain_core.language_models import BaseLanguageModel
 
-from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.autoprompting_method import (
     AutoPromptingMethod,
     BenchmarkContext,
 )
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.utils.deprecation import warn_deprecated
 from coolprompt.utils.logging_config import logger
 
 
 def reflectiveprompt(
-    model: BaseLanguageModel,
-    dataset_split: Tuple[List[str], List[str], List[str], List[str]],
-    evaluator: Evaluator,
-    problem_description: str,
-    initial_prompt: str = None,
-    **kwargs,
+        model: BaseLanguageModel,
+        dataset_split: Tuple[List[str], List[str], List[str], List[str]],
+        evaluator: Evaluator,
+        problem_description: str,
+        initial_prompt: str = None,
+        **kwargs,
 ) -> str:
     """Runs ReflectivePrompt evolution.
 
@@ -82,13 +82,13 @@ class ReflectiveMethod(AutoPromptingMethod):
     """Reflective prompting method for auto‑prompting."""
 
     def optimize(
-        self,
-        model,
-        initial_prompt,
-        dataset_split,
-        evaluator,
-        problem_description,
-        **kwargs,
+            self,
+            model,
+            initial_prompt,
+            dataset_split,
+            evaluator,
+            problem_description,
+            **kwargs,
     ):
         """Run ReflectivePrompt through the shared method interface."""
         telemetry_callback = kwargs.pop("telemetry_callback", None)
@@ -103,17 +103,23 @@ class ReflectiveMethod(AutoPromptingMethod):
         )
 
     def run_configured_benchmark(
-        self,
-        ctx: BenchmarkContext,
-        start_prompt: str,
+            self,
+            ctx: BenchmarkContext,
+            start_prompt: str,
     ) -> str:
         """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
         if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
-            problem_description = generator._generate_problem_description(
-                prompt=start_prompt
+            generator = SyntheticDataGenerator(
+                model=ctx._system_model,
+                task_spec_model=ctx._system_model,
             )
+            context = generator.build_context(
+                prompt=start_prompt,
+                draft=TaskSpecDraft(task=ctx.evaluator.task),
+                detect_dataset=False,
+            )
+            problem_description = context.spec.description
         mc = ctx.config["method"]
         return self.optimize(
             ctx.model,
