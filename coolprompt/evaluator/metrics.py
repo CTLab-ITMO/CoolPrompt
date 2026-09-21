@@ -87,6 +87,33 @@ class HFEvaluateMetric(ABC):
             for output, target in zip(outputs, targets)
         ]
 
+    def _aggregate_score(
+        self,
+        results: List[float],
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> float:
+        """Compute the metric once over the complete evaluation batch.
+
+        Metrics such as macro F1 and BLEU are not decomposable into the mean
+        of scores computed from one example at a time. ``results`` is still
+        retained for bad-example selection, while the aggregate follows the
+        canonical HuggingFace implementation for the full batch.
+        """
+
+        if not outputs:
+            return 0.0
+
+        value = self._metric.compute(
+            predictions=outputs,
+            references=targets,
+            **self._compute_kwargs_func(outputs, targets),
+        )[self._return_parameter]
+        if isinstance(value, (list, tuple, np.ndarray)):
+            return float(np.mean(value)) if len(value) > 0 else 0.0
+        return float(value)
+
 
 class BaseMetric(ABC):
     """Abstract base class for implementing evaluation metrics.
@@ -172,6 +199,17 @@ class BaseMetric(ABC):
             for ind in indices
         ]
 
+    def _aggregate_score(
+        self,
+        results: List[float],
+        outputs: list[str | int],
+        targets: list[str | int],
+        dataset: Optional[list[str]] = None,
+    ) -> float:
+        """Aggregate per-example scores for decomposable metrics."""
+
+        return float(np.mean(results)) if results else 0.0
+
     def compute(
         self,
         outputs: list[str | int],
@@ -214,7 +252,12 @@ class BaseMetric(ABC):
             return None
 
         self._failed_examples_requested = failed_examples
-        aggregate = float(np.mean(results))
+        aggregate = self._aggregate_score(
+            results,
+            encoded_output_labels,
+            encoded_targets,
+            dataset,
+        )
 
         if return_per_task:
             bad_examples = (
@@ -352,7 +395,12 @@ class F1Metric(HFEvaluateMetric, ClassificationMetric):
 
     def __init__(self):
         super().__init__(self._get_name())
-        self._compute_kwargs_func = lambda outputs, targets: {"average": "macro"}
+        self._compute_kwargs_func = lambda outputs, targets: {
+            "average": "macro",
+            # A parsing failure is encoded as -1. It must count as a wrong
+            # prediction, not become a third class in the macro average.
+            "labels": sorted(set(targets)),
+        }
 
 
 class BleuMetric(HFEvaluateMetric, GenerationMetric):
@@ -537,7 +585,10 @@ class LLMAsJudge(GenerationMetric):
         self.templates = {crit: self.prompt_templates[crit] for crit in self.criteria}
 
     def _compute_raw(self, outputs, targets, dataset):
-        scores = []
+        if dataset is None:
+            dataset = [""] * len(outputs)
+
+        scores_by_criterion = []
         for _, template in self.templates.items():
             requests = [
                 template.format(
@@ -563,9 +614,11 @@ class LLMAsJudge(GenerationMetric):
             normalized = [
                 clip(ans, 0, self.metric_ceil) / self.metric_ceil for ans in parsed
             ]
-            scores.append(mean(normalized))
+            scores_by_criterion.append(normalized)
 
-        return scores
+        if not scores_by_criterion:
+            return [0.0] * len(outputs)
+        return [mean(list(scores)) for scores in zip(*scores_by_criterion)]
 
 
 class GEvalMetric(GenerationMetric):
