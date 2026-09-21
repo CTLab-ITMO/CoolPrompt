@@ -4,6 +4,7 @@ import yaml
 from langchain_core.language_models import BaseLanguageModel
 
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
+from coolprompt.optimizer.brave import BRAVEMethod
 from coolprompt.optimizer.distill_prompt import DistillMethod
 from coolprompt.optimizer.hyper.meta_prompt import HyPERLightMethod
 from coolprompt.optimizer.hyper.hyper import HyPERMethod
@@ -21,6 +22,7 @@ _BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
     "compress": CompressorMethod,
     "regps": ReGPSMethod,
     "rider": RIDERGenesisMethod,
+    "brave": BRAVEMethod,
 }
 
 
@@ -37,7 +39,8 @@ def evaluate_method(
     Args:
         method: One of
             ``hyper_light``, ``hyper``, ``reflective`` / ``reflectiveprompt``,
-            ``distill``, ``compress``, ``regps``, ``rider`` (same names as in
+            ``distill``, ``compress``, ``regps``, ``rider``, ``brave``
+            (same names as in
             ``PromptTuner`` / ``validate_method`` where applicable).
         model: LangChain language model used for optimization and evaluation.
         config: Benchmark configuration dict or path to a YAML file.
