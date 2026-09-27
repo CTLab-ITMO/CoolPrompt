@@ -26,6 +26,7 @@ from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.language_model.tracker import model_tracker, TrackedLLMWrapper
 from coolprompt.utils.telemetry import IterationSnapshot, TelemetryCollector
 from coolprompt.utils.utils import get_dataset_split, get_stratified_dataset_split
+from coolprompt.meta_selector import APOMetaSelector
 
 
 class PromptTuner:
@@ -82,6 +83,7 @@ class PromptTuner:
 
         self.synthetic_dataset = None
         self.synthetic_target = None
+        self.meta_selection = None
 
         logger.info("Validating the target model")
         validate_model(self._target_model)
@@ -187,6 +189,8 @@ class PromptTuner:
         export_telemetry: bool = False,
         telemetry_format: str = "json",
         telemetry_path: Optional[str] = None,
+        meta_classifier_path: Optional[str | Path] = None,
+        meta_dataset_name: Optional[str] = None,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -205,7 +209,9 @@ class PromptTuner:
                 corresponding to the dataset. Required if `dataset` is given.
             method (str | AutoPromptingMethod | type[AutoPromptingMethod]):
                 Registered name (e.g. ``hyper_light``), an instance, or a concrete subclass
-                (constructed inside ``validate_method`` with no arguments).
+                (constructed inside ``validate_method`` with no arguments). Use
+                ``"auto"`` to select a supported data-driven method from bundled
+                APO metadata.
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
                 "meteor" for generation. Special metrics `llm_as_judge` and
@@ -267,6 +273,10 @@ class PromptTuner:
                 "json", "csv", or "both".
             telemetry_path (str | None, default=None): Base path for telemetry exports.
                 If None, auto-generates ./logs/telemetry_{timestamp}.
+            meta_classifier_path (str | Path | None): Optional path to a custom
+                APO metadata CSV. Used only with ``method="auto"``.
+            meta_dataset_name (str | None): Optional dataset name that helps the
+                metadata selector retrieve comparable benchmark records.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -286,6 +296,40 @@ class PromptTuner:
         task_detector = TaskDetector(self._system_model)
         if task is None:
             task = task_detector.generate(start_prompt)
+
+        self.meta_selection = None
+        if method == "auto":
+            if dataset is None and target is None:
+                self.meta_selection = APOMetaSelector.no_dataset_result()
+            else:
+                selector = APOMetaSelector(meta_classifier_path)
+                self.meta_selection = selector.select(
+                    system_model=self._system_model,
+                    start_prompt=start_prompt,
+                    task=task,
+                    problem_description=problem_description,
+                    dataset_name=meta_dataset_name,
+                )
+            method = self.meta_selection.selected_method
+            logger.info(
+                "APO meta-selection: recommended=%s, selected=%s, similar=%s",
+                self.meta_selection.recommended_method,
+                self.meta_selection.selected_method,
+                self.meta_selection.similar_datasets,
+            )
+            for candidate in self.meta_selection.candidates:
+                logger.info(
+                    "APO candidate: method=%s model=%s metric=%s score=%.4f",
+                    candidate.method,
+                    candidate.model,
+                    candidate.metric,
+                    candidate.final_score,
+                )
+            if self.meta_selection.fallback_reason:
+                logger.info(
+                    "APO meta-selection fallback: %s",
+                    self.meta_selection.fallback_reason,
+                )
 
         logger.info("Validating args for PromptTuner running")
 
@@ -437,6 +481,11 @@ class PromptTuner:
             telemetry_report = telemetry_collector.finalize(
                 initial_score=self.init_metric,
                 final_score=self.final_metric,
+                meta_selection=(
+                    self.meta_selection.to_dict()
+                    if self.meta_selection is not None
+                    else None
+                ),
             )
 
             if export_telemetry:

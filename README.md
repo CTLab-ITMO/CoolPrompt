@@ -124,6 +124,32 @@ final_prompt = prompt_tuner.run(
 )
 ```
 
+### Automatic APO method selection
+
+Use `method="auto"` to select an optimizer from experiment metadata. The
+selector profiles the task with the system model, retrieves up to three similar
+benchmark datasets, and ranks configurations by quality, cost, and runtime.
+The selected method is available in `prompt_tuner.meta_selection` and is added
+to telemetry exports.
+
+```python
+final_prompt = prompt_tuner.run(
+    "Classify the sentiment of the text: {text}",
+    task="classification",
+    dataset=["Great product", "Very disappointing"],
+    target=["positive", "negative"],
+    method="auto",
+    problem_description="Classify product-review sentiment.",
+    meta_dataset_name="my_product_reviews",  # optional
+)
+```
+
+The bundled metadata contains SAPO, RIDER, and HyPER results. CoolPrompt does
+not yet implement SAPO, so an SAPO recommendation is transparently executed
+with `hyper`; the fallback reason is recorded in `meta_selection`. Pass
+`meta_classifier_path="/path/to/metadata.csv"` to use a custom CSV. Without
+`dataset` and `target`, `method="auto"` uses `hyper_light`.
+
 ## Examples
 
 See more examples in [notebooks](https://github.com/CTLab-ITMO/CoolPrompt/blob/master/notebooks/examples/) to familiarize yourself with our framework

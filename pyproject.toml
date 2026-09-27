@@ -8,6 +8,9 @@ include = ["*"]  # package names should match these glob patterns (["*"] by defa
 exclude = ["test", "notebooks", "data", "docs", "src"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false
 
+[tool.setuptools.package-data]
+"coolprompt.meta_selector.data" = ["*.csv"]
+
 [project]
 name = "coolprompt"
 version = "2.1.0"
