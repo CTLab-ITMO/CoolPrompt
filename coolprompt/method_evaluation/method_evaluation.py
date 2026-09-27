@@ -12,6 +12,7 @@ from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
 from coolprompt.optimizer.rider import RIDERGenesisMethod
+from coolprompt.optimizer.sapo import SAPOMethod
 
 _BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
     "hyper_light": HyPERLightMethod,
@@ -23,6 +24,7 @@ _BENCHMARK_IMPL: dict[str, AutoPromptingMethod] = {
     "regps": ReGPSMethod,
     "rider": RIDERGenesisMethod,
     "brave": BRAVEMethod,
+    "sapo": SAPOMethod,
 }
 
 
@@ -39,7 +41,7 @@ def evaluate_method(
     Args:
         method: One of
             ``hyper_light``, ``hyper``, ``reflective`` / ``reflectiveprompt``,
-            ``distill``, ``compress``, ``regps``, ``rider``, ``brave``
+            ``distill``, ``compress``, ``regps``, ``rider``, ``brave``, ``sapo``
             (same names as in
             ``PromptTuner`` / ``validate_method`` where applicable).
         model: LangChain language model used for optimization and evaluation.

@@ -57,7 +57,7 @@ class MetaSelectionResult:
 
 
 class APOMetaSelector:
-    """Choose RIDER or HyPER from quality, cost, and runtime metadata.
+    """Choose SAPO, RIDER, or HyPER from quality, cost, and runtime metadata.
 
     The selector keeps method choice independent from the caller's LLM: model
     recommendations are returned for diagnostics only and never replace it.
@@ -371,5 +371,5 @@ class APOMetaSelector:
         if method == "HyPER":
             return "hyper", None
         if method == "SAPO":
-            return "hyper", "SAPO is not implemented in CoolPrompt"
+            return "sapo", None
         return "hyper", f"Unsupported recommendation '{method}'; defaulted to HyPER."

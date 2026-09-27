@@ -78,6 +78,7 @@ def _patch_runtime(monkeypatch, selection):
             **validation._METHOD_BY_NAME,
             "rider": lambda: _Method("rider"),
             "hyper": lambda: _Method("hyper"),
+            "sapo": lambda: _Method("sapo"),
             "hyper_light": lambda: _Method("hyper_light", data_driven=False),
         },
     )
@@ -114,14 +115,14 @@ def test_auto_uses_selected_rider_and_exposes_selection(monkeypatch):
     assert tuner.meta_selection is selection
 
 
-def test_auto_applies_sapo_fallback_to_hyper(monkeypatch):
+def test_auto_runs_selected_sapo(monkeypatch):
     selection = MetaSelectionResult(
         profile={"domain": "news"},
         similar_datasets=["xsum"],
         candidates=[],
         recommended_method="SAPO",
-        selected_method="hyper",
-        fallback_reason="SAPO is not implemented in CoolPrompt",
+        selected_method="sapo",
+        fallback_reason=None,
         recommended_model="openai/gpt-4o-mini",
         recommended_split="150/100/300",
         recommended_metric="BERTScore F1",
@@ -140,10 +141,8 @@ def test_auto_applies_sapo_fallback_to_hyper(monkeypatch):
         enable_telemetry=False,
     )
 
-    assert result == "optimized with hyper"
-    assert (
-        tuner.meta_selection.fallback_reason == "SAPO is not implemented in CoolPrompt"
-    )
+    assert result == "optimized with sapo"
+    assert tuner.meta_selection.fallback_reason is None
 
 
 def test_auto_without_data_uses_hyper_light(monkeypatch):

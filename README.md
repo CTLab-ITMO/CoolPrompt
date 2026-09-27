@@ -34,6 +34,7 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     - RE-GPS
     - RIDER
     - BRAVE
+    - SAPO
     - PromptCompressor
     - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
@@ -70,6 +71,7 @@ Compared metrics:
 | `regps` | Required | High | Very High | High |
 | `rider` | Required | Very High | Very High | Very High |
 | `brave` | Required | High | Very High | Budget-controlled |
+| `sapo` | Required | High | Very High | High |
 | `compress` | None | Low | Medium | Low |
 | `reflective` | Required | High | High | High |
 | `distill` | Required | High | High | High |
@@ -144,11 +146,25 @@ final_prompt = prompt_tuner.run(
 )
 ```
 
-The bundled metadata contains SAPO, RIDER, and HyPER results. CoolPrompt does
-not yet implement SAPO, so an SAPO recommendation is transparently executed
-with `hyper`; the fallback reason is recorded in `meta_selection`. Pass
+The bundled metadata contains SAPO, RIDER, and HyPER results. A SAPO
+recommendation is executed directly with the built-in segment-based optimizer. Pass
 `meta_classifier_path="/path/to/metadata.csv"` to use a custom CSV. Without
 `dataset` and `target`, `method="auto"` uses `hyper_light`.
+
+Run SAPO directly when you want contrastive, segment-level prompt refinement:
+
+```python
+final_prompt = prompt_tuner.run(
+    "Summarize the article concisely.",
+    task="generation",
+    dataset=["Article one", "Article two"],
+    target=["Summary one", "Summary two"],
+    method="sapo",
+    validation_size=0.5,
+    n_iterations=3,
+    n_candidates=4,
+)
+```
 
 ## Examples
 
