@@ -28,27 +28,35 @@ class TaskDetector:
         self.model = model
         self._confidence_threshold = confidence_threshold
 
-    def _generate(self, request: str, schema: type[BaseModel], field_name: str) -> Any:
-        """Generate model output and extract the requested response field."""
-        wrapped_model = getattr(self.model, "model", self.model)
+    def _generate(
+        self,
+        request: str,
+        schema: type[BaseModel],
+        field_name: str,
+    ) -> Any:
+        """Generate model output and return the requested field."""
+        model = getattr(self.model, "model", self.model)
 
-        if not isinstance(wrapped_model, BaseChatModel):
+        if not isinstance(model, BaseChatModel):
             output = self.model.invoke(request)
-            if isinstance(output, AIMessage):
-                output = output.content
-            return extract_json(output)[field_name]
+            content = output.content if isinstance(output, AIMessage) else output
+            return extract_json(content)[field_name]
 
         output = self.model.with_structured_output(
             schema=schema,
             method="json_schema",
         ).invoke(request)
+
         if isinstance(output, AIMessage):
             output = output.content
 
-        try:
+        if hasattr(output, field_name):
             return getattr(output, field_name)
-        except (AttributeError, TypeError):
+
+        if isinstance(output, dict):
             return output[field_name]
+
+        raise TypeError(f"Unexpected structured output type: {type(output)!r}")
 
     def generate(self, prompt: str) -> str:
         """Return the task type detected from the user prompt."""
@@ -92,28 +100,27 @@ class TaskDetector:
         self,
         prompt: str,
     ) -> TaskAreaDetectionStructuredOutputSchema:
-        """Detect the task type and supported task area."""
-        logger.info("Detecting task area by query")
+        """Detect task type and supported area."""
+        logger.info("Detecting task area")
+
         result = self._generate_structured(
             request=TASK_AREA_DETECTOR_TEMPLATE.format(query=prompt),
             schema=TaskAreaDetectionStructuredOutputSchema,
         )
 
         if not isinstance(result, TaskAreaDetectionStructuredOutputSchema):
-            raise TypeError(f"Unexpected task-area result type: {type(result)!r}")
+            raise TypeError(f"Unexpected result type: {type(result)!r}")
 
         if result.confidence < self._confidence_threshold:
             logger.info(
-                "Task area confidence too low: area=%r, confidence=%.2f "
-                "(threshold=%.2f); treating as unmatched",
-                result.task_area,
+                "Low task area confidence: %.2f < %.2f",
                 result.confidence,
                 self._confidence_threshold,
             )
-            return result.model_copy(update={"task_area": None})
+            result = result.model_copy(update={"task_area": None})
 
         logger.info(
-            "Task area detected: task=%s, area=%s, confidence=%.2f",
+            "Task area detection result: task=%s, area=%s, confidence=%.2f",
             result.task,
             result.task_area,
             result.confidence,

@@ -13,8 +13,7 @@ from coolprompt.optimizer.autoprompting_method import (
 )
 from coolprompt.optimizer.brave.evoluter import BRAVEEvoluter
 from coolprompt.optimizer.brave.utils import BRAVEConfig
-from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
-from coolprompt.utils.enums import Task
+from coolprompt.spec_generator import generate_problem_description
 from coolprompt.utils.logging_config import logger
 
 
@@ -102,32 +101,19 @@ class BRAVEMethod(AutoPromptingMethod):
     ) -> str:
         """Run BRAVE from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
-        if problem_description is None:
-            generator = SyntheticDataGenerator(
-                model=ctx._system_model,
-                task_spec_model=ctx._system_model,
-            )
+        if not problem_description or not problem_description.strip():
             count = min(5, len(ctx.dataset_split[0]))
             indices = sample(range(len(ctx.dataset_split[0])), count)
             examples = [
                 (ctx.dataset_split[0][index], str(ctx.dataset_split[2][index]))
                 for index in indices
             ]
-            labels = (
-                tuple(dict.fromkeys(map(str, ctx.dataset_split[2])))
-                if ctx.evaluator.task == Task.CLASSIFICATION
-                else None
-            )
-            context = generator.build_context(
+            problem_description = generate_problem_description(
+                model=ctx._system_model,
                 prompt=start_prompt,
-                draft=TaskSpecDraft(
-                    task=ctx.evaluator.task,
-                    labels=labels,
-                ),
+                task=ctx.evaluator.task,
                 examples=examples,
-                detect_dataset=False,
             )
-            problem_description = context.spec.description
 
         method_config = dict(ctx.config.get("method", {}))
         seed = method_config.pop("seed", 19)

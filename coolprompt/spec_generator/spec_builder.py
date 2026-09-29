@@ -8,11 +8,12 @@ from typing import Any
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
-from pydantic import ValidationError
+from pydantic import Field, ValidationError
 
 from coolprompt.spec_generator.models import (
     Example,
     GenerationContext,
+    StrictModel,
     TaskSpec,
     TaskSpecDraft,
 )
@@ -25,6 +26,8 @@ from coolprompt.utils.parsing import extract_json
 from coolprompt.utils.prompt_templates.spec_generator_templates import (
     SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE,
     SPEC_FROM_PROMPT_TEMPLATE,
+    PROBLEM_DESCRIPTION_CLASSIFICATION_TEMPLATE,
+    PROBLEM_DESCRIPTION_GENERATION_TEMPLATE,
 )
 from coolprompt.utils.task_areas import (
     DATASET_EXAMPLES,
@@ -35,6 +38,12 @@ from coolprompt.utils.task_areas import (
 
 class SpecResponseError(ValueError):
     """Raised when the specification model returns an invalid response."""
+
+
+class _ProblemDescription(StrictModel):
+    """Compact structured response for task-description inference."""
+
+    description: str = Field(min_length=1)
 
 
 def _render_draft(draft: TaskSpecDraft | None) -> str:
@@ -167,9 +176,10 @@ class SpecBuilder:
         )
 
         seed_examples, from_dataset = self._resolve_examples(examples, dataset)
-        spec = _apply_draft(
-            self._invoke(_build_request(prompt, seed_examples, dataset, draft)), draft
-        )
+
+        request = _build_request(prompt, seed_examples, dataset, draft)
+        spec = self._invoke(request, draft)
+
         dataset = self._validate_dataset_match(spec, dataset)
 
         if from_dataset and dataset is None:
@@ -235,11 +245,24 @@ class SpecBuilder:
         )
         return None
 
-    def _invoke(self, request: str) -> TaskSpec:
+    def _invoke(
+        self,
+        request: str,
+        draft: TaskSpecDraft | None = None,
+    ) -> TaskSpec:
         """Invoke the specification model with retry handling."""
 
+        def attempt() -> TaskSpec:
+            try:
+                spec = self._invoke_once(request)
+                return _apply_draft(spec, draft)
+            except ValidationError as exc:
+                raise SpecResponseError(
+                    "Specification failed validation after applying user overrides."
+                ) from exc
+
         return invoke_with_retry(
-            lambda: self._invoke_once(request),
+            attempt,
             self._retry_config,
             extra_retry_exceptions=(SpecResponseError,),
         )
@@ -270,24 +293,95 @@ class SpecBuilder:
 
     def _detect_dataset(self, prompt: str) -> str | None:
         """Detect a reference dataset from the prompt."""
-
         try:
             detection = self._detector.detect_task_area(prompt)
         except Exception as exc:
             logger.warning("Dataset detection failed: %s", exc)
             return None
 
-        if detection.task_area is None:
-            return None
+        dataset = TASK_AREA_TO_DATASET.get(detection.task_area)
+        if dataset:
+            logger.info(
+                "Detected dataset %r from task area %r (confidence=%.2f).",
+                dataset,
+                detection.task_area,
+                detection.confidence,
+            )
 
-        if (dataset := TASK_AREA_TO_DATASET.get(detection.task_area)) is None:
-            logger.info("No dataset mapping for task area %r.", detection.task_area)
-            return None
-
-        logger.info(
-            "Detected dataset %r from task area %r (confidence=%.2f).",
-            dataset,
-            detection.task_area,
-            detection.confidence,
-        )
         return dataset
+
+
+def generate_problem_description(
+    model: BaseLanguageModel,
+    prompt: str,
+    *,
+    task: Task,
+    examples: Sequence[tuple[str, str] | Example] | None = None,
+    labels: tuple[str, ...] | None = None,
+    retry_config: RetryConfig | None = None,
+) -> str:
+    """Infer one task-description sentence without building a full TaskSpec."""
+
+    prompt = prompt.strip()
+
+    if not prompt:
+        raise ValueError("prompt must be a non-empty string")
+
+    if labels is not None and task != Task.CLASSIFICATION:
+        raise ValueError("labels are only valid for classification tasks")
+
+    normalized_examples = tuple(
+        item if isinstance(item, Example) else Example(input=item[0], output=item[1])
+        for item in (examples or ())
+    )
+
+    template = (
+        PROBLEM_DESCRIPTION_CLASSIFICATION_TEMPLATE
+        if task == Task.CLASSIFICATION
+        else PROBLEM_DESCRIPTION_GENERATION_TEMPLATE
+    )
+
+    request = template.format(
+        prompt=prompt,
+        labels=json.dumps(labels, ensure_ascii=False) if labels else "None",
+        examples=(
+            _render_examples(normalized_examples) if normalized_examples else "None"
+        ),
+    )
+
+    def invoke() -> str:
+        try:
+            chat_model = resolve_chat_model(model)
+            output = (
+                chat_model.with_structured_output(
+                    _ProblemDescription,
+                    method="json_schema",
+                ).invoke(request)
+                if chat_model is not None
+                else model.invoke(request)
+            )
+
+            if not isinstance(output, _ProblemDescription):
+                if isinstance(output, AIMessage):
+                    output = output.content
+                if isinstance(output, str):
+                    output = extract_json(output)
+
+                output = _ProblemDescription.model_validate(output)
+
+            return output.description
+
+        except ValidationError as exc:
+            raise SpecResponseError(
+                "Problem-description response failed validation."
+            ) from exc
+        except (TypeError, ValueError) as exc:
+            raise SpecResponseError(
+                "Problem-description response could not be parsed."
+            ) from exc
+
+    return invoke_with_retry(
+        invoke,
+        retry_config or RetryConfig(),
+        extra_retry_exceptions=(SpecResponseError,),
+    )

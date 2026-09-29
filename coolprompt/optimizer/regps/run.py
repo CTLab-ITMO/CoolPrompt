@@ -9,7 +9,7 @@ from coolprompt.optimizer.autoprompting_method import (
     BenchmarkContext,
 )
 from coolprompt.optimizer.regps.evoluter import ReGPSEvoluter
-from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
+from coolprompt.spec_generator import generate_problem_description
 from coolprompt.utils.logging_config import logger
 
 
@@ -109,26 +109,21 @@ class ReGPSMethod(AutoPromptingMethod):
     ) -> str:
         """Run Re-GPS from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
-        if problem_description is None:
-            generator = SyntheticDataGenerator(
-                model=ctx._system_model,
-                task_spec_model=ctx._system_model,
-            )
+        if not problem_description or not problem_description.strip():
             indices = sample(
                 range(len(ctx.dataset_split[0])),
                 min(5, len(ctx.dataset_split[0])),
             )
             examples = [
-                (ctx.dataset_split[0][ind], ctx.dataset_split[2][ind])
+                (ctx.dataset_split[0][ind], str(ctx.dataset_split[2][ind]))
                 for ind in indices
             ]
-            context = generator.build_context(
+            problem_description = generate_problem_description(
+                model=ctx._system_model,
                 prompt=start_prompt,
-                draft=TaskSpecDraft(task=ctx.evaluator.task),
+                task=ctx.evaluator.task,
                 examples=examples,
-                detect_dataset=False,
             )
-            problem_description = context.spec.description
         mc = ctx.config["method"]
         return self.optimize(
             ctx.model,

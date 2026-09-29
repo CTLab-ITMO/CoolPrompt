@@ -8,7 +8,7 @@ from coolprompt.optimizer.autoprompting_method import (
     BenchmarkContext,
 )
 from coolprompt.optimizer.reflective_prompt.evoluter import ReflectiveEvoluter
-from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
+from coolprompt.spec_generator import generate_problem_description
 from coolprompt.utils.deprecation import warn_deprecated
 from coolprompt.utils.logging_config import logger
 
@@ -109,17 +109,12 @@ class ReflectiveMethod(AutoPromptingMethod):
     ) -> str:
         """Run ReflectivePrompt from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
-        if problem_description is None:
-            generator = SyntheticDataGenerator(
+        if not problem_description or not problem_description.strip():
+            problem_description = generate_problem_description(
                 model=ctx._system_model,
-                task_spec_model=ctx._system_model,
-            )
-            context = generator.build_context(
                 prompt=start_prompt,
-                draft=TaskSpecDraft(task=ctx.evaluator.task),
-                detect_dataset=False,
+                task=ctx.evaluator.task,
             )
-            problem_description = context.spec.description
         mc = ctx.config["method"]
         return self.optimize(
             ctx.model,

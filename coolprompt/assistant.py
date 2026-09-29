@@ -9,7 +9,11 @@ from langchain_openai import ChatOpenAI
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
-from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
+from coolprompt.spec_generator import (
+    SyntheticDataGenerator,
+    TaskSpecDraft,
+    generate_problem_description,
+)
 from coolprompt.language_model.llm import DefaultLLM
 from coolprompt.utils.logging_config import logger, set_verbose, setup_logging
 from coolprompt.utils.var_validation import (
@@ -358,12 +362,12 @@ class PromptTuner:
             self._target_model, task_value, base_metric, batch_size=batch_size
         )
         final_prompt = ""
-        generator = SyntheticDataGenerator(
-            model=self._system_model,
-            task_spec_model=self._system_model,
-        )
-
         if dataset is None:
+            generator = SyntheticDataGenerator(
+                model=self._system_model,
+                task_spec_model=self._system_model,
+            )
+
             draft = (
                 TaskSpecDraft(
                     task=task_value,
@@ -372,11 +376,13 @@ class PromptTuner:
                 if problem_description and problem_description.strip()
                 else TaskSpecDraft(task=task_value)
             )
+
             generation = generator.generate(
                 prompt=start_prompt,
                 draft=draft,
                 num_samples=generate_num_samples,
             )
+
             dataset = generation.dataset
             target = generation.target
             problem_description = generation.context.spec.description
@@ -393,29 +399,31 @@ class PromptTuner:
             seed=seed,
         )
 
-        if problem_description is None:
+        if not problem_description or not problem_description.strip():
             examples = None
 
             if pd_method is PD_Method.DATASET_BASED:
+                train_data = list(dataset_split[0])
+                train_targets = list(dataset_split[2])
+
                 indices = sample(
-                    range(len(dataset_split[0])),
+                    range(len(train_data)),
                     min(
                         self.NUMBER_OF_EXAMPLES_FOR_DATASET_BASED_PD_METHOD,
-                        len(dataset_split[0]),
+                        len(train_data),
                     ),
                 )
+
                 examples = [
-                    (dataset_split[0][index], dataset_split[2][index])
-                    for index in indices
+                    (train_data[index], str(train_targets[index])) for index in indices
                 ]
 
-            context = generator.build_context(
+            problem_description = generate_problem_description(
+                model=self._system_model,
                 prompt=start_prompt,
-                draft=TaskSpecDraft(task=task_value),
+                task=task_value,
                 examples=examples,
-                detect_dataset=False,
             )
-            problem_description = context.spec.description
 
         logger.info("=== Starting Prompt Optimization ===")
         logger.info(f"Method: {method_impl.name}, Task: {task}")

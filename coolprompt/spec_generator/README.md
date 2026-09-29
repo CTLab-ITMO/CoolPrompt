@@ -1,194 +1,125 @@
 # Spec Generator
 
-`coolprompt.spec_generator` builds a task specification and generates synthetic datasets for `classification` and `generation` tasks.
+`coolprompt.spec_generator` turns a task prompt into a validated `TaskSpec` and generates input/output examples for classification or generation tasks. It can infer coverage axes, track which values have been generated, and request examples for gaps in later batches.
 
-```text
-prompt + examples + optional TaskSpecDraft
-                    ↓
-                SpecBuilder
-                    ↓
-             GenerationContext
-             ├── TaskSpec
-             ├── dataset_name
-             └── seed_examples
-                    ↓
-         optional TaskDistribution
-                    ↓
-                generation
-                    ↓
-     optional validation + deduplication
-                    ↓
-             GenerationResult
-```
-
-## Quick start
+## Generate a dataset
 
 ```python
-from coolprompt.spec_generator import Example, SyntheticDataGenerator, TaskSpecDraft
+from langchain_openai import ChatOpenAI
+
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.utils.enums import Task
 
-result = SyntheticDataGenerator(model).generate(
-    prompt="Classify the emotion in a social-media post.",
+model = ChatOpenAI(model="gpt-4o-mini")
+generator = SyntheticDataGenerator(model=model)
+
+result = generator.generate(
+    prompt="Classify the emotion expressed in a social-media post.",
     draft=TaskSpecDraft(
         task=Task.CLASSIFICATION,
         labels=("anger", "joy", "optimism", "sadness"),
         output_format="Return exactly one lowercase label.",
     ),
-    examples=(
-        Example(input="I finally got the job!! 🎉", output="joy"),
-        Example(input="Tomorrow is another chance.", output="optimism"),
-        Example(input="Why did the app delete my work AGAIN?", output="anger"),
-        Example(input="I miss how things used to be.", output="sadness"),
-    ),
-    num_samples=100,
-    batch_size=10,
+    examples=[
+        ("I finally got the job!", "joy"),
+        ("I miss my friends.", "sadness"),
+    ],
+    detect_dataset=False,
+    num_samples=40,
+)
+
+print(result.context.spec)  # Inferred specification with explicit draft overrides
+print(result.examples[0])   # Example(input=..., output=...)
+print(result.dataset)       # list[str]: generated inputs
+print(result.target)        # list[str]: generated outputs
+```
+
+`examples` are trusted input/output pairs used to infer the specification and guide generation. Pass `distribution_examples` when the examples used to infer coverage should differ from these seed examples. With `detect_dataset=True` (the default), the generator may identify one of the supported reference datasets and use its examples when no explicit examples are supplied. Explicit examples take precedence.
+
+The generator requests exactly `num_samples` examples, in batches of at most `batch_size`. `num_samples` must be between 1 and 100; the defaults are 40 and 15, respectively. If validation cannot obtain enough acceptable examples within the top-up limit, generation raises `RuntimeError`.
+
+## Coverage and validation
+
+Distribution-aware, feedback-controlled generation is enabled by default. The generator infers a `TaskDistribution` from the task and reference examples, records accepted axis values, and targets underrepresented values in later batches. To control coverage yourself, pass a validated `task_distribution` built from `TaskDistribution`, `TaskAxis`, `AxisValue`, and `AxisStrategy` in `coolprompt.spec_generator.distribution`.
+
+```python
+generator.last_distribution      # TaskDistribution | None
+generator.last_generation_state  # GenerationState | None
+```
+
+`last_generation_state` is populated only for feedback-controlled runs. Set `use_task_distribution=False, feedback_controlled=False` to generate without axes. `feedback_controlled=True` requires `use_task_distribution=True`.
+
+Feedback-controlled runs validate examples, reject invalid or duplicate candidates, and request replacements. `structural_validation=True` additionally enables semantic and structural repetition filtering. Outside feedback-controlled mode, the validation pipeline runs only when `structural_validation=True`.
+
+## Generate only a problem description
+
+If you already have a dataset and need a short description for an optimizer, use the standalone helper. It requests only a description, rather than a complete `TaskSpec`:
+
+```python
+from coolprompt.spec_generator import generate_problem_description
+from coolprompt.utils.enums import Task
+
+description = generate_problem_description(
+    model=model,
+    prompt="Classify the emotion expressed in a social-media post.",
+    task=Task.CLASSIFICATION,
+    labels=("anger", "joy", "optimism", "sadness"),
+    examples=[("I finally got the job!", "joy")],
 )
 ```
 
-## Full example: synthetic generation + HyPER
+For generation tasks, omit `labels`. Examples are optional; the task prompt remains the primary source of requirements.
 
-This example generates 100 synthetic samples, optimizes the initial prompt with `hyper`, and saves the main artifacts.
+## Synthetic data with HyPER
+
+`PromptTuner` accepts the generated inputs and targets directly. Pass the inferred description so the tuner does not make another description-generation call.
 
 ```python
-from __future__ import annotations
-
-import json
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
 from coolprompt.assistant import PromptTuner
-from coolprompt.spec_generator import Example, SyntheticDataGenerator, TaskSpecDraft
+from coolprompt.spec_generator import SyntheticDataGenerator, TaskSpecDraft
 from coolprompt.utils.enums import Task
 
-load_dotenv()
+initial_prompt = "Classify the emotion expressed in a social-media post."
+model = ChatOpenAI(model="gpt-4o-mini")
+generator = SyntheticDataGenerator(model=model)
 
-INITIAL_PROMPT = """
-Classify the dominant emotion in the input.
-Return exactly one label: anger, joy, optimism, or sadness.
-""".strip()
-
-system_model = ChatOpenAI(
-    model=os.getenv("SYSTEM_MODEL", "gpt-4o-mini"),
-    api_key=os.environ["OPENAI_API_KEY"],
-    temperature=0.7,
-)
-target_model = ChatOpenAI(
-    model=os.getenv("TARGET_MODEL", "gpt-4o-mini"),
-    api_key=os.environ["OPENAI_API_KEY"],
-    temperature=0,
-)
-
-examples = (
-    Example(input="@user I finally got the job!! 🎉 #happy", output="joy"),
-    Example(input="Today was rough, but tomorrow gives us another chance.", output="optimism"),
-    Example(input="The app deleted my draft AGAIN. Absolutely furious.", output="anger"),
-    Example(input="I honestly feel empty and miss everyone.", output="sadness"),
-)
-
-generator = SyntheticDataGenerator(model=system_model, task_spec_model=system_model)
 synthetic = generator.generate(
-    prompt=INITIAL_PROMPT,
-    dataset_name="tweeteval",
+    prompt=initial_prompt,
     draft=TaskSpecDraft(
         task=Task.CLASSIFICATION,
-        description="Classify the dominant emotion in a short social-media post.",
-        input_format="One short English social-media post.",
-        output_format="Exactly one lowercase label.",
-        requirements=("Return no explanation.",),
         labels=("anger", "joy", "optimism", "sadness"),
-        language="English",
+        output_format="Return exactly one lowercase label.",
     ),
-    examples=examples,
-    distribution_examples=examples,
+    examples=[
+        ("I finally got the job!", "joy"),
+        ("I miss my friends.", "sadness"),
+        ("I am furious that my work was deleted.", "anger"),
+        ("Tomorrow gives me another chance.", "optimism"),
+    ],
     detect_dataset=False,
-    num_samples=100,
-    batch_size=10,
-    use_task_distribution=True,
-    feedback_controlled=True,
-    structural_validation=True,
+    num_samples=40,
 )
 
-tuner = PromptTuner(
-    target_model=target_model,
-    system_model=system_model,
-    logs_dir="run_logs/hyper",
-)
+tuner = PromptTuner(target_model=model, system_model=model)
 optimized_prompt = tuner.run(
-    start_prompt=INITIAL_PROMPT,
+    start_prompt=initial_prompt,
     task="classification",
     dataset=synthetic.dataset,
     target=synthetic.target,
-    method="hyper",
-    metric="f1",
     problem_description=synthetic.context.spec.description,
-    validation_size=0.2,
-    batch_size=20,
-    hyper_meta_info={
-        "input_format": synthetic.context.spec.input_format,
-        "output_format": synthetic.context.spec.output_format,
-        "requirements": synthetic.context.spec.requirements,
-    },
-    system_model_as_optimizer=True,
-    n_iterations=3,
-    patience=2,
-    n_candidates=3,
-    top_n_candidates=2,
-    k_samples=3,
-    mini_batch_size=16,
-    random_seed=42,
+    method="hyper",
+    metric="accuracy",
+    validation_size=0.25,
+    n_iterations=2,
 )
 
-output_dir = Path("results/tweeteval_hyper")
-output_dir.mkdir(parents=True, exist_ok=True)
-(output_dir / "optimized_prompt.txt").write_text(optimized_prompt, encoding="utf-8")
-(output_dir / "synthetic_data.json").write_text(
-    json.dumps(synthetic.model_dump(mode="json"), ensure_ascii=False, indent=2),
-    encoding="utf-8",
-)
-if generator.last_distribution is not None:
-    (output_dir / "task_distribution.json").write_text(
-        generator.last_distribution.model_dump_json(indent=2),
-        encoding="utf-8",
-    )
-
-print("Initial score:", tuner.init_metric)
-print("Final score:", tuner.final_metric)
-print("Optimized prompt:\n", optimized_prompt)
+print("Initial validation score:", tuner.init_metric)
+print("Final validation score:", tuner.final_metric)
+print("Optimized prompt:", optimized_prompt)
 ```
 
-HyPER splits the synthetic dataset into training and validation subsets. Evaluate final quality separately on a fixed real-world test set that was not used for generation or optimization.
+In this example, HyPER's validation score is measured on held-out **synthetic** examples. To measure transfer to real data, evaluate the initial and optimized prompts on the same independent real test set. Keep that test set out of specification inference, generation, and optimization.
 
-## Main parameters
-
-| Parameter | Purpose |
-|---|---|
-| `draft` | Explicit overrides for the inferred `TaskSpec` |
-| `examples` | Trusted examples used for specification and generation |
-| `distribution_examples` | Reference examples used to infer axes and guide feedback-controlled generation |
-| `task_distribution` | Prebuilt `TaskDistribution` used instead of inference |
-| `detect_dataset` | Automatically detect a supported dataset |
-| `use_task_distribution` | Generate with distribution-aware guidance |
-| `feedback_controlled` | Target underrepresented axis values in later batches |
-| `structural_validation` | Filter semantic and structural repetitions |
-
-`feedback_controlled=True` requires `use_task_distribution=True`.
-The validation pipeline always runs in feedback-controlled mode. Otherwise, it runs only when `structural_validation=True`.
-
-Supported datasets: `common_gen`, `gsm8k`, `squad_v2`, `tweeteval`, and `xsum`.
-
-## Result
-
-```python
-result.examples   # tuple[Example, ...]
-result.dataset    # list[str] — generated inputs
-result.target     # list[str] — generated outputs
-result.context    # GenerationContext
-
-generator.last_distribution       # TaskDistribution | None
-generator.last_generation_state   # GenerationState | None
-```
-
-Results are not saved automatically. The maximum `num_samples` value is 100. The pipeline does not use a separate corner-case generation phase.
+Generated results are returned in memory and are not saved automatically.
