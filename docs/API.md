@@ -12,7 +12,13 @@ Main methods:
 - `PromptTuner.test(...)` - run a prompt on a dataset and optionally compute a metric.
 - `PromptTuner.get_stats()` / `PromptTuner.reset_stats()` - read/reset usage statistics when the model supports tracking.
 
-The default optimization method is `hyper_light`.
+The default optimization method is `hyper_light`. `method="auto"` enables the
+metadata-driven APO selector. It uses the system model to profile the task and
+retrieve similar datasets, then ranks comparable configurations by quality,
+cost, and runtime. The result is stored in `PromptTuner.meta_selection` and
+included in telemetry exports. `meta_classifier_path` overrides the bundled
+CSV; `meta_dataset_name` is an optional retrieval hint. SAPO recommendations
+fall back to `hyper`, because SAPO is not yet implemented in CoolPrompt.
 
 ---
 ## `evaluator/`
@@ -53,8 +59,10 @@ Implementations of the supported optimization methods.
 Method names accepted by `PromptTuner.run(method=...)`:
 - `hyper_light` - HyPER Light single-shot meta-prompt optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
 - `hyper` - iterative HyPER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/hyper/README.md">Documentation</a>
+- `auto` - metadata-driven selection between supported data-driven methods.
 - `regps` - RE-GPS optimizer.
 - `rider` - RIDER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider/README.md">Documentation</a>
+- `brave` - BRAVE budget-aware evolutionary optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/brave/README.md">Documentation</a>
 - `compress` - PromptCompressor. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/prompt_compressor/README.md">Documentation</a>
 - `reflective` - legacy ReflectivePrompt. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/reflective_prompt/README.md">Documentation</a>
 - `distill` - legacy DistillPrompt. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/distill_prompt/README.md">Documentation</a>
@@ -65,7 +73,7 @@ Custom methods should implement `AutoPromptingMethod` and can be passed to `Prom
 ## `method_evaluation/`
 Benchmark interface for comparing autoprompting methods on dataset/config-based experiments.
 
-`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, and `rider`.
+`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, `rider`, and `brave`.
 
 ---
 ## `spec_generator/` and `task_detector/`

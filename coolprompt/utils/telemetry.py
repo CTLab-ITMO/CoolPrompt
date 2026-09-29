@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import Any, List, Optional
 from datetime import datetime
 import time
 
@@ -44,6 +44,7 @@ class OptimizationTelemetry(BaseModel):
     final_score: float
     score_improvement: float
     trajectory: List[IterationSnapshot]
+    meta_selection: Optional[dict[str, Any]] = None
 
 
 class TelemetryCollector:
@@ -81,7 +82,10 @@ class TelemetryCollector:
         )
 
     def finalize(
-        self, initial_score: float, final_score: float
+        self,
+        initial_score: float,
+        final_score: float,
+        meta_selection: Optional[dict[str, Any]] = None,
     ) -> OptimizationTelemetry:
         stats = (
             self.target_model.get_stats()
@@ -114,4 +118,5 @@ class TelemetryCollector:
                 else 0.0
             ),
             trajectory=self.trajectory,
+            meta_selection=meta_selection,
         )

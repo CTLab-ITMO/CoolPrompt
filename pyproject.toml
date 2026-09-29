@@ -8,9 +8,12 @@ include = ["*"]  # package names should match these glob patterns (["*"] by defa
 exclude = ["test", "notebooks", "data", "docs", "src"]  # exclude packages matching these glob patterns (empty by default)
 namespaces = false
 
+[tool.setuptools.package-data]
+"coolprompt.meta_selector.data" = ["*.csv"]
+
 [project]
 name = "coolprompt"
-version = "2.0.2"
+version = "2.1.0"
 authors = [
   { name="Nikita Kulin", email="serito1998@gmail.com" },
   { name="Artur Khairullin", email="anderbrine05@gmail.com" },
@@ -53,7 +56,8 @@ dependencies = [
   "langchain-openai>=0.3.30",
   "langdetect>=0.4.31",
   "deepeval>=3.7.2",
-  "transformers<5.0.0"
+  "transformers<5.0.0",
+  "sentence-transformers>=3.0.0"
 ]
 license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]

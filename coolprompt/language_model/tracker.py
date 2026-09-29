@@ -205,6 +205,13 @@ def create_chat_model(model=None, **kwargs):
     Returns:
         TrackedLLMWrapper: Model wrapped with usage tracking.
     """
+    # PromptTuner already wraps its target model. BRAVE calls this helper again,
+    # so preserve an existing tracker instead of nesting another one around it.
+    # Nested wrappers create duplicate call/item records and distort usage and
+    # API timing telemetry.
+    if isinstance(model, TrackedLLMWrapper):
+        return model
+
     if isinstance(model, BaseLanguageModel):
         base_model = model
     elif model is not None:

@@ -6,7 +6,6 @@ from typing import Iterable, List, Optional, Tuple
 from random import sample
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_openai import ChatOpenAI
-from sklearn.model_selection import train_test_split
 
 from coolprompt.evaluator import Evaluator, validate_and_create_metric
 from coolprompt.task_detector.detector import TaskDetector
@@ -26,6 +25,8 @@ from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 
 from coolprompt.language_model.tracker import model_tracker, TrackedLLMWrapper
 from coolprompt.utils.telemetry import IterationSnapshot, TelemetryCollector
+from coolprompt.utils.utils import get_dataset_split, get_stratified_dataset_split
+from coolprompt.meta_selector import APOMetaSelector
 
 
 class PromptTuner:
@@ -82,6 +83,7 @@ class PromptTuner:
 
         self.synthetic_dataset = None
         self.synthetic_target = None
+        self.meta_selection = None
 
         logger.info("Validating the target model")
         validate_model(self._target_model)
@@ -114,6 +116,9 @@ class PromptTuner:
         target: Iterable[str],
         validation_size: float,
         train_as_test: bool,
+        task: Task,
+        stratified_split: bool = False,
+        seed: int = 42,
     ) -> Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
         """Split the dataset into training and validation sets.
 
@@ -123,6 +128,10 @@ class PromptTuner:
             validation_size (float): Fraction of data to use for validation.
             train_as_test (bool): If True, use the full dataset as both
                 train and validation (ignoring `validation_size`).
+            task (Task): Task type used to select stratification labels.
+            stratified_split (bool): If True, stratify classification data by
+                target label and generation data by input-length bins.
+            seed (int): Random seed used for reproducible splitting.
 
         Returns:
             Tuple[Iterable[str], Iterable[str], Iterable[str], Iterable[str]]:
@@ -130,10 +139,21 @@ class PromptTuner:
         """
         if train_as_test:
             return (dataset, dataset, target, target)
-        train_data, val_data, train_targets, val_targets = train_test_split(
-            dataset, target, test_size=validation_size
+        if stratified_split:
+            return get_stratified_dataset_split(
+                dataset=list(dataset),
+                target=list(target),
+                validation_size=validation_size,
+                task=task,
+                random_state=seed,
+            )
+        return get_dataset_split(
+            dataset=dataset,
+            target=target,
+            validation_size=validation_size,
+            train_as_test=False,
+            random_state=seed,
         )
-        return (train_data, val_data, train_targets, val_targets)
 
     def run(
         self,
@@ -147,6 +167,8 @@ class PromptTuner:
         problem_description_generation_method: str = "base",
         validation_size: float = 0.25,
         train_as_test: bool = False,
+        stratified_split: bool = False,
+        seed: int = 42,
         generate_num_samples: int = 10,
         batch_size: int = 25,
         verbose: int = 1,
@@ -166,6 +188,8 @@ class PromptTuner:
         export_telemetry: bool = False,
         telemetry_format: str = "json",
         telemetry_path: Optional[str] = None,
+        meta_classifier_path: Optional[str | Path] = None,
+        meta_dataset_name: Optional[str] = None,
         **kwargs,
     ) -> Optional[str]:
         """Run prompt optimization using the selected method.
@@ -184,7 +208,9 @@ class PromptTuner:
                 corresponding to the dataset. Required if `dataset` is given.
             method (str | AutoPromptingMethod | type[AutoPromptingMethod]):
                 Registered name (e.g. ``hyper_light``), an instance, or a concrete subclass
-                (constructed inside ``validate_method`` with no arguments).
+                (constructed inside ``validate_method`` with no arguments). Use
+                ``"auto"`` to select a supported data-driven method from bundled
+                APO metadata.
             metric (str | None): Evaluation metric name.
                 If None, defaults to "f1" for classification,
                 "meteor" for generation. Special metrics `llm_as_judge` and
@@ -199,6 +225,11 @@ class PromptTuner:
                 for validation (0.0 to 1.0). Ignored if `train_as_test` True.
             train_as_test (bool): If True, the entire dataset is used for
                 both training and validation (no split).
+            stratified_split (bool): If True, create the train/validation split
+                with `get_stratified_dataset_split`. Classification is
+                stratified by target label; generation uses input-length bins.
+            seed (int): Random seed for reproducible train/validation
+                splitting.
             generate_num_samples (int): Number of synthetic samples to
                 generate when no dataset is provided.
             batch_size (int): Number of examples processed in one batch
@@ -239,6 +270,10 @@ class PromptTuner:
                 "json", "csv", or "both".
             telemetry_path (str | None, default=None): Base path for telemetry exports.
                 If None, auto-generates ./logs/telemetry_{timestamp}.
+            meta_classifier_path (str | Path | None): Optional path to a custom
+                APO metadata CSV. Used only with ``method="auto"``.
+            meta_dataset_name (str | None): Optional dataset name that helps the
+                metadata selector retrieve comparable benchmark records.
             **kwargs: Additional arguments passed to the optimization method.
 
         Returns:
@@ -258,6 +293,40 @@ class PromptTuner:
         task_detector = TaskDetector(self._system_model)
         if task is None:
             task = task_detector.generate(start_prompt)
+
+        self.meta_selection = None
+        if method == "auto":
+            if dataset is None and target is None:
+                self.meta_selection = APOMetaSelector.no_dataset_result()
+            else:
+                selector = APOMetaSelector(meta_classifier_path)
+                self.meta_selection = selector.select(
+                    system_model=self._system_model,
+                    start_prompt=start_prompt,
+                    task=task,
+                    problem_description=problem_description,
+                    dataset_name=meta_dataset_name,
+                )
+            method = self.meta_selection.selected_method
+            logger.info(
+                "APO meta-selection: recommended=%s, selected=%s, similar=%s",
+                self.meta_selection.recommended_method,
+                self.meta_selection.selected_method,
+                self.meta_selection.similar_datasets,
+            )
+            for candidate in self.meta_selection.candidates:
+                logger.info(
+                    "APO candidate: method=%s model=%s metric=%s score=%.4f",
+                    candidate.method,
+                    candidate.model,
+                    candidate.metric,
+                    candidate.final_score,
+                )
+            if self.meta_selection.fallback_reason:
+                logger.info(
+                    "APO meta-selection fallback: %s",
+                    self.meta_selection.fallback_reason,
+                )
 
         logger.info("Validating args for PromptTuner running")
 
@@ -319,6 +388,9 @@ class PromptTuner:
             target=target,
             validation_size=validation_size,
             train_as_test=train_as_test,
+            task=task_value,
+            stratified_split=stratified_split,
+            seed=seed,
         )
 
         if problem_description is None:
@@ -424,6 +496,11 @@ class PromptTuner:
             telemetry_report = telemetry_collector.finalize(
                 initial_score=self.init_metric,
                 final_score=self.final_metric,
+                meta_selection=(
+                    self.meta_selection.to_dict()
+                    if self.meta_selection is not None
+                    else None
+                ),
             )
 
             if export_telemetry:

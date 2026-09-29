@@ -33,6 +33,7 @@ CoolPrompt is a framework for automatic prompt creation and optimization.
     - HyPER / HyPER Light
     - RE-GPS
     - RIDER
+    - BRAVE
     - PromptCompressor
     - *(legacy/deprecated)*: ReflectivePrompt, DistillPrompt
 - **LLM-Agnostic Choice:** work with your custom llm (from open-sourced to proprietary) using [supported Langchain LLMs](https://python.langchain.com/docs/integrations/llms/)
@@ -68,6 +69,7 @@ Compared metrics:
 | `hyper` | Required | Medium | High | Medium |
 | `regps` | Required | High | Very High | High |
 | `rider` | Required | Very High | Very High | Very High |
+| `brave` | Required | High | Very High | Budget-controlled |
 | `compress` | None | Low | Medium | Low |
 | `reflective` | Required | High | High | High |
 | `distill` | Required | High | High | High |
@@ -106,6 +108,47 @@ print(prompt_tuner.final_prompt)
 <p align="center">
     <img src="docs/images/demo.gif" alt="CoolPrompt full optimization demo" width="100%">
 </p>
+
+Run the data-driven BRAVE optimizer by selecting it as the method:
+
+```python
+final_prompt = prompt_tuner.run(
+    "Classify the sentiment of the text: {text}",
+    task="classification",
+    dataset=["Great product", "Very disappointing"],
+    target=["positive", "negative"],
+    method="brave",
+    problem_description="Classify product-review sentiment.",
+    max_steps=20,
+    initial_budget_tokens=50_000,
+)
+```
+
+### Automatic APO method selection
+
+Use `method="auto"` to select an optimizer from experiment metadata. The
+selector profiles the task with the system model, retrieves up to three similar
+benchmark datasets, and ranks configurations by quality, cost, and runtime.
+The selected method is available in `prompt_tuner.meta_selection` and is added
+to telemetry exports.
+
+```python
+final_prompt = prompt_tuner.run(
+    "Classify the sentiment of the text: {text}",
+    task="classification",
+    dataset=["Great product", "Very disappointing"],
+    target=["positive", "negative"],
+    method="auto",
+    problem_description="Classify product-review sentiment.",
+    meta_dataset_name="my_product_reviews",  # optional
+)
+```
+
+The bundled metadata contains SAPO, RIDER, and HyPER results. CoolPrompt does
+not yet implement SAPO, so an SAPO recommendation is transparently executed
+with `hyper`; the fallback reason is recorded in `meta_selection`. Pass
+`meta_classifier_path="/path/to/metadata.csv"` to use a custom CSV. Without
+`dataset` and `target`, `method="auto"` uses `hyper_light`.
 
 ## Examples
 
