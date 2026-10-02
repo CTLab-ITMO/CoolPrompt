@@ -1,5 +1,7 @@
 """PromptTuner integration tests for ``method='auto'``."""
 
+from types import SimpleNamespace
+
 from coolprompt.meta_selector import MetaSelectionResult
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
 from coolprompt.utils.enums import Task
@@ -161,11 +163,17 @@ def test_auto_without_data_uses_hyper_light(monkeypatch):
     assistant = _patch_runtime(monkeypatch, selection)
 
     class _Generator:
-        def __init__(self, model):
+        def __init__(self, model, **kwargs):
             pass
 
         def generate(self, **kwargs):
-            return ["one", "two"], ["a", "b"], "Summarize news."
+            return SimpleNamespace(
+                dataset=["one", "two"],
+                target=["a", "b"],
+                context=SimpleNamespace(
+                    spec=SimpleNamespace(description="Summarize news.")
+                ),
+            )
 
     monkeypatch.setattr(assistant, "SyntheticDataGenerator", _Generator)
     tuner = assistant.PromptTuner(target_model=object(), system_model=object())
