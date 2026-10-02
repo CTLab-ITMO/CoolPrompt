@@ -60,4 +60,3 @@ Strong segments: {strong_segments}
 Recommendations:
 {recommendations}
 """
-

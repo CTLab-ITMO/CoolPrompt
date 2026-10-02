@@ -3,4 +3,3 @@
 from .sapo import SAPOMethod, SAPOOptimizer
 
 __all__ = ["SAPOMethod", "SAPOOptimizer"]
-

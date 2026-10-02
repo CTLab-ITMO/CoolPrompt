@@ -186,7 +186,9 @@ class SAPOOptimizer:
         if not weak:
             weak = ["tasks"]
         for segment in weak:
-            recommendations.setdefault(segment, f"Make the {segment} clearer and more specific.")
+            recommendations.setdefault(
+                segment, f"Make the {segment} clearer and more specific."
+            )
         return WeaknessAnalysis(
             weak_segments=weak,
             strong_segments=strong,
@@ -264,8 +266,13 @@ class SAPOOptimizer:
         best_score, _, _ = self._evaluate(current_prompt, val_data, val_targets)
         best_prompt = current_prompt
         self.history = [
-            {"iteration": 0, "prompt": current_prompt, "train_score": train_score,
-             "val_score": best_score, "improved": False}
+            {
+                "iteration": 0,
+                "prompt": current_prompt,
+                "train_score": train_score,
+                "val_score": best_score,
+                "improved": False,
+            }
         ]
         if self.telemetry_callback:
             self.telemetry_callback(0, best_score, best_prompt)
