@@ -38,6 +38,8 @@ class ValidationPipeline:
         target_n: int,
         *,
         reset_deduplicator: bool = True,
+        accept_candidate: Callable[[Example], bool] | None = None,
+        on_accept: Callable[[Example], None] | None = None,
     ) -> list[Example]:
         """Produce, validate, deduplicate, and top up to the target size."""
 
@@ -66,8 +68,23 @@ class ValidationPipeline:
                 continue
 
             valid, invalid = self._validator.validate(raw, context.spec)
-            valid = self._deduplicator.dedupe_exact_pairs_within_batch(valid)
-            new = self._deduplicator.filter(valid, limit=remaining)
+
+            new: list[Example] = []
+
+            for example in valid:
+                if len(new) >= remaining:
+                    break
+
+                if accept_candidate is not None and not accept_candidate(example):
+                    continue
+
+                if not self._deduplicator.accept(example):
+                    continue
+
+                new.append(example)
+
+                if on_accept is not None:
+                    on_accept(example)
 
             accepted.extend(new)
 

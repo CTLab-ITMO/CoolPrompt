@@ -36,6 +36,7 @@ class TaskSpec(StrictModel):
     requirements: tuple[str, ...] = ()
     labels: tuple[str, ...] | None = None
     language: str = Field(default="English", min_length=1)
+    allow_empty_output: bool = False
 
     @field_validator("requirements", "labels")
     @classmethod
@@ -79,6 +80,7 @@ class TaskSpecDraft(BaseModel):
     requirements: tuple[str, ...] | None = None
     labels: tuple[str, ...] | None = None
     language: str | None = Field(default=None, min_length=1)
+    allow_empty_output: bool | None = None
 
     @property
     def is_empty(self) -> bool:

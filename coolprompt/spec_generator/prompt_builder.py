@@ -18,7 +18,6 @@ from coolprompt.utils.prompt_templates.spec_generator_templates import (
     SPEC_REGULAR_GENERATION_TEMPLATE,
 )
 
-
 _REGULAR_TEMPLATES: Mapping[Task, str] = {
     Task.CLASSIFICATION: SPEC_REGULAR_CLASSIFICATION_TEMPLATE,
     Task.GENERATION: SPEC_REGULAR_GENERATION_TEMPLATE,
@@ -48,7 +47,7 @@ def _distribution_axes(distribution: TaskDistribution) -> str:
 
     return (
         "\n".join(
-            f"- {axis.name}: {axis.description}\n"
+            f"- {axis.name} ({axis.strategy.value}): {axis.description}\n"
             + "\n".join(render_value(value) for value in axis.values)
             for axis in distribution.axes
         )
@@ -110,7 +109,21 @@ def _limited_examples(
 ) -> str:
     """Render a bounded prefix or suffix of an example sequence."""
 
-    selected = examples[-limit:] if latest else examples[:limit]
+    if limit <= 0:
+        return "None"
+    if latest and limit == 1:
+        return _examples(examples[-1:])
+    if len(examples) <= limit:
+        selected = examples
+    elif latest:
+        recent = limit // 2
+        older = examples[:-recent]
+        count = limit - recent
+        selected = [older[i * len(older) // count] for i in range(count)] + list(
+            examples[-recent:]
+        )
+    else:
+        selected = [examples[i * len(examples) // limit] for i in range(limit)]
     return _examples(selected)
 
 
@@ -145,12 +158,10 @@ class GenerationPromptBuilder:
         distribution: TaskDistribution,
         *,
         accepted_examples: Sequence[Example] = (),
-        reference_examples: Sequence[Example] = (),
     ) -> str:
         """Build exploratory distribution-aware generation."""
         guidance = DISTRIBUTION_AWARE_GUIDANCE.format(
             axes=_distribution_axes(distribution),
-            reference_examples=_limited_examples(reference_examples, 8),
             accepted_examples=_limited_examples(accepted_examples, 10, latest=True),
         )
         return _insert_guidance(self.regular(context, n), guidance)
@@ -164,14 +175,12 @@ class GenerationPromptBuilder:
         targets: Sequence[dict[str, Any]],
         avoid: Sequence[dict[str, Any]] = (),
         accepted_examples: Sequence[Example] = (),
-        reference_examples: Sequence[Example] = (),
     ) -> str:
         """Build coverage-gap-targeted generation."""
         guidance = TARGETED_GUIDANCE.format(
             axes=_distribution_axes(distribution),
             targets=_target_lines(targets),
             avoid=_avoid_lines(avoid),
-            reference_examples=_limited_examples(reference_examples, 8),
             accepted_examples=_limited_examples(accepted_examples, 10, latest=True),
         )
         return _insert_guidance(self.regular(context, n), guidance)
@@ -203,7 +212,16 @@ class GenerationPromptBuilder:
             "description": spec.description,
             "input_format": spec.input_format,
             "output_format": spec.output_format,
-            "requirements": _bullets(spec.requirements),
+            "requirements": _bullets(
+                (
+                    *spec.requirements,
+                    (
+                        "Empty output is allowed when correct for the task."
+                        if spec.allow_empty_output
+                        else "Empty output is not allowed."
+                    ),
+                )
+            ),
             "labels": _bullets(spec.labels or ()),
             "language": spec.language,
         }

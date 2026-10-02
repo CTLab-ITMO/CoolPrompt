@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import ast
 import json
 import math
 from collections import Counter
@@ -103,8 +102,10 @@ class TaskDistribution(StrictModel):
 
         if not 1 <= len(axes) <= 5:
             raise ValueError("TaskDistribution must contain 1-5 axes.")
+
         if len({_canonical_axis_key(a.name) for a in axes}) != len(axes):
             raise ValueError("Task axis names must be unique.")
+
         return axes
 
     def axis(self, name: str) -> TaskAxis | None:
@@ -141,8 +142,10 @@ class TaggedGeneratedExample(BaseModel):
 
         if value is None:
             return {}
+
         if not isinstance(value, Mapping):
             raise ValueError("axis_tags must be a mapping")
+
         return {str(axis): str(tag) for axis, tag in value.items() if tag is not None}
 
 
@@ -170,59 +173,10 @@ def _render_examples(examples: Sequence[Example], *, limit: int = 30) -> str:
     )
 
 
-def _parse_sequence_size(value: str) -> int | None:
-    """Return length for list-like serialized inputs, otherwise None."""
-
-    try:
-        parsed = ast.literal_eval(value.strip())
-    except (ValueError, SyntaxError):
-        return None
-
-    return len(parsed) if isinstance(parsed, (list, tuple)) and parsed else None
-
-
-def _input_size_axis(reference_examples: Sequence[Example]) -> TaskAxis | None:
-    """Build an empirical list-input cardinality axis."""
-
-    if len(reference_examples) < 10:
-        return None
-
-    sizes = [
-        size
-        for example in reference_examples
-        if (size := _parse_sequence_size(example.input)) is not None
-    ]
-    if len(sizes) < 0.8 * len(reference_examples):
-        return None
-
-    counts = Counter(sizes)
-    if not 2 <= len(counts) <= 6:
-        return None
-
-    total = sum(counts.values())
-    return TaskAxis(
-        name="input_size",
-        description=(
-            "Number of items in the serialized list input. Preserve the empirical "
-            "source-data mix rather than collapsing to one input size."
-        ),
-        strategy=AxisStrategy.TARGET_PROPORTIONS,
-        values=tuple(
-            AxisValue(
-                id=f"size:{size}",
-                description=f"Input contains exactly {size} list items/concepts.",
-                target_ratio=count / total,
-            )
-            for size, count in sorted(counts.items())
-        ),
-    )
-
-
 def _distribution_request(
     prompt: str,
     spec: TaskSpec,
-    seed_examples: Sequence[Example],
-    reference_examples: Sequence[Example],
+    examples: Sequence[Example],
 ) -> str:
     """Build the prompt used to infer non-deterministic coverage axes."""
 
@@ -233,14 +187,6 @@ def _distribution_request(
         "Do not return a label/class axis."
         if spec.task == Task.CLASSIFICATION and labels
         else ""
-    )
-
-    empirical_rule = (
-        "You have enough distribution-reference examples to use TARGET_PROPORTIONS "
-        "for axes whose proportions are directly and repeatedly observable in that sample."
-        if len(reference_examples) >= 20
-        else "The distribution-reference sample is small. "
-        "Use BALANCED; do not infer target proportions."
     )
 
     payload = {
@@ -254,10 +200,15 @@ def _distribution_request(
 
     return DISTRIBUTION_REQUEST_TEMPLATE.format(
         prompt=prompt.strip(),
-        payload_json=json.dumps(payload, ensure_ascii=False, indent=2),
-        seed_examples=_render_examples(seed_examples, limit=8),
-        reference_examples=_render_examples(reference_examples, limit=30),
-        empirical_rule=empirical_rule,
+        payload_json=json.dumps(
+            payload,
+            ensure_ascii=False,
+            indent=2,
+        ),
+        examples=_render_examples(
+            examples,
+            limit=8,
+        ),
         label_rule=label_rule,
     )
 
@@ -265,13 +216,17 @@ def _distribution_request(
 def _label_axis(spec: TaskSpec) -> TaskAxis | None:
     """Build a deterministic label axis for classification tasks."""
 
-    if spec.task != Task.CLASSIFICATION or not spec.labels:
+    if spec.task != Task.CLASSIFICATION or not spec.labels or len(spec.labels) < 2:
         return None
+
     return TaskAxis(
         name="label",
         description="The required classification label.",
         values=tuple(
-            AxisValue(id=f"label:{i}", description=label)
+            AxisValue(
+                id=f"label:{i}",
+                description=label,
+            )
             for i, label in enumerate(spec.labels)
         ),
     )
@@ -283,7 +238,8 @@ def _normalize_axis_ratios(axis: TaskAxis) -> TaskAxis:
     if axis.strategy != AxisStrategy.TARGET_PROPORTIONS:
         return axis
 
-    total = sum(v.target_ratio or 0.0 for v in axis.values)
+    total = sum(value.target_ratio or 0.0 for value in axis.values)
+
     if total <= 0:
         return axis
 
@@ -293,11 +249,11 @@ def _normalize_axis_ratios(axis: TaskAxis) -> TaskAxis:
         strategy=axis.strategy,
         values=tuple(
             AxisValue(
-                id=v.id,
-                description=v.description,
-                target_ratio=(v.target_ratio or 0.0) / total,
+                id=value.id,
+                description=value.description,
+                target_ratio=(value.target_ratio or 0.0) / total,
             )
-            for v in axis.values
+            for value in axis.values
         ),
     )
 
@@ -305,21 +261,34 @@ def _normalize_axis_ratios(axis: TaskAxis) -> TaskAxis:
 def _target_counts(axis: TaskAxis, total_target: int) -> dict[str, int]:
     """Allocate target counts using the largest-remainder method."""
 
-    raw = [(v.target_ratio or 0.0) * total_target for v in axis.values]
-    floors = [math.floor(r) for r in raw]
-    remainder = total_target - sum(floors)
+    axis = _normalize_axis_ratios(axis)
+    exact_counts = [(value.target_ratio or 0.0) * total_target for value in axis.values]
+    target_counts = [math.floor(count) for count in exact_counts]
 
-    order = sorted(range(len(raw)), key=lambda i: (-(raw[i] - floors[i]), i))
-    for i in order[:remainder]:
-        floors[i] += 1
+    remainder_order = sorted(
+        range(len(exact_counts)),
+        key=lambda index: (
+            target_counts[index] - exact_counts[index],
+            index,
+        ),
+    )
 
-    return {v.id: floors[i] for i, v in enumerate(axis.values)}
+    remaining = total_target - sum(target_counts)
+
+    for index in remainder_order[:remaining]:
+        target_counts[index] += 1
+
+    return {value.id: count for value, count in zip(axis.values, target_counts)}
 
 
 class _TaskDistributionBuilder:
     """Infer and validate TaskDistribution once per generate() call."""
 
-    def __init__(self, model: BaseLanguageModel, retry_config: RetryConfig) -> None:
+    def __init__(
+        self,
+        model: BaseLanguageModel,
+        retry_config: RetryConfig,
+    ) -> None:
         """Initialize the builder with a language model and retry policy."""
 
         self._model = model
@@ -330,51 +299,46 @@ class _TaskDistributionBuilder:
         prompt: str,
         spec: TaskSpec,
         examples: Sequence[Example],
-        *,
-        reference_examples: Sequence[Example] | None = None,
     ) -> TaskDistribution:
-        """Infer axes and combine them with deterministic task axes."""
+        """Infer task-level coverage axes."""
 
         seed_examples = tuple(examples)
-        reference = tuple(reference_examples or seed_examples)
 
         inferred = invoke_with_retry(
             lambda: self._invoke_once(
-                _distribution_request(prompt, spec, seed_examples, reference)
+                _distribution_request(
+                    prompt,
+                    spec,
+                    seed_examples,
+                )
             ),
             self._retry_config,
             extra_retry_exceptions=(DistributionResponseError,),
         )
 
-        deterministic_axes = [
-            _normalize_axis_ratios(axis)
-            for axis in (_label_axis(spec), _input_size_axis(reference))
-            if axis is not None
-        ]
+        deterministic_axes = [axis for axis in (_label_axis(spec),) if axis is not None]
 
-        reserved_axis_keys = {"label", "labels", "class", "classes"}
-        if any(axis.name == "input_size" for axis in deterministic_axes):
-            reserved_axis_keys.update(
-                {
-                    "input size",
-                    "concept count",
-                    "concepts count",
-                    "concept set size",
-                    "number of concepts",
-                    "cardinality",
-                    "input length",
-                }
-            )
+        reserved_axis_keys = {
+            _canonical_axis_key(axis.name) for axis in deterministic_axes
+        }
 
         inferred_axes = [
-            _normalize_axis_ratios(axis)
+            axis
             for axis in inferred.axes
             if _canonical_axis_key(axis.name) not in reserved_axis_keys
-        ]
+        ][:4]
 
-        return TaskDistribution(axes=tuple((deterministic_axes + inferred_axes)[:5]))
+        return TaskDistribution(
+            axes=tuple(
+                _normalize_axis_ratios(axis)
+                for axis in deterministic_axes + inferred_axes
+            )
+        )
 
-    def _invoke_once(self, request: str) -> TaskDistribution:
+    def _invoke_once(
+        self,
+        request: str,
+    ) -> TaskDistribution:
         """Invoke the model once and parse a TaskDistribution."""
 
         return self._invoke_structured(
@@ -401,17 +365,25 @@ class _TaskDistributionBuilder:
 
             if chat_model is None:
                 raw = self._model.invoke(request)
+                if isinstance(raw, schema):
+                    return raw
+                if isinstance(raw, dict):
+                    return schema.model_validate(raw)
                 content = raw.content if isinstance(raw, AIMessage) else str(raw)
+
                 return schema.model_validate(extract_json(content))
 
             output = chat_model.with_structured_output(
-                schema=schema, method="json_schema"
+                schema=schema,
+                method="json_schema",
             ).invoke(request)
 
             if isinstance(output, schema):
                 return output
+
             if isinstance(output, dict):
                 return schema.model_validate(output)
+
             if isinstance(output, AIMessage):
                 return schema.model_validate(extract_json(output.content))
 
@@ -419,8 +391,10 @@ class _TaskDistributionBuilder:
 
         except DistributionResponseError:
             raise
+
         except ValidationError as exc:
             raise DistributionResponseError(validation_msg) from exc
+
         except (TypeError, ValueError) as exc:
             raise DistributionResponseError(parse_msg) from exc
 
@@ -429,16 +403,16 @@ def validate_axis_tags(
     distribution: TaskDistribution,
     raw_tags: Mapping[str, str] | None,
     *,
-    input: str | None = None,
     output: str | None = None,
     spec: TaskSpec | None = None,
 ) -> dict[str, str]:
-    """Validate model tags and derive deterministic axis values."""
+    """Validate generated axis tags."""
 
     tags = {
         _canonical_axis_key(name): value_id
         for name, value_id in (raw_tags or {}).items()
     }
+
     result = {
         axis.name: value_id
         for axis in distribution.axes
@@ -446,47 +420,51 @@ def validate_axis_tags(
         in {value.id for value in axis.values}
     }
 
-    _set_axis(result, distribution.axis("input_size"), input=input)
-    _set_axis(result, distribution.axis("label"), output=output, spec=spec)
+    _set_label_axis(
+        result,
+        distribution.axis("label"),
+        output=output,
+        spec=spec,
+    )
 
     return result
 
 
-def _set_axis(
+def _set_label_axis(
     result: dict[str, str],
     axis: TaskAxis | None,
     *,
-    input: str | None = None,
     output: str | None = None,
     spec: TaskSpec | None = None,
 ) -> None:
-    """Derive a deterministic axis value from input/output and set or remove it."""
+    """Derive and validate a deterministic classification label."""
 
     if axis is None:
         return
 
-    if input is not None:
-        size = _parse_sequence_size(input)
-        value_id = f"size:{size}" if size is not None else None
-    elif output is not None and spec and spec.labels:
-        value_id = next(
-            (
-                f"label:{i}"
-                for i, label in enumerate(spec.labels)
-                if label.strip().casefold() == output.strip().casefold()
-            ),
-            None,
-        )
-    else:
+    result.pop(axis.name, None)
+
+    if output is None or spec is None or not spec.labels:
         return
+
+    value_id = next(
+        (
+            f"label:{i}"
+            for i, label in enumerate(spec.labels)
+            if label.strip().casefold() == output.strip().casefold()
+        ),
+        None,
+    )
 
     if value_id in {value.id for value in axis.values}:
         result[axis.name] = value_id
-    else:
-        result.pop(axis.name, None)
 
 
-def _axis_entry(axis: TaskAxis, value: AxisValue, **extra: Any) -> dict[str, Any]:
+def _axis_entry(
+    axis: TaskAxis,
+    value: AxisValue,
+    **extra: Any,
+) -> dict[str, Any]:
     """Serialize an axis-value pair with optional coverage metadata."""
 
     return {
@@ -506,12 +484,15 @@ def _desired_and_allowed_share(
     balanced_floor_fraction: float,
     balanced_over_fraction: float,
 ) -> tuple[int, float]:
-    """Return the desired count and maximum tolerated share for one value."""
+    """Return desired count and maximum tolerated share for one value."""
 
     if axis.strategy == AxisStrategy.TARGET_PROPORTIONS:
         return target_counts[value.id], (value.target_ratio or 0) + 0.10
 
-    desired = max(1, math.ceil(total_target / k * balanced_floor_fraction))
+    index = next(i for i, item in enumerate(axis.values) if item.id == value.id)
+    allocation = total_target // k + (index < total_target % k)
+    desired = math.ceil(allocation * balanced_floor_fraction)
+
     return desired, balanced_over_fraction / k
 
 
@@ -524,7 +505,6 @@ def coverage_gaps(
     balanced_over_fraction: float = 1.35,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Return under- and overrepresented axis values."""
-
     if total_target <= 0:
         return [], []
 
@@ -533,7 +513,8 @@ def coverage_gaps(
 
     for axis in distribution.axes:
         counts = state.axis_counts.get(axis.name, {})
-        observed_total = sum(counts.values())
+        observed = sum(counts.values())
+
         targets = (
             _target_counts(axis, total_target)
             if axis.strategy == AxisStrategy.TARGET_PROPORTIONS
@@ -555,8 +536,8 @@ def coverage_gaps(
             if actual < desired:
                 under.append(_axis_entry(axis, value, gap=desired - actual))
 
-            if observed_total and actual / observed_total > allowed:
-                over.append(_axis_entry(axis, value, share=actual / observed_total))
+            if observed and (share := actual / observed) > allowed:
+                over.append(_axis_entry(axis, value, share=share))
 
     under.sort(key=lambda x: (-x["gap"], x["axis"], x["value_id"]))
     over.sort(key=lambda x: (-x["share"], x["axis"], x["value_id"]))
@@ -566,18 +547,15 @@ def coverage_gaps(
 
 def _target(
     count: int,
-    axis: str | None = None,
-    value_id: str | None = None,
-    description: str | None = None,
+    *,
+    constraints: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     """Build one generation-target instruction."""
 
-    constraints = (
-        [{"axis": axis, "value_id": value_id, "description": description}]
-        if axis is not None
-        else []
-    )
-    return {"count": count, "constraints": constraints}
+    return {
+        "count": count,
+        "constraints": constraints or [],
+    }
 
 
 def build_generation_targets(
@@ -587,48 +565,50 @@ def build_generation_targets(
     batch_size: int,
     remaining_budget: int,
     total_target: int,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Build a target plan from current coverage gaps."""
+) -> tuple[
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+]:
+    """Build coverage targets from current gaps."""
 
-    remaining = min(batch_size, remaining_budget)
-    if remaining <= 0:
+    batch_slots = min(batch_size, remaining_budget)
+
+    if batch_slots <= 0:
         return [], []
 
     under, over = coverage_gaps(distribution, state, total_target)
 
     if not under:
-        return [_target(remaining)], over
+        return [_target(batch_slots)], over
 
-    targets: list[dict[str, Any]] = []
-    allocated: dict[tuple[str, str], int] = {}
-    used_axes: set[str] = set()
-    axis_cap = max(1, math.ceil(remaining / len(distribution.axes)))
-
+    queues: dict[str, list[dict[str, Any]]] = {}
     for item in under:
-        axis, value_id = str(item["axis"]), str(item["value_id"])
-        if axis in used_axes or remaining <= 0:
-            continue
+        queue = queues.setdefault(str(item["axis"]), [])
+        queue.extend([item] * min(int(item["gap"]), batch_slots))
 
-        count = min(int(item["gap"]), axis_cap, remaining)
-        targets.append(_target(count, axis, value_id, str(item["description"])))
-        allocated[axis, value_id] = count
-        used_axes.add(axis)
-        remaining -= count
+    selected: list[dict[str, Any]] = []
+    while len(selected) < batch_slots and any(queues.values()):
+        for queue in queues.values():
+            if queue and len(selected) < batch_slots:
+                selected.append(queue.pop(0))
 
-    for item in under:
-        if remaining <= 0:
-            break
-
-        axis, value_id = str(item["axis"]), str(item["value_id"])
-        key = axis, value_id
-        count = min(max(0, int(item["gap"]) - allocated.get(key, 0)), remaining)
-
-        if count:
-            targets.append(_target(count, axis, value_id, str(item["description"])))
-            allocated[key] = allocated.get(key, 0) + count
-            remaining -= count
-
-    if remaining:
-        targets.append(_target(remaining))
-
+    counts = Counter(
+        (str(item["axis"]), str(item["value_id"]), str(item["description"]))
+        for item in selected
+    )
+    targets = [
+        _target(
+            count,
+            constraints=[
+                {
+                    "axis": axis,
+                    "value_id": value_id,
+                    "description": description,
+                }
+            ],
+        )
+        for (axis, value_id, description), count in counts.items()
+    ]
+    if len(selected) < batch_slots:
+        targets.append(_target(batch_slots - len(selected)))
     return targets, over

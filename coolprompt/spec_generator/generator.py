@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
-from typing import Any
+from html import unescape
+from typing import Any, NoReturn
 
 from langchain_core.language_models.base import BaseLanguageModel
 from langchain_core.messages.ai import AIMessage
@@ -15,6 +16,7 @@ from coolprompt.spec_generator.distribution import (
     TaskDistribution,
     _TaskDistributionBuilder,
     build_generation_targets,
+    coverage_gaps,
     validate_axis_tags,
 )
 from coolprompt.spec_generator.schemas import TaskExamples
@@ -32,6 +34,7 @@ from coolprompt.spec_generator.validation.format import Deduplicator, ExampleVal
 from coolprompt.spec_generator.validation.pipeline import ValidationPipeline
 from coolprompt.utils.enums import Task
 from coolprompt.utils.parsing import extract_json
+from coolprompt.utils.logging_config import logger
 
 _OUTPUT_SCHEMAS: dict[Task, type[BaseModel]] = {
     Task.CLASSIFICATION: TaskExamples,
@@ -54,9 +57,9 @@ def _batch_sizes(total: int, batch_size: int) -> Iterator[int]:
 def _validate_generation_args(num_samples: int, batch_size: int) -> None:
     """Validate public generation arguments."""
 
-    if not 1 <= num_samples <= 100:
+    if type(num_samples) is not int or not 1 <= num_samples <= 100:
         raise ValueError("num_samples must be between 1 and 100")
-    if batch_size < 1:
+    if type(batch_size) is not int or batch_size < 1:
         raise ValueError("batch_size must be at least 1")
 
 
@@ -95,9 +98,12 @@ class SyntheticDataGenerator:
         max_topup_attempts: int = 10,
         *,
         task_spec_model: BaseLanguageModel | None = None,
+        distribution_model: BaseLanguageModel | None = None,
     ) -> None:
         """Initialize generation, specification, and distribution components."""
 
+        if type(max_topup_attempts) is not int or max_topup_attempts < 1:
+            raise ValueError("max_topup_attempts must be a positive integer")
         self._model = model
         self._retry_config = retry_config or RetryConfig()
         self._max_topup_attempts = max_topup_attempts
@@ -108,9 +114,11 @@ class SyntheticDataGenerator:
             retry_config=self._retry_config,
             task_spec_model=task_spec_model,
         )
+
         self._prompt_builder = GenerationPromptBuilder()
+
         self._distribution_builder = _TaskDistributionBuilder(
-            model=model,
+            model=model if distribution_model is None else distribution_model,
             retry_config=self._retry_config,
         )
 
@@ -143,12 +151,10 @@ class SyntheticDataGenerator:
         *,
         draft: TaskSpecDraft | None = None,
         examples: Sequence[tuple[str, str] | Example] | None = None,
-        distribution_examples: Sequence[tuple[str, str] | Example] | None = None,
         task_distribution: TaskDistribution | None = None,
-        detect_dataset: bool = True,
+        detect_dataset: bool = False,
         num_samples: int = 40,
         batch_size: int = 15,
-        structural_validation: bool = False,
         use_task_distribution: bool = True,
         feedback_controlled: bool = True,
     ) -> GenerationResult:
@@ -159,6 +165,9 @@ class SyntheticDataGenerator:
         if feedback_controlled and not use_task_distribution:
             raise ValueError("feedback_controlled requires use_task_distribution=True")
 
+        self._last_distribution = None
+        self._last_generation_state = None
+
         context = self.build_context(
             prompt,
             dataset_name,
@@ -166,47 +175,41 @@ class SyntheticDataGenerator:
             examples=examples,
             detect_dataset=detect_dataset,
         )
-
         self._validate_context(context)
-
-        reference_examples = self._reference_examples(
-            distribution_examples, fallback=context.seed_examples
-        )
 
         distribution = self._resolve_distribution(
             prompt=prompt,
             context=context,
-            reference_examples=reference_examples,
             distribution=task_distribution,
             enabled=use_task_distribution,
         )
 
+        logger.info(
+            "TaskDistribution:\n%s",
+            (
+                distribution.model_dump_json(indent=2)
+                if distribution is not None
+                else "None"
+            ),
+        )
+
         self._last_distribution = distribution
-        self._last_generation_state = None
 
         if feedback_controlled:
             assert distribution is not None
+
             generated = self._generate_feedback_controlled(
                 context=context,
                 distribution=distribution,
                 num_samples=num_samples,
                 batch_size=batch_size,
-                reference_examples=reference_examples,
-                structural_validation=structural_validation,
             )
-        elif structural_validation:
+        else:
             generated = self._generate_validated(
                 context,
                 num_samples,
                 batch_size,
                 distribution,
-            )
-        else:
-            generated = self._generate_group(
-                context,
-                num_samples,
-                batch_size,
-                distribution=distribution,
             )
 
         if len(generated) != num_samples:
@@ -215,27 +218,8 @@ class SyntheticDataGenerator:
             )
 
         return GenerationResult(
-            examples=tuple(map(self._coerce_example, generated)), context=context
-        )
-
-    @staticmethod
-    def _reference_examples(
-        examples: Sequence[tuple[str, str] | Example] | None,
-        *,
-        fallback: Sequence[Example],
-    ) -> tuple[Example, ...]:
-        """Normalize explicit distribution references or use seed examples."""
-
-        if not examples:
-            return tuple(fallback)
-
-        return tuple(
-            (
-                item
-                if isinstance(item, Example)
-                else Example(input=item[0], output=item[1])
-            )
-            for item in examples
+            examples=tuple(map(self._coerce_example, generated)),
+            context=context,
         )
 
     def _resolve_distribution(
@@ -243,7 +227,6 @@ class SyntheticDataGenerator:
         *,
         prompt: str,
         context: GenerationContext,
-        reference_examples: Sequence[Example],
         distribution: TaskDistribution | None,
         enabled: bool,
     ) -> TaskDistribution | None:
@@ -259,7 +242,6 @@ class SyntheticDataGenerator:
             prompt=prompt,
             spec=context.spec,
             examples=context.seed_examples,
-            reference_examples=reference_examples,
         )
 
     @classmethod
@@ -294,12 +276,12 @@ class SyntheticDataGenerator:
         batch_size: int,
         distribution: TaskDistribution | None = None,
     ) -> list[Example]:
-        """Generate and structurally validate exactly the requested examples."""
+        """Generate and validate exactly the requested examples."""
 
         if target <= 0:
             return []
 
-        result = self._build_pipeline(novelty=True).run(
+        result = self._build_pipeline().run(
             producer=lambda remaining: self._generate_group(
                 context,
                 remaining,
@@ -370,7 +352,7 @@ class SyntheticDataGenerator:
             else:
                 method = "function_calling" if with_axis_tags else "json_schema"
                 output = chat_model.with_structured_output(
-                    schema=schema, method=method
+                    schema=schema.model_json_schema(), method=method
                 ).invoke(request)
 
             return _extract_examples(output)
@@ -388,83 +370,129 @@ class SyntheticDataGenerator:
         distribution: TaskDistribution,
         num_samples: int,
         batch_size: int,
-        reference_examples: Sequence[Example],
-        structural_validation: bool,
     ) -> list[Example]:
-        """Generate, observe coverage, then target the next batch."""
+        """Generate examples while preserving requested distribution coverage."""
+        max_extra = 10
+        limit = num_samples + max_extra
+        pipeline = self._build_pipeline()
 
-        pipeline = self._build_pipeline(novelty=structural_validation)
         state = GenerationState()
         accepted: list[Example] = []
+        accepted_tags: list[dict[str, str]] = []  # strictly 1:1 with `accepted`
 
-        first_n = min(batch_size, num_samples)
-
-        batch, tags = self._run_feedback_batch(
-            pipeline=pipeline,
-            context=context,
-            distribution=distribution,
-            target_n=first_n,
-            batch_size=batch_size,
-            reset_deduplicator=True,
-            targets=None,
-            avoid=(),
-            accepted_examples=accepted,
-            reference_examples=reference_examples,
-        )
-        accepted.extend(batch)
-        self._record_feedback_batch(
-            state,
-            distribution,
-            context,
-            batch,
-            tags,
-        )
-
-        while len(accepted) < num_samples:
-            remaining = num_samples - len(accepted)
-            current_n = min(batch_size, remaining)
-
-            targets, avoid = build_generation_targets(
+        def tags_for(
+            example: Example,
+            tag_cache: dict[tuple[str, str], dict[str, str]],
+        ) -> dict[str, str]:
+            key = self._example_key(example.input, example.output)
+            return validate_axis_tags(
                 distribution,
-                state,
-                batch_size=current_n,
-                remaining_budget=remaining,
-                total_target=num_samples,
+                tag_cache.get(key),
+                output=example.output,
+                spec=context.spec,
             )
 
-            batch, tags = self._run_feedback_batch(
+        def record(
+            st: GenerationState,
+            examples: Sequence[Example],
+            tag_cache: dict[tuple[str, str], dict[str, str]],
+        ) -> list[dict[str, str]]:
+            aligned = [tags_for(example, tag_cache) for example in examples]
+            for tags in aligned:
+                st.record(tags)
+            return aligned
+
+        def rebuild_state(tags: Sequence[dict[str, str]]) -> GenerationState:
+            rebuilt = GenerationState()
+            for item in tags:
+                rebuilt.record(item)
+            return rebuilt
+
+        def gaps_of(st: GenerationState) -> list[dict]:
+            return coverage_gaps(distribution, st, num_samples)[0]
+
+        def fail(message: str) -> NoReturn:
+            self._last_generation_state = state
+            raise RuntimeError(message)
+
+        def step(n: int, budget: int | None = None) -> bool:
+            """Run one batch. budget=None means the initial unconstrained batch."""
+            first = budget is None
+            if first:
+                targets, avoid = None, ()
+            else:
+                targets, avoid = build_generation_targets(
+                    distribution,
+                    state,
+                    batch_size=n,
+                    remaining_budget=budget,
+                    total_target=num_samples,
+                )
+                logger.info("Generation targets: %s", targets)
+
+            batch, tag_cache = self._run_feedback_batch(
                 pipeline=pipeline,
                 context=context,
                 distribution=distribution,
-                target_n=current_n,
+                target_n=n,
                 batch_size=batch_size,
-                reset_deduplicator=False,
+                reset_deduplicator=first,
                 targets=targets,
                 avoid=avoid,
                 accepted_examples=accepted,
-                reference_examples=reference_examples,
             )
-
             if not batch:
+                return False
+
+            batch_tags = record(state, batch, tag_cache)
+            accepted.extend(batch)
+            accepted_tags.extend(batch_tags)
+            logger.info("Progress: accepted=%d/%d", len(accepted), num_samples)
+            return True
+
+        if not step(min(batch_size, num_samples)):
+            fail("Initial generation batch returned no examples.")
+
+        while len(accepted) < num_samples:
+            remaining = num_samples - len(accepted)
+            if not step(min(batch_size, remaining), remaining):
                 break
 
-            accepted.extend(batch)
-            self._record_feedback_batch(
-                state,
-                distribution,
-                context,
-                batch,
-                tags,
-            )
-
         if len(accepted) < num_samples:
-            raise RuntimeError(
-                "Could not generate enough feedback-controlled examples: "
-                f"{len(accepted)}/{num_samples}"
+            fail(f"Not enough examples generated: {len(accepted)}/{num_samples}")
+
+        gaps = gaps_of(state)
+        while gaps and len(accepted) < limit:
+            logger.info("Coverage gaps remain: %s", gaps)
+            gap_size = sum(max(0, int(g.get("gap", 0))) for g in gaps)
+            n = min(batch_size, limit - len(accepted), max(1, gap_size))
+            if not step(n, n):
+                break
+            gaps = gaps_of(state)
+
+        if gaps:
+            fail(f"Coverage incomplete after {len(accepted)} examples: {gaps}")
+
+        while len(accepted) > num_samples:
+            for i in range(len(accepted)):
+                trial = rebuild_state(accepted_tags[:i] + accepted_tags[i + 1 :])
+                if gaps_of(trial):
+                    continue
+                del accepted[i], accepted_tags[i]
+                state = trial
+                logger.info("Retained %d/%d examples", len(accepted), num_samples)
+                break
+            else:
+                fail(f"Could not trim to {num_samples} without coverage gaps.")
+
+        final_gaps = gaps_of(state)
+        if len(accepted) != num_samples or final_gaps:
+            fail(
+                f"Generation incomplete: {len(accepted)}/{num_samples}, gaps={final_gaps}"
             )
 
         self._last_generation_state = state
-        return accepted[:num_samples]
+        return accepted
 
     def _run_feedback_batch(
         self,
@@ -478,29 +506,109 @@ class SyntheticDataGenerator:
         targets: Sequence[dict[str, Any]] | None,
         avoid: Sequence[dict[str, Any]],
         accepted_examples: Sequence[Example],
-        reference_examples: Sequence[Example],
     ) -> tuple[list[Example], dict[tuple[str, str], dict[str, str]]]:
         """Generate, validate, and retain axis tags for one feedback batch."""
 
         tag_cache: dict[tuple[str, str], dict[str, str]] = {}
+        local_accepted: list[Example] = []
+        pending = [dict(target) for target in (targets or [])]
+        required_axes = {axis.name for axis in distribution.axes}
+
+        def example_tags(example: Example) -> dict[str, str]:
+            key = self._example_key(example.input, example.output)
+            return validate_axis_tags(
+                distribution,
+                tag_cache.get(key),
+                output=example.output,
+                spec=context.spec,
+            )
+
+        def matching_target(tags: dict[str, str]) -> dict[str, Any] | None:
+            for target in sorted(
+                pending,
+                key=lambda target: len(target["constraints"]),
+                reverse=True,
+            ):
+                if target["count"] <= 0:
+                    continue
+
+                if all(
+                    tags.get(item["axis"]) == item["value_id"]
+                    for item in target["constraints"]
+                ):
+                    return target
+
+            return None
+
+        def accept_candidate(example: Example) -> bool:
+            tags = example_tags(example)
+            valid = required_axes == set(tags) and (
+                targets is None or matching_target(tags) is not None
+            )
+
+            if not valid:
+                logger.info(
+                    "Rejected incomplete tags or unmet coverage target: %s",
+                    example.input,
+                )
+
+            return valid
+
+        def on_accept(example: Example) -> None:
+            if targets is not None:
+                target = matching_target(example_tags(example))
+
+                if target is None:
+                    raise RuntimeError(
+                        "Accepted example does not match an open generation target."
+                    )
+                target["count"] -= 1
+
+            local_accepted.append(example)
+
         common = {
             "accepted_examples": accepted_examples,
-            "reference_examples": reference_examples,
         }
 
-        def producer(remaining: int) -> list[Any]:
-            """Generate the next batch, targeting coverage gaps when available."""
-            args = context, remaining, distribution
+        def proposal_targets(proposal_n: int) -> list[dict[str, Any]]:
+            """Spread the extra quota across open targets to cover an oversampled batch."""
 
-            if targets is None:
-                request = self._prompt_builder.distribution_aware(*args, **common)
-            else:
-                request = self._prompt_builder.targeted(
+            active_targets = [
+                {**target, "constraints": [*target["constraints"]]}
+                for target in pending
+                if target["count"] > 0
+            ]
+
+            if not active_targets:
+                return []
+
+            current_total = sum(target["count"] for target in active_targets)
+            extra = max(0, proposal_n - current_total)
+
+            share, rest = divmod(extra, len(active_targets))
+
+            for index, target in enumerate(active_targets):
+                target["count"] += share + int(index < rest)
+
+            return active_targets
+
+        def producer(remaining: int) -> list[Any]:
+            """Generate a proposal pool, oversampling small top-up requests."""
+            common["accepted_examples"] = [*accepted_examples, *local_accepted]
+
+            proposal_n = min(batch_size, max(remaining, 5))
+            args = (context, proposal_n, distribution)
+
+            request = (
+                self._prompt_builder.distribution_aware(*args, **common)
+                if targets is None
+                else self._prompt_builder.targeted(
                     *args,
-                    targets=targets,
+                    targets=proposal_targets(proposal_n),
                     avoid=avoid,
                     **common,
                 )
+            )
 
             raw = self._call_model(request, context.spec.task, with_axis_tags=True)
             self._cache_axis_tags(tag_cache, raw)
@@ -512,6 +620,8 @@ class SyntheticDataGenerator:
                 context=context,
                 target_n=target_n,
                 reset_deduplicator=reset_deduplicator,
+                accept_candidate=accept_candidate,
+                on_accept=on_accept,
             ),
             tag_cache,
         )
@@ -532,53 +642,37 @@ class SyntheticDataGenerator:
             "axis_tags": getattr(raw, "axis_tags", {}),
         }
 
+    @staticmethod
+    def _example_key(input_: str, output: str) -> tuple[str, str]:
+        """Use the same input decoding before and after validation."""
+        return unescape(input_).strip().casefold(), output.strip().casefold()
+
     @classmethod
     def _cache_axis_tags(
         cls,
         cache: dict[tuple[str, str], dict[str, str]],
         raw_examples: Sequence[Any],
     ) -> None:
-        """Index valid model-provided axis tags by normalized input-output pair."""
+        """Cache valid axis tags by normalized input-output pair."""
 
         for raw in raw_examples:
             payload = cls._payload(raw)
+            input_, output, tags = (
+                payload.get("input"),
+                payload.get("output"),
+                payload.get("axis_tags"),
+            )
 
-            input_ = str(payload.get("input", "")).strip().casefold()
-            output_ = str(payload.get("output", "")).strip().casefold()
-            tags = payload.get("axis_tags")
-
-            if not input_ or not isinstance(tags, dict):
+            if not (isinstance(input_, str) and input_.strip()):
+                continue
+            if not isinstance(output, str) or not isinstance(tags, dict):
                 continue
 
-            cache[input_, output_] = {
+            cache[cls._example_key(input_, output)] = {
                 str(axis): value
                 for axis, value in tags.items()
                 if isinstance(value, str)
             }
-
-    @staticmethod
-    def _record_feedback_batch(
-        state: GenerationState,
-        distribution: TaskDistribution,
-        context: GenerationContext,
-        examples: Sequence[Example],
-        tag_cache: dict[tuple[str, str], dict[str, str]],
-    ) -> None:
-        """Validate batch tags and record their observed coverage counts."""
-
-        for example in examples:
-            key = (
-                example.input.strip().casefold(),
-                example.output.strip().casefold(),
-            )
-            tags = validate_axis_tags(
-                distribution,
-                tag_cache.get(key),
-                input=example.input,
-                output=example.output,
-                spec=context.spec,
-            )
-            state.record(tags)
 
     @property
     def last_distribution(self) -> TaskDistribution | None:
@@ -590,14 +684,11 @@ class SyntheticDataGenerator:
         """Final feedback coverage state from the most recent generate() call."""
         return self._last_generation_state
 
-    def _build_pipeline(self, *, novelty: bool) -> ValidationPipeline:
+    def _build_pipeline(self) -> ValidationPipeline:
         """Create a fresh validation pipeline for one generation phase."""
 
         return ValidationPipeline(
             validator=ExampleValidator(),
-            deduplicator=Deduplicator(
-                enable_semantic_novelty=novelty,
-                enable_structural_novelty=novelty,
-            ),
+            deduplicator=Deduplicator(),
             max_topup_attempts=self._max_topup_attempts,
         )

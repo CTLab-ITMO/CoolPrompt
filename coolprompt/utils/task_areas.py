@@ -177,32 +177,36 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
     ),
     "squad_v2": (
         Example(
-            input="The economy of Victoria is highly diversified: service sectors including financial and property "
-            "services, health, education, wholesale, retail, hospitality and manufacturing constitute the "
-            "majority of employment. Victoria's total gross state product (GSP) is ranked second in Australia, "
-            "although Victoria is ranked fourth in terms of GSP per capita because of its limited mining "
-            "activity. Culturally, Melbourne is home to a number of museums, art galleries and theatres and is "
-            'also described as the "sporting capital of Australia". The Melbourne Cricket Ground is '
-            "the largest stadium in Australia, and the host of the 1956 Summer Olympics and the 2006 "
-            'Commonwealth Games. The ground is also considered the "spiritual home" of Australian cricket '
-            "and Australian rules football, and hosts the grand final of the Australian Football League (AFL) "
-            "each year, usually drawing crowds of over 95,000 people. Victoria includes eight public "
-            "universities, with the oldest, the University of Melbourne, having been founded in 1853. What "
-            "city in Victoria is called the sporting capital of Australia?",
+            input=(
+                "The economy of Victoria is highly diversified: service sectors including financial and property "
+                "services, health, education, wholesale, retail, hospitality and manufacturing constitute the "
+                "majority of employment. Victoria's total gross state product (GSP) is ranked second in Australia, "
+                "although Victoria is ranked fourth in terms of GSP per capita because of its limited mining "
+                "activity. Culturally, Melbourne is home to a number of museums, art galleries and theatres and is "
+                'also described as the "sporting capital of Australia". The Melbourne Cricket Ground is '
+                "the largest stadium in Australia, and the host of the 1956 Summer Olympics and the 2006 "
+                'Commonwealth Games. The ground is also considered the "spiritual home" of Australian cricket '
+                "and Australian rules football, and hosts the grand final of the Australian Football League (AFL) "
+                "each year, usually drawing crowds of over 95,000 people. Victoria includes eight public "
+                "universities, with the oldest, the University of Melbourne, having been founded in 1853. What "
+                "city in Victoria is called the sporting capital of Australia?"
+            ),
             target="Melbourne",
         ),
         Example(
-            input="In the course of the 10th century, the initially destructive incursions of Norse war bands into "
-            "the rivers of France evolved into more permanent encampments that included local women and "
-            "personal property. The Duchy of Normandy, which began in 911 as a fiefdom, was established by "
-            "the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking "
-            "ruler Rollo, and was situated in the former Frankish kingdom of Neustria. The treaty offered Rollo "
-            "and his men the French lands between the river Epte and the Atlantic coast in exchange for their "
-            "protection against further Viking incursions. The area corresponded to the northern part of "
-            "present-day Upper Normandy down to the river Seine, but the Duchy would eventually extend west "
-            "beyond the Seine. The territory was roughly equivalent to the old province of Rouen, and "
-            "reproduced the Roman administrative structure of Gallia Lugdunensis II "
-            "(part of the former Gallia Lugdunensis). When was the Duchy of Normandy founded?",
+            input=(
+                "In the course of the 10th century, the initially destructive incursions of Norse war bands into "
+                "the rivers of France evolved into more permanent encampments that included local women and "
+                "personal property. The Duchy of Normandy, which began in 911 as a fiefdom, was established by "
+                "the treaty of Saint-Clair-sur-Epte between King Charles III of West Francia and the famed Viking "
+                "ruler Rollo, and was situated in the former Frankish kingdom of Neustria. The treaty offered Rollo "
+                "and his men the French lands between the river Epte and the Atlantic coast in exchange for their "
+                "protection against further Viking incursions. The area corresponded to the northern part of "
+                "present-day Upper Normandy down to the river Seine, but the Duchy would eventually extend west "
+                "beyond the Seine. The territory was roughly equivalent to the old province of Rouen, and "
+                "reproduced the Roman administrative structure of Gallia Lugdunensis II "
+                "(part of the former Gallia Lugdunensis). When was the Duchy of Normandy founded?"
+            ),
             target="911",
         ),
     ),

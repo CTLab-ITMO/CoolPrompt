@@ -60,7 +60,7 @@ def _distribution() -> TaskDistribution:
     )
 
 
-def test_axis_tags_validate_model_values_and_override_deterministic_axes() -> None:
+def test_axis_tags_validate_model_values_and_override_label_axis() -> None:
     spec = TaskSpec(
         task=Task.CLASSIFICATION,
         description="Classify sentiment.",
@@ -77,14 +77,12 @@ def test_axis_tags_validate_model_values_and_override_deterministic_axes() -> No
             "label": "label:0",
             "unknown": "value",
         },
-        input="['first', 'second', 'third']",
         output=" POSITIVE ",
         spec=spec,
     )
 
     assert tags == {
         "difficulty": "hard",
-        "input_size": "size:3",
         "label": "label:1",
     }
 

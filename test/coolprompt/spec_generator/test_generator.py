@@ -25,13 +25,25 @@ class _GenerationModel:
     def invoke(self, request: str) -> str:
         self.calls += 1
         count = 2 if "exactly 2" in request else 1
+
+        inputs = {
+            1: [
+                "What causes ocean tides?",
+                "How does photosynthesis work?",
+            ],
+            2: [
+                "Why do metals expand when heated?",
+            ],
+        }
+
         examples = [
             {
-                "input": f"question-{self.calls}-{index}",
+                "input": inputs[self.calls][index],
                 "output": f"answer-{self.calls}-{index}",
             }
             for index in range(count)
         ]
+
         return json.dumps({"examples": examples})
 
 
@@ -57,7 +69,15 @@ def test_generator_builds_spec_and_respects_batch_sizes_without_api_calls() -> N
         feedback_controlled=False,
     )
 
-    assert result.dataset == ["question-1-0", "question-1-1", "question-2-0"]
-    assert result.target == ["answer-1-0", "answer-1-1", "answer-2-0"]
+    assert result.dataset == [
+        "What causes ocean tides?",
+        "How does photosynthesis work?",
+        "Why do metals expand when heated?",
+    ]
+    assert result.target == [
+        "answer-1-0",
+        "answer-1-1",
+        "answer-2-0",
+    ]
     assert result.context.spec.description == "Write a short answer."
     assert generation_model.calls == 2

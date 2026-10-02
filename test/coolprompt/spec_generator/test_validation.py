@@ -30,19 +30,6 @@ def test_validator_normalizes_labels_and_rejects_unknown_values() -> None:
     assert len(invalid) == 2
 
 
-def test_exact_pair_deduplication_normalizes_text_and_numbers() -> None:
-    examples = [
-        Example(input="  Price\u00a0value ", output="1.0"),
-        Example(input="price value", output="1"),
-        Example(input="Different", output="1"),
-    ]
-
-    assert Deduplicator.dedupe_exact_pairs_within_batch(examples) == [
-        examples[0],
-        examples[2],
-    ]
-
-
 def test_pipeline_keeps_valid_examples_and_only_tops_up_missing_count() -> None:
     requested: list[int] = []
     responses = iter(
@@ -63,7 +50,7 @@ def test_pipeline_keeps_valid_examples_and_only_tops_up_missing_count() -> None:
 
     pipeline = ValidationPipeline(
         validator=ExampleValidator(),
-        deduplicator=Deduplicator(enable_near_dup=False),
+        deduplicator=Deduplicator(),
         max_topup_attempts=2,
     )
 
