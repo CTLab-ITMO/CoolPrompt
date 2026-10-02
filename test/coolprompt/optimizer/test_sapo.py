@@ -15,14 +15,17 @@ class _JSONModel:
     def invoke(self, prompt):
         self.prompts.append(prompt)
         if "Decompose the prompt" in prompt:
-            return '{"role":"","context":"","tasks":"Summarize",' \
-                '"output_format":""}'
+            return '{"role":"","context":"","tasks":"Summarize",' '"output_format":""}'
         if "Analyze the prompt" in prompt:
-            return '{"weak_segments":["tasks"],"strong_segments":[],' \
+            return (
+                '{"weak_segments":["tasks"],"strong_segments":[],'
                 '"recommendations":{"tasks":"Make the instruction clear"}}'
+            )
         if "Generate 2 diverse" in prompt:
-            return '{"prompts":["Write a clear one-sentence summary.",' \
+            return (
+                '{"prompts":["Write a clear one-sentence summary.",'
                 '"Write a concise summary."]}'
+            )
         raise AssertionError(f"Unexpected prompt: {prompt}")
 
 
@@ -86,4 +89,3 @@ def test_meta_selector_maps_sapo_without_fallback():
 def test_sapo_rejects_invalid_search_configuration():
     with pytest.raises(ValueError, match="n_candidates"):
         SAPOOptimizer(model=_JSONModel(), evaluator=_Evaluator(), n_candidates=0)
-
