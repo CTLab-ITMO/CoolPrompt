@@ -4,10 +4,8 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from typing import Any
 
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.messages.ai import AIMessage
 from pydantic import Field, ValidationError
 
 from coolprompt.spec_generator.models import (
@@ -17,17 +15,16 @@ from coolprompt.spec_generator.models import (
     TaskSpec,
     TaskSpecDraft,
 )
-from coolprompt.spec_generator.utils.model_utils import resolve_chat_model
+from coolprompt.spec_generator.utils.model_utils import parse_structured
 from coolprompt.spec_generator.utils.retry import RetryConfig, invoke_with_retry
 from coolprompt.task_detector.detector import TaskDetector
 from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
-from coolprompt.utils.parsing import extract_json
 from coolprompt.utils.prompt_templates.spec_generator_templates import (
-    SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE,
-    SPEC_FROM_PROMPT_TEMPLATE,
     PROBLEM_DESCRIPTION_CLASSIFICATION_TEMPLATE,
     PROBLEM_DESCRIPTION_GENERATION_TEMPLATE,
+    SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE,
+    SPEC_FROM_PROMPT_TEMPLATE,
 )
 from coolprompt.utils.task_areas import (
     DATASET_EXAMPLES,
@@ -41,7 +38,7 @@ class SpecResponseError(ValueError):
 
 
 class _ProblemDescription(StrictModel):
-    """Compact structured response for task-description inference."""
+    """Structured response for task-description inference."""
 
     description: str = Field(min_length=1)
 
@@ -61,6 +58,7 @@ def _render_draft(draft: TaskSpecDraft | None) -> str:
         ensure_ascii=False,
         indent=2,
     )
+
     return f"\n\nUser-provided overrides. Respect them exactly:\n{payload}"
 
 
@@ -68,7 +66,7 @@ def _render_examples(examples: Sequence[Example]) -> str:
     """Render trusted examples as JSON."""
 
     return json.dumps(
-        [{"input": e.input, "output": e.output} for e in examples],
+        [{"input": example.input, "output": example.output} for example in examples],
         ensure_ascii=False,
         indent=2,
     )
@@ -100,13 +98,17 @@ def _build_request(
 
     if examples:
         return SPEC_FROM_PROMPT_AND_EXAMPLES_TEMPLATE.format(
-            **values, examples=_render_examples(examples)
+            **values,
+            examples=_render_examples(examples),
         )
 
     return SPEC_FROM_PROMPT_TEMPLATE.format(**values)
 
 
-def _apply_draft(spec: TaskSpec, draft: TaskSpecDraft | None) -> TaskSpec:
+def _apply_draft(
+    spec: TaskSpec,
+    draft: TaskSpecDraft | None,
+) -> TaskSpec:
     """Apply explicit user overrides and revalidate the specification."""
 
     if draft is None or draft.is_empty:
@@ -121,24 +123,6 @@ def _apply_draft(spec: TaskSpec, draft: TaskSpecDraft | None) -> TaskSpec:
         updates["labels"] = None
 
     return TaskSpec.model_validate(spec.model_dump() | updates)
-
-
-def _parse_spec(output: Any) -> TaskSpec:
-    """Convert a model response into a validated TaskSpec."""
-
-    if isinstance(output, TaskSpec):
-        return output
-
-    if isinstance(output, AIMessage):
-        output = output.content
-
-    if isinstance(output, str):
-        output = extract_json(output)
-
-    if not isinstance(output, dict):
-        raise TypeError(f"Unexpected specification response type: {type(output)!r}")
-
-    return TaskSpec.model_validate(output)
 
 
 class SpecBuilder:
@@ -157,7 +141,8 @@ class SpecBuilder:
         self._spec_model = task_spec_model or model
         self._retry_config = retry_config or RetryConfig()
         self._detector = TaskDetector(
-            model, confidence_threshold=detector_confidence_threshold
+            model,
+            confidence_threshold=detector_confidence_threshold,
         )
 
     def build(
@@ -169,7 +154,7 @@ class SpecBuilder:
         detect_dataset: bool = False,
         dataset_name: str | None = None,
     ) -> GenerationContext:
-        """Build the immutable context used for synthetic generation."""
+        """Build the context used for synthetic generation."""
 
         dataset = dataset_name or (
             self._detect_dataset(prompt) if detect_dataset else None
@@ -186,8 +171,11 @@ class SpecBuilder:
             seed_examples = ()
 
         logger.info("GenerationContext ready: task=%r, dataset=%r", spec.task, dataset)
+
         return GenerationContext(
-            spec=spec, dataset_name=dataset, seed_examples=seed_examples
+            spec=spec,
+            dataset_name=dataset,
+            seed_examples=seed_examples,
         )
 
     @staticmethod
@@ -216,18 +204,23 @@ class SpecBuilder:
         return resolved, bool(resolved)
 
     @staticmethod
-    def _validate_dataset_match(spec: TaskSpec, dataset_name: str | None) -> str | None:
-        """Return dataset name if it matches the task spec."""
+    def _validate_dataset_match(
+        spec: TaskSpec,
+        dataset_name: str | None,
+    ) -> str | None:
+        """Return the dataset name when it matches the task specification."""
 
         if not dataset_name:
             return None
 
-        if (expected := DATASET_LABEL_SETS.get(dataset_name)) is None:
+        expected = DATASET_LABEL_SETS.get(dataset_name)
+        if expected is None:
             return dataset_name
 
         if spec.task != Task.CLASSIFICATION or not spec.labels:
             logger.info(
-                "Ignoring dataset %r: classification task expected.", dataset_name
+                "Ignoring dataset %r: classification task expected.",
+                dataset_name,
             )
             return None
 
@@ -254,7 +247,13 @@ class SpecBuilder:
 
         def attempt() -> TaskSpec:
             try:
-                spec = self._invoke_once(request)
+                spec = parse_structured(
+                    self._spec_model,
+                    request,
+                    TaskSpec,
+                    error_cls=SpecResponseError,
+                    label="Specification",
+                )
                 return _apply_draft(spec, draft)
             except ValidationError as exc:
                 raise SpecResponseError(
@@ -267,32 +266,9 @@ class SpecBuilder:
             extra_retry_exceptions=(SpecResponseError,),
         )
 
-    def _invoke_once(self, request: str) -> TaskSpec:
-        """Invoke and parse one specification-model response."""
-
-        try:
-            chat_model = resolve_chat_model(self._spec_model)
-
-            model = (
-                chat_model.with_structured_output(schema=TaskSpec, method="json_schema")
-                if chat_model is not None
-                else self._spec_model
-            )
-
-            return _parse_spec(model.invoke(request))
-
-        except ValidationError as exc:
-            raise SpecResponseError(
-                "Specification response failed validation."
-            ) from exc
-
-        except (TypeError, ValueError) as exc:
-            raise SpecResponseError(
-                "Specification response could not be parsed."
-            ) from exc
-
     def _detect_dataset(self, prompt: str) -> str | None:
         """Detect a reference dataset from the prompt."""
+
         try:
             detection = self._detector.detect_task_area(prompt)
         except Exception as exc:
@@ -300,6 +276,7 @@ class SpecBuilder:
             return None
 
         dataset = TASK_AREA_TO_DATASET.get(detection.task_area)
+
         if dataset:
             logger.info(
                 "Detected dataset %r from task area %r (confidence=%.2f).",
@@ -320,7 +297,7 @@ def generate_problem_description(
     labels: tuple[str, ...] | None = None,
     retry_config: RetryConfig | None = None,
 ) -> str:
-    """Infer one task-description sentence without building a full TaskSpec."""
+    """Infer one task-description sentence."""
 
     prompt = prompt.strip()
 
@@ -350,35 +327,14 @@ def generate_problem_description(
     )
 
     def invoke() -> str:
-        try:
-            chat_model = resolve_chat_model(model)
-            output = (
-                chat_model.with_structured_output(
-                    _ProblemDescription,
-                    method="json_schema",
-                ).invoke(request)
-                if chat_model is not None
-                else model.invoke(request)
-            )
-
-            if not isinstance(output, _ProblemDescription):
-                if isinstance(output, AIMessage):
-                    output = output.content
-                if isinstance(output, str):
-                    output = extract_json(output)
-
-                output = _ProblemDescription.model_validate(output)
-
-            return output.description
-
-        except ValidationError as exc:
-            raise SpecResponseError(
-                "Problem-description response failed validation."
-            ) from exc
-        except (TypeError, ValueError) as exc:
-            raise SpecResponseError(
-                "Problem-description response could not be parsed."
-            ) from exc
+        response = parse_structured(
+            model,
+            request,
+            _ProblemDescription,
+            error_cls=SpecResponseError,
+            label="Problem-description",
+        )
+        return response.description
 
     return invoke_with_retry(
         invoke,

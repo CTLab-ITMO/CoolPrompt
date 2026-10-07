@@ -4,25 +4,25 @@ from __future__ import annotations
 
 import json
 import math
+import random
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from enum import Enum
-from typing import Any, TypeVar
+from typing import Any
 
+import numpy as np
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.messages.ai import AIMessage
-from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+from scipy.optimize import Bounds, LinearConstraint, milp
+from scipy.sparse import lil_matrix
 
 from coolprompt.spec_generator.models import Example, StrictModel, TaskSpec
-from coolprompt.spec_generator.utils.model_utils import resolve_chat_model
+from coolprompt.spec_generator.utils.model_utils import parse_structured
 from coolprompt.spec_generator.utils.retry import RetryConfig, invoke_with_retry
 from coolprompt.utils.enums import Task
-from coolprompt.utils.parsing import extract_json
 from coolprompt.utils.prompt_templates.distribution_prompts import (
     DISTRIBUTION_REQUEST_TEMPLATE,
 )
-
-_SchemaT = TypeVar("_SchemaT", bound=BaseModel)
 
 
 class AxisStrategy(str, Enum):
@@ -30,6 +30,9 @@ class AxisStrategy(str, Enum):
 
     BALANCED = "balanced"
     TARGET_PROPORTIONS = "target_proportions"
+
+
+Constraint = tuple[str, str, str]
 
 
 class AxisValue(StrictModel):
@@ -126,6 +129,20 @@ class GenerationState(BaseModel):
         for axis_name, value_id in axis_tags.items():
             counts = self.axis_counts.setdefault(axis_name, {})
             counts[value_id] = counts.get(value_id, 0) + 1
+
+    def unrecord(self, axis_tags: Mapping[str, str]) -> None:
+        """Revert record() without partially changing the state on error."""
+        for axis, value in axis_tags.items():
+            if self.axis_counts.get(axis, {}).get(value, 0) == 0:
+                raise ValueError(f"Cannot unrecord missing axis value: {axis}={value}")
+
+        for axis, value in axis_tags.items():
+            counts = self.axis_counts[axis]
+            counts[value] -= 1
+            if counts[value] == 0:
+                del counts[value]
+            if not counts:
+                del self.axis_counts[axis]
 
 
 class TaggedGeneratedExample(BaseModel):
@@ -267,10 +284,7 @@ def _target_counts(axis: TaskAxis, total_target: int) -> dict[str, int]:
 
     remainder_order = sorted(
         range(len(exact_counts)),
-        key=lambda index: (
-            target_counts[index] - exact_counts[index],
-            index,
-        ),
+        key=lambda i: (target_counts[i] - exact_counts[i], i),
     )
 
     remaining = total_target - sum(target_counts)
@@ -302,31 +316,26 @@ class _TaskDistributionBuilder:
     ) -> TaskDistribution:
         """Infer task-level coverage axes."""
 
-        seed_examples = tuple(examples)
-
         inferred = invoke_with_retry(
-            lambda: self._invoke_once(
-                _distribution_request(
-                    prompt,
-                    spec,
-                    seed_examples,
-                )
-            ),
+            lambda: self._invoke_once(_distribution_request(prompt, spec, examples)),
             self._retry_config,
             extra_retry_exceptions=(DistributionResponseError,),
         )
 
-        deterministic_axes = [axis for axis in (_label_axis(spec),) if axis is not None]
+        label_axis = _label_axis(spec)
+        deterministic_axes = [] if label_axis is None else [label_axis]
 
         reserved_axis_keys = {
             _canonical_axis_key(axis.name) for axis in deterministic_axes
         }
 
+        max_inferred_axes = 5 - len(deterministic_axes)
+
         inferred_axes = [
             axis
             for axis in inferred.axes
             if _canonical_axis_key(axis.name) not in reserved_axis_keys
-        ][:4]
+        ][:max_inferred_axes]
 
         return TaskDistribution(
             axes=tuple(
@@ -341,62 +350,13 @@ class _TaskDistributionBuilder:
     ) -> TaskDistribution:
         """Invoke the model once and parse a TaskDistribution."""
 
-        return self._invoke_structured(
+        return parse_structured(
+            self._model,
             request,
             TaskDistribution,
-            invalid_type_msg="Unexpected output type",
-            validation_msg="TaskDistribution failed validation.",
-            parse_msg="TaskDistribution could not be parsed.",
+            error_cls=DistributionResponseError,
+            label="TaskDistribution",
         )
-
-    def _invoke_structured(
-        self,
-        request: str,
-        schema: type[_SchemaT],
-        *,
-        invalid_type_msg: str,
-        validation_msg: str,
-        parse_msg: str,
-    ) -> _SchemaT:
-        """Invoke the model with structured output and validate it."""
-
-        try:
-            chat_model = resolve_chat_model(self._model)
-
-            if chat_model is None:
-                raw = self._model.invoke(request)
-                if isinstance(raw, schema):
-                    return raw
-                if isinstance(raw, dict):
-                    return schema.model_validate(raw)
-                content = raw.content if isinstance(raw, AIMessage) else str(raw)
-
-                return schema.model_validate(extract_json(content))
-
-            output = chat_model.with_structured_output(
-                schema=schema,
-                method="json_schema",
-            ).invoke(request)
-
-            if isinstance(output, schema):
-                return output
-
-            if isinstance(output, dict):
-                return schema.model_validate(output)
-
-            if isinstance(output, AIMessage):
-                return schema.model_validate(extract_json(output.content))
-
-            raise DistributionResponseError(f"{invalid_type_msg}: {type(output)!r}")
-
-        except DistributionResponseError:
-            raise
-
-        except ValidationError as exc:
-            raise DistributionResponseError(validation_msg) from exc
-
-        except (TypeError, ValueError) as exc:
-            raise DistributionResponseError(parse_msg) from exc
 
 
 def validate_axis_tags(
@@ -420,12 +380,7 @@ def validate_axis_tags(
         in {value.id for value in axis.values}
     }
 
-    _set_label_axis(
-        result,
-        distribution.axis("label"),
-        output=output,
-        spec=spec,
-    )
+    _set_label_axis(result, distribution.axis("label"), output=output, spec=spec)
 
     return result
 
@@ -475,74 +430,73 @@ def _axis_entry(
     }
 
 
-def _desired_and_allowed_share(
-    axis: TaskAxis,
-    value: AxisValue,
-    target_counts: dict[str, int],
-    k: int,
-    total_target: int,
-    balanced_floor_fraction: float,
-    balanced_over_fraction: float,
-) -> tuple[int, float]:
-    """Return desired count and maximum tolerated share for one value."""
-
-    if axis.strategy == AxisStrategy.TARGET_PROPORTIONS:
-        return target_counts[value.id], (value.target_ratio or 0) + 0.10
-
-    index = next(i for i, item in enumerate(axis.values) if item.id == value.id)
-    allocation = total_target // k + (index < total_target % k)
-    desired = math.ceil(allocation * balanced_floor_fraction)
-
-    return desired, balanced_over_fraction / k
-
-
 def coverage_gaps(
     distribution: TaskDistribution,
     state: GenerationState,
     total_target: int,
-    *,
-    balanced_floor_fraction: float = 0.70,
-    balanced_over_fraction: float = 1.35,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Return under- and overrepresented axis values."""
+) -> tuple[list[dict], list[dict]]:
+    """Return underrepresented and overrepresented distribution values."""
+
     if total_target <= 0:
         return [], []
 
-    under: list[dict[str, Any]] = []
-    over: list[dict[str, Any]] = []
+    quotas = axis_quotas(distribution, total_target)
+
+    under: list[dict] = []
+    over: list[dict] = []
 
     for axis in distribution.axes:
         counts = state.axis_counts.get(axis.name, {})
         observed = sum(counts.values())
 
-        targets = (
-            _target_counts(axis, total_target)
-            if axis.strategy == AxisStrategy.TARGET_PROPORTIONS
-            else {}
-        )
-
         for value in axis.values:
             actual = counts.get(value.id, 0)
-            desired, allowed = _desired_and_allowed_share(
-                axis,
-                value,
-                targets,
-                len(axis.values),
-                total_target,
-                balanced_floor_fraction,
-                balanced_over_fraction,
-            )
+            desired, target_share = quotas[axis.name][value.id]
 
             if actual < desired:
                 under.append(_axis_entry(axis, value, gap=desired - actual))
 
-            if observed and (share := actual / observed) > allowed:
-                over.append(_axis_entry(axis, value, share=share))
-
-    under.sort(key=lambda x: (-x["gap"], x["axis"], x["value_id"]))
-    over.sort(key=lambda x: (-x["share"], x["axis"], x["value_id"]))
+            if observed:
+                share = actual / observed
+                if (axis.strategy == AxisStrategy.BALANCED and actual > desired) or (
+                    axis.strategy == AxisStrategy.TARGET_PROPORTIONS
+                    and share > target_share
+                ):
+                    over.append(_axis_entry(axis, value, share=share))
 
     return under, over
+
+
+def axis_quotas(
+    distribution: TaskDistribution,
+    total_target: int,
+) -> dict[str, dict[str, tuple[int, float]]]:
+    """Return target counts and target shares for distribution values."""
+
+    if total_target <= 0:
+        raise ValueError("total_target must be positive")
+
+    quotas: dict[str, dict[str, tuple[int, float]]] = {}
+
+    for axis in distribution.axes:
+        if axis.strategy == AxisStrategy.BALANCED:
+            base, remainder = divmod(total_target, len(axis.values))
+            targets = {
+                value.id: base + int(index < remainder)
+                for index, value in enumerate(axis.values)
+            }
+        else:
+            targets = _target_counts(axis, total_target)
+
+        quotas[axis.name] = {
+            value.id: (
+                targets[value.id],
+                targets[value.id] / total_target,
+            )
+            for value in axis.values
+        }
+
+    return quotas
 
 
 def _target(
@@ -558,45 +512,137 @@ def _target(
     }
 
 
-def build_generation_targets(
-    distribution: TaskDistribution,
-    state: GenerationState,
-    *,
-    batch_size: int,
-    remaining_budget: int,
-    total_target: int,
-) -> tuple[
-    list[dict[str, Any]],
-    list[dict[str, Any]],
-]:
-    """Build coverage targets from current gaps."""
+def _allocate_quotas(gaps: list[int], capacity: int) -> list[int]:
+    """Allocate slots proportionally to coverage gaps."""
 
-    batch_slots = min(batch_size, remaining_budget)
+    if capacity <= 0 or not gaps:
+        return [0] * len(gaps)
 
-    if batch_slots <= 0:
-        return [], []
+    positive = [max(0, gap) for gap in gaps]
+    total = sum(positive)
 
-    under, over = coverage_gaps(distribution, state, total_target)
+    if total <= capacity:
+        return positive
 
-    if not under:
-        return [_target(batch_slots)], over
+    raw = [gap * capacity / total for gap in positive]
+    quotas = [min(gap, int(value)) for gap, value in zip(positive, raw)]
 
-    queues: dict[str, list[dict[str, Any]]] = {}
-    for item in under:
-        queue = queues.setdefault(str(item["axis"]), [])
-        queue.extend([item] * min(int(item["gap"]), batch_slots))
+    leftover = capacity - sum(quotas)
 
-    selected: list[dict[str, Any]] = []
-    while len(selected) < batch_slots and any(queues.values()):
-        for queue in queues.values():
-            if queue and len(selected) < batch_slots:
-                selected.append(queue.pop(0))
-
-    counts = Counter(
-        (str(item["axis"]), str(item["value_id"]), str(item["description"]))
-        for item in selected
+    by_remainder = sorted(
+        range(len(positive)),
+        key=lambda i: (raw[i] - quotas[i], positive[i], -i),
+        reverse=True,
     )
-    targets = [
+
+    for i in by_remainder:
+        if leftover <= 0:
+            break
+        if quotas[i] >= positive[i]:
+            continue
+
+        quotas[i] += 1
+        leftover -= 1
+
+    return quotas
+
+
+def _allocate_proportional(weights: list[int], capacity: int) -> list[int]:
+    """Allocate capacity proportionally without capping quotas at gap sizes."""
+    positive = [max(0, weight) for weight in weights]
+    total = sum(positive)
+
+    if capacity <= 0 or total <= 0:
+        return [0] * len(weights)
+
+    quotas = [weight * capacity // total for weight in positive]
+    remainders = [weight * capacity % total for weight in positive]
+    leftover = capacity - sum(quotas)
+
+    order = sorted(
+        range(len(positive)),
+        key=lambda i: (remainders[i], positive[i], -i),
+        reverse=True,
+    )
+
+    for i in order[:leftover]:
+        quotas[i] += 1
+
+    return quotas
+
+
+def trim_indices(
+    tags: Sequence[Mapping[str, str]],
+    excess: int,
+    quotas: Mapping[str, Mapping[str, tuple[int, float]]],
+    axis_counts: Mapping[str, Mapping[str, int]],
+    total_target: int,
+) -> set[int]:
+    """Minimize final quota deficits, then excess shares, when trimming."""
+
+    if excess <= 0:
+        return set()
+
+    if excess > len(tags):
+        raise ValueError("excess cannot exceed the number of examples")
+
+    if total_target != len(tags) - excess:
+        raise ValueError("total_target must equal the number of retained examples")
+
+    values = [
+        (axis, value, desired, target_share)
+        for axis, axis_values in quotas.items()
+        for value, (desired, target_share) in axis_values.items()
+    ]
+    n, m = len(tags), len(values)
+    matrix = lil_matrix((1 + 2 * m, n + 2 * m), dtype=float)
+    matrix[0, :n] = 1
+    lower = np.full(1 + 2 * m, -np.inf)
+    upper = np.full(1 + 2 * m, np.inf)
+    lower[0] = upper[0] = total_target
+
+    for j, (axis, value, desired, target_share) in enumerate(values):
+        matching = [i for i, item in enumerate(tags) if item.get(axis) == value]
+        if axis_counts.get(axis, {}).get(value, 0) != len(matching):
+            raise ValueError(
+                f"Coverage state differs from accepted tags: {axis}={value}"
+            )
+        matrix[1 + 2 * j, matching] = 1
+        matrix[1 + 2 * j + 1, matching] = 1
+        matrix[1 + 2 * j, n + j] = 1
+        matrix[1 + 2 * j + 1, n + m + j] = -1
+        lower[1 + 2 * j] = desired
+        upper[1 + 2 * j + 1] = target_share * total_target
+
+    objective = np.zeros(n + 2 * m)
+    objective[n : n + m] = m * total_target + 1
+    objective[n + m :] = 1
+
+    bounds = Bounds(
+        np.zeros(n + 2 * m),
+        np.concatenate((np.ones(n), np.full(2 * m, total_target))),
+    )
+
+    result = milp(
+        objective,
+        integrality=np.r_[np.ones(n), np.zeros(2 * m)],
+        bounds=bounds,
+        constraints=[LinearConstraint(matrix.tocsr(), lower, upper)],
+    )
+
+    if not result.success or result.x is None:
+        raise RuntimeError("Unable to trim examples while preserving coverage.")
+
+    return {i for i, selected in enumerate(result.x[:n]) if selected < 0.5}
+
+
+def _slots_to_targets(
+    slots: list[tuple[Constraint, ...]],
+) -> list[dict[str, Any]]:
+    """Group identical slots into generation targets."""
+    counts: Counter[tuple[Constraint, ...]] = Counter(slots)
+
+    return [
         _target(
             count,
             constraints=[
@@ -605,10 +651,61 @@ def build_generation_targets(
                     "value_id": value_id,
                     "description": description,
                 }
+                for axis, value_id, description in constraints
             ],
         )
-        for (axis, value_id, description), count in counts.items()
+        for constraints, count in counts.most_common()
     ]
-    if len(selected) < batch_slots:
-        targets.append(_target(batch_slots - len(selected)))
-    return targets, over
+
+
+def build_generation_targets(
+    distribution: TaskDistribution,
+    state: GenerationState,
+    *,
+    batch_size: int,
+    remaining_budget: int,
+    total_target: int,
+    rng: random.Random | None = None,
+    mix_axes: bool = True,
+    post_target: bool = False,
+    gap_oversample_factor: float = 2.0,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Build generation targets, using targeted oversampling for post-target gaps."""
+
+    batch_slots = min(batch_size, remaining_budget)
+
+    if batch_slots <= 0:
+        return [], []
+
+    under, over = coverage_gaps(distribution, state, total_target)
+
+    gaps = [item for item in under if int(item["gap"]) > 0]
+
+    if post_target:
+        total_gap = sum(int(item["gap"]) for item in gaps)
+
+        if total_gap <= 0:
+            return [], over
+
+        capacity = min(batch_slots, math.ceil(total_gap * gap_oversample_factor))
+        quotas = _allocate_proportional([int(item["gap"]) for item in gaps], capacity)
+
+    else:
+        if not gaps:
+            return [_target(batch_slots)], over
+
+        quotas = _allocate_quotas([int(item["gap"]) for item in gaps], batch_slots)
+
+    slots: list[tuple[Constraint, ...]] = [
+        ((str(item["axis"]), str(item["value_id"]), str(item["description"])),)
+        for item, quota in zip(gaps, quotas)
+        for _ in range(quota)
+    ]
+
+    if not post_target:
+        slots.extend([()] * (batch_slots - len(slots)))
+
+    if mix_axes:
+        (rng or random.Random()).shuffle(slots)
+
+    return _slots_to_targets(slots), over

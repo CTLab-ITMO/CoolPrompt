@@ -64,115 +64,56 @@ DATASET_EXAMPLES: dict[str, tuple[Example, ...]] = {
     "gsm8k": (
         Example(
             input=(
-                "On a school trip to the seashore, Alan and his friends collected shells. "
-                "Alan collected four times as many shells as Ben did. "
-                "Ben collected a third as many shells as Laurie did. "
-                "If Laurie collected 36 shells, how many shells did Alan collect?"
+                "A school bought 8 boxes of notebooks with 24 notebooks in each box. "
+                "It gave one quarter of all the notebooks to the science department. "
+                "The remaining notebooks were divided equally among 6 classrooms. "
+                "Each classroom then gave 5 notebooks to new students. "
+                "How many notebooks does each classroom have left?"
             ),
-            target="48",
+            target="19",
         ),
         Example(
             input=(
-                "A robe requires some bolts of blue fiber and half as many bolts "
-                "of white fiber. There are 3 bolts in total. "
-                "How many bolts of blue fiber are needed?"
+                "A theater sold 240 tickets for a show. Adult tickets cost $12 each "
+                "and child tickets cost $7 each. There were twice as many child tickets "
+                "sold as adult tickets. How many dollars did the theater collect from "
+                "ticket sales?"
             ),
-            target="2",
+            target="2080",
         ),
         Example(
             input=(
-                "Sam memorized six more digits of pi than Carlos memorized. "
-                "Mina memorized six times as many digits of pi as Carlos memorized. "
-                "If Mina memorized 24 digits, how many digits did Sam memorize?"
-            ),
-            target="10",
-        ),
-        Example(
-            input=(
-                "Maya buys 4 notebooks for $3 each and 2 pens for $2 each. "
-                "She pays with a $20 bill. How many dollars in change does she receive?"
-            ),
-            target="4",
-        ),
-        Example(
-            input=(
-                "A bus travels 45 miles per hour for 2 hours and then "
-                "30 miles per hour for 1 hour. How many miles does it travel in total?"
-            ),
-            target="120",
-        ),
-        Example(
-            input=(
-                "A jacket originally costs $80. The store gives a 25 percent discount. "
-                "How many dollars does the jacket cost after the discount?"
+                "A farmer had some bags of grain. He sold one third of the bags on Monday. "
+                "On Tuesday, he sold 8 fewer bags than he sold on Monday. "
+                "After those sales, he had 28 bags left. "
+                "How many bags of grain did the farmer have originally?"
             ),
             target="60",
-        ),
-        Example(
-            input=(
-                "A library has 250 books. It lends out 68 books on Monday "
-                "and 47 books on Tuesday. Then 25 books are returned. "
-                "How many books are in the library now?"
-            ),
-            target="160",
-        ),
-        Example(
-            input=(
-                "A bakery makes 72 cupcakes. It packs 6 cupcakes in each box. "
-                "After selling 5 boxes, how many cupcakes remain?"
-            ),
-            target="42",
         ),
     ),
     "tweeteval": (
         Example(
             input=(
-                "@user yeah thanks for cancelling it AFTER we all got there 🙃 "
-                "TWO HOURS wasted for absolutely nothing #brilliant"
-            ),
-            target="anger",
-        ),
-        Example(
-            input=(
-                "How do you lose my order TWICE and then tell me to 'just place "
-                "another one'?? 😂 WHAT A JOKE"
-            ),
-            target="anger",
-        ),
-        Example(
-            input=(
-                "@user love how you can ignore every message for a WEEK then suddenly "
-                "need an answer from me RIGHT NOW lol #nice"
-            ),
-            target="anger",
-        ),
-        Example(
-            input=(
-                "@user nah it's FINE, you guys have fun :) kinda getting used to "
-                "finding out about everything from the photos anyway"
-            ),
-            target="sadness",
-        ),
-        Example(
-            input=(
-                "Still catch myself saving things to send you and then remembering "
-                "there's NOBODY on the other end anymore."
-            ),
-            target="sadness",
-        ),
-        Example(
-            input=(
-                "@user you absolute idiot 😂❤️ can't believe you travelled ALL THAT WAY "
-                "just to surprise me, I'm still smiling"
+                "i'm a MESS. cried in the parking lot for 20 min, mascara "
+                "everywhere, hands still shaking. she said yes. SHE SAID YES 😭💍 "
+                "worst makeup day of my life, best day of my life"
             ),
             target="joy",
         ),
         Example(
             input=(
-                "@user ONE rejection doesn't decide where this goes. send the next "
-                "application, then the next one. somebody's gonna say YES #keepgoing"
+                "sent 'happy birthday mom 🎂' to her number again today. "
+                "still shows delivered. i know. i just wasn't ready to delete it yet"
             ),
-            target="optimism",
+            target="sadness",
+        ),
+        Example(
+            input=(
+                "oh wonderful, a 4th 'quick sync' that could have been an email. "
+                "love giving up my only free hour for this. truly the highlight "
+                "of my week 🙃 #grateful @user"
+            ),
+            target="anger",
         ),
     ),
     "squad_v2": (

@@ -76,9 +76,22 @@ Benchmark interface for comparing autoprompting methods on dataset/config-based 
 `evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, `rider`, and `brave`.
 
 ---
+
 ## `spec_generator/` and `task_detector/`
-- `spec_generator/` - task specification inference and controlled synthetic data generation with validation and deduplication.
-- `task_detector/` - automatic task detection for `classification` and `generation` workflows.
+
+- [`spec_generator/`](../coolprompt/spec_generator/README.md) — task
+  specification inference and controlled synthetic-data generation with
+  validation, deduplication, and distribution-aware coverage.
+- `task_detector/` — automatic task detection for `classification` and
+  `generation` workflows.
+
+For usage examples, configuration options, coverage behavior, and validation
+limitations, see the
+[`spec_generator` documentation](../coolprompt/spec_generator/README.md).
+
+The legacy `coolprompt.data_generator` package has been removed and replaced
+by `coolprompt.spec_generator`. This is a breaking API change. See
+[`MIGRATION.md`](MIGRATION.md) for migration instructions.
 
 ---
 ## `utils/`

@@ -10,6 +10,7 @@ from coolprompt.spec_generator.distribution import TaskDistribution
 from coolprompt.spec_generator.models import Example, GenerationContext
 from coolprompt.utils.prompt_templates.snippets_templates import (
     DISTRIBUTION_AWARE_GUIDANCE,
+    TAGGED_GENERATION_OUTPUT_CONTRACT,
     TARGETED_GUIDANCE,
 )
 from coolprompt.utils.enums import Task
@@ -127,13 +128,23 @@ def _limited_examples(
     return _examples(selected)
 
 
-def _insert_guidance(base: str, guidance: str) -> str:
-    """Insert additional guidance immediately before the output contract."""
+def _insert_guidance(
+    base: str,
+    guidance: str,
+    *,
+    output_contract: str | None = None,
+) -> str:
+    """Insert guidance and optionally replace the final output contract."""
 
     if not guidance:
         return base
 
     guidance = guidance.strip()
+
+    if output_contract is not None and _RETURN_MARKER in base:
+        body, _ = base.split(_RETURN_MARKER, 1)
+        return f"{body.rstrip()}\n\n{guidance}\n\n" f"{output_contract.strip()}\n"
+
     insert = f"\n\n{guidance}\n"
 
     return (
@@ -160,11 +171,21 @@ class GenerationPromptBuilder:
         accepted_examples: Sequence[Example] = (),
     ) -> str:
         """Build exploratory distribution-aware generation."""
+
         guidance = DISTRIBUTION_AWARE_GUIDANCE.format(
             axes=_distribution_axes(distribution),
-            accepted_examples=_limited_examples(accepted_examples, 10, latest=True),
+            accepted_examples=_limited_examples(
+                accepted_examples,
+                10,
+                latest=True,
+            ),
         )
-        return _insert_guidance(self.regular(context, n), guidance)
+
+        return _insert_guidance(
+            self.regular(context, n),
+            guidance,
+            output_contract=TAGGED_GENERATION_OUTPUT_CONTRACT,
+        )
 
     def targeted(
         self,
@@ -183,7 +204,11 @@ class GenerationPromptBuilder:
             avoid=_avoid_lines(avoid),
             accepted_examples=_limited_examples(accepted_examples, 10, latest=True),
         )
-        return _insert_guidance(self.regular(context, n), guidance)
+        return _insert_guidance(
+            self.regular(context, n),
+            guidance,
+            output_contract=TAGGED_GENERATION_OUTPUT_CONTRACT,
+        )
 
     def _render(self, context: GenerationContext, n: int) -> str:
         """Render the task-specific base template from a generation context."""

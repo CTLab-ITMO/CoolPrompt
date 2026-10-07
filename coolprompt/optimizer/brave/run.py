@@ -14,6 +14,7 @@ from coolprompt.optimizer.autoprompting_method import (
 from coolprompt.optimizer.brave.evoluter import BRAVEEvoluter
 from coolprompt.optimizer.brave.utils import BRAVEConfig
 from coolprompt.spec_generator import generate_problem_description
+from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
 
 
@@ -104,15 +105,22 @@ class BRAVEMethod(AutoPromptingMethod):
         if not problem_description or not problem_description.strip():
             count = min(5, len(ctx.dataset_split[0]))
             indices = sample(range(len(ctx.dataset_split[0])), count)
+            labels = None
+
+            if ctx.evaluator.task == Task.CLASSIFICATION:
+                labels = sorted({str(label) for label in ctx.dataset_split[2]})
+
             examples = [
                 (ctx.dataset_split[0][index], str(ctx.dataset_split[2][index]))
                 for index in indices
             ]
+
             problem_description = generate_problem_description(
                 model=ctx._system_model,
                 prompt=start_prompt,
                 task=ctx.evaluator.task,
                 examples=examples,
+                labels=labels,
             )
 
         method_config = dict(ctx.config.get("method", {}))

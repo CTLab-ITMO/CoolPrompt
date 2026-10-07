@@ -171,11 +171,12 @@ class PromptTuner:
         problem_description_generation_method: str = "base",
         validation_size: float = 0.25,
         train_as_test: bool = False,
-        stratified_split: bool = False,
-        seed: int = 42,
         generate_num_samples: int = 10,
         batch_size: int = 25,
         verbose: int = 1,
+        corner_ratio: Optional[float] = None,
+        stratified_split: bool = False,
+        seed: int = 42,
         llm_as_judge_criteria: str | list[str] = "relevance",
         llm_as_judge_custom_templates: Optional[dict[str, str]] = None,
         llm_as_judge_metric_ceil: int = 10,
@@ -236,6 +237,8 @@ class PromptTuner:
                 splitting.
             generate_num_samples (int): Number of synthetic samples to
                 generate when no dataset is provided.
+            corner_ratio (float | None): Deprecated and no longer
+                supported.
             batch_size (int): Number of examples processed in one batch
                 during evaluation.
             verbose (int): Logging verbosity: 0 = silent, 1 = steps,
@@ -290,6 +293,12 @@ class PromptTuner:
                 data‑driven methods, length mismatch between dataset and
                 target, or missing problem description when required.
         """
+        if corner_ratio is not None:
+            raise ValueError(
+                "corner_ratio is no longer supported by PromptTuner.run(). "
+                "Corner-case generation has been removed."
+            )
+
         if verbose is not None:
             validate_verbose(verbose)
             set_verbose(verbose)

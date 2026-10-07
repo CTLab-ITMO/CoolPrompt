@@ -86,6 +86,7 @@ Return these fields:
 - requirements: hard rules applying to every example
 - labels: exhaustive labels for classification; null for generation
 - language: primary language
+- allow_empty_output: true only if an empty string is a valid task output; false otherwise
 
 Description rules:
 - Preserve explicit output-format requirements from the task prompt.
@@ -130,6 +131,7 @@ Return these fields:
 - requirements: hard rules applying to every example
 - labels: exhaustive labels for classification; null for generation
 - language: primary language
+- allow_empty_output: true only if an empty string is a valid task output; false otherwise
 
 Description rules:
 - Preserve explicit output-format requirements from the task prompt.
@@ -140,6 +142,7 @@ Description rules:
 Rules:
 - Preserve exact label spelling and casing.
 - Do not assume observed labels are exhaustive without supporting evidence.
+- Infer whether empty output is valid from explicit task instructions or consistent trusted examples, not an isolated blank.
 - Do not invent unsupported labels, limits, or formatting rules.
 - Keep fields concise and non-redundant.
 - Return only valid JSON matching the provided schema.

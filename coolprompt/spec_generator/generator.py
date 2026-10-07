@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import math
+from collections import deque
 from collections.abc import Iterator, Sequence
 from html import unescape
-from typing import Any, NoReturn
+from typing import Any
 
 from langchain_core.language_models.base import BaseLanguageModel
-from langchain_core.messages.ai import AIMessage
 from pydantic import BaseModel
 
 from coolprompt.spec_generator.distribution import (
@@ -15,8 +16,10 @@ from coolprompt.spec_generator.distribution import (
     TaggedGenerationBatch,
     TaskDistribution,
     _TaskDistributionBuilder,
+    axis_quotas,
     build_generation_targets,
     coverage_gaps,
+    trim_indices,
     validate_axis_tags,
 )
 from coolprompt.spec_generator.schemas import TaskExamples
@@ -28,12 +31,11 @@ from coolprompt.spec_generator.models import (
 )
 from coolprompt.spec_generator.prompt_builder import GenerationPromptBuilder
 from coolprompt.spec_generator.spec_builder import SpecBuilder
-from coolprompt.spec_generator.utils.model_utils import resolve_chat_model
+from coolprompt.spec_generator.utils.model_utils import invoke_structured
 from coolprompt.spec_generator.utils.retry import RetryConfig, invoke_with_retry
 from coolprompt.spec_generator.validation.format import Deduplicator, ExampleValidator
 from coolprompt.spec_generator.validation.pipeline import ValidationPipeline
 from coolprompt.utils.enums import Task
-from coolprompt.utils.parsing import extract_json
 from coolprompt.utils.logging_config import logger
 
 _OUTPUT_SCHEMAS: dict[Task, type[BaseModel]] = {
@@ -66,11 +68,6 @@ def _validate_generation_args(num_samples: int, batch_size: int) -> None:
 def _extract_examples(payload: Any) -> list[Any]:
     """Extract a non-empty examples list from a model response."""
 
-    if isinstance(payload, AIMessage):
-        payload = payload.content
-    if isinstance(payload, str):
-        payload = extract_json(payload)
-
     examples = (
         getattr(payload, "examples", None)
         if isinstance(payload, BaseModel)
@@ -81,6 +78,7 @@ def _extract_examples(payload: Any) -> list[Any]:
         raise GenerationResponseError(
             "Generation response does not contain an examples list."
         )
+
     if not examples:
         raise GenerationResponseError("Generation response contains no examples.")
 
@@ -157,6 +155,7 @@ class SyntheticDataGenerator:
         batch_size: int = 15,
         use_task_distribution: bool = True,
         feedback_controlled: bool = True,
+        strict_coverage: bool = False,
     ) -> GenerationResult:
         """Generate exactly ``num_samples`` synthetic examples."""
 
@@ -164,6 +163,8 @@ class SyntheticDataGenerator:
 
         if feedback_controlled and not use_task_distribution:
             raise ValueError("feedback_controlled requires use_task_distribution=True")
+        if strict_coverage and not feedback_controlled:
+            raise ValueError("strict_coverage requires feedback_controlled=True")
 
         self._last_distribution = None
         self._last_generation_state = None
@@ -203,6 +204,7 @@ class SyntheticDataGenerator:
                 distribution=distribution,
                 num_samples=num_samples,
                 batch_size=batch_size,
+                strict_coverage=strict_coverage,
             )
         else:
             generated = self._generate_validated(
@@ -218,7 +220,7 @@ class SyntheticDataGenerator:
             )
 
         return GenerationResult(
-            examples=tuple(map(self._coerce_example, generated)),
+            examples=tuple(generated),
             context=context,
         )
 
@@ -242,19 +244,6 @@ class SyntheticDataGenerator:
             prompt=prompt,
             spec=context.spec,
             examples=context.seed_examples,
-        )
-
-    @classmethod
-    def _coerce_example(cls, item: Any) -> Example:
-        """Convert a generated payload into the public Example model."""
-
-        if isinstance(item, Example):
-            return item
-
-        payload = cls._payload(item)
-        return Example(
-            input=payload["input"],
-            output=payload["output"],
         )
 
     @staticmethod
@@ -342,18 +331,18 @@ class SyntheticDataGenerator:
         """Invoke the model with the appropriate structured-output schema."""
 
         schema = TaggedGenerationBatch if with_axis_tags else _OUTPUT_SCHEMAS[task]
-        chat_model = resolve_chat_model(self._model)
 
         def invoke() -> list[Any]:
             """Perform one retryable model invocation and extract its examples."""
 
-            if chat_model is None:
-                output = self._model.invoke(request)
-            else:
-                method = "function_calling" if with_axis_tags else "json_schema"
-                output = chat_model.with_structured_output(
-                    schema=schema.model_json_schema(), method=method
-                ).invoke(request)
+            output = invoke_structured(
+                self._model,
+                request,
+                schema.model_json_schema(),
+                method="function_calling" if with_axis_tags else "json_schema",
+                error_cls=GenerationResponseError,
+                label="Generation",
+            )
 
             return _extract_examples(output)
 
@@ -370,128 +359,159 @@ class SyntheticDataGenerator:
         distribution: TaskDistribution,
         num_samples: int,
         batch_size: int,
+        strict_coverage: bool,
     ) -> list[Example]:
-        """Generate examples while preserving requested distribution coverage."""
-        max_extra = 10
-        limit = num_samples + max_extra
+        """Generate examples while targeting coverage in the final dataset."""
+
+        if num_samples <= 20:
+            oversample_factor = 1.5
+        elif num_samples <= 50:
+            oversample_factor = 1.3
+        else:
+            oversample_factor = 1.2
+
+        limit = math.ceil(num_samples * oversample_factor)
+
         pipeline = self._build_pipeline()
+        quotas = axis_quotas(distribution, num_samples)
 
         state = GenerationState()
         accepted: list[Example] = []
-        accepted_tags: list[dict[str, str]] = []  # strictly 1:1 with `accepted`
+        tags: list[dict[str, str]] = []
 
-        def tags_for(
-            example: Example,
-            tag_cache: dict[tuple[str, str], dict[str, str]],
-        ) -> dict[str, str]:
-            key = self._example_key(example.input, example.output)
-            return validate_axis_tags(
-                distribution,
-                tag_cache.get(key),
-                output=example.output,
-                spec=context.spec,
+        def gaps_of(generation_state: GenerationState) -> list[dict]:
+            return coverage_gaps(distribution, generation_state, num_samples)[0]
+
+        def gap_total(gap_items: Sequence[dict]) -> int:
+            return sum(max(0, int(gap.get("gap", 0))) for gap in gap_items)
+
+        def projected() -> tuple[set[int], GenerationState]:
+            """Best final-size subset (indices to drop) and its coverage state."""
+
+            excess = len(accepted) - num_samples
+            if excess <= 0:
+                return set(), state
+
+            drop_indices = trim_indices(
+                tags, excess, quotas, state.axis_counts, num_samples
             )
 
-        def record(
-            st: GenerationState,
-            examples: Sequence[Example],
-            tag_cache: dict[tuple[str, str], dict[str, str]],
-        ) -> list[dict[str, str]]:
-            aligned = [tags_for(example, tag_cache) for example in examples]
-            for tags in aligned:
-                st.record(tags)
-            return aligned
+            kept = GenerationState()
+            for index, item in enumerate(tags):
+                if index not in drop_indices:
+                    kept.record(item)
 
-        def rebuild_state(tags: Sequence[dict[str, str]]) -> GenerationState:
-            rebuilt = GenerationState()
-            for item in tags:
-                rebuilt.record(item)
-            return rebuilt
+            return drop_indices, kept
 
-        def gaps_of(st: GenerationState) -> list[dict]:
-            return coverage_gaps(distribution, st, num_samples)[0]
-
-        def fail(message: str) -> NoReturn:
-            self._last_generation_state = state
-            raise RuntimeError(message)
-
-        def step(n: int, budget: int | None = None) -> bool:
-            """Run one batch. budget=None means the initial unconstrained batch."""
-            first = budget is None
-            if first:
-                targets, avoid = None, ()
-            else:
-                targets, avoid = build_generation_targets(
+        def step(
+            target_n: int,
+            target_state: GenerationState,
+            *,
+            first: bool,
+            is_post_target: bool,
+        ) -> bool:
+            targets, avoid = (
+                (None, ())
+                if first
+                else build_generation_targets(
                     distribution,
-                    state,
-                    batch_size=n,
-                    remaining_budget=budget,
+                    target_state,
+                    batch_size=target_n,
+                    remaining_budget=target_n,
                     total_target=num_samples,
+                    post_target=is_post_target,
                 )
-                logger.info("Generation targets: %s", targets)
+            )
 
-            batch, tag_cache = self._run_feedback_batch(
+            if is_post_target and not targets:
+                return False
+
+            batch, cache = self._run_feedback_batch(
                 pipeline=pipeline,
                 context=context,
                 distribution=distribution,
-                target_n=n,
+                target_n=target_n,
                 batch_size=batch_size,
                 reset_deduplicator=first,
                 targets=targets,
                 avoid=avoid,
                 accepted_examples=accepted,
             )
-            if not batch:
-                return False
 
-            batch_tags = record(state, batch, tag_cache)
+            for example in batch:
+                example_tags = validate_axis_tags(
+                    distribution,
+                    cache.get(self._example_key(example.input, example.output)),
+                    output=example.output,
+                    spec=context.spec,
+                )
+                state.record(example_tags)
+                tags.append(example_tags)
+
             accepted.extend(batch)
-            accepted_tags.extend(batch_tags)
+
             logger.info("Progress: accepted=%d/%d", len(accepted), num_samples)
-            return True
 
-        if not step(min(batch_size, num_samples)):
-            fail("Initial generation batch returned no examples.")
+            return bool(batch)
 
-        while len(accepted) < num_samples:
-            remaining = num_samples - len(accepted)
-            if not step(min(batch_size, remaining), remaining):
+        stalls = 0
+
+        while len(accepted) < limit:
+            _, current_state = projected()
+            gaps = gaps_of(current_state)
+            before = gap_total(gaps)
+            post_target = len(accepted) >= num_samples
+
+            if post_target and not gaps:
+                break
+
+            remaining = limit - len(accepted)
+
+            if post_target:
+                n = max(1, min(batch_size, remaining, math.ceil(before * 2.0)))
+            else:
+                n = min(batch_size, num_samples - len(accepted))
+
+            produced = step(
+                n, current_state, first=not accepted, is_post_target=post_target
+            )
+
+            if post_target:
+                after = gap_total(gaps_of(projected()[1]))
+                stalls = 0 if after < before else stalls + 1
+
+                logger.info("Gap batch: n=%d gap %d -> %d", n, before, after)
+
+                if stalls >= 3:
+                    break
+
+                continue
+
+            if not produced:
                 break
 
         if len(accepted) < num_samples:
-            fail(f"Not enough examples generated: {len(accepted)}/{num_samples}")
-
-        gaps = gaps_of(state)
-        while gaps and len(accepted) < limit:
-            logger.info("Coverage gaps remain: %s", gaps)
-            gap_size = sum(max(0, int(g.get("gap", 0))) for g in gaps)
-            n = min(batch_size, limit - len(accepted), max(1, gap_size))
-            if not step(n, n):
-                break
-            gaps = gaps_of(state)
-
-        if gaps:
-            fail(f"Coverage incomplete after {len(accepted)} examples: {gaps}")
-
-        while len(accepted) > num_samples:
-            for i in range(len(accepted)):
-                trial = rebuild_state(accepted_tags[:i] + accepted_tags[i + 1 :])
-                if gaps_of(trial):
-                    continue
-                del accepted[i], accepted_tags[i]
-                state = trial
-                logger.info("Retained %d/%d examples", len(accepted), num_samples)
-                break
-            else:
-                fail(f"Could not trim to {num_samples} without coverage gaps.")
-
-        final_gaps = gaps_of(state)
-        if len(accepted) != num_samples or final_gaps:
-            fail(
-                f"Generation incomplete: {len(accepted)}/{num_samples}, gaps={final_gaps}"
+            self._last_generation_state = state
+            raise RuntimeError(
+                f"Not enough examples generated: {len(accepted)}/{num_samples}"
             )
 
+        drop, state = projected()
+
+        accepted = [
+            example for index, example in enumerate(accepted) if index not in drop
+        ]
+
         self._last_generation_state = state
+
+        if gaps := gaps_of(state):
+            message = f"Coverage incomplete after {len(accepted)} examples: {gaps}"
+
+            if strict_coverage:
+                raise RuntimeError(message)
+
+            logger.warning(message)
+
         return accepted
 
     def _run_feedback_batch(
@@ -510,38 +530,40 @@ class SyntheticDataGenerator:
         """Generate, validate, and retain axis tags for one feedback batch."""
 
         tag_cache: dict[tuple[str, str], dict[str, str]] = {}
+        tag_queue: dict[tuple[str, str], deque[dict[str, str]]] = {}
         local_accepted: list[Example] = []
         pending = [dict(target) for target in (targets or [])]
         required_axes = {axis.name for axis in distribution.axes}
-
-        def example_tags(example: Example) -> dict[str, str]:
-            key = self._example_key(example.input, example.output)
-            return validate_axis_tags(
-                distribution,
-                tag_cache.get(key),
-                output=example.output,
-                spec=context.spec,
-            )
+        candidate_tags: dict[str, str] = {}
 
         def matching_target(tags: dict[str, str]) -> dict[str, Any] | None:
-            for target in sorted(
+            for candidate_target in sorted(
                 pending,
-                key=lambda target: len(target["constraints"]),
+                key=lambda candidate: len(candidate["constraints"]),
                 reverse=True,
             ):
-                if target["count"] <= 0:
+                if candidate_target["count"] <= 0:
                     continue
 
                 if all(
                     tags.get(item["axis"]) == item["value_id"]
-                    for item in target["constraints"]
+                    for item in candidate_target["constraints"]
                 ):
-                    return target
+                    return candidate_target
 
             return None
 
         def accept_candidate(example: Example) -> bool:
-            tags = example_tags(example)
+            nonlocal candidate_tags
+            key = self._example_key(example.input, example.output)
+            queued = tag_queue.get(key)
+            candidate_tags = validate_axis_tags(
+                distribution,
+                queued.popleft() if queued else None,
+                output=example.output,
+                spec=context.spec,
+            )
+            tags = candidate_tags
             valid = required_axes == set(tags) and (
                 targets is None or matching_target(tags) is not None
             )
@@ -556,7 +578,7 @@ class SyntheticDataGenerator:
 
         def on_accept(example: Example) -> None:
             if targets is not None:
-                target = matching_target(example_tags(example))
+                target = matching_target(candidate_tags)
 
                 if target is None:
                     raise RuntimeError(
@@ -564,6 +586,7 @@ class SyntheticDataGenerator:
                     )
                 target["count"] -= 1
 
+            tag_cache[self._example_key(example.input, example.output)] = candidate_tags
             local_accepted.append(example)
 
         common = {
@@ -610,8 +633,19 @@ class SyntheticDataGenerator:
                 )
             )
 
-            raw = self._call_model(request, context.spec.task, with_axis_tags=True)
-            self._cache_axis_tags(tag_cache, raw)
+            try:
+                raw = self._call_model(
+                    request,
+                    context.spec.task,
+                    with_axis_tags=True,
+                )
+            except GenerationResponseError as exc:
+                logger.warning(
+                    "Generation response was invalid; treating batch as empty: %s", exc
+                )
+                return []
+
+            self._queue_axis_tags(tag_queue, raw)
             return raw
 
         return (
@@ -648,12 +682,12 @@ class SyntheticDataGenerator:
         return unescape(input_).strip().casefold(), output.strip().casefold()
 
     @classmethod
-    def _cache_axis_tags(
+    def _queue_axis_tags(
         cls,
-        cache: dict[tuple[str, str], dict[str, str]],
+        queue: dict[tuple[str, str], deque[dict[str, str]]],
         raw_examples: Sequence[Any],
     ) -> None:
-        """Cache valid axis tags by normalized input-output pair."""
+        """Preserve each candidate's own tags, including duplicate text pairs."""
 
         for raw in raw_examples:
             payload = cls._payload(raw)
@@ -665,14 +699,16 @@ class SyntheticDataGenerator:
 
             if not (isinstance(input_, str) and input_.strip()):
                 continue
-            if not isinstance(output, str) or not isinstance(tags, dict):
+            if not isinstance(output, str):
                 continue
 
-            cache[cls._example_key(input_, output)] = {
-                str(axis): value
-                for axis, value in tags.items()
-                if isinstance(value, str)
-            }
+            queue.setdefault(cls._example_key(input_, output), deque()).append(
+                {
+                    str(axis): value
+                    for axis, value in (tags.items() if isinstance(tags, dict) else ())
+                    if isinstance(value, str)
+                }
+            )
 
     @property
     def last_distribution(self) -> TaskDistribution | None:
