@@ -91,7 +91,7 @@ limitations, see the
 
 The legacy `coolprompt.data_generator` package has been removed and replaced
 by `coolprompt.spec_generator`. This is a breaking API change. See
-[`MIGRATION.md`](MIGRATION.md) for migration instructions.
+[`MIGRATION.md`](DATA_GENERATOR_MIGRATION.md) for migration instructions.
 
 ---
 ## `utils/`
