@@ -1,4 +1,9 @@
-"""PromptTuner integration tests for ``method='auto'``."""
+"""PromptTuner integration tests."""
+
+import json
+from types import SimpleNamespace
+
+import pytest
 
 from coolprompt.meta_selector import MetaSelectionResult
 from coolprompt.optimizer.autoprompting_method import AutoPromptingMethod
@@ -161,11 +166,17 @@ def test_auto_without_data_uses_hyper_light(monkeypatch):
     assistant = _patch_runtime(monkeypatch, selection)
 
     class _Generator:
-        def __init__(self, model):
+        def __init__(self, model, **kwargs):
             pass
 
         def generate(self, **kwargs):
-            return ["one", "two"], ["a", "b"], "Summarize news."
+            return SimpleNamespace(
+                dataset=["one", "two"],
+                target=["a", "b"],
+                context=SimpleNamespace(
+                    spec=SimpleNamespace(description="Summarize news.")
+                ),
+            )
 
     monkeypatch.setattr(assistant, "SyntheticDataGenerator", _Generator)
     tuner = assistant.PromptTuner(target_model=object(), system_model=object())
@@ -180,3 +191,121 @@ def test_auto_without_data_uses_hyper_light(monkeypatch):
 
     assert result == "optimized with hyper_light"
     assert tuner.meta_selection.selected_method == "hyper_light"
+
+
+def test_corner_ratio_fails_before_reaching_optimizer(monkeypatch):
+    selection = MetaSelectionResult(
+        profile={},
+        similar_datasets=[],
+        candidates=[],
+        recommended_method="HyPER Light",
+        selected_method="hyper_light",
+        fallback_reason=None,
+        recommended_model=None,
+        recommended_split=None,
+        recommended_metric=None,
+    )
+    assistant = _patch_runtime(monkeypatch, selection)
+    tuner = assistant.PromptTuner(target_model=object(), system_model=object())
+
+    with pytest.raises(ValueError, match="corner_ratio is no longer supported"):
+        tuner.run(
+            "Summarize: {text}",
+            task="generation",
+            method="hyper_light",
+            corner_ratio=0.4,
+            enable_telemetry=False,
+        )
+
+
+class _DefaultGenerationModel:
+    def __init__(self) -> None:
+        self.generation_calls = 0
+
+    def invoke(self, request: str) -> str:
+        if "You are an expert NLP task analyst" in request:
+            return json.dumps(
+                {
+                    "task": "generation",
+                    "description": "Answer a science question concisely.",
+                    "input_format": "A science question.",
+                    "output_format": "A concise answer.",
+                    "requirements": [],
+                    "labels": None,
+                    "language": "English",
+                }
+            )
+
+        if "You define coverage axes" in request:
+            return json.dumps(
+                {
+                    "axes": [
+                        {
+                            "name": "topic",
+                            "description": "Scientific topic.",
+                            "strategy": "balanced",
+                            "values": [
+                                {"id": "physics", "description": "Physics."},
+                                {"id": "biology", "description": "Biology."},
+                            ],
+                        }
+                    ]
+                }
+            )
+
+        self.generation_calls += 1
+        batches = (
+            [
+                {
+                    "input": "Why do objects fall?",
+                    "output": "Gravity accelerates them toward Earth.",
+                    "axis_tags": {"topic": "physics"},
+                },
+                {
+                    "input": "Why do objects fall?",
+                    "output": "Earth's gravity pulls them downward.",
+                    "axis_tags": {"topic": "biology"},
+                },
+            ],
+            [
+                {
+                    "input": "How do plants convert light into stored energy?",
+                    "output": "Photosynthesis converts light into chemical energy.",
+                    "axis_tags": {"topic": "biology"},
+                }
+            ],
+        )
+        return json.dumps({"examples": batches[self.generation_calls - 1]})
+
+
+def test_prompt_tuner_uses_default_feedback_controlled_generator(monkeypatch):
+    selection = MetaSelectionResult(
+        profile={},
+        similar_datasets=[],
+        candidates=[],
+        recommended_method="HyPER Light",
+        selected_method="hyper_light",
+        fallback_reason=None,
+        recommended_model=None,
+        recommended_split=None,
+        recommended_metric=None,
+    )
+    assistant = _patch_runtime(monkeypatch, selection)
+    model = _DefaultGenerationModel()
+    tuner = assistant.PromptTuner(target_model=model, system_model=model)
+
+    result = tuner.run(
+        "Answer each science question.",
+        task="generation",
+        method="hyper_light",
+        generate_num_samples=2,
+        validation_size=0.5,
+        enable_telemetry=False,
+    )
+
+    assert result == "optimized with hyper_light"
+    assert tuner.synthetic_dataset == [
+        "Why do objects fall?",
+        "How do plants convert light into stored energy?",
+    ]
+    assert model.generation_calls == 2

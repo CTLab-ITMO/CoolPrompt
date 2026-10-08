@@ -6,7 +6,6 @@ from typing import Any, List, Mapping, Optional, Tuple, override
 
 from langchain_core.language_models.base import BaseLanguageModel
 
-from coolprompt.data_generator.generator import SyntheticDataGenerator
 from coolprompt.evaluator import Evaluator
 from coolprompt.optimizer.autoprompting_method import (
     AutoPromptingMethod,
@@ -14,6 +13,8 @@ from coolprompt.optimizer.autoprompting_method import (
 )
 from coolprompt.optimizer.brave.evoluter import BRAVEEvoluter
 from coolprompt.optimizer.brave.utils import BRAVEConfig
+from coolprompt.spec_generator import generate_problem_description
+from coolprompt.utils.enums import Task
 from coolprompt.utils.logging_config import logger
 
 
@@ -101,19 +102,24 @@ class BRAVEMethod(AutoPromptingMethod):
     ) -> str:
         """Run BRAVE from a benchmark context."""
         problem_description = ctx.config.get("problem_description")
-        if problem_description is None:
-            generator = SyntheticDataGenerator(ctx._system_model)
+        if not problem_description or not problem_description.strip():
             count = min(5, len(ctx.dataset_split[0]))
             indices = sample(range(len(ctx.dataset_split[0])), count)
+            labels = None
+
+            if ctx.evaluator.task == Task.CLASSIFICATION:
+                labels = sorted({str(label) for label in ctx.dataset_split[2]})
+
             examples = [
-                (ctx.dataset_split[0][index], ctx.dataset_split[2][index])
+                (ctx.dataset_split[0][index], str(ctx.dataset_split[2][index]))
                 for index in indices
             ]
-            labels = generator._extract_labels(ctx.dataset_split[2])
-            problem_description = generator._generate_problem_description(
+
+            problem_description = generate_problem_description(
+                model=ctx._system_model,
                 prompt=start_prompt,
-                examples=examples,
                 task=ctx.evaluator.task,
+                examples=examples,
                 labels=labels,
             )
 
