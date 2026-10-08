@@ -68,8 +68,8 @@ def test_selector_ranks_quality_cost_time_and_maps_sapo(tmp_path):
     result = selector.select(model, "Summarize", "generation")
 
     assert result.recommended_method == "SAPO"
-    assert result.selected_method == "hyper"
-    assert result.fallback_reason == "SAPO is not implemented in CoolPrompt"
+    assert result.selected_method == "sapo"
+    assert result.fallback_reason is None
     assert result.candidates[0].final_score > result.candidates[-1].final_score
 
 

@@ -18,7 +18,7 @@ retrieve similar datasets, then ranks comparable configurations by quality,
 cost, and runtime. The result is stored in `PromptTuner.meta_selection` and
 included in telemetry exports. `meta_classifier_path` overrides the bundled
 CSV; `meta_dataset_name` is an optional retrieval hint. SAPO recommendations
-fall back to `hyper`, because SAPO is not yet implemented in CoolPrompt.
+select the built-in `sapo` optimizer.
 
 ---
 ## `evaluator/`
@@ -63,6 +63,7 @@ Method names accepted by `PromptTuner.run(method=...)`:
 - `regps` - RE-GPS optimizer.
 - `rider` - RIDER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider/README.md">Documentation</a>
 - `brave` - BRAVE budget-aware evolutionary optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/brave/README.md">Documentation</a>
+- `sapo` - segment-based optimizer using contrastive best/worst examples.
 - `compress` - PromptCompressor. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/prompt_compressor/README.md">Documentation</a>
 - `reflective` - legacy ReflectivePrompt. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/reflective_prompt/README.md">Documentation</a>
 - `distill` - legacy DistillPrompt. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/distill_prompt/README.md">Documentation</a>
@@ -73,7 +74,7 @@ Custom methods should implement `AutoPromptingMethod` and can be passed to `Prom
 ## `method_evaluation/`
 Benchmark interface for comparing autoprompting methods on dataset/config-based experiments.
 
-`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, `rider`, and `brave`.
+`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, `rider`, `brave`, and `sapo`.
 
 ---
 ## `data_generator/` and `task_detector/`
