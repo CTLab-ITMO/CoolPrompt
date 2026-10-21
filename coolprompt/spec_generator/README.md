@@ -332,6 +332,123 @@ candidates are requested within a bounded number of top-up attempts. During
 feedback-controlled generation, previously accepted examples are also shown
 to later generation calls to discourage repetition.
 
+## Arithmetic validation
+
+`MathValidator` is an optional post-generation validator for arithmetic word
+problems with a single numerical answer. It operates independently of
+`SyntheticDataGenerator` and is not enabled automatically.
+
+The validator uses a language model to independently reconstruct the
+arithmetic solution from the problem statement. The model receives the problem
+input without the original target answer and returns an arithmetic expression,
+computed and requested units, and numerical constraints.
+
+Python then:
+
+1. Evaluates the expression using exact Fraction arithmetic.
+2. Checks numerical constraints, including integrality, nonnegativity,
+   and supported rounding operations.
+3. Validates unit compatibility and performs conversions using pint.
+4. Compares the independently calculated result with the original target.
+5. Optionally requests verification from a second language model before
+   applying corrections.
+
+### Quick start
+
+```python
+from coolprompt.spec_generator.validation.math_validator import (
+    Example as MathExample,
+    create_math_validator,
+)
+
+validator = create_math_validator(
+    model=model,
+    batch_size=10,
+)
+
+validation = validator.validate(
+    [
+        MathExample(input=item.input, output=item.output)
+        for item in result.examples
+    ]
+)
+
+validated_examples = [
+    item.corrected or item.original
+    for item in validation
+    if item.status in {"accepted", "corrected"}
+]
+```
+
+Only accepted and corrected examples are retained; rejected and uncertain
+examples are excluded.
+
+The validator returns one of four statuses:
+
+* accepted: the independently calculated answer matches the original target.
+* corrected: the original target differs from the verified calculation and
+  has been replaced.
+* rejected: the problem is mathematically invalid or violates a hard
+  numerical constraint.
+* uncertain: the result cannot be verified reliably because of ambiguous
+  interpretation, incompatible units, invalid answer format, or disagreement
+  between models.
+
+### Independent cross-checking
+
+An optional cross_check_model independently verifies proposed corrections.
+
+```python
+validator = create_math_validator(
+    model=model,
+    cross_check_model=second_model,
+    batch_size=10,
+    require_cross_check=True,
+    audit_fraction=0.0,
+)
+```
+
+With require_cross_check=True, corrections require agreement between both
+models. If independent verification is unavailable or the models disagree,
+the validator returns uncertain instead of applying the correction.
+
+The audit_fraction parameter controls additional verification of examples
+initially classified as accepted:
+
+* 0.0 (default): no additional auditing of accepted examples; proposed
+  corrections are cross-checked when a cross-check model is configured.
+* 1.0: verify all proposed corrections and all accepted examples.
+* Values between 0.0 and 1.0: additionally audit a fraction of accepted
+  examples.
+
+A nonzero audit_fraction requires a cross-check model and increases API
+usage.
+
+### Units and numerical constraints
+
+The validator supports:
+
+* Exact arithmetic with rational numbers.
+* Restricted arithmetic expressions, including floor() and ceil().
+* Unit normalization and compatible conversions.
+* Currency and count-unit validation.
+* Integer and nonnegative quantity constraints.
+
+Unresolved unit ambiguities result in an uncertain status.
+
+### Limitations
+
+`MathValidator` verifies arithmetic consistency, numerical constraints, and
+unit compatibility. It does not formally prove that the language model has
+translated the natural-language problem into the correct mathematical
+expression.
+
+Consequently, even independently verified corrections may be incorrect when
+multiple models share the same interpretation error.
+
+The supported expression language is intentionally restricted to numerical
+literals, basic arithmetic operations, parentheses, floor(), and ceil().
+
 ## Generate only a task description
 
 Use `generate_problem_description` when only a concise task description is
@@ -355,7 +472,7 @@ generation tasks, omit `labels`.
 
 ## Use synthetic data with HyPER
 
-HyPER is a data-driven prompt optimizer that iteratively proposes prompt
+`HyPER` is a data-driven prompt optimizer that iteratively proposes prompt
 improvements and evaluates them on training and validation examples. Generated
 inputs and outputs can be passed to HyPER through `PromptTuner`:
 
