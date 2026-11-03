@@ -12,6 +12,7 @@ from coolprompt.optimizer.prompt_compressor import CompressorMethod
 from coolprompt.optimizer.reflective_prompt import ReflectiveMethod
 from coolprompt.optimizer.regps import ReGPSMethod
 from coolprompt.optimizer.rider import RIDERGenesisMethod
+from coolprompt.optimizer.rider_original import RIDEROriginalMethod
 from coolprompt.optimizer.sapo import SAPOMethod
 from coolprompt.utils.enums import PD_Method, Task
 from coolprompt.utils.logging_config import logger
@@ -24,6 +25,7 @@ _METHOD_BY_NAME: dict[str, type[AutoPromptingMethod]] = {
     "regps": ReGPSMethod,
     "compress": CompressorMethod,
     "rider": RIDERGenesisMethod,
+    "rider_original": RIDEROriginalMethod,
     "brave": BRAVEMethod,
     "sapo": SAPOMethod,
 }

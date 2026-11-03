@@ -62,6 +62,7 @@ Method names accepted by `PromptTuner.run(method=...)`:
 - `auto` - metadata-driven selection between supported data-driven methods.
 - `regps` - RE-GPS optimizer.
 - `rider` - RIDER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider/README.md">Documentation</a>
+- `rider_original` - the original RIDER from the FRUCT paper: nine evolutionary operators chosen by Windowed Thompson Sampling, evaluate-first (μ+λ) retention and error-directed evolution. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider_original/README.md">Documentation</a>
 - `brave` - BRAVE budget-aware evolutionary optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/brave/README.md">Documentation</a>
 - `sapo` - segment-based optimizer using contrastive best/worst examples.
 - `compress` - PromptCompressor. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/prompt_compressor/README.md">Documentation</a>
@@ -74,7 +75,7 @@ Custom methods should implement `AutoPromptingMethod` and can be passed to `Prom
 ## `method_evaluation/`
 Benchmark interface for comparing autoprompting methods on dataset/config-based experiments.
 
-`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, `rider`, `brave`, and `sapo`.
+`evaluate_method(...)` supports the built-in method names `hyper_light`, `hyper`, `reflective`, `reflectiveprompt`, `distill`, `compress`, `regps`, `rider`, `rider_original`, `brave`, and `sapo`.
 
 ---
 
