@@ -62,7 +62,7 @@ Method names accepted by `PromptTuner.run(method=...)`:
 - `auto` - metadata-driven selection between supported data-driven methods.
 - `regps` - RE-GPS optimizer.
 - `rider` - RIDER optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider/README.md">Documentation</a>
-- `rider_original` - the original RIDER from the FRUCT paper: nine evolutionary operators chosen by Windowed Thompson Sampling, evaluate-first (μ+λ) retention and error-directed evolution. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider_original/README.md">Documentation</a>
+- `rider_original` - the original RIDER from the FRUCT paper: nine evolutionary operators chosen by Windowed Thompson Sampling, evaluate-first (μ+λ) retention and error-directed evolution. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/rider_original/README.md">Documentation</a> One-call use: `from coolprompt import rider; result = rider(model, prompt, texts, labels, task="classification", metric="f1")`.
 - `brave` - BRAVE budget-aware evolutionary optimizer. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/brave/README.md">Documentation</a>
 - `sapo` - segment-based optimizer using contrastive best/worst examples.
 - `compress` - PromptCompressor. <a href="https://github.com/CTLab-ITMO/CoolPrompt/blob/master/coolprompt/optimizer/prompt_compressor/README.md">Documentation</a>

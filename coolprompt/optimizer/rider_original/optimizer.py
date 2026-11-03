@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import json
 import random
 import re
 import statistics
 import threading
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Sequence
 
 import numpy as np
@@ -84,6 +87,85 @@ class RIDERResult:
     operator_statistics: dict[str, dict[str, float]] = field(default_factory=dict)
     system_calls: int = 0
     evaluations: int = 0
+    initial_prompt: str = ""
+    initial_fitness: float | None = None
+    # (evaluator, template) used by ``predict``; set by ``rider()``.
+    predictor: tuple[Any, str | None] | None = field(default=None, repr=False, compare=False)
+
+    @property
+    def ensemble_prompts(self) -> list[str]:
+        return [c.text for c in self.ensemble]
+
+    def summary(self) -> str:
+        """Human-readable report of the run."""
+
+        start = "n/a" if self.initial_fitness is None else f"{self.initial_fitness:.4f}"
+        lines = [
+            f"RIDER: validation {start} -> {self.best_fitness:.4f}",
+            f"System-model calls: {self.system_calls}, prompt evaluations: {self.evaluations}",
+            "",
+            "gen   best    mean    T     eps   accepted offspring",
+        ]
+        for h in self.history:
+            accepted = ", ".join(f"{op} {n}" for op, n in sorted(h.accepted.items())) or "-"
+            mark = "  restart" if h.restarted else ""
+            lines.append(
+                f"{h.generation:>3}  {h.best_fitness:.4f}  {h.mean_fitness:.4f}  "
+                f"{h.temperature:.2f}  {h.epsilon:.2f}  {accepted}{mark}"
+            )
+        lines += ["", "Operators (trials, mean reward):"]
+        for op, st in self.operator_statistics.items():
+            lines.append(f"  {op}: {int(st['trials'])}, {st['mean_reward']:.2f}")
+        lines += ["", "Best prompt:", self.best_prompt]
+        return "\n".join(lines)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "best_prompt": self.best_prompt,
+            "best_fitness": self.best_fitness,
+            "initial_prompt": self.initial_prompt,
+            "initial_fitness": self.initial_fitness,
+            "ensemble": [
+                {"text": c.text, "fitness": c.fitness, "operator": c.operator}
+                for c in self.ensemble
+            ],
+            "history": [vars(h) for h in self.history],
+            "operator_statistics": self.operator_statistics,
+            "system_calls": self.system_calls,
+            "evaluations": self.evaluations,
+        }
+
+    def save(self, path: str | Path) -> Path:
+        """Write the result as JSON and return the path."""
+
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+        return path
+
+    def predict(self, inputs: Sequence[str]) -> list[str]:
+        """Majority vote of the k-DPP ensemble prompts (Sec. III-H).
+
+        Ties, and inputs where no answer repeats, go to the fittest prompt.
+        """
+
+        if self.predictor is None:
+            raise RuntimeError("predict() needs a result returned by rider()")
+        evaluator, template = self.predictor
+        prompts = self.ensemble_prompts or [self.best_prompt]
+        answers = []
+        for prompt in prompts:
+            full = [evaluator._get_full_prompt(prompt, str(x), template) for x in inputs]
+            raw = evaluator._run_batches(full)
+            answers.append([str(evaluator.metric.parse_output(a)).strip() for a in raw])
+        votes = []
+        for i in range(len(inputs)):
+            column = [answer[i] for answer in answers]
+            counts = Counter(column)
+            top = max(counts.values())
+            # column[0] comes from the fittest prompt, so it wins ties.
+            votes.append(next(a for a in column if counts[a] == top))
+        return votes
 
 
 def _largest_remainder(weights: dict[str, float], total: int) -> dict[str, int]:
@@ -329,8 +411,11 @@ class RIDEROriginalOptimizer:
 
     def _enabled_operators(self) -> list[str]:
         disabled = set(self.config.disabled_operators)
-        metric_name = type(getattr(self.evaluator, "metric", None)).__name__.lower()
-        if any(part in metric_name for part in OPEN_ENDED_METRICS):
+        open_ended = self.config.open_ended
+        if open_ended is None:
+            metric_name = type(getattr(self.evaluator, "metric", None)).__name__.lower()
+            open_ended = any(part in metric_name for part in OPEN_ENDED_METRICS)
+        if open_ended:
             disabled |= OPEN_ENDED_DISABLED_OPERATORS
         return [op for op in OPERATORS if op not in disabled]
 
@@ -389,6 +474,10 @@ class RIDEROriginalOptimizer:
             val_inputs, val_targets = train_inputs, train_targets
         if not val_inputs:
             raise ValueError("RIDER needs a validation (or training) split for fitness")
+        if cfg.validation_limit and len(val_inputs) > cfg.validation_limit:
+            keep = sorted(random.Random(cfg.seed).sample(range(len(val_inputs)), cfg.validation_limit))
+            val_inputs = [val_inputs[i] for i in keep]
+            val_targets = [val_targets[i] for i in keep]
         train = list(zip(train_inputs, train_targets)) or list(zip(val_inputs, val_targets))
         task_description = (problem_description or "").strip() or (
             f"Improve this instruction for its task:\n{initial_prompt.strip()}"
@@ -397,6 +486,8 @@ class RIDEROriginalOptimizer:
         population = self._initial_population(
             initial_prompt, task_description, train, val_inputs, val_targets
         )
+        seeded = self._cache.get(initial_prompt.strip())
+        initial_fitness = seeded.fitness if seeded is not None else None
         operators = self._enabled_operators()
         selector = self._selector(operators)
         memory = LongTermMemory(patterns=cfg.memory_patterns)
@@ -530,6 +621,8 @@ class RIDEROriginalOptimizer:
             operator_statistics=selector.statistics(),
             system_calls=self.system_calls,
             evaluations=self.evaluations,
+            initial_prompt=initial_prompt,
+            initial_fitness=initial_fitness,
         )
 
     def _soft_restart(

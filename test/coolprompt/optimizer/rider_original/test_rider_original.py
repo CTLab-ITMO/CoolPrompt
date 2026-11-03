@@ -1,5 +1,6 @@
 """Offline tests for the original RIDER: no network, no real models."""
 
+import json
 import random
 import re
 import threading
@@ -307,3 +308,60 @@ def test_stagnation_raises_temperature_once_then_restarts():
     assert [r.restarted for r in result.history] == [False, False, False, True]
     assert result.history[-1].stagnation == 0
     assert any(c.operator == "restart_zero_order" for c in result.population)
+
+
+def test_open_ended_flag_overrides_the_metric():
+    opt, _, _ = _optimizer(metric=RougeMetric(), open_ended=False)
+    assert "lamarckian" in opt._enabled_operators()
+    opt, _, _ = _optimizer(open_ended=True)
+    assert "reflection_crossover" not in opt._enabled_operators()
+
+
+class FakeTargetModel(BaseChatModel):
+    """Answers correctly only when the instruction asks to verify."""
+
+    @property
+    def _llm_type(self) -> str:
+        return "fake-target"
+
+    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
+        text = messages[-1].content
+        truth = "neg" if "bad" in text.split("Input:")[-1] else "pos"
+        answer = truth if "verify" in text else "pos"
+        return ChatResult(generations=[ChatGeneration(message=AIMessage(content=f"<ans>{answer}</ans>"))])
+
+
+def test_presets_and_validation_limit():
+    assert RIDERConfig.from_preset("fast").num_generations == 4
+    assert RIDERConfig.from_preset("fast", num_generations=2).num_generations == 2
+    with pytest.raises(ValueError):
+        RIDERConfig.from_preset("huge")
+    from coolprompt.optimizer.rider_original.method import build_config
+    cfg = build_config({"rider_preset": "smoke", "seed": None, "embedding_model": None})
+    assert cfg.population_size == 4 and cfg.seed is None and cfg.embedding_model is None
+    opt, _, evaluator = _optimizer(validation_limit=3, num_generations=1)
+    sizes = []
+    original = evaluator.evaluate
+    evaluator.evaluate = lambda prompt, dataset, *a, **k: sizes.append(len(dataset)) or original(prompt, dataset, *a, **k)
+    train_x, val_x, train_y, val_y = _split()
+    opt.optimize("Answer the question.", train_inputs=train_x, train_targets=train_y,
+                 val_inputs=val_x, val_targets=val_y)
+    assert set(sizes) == {3}
+
+
+def test_one_call_rider_api(tmp_path):
+    from coolprompt import rider
+
+    texts = [f"{'bad' if i % 2 else 'good'} review number {i}" for i in range(24)]
+    labels = ["neg" if i % 2 else "pos" for i in range(24)]
+    system = FakeSystemModel()
+    system.prompts = []
+    result = rider(FakeTargetModel(), "Label the review.", texts, labels, task="classification",
+                   metric="f1", system_model=system, preset="smoke", embedding_model=None,
+                   problem_description="Label reviews as pos or neg.", verbose=False)
+    assert "verify" in result.best_prompt and result.best_fitness == 1.0
+    assert result.initial_fitness is not None and result.initial_fitness < 1.0
+    assert "RIDER: validation" in result.summary()
+    saved = json.loads(result.save(tmp_path / "rider.json").read_text(encoding="utf-8"))
+    assert saved["best_prompt"] == result.best_prompt
+    assert result.predict(["bad thing", "good thing"]) == ["neg", "pos"]

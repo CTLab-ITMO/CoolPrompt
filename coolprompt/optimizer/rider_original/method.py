@@ -16,21 +16,30 @@ from .config import RIDERConfig
 from .optimizer import RIDEROriginalOptimizer, RIDERResult
 
 _CONFIG_FIELDS = {f.name for f in fields(RIDERConfig)}
+# Fields where None is a meaningful value rather than "not set".
+_NULLABLE = {"embedding_model", "seed", "validation_limit", "open_ended"}
 
 
 def build_config(options: dict[str, Any]) -> RIDERConfig:
-    """Build a config from keyword options; ``rider_``-prefixed keys also work."""
+    """Build a config from keyword options; ``rider_``-prefixed keys also work.
+
+    ``preset`` (``"paper"``, ``"fast"``, ``"smoke"``) picks the base configuration.
+    """
 
     values: dict[str, Any] = {}
+    preset = "paper"
     for key, value in options.items():
         name = key[len("rider_") :] if key.startswith("rider_") else key
         if name == "epochs":
             name = "num_generations"
-        if name in _CONFIG_FIELDS and value is not None:
+        if name == "preset":
+            preset = value or preset
+            continue
+        if name in _CONFIG_FIELDS and (value is not None or name in _NULLABLE):
             values[name] = value
     if "disabled_operators" in values:
         values["disabled_operators"] = frozenset(values["disabled_operators"])
-    return RIDERConfig(**values)
+    return RIDERConfig.from_preset(preset, **values)
 
 
 class RIDEROriginalMethod(AutoPromptingMethod):
@@ -58,7 +67,8 @@ class RIDEROriginalMethod(AutoPromptingMethod):
         train_x, val_x, train_y, val_y = dataset_split
         template = kwargs.pop("template", None)
         config = build_config(kwargs)
-        unused = sorted(k for k in kwargs if k.removeprefix("rider_") not in _CONFIG_FIELDS | {"epochs"})
+        known = _CONFIG_FIELDS | {"epochs", "preset"}
+        unused = sorted(k for k in kwargs if k.removeprefix("rider_") not in known)
         if unused:
             logger.debug("RIDER: ignoring unknown options %s", unused)
         optimizer = RIDEROriginalOptimizer(model, evaluator, config, template=template)

@@ -87,6 +87,10 @@ class RIDERConfig:
     ensemble_size: int = 5
     ensemble_quality_weight: float = 1.0
 
+    # Fitness uses at most this many validation examples (a seeded random subset);
+    # None uses the whole validation split.
+    validation_limit: int | None = None
+
     # Stop early once a prompt reaches the metric's maximum; nothing can improve it.
     stop_at_perfect: bool = True
     perfect_score: float = 1.0
@@ -95,6 +99,17 @@ class RIDERConfig:
     max_workers: int = 8
     seed: int | None = 42
     disabled_operators: frozenset[str] = field(default_factory=frozenset)
+    # Open-ended task (no single correct output): disables reflective operators.
+    # None infers it from the metric (BERTScore, ROUGE, BLEU, METEOR, judges).
+    open_ended: bool | None = None
+
+    @classmethod
+    def from_preset(cls, preset: str = "paper", **overrides) -> "RIDERConfig":
+        """Config of a named preset; keyword overrides take precedence."""
+
+        if preset not in PRESETS:
+            raise ValueError(f"Unknown RIDER preset {preset!r}; choose from {sorted(PRESETS)}")
+        return cls(**{**PRESETS[preset], **overrides})
 
     @property
     def offspring_per_generation(self) -> int:
@@ -109,8 +124,32 @@ class RIDERConfig:
             raise ValueError("offspring_multiplier must be at least 1")
         if not 0.0 <= self.epsilon <= 1.0 or not 0.0 <= self.stagnation_epsilon <= 1.0:
             raise ValueError("epsilon values must lie in [0, 1]")
+        if self.validation_limit is not None and self.validation_limit < 1:
+            raise ValueError("validation_limit must be positive or None")
         if not 0.0 < self.thompson_decay <= 1.0:
             raise ValueError("thompson_decay must lie in (0, 1]")
         unknown = set(self.disabled_operators) - set(OPERATORS)
         if unknown:
             raise ValueError(f"Unknown operators: {sorted(unknown)}")
+
+
+# Ready-made configurations. "paper" is the published setup (N=12, G=8); "fast"
+# halves the search and scores fitness on 50 validation examples; "smoke" only
+# checks that everything is wired up.
+PRESETS: dict[str, dict] = {
+    "paper": {},
+    "fast": {
+        "population_size": 8,
+        "num_generations": 4,
+        "data_aware_seeds": 3,
+        "zero_order_seeds": 3,
+        "validation_limit": 50,
+    },
+    "smoke": {
+        "population_size": 4,
+        "num_generations": 1,
+        "data_aware_seeds": 1,
+        "zero_order_seeds": 1,
+        "validation_limit": 10,
+    },
+}

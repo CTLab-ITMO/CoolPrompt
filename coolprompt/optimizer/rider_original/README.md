@@ -41,7 +41,9 @@ A population of `N = 12` prompts evolves for `G = 8` generations.
 
    Reflective operators are disabled for open-ended metrics (BERTScore, ROUGE, BLEU,
    METEOR, LLM-as-judge, G-Eval), where no single correct output exists. Tasks with
-   one correct answer, such as GSM8K with exact match, keep them.
+   one correct answer, such as GSM8K with exact match, keep them. Pass `open_ended=True` or
+   `False` to set this explicitly (for example, SQuAD scored with BERTScore still has one
+   correct answer).
 5. **Evaluate-first (μ+λ) retention.** All offspring are scored before any decision.
    Parents and offspring are pooled, sorted by fitness and the top `N` kept greedily;
    a prompt with Sentence-BERT cosine similarity above 0.92 to a kept one is skipped
@@ -63,24 +65,68 @@ A population of `N = 12` prompts evolves for `G = 8` generations.
 
 ## Usage
 
-```python
-from coolprompt.assistant import PromptTuner
+### One call
 
+```python
+from coolprompt import rider
+
+result = rider(
+    model,                                    # any LangChain chat model
+    "Classify the emotion of the tweet.",
+    texts,
+    labels,
+    task="classification",
+    metric="f1",
+    problem_description="Classify tweets as anger, joy, optimism or sadness.",
+)
+
+result.best_prompt                # the optimized prompt
+print(result.summary())           # scores per generation, operators, best prompt
+result.save("rider_result.json")  # everything, as JSON
+result.predict(new_texts)         # majority vote of the k-DPP ensemble
+```
+
+`rider()` splits the data (stratified, `validation_size=0.25`), scores prompts with the
+CoolPrompt metric and prints progress per generation. Pass `system_model=` to let a
+different model write the prompts.
+
+### Presets
+
+| Preset | Search | When |
+|---|---|---|
+| `"paper"` (default) | N=12, G=8, full validation split | results to report |
+| `"fast"` | N=8, G=4, fitness on 50 validation examples | quick iteration: ~100 prompts instead of ~300 |
+| `"smoke"` | N=4, G=1, 10 validation examples | checking the setup |
+
+```python
+result = rider(model, prompt, texts, labels, preset="fast")
+result = rider(model, prompt, texts, labels, preset="fast", num_generations=6)
+```
+
+Any `RIDERConfig` field can be overridden by name: `population_size`,
+`num_generations`, `validation_limit`, `seed`, `max_workers`, `embedding_model`,
+`open_ended`, `disabled_operators`, `stop_at_perfect`, and so on.
+
+### Through PromptTuner
+
+```python
+from coolprompt import PromptTuner
+from coolprompt.optimizer.rider_original import RIDEROriginalMethod
+
+method = RIDEROriginalMethod()
 tuner = PromptTuner(target_model=model)
 final_prompt = tuner.run(
     start_prompt="Classify the emotion of the tweet.",
     task="classification",
     dataset=texts,
     target=labels,
-    method="rider_original",
+    method=method,              # or method="rider_original"
     metric="f1",
     system_model_as_optimizer=True,
+    rider_preset="fast",        # options work with or without the rider_ prefix
 )
+print(method.last_result.summary())
 ```
-
-Every field of `RIDERConfig` can be passed as a keyword argument, with or without the
-`rider_` prefix: `population_size`, `num_generations`, `seed`, `max_workers`,
-`embedding_model`, `disabled_operators`, and so on.
 
 ## Robustness
 
