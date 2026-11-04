@@ -11,13 +11,56 @@ _SENTENCE = re.compile(r"(?<=[.!?])\s+")
 _WORD = re.compile(r"[A-Za-zА-Яа-яЁё][A-Za-zА-Яа-яЁё'-]+")
 # Common instruction verbs used to summarize what a prompt asks the model to do.
 _ACTION_VERBS = {
-    "analyze", "answer", "apply", "avoid", "calculate", "check", "choose",
-    "classify", "compare", "compute", "consider", "convert", "count", "define",
-    "describe", "determine", "do", "double-check", "ensure", "explain",
-    "extract", "focus", "follow", "format", "generate", "give", "identify",
-    "include", "infer", "keep", "label", "list", "locate", "match", "note",
-    "output", "pick", "provide", "read", "reason", "respond", "return",
-    "review", "select", "solve", "state", "summarize", "use", "verify", "write",
+    "analyze",
+    "answer",
+    "apply",
+    "avoid",
+    "calculate",
+    "check",
+    "choose",
+    "classify",
+    "compare",
+    "compute",
+    "consider",
+    "convert",
+    "count",
+    "define",
+    "describe",
+    "determine",
+    "do",
+    "double-check",
+    "ensure",
+    "explain",
+    "extract",
+    "focus",
+    "follow",
+    "format",
+    "generate",
+    "give",
+    "identify",
+    "include",
+    "infer",
+    "keep",
+    "label",
+    "list",
+    "locate",
+    "match",
+    "note",
+    "output",
+    "pick",
+    "provide",
+    "read",
+    "reason",
+    "respond",
+    "return",
+    "review",
+    "select",
+    "solve",
+    "state",
+    "summarize",
+    "use",
+    "verify",
+    "write",
 }
 
 
@@ -48,7 +91,9 @@ class LongTermMemory:
         """Successes from the kept population, failures from everything evaluated."""
 
         kept = sorted(
-            (c for c in population if c.evaluated), key=lambda c: c.fitness, reverse=True
+            (c for c in population if c.evaluated),
+            key=lambda c: c.fitness,
+            reverse=True,
         )
         if not kept:
             return

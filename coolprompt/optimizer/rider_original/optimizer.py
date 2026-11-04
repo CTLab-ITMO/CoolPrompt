@@ -90,7 +90,9 @@ class RIDERResult:
     initial_prompt: str = ""
     initial_fitness: float | None = None
     # (evaluator, template) used by ``predict``; set by ``rider()``.
-    predictor: tuple[Any, str | None] | None = field(default=None, repr=False, compare=False)
+    predictor: tuple[Any, str | None] | None = field(
+        default=None, repr=False, compare=False
+    )
 
     @property
     def ensemble_prompts(self) -> list[str]:
@@ -107,7 +109,9 @@ class RIDERResult:
             "gen   best    mean    T     eps   accepted offspring",
         ]
         for h in self.history:
-            accepted = ", ".join(f"{op} {n}" for op, n in sorted(h.accepted.items())) or "-"
+            accepted = (
+                ", ".join(f"{op} {n}" for op, n in sorted(h.accepted.items())) or "-"
+            )
             mark = "  restart" if h.restarted else ""
             lines.append(
                 f"{h.generation:>3}  {h.best_fitness:.4f}  {h.mean_fitness:.4f}  "
@@ -140,7 +144,9 @@ class RIDERResult:
 
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+        path.write_text(
+            json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         return path
 
     def predict(self, inputs: Sequence[str]) -> list[str]:
@@ -155,7 +161,9 @@ class RIDERResult:
         prompts = self.ensemble_prompts or [self.best_prompt]
         answers = []
         for prompt in prompts:
-            full = [evaluator._get_full_prompt(prompt, str(x), template) for x in inputs]
+            full = [
+                evaluator._get_full_prompt(prompt, str(x), template) for x in inputs
+            ]
             raw = evaluator._run_batches(full)
             answers.append([str(evaluator.metric.parse_output(a)).strip() for a in raw])
         votes = []
@@ -173,7 +181,9 @@ def _largest_remainder(weights: dict[str, float], total: int) -> dict[str, int]:
     exact = {key: total * w / norm for key, w in weights.items()}
     counts = {key: int(value) for key, value in exact.items()}
     leftover = total - sum(counts.values())
-    for key in sorted(exact, key=lambda k: exact[k] - counts[k], reverse=True)[:leftover]:
+    for key in sorted(exact, key=lambda k: exact[k] - counts[k], reverse=True)[
+        :leftover
+    ]:
         counts[key] += 1
     return counts
 
@@ -191,7 +201,9 @@ def quota_allocation(operators: list[str], total: int) -> list[str]:
         for name, (share, members) in OPERATOR_CLASSES.items()
     }
     classes = {name: value for name, value in classes.items() if value[1]}
-    per_class = _largest_remainder({n: share for n, (share, _) in classes.items()}, total)
+    per_class = _largest_remainder(
+        {n: share for n, (share, _) in classes.items()}, total
+    )
     chosen: list[str] = []
     for name, (_, members) in classes.items():
         counts = _largest_remainder({op: 1.0 for op in members}, per_class[name])
@@ -244,7 +256,9 @@ class RIDEROriginalOptimizer:
             except Exception as exc:
                 if self._temperature_supported:
                     raise  # temperature worked before: this is a real failure
-                logger.warning("RIDER: model rejected temperature (%s); using defaults", exc)
+                logger.warning(
+                    "RIDER: model rejected temperature (%s); using defaults", exc
+                )
                 self._temperature_supported = False
         if response is None:
             response = self.model.invoke(meta_prompt)
@@ -265,9 +279,8 @@ class RIDEROriginalOptimizer:
         return text, tagged
 
     def _is_degenerate(self, text: str) -> bool:
-        return (
-            len(text.split()) < self.config.min_prompt_words
-            or bool(_META_COMMENTARY.match(text))
+        return len(text.split()) < self.config.min_prompt_words or bool(
+            _META_COMMENTARY.match(text)
         )
 
     def _generate(
@@ -299,7 +312,9 @@ class RIDEROriginalOptimizer:
 
     # ----------------------------------------------------------- evaluation
 
-    def _evaluate(self, cand: Candidate, val_x: list[str], val_y: list[Any]) -> Candidate:
+    def _evaluate(
+        self, cand: Candidate, val_x: list[str], val_y: list[Any]
+    ) -> Candidate:
         cached = self._cache.get(cand.text)
         if cached is not None:
             cand.fitness, cand.errors = cached.fitness, list(cached.errors)
@@ -356,20 +371,30 @@ class RIDEROriginalOptimizer:
         lo, hi = cfg.data_aware_temperature
         if train:
             for temp in np.linspace(lo, hi, cfg.data_aware_seeds):
-                sample = self.rng.sample(train, min(cfg.data_aware_examples, len(train)))
+                sample = self.rng.sample(
+                    train, min(cfg.data_aware_examples, len(train))
+                )
                 examples = "\n\n".join(
                     f"Input: {str(x).strip()[:700]}\nOutput: {target_text(y)[:700]}"
                     for x, y in sample
                 )
                 jobs.append(
-                    (DATA_AWARE_TEMPLATE.format(header=header, examples=examples), float(temp), False)
+                    (
+                        DATA_AWARE_TEMPLATE.format(header=header, examples=examples),
+                        float(temp),
+                        False,
+                    )
                 )
                 kinds.append("data_aware")
         lo, hi = cfg.zero_order_temperature
         for i, temp in enumerate(np.linspace(lo, hi, cfg.zero_order_seeds)):
             approach = ZERO_ORDER_APPROACHES[i % len(ZERO_ORDER_APPROACHES)]
             jobs.append(
-                (ZERO_ORDER_SEED_TEMPLATE.format(header=header, approach=approach), float(temp), False)
+                (
+                    ZERO_ORDER_SEED_TEMPLATE.format(header=header, approach=approach),
+                    float(temp),
+                    False,
+                )
             )
             kinds.append("zero_order")
 
@@ -385,7 +410,10 @@ class RIDEROriginalOptimizer:
         ]
 
         fallbacks = [initial_prompt.strip()]
-        if task_description.strip() and task_description.strip() != initial_prompt.strip():
+        if (
+            task_description.strip()
+            and task_description.strip() != initial_prompt.strip()
+        ):
             fallbacks.append(
                 f"{initial_prompt.strip()}\n\nTask details: {task_description.strip()}"
             )
@@ -445,7 +473,9 @@ class RIDEROriginalOptimizer:
             elite=self.config.elite_size,
         )
 
-    def _context(self, population, best, task_description, memory, train) -> OperatorContext:
+    def _context(
+        self, population, best, task_description, memory, train
+    ) -> OperatorContext:
         return OperatorContext(
             task_description=task_description,
             population=population,
@@ -475,10 +505,16 @@ class RIDEROriginalOptimizer:
         if not val_inputs:
             raise ValueError("RIDER needs a validation (or training) split for fitness")
         if cfg.validation_limit and len(val_inputs) > cfg.validation_limit:
-            keep = sorted(random.Random(cfg.seed).sample(range(len(val_inputs)), cfg.validation_limit))
+            keep = sorted(
+                random.Random(cfg.seed).sample(
+                    range(len(val_inputs)), cfg.validation_limit
+                )
+            )
             val_inputs = [val_inputs[i] for i in keep]
             val_targets = [val_targets[i] for i in keep]
-        train = list(zip(train_inputs, train_targets)) or list(zip(val_inputs, val_targets))
+        train = list(zip(train_inputs, train_targets)) or list(
+            zip(val_inputs, val_targets)
+        )
         task_description = (problem_description or "").strip() or (
             f"Improve this instruction for its task:\n{initial_prompt.strip()}"
         )
@@ -514,7 +550,9 @@ class RIDEROriginalOptimizer:
                     selector.select(generation, epsilon)
                     for _ in range(cfg.offspring_per_generation)
                 ]
-            requests: list[OperatorRequest] = [OPERATOR_BUILDERS[op](ctx) for op in chosen]
+            requests: list[OperatorRequest] = [
+                OPERATOR_BUILDERS[op](ctx) for op in chosen
+            ]
             texts = self._generate_many(
                 [(r.meta_prompt, temperature, r.requires_tags) for r in requests]
             )
@@ -562,17 +600,21 @@ class RIDEROriginalOptimizer:
                 stagnation += 1
                 if stagnation == cfg.stagnation_generations:
                     temperature = min(
-                        temperature * cfg.stagnation_temperature_factor, cfg.max_temperature
+                        temperature * cfg.stagnation_temperature_factor,
+                        cfg.max_temperature,
                     )
             else:
                 # Cool down only after genuine progress from a non-stagnated state.
                 if stagnation < cfg.stagnation_generations:
                     temperature = max(
-                        cfg.base_temperature, temperature * cfg.recovery_temperature_factor
+                        cfg.base_temperature,
+                        temperature * cfg.recovery_temperature_factor,
                     )
                 stagnation = 0
             if stagnation >= cfg.restart_generations:
-                restart_ctx = self._context(population, best, task_description, memory, train)
+                restart_ctx = self._context(
+                    population, best, task_description, memory, train
+                )
                 population = self._soft_restart(
                     population, restart_ctx, temperature, val_inputs, val_targets
                 )
@@ -610,7 +652,10 @@ class RIDEROriginalOptimizer:
                 telemetry_callback(generation, best.fitness, best.text)
 
         ensemble = greedy_kdpp(
-            population, cfg.ensemble_size, self.embedder.similarity, cfg.ensemble_quality_weight
+            population,
+            cfg.ensemble_size,
+            self.embedder.similarity,
+            cfg.ensemble_quality_weight,
         )
         return RIDERResult(
             best_prompt=best.text,
@@ -636,10 +681,14 @@ class RIDEROriginalOptimizer:
         """Replace the bottom half with fresh zero-order prompts (Sec. III-F)."""
 
         cfg = self.config
-        keep = population[: len(population) - int(len(population) * cfg.restart_fraction)]
+        keep = population[
+            : len(population) - int(len(population) * cfg.restart_fraction)
+        ]
         needed = cfg.population_size - len(keep)
         requests = [zero_order(ctx) for _ in range(needed)]
-        texts = self._generate_many([(r.meta_prompt, temperature, False) for r in requests])
+        texts = self._generate_many(
+            [(r.meta_prompt, temperature, False) for r in requests]
+        )
         seen = {c.text for c in keep}
         fresh: list[Candidate] = []
         for text in texts:
@@ -651,5 +700,7 @@ class RIDEROriginalOptimizer:
         logger.info("RIDER: soft restart replaced %d prompts", len(fresh))
         merged = keep + fresh
         if len(merged) < cfg.population_size:
-            merged += population[len(keep) : len(keep) + cfg.population_size - len(merged)]
+            merged += population[
+                len(keep) : len(keep) + cfg.population_size - len(merged)
+            ]
         return sorted(merged, key=lambda c: c.fitness, reverse=True)

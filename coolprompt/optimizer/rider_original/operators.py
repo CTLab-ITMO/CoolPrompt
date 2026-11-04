@@ -119,7 +119,9 @@ def eda_mutation(ctx: OperatorContext) -> OperatorRequest:
 
     filtered = list(ctx.ranked)
     if ctx.similarity is not None:
-        filtered = drop_near_duplicates(filtered, ctx.similarity, ctx.duplicate_threshold)
+        filtered = drop_near_duplicates(
+            filtered, ctx.similarity, ctx.duplicate_threshold
+        )
     ctx.rng.shuffle(filtered)
     meta = (
         _header(ctx)
@@ -127,10 +129,7 @@ def eda_mutation(ctx: OperatorContext) -> OperatorRequest:
         + _numbered(filtered, with_scores=False)
         + "\n\nStudy what these instructions have in common and how they differ. "
         "Write one new instruction that combines their strongest common ideas "
-        "and is better than any of them."
-        + _feedback(ctx)
-        + "\n\n"
-        + ANSWER_FORMAT
+        "and is better than any of them." + _feedback(ctx) + "\n\n" + ANSWER_FORMAT
     )
     return OperatorRequest(meta, tuple(filtered))
 
@@ -161,8 +160,7 @@ def de_mutation(ctx: OperatorContext) -> OperatorRequest:
     donor_a = ctx.random_member(exclude=(best, current))
     donor_b = ctx.random_member(exclude=(best, current, donor_a))
     meta = (
-        _header(ctx)
-        + "\nApply a differential-evolution step to instructions.\n"
+        _header(ctx) + "\nApply a differential-evolution step to instructions.\n"
         f"Current instruction:\n{current.text.strip()}\n\n"
         f"Best instruction so far (score {best.fitness:.3f}):\n{best.text.strip()}\n\n"
         f"Donor A:\n{donor_a.text.strip()}\n\nDonor B:\n{donor_b.text.strip()}\n\n"
@@ -220,10 +218,7 @@ def ga_crossover(ctx: OperatorContext) -> OperatorRequest:
         + "\nCross over the two parent instructions below: build one child "
         "instruction that takes the strongest parts of each parent and merges them "
         f"into a coherent whole.\n\nParent 1:\n{first.text.strip()}\n\n"
-        f"Parent 2:\n{second.text.strip()}"
-        + _feedback(ctx)
-        + "\n\n"
-        + ANSWER_FORMAT
+        f"Parent 2:\n{second.text.strip()}" + _feedback(ctx) + "\n\n" + ANSWER_FORMAT
     )
     return OperatorRequest(meta, (first, second))
 

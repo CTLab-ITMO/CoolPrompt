@@ -22,7 +22,14 @@ OPEN_ENDED_DISABLED_OPERATORS: frozenset[str] = frozenset(
     {"reflection_crossover", "lamarckian"}
 )
 # Metric class-name fragments that mean "no single correct output".
-OPEN_ENDED_METRICS: tuple[str, ...] = ("bert", "rouge", "bleu", "meteor", "judge", "geval")
+OPEN_ENDED_METRICS: tuple[str, ...] = (
+    "bert",
+    "rouge",
+    "bleu",
+    "meteor",
+    "judge",
+    "geval",
+)
 
 
 def operator_budget_shares() -> dict[str, float]:
@@ -108,7 +115,9 @@ class RIDERConfig:
         """Config of a named preset; keyword overrides take precedence."""
 
         if preset not in PRESETS:
-            raise ValueError(f"Unknown RIDER preset {preset!r}; choose from {sorted(PRESETS)}")
+            raise ValueError(
+                f"Unknown RIDER preset {preset!r}; choose from {sorted(PRESETS)}"
+            )
         return cls(**{**PRESETS[preset], **overrides})
 
     @property

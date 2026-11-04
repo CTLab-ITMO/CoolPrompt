@@ -127,14 +127,12 @@ def mu_plus_lambda_select(
             selected.append(cand)
             continue
         twin = next(
-            (
-                kept
-                for kept in selected
-                if sim[i, index[id(kept)]] > threshold
-            ),
+            (kept for kept in selected if sim[i, index[id(kept)]] > threshold),
             None,
         )
-        if twin is not None and _within_tolerance(cand.fitness, twin.fitness, tolerance):
+        if twin is not None and _within_tolerance(
+            cand.fitness, twin.fitness, tolerance
+        ):
             skipped.append(cand)
         else:
             selected.append(cand)

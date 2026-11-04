@@ -72,7 +72,9 @@ def rider(
         task=task,
         random_state=config.seed if config.seed is not None else 42,
     )
-    optimizer = RIDEROriginalOptimizer(system_model, evaluator, config, template=template)
+    optimizer = RIDEROriginalOptimizer(
+        system_model, evaluator, config, template=template
+    )
     result = optimizer.optimize(
         start_prompt,
         train_inputs=list(train_x),
