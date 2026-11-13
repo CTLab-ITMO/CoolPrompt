@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import ast
 import json
 import random
 import re
@@ -19,11 +18,47 @@ from coolprompt.spec_generator.utils import parse_structured
 from coolprompt.spec_generator.validation.math_constants import (
     MathValidationConstants as C,
 )
+from coolprompt.spec_generator.validation.math_parsing import (
+    Evaluation,
+    calculate,
+    evaluate_expression,
+    format_number,
+    is_terminating_decimal,
+    parse_answer,
+    parse_answer_with_unit,
+)
+from coolprompt.spec_generator.validation.math_units import (
+    UnitError,
+    _alias_key,
+    _define,
+    _same_unit,
+    convert_units,
+    normalize_unit,
+    unit_dimension,
+)
 from coolprompt.utils.prompt_templates.math_validation_template import (
     MATH_VALIDATION_TEMPLATE,
 )
 
-_UREG = pint.UnitRegistry(non_int_type=Fraction)
+__all__ = [
+    "Evaluation",
+    "Example",
+    "MathValidator",
+    "Solution",
+    "SolutionBatch",
+    "UnitError",
+    "ValidationResult",
+    "calculate",
+    "convert_units",
+    "create_math_validator",
+    "evaluate_expression",
+    "format_number",
+    "is_terminating_decimal",
+    "normalize_unit",
+    "parse_answer",
+    "parse_answer_with_unit",
+    "unit_dimension",
+]
 
 
 class Example(BaseModel):
@@ -51,11 +86,15 @@ class Solution(BaseModel):
 
 
 class SolutionBatch(BaseModel):
+    """Batch of solutions returned by a solver model."""
+
     model_config = ConfigDict(extra="forbid")
     solutions: list[Solution]
 
 
 class ValidationResult(BaseModel):
+    """Validation outcome for a single example."""
+
     original: Example
     corrected: Example | None = None
     status: Literal["accepted", "corrected", "rejected", "uncertain"]
@@ -72,13 +111,9 @@ SolveBatch = Callable[[str], SolutionBatch]
 
 
 @dataclass(frozen=True)
-class Evaluation:
-    value: Fraction
-    rounded: bool
-
-
-@dataclass(frozen=True)
 class _Outcome:
+    """Internal result of assessing a single solution."""
+
     status: Literal["ok", "rejected", "uncertain"]
     reason: str = ""
     expected: Fraction | None = None
@@ -87,472 +122,8 @@ class _Outcome:
     retryable: bool = False
 
 
-class UnitError(ValueError):
-    def __init__(self, code: str, message: str) -> None:
-        super().__init__(message)
-        self.code = code
-
-
-def _alias_key(text: str) -> str:
-    return " ".join(text.strip().casefold().split())
-
-
-def _normalize(text: str) -> str:
-    text = re.sub(r"\s+per\s+|_per_", "/", text, flags=re.I)
-    text = C.QUALIFIED.sub(
-        lambda m: ("US_liquid" if m[1].lower() == "us" else m[1].lower())
-        + "_"
-        + m[2].lower(),
-        text,
-    )
-    text = re.sub(
-        r"\b(square|sq\.?|cubic|cu\.?)[ _]+([A-Za-z]+)\b",
-        lambda m: f"({m[2]}**{3 if m[1].lower().startswith('cu') else 2})",
-        text,
-    )
-    return re.sub(r"\b(mm|cm|km|m)([23])\b", r"\1**\2", text)
-
-
-def normalize_unit(unit: str, aliases: Mapping[str, str] | None = None) -> str:
-    """Resolve aliases and normalize unit notation."""
-    if not isinstance(unit, str) or not unit.strip() or len(unit) > 200:
-        raise UnitError("unsupported_unit", "Missing or oversized unit.")
-    explicit: dict[str, str] = {}
-    for key, value in (aliases or {}).items():
-        if not isinstance(key, str) or not isinstance(value, str):
-            raise UnitError("unsupported_unit", "Unit aliases must be strings.")
-        normalized_key, target = _alias_key(key), value.strip()
-        if not normalized_key or not target or len(target) > 200:
-            raise UnitError("unsupported_unit", "Empty or oversized unit alias.")
-        if normalized_key in explicit and explicit[normalized_key] != target:
-            raise UnitError("unsupported_unit", f"Conflicting unit aliases: {key!r}")
-        explicit[normalized_key] = target
-
-    source = " ".join(unit.split())
-    synonyms = {**C.UNIT_SYNONYMS, **explicit}
-    if _alias_key(source) in synonyms:
-        return _normalize(synonyms[_alias_key(source)])
-
-    multiword = sorted((key for key in synonyms if " " in key), key=len, reverse=True)
-    if multiword:
-        pattern = re.compile(
-            r"(?<![A-Za-z0-9_:])(?:"
-            + "|".join(re.escape(key).replace(r"\ ", r"\s+") for key in multiword)
-            + r")(?![A-Za-z0-9_])",
-            re.I,
-        )
-        source = pattern.sub(lambda m: synonyms[_alias_key(m.group(0))], source)
-
-    def replace_token(match: re.Match[str]) -> str:
-        token = match.group(0)
-        return synonyms.get(_alias_key(token), token)
-
-    return _normalize(C.TOKEN.sub(replace_token, source))
-
-
-def _define(registry: pint.UnitRegistry, name: str, definition: str) -> None:
-    if name not in registry:
-        registry.define(f"{name} = {definition}")
-
-
-def _parse_unit(
-    unit: str,
-    registry: pint.UnitRegistry = _UREG,
-    aliases: Mapping[str, str] | None = None,
-) -> pint.Unit:
-    """Parse and validate a unit using Pint."""
-    try:
-        for name, definition in C.DEFINITIONS:
-            _define(registry, name, definition)
-        text = normalize_unit(unit, aliases)
-
-        def normalize_count(match: re.Match[str]) -> str:
-            entity = match.group(1).strip().casefold()
-            entity = re.sub(r"[^a-z0-9_]+", "_", entity).strip("_")
-            if not C.COUNT_ENTITY.fullmatch(entity):
-                raise UnitError(
-                    "unsupported_unit", f"Unsupported count entity: {match.group(0)!r}"
-                )
-            return f"count:{entity}"
-
-        text = re.sub(r"count:([^/*()^]+)", normalize_count, text, flags=re.I)
-
-        def resolve(match: re.Match[str]) -> str:
-            token = match.group(0)
-            name = token.lower()
-            if name.startswith("count:"):
-                entity = name[6:]
-                if not C.COUNT_ENTITY.fullmatch(entity):
-                    raise UnitError(
-                        "unsupported_unit", f"Unsupported count entity: {token!r}"
-                    )
-                name = f"count_{entity}"
-                _define(registry, name, f"[{name}]")
-                return name
-            if name.removesuffix("s") in C.AMBIGUOUS:
-                raise UnitError("ambiguous_unit", f"Ambiguous unit: {token!r}")
-            return name if name in C.CURRENCIES else token
-
-        parsed = registry.parse_units(C.TOKEN.sub(resolve, text))
-        result = registry.dimensionless
-        for name, power in parsed._units.items():
-            valid_power = (
-                power.denominator == 1
-                if isinstance(power, Fraction)
-                else float(power).is_integer()
-            )
-            if not valid_power:
-                raise UnitError(
-                    "unsupported_unit", "Fractional unit powers are unsupported."
-                )
-            resolved_name = f"calendar_{name}" if name in C.CALENDAR else name
-            result *= registry.Unit(resolved_name) ** int(power)
-        return result
-    except UnitError:
-        raise
-    except Exception as exc:
-        raise UnitError(
-            "unsupported_unit", f"Unsupported unit: {unit!r} ({exc})"
-        ) from exc
-
-
-def unit_dimension(
-    unit: str | None,
-    *,
-    registry: pint.UnitRegistry = _UREG,
-    aliases: Mapping[str, str] | None = None,
-) -> str:
-    if unit is None:
-        raise UnitError("missing_unit", "Missing unit.")
-    if _temperature_kind(normalize_unit(unit, aliases)) is not None:
-        return "[temperature]"
-    return str(_parse_unit(unit, registry, aliases).dimensionality)
-
-
-def _canonical_temperature_unit(unit: str) -> str:
-    return C.TEMPERATURE_ALIASES.get(unit, unit)
-
-
-def _temperature_kind(unit: str) -> str | None:
-    """Classify standalone temperature units; reject compound expressions."""
-    unit = _canonical_temperature_unit(unit)
-    if unit in C.ABSOLUTE_TEMPERATURE_UNITS:
-        return "absolute"
-    if unit in C.DELTA_TEMPERATURE_UNITS:
-        return "delta"
-    if C.TEMPERATURE_TOKEN.search(unit):
-        raise UnitError(
-            "unsupported_unit", f"Compound temperature unit is not supported: {unit!r}"
-        )
-    return None
-
-
-def _temperature_to_kelvin(value: Fraction, unit: str) -> Fraction:
-    if unit == "kelvin":
-        return value
-    if unit == "degC":
-        return value + Fraction(27315, 100)
-    if unit == "degF":
-        return (value - 32) * Fraction(5, 9) + Fraction(27315, 100)
-    if unit == "degR":
-        return value * Fraction(5, 9)
-    raise UnitError("unsupported_unit", f"Unsupported absolute temperature: {unit!r}")
-
-
-def _kelvin_to_temperature(value: Fraction, unit: str) -> Fraction:
-    if unit == "kelvin":
-        return value
-    if unit == "degC":
-        return value - Fraction(27315, 100)
-    if unit == "degF":
-        return (value - Fraction(27315, 100)) * Fraction(9, 5) + 32
-    if unit == "degR":
-        return value * Fraction(9, 5)
-    raise UnitError("unsupported_unit", f"Unsupported absolute temperature: {unit!r}")
-
-
-def _temperature_delta_to_kelvin(value: Fraction, unit: str) -> Fraction:
-    if unit in {"delta_kelvin", "delta_degC"}:
-        return value
-    if unit in {"delta_degF", "delta_degR"}:
-        return value * Fraction(5, 9)
-    raise UnitError("unsupported_unit", f"Unsupported temperature difference: {unit!r}")
-
-
-def _kelvin_to_temperature_delta(value: Fraction, unit: str) -> Fraction:
-    if unit in {"delta_kelvin", "delta_degC"}:
-        return value
-    if unit in {"delta_degF", "delta_degR"}:
-        return value * Fraction(9, 5)
-    raise UnitError("unsupported_unit", f"Unsupported temperature difference: {unit!r}")
-
-
-def convert_units(
-    value: Fraction,
-    computed_unit: str | None,
-    requested_unit: str | None,
-    *,
-    registry: pint.UnitRegistry = _UREG,
-    aliases: Mapping[str, str] | None = None,
-) -> Fraction:
-    """Convert compatible units exactly, keeping temperature deltas separate."""
-    if computed_unit is None or requested_unit is None:
-        raise UnitError("missing_unit", "Missing unit.")
-    if type(value) not in (int, Fraction):
-        raise ValueError("Value must be an int or Fraction.")
-    value = Fraction(value)
-    source_text = _canonical_temperature_unit(normalize_unit(computed_unit, aliases))
-    target_text = _canonical_temperature_unit(normalize_unit(requested_unit, aliases))
-    source_kind = _temperature_kind(source_text)
-    target_kind = _temperature_kind(target_text)
-
-    if source_kind is not None or target_kind is not None:
-        if source_kind != target_kind:
-            raise UnitError(
-                "incompatible_temperature_kind",
-                f"Cannot convert {computed_unit!r} to {requested_unit!r}: "
-                "absolute temperatures and temperature differences are not interchangeable.",
-            )
-        if source_kind == "absolute":
-            result = _kelvin_to_temperature(
-                _temperature_to_kelvin(value, source_text), target_text
-            )
-        elif source_kind == "delta":
-            result = _kelvin_to_temperature_delta(
-                _temperature_delta_to_kelvin(value, source_text), target_text
-            )
-        else:
-            raise UnitError("unsupported_unit", "Unsupported temperature conversion.")
-        if max(abs(result.numerator), result.denominator) > C.LIMIT:
-            raise ValueError("Numerical limits exceeded.")
-        return result
-
-    source = _parse_unit(computed_unit, registry, aliases)
-    target = _parse_unit(requested_unit, registry, aliases)
-    try:
-        result = registry.Quantity(value, source).to(target).magnitude
-    except Exception as exc:
-        calendar = any("[calendar]" in unit.dimensionality for unit in (source, target))
-        time = any("[time]" in unit.dimensionality for unit in (source, target))
-        code = "ambiguous_calendar" if calendar and time else "incompatible_units"
-        raise UnitError(
-            code, f"Cannot convert {computed_unit!r} to {requested_unit!r}"
-        ) from exc
-    if not isinstance(result, (int, Fraction)) or isinstance(result, float):
-        raise UnitError("inexact_conversion", "Inexact unit conversion.")
-    result = Fraction(result)
-    if max(abs(result.numerator), result.denominator) > C.LIMIT:
-        raise ValueError("Numerical limits exceeded.")
-    return result
-
-
-def _same_unit(
-    first: str | None,
-    second: str | None,
-    *,
-    registry: pint.UnitRegistry = _UREG,
-    aliases: Mapping[str, str] | None = None,
-) -> bool:
-    if first is None or second is None:
-        return False
-    try:
-        first_text = _canonical_temperature_unit(normalize_unit(first, aliases))
-        second_text = _canonical_temperature_unit(normalize_unit(second, aliases))
-        first_kind = _temperature_kind(first_text)
-        second_kind = _temperature_kind(second_text)
-        if first_kind is not None or second_kind is not None:
-            return first_kind == second_kind and first_text == second_text
-        return _parse_unit(first, registry, aliases) == _parse_unit(
-            second, registry, aliases
-        )
-    except ValueError:
-        return False
-
-
-def evaluate_expression(expression: str) -> Evaluation:
-    """Evaluate a restricted arithmetic AST with exact fractions."""
-    expression = expression.strip()
-    if not 0 < len(expression) <= 400:
-        raise ValueError("Invalid expression.")
-    tree = ast.parse(expression, mode="eval")
-    if sum(1 for _ in ast.walk(tree)) > 100:
-        raise ValueError("Expression is too complex.")
-    rounded = False
-
-    def evaluate(node: ast.AST) -> Fraction:
-        nonlocal rounded
-        if isinstance(node, ast.Constant) and type(node.value) in (int, float):
-            literal = ast.get_source_segment(expression, node)
-            if not literal or not C.NUMBER_LITERAL.fullmatch(literal):
-                raise ValueError("Unsupported numeric literal.")
-            value = Fraction(literal)
-        elif isinstance(node, ast.UnaryOp) and isinstance(
-            node.op, (ast.UAdd, ast.USub)
-        ):
-            value = evaluate(node.operand)
-            if isinstance(node.op, ast.USub):
-                value = -value
-        elif isinstance(node, ast.BinOp) and type(node.op) in C.OPERATIONS:
-            left, right = evaluate(node.left), evaluate(node.right)
-            if isinstance(node.op, ast.FloorDiv):
-                quotient, remainder = divmod(left, right)
-                value = Fraction(quotient)
-                rounded |= bool(remainder)
-            else:
-                value = Fraction(C.OPERATIONS[type(node.op)](left, right))
-        elif (
-            isinstance(node, ast.Call)
-            and isinstance(node.func, ast.Name)
-            and node.func.id in C.ROUNDING_FUNCTIONS
-            and len(node.args) == 1
-            and not node.keywords
-        ):
-            argument = evaluate(node.args[0])
-            value = Fraction(C.ROUNDING_FUNCTIONS[node.func.id](argument))
-            rounded |= value != argument
-        else:
-            raise ValueError("Unsupported expression.")
-        if max(abs(value.numerator), value.denominator) > C.LIMIT:
-            raise ValueError("Numerical limits exceeded.")
-        return value
-
-    return Evaluation(evaluate(tree.body), rounded)
-
-
-def calculate(expression: str) -> Fraction:
-    return evaluate_expression(expression).value
-
-
-def _decimal_places(value: Fraction) -> int | None:
-    n, places = value.denominator, [0, 0]
-    for index, factor in enumerate((2, 5)):
-        while n % factor == 0:
-            n //= factor
-            places[index] += 1
-    return max(places) if n == 1 else None
-
-
-def is_terminating_decimal(value: Fraction) -> bool:
-    return _decimal_places(value) is not None
-
-
-def format_number(value: Fraction) -> str:
-    places = _decimal_places(value)
-    if places is None:
-        return str(value)
-    if not places:
-        return str(value.numerator)
-    digits = str(abs(value.numerator) * 10**places // value.denominator).zfill(
-        places + 1
-    )
-    return f"{'-' if value < 0 else ''}{digits[:-places]}.{digits[-places:]}".rstrip(
-        "0"
-    ).rstrip(".")
-
-
-def parse_answer(output: str) -> Fraction:
-    if output.count("####") > 1:
-        raise ValueError("Multiple answer markers.")
-    value = output.rsplit("####", 1)[-1].strip()
-    if len(value) > 100:
-        raise ValueError("Oversized answer.")
-    if re.fullmatch(r"[+-]?\d{1,3}(?:,\d{3})+(?:\.\d+)?", value):
-        value = value.replace(",", "")
-    if not re.fullmatch(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:/[+-]?\d+)?", value):
-        raise ValueError("Invalid numerical answer.")
-    result = Fraction(value)
-    if max(abs(result.numerator), result.denominator) > C.LIMIT:
-        raise ValueError("Numerical limits exceeded.")
-    return result
-
-
-def _extract_answer_text(output: str) -> str:
-    if output.count("####") > 1:
-        raise ValueError("Multiple answer markers.")
-    return output.rsplit("####", 1)[-1].strip() if "####" in output else output.strip()
-
-
-def _normalize_answer_unit(unit: str) -> str:
-    unit = unit.strip().translate(C.UNICODE_UNIT_TRANSLATION)
-    return re.sub(
-        r"\b([A-Za-z]+)([23])\b",
-        lambda m: (
-            f"{m.group(1)}**{m.group(2)}"
-            if m.group(1).lower() in {"m", "cm", "mm", "km"}
-            else m.group(0)
-        ),
-        unit,
-    )
-
-
-def _currency_from_context(symbol: str, aliases: Mapping[str, str] | None) -> str:
-    if symbol not in C.CURRENCY_SYMBOLS:
-        raise UnitError("unsupported_unit", f"Unsupported currency symbol: {symbol!r}")
-    currency = C.CURRENCY_SYMBOLS[symbol]
-    if currency is not None:
-        return currency
-    normalized_aliases = {
-        _alias_key(key): value for key, value in (aliases or {}).items()
-    }
-    currency = normalized_aliases.get(symbol)
-    if currency is None:
-        raise UnitError(
-            "ambiguous_unit", f"Currency symbol {symbol!r} requires an explicit alias."
-        )
-    currency = currency.strip().lower()
-    if currency not in C.CURRENCIES:
-        raise UnitError(
-            "unsupported_unit",
-            f"Unsupported currency alias for {symbol!r}: {currency!r}",
-        )
-    return currency
-
-
-def parse_answer_with_unit(
-    output: str,
-    requested_unit: str,
-    *,
-    registry: pint.UnitRegistry = _UREG,
-    aliases: Mapping[str, str] | None = None,
-) -> Fraction:
-    raw = _extract_answer_text(output)
-    if not raw or len(raw) > 200:
-        raise ValueError("Missing or oversized final answer.")
-    try:
-        return parse_answer(output)
-    except ValueError:
-        pass
-    percent_match = re.fullmatch(rf"\s*(?P<number>(?:{C.ANSWER_NUMBER}))\s*%\s*", raw)
-    if percent_match:
-        return convert_units(
-            parse_answer(percent_match.group("number")),
-            "percent",
-            requested_unit,
-            registry=registry,
-            aliases=aliases,
-        )
-    if raw[0] in C.CURRENCY_SYMBOLS:
-        symbol = raw[0]
-        value = parse_answer(raw[1:].strip())
-        source_unit = _currency_from_context(symbol, aliases)
-        return convert_units(
-            value, source_unit, requested_unit, registry=registry, aliases=aliases
-        )
-    match = C.ANSWER_PATTERN.fullmatch(raw)
-    if match is None:
-        raise ValueError("Unsupported numerical answer format.")
-    value = parse_answer(match.group("number"))
-    source_unit = _normalize_answer_unit(match.group("unit"))
-    if not source_unit:
-        return value
-    if source_unit in C.CURRENCY_SYMBOLS:
-        source_unit = _currency_from_context(source_unit, aliases)
-    return convert_units(
-        value, source_unit, requested_unit, registry=registry, aliases=aliases
-    )
-
-
 def _uncertain(code: str, reason: str) -> _Outcome:
+    """Build an uncertain outcome, marking retryable codes."""
     return _Outcome(
         "uncertain", reason, reason_code=code, retryable=code in C.RETRYABLE
     )
@@ -605,6 +176,7 @@ class MathValidator:
         self._unit_context = unit_context
 
     def validate(self, examples: Sequence[Example]) -> list[ValidationResult]:
+        """Validate examples and return one result per example, in input order."""
         examples = [Example(input=item.input, output=item.output) for item in examples]
         results: list[ValidationResult | None] = [None] * len(examples)
         rng = random.Random(self._seed)
@@ -710,6 +282,7 @@ class MathValidator:
     def _collect(
         solver: SolveBatch, request: str, size: int, label: str
     ) -> dict[int, Solution]:
+        """Call a solver and check that it returned exactly one solution per problem."""
         response = solver(request)
         ids = [item.id for item in response.solutions]
         if sorted(ids) != list(range(size)):
@@ -717,6 +290,7 @@ class MathValidator:
         return {item.id: item for item in response.solutions}
 
     def _build_request(self, examples: Sequence[Example]) -> str:
+        """Build the solver prompt for a batch of problems."""
         problems = [
             {"id": index, "problem": example.input}
             for index, example in enumerate(examples)
@@ -776,6 +350,7 @@ class MathValidator:
         return dict(registry=registry, aliases=aliases)
 
     def _assess(self, solution: Solution, *, units: Mapping | None = None) -> _Outcome:
+        """Check a solution and compute the expected answer."""
         if solution.status != "solved":
             if solution.status == "invalid":
                 return _Outcome(
@@ -825,6 +400,7 @@ class MathValidator:
     def _reconcile(
         self, primary: _Outcome, secondary: _Outcome, *, units: Mapping | None = None
     ) -> _Outcome:
+        """Combine primary and cross-check outcomes into one outcome."""
         if primary.status != "ok":
             return _uncertain(
                 "verifier_disagreement",
@@ -875,6 +451,7 @@ class MathValidator:
         *,
         units: Mapping | None = None,
     ) -> ValidationResult:
+        """Convert an outcome into a validation result."""
         expected = outcome.expected
         details = dict(
             original=example,
@@ -948,6 +525,7 @@ def create_math_validator(
     """Create a math validator from language models."""
 
     def solver(llm: BaseLanguageModel) -> SolveBatch:
+        """Wrap a language model as a structured batch solver."""
         return lambda request: parse_structured(
             llm, request, SolutionBatch, label="Math validator"
         )
