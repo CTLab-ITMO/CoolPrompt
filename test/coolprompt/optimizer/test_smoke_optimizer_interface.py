@@ -63,6 +63,7 @@ def test_method_by_name_covers_expected_keys():
         "regps",
         "compress",
         "rider",
+        "rider_original",
         "brave",
         "sapo",
     }

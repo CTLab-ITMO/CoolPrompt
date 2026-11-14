@@ -1,6 +1,6 @@
 """Public CoolPrompt package exports."""
 
-__all__ = ["PromptTuner"]
+__all__ = ["PromptTuner", "rider"]
 
 
 def __getattr__(name: str):
@@ -13,4 +13,8 @@ def __getattr__(name: str):
         from .assistant import PromptTuner
 
         return PromptTuner
+    if name == "rider":
+        from .optimizer.rider_original import rider
+
+        return rider
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
