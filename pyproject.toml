@@ -13,7 +13,7 @@ namespaces = false
 
 [project]
 name = "coolprompt"
-version = "2.1.1"
+version = "2.1.2"
 authors = [
   { name="Nikita Kulin", email="serito1998@gmail.com" },
   { name="Artur Khairullin", email="anderbrine05@gmail.com" },
@@ -59,7 +59,8 @@ dependencies = [
   "langdetect>=0.4.31",
   "deepeval>=3.7.2",
   "transformers<5.0.0",
-  "sentence-transformers>=3.0.0"
+  "sentence-transformers>=3.0.0",
+  "pint>=0.24",
 ]
 license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]
